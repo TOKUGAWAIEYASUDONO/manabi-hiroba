@@ -15,6 +15,8 @@ const MAX_PLAYERS = 60;
 // やさしいルール：たからばこの「うばう・入れかえ・落とす」と、すごろくの🌀（もどる）をなくす
 const RULES = ["normal", "easy"];
 const EASY_NG = ["steal", "swap", "lose"];
+// 遊び方ごとに受け付ける操作（answer はどちらでも可）
+const MODE_OPS = { chest: ["add", "x2", "lose", "steal", "swap"], race: ["move"] };
 const evOf = rule => rule === "easy" ? Object.fromEntries(Object.entries(EV).filter(([, e]) => e !== "🌀")) : EV;
 // ページが読み込む問題データ（data フォルダの .js だけを返す）
 const DATA_DIR = path.join(__dirname, "data");
@@ -128,6 +130,7 @@ const API = {
     const room = rooms.get(String(b.code)), p = player(room, b);
     if (!p) return [403, { error: "参加情報が正しくありません" }];
     if (room.status !== "playing") return [409, { error: "対戦中ではありません" }];
+    if (b.op !== "answer" && !(MODE_OPS[room.mode] || []).includes(b.op)) return [403, { error: "この遊び方では使えない操作です" }];
     if (room.rule === "easy" && EASY_NG.includes(b.op)) return [403, { error: "やさしいルールの部屋では使えません" }];
     const out = { ok: true };
     switch (b.op) {
