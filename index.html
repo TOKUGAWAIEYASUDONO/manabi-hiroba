@@ -143,20 +143,18 @@ h2{font-size:20px;margin:20px 0 10px}
 
 <main class="wrap" id="app"></main>
 
+<!-- 問題データ（file:// でも読めるよう script タグで読む） -->
+<script src="data/questions.js"></script>
+<script src="data/calc.js"></script>
 <script>
 /* ================= データ ================= */
 const SUBJ={math:{n:"算数",c:"var(--math)"},jp:{n:"国語",c:"var(--jp)"},soc:{n:"社会",c:"var(--soc)"},eng:{n:"英語",c:"var(--eng)"}};
+const DATA_OK=!!(window.MH_QUESTIONS&&window.MH_CALC);
+const QD=window.MH_QUESTIONS||{kanji:[],kencho:[],eigo:[]};
+/* 漢字は学年ごとに分けておく（1問 = {id,g,q,a}） */
+const KANJI={}; for(const x of QD.kanji) (KANJI[x.g]=KANJI[x.g]||[]).push(x);
+const KENCHO=QD.kencho, EIGO=QD.eigo;
 
-const KANJI={
-1:[["山","やま"],["川","かわ"],["花","はな"],["森","もり"],["空","そら"],["雨","あめ"],["学校","がっこう"],["先生","せんせい"],["水","みず"],["石","いし"],["一年生","いちねんせい"],["早い","はやい"]],
-2:[["天気","てんき"],["電車","でんしゃ"],["教室","きょうしつ"],["遠足","えんそく"],["朝","あさ"],["昼","ひる"],["夜","よる"],["春","はる"],["夏","なつ"],["秋","あき"],["冬","ふゆ"],["家","いえ"]],
-3:[["世界","せかい"],["写真","しゃしん"],["漢字","かんじ"],["宿題","しゅくだい"],["旅行","りょこう"],["主人公","しゅじんこう"],["感想","かんそう"],["練習","れんしゅう"],["安心","あんしん"],["勉強","べんきょう"]],
-4:[["卒業","そつぎょう"],["協力","きょうりょく"],["説明","せつめい"],["希望","きぼう"],["季節","きせつ"],["健康","けんこう"],["努力","どりょく"],["関係","かんけい"],["自然","しぜん"],["選手","せんしゅ"]],
-5:[["経験","けいけん"],["移動","いどう"],["貿易","ぼうえき"],["準備","じゅんび"],["構造","こうぞう"],["資源","しげん"],["効果","こうか"],["複雑","ふくざつ"],["燃料","ねんりょう"],["検査","けんさ"]],
-6:[["宇宙","うちゅう"],["憲法","けんぽう"],["誕生","たんじょう"],["批判","ひはん"],["貴重","きちょう"],["展覧会","てんらんかい"],["専門","せんもん"],["尊敬","そんけい"],["郵便","ゆうびん"],["縦横","じゅうおう"]]
-};
-const KENCHO=[["北海道","札幌市"],["青森県","青森市"],["岩手県","盛岡市"],["宮城県","仙台市"],["秋田県","秋田市"],["山形県","山形市"],["福島県","福島市"],["茨城県","水戸市"],["栃木県","宇都宮市"],["群馬県","前橋市"],["埼玉県","さいたま市"],["千葉県","千葉市"],["東京都","東京（新宿区）"],["神奈川県","横浜市"],["新潟県","新潟市"],["富山県","富山市"],["石川県","金沢市"],["福井県","福井市"],["山梨県","甲府市"],["長野県","長野市"],["岐阜県","岐阜市"],["静岡県","静岡市"],["愛知県","名古屋市"],["三重県","津市"],["滋賀県","大津市"],["京都府","京都市"],["大阪府","大阪市"],["兵庫県","神戸市"],["奈良県","奈良市"],["和歌山県","和歌山市"],["鳥取県","鳥取市"],["島根県","松江市"],["岡山県","岡山市"],["広島県","広島市"],["山口県","山口市"],["徳島県","徳島市"],["香川県","高松市"],["愛媛県","松山市"],["高知県","高知市"],["福岡県","福岡市"],["佐賀県","佐賀市"],["長崎県","長崎市"],["熊本県","熊本市"],["大分県","大分市"],["宮崎県","宮崎市"],["鹿児島県","鹿児島市"],["沖縄県","那覇市"]];
-const EIGO=[["apple","りんご"],["school","学校"],["friend","友だち"],["teacher","先生"],["library","図書館"],["Sunday","日曜日"],["summer","夏"],["animal","動物"],["music","音楽"],["breakfast","朝ごはん"],["birthday","誕生日"],["family","家族"],["weather","天気"],["pencil","えんぴつ"],["homework","宿題"],["park","公園"],["train","電車"],["hospital","病院"],["station","駅"],["river","川"]];
 
 /* ゲーム一覧（自分で作るゲーム） */
 const GAMES=[
@@ -191,29 +189,20 @@ function medalTotal(){ return Object.values(bests()).reduce((n,b)=>n+(b.medal||0
 function refreshMedals(){ $("#medalCount").textContent="🏅 "+medalTotal(); }
 
 /* ================= 問題を作る ================= */
-function makeCalc(g){
-  const r=(a,b)=>a+rnd(b-a+1);
-  switch(g){
-    case 1:{ if(rnd(2)){const a=r(1,9),b=r(1,10-a);return {q:`${a} + ${b}`,a:a+b}} const a=r(2,10),b=r(1,a-1);return {q:`${a} − ${b}`,a:a-b} }
-    case 2:{ if(rnd(2)){const a=r(10,60),b=r(10,39);return {q:`${a} + ${b}`,a:a+b}} const a=r(2,9),b=r(1,9);return {q:`${a} × ${b}`,a:a*b} }
-    case 3:{ if(rnd(2)){const b=r(2,9),c=r(1,9);return {q:`${b*c} ÷ ${b}`,a:c}} const a=r(100,500),b=r(100,400);return {q:`${a} + ${b}`,a:a+b} }
-    case 4:{ if(rnd(2)){const a=r(12,49),b=r(2,9);return {q:`${a} × ${b}`,a:a*b}} const a=r(1,49)/10,b=r(1,49)/10;return {q:`${a} + ${b}`,a:+(a+b).toFixed(1)} }
-    case 5:{ if(rnd(2)){const a=r(11,49)/10,b=r(2,9);return {q:`${a} × ${b}`,a:+(a*b).toFixed(1)}} const b=r(2,9),c=r(11,30);return {q:`${b*c} ÷ ${b}`,a:c} }
-    default:{ if(rnd(2)){const a=r(2,9)/10,b=r(2,9)/10;return {q:`${a} × ${b}`,a:+(a*b).toFixed(2)}} const a=r(12,30),b=r(11,25);return {q:`${a} × ${b}`,a:a*b} }
-  }
-}
+/* 計算は data/calc.js で学年の単元に合わせて作る（分数の学年は4択になる） */
+function makeCalc(g){ return window.MH_CALC.make(g,rnd,shuffle); }
 function makeKuku(){ const a=1+rnd(9),b=1+rnd(9); return {q:`${a} × ${b}`,a:a*b}; }
-function makeChoice(list,qi,ai,small){
+function makeChoice(list,small){
   const item=list[rnd(list.length)];
-  const others=shuffle(list.filter(x=>x[ai]!==item[ai])).slice(0,3).map(x=>x[ai]);
-  return {q:item[qi],a:item[ai],ch:shuffle([item[ai],...others]),small};
+  const others=shuffle([...new Set(list.filter(x=>x.a!==item.a).map(x=>x.a))]).slice(0,3);
+  return {id:item.id,q:item.q,a:item.a,ch:shuffle([item.a,...others]),small};
 }
 function gen(id,g){
   if(id==="calc") return makeCalc(g);
   if(id==="kuku") return makeKuku();
-  if(id==="kanji") return makeChoice(KANJI[g]||KANJI[1],0,1,"この漢字の読みは？");
-  if(id==="kencho") return makeChoice(KENCHO,0,1,"県庁所在地は？");
-  if(id==="eigo") return makeChoice(EIGO,0,1,"意味は？");
+  if(id==="kanji") return makeChoice(KANJI[g]||KANJI[1],"この漢字の読みは？");
+  if(id==="kencho") return makeChoice(KENCHO,"県庁所在地は？");
+  if(id==="eigo") return makeChoice(EIGO,"意味は？");
 }
 
 /* ================= ホーム ================= */
@@ -240,7 +229,8 @@ function renderHome(){
     <div class="modes">${MODES.map(m=>`<button class="mode" data-m="${m.id}"><span class="ico">${m.ico}</span><span><span class="t">${m.t}</span><span class="d">${m.d}</span></span></button>`).join("")}</div>
     <h2>ほかの学習サイト</h2>
     <div class="links">${LINKS.map(l=>`<a class="link" href="${l.u}" target="_blank" rel="noopener"><b>${esc(l.t)} ↗</b><span>${esc(l.d)}</span></a>`).join("")}</div>
-    <p class="note">※ ほかのサイトは紹介のみです。学校で使えるかどうかは先生に聞いてね。</p>`;
+    <p class="note">※ ほかのサイトは紹介のみです。学校で使えるかどうかは先生に聞いてね。</p>
+    <p class="note" style="text-align:center;margin-top:20px"><a href="#check">🔌 接続テスト（先生・ICT担当の方へ）</a></p>`;
   $("#quick").onclick=()=>{
     const pool=GAMES.filter(x=>ui.grade===0||x.g.includes(ui.grade));
     const x=pool[rnd(pool.length)]; const g=x.g.includes(ui.grade)?ui.grade:x.g[0];
@@ -292,7 +282,7 @@ function next(){
   P.cur=gen(P.x.id,P.g); P.inp=""; P.lock=false;
   $("#qq").textContent=P.cur.q; $("#qs").textContent=P.cur.small||"= ?";
   const area=$("#area");
-  if(P.x.type==="input"){
+  if(!P.cur.ch){
     area.innerHTML=`<div class="answer" id="ans">&nbsp;</div>
       <div class="pad">${["7","8","9","4","5","6","1","2","3",".","0","⌫"].map(k=>`<button data-k="${k}">${k}</button>`).join("")}
       <button class="ok" data-k="OK" style="grid-column:span 3">こたえる</button></div>`;
@@ -348,8 +338,8 @@ function finish(){
   const cp=$("#cp"); if(cp) cp.onclick=()=>{ navigator.clipboard?.writeText(report).then(()=>cp.textContent="コピーしました",()=>{}); };
 }
 document.addEventListener("keydown",e=>{
-  if(!P||!timerId) return;
-  if(P.x.type==="input"){
+  if(!P||!timerId||!P.cur) return;
+  if(!P.cur.ch){
     if(/^[0-9.]$/.test(e.key)) key(e.key);
     else if(e.key==="Backspace") key("⌫");
     else if(e.key==="Enter") key("OK");
@@ -364,7 +354,7 @@ function renderTeacher(){
   const choiceOpt=GAMES.filter(x=>x.type==="choice").map(x=>`<option value="${x.id}">${x.ico} ${x.t}</option>`).join("");
   app.innerHTML=`
     <h2>👩‍🏫 先生の画面</h2>
-    <p class="note">ログインは不要です。児童の名前などの個人情報は集めません。</p>
+    <p class="note">ログインは不要です。児童の名前などの個人情報は集めません。　<a href="#check">🔌 接続テスト（友だち対戦が使えるか調べる）</a></p>
     <div class="tcols">
       <div class="form">
         <b style="font-size:18px">① 課題リンクを作る</b>
@@ -394,18 +384,23 @@ function renderTeacher(){
         <label>問題<select id="ng">${opt}</select></label>
         <label>学年<select id="ngr"></select></label>
         <label>時間<select id="nt"><option value="120">2分</option><option value="180" selected>3分</option><option value="300">5分</option></select></label>
+        <label>ルール<select id="nr">${RULES.map(r=>`<option value="${r.id}">${r.t}（${r.d}）</option>`).join("")}</select></label>
       </div>
+      <span class="note">やさしいルール：たからばこで「うばう・入れかえ・落とす」が出ず、すごろくに🌀（もどる）がありません。1〜2年を選ぶと、はじめは「やさしい」になります。</span>
       <button class="btn" id="mkroom">部屋を作る</button>
       <div class="err" id="roomErr"></div>
+      <span class="note">つながるか心配なときは、先に <a href="#check">🔌 接続テスト</a> をためしてください。</span>
     </div>
     <div class="banner" style="margin-top:16px"><b>次の段階で追加する予定：</b>単元ごとのつまずき分析、学校のアカウントでのログイン。</div>`;
   const fillG=(sel,gsel)=>{ const x=GAMES.find(y=>y.id===$(sel).value); $(gsel).innerHTML=x.g.map(n=>`<option value="${n}">${n}年</option>`).join(""); };
-  $("#ng").onchange=()=>fillG("#ng","#ngr"); fillG("#ng","#ngr");
+  const setRule=()=>{ $("#nr").value=defaultRule(+$("#ngr").value); };
+  $("#ng").onchange=()=>{ fillG("#ng","#ngr"); setRule(); }; fillG("#ng","#ngr"); setRule();
+  $("#ngr").onchange=setRule;
   $("#mkroom").onclick=async()=>{
     if(!netOK) return $("#roomErr").textContent="予備モードは、サーバー（node server.js）から開いたときだけ使えます。";
     $("#mkroom").disabled=true; $("#roomErr").textContent="部屋を作っています…";
     try{
-      const s={mode:$("#nm").value,game:$("#ng").value,g:+$("#ngr").value,t:+$("#nt").value};
+      const s={mode:$("#nm").value,game:$("#ng").value,g:+$("#ngr").value,t:+$("#nt").value,rule:ruleOf($("#nr").value)};
       const r=await api("create",s);
       HOST={...r,...s}; sset("mh_host",HOST); go("#host");
     }catch(e){ $("#roomErr").textContent=e.message; $("#mkroom").disabled=false; }
@@ -461,6 +456,12 @@ const MODES=[
  {id:"race",ico:"🎲",t:"すごろくレース",d:"正解するとサイコロをふれる。先にゴールした人の勝ち！"}
 ];
 const BOTS=[{n:"パンダ",e:"🐼"},{n:"ウサギ",e:"🐰"},{n:"カエル",e:"🐸"}];
+/* ルール：やさしい＝たからばこで「うばう・入れかえ・落とす」が出ない／すごろくに🌀（もどる）がない */
+const RULES=[{id:"normal",t:"ふつう",d:"うばう・入れかえ・もどる もある"},{id:"easy",t:"やさしい",d:"コインがへらない・もどらない"}];
+const ruleOf=v=>v==="easy"?"easy":"normal";
+const ruleName=v=>ruleOf(v)==="easy"?"やさしいルール":"ふつうのルール";
+const defaultRule=g=>g===1||g===2?"easy":"normal";   // 1〜2年は「やさしい」が初期値
+function evOf(rule){ if(ruleOf(rule)!=="easy") return EV; const e={}; for(const k in EV) if(EV[k]!=="🌀") e[k]=EV[k]; return e; }
 const rr=(a,b)=>a+Math.random()*(b-a);
 
 /* 計算問題も4択にする（タブレットで押しやすく） */
@@ -475,6 +476,7 @@ function genChoice(id,g){
 function renderModeSetup(q){
   const m=MODES.find(x=>x.id===q.get("m")); if(!m) return go("#home");
   const list=GAMES.filter(x=>ui.grade===0||x.g.includes(ui.grade));
+  const rule0=defaultRule(ui.grade);
   app.innerHTML=`<div class="play">
     <div class="topbar"><button class="back" onclick="go('#home')">← もどる</button><b>${m.ico} ${m.t}</b><span></span></div>
     <div class="q"><div style="font-size:15px">${m.d}</div></div>
@@ -483,12 +485,15 @@ function renderModeSetup(q){
       <span><span class="tag" style="background:${SUBJ[x.s].c}">${SUBJ[x.s].n}</span></span></button>`).join("")}</div>
     <h2>時間</h2>
     <div class="pills" style="justify-content:center"><button class="pill on" data-t="120">2分</button><button class="pill" data-t="180">3分</button></div>
+    <h2>ルール</h2>
+    <div class="pills" style="justify-content:center">${RULES.map(r=>`<button class="pill ${r.id===rule0?"on":""}" data-r="${r.id}">${r.t}<span class="note" style="color:inherit">（${r.d}）</span></button>`).join("")}</div>
   </div>`;
-  let t=120;
+  let t=120, rule=rule0;
   app.querySelectorAll("[data-t]").forEach(b=>b.onclick=()=>{t=+b.dataset.t;app.querySelectorAll("[data-t]").forEach(e=>e.classList.toggle("on",e===b));});
+  app.querySelectorAll("[data-r]").forEach(b=>b.onclick=()=>{rule=b.dataset.r;app.querySelectorAll("[data-r]").forEach(e=>e.classList.toggle("on",e===b));});
   app.querySelectorAll("[data-id]").forEach(b=>b.onclick=()=>{
     const x=GAMES.find(y=>y.id===b.dataset.id); const g=x.g.includes(ui.grade)?ui.grade:x.g[0];
-    go(`#mode?m=${m.id}&game=${x.id}&g=${g}&t=${t}`);
+    go(`#mode?m=${m.id}&game=${x.id}&g=${g}&t=${t}&r=${rule}`);
   });
 }
 
@@ -498,7 +503,8 @@ function renderMode(q){
   if(!m||!x) return go("#home");
   let g=+q.get("g")||x.g[0]; if(!x.g.includes(g)) g=x.g[0];
   const t=Math.min(300,Math.max(60,+q.get("t")||120)), task=q.get("task")==="1";
-  M={m,x,g,t,task,ok:0,ng:0,misses:[],phase:"q",end:Date.now()+t*1000,
+  const rule=q.has("r")?ruleOf(q.get("r")):defaultRule(g);
+  M={m,x,g,t,task,rule,ev:evOf(rule),ok:0,ng:0,misses:[],phase:"q",end:Date.now()+t*1000,
      me:{n:"あなた",e:"😀",v:0,me:true},
      bots:BOTS.map((b,i)=>({...b,v:0,wait:rr(2,5),spd:[1,1.15,0.85][i]})),
      over:false};
@@ -506,7 +512,7 @@ function renderMode(q){
     ${task?`<div class="banner">📝 先生からの課題：${m.t}（${x.t}・${g}年）</div>`:""}
     <div class="topbar">
       <button class="back" onclick="stopTimer();M=null;go('#home')">← もどる</button>
-      <span><b>${m.ico} ${m.t}</b> <span class="note">${x.t}・${g}年</span></span>
+      <span><b>${m.ico} ${m.t}</b> <span class="note">${x.t}・${g}年・${ruleName(rule)}</span></span>
       <span class="timer" id="tm">${t}</span>
     </div>
     <div class="tbar"><i id="tb"></i></div>
@@ -559,14 +565,16 @@ function chestReward(){
     <div class="boxes">${[0,1,2].map(i=>`<button class="box" data-b="${i}">🎁</button>`).join("")}</div><div class="msg" id="msg"></div></div>`;
   $("#mmain").querySelectorAll("[data-b]").forEach(b=>b.onclick=()=>openBox(b));
 }
-function rollChest(){
-  const T=[["+10",20],["+20",22],["+30",16],["+50",10],["x2",8],["lose",8],["steal",10],["swap",4],["none",2]];
+function rollChest(rule){
+  const T=ruleOf(rule)==="easy"
+    ?[["+10",24],["+20",26],["+30",18],["+50",12],["x2",8],["none",2]]          // やさしい：増えるか からっぽ だけ
+    :[["+10",20],["+20",22],["+30",16],["+50",10],["x2",8],["lose",8],["steal",10],["swap",4],["none",2]];
   let r=Math.random()*T.reduce((n,x)=>n+x[1],0); for(const [k,w] of T){ if((r-=w)<0) return k; } return "+10";
 }
 function openBox(btn){
   if(M.phase!=="reward") return; M.phase="wait";
-  if(M.net) return netBox(rollChest(),btn);
-  const k=rollChest(), L=leaderBot(); let label, msg;
+  if(M.net) return netBox(rollChest(M.rule),btn);
+  const k=rollChest(M.rule), L=leaderBot(); let label, msg;
   if(k[0]==="+"){ const n=+k.slice(1); M.me.v+=n; label=`🪙 +${n}`; msg=`コイン ${n} まいゲット！`; }
   else if(k==="x2"){ M.me.v*=2; label="✨ 2ばい"; msg="コインが2ばいになった！"; }
   else if(k==="lose"){ const n=Math.round(M.me.v*0.25); M.me.v-=n; label=`💸 −${n}`; msg="あっ、コインを少し落とした…"; }
@@ -599,7 +607,7 @@ function raceReward(){
         return;
       }
       let msg=`${n} すすむ！`; M.me.v=Math.min(GOAL,M.me.v+n);
-      const e=EV[M.me.v];
+      const e=M.ev[M.me.v];
       if(e==="⭐"){ M.me.v=Math.min(GOAL,M.me.v+3); msg+=" ⭐でさらに3すすむ！"; }
       if(e==="🌀"){ M.me.v=Math.max(0,M.me.v-2); msg+=" 🌀で2もどる…"; }
       $("#msg").textContent=msg; drawSide();
@@ -616,11 +624,11 @@ function botTick(dt){
     if(M.m.id==="chest"){
       b.wait=rr(3.5,6.5);
       const r=Math.random();
-      if(r<0.08) b.v*=2; else if(r<0.14) b.v=Math.round(b.v*0.75); else b.v+=[10,20,20,30,50][rnd(5)];
+      if(r<0.08) b.v*=2; else if(r<0.14&&M.rule!=="easy") b.v=Math.round(b.v*0.75); else b.v+=[10,20,20,30,50][rnd(5)];
     } else {
       b.wait=rr(4.5,7.5);
       b.v=Math.min(GOAL,b.v+1+rnd(4));
-      const e=EV[b.v]; if(e==="⭐") b.v=Math.min(GOAL,b.v+3); if(e==="🌀") b.v=Math.max(0,b.v-2);
+      const e=M.ev[b.v]; if(e==="⭐") b.v=Math.min(GOAL,b.v+3); if(e==="🌀") b.v=Math.max(0,b.v-2);
       if(b.v>=GOAL){ modeFinish(); return; }
     }
   }
@@ -635,7 +643,8 @@ function drawSide(){
     const cells=[];
     for(let i=0;i<=GOAL;i++){
       const tk=players().filter(p=>p.v===i).map(p=>p.e).join("");
-      cells.push(`<div class="cell ${EV[i]?"ev":""} ${i===GOAL?"goal":""}">${i===0?"スタート":i===GOAL?"ゴール":i}${EV[i]?" "+EV[i]:""}<span class="tk">${tk}</span></div>`);
+      const ev=M.ev[i];
+      cells.push(`<div class="cell ${ev?"ev":""} ${i===GOAL?"goal":""}">${i===0?"スタート":i===GOAL?"ゴール":i}${ev?" "+ev:""}<span class="tk">${tk}</span></div>`);
     }
     $("#mside").innerHTML=`<h3>🎲 すごろく</h3><div class="board">${cells.join("")}</div>
       <div style="margin-top:8px">${topList(ps).map(([p,i])=>`<div class="rank ${p.me?"me":""}">${i}. ${p.e} ${esc(p.n)}<span class="v">${p.v}マス</span></div>`).join("")}</div>`;
@@ -712,7 +721,7 @@ const NICK_ANI=[["パンダ","🐼"],["ウサギ","🐰"],["カエル","🐸"],[
 /* 先生の端末で動く「部屋」 */
 let HR=null;
 function hrPub(r){
-  return {code:r.code,mode:r.mode,game:r.game,g:r.g,t:r.t,status:r.status,endAt:r.endAt,now:Date.now(),
+  return {code:r.code,mode:r.mode,game:r.game,g:r.g,t:r.t,rule:r.rule,status:r.status,endAt:r.endAt,now:Date.now(),
     players:[...r.players.values()].map(p=>({pid:p.pid,name:p.name,emoji:p.emoji,v:p.v,ok:p.ok,ng:p.ng}))};
 }
 function hrBroadcast(r,now){
@@ -745,6 +754,7 @@ function hrApi(r,name,b){
   if(name!=="act") return [400,{error:"不明な操作です"}];
   const p=pl(); if(!p) return [403,{error:"参加情報が正しくありません"}];
   if(r.status!=="playing") return [409,{error:"対戦中ではありません"}];
+  if(r.rule==="easy"&&["steal","swap","lose"].includes(b.op)) return [403,{error:"やさしいルールの部屋では使えません"}];
   const out={ok:true}, leader=()=>[...r.players.values()].filter(q=>q!==p).sort((a,c)=>c.v-a.v)[0];
   switch(b.op){
     case "answer": b.right?p.ok++:p.ng++; break;
@@ -754,7 +764,7 @@ function hrApi(r,name,b){
     case "steal": { const t=leader(); if(t&&t.v>0){ out.n=Math.round(t.v*0.2); t.v-=out.n; p.v+=out.n; out.target=t.emoji+t.name; } else { out.n=20; p.v+=20; } break; }
     case "swap": { const t=leader(); if(t&&t.v>p.v){ [t.v,p.v]=[p.v,t.v]; out.target=t.emoji+t.name; } else { p.v+=20; out.n=20; } break; }
     case "move": { if(r.mode!=="race") break; const n=Math.min(6,Math.max(1,b.n|0)); p.v=Math.min(GOAL,p.v+n);
-      out.ev=EV[p.v]||""; if(out.ev==="⭐") p.v=Math.min(GOAL,p.v+3); if(out.ev==="🌀") p.v=Math.max(0,p.v-2); break; }
+      out.ev=evOf(r.rule)[p.v]||""; if(out.ev==="⭐") p.v=Math.min(GOAL,p.v+3); if(out.ev==="🌀") p.v=Math.max(0,p.v-2); break; }
     default: return [400,{error:"不明な操作です"}];
   }
   out.v=p.v;
@@ -780,7 +790,7 @@ async function hrCreate(s){
     try{ await withTimeout(new Promise((ok,ng)=>{peer.on("open",ok);peer.on("error",ng);}),10000,"つなぎ役のサーバーに接続できませんでした"); }
     catch(e){ try{peer.destroy()}catch(_){} if(e&&e.type==="unavailable-id") continue;
       throw new Error("つなぎ役のサーバーに接続できませんでした"+(e&&e.type?"（"+e.type+"）":"")); }
-    const r={code,mode:s.mode,game:s.game,g:s.g,t:s.t,status:"lobby",endAt:0,players:new Map(),conns:new Set(),listeners:new Set(),timer:null,peer};
+    const r={code,mode:s.mode,game:s.game,g:s.g,t:s.t,rule:ruleOf(s.rule),status:"lobby",endAt:0,players:new Map(),conns:new Set(),listeners:new Set(),timer:null,peer};
     peer.on("connection",conn=>{ conn.on("data",m=>hrHandle(r,conn,m)); conn.on("close",()=>r.conns.delete(conn)); });
     peer.on("disconnected",()=>{ try{peer.reconnect()}catch(e){} });   // 途中参加できるよう仲介サーバーにつなぎ直す
     r.iv=setInterval(()=>{ if(r.status==="playing"&&Date.now()>=r.endAt) hrEnd(r); },1000);
@@ -850,6 +860,8 @@ function listen(code,onState,onLost){
   })();
 }
 const modeOf=s=>MODES.find(m=>m.id===s.mode), gameOf=s=>GAMES.find(x=>x.id===s.game);
+/* 集めている情報の表示（待合室・結果・先生の部屋画面） */
+const PRIVACY=`<p class="note privacy" style="text-align:center">🔒 先生の端末に送られるのは、自動でつくニックネーム・正解数・点数だけです。名前やメールアドレスは集めません。</p>`;
 const unitOf=s=>s.mode==="chest"?"コイン":"マス";
 const sorted=ps=>[...ps].sort((a,b)=>b.v-a.v||b.ok-a.ok);
 
@@ -892,24 +904,24 @@ function renderLobby(){
 function lobbyView(s){
   const me=s.players.find(p=>p.pid===NET.pid);
   app.innerHTML=`<div class="play">
-    <div class="q"><div class="note">部屋 ${s.code}｜${modeOf(s).ico} ${modeOf(s).t}｜${gameOf(s).t}（${s.g}年）</div>
+    <div class="q"><div class="note">部屋 ${s.code}｜${modeOf(s).ico} ${modeOf(s).t}｜${gameOf(s).t}（${s.g}年）｜${ruleName(s.rule)}</div>
       <div style="margin-top:14px">あなたの名前</div>
       <div style="font-size:44px;font-weight:bold">${me.emoji} ${esc(me.name)}</div>
       <button class="btn sub" id="rr">名前をかえる</button>
       <p style="font-size:20px">先生がスタートするのを待っています…</p>
       <div class="note">参加している人：${s.players.length}人</div>
       <div class="chips">${s.players.map(p=>`<span class="chip">${p.emoji} ${esc(p.name)}</span>`).join("")}</div>
-    </div></div>`;
+    </div>${PRIVACY}</div>`;
   $("#rr").onclick=()=>api("reroll",NET).then(r=>{NET={...NET,...r};sset("mh_net",NET);}).catch(()=>{});
 }
 function startNetGame(s){
   const m=modeOf(s), x=gameOf(s), off=s.now-Date.now();
   const end=s.endAt-off, startAt=end-s.t*1000;
   const mine=s.players.find(p=>p.pid===NET.pid);
-  M={m,x,g:s.g,t:s.t,task:false,ok:0,ng:0,misses:[],phase:"count",end,net:true,state:s,
+  M={m,x,g:s.g,t:s.t,task:false,rule:ruleOf(s.rule),ev:evOf(s.rule),ok:0,ng:0,misses:[],phase:"count",end,net:true,state:s,
      me:{n:mine.name,e:mine.emoji,v:mine.v,me:true},bots:[],over:false};
   app.innerHTML=`<div class="mplay">
-    <div class="topbar"><span class="note">部屋 ${s.code}</span><span><b>${m.ico} ${m.t}</b> <span class="note">${x.t}・${s.g}年</span></span><span class="timer" id="tm">${s.t}</span></div>
+    <div class="topbar"><span class="note">部屋 ${s.code}</span><span><b>${m.ico} ${m.t}</b> <span class="note">${x.t}・${s.g}年・${ruleName(s.rule)}</span></span><span class="timer" id="tm">${s.t}</span></div>
     <div class="tbar"><i id="tb"></i></div>
     <div class="mgrid"><div id="mmain"></div><div class="side" id="mside"></div></div></div>`;
   drawSide();
@@ -942,11 +954,11 @@ function netFinish(){
     ${netResultHtml(s,NET.pid)}
     <table><tr><td>せいかい</td><td>${M.ok} 問</td></tr><tr><td>正答率</td><td>${acc}%</td></tr></table>
     ${M.misses.length?`<div class="miss"><b>まちがえた問題（ふくしゅうしよう）</b><br>${M.misses.slice(0,8).map(esc).join("<br>")}</div>`:""}
-    <div><button class="btn" onclick="go('#home')">ホームへ</button></div></div></div>`;
+    <div><button class="btn" onclick="go('#home')">ホームへ</button></div></div>${PRIVACY}</div>`;
 }
 function netFinishView(s){
   app.innerHTML=`<div class="play"><div class="res"><div class="num">対戦は終わりました</div>${netResultHtml(s,NET.pid)}
-    <button class="btn" onclick="go('#home')">ホームへ</button></div></div>`;
+    <button class="btn" onclick="go('#home')">ホームへ</button></div>${PRIVACY}</div>`;
 }
 async function netBox(k,btn){
   const op=k[0]==="+"?"add":k==="none"?null:k;
@@ -980,7 +992,7 @@ function renderHost(){
   let last=null;
   const draw=s=>{
     last=s; const m=modeOf(s), x=gameOf(s), u=unitOf(s), ps=sorted(s.players);
-    const head=warn+`<div class="topbar"><button class="back" onclick="go('#teacher')">← 先生の画面</button><b>${m.ico} ${m.t}｜${x.t}（${s.g}年）</b><span class="timer" id="htm"></span></div>`;
+    const head=warn+`<div class="topbar"><button class="back" onclick="go('#teacher')">← 先生の画面</button><b>${m.ico} ${m.t}｜${x.t}（${s.g}年）｜${ruleName(s.rule)}</b><span class="timer" id="htm"></span></div>`+PRIVACY;
     if(s.status==="lobby"){
       app.innerHTML=`${head}<div class="q" style="text-align:center">
         <div>「🔑 コードで参加」から、この数字を入れてください</div>
@@ -1006,7 +1018,7 @@ function renderHost(){
         <p class="note">※ 名前は自動でつけたニックネームです。だれがどの名前かは、必要なら授業中に確認してください。</p>
         <div style="text-align:center"><button class="btn sub" id="hc">結果をコピー（表計算に貼れます）</button><button class="btn" id="hn">同じ設定で新しい部屋</button></div>`;
       $("#hc").onclick=()=>navigator.clipboard?.writeText(tsv).then(()=>$("#hc").textContent="コピーしました",()=>{});
-      $("#hn").onclick=async()=>{ const r=await api("create",{mode:HOST.mode,game:HOST.game,g:HOST.g,t:HOST.t}); HOST={...HOST,...r}; sset("mh_host",HOST); route(); };
+      $("#hn").onclick=async()=>{ const r=await api("create",{mode:HOST.mode,game:HOST.game,g:HOST.g,t:HOST.t,rule:HOST.rule}); HOST={...HOST,...r}; sset("mh_host",HOST); route(); };
     }
   };
   let off=0;
@@ -1015,13 +1027,117 @@ function renderHost(){
   timerId=setInterval(()=>{ const t=$("#htm"); if(t&&last&&last.status==="playing") t.textContent=Math.max(0,Math.ceil((last.endAt-off-Date.now())/1000))+"秒"; },250);
 }
 
+/* ================= 接続テスト（#check） ================= */
+/* 同じページの中で2つの接続（Peer）を作り、メッセージを往復させて、友だち対戦が使えるかを調べる */
+let CK=null;
+function ckStop(){ if(CK){ CK.dead=true; for(const p of CK.peers){ try{p.destroy()}catch(e){} } CK=null; } }
+const CK_STEPS=[
+  {t:"① 部品の読み込み",ok:"通信の部品（PeerJS）を読み込めました。",ng:"通信の部品（PeerJS）を読み込めませんでした。",
+   why:"学校のフィルタで、部品を置いている unpkg.com が止められているかもしれません。インターネットにつながっているかも確認してください。"},
+  {t:"② 仲介サーバーへの接続",ok:"端末どうしをつなぐ「仲介サーバー」に接続できました。",ng:"仲介サーバーに接続できませんでした。",
+   why:"学校のフィルタやプロキシで、仲介サーバー（0.peerjs.com）への通信（WebSocket）が止められているかもしれません。"},
+  {t:"③ 端末どうしの接続",ok:"端末どうしが直接つながり、メッセージが往復しました。",ng:"端末どうしの直接の接続（WebRTC）ができませんでした。",
+   why:"ネットワークの設定（ファイアウォール）で、WebRTC が使う通信（UDP や STUN／TURN）が止められているかもしれません。"},
+  {t:"④ かかった時間",ok:"",ng:"時間をはかれませんでした（③までが終わっていません）。",why:""}
+];
+function renderCheck(){
+  app.innerHTML=`<div class="play" style="text-align:left">
+    <div class="topbar"><button class="back" onclick="history.length>1?history.back():go('#home')">← もどる</button><b>🔌 接続テスト</b><span></span></div>
+    <div class="q" style="text-align:left;padding:16px">
+      <div>この端末で <b>友だち対戦</b> が使えるかを調べます（20秒ほど）。</div>
+      <div class="note" style="margin-top:6px">同じ端末の中で2つの接続を作り、メッセージを往復させます。名前などの情報は送りません。授業の前に、先生の端末と児童の端末の両方で一度ためしてください。</div>
+    </div>
+    <div class="form" id="ckRows">${CK_STEPS.map((x,i)=>`<div id="ck${i}"><b><span id="cki${i}">⏳</span> ${x.t}</b><div class="note" id="ckm${i}">まだ調べていません</div></div>`).join("")}</div>
+    <div id="ckSum" style="margin-top:12px"></div>
+    <div style="text-align:center"><button class="btn" id="ckGo">もう一度テストする</button></div>
+  </div>`;
+  $("#ckGo").onclick=runCheck;
+  runCheck();
+}
+async function runCheck(){
+  ckStop();
+  const me={dead:false,peers:[]}; CK=me;
+  const set=(i,st,msg)=>{ if(me.dead) return; $("#cki"+i).textContent=st; $("#ckm"+i).textContent=msg; };
+  CK_STEPS.forEach((x,i)=>set(i,"⏳",i?"まだ調べていません":"調べています…"));
+  $("#ckSum").innerHTML=""; $("#ckGo").disabled=true;
+  const t0=performance.now(); let step=0, detail="";
+  try{
+    if(!window.RTCPeerConnection){ detail="このブラウザは WebRTC に対応していません"; step=2; throw new Error(detail); }
+    // ① 部品
+    await withTimeout(loadPeer(),15000,"時間切れ");
+    set(0,"✅",CK_STEPS[0].ok+`（${Math.round(performance.now()-t0)}ミリ秒）`); step=1; set(1,"⏳","調べています…");
+    // ② 仲介サーバー
+    const t1=performance.now();
+    const open=p=>new Promise((ok,ng)=>{ p.on("open",ok); p.on("error",ng); });
+    const A=new Peer(PEER_PREFIX+"check-"+rid()); me.peers.push(A);
+    const B=new Peer(); me.peers.push(B);
+    await withTimeout(Promise.all([open(A),open(B)]),12000,"時間切れ").catch(e=>{ detail=e&&e.type||e.message; throw e; });
+    if(me.dead) return;
+    set(1,"✅",CK_STEPS[1].ok+`（${Math.round(performance.now()-t1)}ミリ秒）`); step=2; set(2,"⏳","調べています…");
+    // ③ 端末どうし（A は受け取ったものをそのまま返す）
+    A.on("connection",c=>c.on("data",m=>{ try{c.send(m)}catch(e){} }));
+    const t2=performance.now();
+    const conn=B.connect(A.id,{reliable:true});
+    await withTimeout(new Promise((ok,ng)=>{ conn.on("open",ok); conn.on("error",ng); B.on("error",ng); }),15000,"時間切れ")
+      .catch(e=>{ detail=e&&e.type||e.message; throw e; });
+    const tc=performance.now()-t2, rtts=[];
+    for(let i=0;i<3;i++){
+      const ts=performance.now();
+      await withTimeout(new Promise(ok=>{ const f=m=>{ if(m&&m.ping===i){ conn.off("data",f); ok(); } }; conn.on("data",f); conn.send({ping:i}); }),5000,"返事がありません")
+        .catch(e=>{ detail=e.message; throw e; });
+      rtts.push(performance.now()-ts);
+    }
+    if(me.dead) return;
+    set(2,"✅",CK_STEPS[2].ok+`（つながるまで ${Math.round(tc)}ミリ秒）`); step=3;
+    // ④ 時間
+    const rtt=Math.round(rtts.reduce((a,b)=>a+b,0)/rtts.length), all=((performance.now()-t0)/1000).toFixed(1);
+    const good=rtt<300;
+    set(3,good?"✅":"⚠",`全部で ${all}秒。メッセージの往復は 平均 ${rtt}ミリ秒（${good?"対戦に十分な速さです":"少しおそめです。対戦はできますが、動きがおくれることがあります"}）。`);
+    $("#ckSum").innerHTML=`<div class="banner" style="border-color:var(--d)"><b>✅ この端末では友だち対戦が使えそうです。</b><br><span class="note">児童の端末でも同じテストをして、全部 ✅ になるか確かめてください。</span></div>`;
+  }catch(e){
+    if(me.dead) return;
+    const x=CK_STEPS[step];
+    set(step,"❌",x.ng+(detail?`（くわしく：${detail}）`:""));
+    for(let i=step+1;i<CK_STEPS.length;i++) set(i,"−",i===3?CK_STEPS[3].ng:"前のテストが失敗したので、調べていません");
+    const results=CK_STEPS.map((y,i)=>`${y.t}：${i<step?"成功":i===step?"失敗":"未実施"}`).join("\n");
+    const msg=`ICT担当の方へ
+
+学習ゲーム「まなびひろば」の「友だち対戦」を授業で使いたいのですが、接続テストで失敗しました。
+次の通信が学校のネットワークで許可されているか、確認をお願いできますか。
+
+【テストの結果】
+${results}${detail?`\n（くわしい情報：${detail}）`:""}
+
+【使っている通信】
+・https://unpkg.com （通信の部品 PeerJS の読み込み）
+・https://0.peerjs.com （仲介サーバー。443番・WebSocket）
+・WebRTC（端末どうしの直接通信。UDP、STUN／TURN サーバー）
+
+※ 児童の名前やメールアドレスは送りません。送るのは自動でつくニックネーム・正解数・点数だけです。`;
+    $("#ckSum").innerHTML=`<div class="banner" style="border-color:var(--a)">
+      <b>❌ この端末では、今は友だち対戦が使えないかもしれません。</b>
+      <p style="margin:6px 0"><b>考えられる原因：</b>${esc(x.why||"")}</p>
+      <p class="note" style="margin:6px 0">ひとりで遊ぶゲーム・バトルモード（CPU戦）・教室で映すクイズは、このままでも使えます。</p>
+      <b>ICT担当の方に伝える文面の例</b>
+      <pre id="ckMsg" style="white-space:pre-wrap;background:#fff;border:1px solid var(--line);border-radius:8px;padding:10px;font-size:13px;font-family:inherit">${esc(msg)}</pre>
+      <button class="btn sub" id="ckCopy">文面をコピー</button></div>`;
+    $("#ckCopy").onclick=()=>navigator.clipboard?.writeText(msg).then(()=>$("#ckCopy").textContent="コピーしました",()=>{});
+  }finally{
+    if(!me.dead){ $("#ckGo").disabled=false; for(const p of me.peers){ try{p.destroy()}catch(e){} } me.peers=[]; }
+  }
+}
+
 /* ================= ルーター ================= */
 function route(){
-  stopTimer(); P=null; M=null;
+  stopTimer(); P=null; M=null; ckStop();
   if(ES){ ES.close(); ES=null; }
   const {path,q}=params();
   window.scrollTo(0,0);
-  if(path==="play") renderPlay(q);
+  if(!DATA_OK&&path!=="check"&&path!=="teacher"){
+    app.innerHTML=`<div class="q">問題データ（data フォルダ）を読み込めませんでした。<br>index.html と同じ場所に data フォルダがあるか確認してください。</div>`; return;
+  }
+  if(path==="check") renderCheck();
+  else if(path==="play") renderPlay(q);
   else if(path==="modesetup") renderModeSetup(q);
   else if(path==="mode") renderMode(q);
   else if(path==="join") renderJoin(q);

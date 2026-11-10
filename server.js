@@ -12,6 +12,12 @@ const GAMES = ["calc", "kuku", "kanji", "kencho", "eigo"];
 const GOAL = 40;
 const EV = { 4: "⭐", 9: "🌀", 13: "⭐", 17: "🌀", 21: "⭐", 25: "🌀", 27: "⭐", 31: "🌀", 35: "⭐", 38: "🌀" };
 const MAX_PLAYERS = 60;
+// やさしいルール：たからばこの「うばう・入れかえ・落とす」と、すごろくの🌀（もどる）をなくす
+const RULES = ["normal", "easy"];
+const EASY_NG = ["steal", "swap", "lose"];
+const evOf = rule => rule === "easy" ? Object.fromEntries(Object.entries(EV).filter(([, e]) => e !== "🌀")) : EV;
+// ページが読み込む問題データ（data フォルダの .js だけを返す）
+const DATA_DIR = path.join(__dirname, "data");
 
 const ADJ = ["はやい", "かしこい", "げんきな", "つよい", "やさしい", "ひかる", "ふしぎな", "まじめな", "すごい", "のんびり"];
 const ANI = [["パンダ", "🐼"], ["ウサギ", "🐰"], ["カエル", "🐸"], ["ネコ", "🐱"], ["イヌ", "🐶"], ["キツネ", "🦊"],
@@ -34,7 +40,7 @@ function newCode() {
 }
 function pub(room) {
   return {
-    code: room.code, mode: room.mode, game: room.game, g: room.g, t: room.t,
+    code: room.code, mode: room.mode, game: room.game, g: room.g, t: room.t, rule: room.rule,
     status: room.status, endAt: room.endAt, now: Date.now(),
     players: [...room.players.values()].map(p => ({ pid: p.pid, name: p.name, emoji: p.emoji, v: p.v, ok: p.ok, ng: p.ng }))
   };
@@ -83,7 +89,8 @@ const API = {
   create(b) {
     if (!MODES.includes(b.mode) || !GAMES.includes(b.game)) return [400, { error: "設定が正しくありません" }];
     const g = Math.min(6, Math.max(1, b.g | 0)), t = Math.min(300, Math.max(60, b.t | 0));
-    const room = { code: newCode(), hostKey: id(), mode: b.mode, game: b.game, g, t, status: "lobby", endAt: 0,
+    const rule = RULES.includes(b.rule) ? b.rule : "normal";
+    const room = { code: newCode(), hostKey: id(), mode: b.mode, game: b.game, g, t, rule, status: "lobby", endAt: 0,
       players: new Map(), clients: new Set(), created: Date.now(), timer: null };
     rooms.set(room.code, room);
     return [200, { code: room.code, hostKey: room.hostKey }];
@@ -121,6 +128,7 @@ const API = {
     const room = rooms.get(String(b.code)), p = player(room, b);
     if (!p) return [403, { error: "参加情報が正しくありません" }];
     if (room.status !== "playing") return [409, { error: "対戦中ではありません" }];
+    if (room.rule === "easy" && EASY_NG.includes(b.op)) return [403, { error: "やさしいルールの部屋では使えません" }];
     const out = { ok: true };
     switch (b.op) {
       case "answer": b.right ? p.ok++ : p.ng++; break;
@@ -142,7 +150,7 @@ const API = {
         if (room.mode !== "race") break;
         const n = Math.min(6, Math.max(1, b.n | 0));
         p.v = Math.min(GOAL, p.v + n);
-        out.ev = EV[p.v] || "";
+        out.ev = evOf(room.rule)[p.v] || "";
         if (out.ev === "⭐") p.v = Math.min(GOAL, p.v + 3);
         if (out.ev === "🌀") p.v = Math.max(0, p.v - 2);
         break;
@@ -161,6 +169,13 @@ http.createServer(async (req, res) => {
     if (req.method === "GET" && (url.pathname === "/" || url.pathname === "/manabi-hiroba.html" || url.pathname === "/index.html")) {
       res.writeHead(200, { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "no-store" });
       return fs.createReadStream(PAGE).pipe(res);
+    }
+    const dm = url.pathname.match(/^\/data\/([\w-]+\.js)$/);
+    if (req.method === "GET" && dm) {
+      const f = path.join(DATA_DIR, dm[1]);
+      if (!fs.existsSync(f)) return json(res, 404, { error: "not found" });
+      res.writeHead(200, { "Content-Type": "text/javascript; charset=utf-8", "Cache-Control": "no-store" });
+      return fs.createReadStream(f).pipe(res);
     }
     if (req.method === "GET" && url.pathname === "/api/events") {
       const room = rooms.get(url.searchParams.get("code") || "");
