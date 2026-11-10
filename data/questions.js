@@ -417,8 +417,7 @@ window.MH_QUESTIONS = {
     {id:"eigo-096", g:6, q:"history", a:"歴史", reviewed:false},
     {id:"eigo-097", g:6, q:"country", a:"国", reviewed:false},
     {id:"eigo-098", g:6, q:"volunteer", a:"ボランティア", reviewed:false},
-    {id:"eigo-099", g:6, q:"pos", a:"post", reviewed:false},
-    {id:"eigo-100", g:6, q:"office", a:"郵便局", reviewed:false},
+    {id:"eigo-099", g:6, q:"post office", a:"郵便局", reviewed:false},
     {id:"eigo-101", g:6, q:"elephant", a:"ぞう", reviewed:false}
   ],
   /* 県庁所在地の地方（rg の意味）。near = 同じ地方で選択肢が足りないとき、近い順にほかの地方から選ぶ */

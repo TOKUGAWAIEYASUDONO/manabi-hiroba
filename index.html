@@ -467,7 +467,7 @@ function gen(id,g,opt){
   if(id==="kuku") return makeKuku();
   if(id==="kanji") return makeChoice(KANJI[g]||KANJI[1],T("q.kanji"));
   if(id==="kencho") return makeKencho(!!(opt&&opt.k==="diff"));
-  if(id==="eigo") return makeChoice(EIGO,T("q.eigo"));
+  if(id==="eigo"){ const pool=EIGO.filter(x=>(x.g||5)<=g); return makeChoice(pool.length>=4?pool:EIGO,T("q.eigo")); } // 学年より上の単語は出さない
 }
 /* 九九の段えらび：えらんだ段を、上り・下り・ばらばらの順に出す（一巡したらまた始める） */
 const parseDans=s=>[...new Set(String(s||"").split(",").map(Number).filter(n=>Number.isInteger(n)&&n>=1&&n<=9))].sort((a,b)=>a-b);
