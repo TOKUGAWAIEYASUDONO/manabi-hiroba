@@ -189,6 +189,42 @@ for (let g = 1; g <= 6; g++) {
   }
 }
 
+
+/* ---------- 問題の量・確認状況・重複（content-1 で追加） ---------- */
+{
+  const MIN_KANJI = 40, MIN_EIGO = 60;
+  for (let g = 1; g <= 6; g++) {
+    const xs = Q.kanji.filter(x => x.g === g);
+    if (xs.length < MIN_KANJI) err("漢字 " + g + "年", "問題が " + xs.length + " 問しかない（" + MIN_KANJI + " 問以上必要）");
+    // 同じ読みの答えが2つあると、4択で正解が2つに見えることがある
+    const ans = new Map();
+    for (const x of xs) { if (ans.has(x.a)) err(x.id, "読み「" + x.a + "」が " + ans.get(x.a) + " と同じ（4択で正解が2つになるおそれ）"); else ans.set(x.a, x.id); }
+  }
+  if (Q.eigo.length < MIN_EIGO) err("英単語", "語が " + Q.eigo.length + " 語しかない（" + MIN_EIGO + " 語以上必要）");
+  { const seenE = new Map();
+    for (const x of Q.eigo) {
+      const k = x.q.toLowerCase().trim();
+      if (seenE.has(k)) err(x.id, "英単語「" + x.q + "」が " + seenE.get(k) + " と重複"); else seenE.set(k, x.id);
+    }
+    const ansE = new Map();
+    for (const x of Q.eigo) { if (ansE.has(x.a)) err(x.id, "意味「" + x.a + "」が " + ansE.get(x.a) + " と同じ"); else ansE.set(x.a, x.id); }
+    // 意味に使う漢字も、その学年までに習う字だけ
+    for (const x of Q.eigo) for (const c of x.a) if (isKanji(c)) {
+      const cg = gradeOf.get(c);
+      if (!cg || cg > x.g) err(x.id, "意味「" + x.a + "」の「" + c + "」は学年(" + x.g + "年)までに習わない字");
+    }
+    for (const x of Q.eigo) if (!/^[A-Za-z. ]+$/.test(x.q)) err(x.id, "英単語「" + x.q + "」に英字以外が入っている");
+  }
+  // reviewed：false = 人の確認待ち、ない／true = 確認済み
+  const rv = { kanji: Q.kanji, 英単語: Q.eigo };
+  for (const [name, arr] of Object.entries(rv)) {
+    for (const x of arr) if ("reviewed" in x && typeof x.reviewed !== "boolean") err(x.id, "reviewed は true か false にする");
+  }
+  const cnt = a => { const w = a.filter(x => x.reviewed === false).length; return "確認済み " + (a.length - w) + "問／確認待ち " + w + "問"; };
+  for (let g = 1; g <= 6; g++) console.log("漢字 " + g + "年：" + Q.kanji.filter(x => x.g === g).length + "問（" + cnt(Q.kanji.filter(x => x.g === g)) + "）");
+  console.log("英単語：" + Q.eigo.length + "語（" + cnt(Q.eigo) + "）");
+}
+
 /* ---------- 結果 ---------- */
 console.log(`漢字よみ ${Q.kanji.length}問・県庁所在地 ${Q.kencho.length}問・英単語 ${Q.eigo.length}問・配当表 ${gradeOf.size}字`);
 console.log(`漢字の配当誤り：${kanjiBad}件`);
