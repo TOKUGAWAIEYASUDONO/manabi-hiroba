@@ -138,6 +138,37 @@ for (let g = 1; g <= 6; g++) {
   console.log(`計算 ${g}年：${TRIES}回 作成／単元 ${[...units].map(u => CALC.UNITS[g][u]).join("・")}／誤り ${uniq.length}件`);
 }
 
+
+/* ---------- 県庁所在地：地方・ふりがな ---------- */
+{
+  const RG = Q.kenchoRegions || {}, cnt = {}, EXP = { hk: 1, th: 6, kt: 7, cb: 9, kn: 7, cg: 5, sk: 4, ky: 8 };
+  for (const x of Q.kencho) {
+    if (!RG[x.rg]) err(x.id, `地方(rg)「${x.rg}」が kenchoRegions にない`);
+    cnt[x.rg] = (cnt[x.rg] || 0) + 1;
+    if (!/^[ぁ-ん（）]+$/.test(x.r || "")) err(x.id, `読み(r)がひらがなでない：${x.r}`);
+  }
+  for (const k of Object.keys(EXP)) if (cnt[k] !== EXP[k]) err("地方", `${k} の県数が ${cnt[k]}（${EXP[k]} のはず）`);
+  for (const k of Object.keys(RG)) if (new Set(RG[k].near).size !== 7 || RG[k].near.includes(k)) err("地方", `${k} の near が正しくない`);
+  const diff = Q.kencho.filter(x => x.a.includes("（") || x.q.replace(/[都道府県]$/, "") !== x.a.replace(/市$/, ""));
+  if (diff.length !== 19) err("県庁", `県名と市名がちがう県が ${diff.length}（19のはず）`);
+}
+/* ---------- やさしい文字：画面の文言の辞書（index.html の TX）---------- */
+{
+  const html = fs.readFileSync(path.join(root, "index.html"), "utf8");
+  const m = html.match(/\/\*TX-BEGIN\*\/([\s\S]*?)\/\*TX-END\*\//);
+  if (!m) err("TX", "index.html に文言の辞書が見つからない");
+  else {
+    const TX = vm.runInNewContext("(()=>{" + m[1] + ";return TX})()");
+    let n = 0;
+    for (const [k, e] of Object.entries(TX)) {
+      if (e[1] == null) continue; n++;
+      const probe = typeof e[1] === "function" ? e[1](..."abcde".split("").map((_, i) => i + 1)) : e[1];
+      for (const c of String(probe)) if (isKanji(c) && gradeOf.get(c) !== 1) err("TX:" + k, `やさしい文字に1年で習わない漢字「${c}」`);
+    }
+    console.log(`やさしい文字の辞書：${n}件を検査`);
+  }
+}
+
 /* ---------- 結果 ---------- */
 console.log(`漢字よみ ${Q.kanji.length}問・県庁所在地 ${Q.kencho.length}問・英単語 ${Q.eigo.length}問・配当表 ${gradeOf.size}字`);
 console.log(`漢字の配当誤り：${kanjiBad}件`);
