@@ -151,7 +151,10 @@ h2{font-size:20px;margin:20px 0 10px}
 .ptable td{padding:4px 10px;border-bottom:1px solid var(--line)}
 .ptable td:last-child{text-align:right;font-weight:bold}
 /* 授業モード（課題リンクで開いたとき）：ほかの画面への入口を隠す */
-body.lesson .tbtn{display:none}
+body.lesson .tbtn:not(#hSound){display:none}
+.foot{text-align:center;padding:18px 16px 28px;font-size:13px}
+.foot a{color:var(--muted)}
+.qrbox svg{width:min(80vw,52vh,520px);height:auto;display:block;margin:12px auto;background:#fff;border:2px solid var(--line);border-radius:8px}
 .prep{font-size:14px;background:var(--main2);border-radius:8px;padding:6px 10px}
 /* 見えるフォーカス／動きを減らす設定 */
 :focus-visible{outline:3px solid #0b3d91;outline-offset:2px;box-shadow:0 0 0 2px #fff}
@@ -164,11 +167,13 @@ body.lesson .tbtn{display:none}
 <header>
   <span class="logo" onclick="go('#home')">🌱 まなびひろば</span>
   <span class="medals" id="medalCount">🏅 0</span>
+  <button class="tbtn" id="hSound" onclick="toggleSound()" style="padding:7px 11px"></button>
   <button class="tbtn" id="hJoin" onclick="go('#join')"></button>
   <button class="tbtn" id="hTeacher" onclick="go('#teacher')"></button>
 </header>
 
 <main class="wrap" id="app"></main>
+<footer class="foot"><a id="licLink" href="vendor/THIRD-PARTY-LICENSES.md" target="_blank" rel="noopener"></a></footer>
 
 <!-- 問題データ（file:// でも読めるよう script タグで読む） -->
 <script src="data/questions.js"></script>
@@ -276,6 +281,27 @@ const TX={
  "n.finished":["対戦は終わりました","たいせんは おわったよ"],
  "n.lost":["先生の端末との接続が切れました。<br>対戦が終わったか、先生の画面が閉じられたのかもしれません。","せんせいの たんまつと つながらなくなったよ。<br>たいせんが おわったのかも しれないよ。"],
  "n.rejoin":["もう一度コードを入れる","もういちど コードを いれる"],
+ "ft.lic":["つかっているソフトのライセンス","つかっている ソフトの ライセンス"],
+ "snd.on":["音を出す（いまは出ない）","おとを だす（いまは でない）"],"snd.off":["音を止める（いまは出る）","おとを とめる（いまは でる）"],
+ "qr.t":["このQRコードを読みとって参加","この QRコードを よみとって はいる"],
+ /* 参加・待合室のエラー（先生の端末から来る文もここで言いかえる。ふつうの文言と一字一句同じにすること） */
+ "e.load":["通信の部品を読み込めませんでした（ネット接続を確認してください）","つうしんの ぶひんが よみこめなかったよ。ネットを たしかめてね"],
+ "e.relay":["つなぎ役のサーバーに接続できませんでした","つなぐ サーバーに つながらなかったよ"],
+ "e.nopeer":["その部屋コードは見つかりません","その へやの コードは みつからないよ"],
+ "e.noteacher":["先生の端末につながりませんでした","せんせいの たんまつに つながらなかったよ"],
+ "e.noteacher2":["先生の端末につながりませんでした（学校のネットワークで止められているかもしれません）","せんせいの たんまつに つながらなかったよ。がっこうの ネットで とめられて いるかも"],
+ "e.cut":["先生の端末との接続が切れました","せんせいの たんまつと つながらなくなったよ"],
+ "e.noreply":["先生の端末から返事がありません","せんせいの たんまつから へんじが ないよ"],
+ "e.ended":["この対戦はもう終わっています","この たいせんは もう おわっているよ"],
+ "e.full":["部屋がいっぱいです","へやが いっぱいだよ"],
+ "e.badinfo":["参加情報が正しくありません","さんかの じょうほうが ちがうよ"],
+ "e.noinfo":["参加情報が見つかりません","さんかの じょうほうが みつからないよ"],
+ "e.comm":["通信エラー","つうしんの エラーだよ"],"e.err":["エラー","エラーだよ"],
+ "e.cannot":["今は変えられません","いまは かえられないよ"],
+ "e.notplaying":["対戦中ではありません","たいせんちゅうじゃ ないよ"],
+ "e.nomode":["この遊び方では使えない操作です","この あそびかたでは できないよ"],
+ "e.noeasy":["やさしいルールの部屋では使えません","やさしいルールの へやでは できないよ"],
+ "e.unknown":["不明な操作です","ふめいな そうさだよ"],
  "pv":[s=>`🔒 ${s?"対戦用サーバーに":"先生の端末に"}送られるのは、自動でつくニックネーム・正解数・点数だけです。名前やメールアドレスは集めません。`,
        s=>`🔒 ${s?"サーバーに":"せんせいの たんまつに"} おくられるのは、じどうで つく なまえと、せいかいの かずと、てんすう だけです。ほんとうの なまえは あつめません。`]
 };
@@ -284,8 +310,62 @@ let LG=0;                                   // いま見せている画面の学
 const easyG=g=>g===1||g===2;
 function T(k,...a){ const e=TX[k]; if(!e) return k; const v=(easyG(LG)&&e[1]!=null)?e[1]:e[0]; return typeof v==="function"?v(...a):v; }
 function T0(k,...a){ const v=TX[k][0]; return typeof v==="function"?v(...a):v; }   // 先生に送る結果など、いつも「ふつうの文言」にしたいとき
+const ERRKEYS=Object.keys(TX).filter(k=>k.startsWith("e."));
+function errMsg(m){ m=String(m||""); const base=m.replace(/（[a-z-]+）$/,""); for(const k of ERRKEYS) if(TX[k][0]===m||TX[k][0]===base) return T(k); return m; }
 function setLG(g){ LG=g||0; drawHeader(); }
-function drawHeader(){ const a=document.getElementById("hJoin"), b=document.getElementById("hTeacher"); if(a) a.textContent=T("h.join"); if(b) b.textContent=T("h.teacher"); }
+function drawHeader(){
+  const a=document.getElementById("hJoin"), b=document.getElementById("hTeacher"), c=document.getElementById("hSound"), l=document.getElementById("licLink");
+  if(a) a.textContent=T("h.join"); if(b) b.textContent=T("h.teacher"); if(l) l.textContent=T("ft.lic");
+  if(c){ c.textContent=SND?"🔊":"🔇"; c.setAttribute("aria-label",T(SND?"snd.off":"snd.on")); c.title=T(SND?"snd.off":"snd.on"); c.setAttribute("aria-pressed",SND); }
+}
+/* ===== 必要なときだけ読み込む部品（vendor/ に同梱。外部には通信しない） ===== */
+const scriptP={};
+function loadScript(src,have){
+  if(have&&have()) return Promise.resolve();
+  if(!scriptP[src]) scriptP[src]=new Promise((ok,ng)=>{
+    const el=document.createElement("script"); el.src=src; el.onload=ok;
+    el.onerror=()=>{ delete scriptP[src]; ng(new Error("load "+src)); };
+    document.head.appendChild(el);
+  });
+  return scriptP[src];
+}
+/* ===== 効果音（ZzFX）。はじめはオフ。ヘッダーの🔇／🔊で切りかえ、設定は端末に保存 ===== */
+const SFX={                      // 小さめ・短め（0.3秒以内）・やさしい音（サイン波）
+  ok:[.7,0,660,.01,.05,.12,0,1,0,0,220,.05],            // ピンポン
+  ng:[.6,0,260,.01,.05,.14,0,1,-5],                    // ポーン（下がる）
+  end:[.7,0,520,.01,.07,.16,0,1,0,0,-130,.08],         // 時間切れ（下がる2音）
+  medal:[.7,0,660,.01,.07,.18,0,1,0,0,330,.07]         // メダル（上がる2音）
+};
+let SND=false; try{ SND=JSON.parse(localStorage.getItem("mh_sound"))===true; }catch(e){}
+function sfx(k){
+  if(!SND) return;
+  if(typeof zzfx!=="function"){ loadScript("vendor/zzfx-1.4.0.micro.min.js",()=>typeof zzfx==="function").then(()=>{ try{ zzfxV=.15; }catch(e){} sfx(k); }).catch(()=>{}); return; }
+  try{ if(zzfxX.state==="suspended") zzfxX.resume(); zzfx(...SFX[k]); }catch(e){}
+}
+function toggleSound(){
+  SND=!SND; try{ localStorage.setItem("mh_sound",JSON.stringify(SND)); }catch(e){}
+  drawHeader(); if(SND) sfx("ok");
+}
+/* ===== 紙吹雪（2秒以内。動きを減らす設定のときは出さない。必要なときだけ読み込む） ===== */
+const reduceMotion=()=>{ try{ return matchMedia("(prefers-reduced-motion: reduce)").matches; }catch(e){ return false; } };
+function party(){
+  if(reduceMotion()) return;
+  loadScript("vendor/canvas-confetti-1.9.4.js",()=>typeof confetti==="function").then(()=>{
+    confetti({particleCount:100,spread:75,origin:{y:.62},ticks:80,gravity:1.2,useWorker:false,disableForReducedMotion:true});
+  }).catch(()=>{});
+}
+/* ===== 参加用QRコード（file:// で開いているときは出さない） ===== */
+const qrCache={};
+function showQr(box,url){
+  if(!box||location.protocol==="file:") return;
+  const put=()=>{ box.innerHTML=qrCache[url]+`<div class="note" style="text-align:center">${T("qr.t")}</div>`; };
+  if(qrCache[url]) return put();
+  loadScript("vendor/qrcode-generator-2.0.4.js",()=>typeof qrcode==="function").then(()=>{
+    const q=qrcode(0,"M"); q.addData(url); q.make();
+    qrCache[url]=q.createSvgTag({cellSize:6,margin:4,scalable:true});
+    if(document.body.contains(box)) put();
+  }).catch(()=>{});
+}
 const tget=(o,p,k)=>Object.defineProperty(o,p,{get:()=>T(k),enumerable:true});   // GAMES・MODES・RULES の t・d は表から取る
 
 /* ================= データ ================= */
@@ -534,7 +614,7 @@ function renderPlay(q){
 /* 時間切れ：「おわり！」を0.8秒出して、そのあいだボタンを押せなくする */
 function timeUp(){
   const p=P; p.lock=true; p.over=true;
-  const fb=$("#fb"); fb.className="fb end"; fb.textContent=T("p.end");
+  const fb=$("#fb"); fb.className="fb end"; fb.textContent=T("p.end"); sfx("end");
   $("#area").querySelectorAll("button").forEach(b=>b.disabled=true);
   setTimeout(()=>{ if(P===p) finish(); },800);
 }
@@ -575,6 +655,7 @@ function pick(b){
 function judge(right,ans){
   const p=P; p.lock=true;
   const fb=$("#fb");
+  sfx(right?"ok":"ng");
   if(right){ p.ok++; fb.className="fb ok"; fb.textContent=T("fb.ok"); }
   else {
     p.ng++; p.misses.push(`${p.cur.q} → ${ans}`); p.missObjs.push(p.cur);
@@ -600,6 +681,8 @@ function finish(){
   }
   const all=bests(), key=p.x.id, prev=all[key]||{score:0,medal:0};
   const isNew=p.ok>prev.score && !p.task;
+  if(medal>0) sfx("medal");
+  if(medal===3||isNew) party();
   all[key]={score:Math.max(prev.score,p.ok),medal:Math.max(prev.medal,medal)};
   store.set("mh_best",all); refreshMedals();
   const report=`【${T0("g."+p.x.id+".t")}】${p.g}年 ${p.t}秒｜せいかい${p.ok}問／${total}問（正答率${acc}%）`;
@@ -871,7 +954,7 @@ function mPick(b){
   $("#mmain").querySelectorAll(".choice").forEach(e=>e.classList.add(e.dataset.c===M.cur.a?"right":"wrong"));
   const fb=$("#fb");
   if(M.net) api("act",{...NET,op:"answer",right}).catch(()=>{});
-  const mm=M;
+  const mm=M; sfx(right?"ok":"ng");
   if(right){ M.ok++; fb.className="fb ok"; fb.textContent=T("fb.ok"); setTimeout(()=>M===mm&&!M.over&&reward(),400); }
   else { M.ng++; M.misses.push(`${M.cur.q} → ${M.cur.a}`); M.missObjs.push(M.cur); fb.className="fb ng"; fb.textContent=T("fb.ng",M.cur.a); setTimeout(()=>M===mm&&showQ(),1800); }   // まちがえたあとは1.8秒待つ
 }
@@ -1006,7 +1089,7 @@ function modeFinish(timeUp){
   if(!M||M.over) return; M.over=true; stopTimer();
   const mm=M;
   if(timeUp){           // 時間切れ：「おわり！」を0.8秒出してから結果へ（そのあいだボタンは出ない）
-    $("#mmain").innerHTML=`<div class="q"><div class="big">${T("p.end")}</div></div>`;
+    $("#mmain").innerHTML=`<div class="q"><div class="big">${T("p.end")}</div></div>`; sfx("end");
     setTimeout(()=>{ if(M===mm) modeResult(); },800);
   } else modeResult();
 }
@@ -1018,6 +1101,8 @@ function modeResult(){
   all[key]={score:Math.max(prev.score,p.ok),medal:Math.max(prev.medal,medal)}; store.set("mh_best",all); refreshMedals();
   const unit=p.m.id==="chest"?"コイン":"マス";
   const easy=p.rule==="easy";      // やさしいルール：順位の数字と最下位は出さない
+  if(easy||place<=3) sfx("medal");
+  if(easy||place===1) party();       // 1位（やさしいルールでは全員）
   const report=`【${T0("m."+p.m.id+".t")}／${T0("g."+p.x.id+".t")}】${p.g}年｜${place}位｜せいかい${p.ok}問／${total}問（正答率${acc}%）`;
   app.innerHTML=`<div class="play"><div class="res">
     <div class="medal">${easy?"🎉":["🙂","🥉","🥈","🥇"][medal]}</div>
@@ -1068,11 +1153,7 @@ const PEER_PREFIX="manabihiroba-v1-";
 let peerP=null;
 function loadPeer(){
   if(window.Peer) return Promise.resolve();
-  if(!peerP) peerP=new Promise((ok,ng)=>{
-    const s=document.createElement("script"); s.src="https://unpkg.com/peerjs@1.5.4/dist/peerjs.min.js";
-    s.onload=ok; s.onerror=()=>{peerP=null; ng(new Error("通信の部品を読み込めませんでした（ネット接続を確認してください）"));};
-    document.head.appendChild(s);
-  });
+  if(!peerP) peerP=loadScript("vendor/peerjs-1.5.5.min.js",()=>!!window.Peer).catch(()=>{ peerP=null; throw new Error(T("e.load")); });
   return peerP;
 }
 const rid=()=>{const a=new Uint8Array(9);crypto.getRandomValues(a);return Array.from(a,b=>b.toString(16).padStart(2,"0")).join("")};
@@ -1243,7 +1324,7 @@ function renderJoin(q){
   const join=async()=>{
     if(code.length!==4) return $("#jerr").textContent=T("j.need");
     try{ NET=await api("join",{code}); sset("mh_net",NET); go("#lobby"); }
-    catch(e){ $("#jerr").textContent=e.message; }
+    catch(e){ $("#jerr").textContent=errMsg(e.message); }
   };
   const key=k=>{ $("#jerr").textContent="";
     if(k==="⌫") code=code.slice(0,-1); else if(k==="→") return join(); else if(code.length<4) code+=k; draw(); };
@@ -1314,13 +1395,15 @@ function netResultHtml(s,meId,easy){
 function netFinish(){
   if(!M||M.over) return; M.over=true; stopTimer();
   const mm=M, box=$("#mmain");
-  if(box){ box.innerHTML=`<div class="q"><div class="big">${T("p.end")}</div></div>`; setTimeout(()=>{ if(M===mm) netResult(); },800); }   // 時間切れ：「おわり！」を0.8秒
+  if(box){ box.innerHTML=`<div class="q"><div class="big">${T("p.end")}</div></div>`; sfx("end"); setTimeout(()=>{ if(M===mm) netResult(); },800); }   // 時間切れ：「おわり！」を0.8秒
   else netResult();
 }
 function netResult(){
   const s=M.state, ps=sorted(s.players), place=ps.findIndex(p=>p.pid===NET.pid)+1;
   const total=M.ok+M.ng, acc=total?Math.round(M.ok/total*100):0;
   const medal=place===1?3:place===2?2:place===3?1:0, easy=M.rule==="easy", p=M;
+  if(easy||place<=3) sfx("medal");
+  if(easy||place===1) party();
   app.innerHTML=`<div class="play"><div class="res">
     <div class="medal">${easy?"🎉":["🙂","🥉","🥈","🥇"][medal]}</div>
     <div class="num">${easy?T("b.done"):T("b.placeof",ps.length,place)}</div>
@@ -1374,11 +1457,13 @@ function renderHost(){
       app.innerHTML=`${head}<div class="q" style="text-align:center">
         <div>「🔑 コードで参加」から、この数字を入れてください</div>
         <div class="bigcode">${s.code}</div>
+        <div class="qrbox" id="qrbox"></div>
         <div class="note">または このアドレスを開く：${esc(joinUrl)}</div>
         <div style="font-size:22px;margin-top:12px">参加：<b>${s.players.length}</b> 人</div>
         <div class="chips">${s.players.map(p=>`<span class="chip">${p.emoji} ${esc(p.name)}</span>`).join("")||`<span class="note">まだ誰もいません</span>`}</div>
         <button class="btn" id="hs" ${s.players.length?"":"disabled style='opacity:.5'"}>スタート！</button><div class="err" id="herr"></div></div>`;
       $("#hs").onclick=()=>api("start",HOST).catch(e=>$("#herr").textContent=e.message);
+      showQr($("#qrbox"),joinUrl);
     } else if(s.status==="playing"){
       app.innerHTML=`${head}<h2>🏆 リアルタイム順位（${ps.length}人）</h2>
         ${ps.slice(0,8).map((p,i)=>`<div class="hrank"><b>${i+1}</b><span>${p.emoji} ${esc(p.name)}</span><span>${p.v} ${u}</span><span class="note">正解 ${p.ok}</span></div>`).join("")}
@@ -1414,7 +1499,7 @@ function ckStop(){ if(CK){ CK.dead=true; for(const p of CK.peers){ try{p.destroy
 function prStop(){ if(PR){ PR.dead=true; clearTimeout(PR.tm); for(const p of PR.peers){ try{p.destroy()}catch(e){} } PR=null; } }
 const CK_STEPS=[
   {t:"① 部品の読み込み",ok:"通信の部品（PeerJS）を読み込めました。",ng:"通信の部品（PeerJS）を読み込めませんでした。",
-   why:"学校のフィルタで、部品を置いている unpkg.com が止められているかもしれません。インターネットにつながっているかも確認してください。"},
+   why:"通信の部品はこのサイトの中（vendor フォルダ）に入っています。読み込めないときは、ページを開き直すか、vendor フォルダが index.html と同じ場所にあるかを確認してください。"},
   {t:"② 仲介サーバーへの接続",ok:"端末どうしをつなぐ「仲介サーバー」に接続できました。",ng:"仲介サーバーに接続できませんでした。",
    why:"学校のフィルタやプロキシで、仲介サーバー（0.peerjs.com）への通信（HTTPS・WebSocket）が止められているかもしれません。"},
   {t:"③ 端末どうしの接続（この端末の中）",ok:"この端末の中で2つの接続を作り、メッセージが往復しました。別の端末とつながるかは、下の「2台でためす」で確かめます。",ng:"この端末の中でも、接続（WebRTC）ができませんでした。",
@@ -1422,7 +1507,7 @@ const CK_STEPS=[
   {t:"④ かかった時間",ok:"",ng:"時間をはかれませんでした（③までが終わっていません）。",why:""}
 ];
 const PAIR_WHY="校内のネットワークで、端末どうしの直接の通信が止められているかもしれません（Wi-Fi の「端末間通信の禁止（クライアント分離）」、UDP の遮断、STUN／TURN サーバーへの通信の遮断など）。";
-/* ICT担当に伝える文面。接続先は PeerJS 1.5.4 のソース（初期設定）で確認したもの */
+/* ICT担当に伝える文面。接続先は PeerJS 1.5.5 のソース（初期設定）で確認したもの */
 function ictMsg(results,detail){
   return `ICT担当の方へ
 
@@ -1432,13 +1517,12 @@ function ictMsg(results,detail){
 【テストの結果】
 ${results}${detail?`\n（くわしい情報：${detail}）`:""}
 
-【使っている通信（通信の部品 PeerJS 1.5.4 の初期設定）】
-1. unpkg.com（HTTPS・443番）… 通信の部品の読み込み（https://unpkg.com/peerjs@1.5.4/dist/peerjs.min.js）
-2. 0.peerjs.com（443番・HTTPS と WebSocket〔wss://0.peerjs.com/peerjs〕）… 仲介サーバー
-3. stun.l.google.com（19302番・UDP）… STUN サーバー（自分の端末の住所を調べる）
-4. eu-0.turn.peerjs.com／us-0.turn.peerjs.com（3478番）… TURN サーバー（直接つながらないときの中継）
+【使っている通信（通信の部品 PeerJS 1.5.5 の初期設定。部品そのものは本サイトに同梱しているので、ほかのサイトからは読み込みません）】
+1. 0.peerjs.com（443番・HTTPS と WebSocket〔wss://0.peerjs.com/peerjs〕）… 仲介サーバー
+2. stun.l.google.com（19302番・UDP）… STUN サーバー（自分の端末の住所を調べる）
+3. eu-0.turn.peerjs.com／us-0.turn.peerjs.com（3478番）… TURN サーバー（直接つながらないときの中継）
    ・UDP を使います。念のため、TCP の3478番も許可してもらえると安心です
-5. 端末どうしの直接の通信（WebRTC・UDP。ポート番号は毎回変わります）
+4. 端末どうしの直接の通信（WebRTC・UDP。ポート番号は毎回変わります）
    ・校内の端末どうしが通信できるか（Wi-Fi の端末間通信の禁止〔クライアント分離〕など）も確認をお願いします
 
 ※ 児童の名前やメールアドレスは送りません。送るのは自動でつくニックネーム・正解数・点数だけです。`;
