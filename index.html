@@ -19,11 +19,11 @@ button{font-family:inherit}
 header{background:var(--main);color:#fff;padding:10px 16px;display:flex;align-items:center;gap:12px;flex-wrap:wrap}
 header .logo{font-size:22px;font-weight:bold;cursor:pointer;letter-spacing:.05em}
 header .medals{margin-left:auto;background:rgba(255,255,255,.18);padding:6px 12px;border-radius:20px;font-size:15px}
-header .tbtn{background:#fff;color:var(--main);border:0;border-radius:20px;padding:7px 14px;font-weight:bold;cursor:pointer}
+header .tbtn{background:#fff;color:var(--main);border:0;border-radius:20px;padding:7px 14px;font-weight:bold;cursor:pointer;min-height:44px;min-width:44px}
 .wrap{max-width:980px;margin:0 auto;padding:16px}
 h2{font-size:20px;margin:20px 0 10px}
 .pills{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:8px}
-.pill{border:2px solid var(--line);background:#fff;border-radius:22px;padding:8px 16px;font-size:16px;cursor:pointer;color:var(--ink)}
+.pill{min-height:44px;border:2px solid var(--line);background:#fff;border-radius:22px;padding:8px 16px;font-size:16px;cursor:pointer;color:var(--ink)}
 .pill.on{background:var(--main);border-color:var(--main);color:#fff;font-weight:bold}
 .games{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:14px}
 .game{background:var(--card);border:2px solid var(--line);border-radius:16px;padding:14px;cursor:pointer;text-align:left;
@@ -47,7 +47,7 @@ h2{font-size:20px;margin:20px 0 10px}
 .play{max-width:640px;margin:0 auto;text-align:center}
 .topbar{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;gap:8px}
 .topbar>:nth-child(2){flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;text-align:center}
-.back{background:#fff;border:2px solid var(--line);border-radius:10px;padding:8px 14px;cursor:pointer;font-size:15px;white-space:nowrap;flex:none}
+.back{background:#fff;border:2px solid var(--line);border-radius:10px;padding:8px 14px;cursor:pointer;font-size:15px;white-space:nowrap;flex:none;min-height:44px}
 .timer{font-size:22px;font-weight:bold;white-space:nowrap;flex:none;min-width:2.4ch;text-align:right}
 .timer.warn{font-size:40px;color:var(--a);line-height:1}
 .tbar{height:10px;background:#e7e1d4;border-radius:5px;overflow:hidden;margin-bottom:14px}
@@ -127,7 +127,7 @@ h2{font-size:20px;margin:20px 0 10px}
 .dice{font-size:80px;margin:10px 0;display:inline-block}
 .dice.roll{animation:roll .5s linear infinite}
 @keyframes roll{to{transform:rotate(360deg)}}
-.pill.small{padding:6px 12px;font-size:14px}
+.pill.small{padding:6px 12px;font-size:14px;min-height:44px}
 /* 友だち対戦 */
 .bigcode{font-size:clamp(56px,14vw,120px);font-weight:bold;letter-spacing:.15em;color:var(--main);font-family:ui-monospace,Consolas,monospace}
 .chips{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin:12px 0}
@@ -167,13 +167,13 @@ body.lesson .tbtn:not(#hSound){display:none}
 <header>
   <span class="logo" onclick="go('#home')">🌱 まなびひろば</span>
   <span class="medals" id="medalCount">🏅 0</span>
-  <button class="tbtn" id="hSound" onclick="toggleSound()" style="padding:7px 11px"></button>
+  <button class="tbtn" id="hSound" onclick="toggleSound()"></button>
   <button class="tbtn" id="hJoin" onclick="go('#join')"></button>
   <button class="tbtn" id="hTeacher" onclick="go('#teacher')"></button>
 </header>
 
 <main class="wrap" id="app"></main>
-<footer class="foot"><a id="licLink" href="vendor/THIRD-PARTY-LICENSES.md" target="_blank" rel="noopener"></a></footer>
+<footer class="foot"><a id="licLink" href="vendor/THIRD-PARTY-LICENSES.txt" target="_blank" rel="noopener"></a></footer>
 
 <!-- 問題データ（file:// でも読めるよう script タグで読む） -->
 <script src="data/questions.js"></script>
@@ -218,6 +218,9 @@ const TX={
  "home.battle.n":["同じ問題を、ちがう遊び方で。コンピューターの3人とたいせん！","コンピューターの 3にんと たいせんしよう！"],
  "home.links":["ほかの学習サイト","ほかの サイト"],
  "home.links.n":["※ ほかのサイトは紹介のみです。学校で使えるかどうかは先生に聞いてね。","※ ほかの サイトは しょうかいだけ です。つかえるか せんせいに きいてね。"],
+ "lk.sushi.t":["寿司打","すしだ"],"lk.sushi.d":["回転ずしのタイピングゲーム","タイピングの ゲーム"],
+ "lk.kahoot.t":["Kahoot!（参加用）","Kahoot!"],"lk.kahoot.d":["先生のクイズに参加するときに使うページ","せんせいの クイズに はいる ときに つかうよ"],
+ "lk.nhk.t":["NHK for School"],"lk.nhk.d":["教科ごとの学習動画","きょうかごとの どうが"],
  "home.check":["🔌 接続テスト（先生・ICT担当の方へ）"],
  "gr.title":["なんねんせい？"],"gr.note":["えらんだ学年はおぼえておきます（あとで変えられます）","えらんだ がくねんは おぼえておくよ（あとで かえられるよ）"],
  /* 九九・県庁所在地の選びかた */
@@ -273,6 +276,7 @@ const TX={
  /* 参加・待合室・対戦 */
  "j.title":["🔑 コードで参加","🔑 はいる"],
  "j.ask":["先生の画面に出ている<b>4けたの数字</b>を入れてね","せんせいの がめんに でている <b>4けたの すうじ</b>を いれてね"],
+ "j.nonet":["このページは友だち対戦に使えません。<br>先生に教えてもらったアドレスを開いてね。","この ページでは たいせんが できないよ。<br>せんせいに おしえて もらった アドレスを ひらいてね。"],
  "j.go":["参加","はいる"],"j.need":["4けた入れてね","4けた いれてね"],
  "l.room":["部屋","へや"],"l.name":["あなたの名前","あなたの なまえ"],"l.change":["名前をかえる","なまえを かえる"],
  "l.wait":["先生がスタートするのを待っています…","せんせいが スタートするのを まっているよ…"],
@@ -316,7 +320,7 @@ function setLG(g){ LG=g||0; drawHeader(); }
 function drawHeader(){
   const a=document.getElementById("hJoin"), b=document.getElementById("hTeacher"), c=document.getElementById("hSound"), l=document.getElementById("licLink");
   if(a) a.textContent=T("h.join"); if(b) b.textContent=T("h.teacher"); if(l) l.textContent=T("ft.lic");
-  if(c){ c.textContent=SND?"🔊":"🔇"; c.setAttribute("aria-label",T(SND?"snd.off":"snd.on")); c.title=T(SND?"snd.off":"snd.on"); c.setAttribute("aria-pressed",SND); }
+  if(c){ c.classList.toggle("hidden",SND_DEAD); c.textContent=SND?"🔊":"🔇"; c.setAttribute("aria-label",T(SND?"snd.off":"snd.on")); c.title=T(SND?"snd.off":"snd.on"); c.setAttribute("aria-pressed",SND); }
 }
 /* ===== 必要なときだけ読み込む部品（vendor/ に同梱。外部には通信しない） ===== */
 const scriptP={};
@@ -336,13 +340,16 @@ const SFX={                      // 小さめ・短め（0.3秒以内）・や�
   end:[.7,0,520,.01,.07,.16,0,1,0,0,-130,.08],         // 時間切れ（下がる2音）
   medal:[.7,0,660,.01,.07,.18,0,1,0,0,330,.07]         // メダル（上がる2音）
 };
-let SND=false; try{ SND=JSON.parse(localStorage.getItem("mh_sound"))===true; }catch(e){}
+const HAS_AUDIO=!!(window.AudioContext||window.webkitAudioContext);
+let SND=false, SND_DEAD=!HAS_AUDIO;     // 音が出せない端末（AudioContext なし／部品の読み込み失敗）では、止めて再試行しない
+try{ SND=JSON.parse(localStorage.getItem("mh_sound"))===true; }catch(e){}
 function sfx(k){
-  if(!SND) return;
-  if(typeof zzfx!=="function"){ loadScript("vendor/zzfx-1.4.0.micro.min.js",()=>typeof zzfx==="function").then(()=>{ try{ zzfxV=.15; }catch(e){} sfx(k); }).catch(()=>{}); return; }
-  try{ if(zzfxX.state==="suspended") zzfxX.resume(); zzfx(...SFX[k]); }catch(e){}
+  if(!SND||SND_DEAD) return;
+  if(typeof zzfx!=="function"){ loadScript("vendor/zzfx-1.4.0.micro.min.js",()=>typeof zzfx==="function").then(()=>{ try{ zzfxV=.15; }catch(e){} sfx(k); }).catch(()=>{ SND_DEAD=true; drawHeader(); }); return; }
+  try{ if(zzfxX.state==="suspended") zzfxX.resume(); zzfx(...SFX[k]); }catch(e){ SND_DEAD=true; drawHeader(); }
 }
 function toggleSound(){
+  if(SND_DEAD) return;
   SND=!SND; try{ localStorage.setItem("mh_sound",JSON.stringify(SND)); }catch(e){}
   drawHeader(); if(SND) sfx("ok");
 }
@@ -393,10 +400,11 @@ GAMES.forEach(x=>{ tget(x,"t","g."+x.id+".t"); tget(x,"d","g."+x.id+".d"); });
 
 /* ほかの学習サイト（紹介とリンクのみ） */
 const LINKS=[
- {t:"寿司打",u:"https://sushida.net/",d:"回転ずしのタイピングゲーム"},
- {t:"Kahoot!（参加用）",u:"https://kahoot.it/",d:"先生のクイズに参加するときに使うページ"},
- {t:"NHK for School",u:"https://www.nhk.or.jp/school/",d:"教科ごとの学習動画"}
+ {k:"sushi",u:"https://sushida.net/"},
+ {k:"kahoot",u:"https://kahoot.it/"},
+ {k:"nhk",u:"https://www.nhk.or.jp/school/"}
 ];
+LINKS.forEach(l=>{ tget(l,"t","lk."+l.k+".t"); tget(l,"d","lk."+l.k+".d"); });
 
 /* ================= 共通 ================= */
 const $=s=>document.querySelector(s);
@@ -519,7 +527,7 @@ function renderHome(){
     <h2>${T("home.links")}</h2>
     <div class="links">${LINKS.map(l=>`<a class="link" href="${l.u}" target="_blank" rel="noopener"><b>${esc(l.t)} ↗</b><span>${esc(l.d)}</span></a>`).join("")}</div>
     <p class="note">${T("home.links.n")}</p>
-    <p class="note" style="text-align:center;margin-top:20px"><a href="#check">${T("home.check")}</a></p>`;
+    ${easyG(LG)?"":`<p class="note" style="text-align:center;margin-top:20px"><a href="#check">${T("home.check")}</a></p>`}`;   // 先生・ICT向けのリンクは、1〜2年には出さない
   $("#quick").onclick=()=>withGrade(g=>{
     const pool=GAMES.filter(x=>x.g.includes(g)), x=pool[rnd(pool.length)];
     go(`#play?game=${x.id}&g=${g}&t=60`);
@@ -682,7 +690,7 @@ function finish(){
   const all=bests(), key=p.x.id, prev=all[key]||{score:0,medal:0};
   const isNew=p.ok>prev.score && !p.task;
   if(medal>0) sfx("medal");
-  if(medal===3||isNew) party();
+  if(medal===3||(isNew&&medal>0)) party();
   all[key]={score:Math.max(prev.score,p.ok),medal:Math.max(prev.medal,medal)};
   store.set("mh_best",all); refreshMedals();
   const report=`【${T0("g."+p.x.id+".t")}】${p.g}年 ${p.t}秒｜せいかい${p.ok}問／${total}問（正答率${acc}%）`;
@@ -1048,19 +1056,22 @@ function raceReward(){
 /* CPUの待ち時間：学年の係数（1〜2年は1.8倍ゆっくり、3〜4年は1.3倍、5〜6年は1倍）。
    さらに、自分が最下位のCPUより大きく負けているときは、CPUの待ちを1.5秒のばす（ゴムひも）。 */
 const botK=g=>g<=2?1.8:g<=4?1.3:1;
-function botRubber(){
-  const low=Math.min(...M.bots.map(b=>b.v));
-  return low-M.me.v>=(M.m.id==="chest"?20:3)?1.5:0;
+function botRubber(b){
+  const low=Math.min(...M.bots.map(x=>x.v));
+  return (M.me.v<low&&b.v>low)?RUBBER:0;      // 自分が最下位のとき、上位のCPUの待ちをのばす
 }
+const RUBBER=2;
+const BOT_NORMAL={x2:0.08,gain:[10,20,20,30,50]}, BOT_EASY={x2:0.04,gain:[10,10,10,10,20,20]};   // CPUがたからばこでもらう量（やさしいルールは少なめ）
 function botTick(dt){
   for(const b of M.bots){
     b.wait-=dt*b.spd; if(b.wait>0) continue;
     if(M.m.id==="chest"){
-      b.wait=rr(3.5,6.5)*botK(M.g)+botRubber();
+      b.wait=rr(3.5,6.5)*botK(M.g)+botRubber(b);
       const r=Math.random();
-      if(r<(M.rule==="easy"?0.04:0.08)) b.v*=2; else if(r<0.14&&M.rule!=="easy") b.v=Math.round(b.v*0.75); else b.v+=(M.rule==="easy"?[10,10,10,20,20,30]:[10,20,20,30,50])[rnd(M.rule==="easy"?6:5)];   // やさしいルールのCPUは、たまにもらう量も少なめ
+      const E=M.rule==="easy"?BOT_EASY:BOT_NORMAL;
+      if(r<E.x2) b.v*=2; else if(r<0.14&&M.rule!=="easy") b.v=Math.round(b.v*0.75); else b.v+=E.gain[rnd(E.gain.length)];   // やさしいルールのCPUは、たまにもらう量も少なめ
     } else {
-      b.wait=rr(4.5,7.5)*botK(M.g)+botRubber();
+      b.wait=rr(4.5,7.5)*botK(M.g)+botRubber(b);
       b.v=Math.min(GOAL,b.v+1+rnd(4));
       const e=M.ev[b.v]; if(e==="⭐") b.v=Math.min(GOAL,b.v+3); if(e==="🌀") b.v=Math.max(0,b.v-2);
       if(b.v>=GOAL){ modeFinish(); return; }
@@ -1312,7 +1323,7 @@ const sorted=ps=>[...ps].sort((a,b)=>b.v-a.v||b.ok-a.ok);
 /* --- 児童：コードを入れて参加 --- */
 function renderJoin(q){
   setLG(ui.grade);
-  if(!netOK){ app.innerHTML=`<div class="play"><div class="q">このページは友だち対戦に使えません。<br>先生に教えてもらったアドレスを開いてね。</div></div>`; return; }
+  if(!netOK){ app.innerHTML=`<div class="play"><div class="q">${T("j.nonet")}</div></div>`; return; }
   let code=(q.get("code")||"").replace(/\D/g,"").slice(0,4);
   app.innerHTML=`<div class="play">
     <div class="topbar"><button class="back" onclick="go('#home')">${T("back")}</button><b>${T("j.title")}</b><span></span></div>
@@ -1365,7 +1376,7 @@ function startNetGame(s){
   const m=modeOf(s), x=gameOf(s), off=s.now-Date.now();
   const end=s.endAt-off, startAt=end-s.t*1000;
   const mine=s.players.find(p=>p.pid===NET.pid);
-  M={m,x,g:s.g,t:s.t,task:false,rule:ruleOf(s.rule),ev:evOf(s.rule),ok:0,ng:0,misses:[],missObjs:[],phase:"count",end,net:true,state:s,
+  M={m,x,g:s.g,t:s.t,task:false,rule:ruleOf(s.rule),ev:evOf(s.rule),ok:mine.ok||0,ng:mine.ng||0,misses:[],missObjs:[],phase:"count",end,net:true,state:s,
      me:{n:mine.name,e:mine.emoji,v:mine.v,me:true},bots:[],over:false};
   app.innerHTML=`<div class="mplay">
     <div class="topbar"><span class="note" style="white-space:nowrap">${T("l.room")} ${s.code}</span><span><b>${m.ico} ${m.t}</b> <span class="note">${x.t}・${s.g}年・${ruleName(s.rule)}</span></span><span class="timer" id="tm">${s.t}</span></div>

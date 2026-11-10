@@ -180,7 +180,7 @@ http.createServer(async (req, res) => {
       res.writeHead(200, { "Content-Type": "text/javascript; charset=utf-8", "Cache-Control": "no-store" });
       return fs.createReadStream(f).pipe(res);
     }
-    const vm = url.pathname.match(/^\/vendor\/([\w.-]+\.(js|md))$/);   // 同梱の部品とライセンス表示
+    const vm = url.pathname.match(/^\/vendor\/([\w.-]+\.(js|txt))$/);   // 同梱の部品とライセンス表示
     if (req.method === "GET" && vm) {
       const f = path.join(__dirname, "vendor", vm[1]);
       if (!fs.existsSync(f)) return json(res, 404, { error: "not found" });

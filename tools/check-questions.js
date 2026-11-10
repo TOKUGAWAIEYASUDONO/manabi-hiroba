@@ -154,7 +154,7 @@ for (let g = 1; g <= 6; g++) {
 }
 /* ---------- やさしい文字：画面の文言の辞書（index.html の TX）---------- */
 {
-  const html = fs.readFileSync(path.join(root, "index.html"), "utf8");
+  const html = fs.readFileSync(path.join(root, "index.html"), "utf8").split(String.fromCharCode(13)).join("");
   const m = html.match(/\/\*TX-BEGIN\*\/([\s\S]*?)\/\*TX-END\*\//);
   if (!m) err("TX", "index.html に文言の辞書が見つからない");
   else {
@@ -166,6 +166,26 @@ for (let g = 1; g <= 6; g++) {
       for (const c of String(probe)) if (isKanji(c) && gradeOf.get(c) !== 1) err("TX:" + k, `やさしい文字に1年で習わない漢字「${c}」`);
     }
     console.log(`やさしい文字の辞書：${n}件を検査`);
+  }
+}
+
+
+/* ---------- 児童向け画面のコードに直接書いた文字（TX を通していないもの） ----------
+   ホーム・学年えらび・九九／県庁のえらび・やさしい文字になる画面の関数から、${...} の中身とコメントを除き、
+   残った文字に小1で習わない漢字がないか調べる（1〜2年に見せる画面。先生向けの画面は対象外） */
+{
+  const html = fs.readFileSync(path.join(root, "index.html"), "utf8").split(String.fromCharCode(13)).join("");
+  const strip = src => { let o = "", d = 0;
+    for (let i = 0; i < src.length; i++) {
+      if (src[i] === "$" && src[i + 1] === "{") { d = 1; i++; continue; }
+      if (d) { if (src[i] === "{") d++; else if (src[i] === "}") d--; continue; }
+      o += src[i];
+    } return o; };
+  for (const fn of ["renderHome", "renderGradePick", "renderSetup", "renderModeSetup", "renderJoin", "lobbyView", "finish", "modeResult", "netResult", "startReview", "reviewDone"]) {
+    const a = html.indexOf("function " + fn + "(");
+    if (a < 0) { err("画面", `${fn} が見つからない`); continue; }
+    const z = html.indexOf("\n}\n", a), body = html.slice(a, z).replace(/const report=`[^`]*`;/g, "").replace(/\/\*[\s\S]*?\*\//g, "").replace(/(^|\s)\/\/[^\n]*/g, "$1");
+    for (const ch of new Set(strip(body))) if (isKanji(ch) && gradeOf.get(ch) !== 1) err("画面:" + fn, `TX を通さず、小1で習わない漢字「${ch}」が書いてある`);
   }
 }
 
