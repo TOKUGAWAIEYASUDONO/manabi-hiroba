@@ -4,6 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>まなびひろば</title>
+<link rel="stylesheet" href="vendor/fonts/biz-udpgothic.css">
 <style>
 :root{
   /* ===== 色（トークン）。文字と背景の組み合わせは 4.5:1 以上（数値は README に記載） ===== */
@@ -15,13 +16,13 @@
   --paper:#ffffff;
   --line:#c9d8c8;       /* 押せない物のうすい線 */
   --chalk:#d6ebdd;      /* 黒板の上の補助の文字 */
-  --math:#cf3d2c;       /* 算数・赤（白い文字 4.9:1） */
+  --math:#cf3d2c;       /* 算数・赤（白い文字 4.8:1） */
   --jp:#2f6fd8;         /* 国語・青（白い文字 4.8:1） */
   --soc:#f2c230;        /* 社会・黄（濃い文字 9:1） */
   --eng:#7a4cc8;        /* 英語・紫（白い文字 5.7:1） */
-  --btl:#8a5a2b;        /* バトル・木（白い文字 6:1） */
+  --btl:#8a5a2b;        /* バトル・木（白い文字 5.9:1） */
   --go:#1b7a4b;         /* 進む・決めるボタンの緑（白い文字 5.3:1） */
-  --sun:#ff9422;        /* 「1分であそぶ」（濃い文字 8:1） */
+  --sun:#ff9422;        /* 「1分であそぶ」（濃い文字 6.8:1） */
   --wood:#c9a066;       /* ボードのふち */
   --main:var(--go); --main2:#e1f0e3; --accent:#ff9422;
   --a:var(--math); --b:var(--jp); --c:var(--soc); --d:#1b7a4b;
@@ -52,7 +53,7 @@ button:disabled{opacity:.55;cursor:default;box-shadow:none;transform:translateY(
 header{background:var(--board);color:#fff;padding:6px 14px;display:flex;align-items:center;gap:10px;border-bottom:4px solid var(--edge)}
 header h1{margin:0;font-size:inherit}
 header .logo{font:inherit;font-size:24px;font-weight:800;cursor:pointer;letter-spacing:.06em;background:none;border:0;color:#fff;min-height:44px;padding:0 4px;text-shadow:2px 2px 0 var(--edge)}
-header .logo:disabled{color:#fff;cursor:default}
+header .logo:disabled{color:#fff;cursor:default;opacity:1;box-shadow:none;transform:none}
 header .sp{flex:1}
 .hbtn{background:#fff;color:var(--ink);border-radius:12px;padding:0 12px;min-height:44px;min-width:44px;font-size:16px;display:inline-flex;align-items:center;justify-content:center;gap:6px;box-shadow:0 3px 0 var(--edge)}
 .hbtn.snd{padding:0}
@@ -78,7 +79,7 @@ h2{font-size:20px;margin:18px 0 8px}
 .empty{color:var(--muted);padding:20px;text-align:center;background:#fff;border:2px dashed var(--line)}
 .err{color:var(--bad);font-weight:700;min-height:24px}
 /* ===== ホーム ===== */
-.home{display:flex;flex-direction:column;gap:14px;flex:1}
+.home{display:flex;flex-direction:column;gap:12px;flex:1}
 .hero{width:100%;background:var(--sun);color:var(--ink);border-radius:24px;padding:12px 20px;display:flex;align-items:center;justify-content:center;gap:16px;
   border-width:4px;box-shadow:0 7px 0 var(--edge);text-align:left;transition:transform .06s ease-out,box-shadow .06s ease-out}
 .hero:active{transform:translateY(5px);box-shadow:0 2px 0 var(--edge)}
@@ -89,9 +90,9 @@ h2{font-size:20px;margin:18px 0 8px}
 .zone{background:var(--zc);color:var(--zt,#fff);padding:10px 12px 14px;border-radius:6px 6px 18px 18px;border-top:8px solid var(--edge)}
 .zone h2{margin:0 0 8px;font-size:20px;letter-spacing:.08em;display:flex;align-items:center;gap:8px}
 .zone.s-math{--zc:var(--math)} .zone.s-jp{--zc:var(--jp)} .zone.s-soc{--zc:var(--soc);--zt:var(--ink)} .zone.s-eng{--zc:var(--eng)} .zone.s-btl{--zc:var(--btl)}
-.tiles{display:grid;gap:10px}
+.tiles{display:grid;gap:8px}
 .play .tiles{grid-template-columns:repeat(auto-fit,minmax(240px,1fr))}
-.tile{width:100%;background:#fff;color:var(--ink);border-radius:12px;padding:8px 12px;display:flex;align-items:center;gap:12px;text-align:left;min-height:84px}
+.tile{width:100%;background:#fff;color:var(--ink);border-radius:12px;padding:6px 12px;display:flex;align-items:center;gap:12px;text-align:left;min-height:76px}
 .tile .tico{font-size:38px;line-height:1;flex:none;width:46px;text-align:center}
 .tile .tbody{display:flex;flex-direction:column;gap:1px;min-width:0}
 .tile .tt{font-size:18px;font-weight:800}
