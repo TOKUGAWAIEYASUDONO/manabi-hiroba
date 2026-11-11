@@ -26,6 +26,8 @@
   --wood:#c9a066;       /* ボードのふち */
   --main:var(--go); --main2:#e1f0e3; --accent:#ff9422;
   --a:var(--math); --b:var(--jp); --c:var(--soc); --d:#1b7a4b;
+  --agreen:#7ccf6b; --agray:#b9c6c0; --pink:#f6a9b4; --cream:#fff3d6;   /* 絵の色（動物・めばえ） */
+  --bronze:#d08a4e; --silver:#cdd6d3; --gold:#f6c431;   /* メダル */
   --bad:#b3261e;        /* まちがい・警告の赤（白の上で 6.5:1） */
   color-scheme:light;
 }
@@ -62,8 +64,9 @@ body[data-v=home] .hx,body[data-v=record] .hx{display:inline-flex}
 body.lesson .hx{display:none!important}
 body.lesson .logo{pointer-events:none}
 #hRec b{font-size:18px}
+#hRec .art{width:24px;height:24px}
 .hbtn,header .logo{white-space:nowrap}
-@media (max-width:430px){.slot{width:38px;height:38px;font-size:22px}.stamp .slots{gap:4px}.stamp .sico{width:36px;font-size:28px}.stamp{gap:8px} header{padding:6px 8px;gap:6px} header .logo{font-size:19px;letter-spacing:.02em;padding:0 2px} .hbtn{padding:0 8px;font-size:15px;gap:4px} .hbtn.snd{padding:0}}
+@media (max-width:430px){.slot,.slot .art{width:38px;height:38px}.stamp .slots{gap:4px}.stamp .sico,.stamp .sico .art{width:36px;height:36px}.stamp{gap:8px} header{padding:6px 8px;gap:6px} header .logo{font-size:19px;letter-spacing:.02em;padding:0 2px} .hbtn{padding:0 8px;font-size:15px;gap:4px} .hbtn.snd{padding:0}}
 /* ===== 全体 ===== */
 .wrap{width:100%;max-width:1080px;margin:0 auto;padding:12px 16px;flex:1;display:flex;flex-direction:column}
 h2{font-size:20px;margin:18px 0 8px}
@@ -86,24 +89,41 @@ h2{font-size:20px;margin:18px 0 8px}
 .hero .ic{width:52px;height:52px;stroke-width:2.2;fill:#fff;flex:none}
 .hero .ht{font-size:clamp(30px,6vw,44px);font-weight:800;line-height:1.1;display:block;letter-spacing:.04em}
 .hero .hn{display:block;font-size:14px;font-weight:400;margin-top:4px}
-.zones{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));gap:14px;align-items:start}
+.hero .mb{width:56px;height:63px}
+.guide{display:flex;align-items:center;gap:10px;justify-content:center;margin:-2px 0}
+.guide .mb{width:60px;height:68px}
+.guide span.say{background:#fff;border:3px solid var(--edge);border-radius:16px;padding:6px 14px;font-weight:700;font-size:18px;position:relative}
+.guide span.say::before{content:"";position:absolute;left:-10px;top:50%;margin-top:-7px;border:7px solid transparent;border-right:10px solid var(--edge);border-left:0}
+@keyframes hop{0%{transform:translateY(0)}35%{transform:translateY(-16px)}60%{transform:translateY(0)}78%{transform:translateY(-5px)}100%{transform:translateY(0)}}
+.mb.hop{animation:hop .7s ease-out 1 both}
+.zones{display:grid;grid-template-columns:1fr;gap:14px;align-items:stretch}
+/* 区画の並べかた：すき間ができないように、区画の数（data-n）ごとに決める。 640px〜：2列、900px〜：3列（6分割で、バトルは残りをうめる） */
+@media (min-width:640px){.zones{grid-template-columns:repeat(2,1fr)} .zones[data-n="3"] .s-btl,.zones[data-n="5"] .s-btl{grid-column:1/-1}}
+@media (min-width:900px){.zones{grid-template-columns:repeat(6,1fr)} .zone{grid-column:span 2}
+  .zones[data-n="3"] .s-btl{grid-column:span 2} .zones[data-n="4"] .s-btl{grid-column:1/-1} .zones[data-n="5"] .s-btl{grid-column:span 4}
+  .zones[data-n="4"] .s-btl .tiles,.zones[data-n="5"] .s-btl .tiles{grid-template-columns:repeat(2,1fr)}}
 .zone{background:var(--zc);color:var(--zt,#fff);padding:10px 12px 14px;border-radius:6px 6px 18px 18px;border-top:8px solid var(--edge)}
 .zone h2{margin:0 0 8px;font-size:20px;letter-spacing:.08em;display:flex;align-items:center;gap:8px}
 .zone.s-math{--zc:var(--math)} .zone.s-jp{--zc:var(--jp)} .zone.s-soc{--zc:var(--soc);--zt:var(--ink)} .zone.s-eng{--zc:var(--eng)} .zone.s-btl{--zc:var(--btl)}
 .tiles{display:grid;gap:8px}
 .play .tiles{grid-template-columns:repeat(auto-fit,minmax(240px,1fr))}
 .tile{width:100%;background:#fff;color:var(--ink);border-radius:12px;padding:6px 12px;display:flex;align-items:center;gap:12px;text-align:left;min-height:76px}
-.tile .tico{font-size:38px;line-height:1;flex:none;width:46px;text-align:center}
+.art{display:block;flex:none;overflow:visible}
+.tile .tico{flex:none;width:56px;height:56px}
+.tile .tico .art{width:56px;height:56px}
 .tile .tbody{display:flex;flex-direction:column;gap:1px;min-width:0}
 .tile .tt{font-size:18px;font-weight:800}
 .tile .tstat{font-size:14px;color:var(--muted);display:flex;align-items:center;gap:2px;flex-wrap:wrap;font-weight:400}
-.tile .tstat .st{font-size:17px}
-.tile .tstat .st:not(.on){filter:grayscale(1);opacity:.28}
+.tile .tstat .st{width:24px;height:24px}
+.tile .tstat .st:not(.on){opacity:.6}
+.ti{display:inline-block;width:28px;height:28px;vertical-align:-7px}
+.mi{display:inline-block;width:1.3em;height:1.3em;vertical-align:-.3em}
+.fc{display:inline-block;width:1.25em;height:1.25em;vertical-align:-.3em;flex:none}
 .tile .tstat .bv{margin-left:6px}
 .tile .tnext{font-size:14px;font-weight:700;color:#8a3b00}
 .tile .td{font-size:13px;color:var(--muted);font-weight:400}
 .home.easy .tile{min-height:112px;padding:12px 16px}
-.home.easy .tile .tico{font-size:52px;width:60px}
+.home.easy .tile .tico,.home.easy .tile .tico .art{width:64px;height:64px}
 .home.easy .tile .tt{font-size:22px;line-height:1.25}
 .home.easy .tile .tstat,.home.easy .tile .tnext{font-size:16px}
 .home.easy .zone h2{font-size:24px}
@@ -165,8 +185,11 @@ h2{font-size:20px;margin:18px 0 8px}
 /* ===== 結果：メダル → あと○もん → もういっかい → まちがえた問題 ===== */
 .res{background:#fff;border:2px solid var(--line);border-radius:22px 22px 6px 6px;padding:20px 16px 18px}
 .medalwrap{position:relative;display:inline-block;padding:8px;isolation:isolate}
-.medal{font-size:104px;line-height:1;display:block;animation:medalIn .9s cubic-bezier(.2,1.4,.4,1) both}
-.medalwrap.m3 .medal{filter:drop-shadow(0 0 14px rgba(242,194,48,.9))}
+.medal{display:block;animation:medalIn .9s cubic-bezier(.2,1.4,.4,1) both}
+.medal .art{width:112px;height:112px}
+.medrow{display:flex;align-items:flex-end;justify-content:center;gap:6px}
+.medrow .mb{width:72px;height:81px;margin-bottom:6px}
+.medalwrap.m3 .medal .art{filter:drop-shadow(0 0 10px rgba(242,194,48,.9))}
 .medalwrap.m3::before,.medalwrap.m2::before,.medalwrap.m1::before{content:"";position:absolute;inset:-6px;border-radius:50%;
   background:conic-gradient(from 0deg,rgba(242,194,48,0),rgba(242,194,48,.55),rgba(242,194,48,0),rgba(255,148,34,.5),rgba(242,194,48,0));animation:shine 3s linear 1;z-index:-1}
 .medalwrap.m1::before{opacity:.5} .medalwrap.m2::before{opacity:.75}
@@ -225,22 +248,21 @@ h2{font-size:20px;margin:18px 0 8px}
 .rank.me{background:#d9efdd;font-weight:700}
 .rank .v{margin-left:auto;font-weight:700}
 .boxes{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:10px 0}
+.box .art{width:72px;height:72px;margin:0 auto}
 .box{font-size:64px;background:#fff;border-radius:18px;padding:18px 0}
 .box.open{cursor:default;font-size:22px;font-weight:800;padding:30px 4px;background:#fff6e3;transform:translateY(3px);box-shadow:0 1px 0 var(--edge)}
 .box.dim{opacity:.35}
 .msg{font-size:24px;font-weight:800;min-height:36px;margin:8px 0}
 @media (min-width:761px){.mgrid.race{grid-template-columns:1fr 380px}}
-.board{display:grid;grid-template-columns:repeat(8,1fr);gap:3px}      /* すごろく盤：8列×5行（1〜40マス）。スタートは盤の上の帯 */
-.cell{position:relative;background:#f2f6ef;border-radius:4px;min-height:52px;font-size:14px;line-height:1.2;color:var(--muted);padding:2px 3px;text-align:left}
-.cell.ev{background:#fff3d6}
-.cell.goal{background:#ffe08a;font-weight:700;color:var(--ink)}
-.cell .evi{position:absolute;top:2px;right:2px;font-size:12px}
-.cell .tk,.startrow .tk{position:absolute;bottom:2px;right:2px;display:flex}
-.startrow{position:relative;min-height:34px;margin-bottom:6px;padding:4px 8px;background:#d9efdd;border-radius:4px;font-size:14px;font-weight:700;color:var(--ink);display:flex;align-items:center}
-.pc{font-size:24px;width:26px;height:26px;line-height:26px;text-align:center;margin-left:-12px;border-radius:50%;flex:none}
-.pc.me{outline:3px solid var(--go);background:#fff;position:relative;z-index:1}
+.sgbd{display:block;width:100%;height:auto;max-width:420px;margin:0 auto;border-radius:16px}   /* すごろく盤（校庭の地図）。SVGで描く */
+.sgbd text{font-family:inherit;font-weight:800;text-anchor:middle;pointer-events:none}
+.pk{transition:transform .17s ease-in-out}
+.pk .hp{transform-box:fill-box;transform-origin:center}
+.pk .hp.hop{animation:pkhop .17s ease-out 1}
+@keyframes pkhop{0%{transform:translateY(0)}50%{transform:translateY(-9px)}100%{transform:translateY(0)}}
 .rline{font-size:16px;font-weight:700;margin:2px 0 8px}
-.dice{font-size:80px;margin:10px 0;display:inline-block}
+.dice{margin:10px 0;display:inline-block}
+.dice .art{width:88px;height:88px}
 .dice.roll{animation:roll .5s linear infinite}
 @keyframes roll{to{transform:rotate(360deg)}}
 /* ===== 友だち対戦 ===== */
@@ -269,18 +291,16 @@ h2{font-size:20px;margin:18px 0 8px}
 .rectotal{display:flex;align-items:center;gap:14px;background:var(--board);color:#fff;border:6px solid var(--wood);border-radius:6px;padding:12px 18px;margin-bottom:12px}
 .rectotal .n{font-size:56px;font-weight:800;line-height:1}
 .rectotal .l{font-size:18px;font-weight:700}
-.rectotal .e{font-size:48px}
+.rectotal .e .art{width:60px;height:60px}
 .book{background:#fff;border:2px solid var(--line);border-radius:4px;padding:4px 12px;margin-bottom:12px}
 .book h3{margin:8px 0 2px;font-size:17px}
 .stamp{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:2px dotted var(--line)}
 .stamp:last-of-type{border-bottom:0}
-.stamp .sico{font-size:34px;width:44px;text-align:center}
+.stamp .sico{width:48px;height:48px;flex:none}.stamp .sico .art{width:48px;height:48px}
 .stamp .sn{flex:1;min-width:0;font-weight:700;font-size:17px;line-height:1.35}
 .stamp .sn small{display:block;margin-top:2px;font-weight:400;font-size:13px;color:var(--muted)}
 .stamp .slots{display:flex;gap:6px}
-.slot{width:46px;height:46px;border-radius:50%;border:3px dashed #8fa596;display:flex;align-items:center;justify-content:center;font-size:28px;position:relative}
-.slot.on{border:3px solid var(--edge);background:#fff6d6}
-.slot:not(.on) span{filter:grayscale(1);opacity:.22}
+.slot{width:46px;height:46px}.slot .art{width:46px;height:46px}
 .bak{background:#fff;border:2px solid var(--line);border-left:8px solid var(--eng);border-radius:4px 14px 14px 4px;padding:12px 14px;display:grid;gap:10px}
 .bak h3{margin:0;font-size:17px}
 .bak .code{font-family:ui-monospace,Consolas,monospace;font-size:20px;letter-spacing:.06em;background:#f4f8f1;border:2px solid var(--edge);padding:10px;word-break:break-all;border-radius:4px;color:var(--ink);text-align:center;font-weight:700}
@@ -335,6 +355,52 @@ h2{font-size:20px;margin:18px 0 8px}
 <symbol id="i-book-open" viewBox="0 0 24 24"><path d="M12 5v16" /> <path d="M20.001 19A2 2 0 0022 17V5a2 2 0 00-1.999-2L16 3.002A5 5 0 0012 5a5 5 0 00-4-2H4a2 2 0 00-2 2v12a2 2 0 001.999 2H8a5 5 0 014 2 5 5 0 014-2z" /></symbol>
 <symbol id="i-rotate-ccw" viewBox="0 0 24 24"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8" /> <path d="M3 3v5h5" /></symbol>
 </defs></svg>
+<!--ART-BEGIN-->
+<svg xmlns="http://www.w3.org/2000/svg" style="position:absolute;width:0;height:0;overflow:hidden" aria-hidden="true" focusable="false"><defs>
+<!-- ===== ゲームの絵（コードで描いたSVG。外部ファイルなし。色は CSS 変数） ===== -->
+<symbol id="a-soroban" viewBox="0 0 64 64"><g stroke="var(--edge)" stroke-width="3.5" stroke-linejoin="round" stroke-linecap="round"><rect x="5" y="8" width="54" height="48" rx="6" fill="var(--wood)"/><path d="M18 12v40M32 12v40M46 12v40" stroke-width="2"/><path d="M7 24h50" stroke-width="3"/><g stroke-width="2.4"><ellipse cx="18" cy="17" rx="6" ry="3.4" fill="var(--math)"/><ellipse cx="32" cy="17" rx="6" ry="3.4" fill="var(--jp)"/><ellipse cx="46" cy="17" rx="6" ry="3.4" fill="var(--soc)"/><ellipse cx="18" cy="30" rx="6" ry="3" fill="var(--math)"/><ellipse cx="18" cy="36" rx="6" ry="3" fill="var(--math)"/><ellipse cx="18" cy="45" rx="6" ry="3" fill="var(--math)"/><ellipse cx="18" cy="51" rx="6" ry="3" fill="var(--math)"/><ellipse cx="32" cy="30" rx="6" ry="3" fill="var(--jp)"/><ellipse cx="32" cy="36" rx="6" ry="3" fill="var(--jp)"/><ellipse cx="32" cy="45" rx="6" ry="3" fill="var(--jp)"/><ellipse cx="32" cy="51" rx="6" ry="3" fill="var(--jp)"/><ellipse cx="46" cy="30" rx="6" ry="3" fill="var(--soc)"/><ellipse cx="46" cy="36" rx="6" ry="3" fill="var(--soc)"/><ellipse cx="46" cy="45" rx="6" ry="3" fill="var(--soc)"/><ellipse cx="46" cy="51" rx="6" ry="3" fill="var(--soc)"/></g></g></symbol>
+<symbol id="a-kuku" viewBox="0 0 64 64"><g stroke="var(--edge)" stroke-width="3.5" stroke-linejoin="round" stroke-linecap="round"><rect x="6" y="6" width="16" height="16" rx="3" fill="var(--math)"/><rect x="24" y="6" width="16" height="16" rx="3" fill="var(--soc)"/><rect x="42" y="6" width="16" height="16" rx="3" fill="var(--jp)"/><rect x="6" y="24" width="16" height="16" rx="3" fill="var(--eng)"/><rect x="24" y="24" width="16" height="16" rx="3" fill="var(--paper)"/><path d="M29 29l6 6M35 29l-6 6" stroke-width="3"/><rect x="42" y="24" width="16" height="16" rx="3" fill="var(--math)"/><rect x="6" y="42" width="16" height="16" rx="3" fill="var(--soc)"/><rect x="24" y="42" width="16" height="16" rx="3" fill="var(--jp)"/><rect x="42" y="42" width="16" height="16" rx="3" fill="var(--eng)"/></g></symbol>
+<symbol id="a-kanji" viewBox="0 0 64 64"><g stroke="var(--edge)" stroke-width="3.5" stroke-linejoin="round" stroke-linecap="round"><rect x="6" y="8" width="36" height="48" rx="3" fill="var(--paper)" transform="rotate(-6 24 32)"/><path d="M12 22q10-5 22 0M12 32q11-5 22 0M14 42q10-4 18 0" stroke-width="5" fill="none" transform="rotate(-6 24 32)"/><path d="M43 52L56 12" stroke="var(--btl)" stroke-width="6"/><path d="M38 62q-1-8 4-9 5 0 3 9z" fill="var(--edge)" stroke-width="2.5"/></g></symbol>
+<symbol id="a-japan" viewBox="0 0 64 64"><g stroke="var(--edge)" stroke-width="3" stroke-linejoin="round" stroke-linecap="round" fill="var(--go)"><path d="M38 8l8-3 10 5 5 9-9 4-6-5-8-1z"/><path d="M52 24Q54 32 46 36Q38 38 34 42Q26 46 16 47L9 52Q6 47 12 43Q22 40 28 35Q36 31 42 25z"/><path d="M18 50l9-1 3 5-9 3-6-2z"/><path d="M5 53l8-3 3 8-5 3-5-5z"/><circle cx="42" cy="30" r="3.6" fill="var(--math)" stroke-width="2.4"/></g></symbol>
+<symbol id="a-abc" viewBox="0 0 64 64"><g stroke="var(--edge)" stroke-width="3.5" stroke-linejoin="round" stroke-linecap="round"><path d="M14 8h36a8 8 0 0 1 8 8v22a8 8 0 0 1-8 8H30L16 58V46h-2a8 8 0 0 1-8-8V16a8 8 0 0 1 8-8z" fill="var(--eng)"/><g fill="none" stroke="var(--paper)" stroke-width="4"><path d="M12 36l5-17 5 17M14 30h6"/><path d="M27 36V20h4.5q4.5 0 4.5 4.5t-4.5 4.5H27m4.5 0q5 0 5 4t-5 4H27"/><path d="M52 24q-2-4-6-4-5 1-5 8t5 8q4 0 6-4"/></g></g></symbol>
+<symbol id="a-chest" viewBox="0 0 64 64"><g stroke="var(--edge)" stroke-width="3.5" stroke-linejoin="round" stroke-linecap="round"><rect x="7" y="28" width="50" height="28" rx="3" fill="var(--wood)"/><path d="M7 29V22q0-14 25-14t25 14v7z" fill="var(--btl)"/><path d="M17 17v39M47 17v39" stroke="var(--soc)" stroke-width="7" stroke-linecap="butt"/><rect x="26" y="26" width="12" height="13" rx="2.5" fill="var(--soc)"/><circle cx="32" cy="31.5" r="2" fill="var(--edge)" stroke="none"/></g></symbol>
+<symbol id="a-dice" viewBox="0 0 64 64"><g stroke="var(--edge)" stroke-width="3.5" stroke-linejoin="round" stroke-linecap="round"><rect x="6" y="6" width="52" height="52" rx="12" fill="var(--paper)"/><g fill="var(--edge)" stroke="none"><circle cx="20" cy="20" r="4.5"/><circle cx="44" cy="20" r="4.5"/><circle cx="32" cy="32" r="4.5" fill="var(--math)"/><circle cx="20" cy="44" r="4.5"/><circle cx="44" cy="44" r="4.5"/></g></g></symbol>
+<!-- ===== 動物の顔（ニックネーム用）12種 ＋ ふつうの顔 ===== -->
+<symbol id="f-panda" viewBox="0 0 64 64"><g stroke="var(--edge)" stroke-width="3" stroke-linejoin="round" stroke-linecap="round"><circle cx="14" cy="14" r="8" fill="var(--edge)"/><circle cx="50" cy="14" r="8" fill="var(--edge)"/><circle cx="32" cy="35" r="25" fill="var(--paper)"/><ellipse cx="21" cy="33" rx="6" ry="8" fill="var(--edge)" transform="rotate(20 21 33)"/><ellipse cx="43" cy="33" rx="6" ry="8" fill="var(--edge)" transform="rotate(-20 43 33)"/><circle cx="22.5" cy="33" r="2.4" fill="var(--paper)" stroke="none"/><circle cx="41.5" cy="33" r="2.4" fill="var(--paper)" stroke="none"/><ellipse cx="32" cy="43" rx="4" ry="3" fill="var(--edge)"/><path d="M27 49q5 4 10 0" fill="none"/></g></symbol>
+<symbol id="f-usagi" viewBox="0 0 64 64"><g stroke="var(--edge)" stroke-width="3" stroke-linejoin="round" stroke-linecap="round"><ellipse cx="22" cy="15" rx="7" ry="13" fill="var(--paper)"/><ellipse cx="42" cy="15" rx="7" ry="13" fill="var(--paper)"/><ellipse cx="22" cy="16" rx="2.8" ry="8" fill="var(--pink)" stroke="none"/><ellipse cx="42" cy="16" rx="2.8" ry="8" fill="var(--pink)" stroke="none"/><circle cx="32" cy="39" r="22" fill="var(--paper)"/><circle cx="24" cy="37" r="2.8" fill="var(--edge)" stroke="none"/><circle cx="40" cy="37" r="2.8" fill="var(--edge)" stroke="none"/><circle cx="32" cy="44" r="2.5" fill="var(--pink)"/><path d="M32 46.5q-3 4-6.5 2M32 46.5q3 4 6.5 2" fill="none" stroke-width="2.4"/><circle cx="17" cy="45" r="3.5" fill="var(--pink)" stroke="none"/><circle cx="47" cy="45" r="3.5" fill="var(--pink)" stroke="none"/></g></symbol>
+<symbol id="f-kaeru" viewBox="0 0 64 64"><g stroke="var(--edge)" stroke-width="3" stroke-linejoin="round" stroke-linecap="round"><ellipse cx="32" cy="40" rx="26" ry="20" fill="var(--agreen)"/><circle cx="20" cy="21" r="10" fill="var(--agreen)"/><circle cx="44" cy="21" r="10" fill="var(--agreen)"/><circle cx="20" cy="21" r="5.5" fill="var(--paper)" stroke-width="2"/><circle cx="44" cy="21" r="5.5" fill="var(--paper)" stroke-width="2"/><circle cx="21" cy="22" r="2.6" fill="var(--edge)" stroke="none"/><circle cx="43" cy="22" r="2.6" fill="var(--edge)" stroke="none"/><path d="M17 44q15 11 30 0" fill="none"/><circle cx="14" cy="40" r="3.5" fill="var(--pink)" stroke="none"/><circle cx="50" cy="40" r="3.5" fill="var(--pink)" stroke="none"/></g></symbol>
+<symbol id="f-neko" viewBox="0 0 64 64"><g stroke="var(--edge)" stroke-width="3" stroke-linejoin="round" stroke-linecap="round"><path d="M9 28L11 6l18 11z" fill="var(--agray)"/><path d="M55 28L53 6 35 17z" fill="var(--agray)"/><path d="M13 21l1-8 7 5zM51 21l-1-8-7 5z" fill="var(--pink)" stroke="none"/><ellipse cx="32" cy="38" rx="25" ry="21" fill="var(--agray)"/><path d="M32 18v7M25 19l2 6M39 19l-2 6" fill="none" stroke-width="2.4"/><circle cx="23" cy="37" r="2.8" fill="var(--edge)" stroke="none"/><circle cx="41" cy="37" r="2.8" fill="var(--edge)" stroke="none"/><path d="M29 43h6l-3 3.5z" fill="var(--pink)" stroke-width="2"/><path d="M32 46.5q-3 5-7 2.5M32 46.5q3 5 7 2.5" fill="none" stroke-width="2.4"/><path d="M5 40h9M6 47l8-3M59 40h-9M58 47l-8-3" fill="none" stroke-width="2"/></g></symbol>
+<symbol id="f-inu" viewBox="0 0 64 64"><g stroke="var(--edge)" stroke-width="3" stroke-linejoin="round" stroke-linecap="round"><ellipse cx="11" cy="28" rx="8" ry="15" fill="var(--btl)" transform="rotate(14 11 28)"/><ellipse cx="53" cy="28" rx="8" ry="15" fill="var(--btl)" transform="rotate(-14 53 28)"/><circle cx="32" cy="35" r="22" fill="var(--cream)"/><circle cx="41" cy="30" r="8" fill="var(--btl)" stroke="none"/><circle cx="23" cy="32" r="2.8" fill="var(--edge)" stroke="none"/><circle cx="41" cy="32" r="2.8" fill="var(--paper)" stroke="none"/><ellipse cx="32" cy="46" rx="11" ry="8" fill="var(--paper)"/><ellipse cx="32" cy="42" rx="4.5" ry="3.2" fill="var(--edge)"/><path d="M32 45v4M26 51q6 4 6-2M38 51q-6 4-6-2" fill="none" stroke-width="2.4"/></g></symbol>
+<symbol id="f-kitsune" viewBox="0 0 64 64"><g stroke="var(--edge)" stroke-width="3" stroke-linejoin="round" stroke-linecap="round"><path d="M7 30L9 4l20 13z" fill="var(--sun)"/><path d="M57 30L55 4 35 17z" fill="var(--sun)"/><path d="M12 23l1-12 9 7zM52 23l-1-12-9 7z" fill="var(--edge)" stroke="none"/><path d="M5 31Q32 8 59 31Q53 53 32 59Q11 53 5 31z" fill="var(--sun)"/><path d="M8 35Q22 38 32 46Q42 38 56 35Q51 53 32 59Q13 53 8 35z" fill="var(--paper)" stroke="none"/><path d="M5 31Q32 8 59 31Q53 53 32 59Q11 53 5 31z" fill="none"/><path d="M17 34q4-3 8 0M39 34q4-3 8 0" fill="none"/><circle cx="32" cy="53" r="3" fill="var(--edge)" stroke="none"/></g></symbol>
+<symbol id="f-koala" viewBox="0 0 64 64"><g stroke="var(--edge)" stroke-width="3" stroke-linejoin="round" stroke-linecap="round"><circle cx="11" cy="20" r="11" fill="var(--agray)"/><circle cx="53" cy="20" r="11" fill="var(--agray)"/><circle cx="11" cy="20" r="5.5" fill="var(--pink)" stroke="none"/><circle cx="53" cy="20" r="5.5" fill="var(--pink)" stroke="none"/><ellipse cx="32" cy="36" rx="23" ry="21" fill="var(--agray)"/><circle cx="23" cy="31" r="2.7" fill="var(--edge)" stroke="none"/><circle cx="41" cy="31" r="2.7" fill="var(--edge)" stroke="none"/><ellipse cx="32" cy="40" rx="5.5" ry="7.5" fill="var(--edge)"/><path d="M26 52q6 4 12 0" fill="none" stroke-width="2.4"/></g></symbol>
+<symbol id="f-pen" viewBox="0 0 64 64"><g stroke="var(--edge)" stroke-width="3" stroke-linejoin="round" stroke-linecap="round"><circle cx="32" cy="33" r="26" fill="var(--board)"/><path d="M32 27Q40 16 49 25Q53 37 32 55Q11 37 15 25Q24 16 32 27z" fill="var(--paper)" stroke="none"/><circle cx="24" cy="33" r="2.8" fill="var(--edge)" stroke="none"/><circle cx="40" cy="33" r="2.8" fill="var(--edge)" stroke="none"/><path d="M26 39h12l-6 8z" fill="var(--sun)" stroke-width="2.4"/><circle cx="18" cy="41" r="3.2" fill="var(--pink)" stroke="none"/><circle cx="46" cy="41" r="3.2" fill="var(--pink)" stroke="none"/></g></symbol>
+<symbol id="f-tora" viewBox="0 0 64 64"><g stroke="var(--edge)" stroke-width="3" stroke-linejoin="round" stroke-linecap="round"><circle cx="12" cy="15" r="7" fill="var(--soc)"/><circle cx="52" cy="15" r="7" fill="var(--soc)"/><circle cx="32" cy="36" r="25" fill="var(--soc)"/><path d="M32 12v9M23 13l2 8M41 13l-2 8M8 33h9M9 41h8M56 33h-9M55 41h-8" fill="none"/><ellipse cx="32" cy="47" rx="12" ry="9" fill="var(--paper)" stroke="none"/><circle cx="23" cy="34" r="2.8" fill="var(--edge)" stroke="none"/><circle cx="41" cy="34" r="2.8" fill="var(--edge)" stroke="none"/><path d="M28 42h8l-4 5z" fill="var(--edge)" stroke-width="2"/><path d="M32 47v3M26 52q6 3 6-2M38 52q-6 3-6-2" fill="none" stroke-width="2.4"/></g></symbol>
+<symbol id="f-lion" viewBox="0 0 64 64"><g stroke="var(--edge)" stroke-width="3" stroke-linejoin="round" stroke-linecap="round"><g fill="var(--btl)"><circle cx="55" cy="32" r="7"/><circle cx="50.6" cy="45.5" r="7"/><circle cx="39.1" cy="53.9" r="7"/><circle cx="24.9" cy="53.9" r="7"/><circle cx="13.4" cy="45.5" r="7"/><circle cx="9" cy="32" r="7"/><circle cx="13.4" cy="18.5" r="7"/><circle cx="24.9" cy="10.1" r="7"/><circle cx="39.1" cy="10.1" r="7"/><circle cx="50.6" cy="18.5" r="7"/></g><circle cx="32" cy="32" r="23" fill="var(--btl)" stroke="none"/><circle cx="32" cy="34" r="16" fill="var(--wood)"/><circle cx="26" cy="31" r="2.6" fill="var(--edge)" stroke="none"/><circle cx="38" cy="31" r="2.6" fill="var(--edge)" stroke="none"/><ellipse cx="32" cy="41" rx="7.5" ry="5.5" fill="var(--paper)" stroke="none"/><path d="M29 37.5h6l-3 3z" fill="var(--edge)" stroke-width="2"/><path d="M32 40.5v3M28 45q4 2 4-1.5M36 45q-4 2-4-1.5" fill="none" stroke-width="2.2"/></g></symbol>
+<symbol id="f-tako" viewBox="0 0 64 64"><g stroke="var(--edge)" stroke-width="3" stroke-linejoin="round" stroke-linecap="round" fill="var(--math)"><circle cx="13.5" cy="49" r="6.5"/><circle cx="26" cy="53" r="6.5"/><circle cx="38" cy="53" r="6.5"/><circle cx="50.5" cy="49" r="6.5"/><path d="M8 45V33Q8 6 32 6t24 27v12"/><circle cx="23" cy="29" r="3.2" fill="var(--edge)" stroke="none"/><circle cx="41" cy="29" r="3.2" fill="var(--edge)" stroke="none"/><circle cx="22" cy="28" r="1" fill="var(--paper)" stroke="none"/><circle cx="40" cy="28" r="1" fill="var(--paper)" stroke="none"/><circle cx="15" cy="37" r="3.5" fill="var(--pink)" stroke="none"/><circle cx="49" cy="37" r="3.5" fill="var(--pink)" stroke="none"/><path d="M28 36q4 4 8 0" fill="none"/></g></symbol>
+<symbol id="f-hiyoko" viewBox="0 0 64 64"><g stroke="var(--edge)" stroke-width="3" stroke-linejoin="round" stroke-linecap="round"><path d="M32 12Q30 4 25 5M32 12Q34 3 40 4" fill="none"/><circle cx="32" cy="36" r="24" fill="var(--soc)"/><circle cx="23" cy="34" r="2.8" fill="var(--edge)" stroke="none"/><circle cx="41" cy="34" r="2.8" fill="var(--edge)" stroke="none"/><path d="M25 40Q32 36 39 40L32 49z" fill="var(--sun)" stroke-width="2.6"/><circle cx="15" cy="43" r="4" fill="var(--pink)" stroke="none"/><circle cx="49" cy="43" r="4" fill="var(--pink)" stroke="none"/></g></symbol>
+<symbol id="f-smile" viewBox="0 0 64 64"><g stroke="var(--edge)" stroke-width="3" stroke-linecap="round"><circle cx="32" cy="32" r="25" fill="var(--soc)"/><circle cx="23" cy="28" r="2.8" fill="var(--edge)" stroke="none"/><circle cx="41" cy="28" r="2.8" fill="var(--edge)" stroke="none"/><path d="M21 38q11 12 22 0" fill="none"/></g></symbol>
+<!-- ===== めばえ（双葉の妖精）：ふつう／よろこぶ／おしい ===== -->
+<g id="mb-b" stroke="var(--edge)" stroke-width="3" stroke-linejoin="round" stroke-linecap="round"><path d="M27 63v6M37 63v6" fill="none"/><path d="M32 44Q20 46 20 61Q32 68 44 61Q44 46 32 44z" fill="var(--go)"/><circle cx="32" cy="31" r="15" fill="var(--cream)"/><circle cx="23" cy="35" r="3" fill="var(--pink)" stroke="none"/><circle cx="41" cy="35" r="3" fill="var(--pink)" stroke="none"/></g>
+<symbol id="mb-n" viewBox="0 0 64 72"><use href="#mb-b"/><g stroke="var(--edge)" stroke-width="3" stroke-linejoin="round" stroke-linecap="round"><path d="M32 16v-5" fill="none"/><path d="M32 11Q20 12 17 3Q30 1 32 11z" fill="var(--agreen)"/><path d="M32 11Q44 12 47 3Q34 1 32 11z" fill="var(--agreen)"/><path d="M21 50Q15 54 14 58M43 50Q49 54 50 58" fill="none"/><circle cx="26" cy="31" r="2.3" fill="var(--edge)" stroke="none"/><circle cx="38" cy="31" r="2.3" fill="var(--edge)" stroke="none"/><path d="M28 37q4 3.5 8 0" fill="none" stroke-width="2.4"/></g></symbol>
+<symbol id="mb-h" viewBox="0 0 64 72"><use href="#mb-b"/><g stroke="var(--edge)" stroke-width="3" stroke-linejoin="round" stroke-linecap="round"><path d="M32 16v-5" fill="none"/><path d="M32 11Q18 12 14 2Q30 0 32 11z" fill="var(--agreen)"/><path d="M32 11Q46 12 50 2Q34 0 32 11z" fill="var(--agreen)"/><path d="M21 50Q12 48 11 38M43 50Q52 48 53 38" fill="none"/><path d="M23 32q3-5 6 0M35 32q3-5 6 0" fill="none" stroke-width="2.6"/><path d="M27 36q5 9 10 0z" fill="var(--edge)" stroke-width="2"/></g></symbol>
+<symbol id="mb-o" viewBox="0 0 64 72"><use href="#mb-b"/><g stroke="var(--edge)" stroke-width="3" stroke-linejoin="round" stroke-linecap="round"><path d="M32 16v-4" fill="none"/><path d="M32 12Q22 7 14 14Q27 18 32 12z" fill="var(--agreen)"/><path d="M32 12Q42 7 50 14Q37 18 32 12z" fill="var(--agreen)"/><path d="M21 50Q16 56 17 62M43 50Q48 56 47 62" fill="none"/><circle cx="26" cy="33" r="2.3" fill="var(--edge)" stroke="none"/><circle cx="38" cy="33" r="2.3" fill="var(--edge)" stroke="none"/><path d="M21 26l8 2.5M43 26l-8 2.5" fill="none" stroke-width="2.4"/><path d="M28 40q4-3 8 0" fill="none" stroke-width="2.4"/><path d="M54 20q-4.5 6 0 9 4.5-3 0-9z" fill="var(--jp)" stroke-width="2"/></g></symbol>
+<!-- ===== メダル：0=空きわく 1=銅 2=銀 3=金 ===== -->
+<symbol id="m-0" viewBox="0 0 64 64"><g fill="none" stroke="#6d8577" stroke-width="3.5" stroke-linecap="round"><circle cx="32" cy="34" r="22" stroke-dasharray="6 6"/></g></symbol>
+<g id="m-r" stroke="var(--edge)" stroke-width="3" stroke-linejoin="round"><path d="M17 3h13l6 25H22z" fill="var(--math)"/><path d="M47 3H34l-6 25h14z" fill="var(--jp)"/></g>
+<g id="m-s" stroke="var(--edge)" stroke-width="1.8" stroke-linejoin="round" fill="var(--paper)"><path d="M32 34L34 39.2 39.6 39.5 35.3 43.1 36.7 48.5 32 45.5 27.3 48.5 28.7 43.1 24.4 39.5 29.9 39.2z"/></g>
+<symbol id="m-1" viewBox="0 0 64 64"><use href="#m-r"/><circle cx="32" cy="42" r="19" fill="var(--bronze)" stroke="var(--edge)" stroke-width="3.5"/><circle cx="32" cy="42" r="13" fill="none" stroke="var(--edge)" stroke-width="1.6" opacity=".55"/><use href="#m-s"/></symbol>
+<symbol id="m-2" viewBox="0 0 64 64"><use href="#m-r"/><circle cx="32" cy="42" r="19" fill="var(--silver)" stroke="var(--edge)" stroke-width="3.5"/><circle cx="32" cy="42" r="13" fill="none" stroke="var(--edge)" stroke-width="1.6" opacity=".55"/><use href="#m-s"/></symbol>
+<symbol id="m-3" viewBox="0 0 64 64"><use href="#m-r"/><circle cx="32" cy="42" r="19" fill="var(--gold)" stroke="var(--edge)" stroke-width="3.5"/><circle cx="32" cy="42" r="13" fill="none" stroke="var(--edge)" stroke-width="1.6" opacity=".55"/><use href="#m-s"/></symbol>
+<!-- ===== すごろく盤の飾り ===== -->
+<symbol id="d-tree" viewBox="0 0 64 64"><g stroke="var(--edge)" stroke-width="3.5" stroke-linejoin="round" stroke-linecap="round"><rect x="27" y="36" width="10" height="22" fill="var(--btl)"/><circle cx="32" cy="24" r="19" fill="var(--go)"/><circle cx="26" cy="20" r="3" fill="var(--agreen)" stroke="none"/></g></symbol>
+<symbol id="d-slide" viewBox="0 0 64 64"><g stroke="var(--edge)" stroke-width="3.5" stroke-linejoin="round" stroke-linecap="round"><path d="M12 58V14M26 58V14M12 22h14M12 34h14M12 46h14" fill="none" stroke-width="3"/><path d="M26 14L56 56" stroke="var(--math)" stroke-width="9"/><path d="M8 12h22" stroke="var(--soc)" stroke-width="6"/></g></symbol>
+<symbol id="d-swing" viewBox="0 0 64 64"><g stroke="var(--edge)" stroke-width="3.5" stroke-linejoin="round" stroke-linecap="round" fill="none"><path d="M6 60L22 8h20l16 52"/><path d="M24 12v34M40 12v34" stroke-width="2.2"/><rect x="20" y="46" width="24" height="7" rx="2" fill="var(--jp)"/></g></symbol>
+<symbol id="d-gate" viewBox="0 0 64 64"><g stroke="var(--edge)" stroke-width="3.5" stroke-linejoin="round" stroke-linecap="round"><rect x="8" y="14" width="10" height="46" fill="var(--wood)"/><rect x="46" y="14" width="10" height="46" fill="var(--wood)"/><rect x="3" y="8" width="58" height="12" rx="3" fill="var(--math)"/></g></symbol>
+<symbol id="d-flag" viewBox="0 0 64 64"><g stroke="var(--edge)" stroke-width="3.5" stroke-linejoin="round" stroke-linecap="round"><path d="M16 60V6" fill="none"/><path d="M16 8h38l-8 11 8 11H16z" fill="var(--math)"/><circle cx="16" cy="60" r="3" fill="var(--edge)"/></g></symbol>
+<symbol id="d-star" viewBox="0 0 24 24"><path d="M12 2.5l2.9 6.2 6.8.8-5 4.7 1.3 6.7L12 17.5l-6 3.4 1.3-6.7-5-4.7 6.8-.8z" fill="var(--soc)" stroke="var(--edge)" stroke-width="2" stroke-linejoin="round"/></symbol>
+<symbol id="d-swirl" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10.5" fill="var(--eng)" stroke="var(--edge)" stroke-width="2"/><path d="M12 12a1.5 1.5 0 1 1 2 1.4 3.5 3.5 0 1 1-4.8-4.3 5.5 5.5 0 1 1 7 6.8" fill="none" stroke="var(--paper)" stroke-width="2.2" stroke-linecap="round"/></symbol>
+</defs></svg>
+<!--ART-END-->
 <header>
   <h1><button class="logo" id="logo" onclick="go('#home')">まなびひろば</button></h1>
   <span class="sp"></span>
@@ -381,6 +447,7 @@ const TX={
  "ru.auto":["おまかせ"],"ru.auto.d":["1〜2年の問題ならやさしい","1〜2ねんの もんだいなら やさしい"],
 /* ホーム */
  "home.quick":["1分であそぶ","1ぷん あそぶ"],
+ "home.guide":["いっしょに あそぼう！"],
  "home.quick.n":["ワンタップで、学年に合ったゲームがはじまります","ボタンを 1かい おすと はじまるよ"],
  "home.all":["ぜんぶ"],
  "home.empty":["この学年のゲームはじゅんび中です","この ゲームは じゅんびちゅう です"],
@@ -458,7 +525,7 @@ const TX={
  "c.q":["確率を見る","かくりつを みる"],
  "b.roll":["サイコロをふる"],"b.go":[n=>`${n} すすむ！`],"b.star":[" ⭐でさらに3すすむ！"],"b.swirl":[" 🌀で2もどる…"],
  "b.rank":["ランキング"],"b.rank.e":["がんばってる みんな"],
- "b.race":["🎲 すごろく"],"b.right":[n=>`正解${n}問`,n=>`せいかい ${n} もん`],
+ "b.race":["すごろく"],"b.right":[n=>`正解${n}問`,n=>`せいかい ${n} もん`],
  "b.place":[n=>`${n} 位！`,n=>`${n} ばん！`],
  "b.placeof":[(t,n)=>`${t}人中 ${n} 位！`,(t,n)=>`${t}にんの うち ${n}ばん！`],
  "b.done":["みんなでがんばった！","みんなで がんばった！"],
@@ -513,11 +580,23 @@ function setLG(g){ LG=g||0; drawHeader(); }
 /* 道具アイコン：Lucide（ISC）を、ページの先頭にある <symbol> から使う */
 const ic=(n,c)=>`<svg class="ic${c?" "+c:""}" aria-hidden="true" focusable="false"><use href="#i-${n}"/></svg>`;
 const BK=()=>ic("arrow-left")+T("back");
+/* コードで描いた絵：<symbol> は ART ブロックにある。絵は飾りなので aria-hidden（意味が要るものは近くの文字で伝える） */
+const svgU=(id,c)=>`<svg class="art${c?" "+c:""}" aria-hidden="true" focusable="false"><use href="#${id}"/></svg>`;
+const msvg=(n,c)=>svgU("m-"+n,c);                       // メダル 0=空きわく 1=銅 2=銀 3=金
+const mbs=(k,c)=>svgU("mb-"+k,"mb"+(c?" "+c:""));        // めばえ n=ふつう h=よろこぶ o=おしい
+const MIDX={"🥉":1,"🥈":2,"🥇":3};
+const medalize=s=>String(s).replace(/[🥉🥈🥇]/gu,e=>msvg(MIDX[e],"mi"));      // 文の中のメダル絵文字を絵にする
+/* 動物の顔：通信で送るデータは絵文字のまま。表示するときだけ、この表で絵にする */
+const FACE={"🐼":"panda","🐰":"usagi","🐸":"kaeru","🐱":"neko","🐶":"inu","🦊":"kitsune","🐨":"koala","🐧":"pen","🐯":"tora","🦁":"lion","🐙":"tako","🐤":"hiyoko"};
+const faceId=e=>"f-"+(FACE[e]||"smile");
+const face=e=>`<svg class="fc" aria-hidden="true" focusable="false"><use href="#${faceId(e)}"/></svg>`;
+const PIPS={1:[[32,32]],2:[[20,20],[44,44]],3:[[20,20],[32,32],[44,44]],4:[[20,20],[44,20],[20,44],[44,44]],5:[[20,20],[44,20],[32,32],[20,44],[44,44]],6:[[20,18],[44,18],[20,32],[44,32],[20,46],[44,46]]};
+const diceSvg=n=>`<svg class="art" viewBox="0 0 64 64" aria-hidden="true" focusable="false"><g stroke="var(--edge)" stroke-width="3.5" stroke-linejoin="round"><rect x="6" y="6" width="52" height="52" rx="12" fill="var(--paper)"/>${PIPS[n].map(([x,y])=>`<circle cx="${x}" cy="${y}" r="4.5" fill="${n===1?"var(--math)":"var(--edge)"}" stroke="none"/>`).join("")}</g></svg>`;
 function drawHeader(){
   const c=document.getElementById("hSound"), l=document.getElementById("licLink"), gb=document.getElementById("hGrade"), rb=document.getElementById("hRec");
   if(l) l.textContent=T("ft.lic");
   if(gb){ gb.innerHTML=(ui.grade?`<b>${ui.grade}年</b>`:T("h.gradepick"))+ic("chevron-down"); gb.setAttribute("aria-label",T("h.gradeq")); }
-  if(rb){ rb.innerHTML=`<span aria-hidden="true">🏅</span><b id="hRecN">${medalTotal()}</b>${T("h.rec")}`; rb.setAttribute("aria-label",T("rec.t")); }
+  if(rb){ rb.innerHTML=`${msvg(3)}<b id="hRecN">${medalTotal()}</b>${T("h.rec")}`; rb.setAttribute("aria-label",T("rec.t")); }
   if(c){ c.classList.toggle("hidden",SND_DEAD); c.innerHTML=ic(SND?"volume-2":"volume-x"); c.setAttribute("aria-label",T(SND?"snd.off":"snd.on")); c.title=T(SND?"snd.off":"snd.on"); c.setAttribute("aria-pressed",SND); }
 }
 /* ===== 必要なときだけ読み込む部品（vendor/ に同梱。外部には通信しない） ===== */
@@ -588,11 +667,11 @@ const kDiff=x=>x.a.includes("（")||x.q.replace(/[都道府県]$/,"")!==x.a.repl
 
 /* ゲーム一覧（自分で作るゲーム）。名前（t）と説明（d）は上の表 TX から取る */
 const GAMES=[
- {id:"calc",ico:"🧮",s:"math",g:[1,2,3,4,5,6],type:"input"},
- {id:"kuku",ico:"✖️",s:"math",g:[2,3],type:"input"},
- {id:"kanji",ico:"📖",s:"jp",g:[1,2,3,4,5,6],type:"choice"},
- {id:"kencho",ico:"🗾",s:"soc",g:[4,5,6],type:"choice"},
- {id:"eigo",ico:"🔤",s:"eng",g:[5,6],type:"choice"}
+ {id:"calc",ico:"🧮",art:"a-soroban",s:"math",g:[1,2,3,4,5,6],type:"input"},
+ {id:"kuku",ico:"✖️",art:"a-kuku",s:"math",g:[2,3],type:"input"},
+ {id:"kanji",ico:"📖",art:"a-kanji",s:"jp",g:[1,2,3,4,5,6],type:"choice"},
+ {id:"kencho",ico:"🗾",art:"a-japan",s:"soc",g:[4,5,6],type:"choice"},
+ {id:"eigo",ico:"🔤",art:"a-abc",s:"eng",g:[5,6],type:"choice"}
 ];
 GAMES.forEach(x=>{ tget(x,"t","g."+x.id+".t"); tget(x,"d","g."+x.id+".d"); });
 
@@ -723,7 +802,8 @@ function openGame(x,g0){
   go(x.id==="kuku"||x.id==="kencho"?`#setup?game=${x.id}&g=${g}`:`#play?game=${x.id}&g=${g}&t=60`);
 }
 const SUBJ_ORDER=["math","jp","soc","eng"], MEDAL_ICO=["🥉","🥈","🥇"];
-const stampsHtml=m=>MEDAL_ICO.map((e,i)=>`<span class="st${m>i?" on":""}" aria-hidden="true">${e}</span>`).join("");
+const stampsHtml=m=>MEDAL_ICO.map((e,i)=>m>i?msvg(i+1,"st on"):msvg(0,"st")).join("");
+const tico=x=>svgU(x.art,"ti");
 /* 「つぎのメダルまで あと○もん」（1分あそんだときの正解数で数える） */
 function homeNext(x,best){
   const m=best?best.medal:0; if(m>=3) return T("r.top");
@@ -732,13 +812,13 @@ function homeNext(x,best){
 }
 function gameTile(x,b){
   const best=b[x.id], m=best?best.medal:0;
-  return `<button class="tile" data-id="${x.id}"><span class="tico" aria-hidden="true">${x.ico}</span><span class="tbody"><span class="tt">${x.t}</span>
+  return `<button class="tile" data-id="${x.id}"><span class="tico">${svgU(x.art)}</span><span class="tbody"><span class="tt">${x.t}</span>
     <span class="tstat">${stampsHtml(m)}<span class="bv">${best?T("h.best",best.score):T("h.best0")}</span></span>
-    <span class="tnext">${homeNext(x,best)}</span></span></button>`;
+    <span class="tnext">${medalize(homeNext(x,best))}</span></span></button>`;
 }
 function modeTile(m,b){
   const mb=GAMES.reduce((n,x)=>Math.max(n,(b[m.id+"_"+x.id]||{}).medal||0),0);
-  return `<button class="tile" data-m="${m.id}"><span class="tico" aria-hidden="true">${m.ico}</span><span class="tbody"><span class="tt">${m.t}</span><span class="tstat">${stampsHtml(mb)}</span></span></button>`;
+  return `<button class="tile" data-m="${m.id}"><span class="tico">${svgU(m.art)}</span><span class="tbody"><span class="tt">${m.t}</span><span class="tstat">${stampsHtml(mb)}</span></span></button>`;
 }
 function renderHome(){
   setLG(ui.grade);
@@ -746,8 +826,9 @@ function renderHome(){
   const games=GAMES.filter(x=>ui.grade===0||x.g.includes(ui.grade));
   const zones=SUBJ_ORDER.map(k=>[k,games.filter(x=>x.s===k)]).filter(z=>z[1].length);
   app.innerHTML=`<div class="home${easy?" easy":""}">
-    <button class="hero" id="quick">${ic("zap")}<span><span class="ht">${T("home.quick")}</span><span class="hn">${T("home.quick.n")}</span></span></button>
-    <div class="zones">${zones.map(([k,l])=>`<section class="zone s-${k}"><h2>${subjN(k)}</h2><div class="tiles">${l.map(x=>gameTile(x,b)).join("")}</div></section>`).join("")}
+    ${easy?`<div class="guide">${mbs("n")}<span class="say">${T("home.guide")}</span></div>`:""}
+    <button class="hero" id="quick">${easy?"":mbs("n")}${ic("zap")}<span><span class="ht">${T("home.quick")}</span><span class="hn">${T("home.quick.n")}</span></span></button>
+    <div class="zones" data-n="${zones.length+1}">${zones.map(([k,l])=>`<section class="zone s-${k}"><h2>${subjN(k)}</h2><div class="tiles">${l.map(x=>gameTile(x,b)).join("")}</div></section>`).join("")}
       <section class="zone s-btl"><h2>${ic("swords")}${T("home.battle")}</h2><div class="tiles">${MODES.map(m=>modeTile(m,b)).join("")}</div></section></div>
     ${zones.length?"":`<div class="empty">${T("home.empty")}</div>`}
     <div class="bottom">
@@ -797,7 +878,7 @@ function renderSetup(q){
     :`<h2>${T("st.kencho")}</h2>
       <div class="pills" style="justify-content:center">${[["","kc.all"],["diff","kc.diff"]].map(([v,k])=>`<button class="pill" data-k="${v}">${T(k)}</button>`).join("")}</div>`;
   app.innerHTML=`<div class="play">
-    <div class="topbar"><button class="back" onclick="go('#home')">${BK()}</button><b>${x.ico} ${x.t}</b><span></span></div>
+    <div class="topbar"><button class="back" onclick="go('#home')">${BK()}</button><b>${tico(x)} ${x.t}</b><span></span></div>
     ${body}
     <button class="btn" id="go" style="width:100%;margin:18px 0 0;font-size:22px;padding:18px">${T("st.start")}</button></div>`;
   const paint=()=>{
@@ -838,7 +919,7 @@ function renderPlay(q){
     ${task?`<div class="banner">${ic("pencil")} ${T("p.task",`${x.t}（${g}年・${t}${T("sec")}）`)}</div>`:""}
     <div class="topbar">
       ${task?`<button class="back" id="bk">${ic("x")}${T("back.end")}</button>`:`<button class="back" onclick="stopTimer();go('#home')">${BK()}</button>`}
-      <span><b>${x.ico} ${x.t}</b> <span class="note">${g}年${info?"・"+esc(info):""}</span></span>
+      <span><b>${tico(x)} ${x.t}</b> <span class="note">${g}年${info?"・"+esc(info):""}</span></span>
       <span class="timer" id="tm" aria-hidden="true">${t}</span>
     </div>
     <div class="tbar" id="tbar"><i id="tb"></i></div>
@@ -935,9 +1016,9 @@ function finish(){
   const report=`【${T0("g."+p.x.id+".t")}】${p.g}年 ${p.t}秒｜せいかい${p.ok}問／${total}問（正答率${acc}%）`;
   const repFull=report+missIds(p.missObjs,p.x);          // 課題リンクの結果の末尾に、まちがえた問題のID
   app.innerHTML=`<div class="play"><div class="res">
-    <div class="medalwrap m${medal}"><div class="medal">${["🙂","🥉","🥈","🥇"][medal]}</div></div>
+    <div class="medrow"><div class="medalwrap m${medal}"><div class="medal">${msvg(medal)}</div></div>${mbs(medal?"h":"o","hop")}</div>
     <div class="num">${T("r.num",p.ok)}</div>
-    <div class="nextm">${esc(nextMsg)}</div>
+    <div class="nextm">${medalize(esc(nextMsg))}</div>
     ${showNew?`<div class="newbest">${T("r.new")}</div>`:""}
     <div class="actions"><button class="btn again" id="again">${ic("rotate-ccw")}${T("r.again")}</button>
       <div class="subs">${p.missObjs.length?`<button class="btn sub" id="redo">${T("r.redo")}</button>`:""}${p.task?"":`<button class="btn sub" onclick="go('#home')">${T("r.other")}</button>`}</div></div>
@@ -958,7 +1039,7 @@ function startReview(items,x,g,task){
   app.innerHTML=`<div class="play pg">
     <div class="topbar">
       ${task?`<button class="back" onclick="reviewDone()">${ic("x")}${T("back.end")}</button>`:`<button class="back" onclick="go('#home')">${BK()}</button>`}
-      <span><b>${x.ico} ${T("p.review")}</b> <span class="note">${x.t}・${g}年</span></span>
+      <span><b>${tico(x)} ${T("p.review")}</b> <span class="note">${x.t}・${g}年</span></span>
       <span class="timer" id="tm" aria-hidden="true"></span>
     </div>
     <div class="q"><div class="big" id="qq"></div><div class="small" id="qs"></div></div>
@@ -972,7 +1053,7 @@ function startReview(items,x,g,task){
 }
 function reviewDone(){
   const p=P; p.lock=true;
-  app.innerHTML=`<div class="play"><div class="res"><div class="medalwrap m3"><div class="medal">🎉</div></div><div class="num">${T("p.reviewclear")}</div>
+  app.innerHTML=`<div class="play"><div class="res"><div class="medrow"><div class="medalwrap m3"><div class="medal">${msvg(3)}</div></div>${mbs("h","hop")}</div><div class="num">${T("p.reviewclear")}</div>
     <div>${p.task?`<button class="btn" onclick="route()">${T("r.again")}</button>`:`<button class="btn" onclick="go('#home')">${T("n.home")}</button>`}</div></div></div>`;
 }
 document.addEventListener("keydown",e=>{
@@ -1021,11 +1102,11 @@ function renderRecord(msg){
   const b=bests(), tot=medalTotal(), btl=Object.keys(b).filter(k=>k.includes("_")).reduce((n,k)=>n+(b[k].medal||0),0);
   app.innerHTML=`<div class="rec">
     <div class="topbar"><button class="back" onclick="go('#home')">${BK()}</button><b>${T("rec.t")}</b><span></span></div>
-    <div class="rectotal"><span class="e" aria-hidden="true">🏅</span><span class="n">${tot}</span><span class="l">${T("rec.total")}</span></div>
+    <div class="rectotal"><span class="e" aria-hidden="true">${msvg(3)}</span><span class="n">${tot}</span><span class="l">${T("rec.total")}</span></div>
     <div class="book"><h3>${T("rec.book")}</h3>
       ${GAMES.map(x=>{ const e=b[x.id], m=e?e.medal:0;
-        return `<div class="stamp"><span class="sico" aria-hidden="true">${x.ico}</span><span class="sn">${x.t}<small>${e?T("h.best",e.score):T("rec.none")}</small></span>
-          <span class="slots" aria-hidden="true">${MEDAL_ICO.map((em,i)=>`<span class="slot${m>i?" on":""}"><span>${em}</span></span>`).join("")}</span></div>`; }).join("")}
+        return `<div class="stamp"><span class="sico" aria-hidden="true">${svgU(x.art)}</span><span class="sn">${x.t}<small>${e?T("h.best",e.score):T("rec.none")}</small></span>
+          <span class="slots" aria-hidden="true">${MEDAL_ICO.map((em,i)=>`<span class="slot${m>i?" on":""}">${msvg(m>i?i+1:0)}</span>`).join("")}</span></div>`; }).join("")}
       <div class="note" style="padding:8px 0 6px">${T("rec.battle",btl)}</div></div>
     <p class="note">${T("rec.safe")}</p>
     <div class="bak"><h3>${ic("save")} ${T("rec.bk")}</h3>
@@ -1166,7 +1247,7 @@ function startProjector(id,g,n,sec){
 }
 
 /* ================= バトルモード（Blooket型：同じ問題をいろいろな遊び方で） ================= */
-const MODES=[{id:"chest",ico:"🎁"},{id:"race",ico:"🎲"}];
+const MODES=[{id:"chest",ico:"🎁",art:"a-chest"},{id:"race",ico:"🎲",art:"a-dice"}];
 MODES.forEach(m=>{ tget(m,"t","m."+m.id+".t"); tget(m,"d","m."+m.id+".d"); });
 const BOTS=[{n:"パンダ",e:"🐼"},{n:"ウサギ",e:"🐰"},{n:"カエル",e:"🐸"}];
 /* ルール：やさしい＝たからばこで「うばう・入れかえ・落とす」が出ない／すごろくに🌀（もどる）がない */
@@ -1194,10 +1275,10 @@ function renderModeSetup(q){
   const rule0=ui.grade?defaultRule(ui.grade):"auto";   // 「ぜんぶ」のときは、えらんだ問題の学年で決める
   const ruleBtns=ui.grade?RULES:[{id:"auto",t:T("ru.auto"),d:T("ru.auto.d")},...RULES];
   app.innerHTML=`<div class="play">
-    <div class="topbar"><button class="back" onclick="go('#home')">${BK()}</button><b>${m.ico} ${m.t}</b><span></span></div>
+    <div class="topbar"><button class="back" onclick="go('#home')">${BK()}</button><b>${svgU(m.art,"ti")} ${m.t}</b><span></span></div>
     <div class="q"><div style="font-size:15px">${m.d}</div></div>
     <h2>${T("ms.which")}</h2>
-    <div class="tiles">${list.map(x=>`<button class="tile" data-id="${x.id}"><span class="tico" aria-hidden="true">${x.ico}</span><span class="tbody"><span class="tt">${x.t}</span>
+    <div class="tiles">${list.map(x=>`<button class="tile" data-id="${x.id}"><span class="tico">${svgU(x.art)}</span><span class="tbody"><span class="tt">${x.t}</span>
       <span class="tstat">${tagHtml(x.s)}</span></span></button>`).join("")}</div>
     <h2>${T("ms.time")}</h2>
     <div class="pills" style="justify-content:center"><button class="pill on" data-t="120">${T("ms.2")}</button><button class="pill" data-t="180">${T("ms.3")}</button></div>
@@ -1223,14 +1304,14 @@ function renderMode(q){
   const rule=q.has("r")?ruleOf(q.get("r")):defaultRule(g);
   setLG(g);
   M={m,x,g,t,task,rule,ev:evOf(rule),ok:0,ng:0,misses:[],missObjs:[],phase:"q",end:Date.now()+t*1000,
-     me:{n:T("b.me"),e:"😀",v:0,me:true},
+     me:{n:T("b.me"),e:(l=>l[rnd(l.length)][1])(NICK_ANI.filter(a=>!BOTS.some(b=>b.e===a[1]))),v:0,me:true},
      bots:BOTS.map((b,i)=>({...b,v:0,wait:rr(2,5)*botK(g),spd:[1,1.15,0.85][i]})),
      over:false};
   app.innerHTML=`<div class="mplay">
     ${task?`<div class="banner">${ic("pencil")} ${T("p.task",`${m.t}（${x.t}・${g}年）`)}</div>`:""}
     <div class="topbar">
       ${task?`<button class="back" id="bk">${ic("x")}${T("back.end")}</button>`:`<button class="back" onclick="stopTimer();M=null;go('#home')">${BK()}</button>`}
-      <span><b>${m.ico} ${m.t}</b> <span class="note">${x.t}・${g}年・${ruleName(rule)}</span></span>
+      <span><b>${svgU(m.art,"ti")} ${m.t}</b> <span class="note">${x.t}・${g}年・${ruleName(rule)}</span></span>
       <span class="timer" id="tm" aria-hidden="true">${t}</span>
     </div>
     <div class="tbar" id="tbar"><i id="tb"></i></div>
@@ -1279,7 +1360,7 @@ function topList(ps){ // 人数が多いときは上位8人＋自分だけ表示
 function leaderBot(){ return [...M.bots].sort((a,b)=>b.v-a.v)[0]; }
 /* やさしいルール：順位の数字は出さず、上の3人と自分だけ（最下位は出さない） */
 function easyList(ps){ const top=ps.slice(0,3).map(p=>[p,0]), i=ps.findIndex(p=>p.me); return i>=3?[...top,[ps[i],0]]:top; }
-const rankRows=(rows,unit)=>rows.map(([p,i])=>`<div class="rank ${p.me?"me":""}">${i?i+". ":""}${p.e} ${esc(p.n)}<span class="v">${unit(p)}</span></div>`).join("");
+const rankRows=(rows,unit)=>rows.map(([p,i])=>`<div class="rank ${p.me?"me":""}">${i?i+". ":""}${face(p.e)} ${esc(p.n)}<span class="v">${unit(p)}</span></div>`).join("");
 
 /* --- ごほうび（モードごと） --- */
 function reward(){ M.phase="reward"; if(M.m.id==="chest") chestReward(); else raceReward(); }
@@ -1315,25 +1396,25 @@ function openBox(btn){
   if(k[0]==="+"){ const n=+k.slice(1); M.me.v+=n; label=`🪙 +${n}`; msg=T("b.get",n); }
   else if(k==="x2"){ M.me.v*=2; label=T("c.x2"); msg=T("b.x2"); }
   else if(k==="lose"){ const n=Math.round(M.me.v*0.25); M.me.v-=n; label=`💸 −${n}`; msg=T("b.lose"); }
-  else if(k==="steal"){ const n=Math.round(L.v*0.2); L.v-=n; M.me.v+=n; label=`🦝 +${n}`; msg=T("b.steal",`${L.e}${L.n}`,n); }
-  else if(k==="swap"){ if(L.v>M.me.v){ [L.v,M.me.v]=[M.me.v,L.v]; label=T("c.swapdone"); msg=T("b.swap",`${L.e}${L.n}`); } else { M.me.v+=20; label="🪙 +20"; msg=T("b.get",20); } }
+  else if(k==="steal"){ const n=Math.round(L.v*0.2); L.v-=n; M.me.v+=n; label=`🦝 +${n}`; msg=T("b.steal",`${face(L.e)}${esc(L.n)}`,n); }
+  else if(k==="swap"){ if(L.v>M.me.v){ [L.v,M.me.v]=[M.me.v,L.v]; label=T("c.swapdone"); msg=T("b.swap",`${face(L.e)}${esc(L.n)}`); } else { M.me.v+=20; label="🪙 +20"; msg=T("b.get",20); } }
   else { label=T("c.none"); msg=T("b.none"); }
   btn.classList.add("open"); btn.textContent=label;
   $("#mmain").querySelectorAll(".box").forEach(b=>{ if(b!==btn) b.classList.add("dim"); });
-  $("#msg").textContent=msg; drawSide();
+  $("#msg").innerHTML=msg; drawSide();
   const mm=M; setTimeout(()=>M===mm&&showQ(),1300);
 }
 
 const GOAL=40, EV={4:"⭐",9:"🌀",13:"⭐",17:"🌀",21:"⭐",25:"🌀",27:"⭐",31:"🌀",35:"⭐",38:"🌀"};
 function raceReward(){
-  $("#mmain").innerHTML=`<div class="q" style="padding:16px"><div class="dice" id="dc">🎲</div><div class="msg" id="msg"></div>
+  $("#mmain").innerHTML=`<div class="q" style="padding:16px"><div class="dice" id="dc">${diceSvg(5)}</div><div class="msg" id="msg"></div>
     <button class="btn" id="rollBtn">${T("b.roll")}</button></div>`;
   $("#rollBtn").onclick=()=>{
     if(M.phase!=="reward") return; M.phase="wait";
     $("#rollBtn").remove(); $("#dc").classList.add("roll");
     setTimeout(()=>{
       if(!M||M.over) return;
-      const n=1+rnd(6); $("#dc").classList.remove("roll"); $("#dc").textContent=["⚀","⚁","⚂","⚃","⚄","⚅"][n-1];
+      const n=1+rnd(6); $("#dc").classList.remove("roll"); $("#dc").innerHTML=diceSvg(n);
       if(M.net){
         api("act",{...NET,op:"move",n}).then(r=>{
           if(!M||M.over) return;
@@ -1348,7 +1429,7 @@ function raceReward(){
       if(e==="⭐"){ M.me.v=Math.min(GOAL,M.me.v+3); msg+=T("b.star"); }
       if(e==="🌀"){ M.me.v=Math.max(0,M.me.v-2); msg+=T("b.swirl"); }
       $("#msg").textContent=msg; drawSide();
-      if(M.me.v>=GOAL) return setTimeout(modeFinish,700);
+      if(M.me.v>=GOAL) return setTimeout(modeFinish,1500);       // 駒がゴールまで進むのを見せてから結果へ
       setTimeout(showQ,1200);
     },600);
   };
@@ -1376,7 +1457,7 @@ function botTick(dt){
       b.wait=rr(4.5,7.5)*botK(M.g)+botRubber(b);
       b.v=Math.min(GOAL,b.v+1+rnd(4));
       const e=M.ev[b.v]; if(e==="⭐") b.v=Math.min(GOAL,b.v+3); if(e==="🌀") b.v=Math.max(0,b.v-2);
-      if(b.v>=GOAL){ modeFinish(); return; }
+      if(b.v>=GOAL){ if(!M.finishing){ M.finishing=true; M.phase="wait"; setTimeout(()=>modeFinish(),1500); } return; }
     }
   }
 }
@@ -1388,18 +1469,97 @@ function drawSide(){
     $("#mside").innerHTML=`<h3>${ic("trophy")} ${easy?T("b.rank.e"):T("b.rank")+(M.net?`（${ps.length}人）`:"")}</h3>${rankRows(easy?easyList(ps):topList(ps),p=>"🪙 "+p.v)}
       <p class="note">${T("b.right",M.ok)}</p>`;
   } else {
-    const cells=[], pcs=v=>players().filter(p=>p.v===v).map(p=>`<span class="pc${p.me?" me":""}">${p.e}</span>`).join("");
-    for(let i=1;i<=GOAL;i++){
-      const ev=M.ev[i], tk=pcs(i);
-      cells.push(`<div class="cell ${ev?"ev":""} ${i===GOAL?"goal":""}">${i}${i===GOAL?"🏁":""}${ev?`<span class="evi">${ev}</span>`:""}${tk?`<span class="tk">${tk}</span>`:""}</div>`);
-    }
     const me=ps.find(p=>p.me), easy=M.rule==="easy";      // 盤の上の1行：あなたは何マス目か／1位はだれか（やさしいルールでは順位を出さない）
-    const line=T("b.line.me",me?me.v:0)+(easy?"":ps[0]&&ps[0].me?T("b.line.1st"):`／${T("b.line.top",ps[0].e+esc(ps[0].n),ps[0].v)}`);
-    const st=pcs(0);
-    $("#mside").innerHTML=`<h3>${T("b.race")}</h3><div class="rline">${line}</div>
-      <div class="startrow">${T("b.start")}${st?`<span class="tk">${st}</span>`:""}</div><div class="board">${cells.join("")}</div>
-      <div style="margin-top:8px">${rankRows(easy?easyList(ps):topList(ps),p=>p.v+"マス")}</div>`;
+    const line=T("b.line.me",me?me.v:0)+(easy?"":ps[0]&&ps[0].me?T("b.line.1st"):`／${T("b.line.top",face(ps[0].e)+esc(ps[0].n),ps[0].v)}`);
+    const rk=`${rankRows(easy?easyList(ps):topList(ps),p=>p.v+"マス")}`;
+    if(!M.sgBuilt){          // 盤は1回だけ作る（作り直すと駒の動きが止まるので、あとは駒・文字だけ更新）
+      M.sgBuilt=true; M.pk={};
+      $("#mside").innerHTML=`<h3>${svgU("a-dice","ti")} ${T("b.race")}</h3><div class="rline" id="rl"></div>${boardSvg(M.ev)}<div style="margin-top:8px" id="rk"></div>`;
+    }
+    $("#rl").innerHTML=line; $("#rk").innerHTML=rk;
+    syncPieces(players());
   }
+}
+/* ===== すごろく盤（校庭の地図）：SVGで描く。40マスをヘビのように進む道。駒は参加者の動物＋色の輪 ===== */
+const BD={W:400,H:512,COLS:5,X0:80,DX:60,Y0:60,DY:58}, SVGNS="http://www.w3.org/2000/svg";
+function cellXY(i){
+  if(i<=0) return {x:34,y:BD.Y0+30};
+  const r=Math.floor((i-1)/BD.COLS); let c=(i-1)%BD.COLS; if(r%2) c=BD.COLS-1-c;
+  return {x:BD.X0+c*BD.DX,y:BD.Y0+r*BD.DY+(i%2?-4:4)};
+}
+function roadD(){
+  const pts=[{x:34,y:BD.Y0}];
+  for(let i=1;i<=GOAL;i++){
+    pts.push(cellXY(i));
+    if(i%BD.COLS===0&&i<GOAL){ const a=cellXY(i), b=cellXY(i+1); pts.push({x:a.x+(a.x>200?30:-30),y:(a.y+b.y)/2}); }   // 折り返しをふくらませる
+  }
+  let d=`M${pts[0].x} ${pts[0].y}`;
+  for(let k=0;k<pts.length-1;k++){
+    const p0=pts[k-1]||pts[k], p1=pts[k], p2=pts[k+1], p3=pts[k+2]||p2, f=n=>n.toFixed(1);
+    d+=`C${f(p1.x+(p2.x-p0.x)/6)} ${f(p1.y+(p2.y-p0.y)/6)} ${f(p2.x-(p3.x-p1.x)/6)} ${f(p2.y-(p3.y-p1.y)/6)} ${p2.x} ${p2.y}`;
+  }
+  return d;
+}
+function boardSvg(ev){
+  const cols=["var(--math)","var(--jp)","var(--soc)","var(--eng)"], tc=["#fff","#fff","var(--ink)","#fff"];
+  let st="";
+  for(let i=1;i<=GOAL;i++){
+    const {x,y}=cellXY(i), e=ev[i], g=i===GOAL, k=(i-1)%4;
+    if(g) st+=`<g transform="translate(${x} ${y})"><circle r="27" fill="var(--gold)" stroke="var(--edge)" stroke-width="3.5"/><circle r="20.5" fill="none" stroke="var(--edge)" stroke-width="2" stroke-dasharray="4 4"/><text dy=".35em" font-size="20" fill="var(--ink)">${i}</text></g>`;
+    else if(e) st+=`<g transform="translate(${x} ${y})"><circle r="25" fill="var(--paper)" stroke="var(--edge)" stroke-width="3.5"/><circle r="19" fill="none" stroke="var(${e==="⭐"?"--soc":"--eng"})" stroke-width="3"/><use href="#${e==="⭐"?"d-star":"d-swirl"}" x="-11" y="-21" width="22" height="22"/><text y="12" dy=".35em" font-size="15" fill="var(--ink)">${i}</text></g>`;
+    else st+=`<g transform="translate(${x} ${y})"><circle r="22" fill="${cols[k]}" stroke="var(--edge)" stroke-width="3.5"/><text dy=".35em" font-size="19" fill="${tc[k]}">${i}</text></g>`;
+  }
+  const rd=roadD(), gl=cellXY(GOAL);
+  const tufts=[[150,100],[250,152],[110,214],[290,268],[200,330],[360,215],[40,260],[160,452],[250,490],[60,495],[330,485]].map(([x,y])=>`<path d="M${x-5} ${y}q1-8 5-9 4 1 5 9" fill="none" stroke="var(--agreen)" stroke-width="3" stroke-linecap="round"/>`).join("");
+  const flowers=[[45,140],[355,100],[365,330],[40,380]].map(([x,y])=>`<circle cx="${x}" cy="${y}" r="5" fill="var(--paper)" stroke="var(--edge)" stroke-width="2"/><circle cx="${x}" cy="${y}" r="1.8" fill="var(--soc)"/>`).join("");
+  return `<svg class="sgbd" viewBox="0 0 ${BD.W} ${BD.H}" aria-hidden="true" focusable="false">
+    <rect x="2" y="2" width="${BD.W-4}" height="${BD.H-4}" rx="18" fill="var(--field)" stroke="var(--edge)" stroke-width="4"/>
+    ${tufts}${flowers}
+    <use href="#d-tree" x="6" y="183" width="46" height="46"/><use href="#d-slide" x="350" y="240" width="46" height="46"/>
+    <use href="#d-swing" x="6" y="298" width="46" height="46"/><use href="#d-tree" x="350" y="356" width="46" height="46"/>
+    <path d="${rd}" fill="none" stroke="var(--edge)" stroke-width="46" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="${rd}" fill="none" stroke="var(--cream)" stroke-width="40" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="${rd}" fill="none" stroke="var(--wood)" stroke-width="3" stroke-linecap="round" stroke-dasharray="1 10"/>
+    <use href="#d-gate" x="8" y="${BD.Y0-34}" width="50" height="50"/>
+    <use href="#d-flag" x="4" y="${gl.y-38}" width="54" height="54"/>
+    ${st}<g id="pcs"></g></svg>`;
+}
+/* 駒：マスごとに1歩ずつ、ぴょこぴょこ進む（動きを減らす設定では、すぐに着く） */
+const PCOL=["var(--go)","var(--math)","var(--jp)","var(--eng)","var(--sun)","var(--soc)"];
+function layoutPieces(){
+  if(!M||!M.pk) return;
+  const g={}; for(const k in M.pk){ const o=M.pk[k]; (g[o.shown]=g[o.shown]||[]).push(o); }
+  for(const c in g){ const a=g[c], b=cellXY(+c);
+    a.forEach((o,k)=>{ const dx=(k-(a.length-1)/2)*(a.length>4?9:16), dy=-20+(+c===0?0:0);
+      o.el.style.transform=`translate(${(b.x+dx).toFixed(1)}px,${(b.y+dy).toFixed(1)}px)`; }); }
+}
+function stepPiece(o){
+  const m=M;
+  if(reduceMotion()){ o.shown=o.tgt; layoutPieces(); return; }
+  const adv=()=>{
+    o.timer=0; if(M!==m||!m.pk) return;
+    o.shown+=o.tgt>o.shown?1:-1;
+    const h=o.el.querySelector(".hp"); if(h){ h.classList.remove("hop"); void h.getBoundingClientRect(); h.classList.add("hop"); }
+    layoutPieces();
+    if(o.shown!==o.tgt) o.timer=setTimeout(adv,210);
+  };
+  adv();
+}
+function syncPieces(ps){
+  const layer=document.getElementById("pcs"); if(!layer||!M.pk) return;
+  ps.forEach((p,idx)=>{
+    let o=M.pk[p.n];
+    if(!o){
+      const el=document.createElementNS(SVGNS,"g"); el.setAttribute("class","pk");
+      const big=p.me, sz=big?30:24, col=PCOL[idx%PCOL.length];
+      el.innerHTML=`<g class="hp">${big?`<circle r="26" fill="var(--sun)" stroke="var(--edge)" stroke-width="3"/>`:""}<circle r="${big?20:16}" fill="${col}" stroke="var(--edge)" stroke-width="${big?4:3}"/><use href="#${faceId(p.e)}" x="${-sz/2}" y="${-sz/2}" width="${sz}" height="${sz}"/></g>`;
+      layer.appendChild(el); o=M.pk[p.n]={shown:0,tgt:0,el,timer:0,me:!!p.me};
+    }
+    o.tgt=p.v;
+    if(o.shown!==o.tgt&&!o.timer) stepPiece(o);
+  });
+  for(const k in M.pk) if(M.pk[k].me) layer.appendChild(M.pk[k].el);       // 自分の駒をいちばん上に
+  layoutPieces();
 }
 function modeFinish(timeUp){
   if(!M||M.over) return; M.over=true; stopTimer();
@@ -1422,7 +1582,7 @@ function modeResult(){
   const report=`【${T0("m."+p.m.id+".t")}／${T0("g."+p.x.id+".t")}】${p.g}年｜${place}位｜せいかい${p.ok}問／${total}問（正答率${acc}%）`;
   const repFull=report+missIds(p.missObjs,p.x);
   app.innerHTML=`<div class="play"><div class="res">
-    <div class="medalwrap m${easy?3:medal}"><div class="medal">${easy?"🎉":["🙂","🥉","🥈","🥇"][medal]}</div></div>
+    <div class="medrow"><div class="medalwrap m${easy?3:medal}"><div class="medal">${msvg(easy?3:medal)}</div></div>${mbs(easy||medal?"h":"o","hop")}</div>
     <div class="num">${easy?T("b.done"):T("b.place",place)}</div>
     <div style="margin:10px auto;max-width:320px">${rankRows(easy?easyList(ps):ps.map((q,i)=>[q,i+1]),q=>q.v+" "+unit)}</div>
     <div class="actions"><button class="btn again" id="again">${ic("rotate-ccw")}${T("r.again")}</button>
@@ -1677,11 +1837,11 @@ function lobbyView(s){
   app.innerHTML=`<div class="play">
     <div class="q"><div class="note">${T("l.room")} ${s.code}｜${modeOf(s).ico} ${modeOf(s).t}｜${gameOf(s).t}（${s.g}年）｜${ruleName(s.rule)}</div>
       <div style="margin-top:14px">${T("l.name")}</div>
-      <div style="font-size:44px;font-weight:bold">${me.emoji} ${esc(me.name)}</div>
+      <div style="font-size:44px;font-weight:bold">${face(me.emoji)} ${esc(me.name)}</div>
       <button class="btn sub" id="rr">${T("l.change")}</button>
       <p style="font-size:20px">${T("l.wait")}</p>
       <div class="note">${T("l.n",s.players.length)}</div>
-      <div class="chips">${s.players.map(p=>`<span class="chip">${p.emoji} ${esc(p.name)}</span>`).join("")}</div>
+      <div class="chips">${s.players.map(p=>`<span class="chip">${face(p.emoji)} ${esc(p.name)}</span>`).join("")}</div>
     </div>${privacy()}</div>`;
   $("#rr").onclick=()=>api("reroll",NET).then(r=>{NET={...NET,...r};sset("mh_net",NET);}).catch(()=>{});
 }
@@ -1730,7 +1890,7 @@ function netResult(){
   if(easy||place<=3) sfx("medal");
   if(easy||place===1) party();
   app.innerHTML=`<div class="play"><div class="res">
-    <div class="medalwrap m${easy?3:medal}"><div class="medal">${easy?"🎉":["🙂","🥉","🥈","🥇"][medal]}</div></div>
+    <div class="medrow"><div class="medalwrap m${easy?3:medal}"><div class="medal">${msvg(easy?3:medal)}</div></div>${mbs(easy||medal?"h":"o","hop")}</div>
     <div class="num">${easy?T("b.done"):T("b.placeof",ps.length,place)}</div>
     ${netResultHtml(s,NET.pid,easy)}
     <div class="actions"><button class="btn again" onclick="go('#home')">${T("n.home")}</button>
@@ -1790,13 +1950,13 @@ function renderHost(){
         <div class="rcol">
           <div style="font-size:24px">参加：<b>${s.players.length}</b> 人</div>
           <button class="btn" id="hs" style="font-size:24px;padding:16px 36px" ${s.players.length?"":"disabled style='opacity:.5;font-size:24px;padding:16px 36px'"}>スタート！</button><div class="err" id="herr"></div>
-          <div class="chips">${s.players.map(p=>`<span class="chip">${p.emoji} ${esc(p.name)}</span>`).join("")||`<span class="note">まだ誰もいません</span>`}</div>
+          <div class="chips">${s.players.map(p=>`<span class="chip">${face(p.emoji)} ${esc(p.name)}</span>`).join("")||`<span class="note">まだ誰もいません</span>`}</div>
         </div></div>`;
       $("#hs").onclick=()=>api("start",HOST).catch(e=>$("#herr").textContent=e.message);
       showQr($("#qrbox"),joinUrl);
     } else if(s.status==="playing"){
       app.innerHTML=`${head}<h2 class="th2">${ic("trophy")}リアルタイム順位（${ps.length}人）</h2>
-        ${ps.slice(0,8).map((p,i)=>`<div class="hrank"><b>${i+1}</b><span>${p.emoji} ${esc(p.name)}</span><span>${p.v} ${u}</span><span class="note">正解 ${p.ok}</span></div>`).join("")}
+        ${ps.slice(0,8).map((p,i)=>`<div class="hrank"><b>${i+1}</b><span>${face(p.emoji)} ${esc(p.name)}</span><span>${p.v} ${u}</span><span class="note">正解 ${p.ok}</span></div>`).join("")}
         ${ps.length>8?`<p style="font-size:24px;text-align:center;margin:8px 0">ほか ${ps.length-8} 人</p>`:""}
         <div style="text-align:center"><button class="btn sub" id="he">ここで終わる</button></div>`;
       $("#he").onclick=()=>{ if(confirm("対戦を終わりにしますか？")) api("end",HOST).catch(()=>{}); };
@@ -1807,7 +1967,7 @@ function renderHost(){
       const tsv=["順位\t名前\t"+u+"\t正解\t解答数\t正答率",...rows.map(r=>`${r.i}\t${r.p.name}\t${r.p.v}\t${r.p.ok}\t${r.t}\t${r.acc}%`)].join("\n");
       app.innerHTML=`${head}<h2 class="th2">${ic("flag")}結果（${ps.length}人・クラスの平均正答率 ${avg}%）</h2>
         <table class="rtable"><tr><th>順位</th><th>名前</th><th>${u}</th><th>正解</th><th>正答率</th></tr>
-        ${rows.map(r=>`<tr><td>${r.i}</td><td>${r.p.emoji} ${esc(r.p.name)}</td><td>${r.p.v}</td><td>${r.p.ok} / ${r.t}</td><td>${r.t?r.acc+"%":"−"}</td></tr>`).join("")}</table>
+        ${rows.map(r=>`<tr><td>${r.i}</td><td>${face(r.p.emoji)} ${esc(r.p.name)}</td><td>${r.p.v}</td><td>${r.p.ok} / ${r.t}</td><td>${r.t?r.acc+"%":"−"}</td></tr>`).join("")}</table>
         <p class="note">※ 名前は自動でつけたニックネームです。だれがどの名前かは、必要なら授業中に確認してください。</p>
         <div style="text-align:center"><button class="btn sub" id="hc">結果をコピー（表計算に貼れます）</button><button class="btn" id="hn">同じ設定で新しい部屋</button></div>`;
       $("#hc").onclick=()=>navigator.clipboard?.writeText(tsv).then(()=>$("#hc").textContent="コピーしました",()=>{});
