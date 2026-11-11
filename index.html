@@ -178,6 +178,7 @@ body.lesson .tbtn:not(#hSound){display:none}
 <!-- 問題データ（file:// でも読めるよう script タグで読む） -->
 <script src="data/questions.js"></script>
 <script src="data/calc.js"></script>
+<script src="data/choices.js"></script>
 <script>
 /* ================= 画面の文言（1つの表） =================
    TX["キー"] = [ふつうの文言, 1〜2年の「やさしい文字」]（やさしい側がないものは同じ文言）。
@@ -379,7 +380,7 @@ const tget=(o,p,k)=>Object.defineProperty(o,p,{get:()=>T(k),enumerable:true});  
 const SUBJ={math:{bg:"#fde6df",fg:"#8a2a10"},jp:{bg:"#e1ecfb",fg:"#1c4a96"},soc:{bg:"#dff3e8",fg:"#14603f"},eng:{bg:"#efe3fa",fg:"#5a2a8a"}};   // 薄い背景＋濃い文字
 const subjN=k=>T("subj."+k);
 const tagHtml=k=>`<span class="tag" style="background:${SUBJ[k].bg};color:${SUBJ[k].fg}">${subjN(k)}</span>`;
-const DATA_OK=!!(window.MH_QUESTIONS&&window.MH_CALC);
+const DATA_OK=!!(window.MH_QUESTIONS&&window.MH_CALC&&window.MH_CHOICE);
 const QD=window.MH_QUESTIONS||{kanji:[],kencho:[],eigo:[]};
 /* 漢字は学年ごとに分けておく（1問 = {id,g,q,a}） */
 const KANJI={}; for(const x of QD.kanji) (KANJI[x.g]=KANJI[x.g]||[]).push(x);
@@ -446,10 +447,15 @@ const chLabel=(c,q)=>q&&q.rd&&q.rd[c]?`<ruby>${esc(c)}<rt>${esc(q.rd[c])}</rt></
 /* 計算は data/calc.js で学年の単元に合わせて作る（分数の学年は4択になる） */
 function makeCalc(g){ return window.MH_CALC.make(g,rnd,shuffle); }
 function makeKuku(){ const a=1+rnd(9),b=1+rnd(9); return {q:`${a} × ${b}`,a:a*b}; }
-function makeChoice(list,small){
-  const item=list[rnd(list.length)];
-  const others=shuffle([...new Set(list.filter(x=>x.a!==item.a).map(x=>x.a))]).slice(0,3);
-  return {id:item.id,q:item.q,a:item.a,ch:shuffle([item.a,...others]),small};
+/* 4択：まちがいの選択肢を、正解と「長さ・種類」が近いものから選ぶ（選びかたは data/choices.js） */
+function makeKanji(g){
+  const list=KANJI[g]||KANJI[1], item=list[rnd(list.length)];
+  return {id:item.id,q:item.q,a:item.a,ch:shuffle([item.a,...MH_CHOICE.kanji(QD.kanji,item,shuffle)]),small:T("q.kanji")};
+}
+function makeEigo(g){
+  let pool=EIGO.filter(x=>(x.g||5)<=g); if(pool.length<4) pool=EIGO;     // 学年より上の単語は出さない
+  const item=pool[rnd(pool.length)];
+  return {id:item.id,q:item.q,a:item.a,ch:shuffle([item.a,...MH_CHOICE.eigo(pool,item,shuffle)]),small:T("q.eigo")};
 }
 /* 県庁所在地：まちがいの選択肢は同じ地方から。足りないときは近い地方から（地方は data/questions.js） */
 function makeKencho(only){
@@ -465,9 +471,9 @@ function makeKencho(only){
 function gen(id,g,opt){
   if(id==="calc") return makeCalc(g);
   if(id==="kuku") return makeKuku();
-  if(id==="kanji") return makeChoice(KANJI[g]||KANJI[1],T("q.kanji"));
+  if(id==="kanji") return makeKanji(g);
   if(id==="kencho") return makeKencho(!!(opt&&opt.k==="diff"));
-  if(id==="eigo"){ const pool=EIGO.filter(x=>(x.g||5)<=g); return makeChoice(pool.length>=4?pool:EIGO,T("q.eigo")); } // 学年より上の単語は出さない
+  if(id==="eigo") return makeEigo(g);
 }
 /* 九九の段えらび：えらんだ段を、上り・下り・ばらばらの順に出す（一巡したらまた始める） */
 const parseDans=s=>[...new Set(String(s||"").split(",").map(Number).filter(n=>Number.isInteger(n)&&n>=1&&n<=9))].sort((a,b)=>a-b);

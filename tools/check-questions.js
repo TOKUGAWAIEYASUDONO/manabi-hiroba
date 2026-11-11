@@ -13,7 +13,7 @@ const fs = require("fs"), path = require("path"), vm = require("vm");
 const root = path.join(__dirname, "..");
 const ctx = { window: {} };
 vm.createContext(ctx);
-for (const f of ["data/kanji-grade.js", "data/questions.js", "data/calc.js"]) {
+for (const f of ["data/kanji-grade.js", "data/questions.js", "data/calc.js", "data/choices.js"]) {
   vm.runInContext(fs.readFileSync(path.join(root, f), "utf8"), ctx, { filename: f });
 }
 const GRADE = ctx.window.MH_KANJI_GRADE, Q = ctx.window.MH_QUESTIONS, CALC = ctx.window.MH_CALC;
@@ -213,6 +213,7 @@ for (let g = 1; g <= 6; g++) {
       const cg = gradeOf.get(c);
       if (!cg || cg > x.g) err(x.id, "意味「" + x.a + "」の「" + c + "」は学年(" + x.g + "年)までに習わない字");
     }
+    for (const x of Q.eigo) if (/^[A-Za-z. ]+$/.test(x.a)) err(x.id, "答え「" + x.a + "」が英字だけ（意味は日本語にする）");
     for (const x of Q.eigo) if (!/^[A-Za-z. ]+$/.test(x.q)) err(x.id, "英単語「" + x.q + "」に英字以外が入っている");
   }
   // reviewed：false = 人の確認待ち、ない／true = 確認済み
@@ -223,6 +224,47 @@ for (let g = 1; g <= 6; g++) {
   const cnt = a => { const w = a.filter(x => x.reviewed === false).length; return "確認済み " + (a.length - w) + "問／確認待ち " + w + "問"; };
   for (let g = 1; g <= 6; g++) console.log("漢字 " + g + "年：" + Q.kanji.filter(x => x.g === g).length + "問（" + cnt(Q.kanji.filter(x => x.g === g)) + "）");
   console.log("英単語：" + Q.eigo.length + "語（" + cnt(Q.eigo) + "）");
+}
+
+/* ---------- 4択の選択肢の質（消去法で当たらないこと） ---------- */
+{
+  const CH = ctx.window.MH_CHOICE, N = 1000;
+  if (!CH) err("選択肢", "data/choices.js が読み込めない");
+  else {
+    const KINDS = ["food", "animal", "subject", "day", "month", "color", "sport", "job", "place", "feeling", "action", "season", "thing"];
+    for (const x of Q.eigo) if (!KINDS.includes(x.c)) err(x.id, "種類(c)がない／正しくない：" + x.c);
+    for (const G of [...new Set(Q.eigo.map(x => x.g))].sort()) {   // その学年で出せる語の中に、同じ種類が4語以上あること
+      const pool = Q.eigo.filter(x => x.g <= G), cnt = {};
+      for (const x of pool) cnt[x.c] = (cnt[x.c] || 0) + 1;
+      for (const k of Object.keys(cnt)) if (cnt[k] < 4) err("英単語 " + G + "年", "種類「" + k + "」が " + cnt[k] + " 語しかない（4語以上で、同じ種類から4択が作れる）");
+    }
+    // 漢字よみ：正解との文字数の差の平均、送りがな付き問題の選択肢の送りがな率
+    for (let g = 1; g <= 6; g++) {
+      const list = Q.kanji.filter(x => x.g === g); let diff = 0, nd = 0, ok = 0, nok = 0;
+      for (let i = 0; i < N; i++) {
+        const it = list[rnd(list.length)], ds = CH.kanji(Q.kanji, it, shuffle);
+        if (ds.length !== 3 || new Set([it.a, ...ds]).size !== 4) { err(it.id, "4択がそろわない"); continue; }
+        for (const d of ds) { diff += Math.abs([...d].length - [...it.a].length); nd++; }
+        if (CH.okuri(it.q)) for (const d of ds) { nok++; const o = Q.kanji.find(y => y.a === d); if (o && CH.okuri(o.q)) ok++; }
+      }
+      const avg = diff / nd, rate = nok ? ok / nok : 1;
+      console.log(`漢字 ${g}年の4択：${N}回／文字数の差の平均 ${avg.toFixed(2)}／送りがな付きの問題で送りがな付きの選択肢 ${nok ? Math.round(rate * 100) + "%" : "（該当なし）"}`);
+      if (avg > 1) err("漢字 " + g + "年", "選択肢の文字数の差の平均が " + avg.toFixed(2) + "（1以下にする）");
+      if (rate < 0.8) err("漢字 " + g + "年", "送りがな付きの問題の選択肢で、送りがな付きが " + Math.round(rate * 100) + "%（80%以上にする）");
+    }
+    // 英単語：選択肢が正解と同じ種類の割合
+    for (const G of [...new Set(Q.eigo.map(x => x.g))].sort()) {
+      const pool = Q.eigo.filter(x => x.g <= G); let same = 0, n = 0;
+      for (let i = 0; i < N; i++) {
+        const it = pool[rnd(pool.length)], ds = CH.eigo(pool, it, shuffle);
+        if (ds.length !== 3) { err(it.id, "4択がそろわない"); continue; }
+        for (const d of ds) { n++; const o = pool.find(y => y.a === d); if (o && o.c === it.c) same++; }
+      }
+      const rate = same / n;
+      console.log(`英単語 ${G}年の4択：${N}回／正解と同じ種類の選択肢 ${Math.round(rate * 100)}%`);
+      if (rate < 0.9) err("英単語 " + G + "年", "同じ種類の選択肢が " + Math.round(rate * 100) + "%（90%以上にする）");
+    }
+  }
 }
 
 /* ---------- 結果 ---------- */
