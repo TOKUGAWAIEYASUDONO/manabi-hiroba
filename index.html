@@ -86,6 +86,11 @@ h2{font-size:20px;margin:20px 0 10px}
 .btn{display:inline-block;background:var(--main);color:#fff;border:0;border-radius:12px;padding:14px 22px;font-size:18px;font-weight:bold;cursor:pointer;margin:6px}
 .btn.sub{background:#fff;color:var(--main);border:2px solid var(--main)}
 .miss{font-size:14px;text-align:left;background:#faf7f0;border-radius:10px;padding:10px 14px;margin-top:10px}
+.mcard{background:#fff;border:2px solid var(--line);border-radius:12px;padding:10px 12px;margin-top:8px}
+.mcard .mq{font-size:24px;font-weight:bold}
+.mcard .ma{font-size:20px}
+.mcard .bad{min-height:44px;font-size:15px;background:#fff;border:2px solid var(--line);border-radius:10px;margin-top:6px;padding:6px 12px;cursor:pointer;color:var(--ink)}
+.mcard .badid{font-size:16px;margin-top:6px;background:#fff6e3;border-radius:8px;padding:6px 10px}
 /* 先生 */
 .form{background:#fff;border-radius:14px;border:2px solid var(--line);padding:16px;display:grid;gap:12px}
 .form label{display:grid;gap:6px;font-weight:bold;font-size:15px}
@@ -252,6 +257,7 @@ const TX={
  "r.acc":["正答率","せいかいの わりあい"],"r.best":["自己ベスト","いちばん よかった"],"r.ok":["せいかい"],
  "r.miss":["まちがえた問題（ふくしゅうしよう）","まちがえた もんだい（もういちど やろう）"],
  "r.send":["先生に送る結果","せんせいに おくる けっか"],
+ "r.ans":["こたえ"],"r.bad":["？ この もんだい、おかしい"],"r.badid":["問題ID","もんだいID"],"r.bad2":["せんせいに みせてね"],"r.ids":["まちがえた問題"],
  "r.copy":["コピーする"],"r.copied":["コピーしました"],
  "r.again":["もう一回","もういっかい"],"r.other":["ほかのゲーム","ほかの ゲーム"],
  "r.redo":["まちがえた問題だけもう一回","まちがえた もんだいだけ もういっかい"],
@@ -447,6 +453,19 @@ function speak(w){ try{ speechSynthesis.cancel(); const u=new SpeechSynthesisUtt
 document.addEventListener("click",e=>{ const b=e.target.closest&&e.target.closest(".spk"); if(b) speak(b.dataset.w); });
 /* 4択のボタンの文字（県庁所在地は市の名前にふりがなをつける） */
 const chLabel=(c,q)=>q&&q.rd&&q.rd[c]?`<ruby>${esc(c)}<rt>${esc(q.rd[c])}</rt></ruby>`:esc(c);
+
+/* ===== まちがえた問題：1問1カード。「？この もんだい、おかしい」で問題IDを出す（画面に出すだけ。どこにも送らない） ===== */
+const qidOf=(o,x)=>o.id||`${x.id}: ${o.q}`;            // 計算など毎回つくる問題には ID がないので、ゲーム名と式を使う
+const uniqMiss=(objs,x)=>{ const s=new Set(); return objs.filter(o=>{ const k=qidOf(o,x); if(s.has(k)) return false; s.add(k); return true; }); };
+function missCards(objs,x){
+  return `<div class="miss"><b>${T("r.miss")}</b>${uniqMiss(objs,x).slice(0,8).map(o=>`<div class="mcard"><div class="mq">${esc(o.q)}</div>
+    <div class="ma">${T("r.ans")}：<b>${chLabel(o.a,o)}</b></div>
+    <button type="button" class="bad" aria-expanded="false">${T("r.bad")}</button>
+    <div class="badid hidden">${T("r.badid")}：<b>${esc(qidOf(o,x))}</b><br>${T("r.bad2")}</div></div>`).join("")}</div>`;
+}
+const missIds=(objs,x)=>objs.length?`｜${T0("r.ids")}：${uniqMiss(objs,x).slice(0,30).map(o=>qidOf(o,x)).join(", ")}`:"";
+document.addEventListener("click",e=>{ const b=e.target.closest&&e.target.closest(".mcard .bad"); if(!b) return;
+  const d=b.nextElementSibling, show=d.classList.contains("hidden"); d.classList.toggle("hidden",!show); b.setAttribute("aria-expanded",show); });
 
 /* ================= 問題を作る ================= */
 /* 計算は data/calc.js で学年の単元に合わせて作る（分数の学年は4択になる） */
@@ -706,19 +725,20 @@ function finish(){
   all[key]={score:Math.max(prev.score,p.ok),medal:Math.max(prev.medal,medal)};
   store.set("mh_best",all); refreshMedals();
   const report=`【${T0("g."+p.x.id+".t")}】${p.g}年 ${p.t}秒｜せいかい${p.ok}問／${total}問（正答率${acc}%）`;
+  const repFull=report+missIds(p.missObjs,p.x);          // 課題リンクの結果の末尾に、まちがえた問題のID
   app.innerHTML=`<div class="play"><div class="res">
     <div class="medal">${["🙂","🥉","🥈","🥇"][medal]}</div>
     <div class="num">${T("r.num",p.ok)}</div>
     <div style="font-size:17px;font-weight:bold;margin-top:6px">${esc(nextMsg)}</div>
     ${isNew?`<div class="newbest">${T("r.new")}</div>`:""}
     <table><tr><td>${T("r.answered")}</td><td>${T("r.n",total)}</td></tr><tr><td>${T("r.acc")}</td><td>${acc}%</td></tr><tr><td>${T("r.best")}</td><td>${T("r.n",all[key].score)}</td></tr></table>
-    ${p.misses.length?`<div class="miss"><b>${T("r.miss")}</b><br>${p.misses.slice(0,8).map(esc).join("<br>")}</div>`:""}
-    ${p.task?`<div class="miss"><b>${T("r.send")}</b><br><span id="rep">${esc(report)}</span><br><button class="btn sub" id="cp">${T("r.copy")}</button></div>`:""}
+    ${p.missObjs.length?missCards(p.missObjs,p.x):""}
+    ${p.task?`<div class="miss"><b>${T("r.send")}</b><br><span id="rep">${esc(repFull)}</span><br><button class="btn sub" id="cp">${T("r.copy")}</button></div>`:""}
     <div>${p.missObjs.length?`<button class="btn sub" id="redo">${T("r.redo")}</button>`:""}<button class="btn" id="again">${T("r.again")}</button>${p.task?"":`<button class="btn sub" onclick="go('#home')">${T("r.other")}</button>`}</div>
   </div></div>`;
   $("#again").onclick=()=>route();
   const rd=$("#redo"); if(rd) rd.onclick=()=>startReview(p.missObjs,p.x,p.g,p.task);
-  const cp=$("#cp"); if(cp) cp.onclick=()=>{ navigator.clipboard?.writeText(report).then(()=>cp.textContent=T("r.copied"),()=>{}); };
+  const cp=$("#cp"); if(cp) cp.onclick=()=>{ navigator.clipboard?.writeText(repFull).then(()=>cp.textContent=T("r.copied"),()=>{}); };
 }
 /* まちがえた問題だけもう一回（その回のまちがい最大8問。記録・メダルには入れない。ふくしゅう中のまちがいは最後にもう一度） */
 function startReview(items,x,g,task){
@@ -1128,18 +1148,19 @@ function modeResult(){
   if(easy||place<=3) sfx("medal");
   if(easy||place===1) party();       // 1位（やさしいルールでは全員）
   const report=`【${T0("m."+p.m.id+".t")}／${T0("g."+p.x.id+".t")}】${p.g}年｜${place}位｜せいかい${p.ok}問／${total}問（正答率${acc}%）`;
+  const repFull=report+missIds(p.missObjs,p.x);
   app.innerHTML=`<div class="play"><div class="res">
     <div class="medal">${easy?"🎉":["🙂","🥉","🥈","🥇"][medal]}</div>
     <div class="num">${easy?T("b.done"):T("b.place",place)}</div>
     <div style="margin:10px auto;max-width:320px">${rankRows(easy?easyList(ps):ps.map((q,i)=>[q,i+1]),q=>q.v+" "+unit)}</div>
     <table><tr><td>${T("r.ok")}</td><td>${T("r.n",p.ok)}</td></tr><tr><td>${T("r.acc")}</td><td>${acc}%</td></tr></table>
-    ${p.misses.length?`<div class="miss"><b>${T("r.miss")}</b><br>${p.misses.slice(0,8).map(esc).join("<br>")}</div>`:""}
-    ${p.task?`<div class="miss"><b>${T("r.send")}</b><br>${esc(report)}<br><button class="btn sub" id="cp">${T("r.copy")}</button></div>`:""}
+    ${p.missObjs.length?missCards(p.missObjs,p.x):""}
+    ${p.task?`<div class="miss"><b>${T("r.send")}</b><br>${esc(repFull)}<br><button class="btn sub" id="cp">${T("r.copy")}</button></div>`:""}
     <div>${p.missObjs.length?`<button class="btn sub" id="redo">${T("r.redo")}</button>`:""}<button class="btn" id="again">${T("r.again")}</button>${p.task?"":`<button class="btn sub" onclick="go('#home')">${T("r.other")}</button>`}</div>
   </div></div>`;
   $("#again").onclick=()=>route();
   const rd=$("#redo"); if(rd) rd.onclick=()=>startReview(p.missObjs,p.x,p.g,p.task);
-  const cp=$("#cp"); if(cp) cp.onclick=()=>navigator.clipboard?.writeText(report).then(()=>cp.textContent=T("r.copied"),()=>{});
+  const cp=$("#cp"); if(cp) cp.onclick=()=>navigator.clipboard?.writeText(repFull).then(()=>cp.textContent=T("r.copied"),()=>{});
 }
 document.addEventListener("keydown",e=>{
   if(!M||M.over||M.phase!=="q"||!/^[1-4]$/.test(e.key)) return;
@@ -1433,7 +1454,7 @@ function netResult(){
     <div class="num">${easy?T("b.done"):T("b.placeof",ps.length,place)}</div>
     ${netResultHtml(s,NET.pid,easy)}
     <table><tr><td>${T("r.ok")}</td><td>${T("r.n",M.ok)}</td></tr><tr><td>${T("r.acc")}</td><td>${acc}%</td></tr></table>
-    ${M.misses.length?`<div class="miss"><b>${T("r.miss")}</b><br>${M.misses.slice(0,8).map(esc).join("<br>")}</div>`:""}
+    ${M.missObjs.length?missCards(M.missObjs,M.x):""}
     <div>${M.missObjs.length?`<button class="btn sub" id="redo">${T("r.redo")}</button>`:""}<button class="btn" onclick="go('#home')">${T("n.home")}</button></div></div>${privacy()}</div>`;
   const rd=$("#redo"); if(rd) rd.onclick=()=>startReview(p.missObjs,p.x,p.g,p.task);
 }
