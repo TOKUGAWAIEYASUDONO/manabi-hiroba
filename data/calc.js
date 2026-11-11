@@ -12,15 +12,16 @@
    - 小数は整数で計算してから文字にするので、0.1+0.2=0.30000000000000004 のような誤差は出ない。
    - 分数の答えは約分した形（例 6/8 → 3/4、4/4 → 1）。1より大きいときは仮分数（例 5/4）。
    - 分数の問題は 4択（ch に選択肢）。それ以外は数字を入力（a は数値）。
+   - 単元の名前（UNITS）の漢字には《》で読みを付けてある（書き方は data/quizlib.js と同じ）。本文だけにするときは MH_CHOICE.plain
    - 検査：node tools/check-questions.js（学年ごとに200回ずつ作って答えを確かめる） */
 window.MH_CALC = (function () {
   const UNITS = {
-    1: { add20: "20までのたし算", sub20: "20までのひき算" },
-    2: { add2: "2けたのたし算", sub2: "2けたのひき算", kuku: "九九" },
-    3: { add3: "3けたのたし算", sub3: "3けたのひき算", div99: "わり算（九九の範囲）", mul21: "2けた×1けた" },
-    4: { div21: "わり算（2けた÷1けた）", decAdd: "小数のたし算", decSub: "小数のひき算", mul32: "3けた×2けた" },
-    5: { decMul: "小数×小数", decDivInt: "小数÷整数", fracAdd: "分数のたし算（分母がちがう）", fracSub: "分数のひき算（分母がちがう）" },
-    6: { fracMul: "分数×分数", fracDiv: "分数÷分数" }
+    1: { add20: "20までのたし算《ざん》", sub20: "20までのひき算《ざん》" },
+    2: { add2: "2けたのたし算《ざん》", sub2: "2けたのひき算《ざん》", kuku: "九九《くく》" },
+    3: { add3: "3けたのたし算《ざん》", sub3: "3けたのひき算《ざん》", div99: "わり算《ざん》（九九《くく》の範囲《はんい》）", mul21: "2けた×1けた" },
+    4: { div21: "わり算《ざん》（2けた÷1けた）", decAdd: "小数《しょうすう》のたし算《ざん》", decSub: "小数《しょうすう》のひき算《ざん》", mul32: "3けた×2けた" },
+    5: { decMul: "小数《しょうすう》×小数《しょうすう》", decDivInt: "小数《しょうすう》÷整数《せいすう》", fracAdd: "分数《ぶんすう》のたし算《ざん》（分母《ぶんぼ》がちがう）", fracSub: "分数《ぶんすう》のひき算《ざん》（分母《ぶんぼ》がちがう）" },
+    6: { fracMul: "分数《ぶんすう》×分数《ぶんすう》", fracDiv: "分数《ぶんすう》÷分数《ぶんすう》" }
   };
   // 出やすさ（重み）。むずかしい単元は少なめ
   const WEIGHT = { mul32: 1, decAdd: 2, decSub: 2, div21: 2 };
@@ -106,7 +107,7 @@ window.MH_CALC = (function () {
           frac(sub ? Math.abs(a - c) : a + c, Math.max(b, d)),                        // 分母をそろえずに分子だけ
           frac(sub ? n + 1 : n - 1, b * d), frac(n + 1, b * d), frac(a * c, b * d)
         ];
-        return { unit: u, small: "答えを4つからえらぼう", q: `${a}/${b} ${op} ${c}/${d}`, a: ans, ch: fracChoices(ans, cands, shuffle) };
+        return { unit: u, small: "答《こた》えを4つからえらぼう", q: `${a}/${b} ${op} ${c}/${d}`, a: ans, ch: fracChoices(ans, cands, shuffle) };
       }
       case "fracMul": case "fracDiv": {
         const b = r(2, 9), d = r(2, 9), a = num(b), c = num(d), div = u === "fracDiv";
@@ -114,7 +115,7 @@ window.MH_CALC = (function () {
         const cands = div
           ? [frac(a * c, b * d), frac(b * c, a * d), frac(a + d, b + c), frac(a * d + 1, b * c)]   // ひっくり返し忘れ・逆数 など
           : [frac(a * d, b * c), frac(a + c, b + d), frac(a * c, b + d), frac(a * c + 1, b * d)];
-        return { unit: u, small: "答えを4つからえらぼう", q: `${a}/${b} ${div ? "÷" : "×"} ${c}/${d}`, a: ans, ch: fracChoices(ans, cands, shuffle) };
+        return { unit: u, small: "答《こた》えを4つからえらぼう", q: `${a}/${b} ${div ? "÷" : "×"} ${c}/${d}`, a: ans, ch: fracChoices(ans, cands, shuffle) };
       }
     }
     return make(g, rnd, shuffle, Object.keys(UNITS[g])[0]);

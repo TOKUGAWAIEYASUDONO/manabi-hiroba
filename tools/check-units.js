@@ -20,6 +20,7 @@ for (const f of fs.readdirSync(path.join(root, "data/gen")).sort()) if (f !== "c
 files.push("data/units.js");
 for (const f of files) vm.runInContext(fs.readFileSync(path.join(root, f), "utf8"), ctx, { filename: f });
 const W = ctx.window, GRADE = W.MH_KANJI_GRADE, G = W.MH_GEN, UN = W.MH_UNITS;
+const P = W.MH_UNITS.plain;                              // 読み《》を取り除いた本文（正解の比較・計算の検算・漢字の配当検査は本文でする）
 const N = Number(process.argv.slice(2).find(x => /^\d+$/.test(x))) || 1000;
 
 const errors = [], warns = [];
@@ -100,12 +101,12 @@ for (const u of ready) {
   const mx = u.max || defMax[u.g], loose = !!(u.params && u.params.loose), qs = new Set(), modes = new Set();
   let n = 0;
   for (let i = 0; i < N; i++) {
-    let it, it2;
+    let it, it2, raw;
     try { it = UN.make(u, `chk|${u.id}|${i}`); it2 = UN.make(u, `chk|${u.id}|${i}`); } catch (e) { err(u.id, "作成に失敗: " + e.message); break; }
-    n++; qs.add(it.q + "|" + (it.stem || "") + "|" + [...it.choices].sort().join(",")); modes.add(it.ans);
+    raw = it; n++; qs.add(it.q + "|" + (it.stem || "") + "|" + [...it.choices].sort().join(",")); modes.add(it.ans);
     const tag = `「${it.q}」`;
     if (JSON.stringify(it) !== JSON.stringify(it2)) err(u.id, `同じシードで結果がちがう ${tag}`);
-    const ch = it.choices;
+    let ch = it.choices;
     if (!Array.isArray(ch) || ch.length !== 4) { err(u.id, `選択肢が4つない ${tag}`); continue; }
     if (new Set(ch).size !== 4) err(u.id, `選択肢が重複 ${tag} [${ch}]`);
     if (ch.filter(c => c === it.a).length !== 1) err(u.id, `正解が選択肢に1つだけ入っていない ${tag} [${ch}] 正解${it.a}`);
@@ -120,6 +121,7 @@ for (const u of ready) {
         else if (vals.has(cv)) err(u.id, `選択肢「${c}」が他と同じ値 ${tag}`); else vals.add(cv);
       }
     }
+    it = { ...it, q: P(it.q), a: P(it.a), stem: it.stem && P(it.stem) }; ch = ch.map(P);   // ここから先は読みを取り除いた本文で検査
     if (u.subj === "sansu") {
       const why = verify(u, it); if (why) err(u.id, "答えがまちがい：" + why);
       // 分数：誤答が正解と同じ大きさ（見かけだけちがう）にならない（約分の練習だけ例外）
@@ -140,7 +142,7 @@ for (const u of ready) {
       for (const c of it.stem) if (isHan(c)) { const cg = gradeOf.get(c); if (!cg || cg > u.g) err(u.id, `ステム「${it.stem}」の「${c}」が${u.g}年より上`); }
     } else if (u.subj === "shakai") {
       for (const c of it.q) if (isHan(c)) { const cg = gradeOf.get(c); if (!cg || cg > u.g) err(u.id, `「${c}」が${u.g}年より上の漢字`); }
-      for (const c of ch) if (!it.ruby || !it.ruby[c]) err(u.id, `選択肢「${c}」にふりがな(ruby)がない`);
+      for (const c of raw.choices) if (!/《/.test(c)) err(u.id, `選択肢「${c}」にふりがな《》がない`);
     }
   }
   const row = (stats[`${u.subj}${u.g}`] = stats[`${u.subj}${u.g}`] || { units: 0, made: 0 }); row.units++; row.made += n;

@@ -3,8 +3,12 @@
    - 英単語：同じ種類（data/questions.js の c）の語から選ぶ。足りないときだけほかの種類で補う
    消去法（長さや種類のちがいだけで答えが分かること）を防ぐためのもの */
 window.MH_CHOICE = (function () {
-  const okuri = q => /[ぁ-ゖ]$/.test(String(q));               // 送りがな付き（例：早い・読む）
-  const lenOf = s => [...String(s)].length;
+  const okuri = q => /[ぁ-ゖ]$/.test(plain(q));               // 送りがな付き（例：早い・読む）
+  /* 《》で付けた読みを取り除いた本文（data/quizlib.js の plain と同じ結果）。長さの比べ・重複の判定はこの本文でする */
+  const KAN = "\u3400-\u4dbf\u4e00-\u9fff\uf900-\ufaff々〆〇ヶ";
+  const RB = new RegExp("(?:[｜|]([^｜|《》\n]{1,30})|([" + KAN + "]+))《[^《》\n]{1,30}》", "g");
+  const plain = s => String(s == null ? "" : s).replace(RB, (m, a, b) => a || b);
+  const lenOf = s => [...plain(s)].length;
   /* all = 読みの候補を取る問題（全学年）、item = 出す問題。まちがいの読みを3つ返す */
   function kanji(all, item, shuffle) {
     const ok = okuri(item.q), n = lenOf(item.a), seen = new Set([item.a]), tiers = [[], [], [], []];
@@ -24,5 +28,5 @@ window.MH_CHOICE = (function () {
     }
     return [...same, ...rest].slice(0, 3);
   }
-  return { kanji, eigo, okuri };
+  return { kanji, eigo, okuri, plain };
 })();

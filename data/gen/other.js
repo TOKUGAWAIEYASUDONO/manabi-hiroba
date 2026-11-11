@@ -8,7 +8,7 @@
   g.kanjiYomi = (r, p) => {
     const all = Q().kanji, pool = all.filter(x => p.upTo ? x.g <= p.g : x.g === p.g);
     const item = r.pick(pool), wrong = CH().kanji(all, item, r.shuffle);
-    return { q: item.q, stem: p.g <= 2 ? "この かんじの よみは？" : "この漢字の読みは？", a: item.a, ans: "choice4", choices: r.shuffle([item.a, ...wrong]), src: item.id };
+    return { q: item.q, raw: ["q"], stem: p.g <= 2 ? "この かんじの よみは？" : "この漢字の読みは？", a: item.a, ans: "choice4", choices: r.shuffle([item.a, ...wrong]), src: item.id };
   };
   // 県庁所在地（p.rg=地方コードの配列。なければ全国）。まちがいは同じ地方から、足りなければ近い地方から
   g.kencho = (r, p) => {
@@ -16,8 +16,7 @@
     const reg = D.kenchoRegions || {}, order = [item.rg, ...((reg[item.rg] || {}).near || [])];
     const wrong = [];
     for (const rg of order) for (const x of r.shuffle(all.filter(y => y.rg === rg && y.a !== item.a && !wrong.some(w => w.a === y.a)))) { if (wrong.length < 3) wrong.push(x); }
-    const ruby = { [item.a]: item.r }; wrong.forEach(w => { ruby[w.a] = w.r; });
-    return { q: item.q, stem: "県庁所在地は？", a: item.a, ans: "choice4", choices: r.shuffle([item.a, ...wrong.map(w => w.a)]), ruby, src: item.id };
+    return { q: item.q, stem: "県庁所在地は？", a: item.a, ans: "choice4", choices: r.shuffle([item.a, ...wrong.map(w => w.a)]), src: item.id };      // 県名・県庁名の読みは問題データ（questions.js）の《》に入っている
   };
   // 英単語（p.g 年・種類 p.cs の語を出す。まちがいは同じ種類から：choices.js）
   g.eigo = (r, p) => {

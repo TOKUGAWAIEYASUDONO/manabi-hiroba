@@ -26,9 +26,9 @@
    ■ unitPick(unitIds[], n, seed, mix) → 問題の配列（単元を等分、あまりはシードでくばる。mix=false なら単元順）
    ■ UNIT_SETS … 学年をまたぐ「おすすめの組み合わせ」 */
 window.MH_UNITS = (function () {
-  const G = window.MH_GEN, gens = G.gens;
+  const G = window.MH_GEN, gens = G.gens, rb = G.ruby, plain = G.plain;   // rb = ふりがなを付ける、plain = 読みを取り除く
   const list = [];
-  const U = (id, subj, g, area, item, title, gen, params, o) => { o = o || {}; list.push({ id, subj, g, area, base: o.base || "", item, title, note: o.note || "", ex: o.ex || "", gen, params: params || {}, max: o.max, series: o.series, step: o.step, stepLabel: o.label, status: gen ? "ready" : "later", sample: 3 }); };
+  const U = (id, subj, g, area, item, title, gen, params, o) => { o = o || {}; list.push({ id, subj, g, area, base: o.base || "", item, title: rb(title), note: rb(o.note || ""), ex: rb(o.ex || ""), gen, params: params || {}, max: o.max, series: o.series, step: o.step, stepLabel: o.label == null ? o.label : rb(o.label), status: gen ? "ready" : "later", sample: 3 }); };
   const M = "sansu";
 
   /* ================= 算数 1年 ================= */
@@ -166,7 +166,7 @@ window.MH_UNITS = (function () {
 
   /* ---------- 答え方 ---------- */
   function inferAns(a) {
-    a = String(a);
+    a = plain(a);
     if (/^\d+$/.test(a)) return "num";
     if (/^\d+\.\d+$/.test(a)) return "dec";
     if (/^\d+あまり\d+$/.test(a)) return "amari";
@@ -178,6 +178,7 @@ window.MH_UNITS = (function () {
   /* 正解・入力を正規化した文字にする（読めない入力は null） */
   function canon(mode, x) {
     if (x == null) return null;
+    if (typeof x === "string") x = plain(x);           // 読み（《》）が付いた文字でも、本文だけで比べる
     if (mode === "choice4") return String(x);
     let m;
     if (mode === "num") { const s = typeof x === "object" ? x.n : x; return /^\d+$/.test(String(s).trim()) ? stripZ(String(s).trim()) : null; }
@@ -214,9 +215,10 @@ window.MH_UNITS = (function () {
       try { it = gens[u.gen](G.rng(seed === undefined ? 1 : seed + (t ? "|retry" + t : "")), u.params || {}); break; } catch (e) { err = e; }
     }
     if (!it) throw err;
-    const ans = it.ans || (u.params && u.params.ans) || inferAns(it.a);
-    const out = { unit: u.id, subj: u.subj, g: u.g, q: it.q, a: String(it.a), choices: it.choices, ans, val: canon(ans, it.a) };
-    for (const k of ["tag", "hissan", "ruby", "stem", "src"]) if (it[k]) out[k] = it[k];
+    const ans = it.ans || (u.params && u.params.ans) || inferAns(it.a), rw = it.raw || [];       // raw = ふりがなを付けない欄（漢字よみの「問われている漢字」）
+    const out = { unit: u.id, subj: u.subj, g: u.g, q: rw.includes("q") ? it.q : rb(it.q), a: rb(String(it.a)), choices: it.choices.map(c => rb(String(c))), ans, val: canon(ans, plain(it.a)) };
+    for (const k of ["tag", "hissan", "src"]) if (it[k]) out[k] = it[k];
+    if (it.stem) out.stem = rb(it.stem);
     return out;
   }
   /* 単元をまぜて n問。unitIds は学年をまたいでよい。mix=false なら単元の順に並べる */
@@ -250,9 +252,11 @@ window.MH_UNITS = (function () {
     { id: "set-kokugo-kanji-34", title: "漢字の読み（3〜4年）", units: ["j3-kanji-yomi", "j4-kanji-yomi"] }
   ];
 
+  UNIT_SETS.forEach(s => { s.title = rb(s.title); });
+
   // 各単元の標準の答え方（見本の1問から決める）
   list.forEach(u => { if (u.gen) { try { u.ans = (u.params && u.params.ans) || make(u, "type|" + u.id).ans; } catch (e) { u.ans = "choice4"; } } });
-  return { UNITS: list, byId, UNIT_SETS, make, unitPick, check, canon, inferAns };
+  return { UNITS: list, byId, UNIT_SETS, make, unitPick, check, canon, inferAns, ruby: rb, plain };
 })();
 window.UNITS = window.MH_UNITS.UNITS;
 window.UNIT_SETS = window.MH_UNITS.UNIT_SETS;

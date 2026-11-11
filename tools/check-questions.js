@@ -10,6 +10,8 @@
            分数は約分済みか、4択がそろっているか、全単元が出ているか
    エラーが1件でもあれば終了コード 1 */
 const fs = require("fs"), path = require("path"), vm = require("vm");
+const QZ = require("../data/quizlib.js");          // 読み《》の処理（plain = 読みを取り除いた本文）
+const P = QZ.plain, yomiOf = s => QZ.rubyParts(s).map(p => (p.b != null ? p.r : p.t)).join("");
 const root = path.join(__dirname, "..");
 const ctx = { window: {} };
 vm.createContext(ctx);
@@ -149,7 +151,11 @@ for (let g = 1; g <= 6; g++) {
   }
   for (const k of Object.keys(EXP)) if (cnt[k] !== EXP[k]) err("地方", `${k} の県数が ${cnt[k]}（${EXP[k]} のはず）`);
   for (const k of Object.keys(RG)) if (new Set(RG[k].near).size !== 7 || RG[k].near.includes(k)) err("地方", `${k} の near が正しくない`);
-  const diff = Q.kencho.filter(x => x.a.includes("（") || x.q.replace(/[都道府県]$/, "") !== x.a.replace(/市$/, ""));
+  for (const x of Q.kencho) {                // 県名・県庁名の《》の読みが、読みデータ(r)と合っているか
+    if (yomiOf(x.a) !== x.r) err(x.id, `答え「${x.a}」の《》の読みが r「${x.r}」と合わない`);
+    if (!/《/.test(x.q) || P(x.q) === x.q) err(x.id, `県名「${x.q}」に読み《》がない`);
+  }
+  const diff = Q.kencho.filter(x => P(x.a).includes("（") || P(x.q).replace(/[都道府県]$/, "") !== P(x.a).replace(/市$/, ""));
   if (diff.length !== 19) err("県庁", `県名と市名がちがう県が ${diff.length}（19のはず）`);
 }
 /* ---------- やさしい文字：画面の文言の辞書（index.html の TX）---------- */
@@ -209,7 +215,8 @@ for (let g = 1; g <= 6; g++) {
     const ansE = new Map();
     for (const x of Q.eigo) { if (ansE.has(x.a)) err(x.id, "意味「" + x.a + "」が " + ansE.get(x.a) + " と同じ"); else ansE.set(x.a, x.id); }
     // 意味に使う漢字も、その学年までに習う字だけ
-    for (const x of Q.eigo) for (const c of x.a) if (isKanji(c)) {
+    for (const x of Q.eigo) if (/[一-龥]/.test(P(x.a)) && P(x.a) === x.a) err(x.id, "意味「" + x.a + "」に読み《》がない");
+    for (const x of Q.eigo) for (const c of P(x.a)) if (isKanji(c)) {
       const cg = gradeOf.get(c);
       if (!cg || cg > x.g) err(x.id, "意味「" + x.a + "」の「" + c + "」は学年(" + x.g + "年)までに習わない字");
     }
