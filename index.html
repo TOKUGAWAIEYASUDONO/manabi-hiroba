@@ -436,6 +436,7 @@ textarea.fld{resize:vertical}
 .up .th2{margin:6px 0}
 .upf{display:grid;gap:4px}
 .pl{align-self:center;font-size:14px;margin-right:2px}
+.upanel .err:empty,.upanel .lkout:empty{display:none}
 .upsets{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:4px 0 8px}
 .pill.set{background:#fff3d6}
 .upanel{margin:0 0 12px;border-left-color:var(--accent)}
@@ -489,7 +490,7 @@ textarea.fld{resize:vertical}
 .ulab{font-size:16px;font-weight:700;color:var(--muted)}
 .ufrac{display:inline-flex;flex-direction:column;align-items:center}
 .ubar2{display:block;width:100%;height:4px;background:var(--ink);margin:2px 0}
-.pad .sk{font-size:16px}
+.pad .sk{font-size:16px}.pad .sk.ar{font-size:24px}
 .unitrow{display:grid;grid-template-columns:repeat(auto-fit,minmax(72px,1fr));gap:8px;max-width:360px;margin:8px auto 0}
 .unitrow button{font-size:22px;min-height:48px;border:3px solid var(--edge);box-shadow:0 4px 0 var(--edge);border-radius:12px;background:var(--go);color:#fff;cursor:pointer}
 .unitrow button:active{transform:translateY(3px);box-shadow:0 1px 0 var(--edge)}
@@ -3163,11 +3164,11 @@ function renderUnits(q){
     if(kid) startBtn.disabled=!k, startBtn.textContent=T("u.go");
   }
   const startBtn=h("button",{type:"button",class:"btn again ustart",text:T("u.go"),onclick:()=>{ if(!need()) return; uSave(); go(uHash({...cfg(),n:Math.min(UPK.n,20)})); }});
-  root.append(
+  root.append(...[
     h("div",{class:"topbar"},h("button",{type:"button",class:"back",innerHTML:kid?BK():ic("arrow-left")+"先生の画面",onclick:()=>go(kid?"#home":"#teacher")}),h("b"),h("span")),
     h("h2",{class:"th2",innerHTML:kid?"":ic("check")+"単元から つくる",text:kid?`${SUBJ_JA[subj]&&easyG(kg)?T("subj."+SJ[subj]):SUBJ_JA[subj]}　${T("u.pick")}`:null}),
     kid?null:h("p",{class:"note",text:"教科・学年でしぼって、単元をいくつでも選べます（学年をまたいでもOK）。選んだ単元を等分にまぜて出題します。"}),
-    filt,sets,h("div",{class:"uwrap"},panel,cards),kid?h("div",{class:"ufoot"},startBtn):null);
+    filt,sets,h("div",{class:"uwrap"},panel,cards),kid?h("div",{class:"ufoot"},startBtn):null].filter(Boolean));
   app.replaceChildren(root);
   drawFilter(); drawSets(); drawCards(); drawPanel();
 }
@@ -3238,7 +3239,7 @@ function unitNext(){
     return;
   }
   const m=c.mode, dot=m==="dec"||(m==="unit"&&c.dot);
-  const sp=m==="amari"?`<button data-k="あまり" class="sk">${T("u.amari")}</button>`:m==="frac"?`<button data-k="▶" class="sk" aria-label="${esc(T("u.nextf"))}">▶</button>`:dot?`<button data-k=".">.</button>`:"";
+  const sp=m==="amari"?`<button data-k="あまり" class="sk">${T("u.amari")}</button>`:m==="frac"?`<button data-k="▶" class="sk ar" aria-label="${esc(T("u.nextf"))}">▶</button>`:dot?`<button data-k=".">.</button>`:"";
   const keys=["7","8","9","4","5","6","1","2","3"].map(k=>`<button data-k="${k}">${k}</button>`).join("")
     +(sp?sp+`<button data-k="0">0</button>`:`<button data-k="0" class="zero">0</button>`)+`<button data-k="⌫" aria-label="${esc(T("u.del"))}">⌫</button>`;
   const tail=m==="unit"?`<div class="unitrow">${c.units.map(u=>`<button data-u="${esc(u)}">${esc(u)}</button>`).join("")}</div>`
