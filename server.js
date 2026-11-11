@@ -4,10 +4,11 @@ const http = require("http");
 const fs = require("fs");
 const path = require("path");
 const crypto = require("crypto");
+const QZ = require("./data/quizlib.js");   // 先生のもんだい：形式チェックとクイズの進行（ブラウザと同じ部品）
 
 const PORT = +process.env.PORT || 8787;
 const PAGE = ["manabi-hiroba.html", "index.html"].map(f => path.join(__dirname, f)).find(f => fs.existsSync(f));
-const MODES = ["chest", "race"];
+const MODES = ["chest", "race", "quiz"];
 const GAMES = ["calc", "kuku", "kanji", "kencho", "eigo"];
 const GOAL = 40;
 const EV = { 4: "⭐", 9: "🌀", 13: "⭐", 17: "🌀", 21: "⭐", 25: "🌀", 27: "⭐", 31: "🌀", 35: "⭐", 38: "🌀" };
@@ -16,7 +17,7 @@ const MAX_PLAYERS = 60;
 const RULES = ["normal", "easy"];
 const EASY_NG = ["steal", "swap", "lose"];
 // 遊び方ごとに受け付ける操作（answer はどちらでも可）
-const MODE_OPS = { chest: ["add", "x2", "lose", "steal", "swap"], race: ["move"] };
+const MODE_OPS = { chest: ["add", "x2", "lose", "steal", "swap"], race: ["move"], quiz: ["qans"] };
 const evOf = rule => rule === "easy" ? Object.fromEntries(Object.entries(EV).filter(([, e]) => e !== "🌀")) : EV;
 // ページが読み込む問題データ（data フォルダの .js だけを返す）
 const DATA_DIR = path.join(__dirname, "data");
@@ -44,8 +45,17 @@ function pub(room) {
   return {
     code: room.code, mode: room.mode, game: room.game, g: room.g, t: room.t, rule: room.rule,
     status: room.status, endAt: room.endAt, now: Date.now(),
-    players: [...room.players.values()].map(p => ({ pid: p.pid, name: p.name, emoji: p.emoji, v: p.v, ok: p.ok, ng: p.ng }))
+    gt: room.gt || "",
+    players: [...room.players.values()].map(p => room.qz
+      ? { pid: p.pid, name: p.name, emoji: p.emoji, v: p.v, ok: p.ok, ng: p.ng, st: p.st | 0, lp: p.lp | 0, lc: p.lc | 0, ...(room.qz.phase === "end" ? { rec: p.rec || "" } : {}) }
+      : { pid: p.pid, name: p.name, emoji: p.emoji, v: p.v, ok: p.ok, ng: p.ng }),
+    ...(room.qz ? { quiz: room.qz.pub() } : {})
   };
+}
+// クイズの得点などを、部屋の参加者の表に写す
+function qzSync(room) {
+  const E = room.qz;
+  for (const [pid, p] of room.players) { const s = E.P.get(pid); if (s) Object.assign(p, { v: s.v, ok: s.ok, ng: s.ng, st: s.st, lp: s.lp, lc: s.lc }); if (E.phase === "end") p.rec = E.recStr(pid); }
 }
 function broadcast(room, now = false) {
   const send = () => {
@@ -58,20 +68,22 @@ function broadcast(room, now = false) {
 }
 function endRoom(room) {
   if (room.status === "ended") return;
+  if (room.qz) { room.qz.finish(); qzSync(room); }
   room.status = "ended"; broadcast(room, true);
 }
 setInterval(() => {
   const now = Date.now();
   for (const room of rooms.values()) {
-    if (room.status === "playing" && now >= room.endAt) endRoom(room);
+    if (room.qz) { if (room.status === "playing" && room.qz.tick(now)) { qzSync(room); if (room.qz.phase === "end") endRoom(room); else broadcast(room, true); } }
+    else if (room.status === "playing" && now >= room.endAt) endRoom(room);
     if (now - room.created > 3 * 3600e3) { for (const r of room.clients) r.end(); rooms.delete(room.code); }
   }
-}, 1000);
+}, 250);
 
 function body(req) {
   return new Promise((ok, ng) => {
     let s = "";
-    req.on("data", c => { s += c; if (s.length > 10000) { ng(new Error("too large")); req.destroy(); } });
+    req.on("data", c => { s += c; if (s.length > 400000) { ng(new Error("too large")); req.destroy(); } });
     req.on("end", () => { try { ok(s ? JSON.parse(s) : {}); } catch (e) { ng(e); } });
   });
 }
@@ -89,11 +101,20 @@ function leader(room, me) {
 
 const API = {
   create(b) {
-    if (!MODES.includes(b.mode) || !GAMES.includes(b.game)) return [400, { error: "設定が正しくありません" }];
+    const own = b.mode === "quiz" || b.game === "mine";       // 先生のもんだいを使う部屋
+    if (!MODES.includes(b.mode) || !(own || GAMES.includes(b.game))) return [400, { error: "設定が正しくありません" }];
     const g = Math.min(6, Math.max(1, b.g | 0)), t = Math.min(300, Math.max(60, b.t | 0));
     const rule = RULES.includes(b.rule) ? b.rule : "normal";
-    const room = { code: newCode(), hostKey: id(), mode: b.mode, game: b.game, g, t, rule, status: "lobby", endAt: 0,
-      players: new Map(), clients: new Set(), created: Date.now(), timer: null };
+    const room = { code: newCode(), hostKey: id(), mode: b.mode, game: b.mode === "quiz" ? "quiz" : b.game, g, t, rule, status: "lobby", endAt: 0,
+      players: new Map(), clients: new Set(), created: Date.now(), timer: null, gt: "" };
+    if (own) {
+      const r = QZ.cleanSet({ title: b.gt, qs: b.qs });         // 型・文字数・個数・時間の値を調べてから使う
+      if (!r.ok) return [400, { error: "もんだいが正しくありません：" + r.why }];
+      const qs = b.mode === "quiz" ? r.set.qs : r.set.qs.filter(q => q.t === "mc");   // たからばこ・すごろくは4択だけ
+      if (!qs.length) return [400, { error: "4択の問題がありません" }];
+      room.gt = r.set.title; if (b.mode !== "quiz") room.set = { title: r.set.title, qs };   // クイズでは、答えつきの問題を児童に渡さない
+      if (b.mode === "quiz") room.qz = QZ.engine(qs, { easy: rule === "easy" });
+    }
     rooms.set(room.code, room);
     return [200, { code: room.code, hostKey: room.hostKey }];
   },
@@ -103,7 +124,7 @@ const API = {
     if (room.status === "ended") return [409, { error: "この対戦はもう終わっています" }];
     if (room.players.size >= MAX_PLAYERS) return [409, { error: "部屋がいっぱいです" }];
     const p = { pid: id(), token: id(), ...nick(room), v: 0, ok: 0, ng: 0 };
-    room.players.set(p.pid, p); broadcast(room);
+    room.players.set(p.pid, p); if (room.qz) room.qz.add(p.pid); broadcast(room);
     return [200, { code: room.code, pid: p.pid, token: p.token, name: p.name, emoji: p.emoji }];
   },
   reroll(b) {
@@ -117,9 +138,34 @@ const API = {
     if (!room || room.hostKey !== b.hostKey) return [403, { error: "先生の画面からのみ操作できます" }];
     if (!room.players.size) return [409, { error: "まだ誰も参加していません" }];
     for (const p of room.players.values()) Object.assign(p, { v: 0, ok: 0, ng: 0 });
+    if (room.qz) { room.status = "playing"; room.endAt = 0; room.qz.begin(Date.now()); qzSync(room); broadcast(room, true); return [200, { ok: true }]; }
     room.status = "playing"; room.endAt = Date.now() + room.t * 1000 + 3000; // 3秒のカウントダウン
     broadcast(room, true);
     return [200, { ok: true }];
+  },
+  // クイズ：先生が「つぎへ」を押す（出題中なら しめきって正解を見せる）
+  qnext(b) {
+    const room = rooms.get(String(b.code));
+    if (!room || !room.qz || room.hostKey !== b.hostKey) return [403, { error: "先生の画面からのみ操作できます" }];
+    if (room.status !== "playing") return [409, { error: "今は進められません" }];
+    if (room.qz.next(Date.now())) { qzSync(room); if (room.qz.phase === "end") endRoom(room); else broadcast(room, true); }
+    return [200, { ok: true }];
+  },
+  // クイズ：正答率の低い問題だけ、同じ部屋でもう一度
+  qreplay(b) {
+    const room = rooms.get(String(b.code));
+    if (!room || !room.qz || room.hostKey !== b.hostKey) return [403, { error: "先生の画面からのみ操作できます" }];
+    if (room.status !== "ended") return [409, { error: "今は始められません" }];
+    const low = room.qz.low(0.6).map(i => room.qz.qs[i]);
+    if (!low.length) return [409, { error: "正答率の低い問題はありません" }];
+    room.status = "playing"; room.endAt = 0; room.qz.begin(Date.now(), low); qzSync(room); broadcast(room, true);
+    return [200, { ok: true }];
+  },
+  // たからばこ・すごろくで使う、先生のもんだい（参加している児童だけが読める）
+  set(b) {
+    const room = rooms.get(String(b.code)), p = player(room, b);
+    if (!p || !room.set) return [403, { error: "参加情報が正しくありません" }];
+    return [200, room.set];
   },
   end(b) {
     const room = rooms.get(String(b.code));
@@ -131,6 +177,13 @@ const API = {
     if (!p) return [403, { error: "参加情報が正しくありません" }];
     if (room.status !== "playing") return [409, { error: "対戦中ではありません" }];
     if (b.op !== "answer" && !(MODE_OPS[room.mode] || []).includes(b.op)) return [403, { error: "この遊び方では使えない操作です" }];
+    if (room.qz) {      // クイズ：答えの番号だけ受け取り、点数は部屋の側で決める
+      if (b.op !== "qans") return [403, { error: "この遊び方では使えない操作です" }];
+      const r = room.qz.answer(p.pid, b.i, b.c, Date.now());
+      if (!r.ok) return [409, { error: r.why === "late" ? "もう時間がおわりました" : "この答えは使えません" }];
+      if (room.qz.tick(Date.now())) { qzSync(room); broadcast(room, true); } else broadcast(room);
+      return [200, { ok: true }];
+    }
     if (room.rule === "easy" && EASY_NG.includes(b.op)) return [403, { error: "やさしいルールの部屋では使えません" }];
     const out = { ok: true };
     switch (b.op) {
