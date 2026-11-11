@@ -17,7 +17,9 @@ body{margin:0;background:var(--bg);color:var(--ink);
 a{color:var(--main)}
 button{font-family:inherit}
 header{background:var(--main);color:#fff;padding:10px 16px;display:flex;align-items:center;gap:12px;flex-wrap:wrap}
-header .logo{font-size:22px;font-weight:bold;cursor:pointer;letter-spacing:.05em}
+header h1{margin:0;font-size:inherit}
+header .logo{font:inherit;font-size:22px;font-weight:bold;cursor:pointer;letter-spacing:.05em;background:none;border:0;color:#fff;min-height:44px;padding:0 4px}
+header .logo:disabled{color:#fff;cursor:default}
 header .medals{margin-left:auto;background:rgba(255,255,255,.18);padding:6px 12px;border-radius:20px;font-size:15px}
 header .tbtn{background:#fff;color:var(--main);border:0;border-radius:20px;padding:7px 14px;font-weight:bold;cursor:pointer;min-height:44px;min-width:44px}
 .wrap{max-width:980px;margin:0 auto;padding:16px}
@@ -62,9 +64,10 @@ h2{font-size:20px;margin:20px 0 10px}
 .pad button.zero{grid-column:span 2}
 .pad button.ok{background:var(--main);color:#fff;border-color:var(--main)}
 .choices{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-.choice{font-size:clamp(18px,4.5vw,26px);padding:18px 8px;border-radius:14px;border:0;color:#fff;cursor:pointer;font-weight:bold;min-height:72px}
+.choice{position:relative;font-size:clamp(18px,4.5vw,26px);padding:18px 8px;border-radius:14px;border:0;color:#fff;cursor:pointer;font-weight:bold;min-height:72px}
 .ca{background:var(--a)} .cb{background:var(--b)} .cc{background:var(--c);color:#2b2200} .cd{background:var(--d)}
 .choice rt{font-size:.5em;font-weight:normal}
+.choice .kh{position:absolute;top:4px;left:8px;font-size:14px;line-height:1;opacity:.7;font-weight:bold}
 .spk{font-size:26px;vertical-align:middle;margin-left:10px;width:54px;height:54px;border-radius:50%;border:2px solid var(--line);background:#fff;cursor:pointer}
 .choice.wrong{opacity:.35} .choice.right{outline:5px solid #222}
 .score{font-size:15px;color:var(--muted);margin-top:12px}
@@ -106,6 +109,7 @@ h2{font-size:20px;margin:20px 0 10px}
 .mode .t{font-size:19px;font-weight:bold;display:block}
 .mode .d{font-size:13px;color:var(--muted)}
 .mplay{max-width:980px;margin:0 auto}
+.mplay .q{text-align:center}
 .mgrid{display:grid;grid-template-columns:1fr 300px;gap:14px;align-items:start}
 @media (max-width:760px){.mgrid{grid-template-columns:1fr}}
 .side{background:#fff;border:2px solid var(--line);border-radius:16px;padding:12px}
@@ -152,6 +156,7 @@ h2{font-size:20px;margin:20px 0 10px}
 .ptable td:last-child{text-align:right;font-weight:bold}
 /* 授業モード（課題リンクで開いたとき）：ほかの画面への入口を隠す */
 body.lesson .tbtn:not(#hSound){display:none}
+body.lesson .logo{pointer-events:none}
 .foot{text-align:center;padding:18px 16px 28px;font-size:13px}
 .foot a{color:var(--muted)}
 .qrbox svg{width:min(80vw,52vh,520px);height:auto;display:block;margin:12px auto;background:#fff;border:2px solid var(--line);border-radius:8px}
@@ -165,7 +170,7 @@ body.lesson .tbtn:not(#hSound){display:none}
 </head>
 <body>
 <header>
-  <span class="logo" onclick="go('#home')">🌱 まなびひろば</span>
+  <h1><button class="logo" id="logo" onclick="go('#home')">🌱 まなびひろば</button></h1>
   <span class="medals" id="medalCount">🏅 0</span>
   <button class="tbtn" id="hSound" onclick="toggleSound()"></button>
   <button class="tbtn" id="hJoin" onclick="go('#join')"></button>
@@ -189,7 +194,7 @@ const TX={
  /* ヘッダー・共通 */
  "h.join":["🔑 コードで参加","🔑 はいる"],
  "h.teacher":["先生の画面","せんせい"],
- "back":["← もどる"],
+ "back":["← もどる"],"back.end":["ここでおわる","ここで おわる"],
  "sec":["秒","びょう"],
  "subj.math":["算数","さんすう"],"subj.jp":["国語","こくご"],"subj.soc":["社会","しゃかい"],"subj.eng":["英語","えいご"],
  "n.home":["ホームへ"],
@@ -602,19 +607,20 @@ function renderPlay(q){
   app.innerHTML=`<div class="play">
     ${task?`<div class="banner">${T("p.task",`${x.t}（${g}年・${t}${T("sec")}）`)}</div>`:""}
     <div class="topbar">
-      <button class="back" onclick="stopTimer();go('#home')">${T("back")}</button>
+      ${task?`<button class="back" id="bk">${T("back.end")}</button>`:`<button class="back" onclick="stopTimer();go('#home')">${T("back")}</button>`}
       <span><b>${x.ico} ${x.t}</b> <span class="note">${g}年</span></span>
-      <span class="timer" id="tm">${t}</span>
+      <span class="timer" id="tm" aria-hidden="true">${t}</span>
     </div>
     ${info?`<div class="note" style="margin:-4px 0 8px">${esc(info)}</div>`:""}
     ${x.g.length>1&&!task?`<div class="pills" style="justify-content:center">${x.g.map(n=>`<button class="pill ${n===g?"on":""}" data-g="${n}">${n}年</button>`).join("")}</div>`:""}
     <div class="tbar" id="tbar"><i id="tb"></i></div>
     <div class="q"><div class="big" id="qq"></div><div class="small" id="qs"></div></div>
     <div id="area"></div>
-    <div class="fb" id="fb"></div>
+    <div class="fb" id="fb" aria-live="polite"></div>
     <div class="score" id="scw">${T("p.score",0)}</div>
   </div>`;
   app.querySelectorAll("[data-g]").forEach(e=>e.onclick=()=>go(`#play?game=${x.id}&g=${e.dataset.g}&t=${t}${ex}`));
+  if(task) $("#bk").onclick=()=>{ stopTimer(); finish(); };     // 授業モード：ホームへは行かず、結果の画面へ
   next();
   stopTimer();
   const end=Date.now()+t*1000;
@@ -649,7 +655,7 @@ function next(){
     area.querySelectorAll("[data-k]").forEach(b=>b.onclick=()=>key(b.dataset.k));
   } else {
     const cls=["ca","cb","cc","cd"];
-    area.innerHTML=`<div class="choices">${P.cur.ch.map((c,i)=>`<button class="choice ${cls[i]}" data-c="${esc(c)}">${chLabel(c,P.cur)}</button>`).join("")}</div>`;
+    area.innerHTML=`<div class="choices">${P.cur.ch.map((c,i)=>`<button class="choice ${cls[i]}" data-c="${esc(c)}"><span class="kh" aria-hidden="true">${i+1}</span>${chLabel(c,P.cur)}</button>`).join("")}</div>`;
     area.querySelectorAll("[data-c]").forEach(b=>b.onclick=()=>pick(b));
   }
 }
@@ -681,7 +687,7 @@ function judge(right,ans){
   setTimeout(()=>{ if(P!==p) return; if(p.review||(p.left>0&&timerId)){ fb.className="fb"; fb.textContent=""; next(); } }, right?350:(p.cur.ch?1800:1100));
 }
 function finish(){
-  const p=P; p.lock=true;
+  const p=P; if(!p||p.done) return; p.done=true; p.lock=true;
   const total=p.ok+p.ng, acc=total?Math.round(p.ok/total*100):0;
   const per=p.ok*60/p.t;                       // 1分あたりの正解数
   /* メダルの基準：4択か入力かで分ける（両方が出るときは出た割合で混ぜる）。正答率の条件もつける */
@@ -711,24 +717,24 @@ function finish(){
     <div>${p.missObjs.length?`<button class="btn sub" id="redo">${T("r.redo")}</button>`:""}<button class="btn" id="again">${T("r.again")}</button>${p.task?"":`<button class="btn sub" onclick="go('#home')">${T("r.other")}</button>`}</div>
   </div></div>`;
   $("#again").onclick=()=>route();
-  const rd=$("#redo"); if(rd) rd.onclick=()=>startReview(p.missObjs,p.x,p.g);
+  const rd=$("#redo"); if(rd) rd.onclick=()=>startReview(p.missObjs,p.x,p.g,p.task);
   const cp=$("#cp"); if(cp) cp.onclick=()=>{ navigator.clipboard?.writeText(report).then(()=>cp.textContent=T("r.copied"),()=>{}); };
 }
 /* まちがえた問題だけもう一回（その回のまちがい最大8問。記録・メダルには入れない。ふくしゅう中のまちがいは最後にもう一度） */
-function startReview(items,x,g){
+function startReview(items,x,g,task){
   stopTimer();
   const queue=items.slice(0,8).map(o=>({...o,retry:false}));
   setLG(g);
-  P={x,g,t:0,left:1,ok:0,ng:0,cur:null,inp:"",misses:[],missObjs:[],task:false,lock:false,over:false,review:true,queue,chN:0,inN:0};
+  P={x,g,t:0,left:1,ok:0,ng:0,cur:null,inp:"",misses:[],missObjs:[],task:!!task,lock:false,over:false,review:true,queue,chN:0,inN:0};
   app.innerHTML=`<div class="play">
     <div class="topbar">
-      <button class="back" onclick="go('#home')">${T("back")}</button>
+      ${task?`<button class="back" onclick="reviewDone()">${T("back.end")}</button>`:`<button class="back" onclick="go('#home')">${T("back")}</button>`}
       <span><b>${x.ico} ${T("p.review")}</b> <span class="note">${x.t}・${g}年</span></span>
-      <span class="timer" id="tm"></span>
+      <span class="timer" id="tm" aria-hidden="true"></span>
     </div>
     <div class="q"><div class="big" id="qq"></div><div class="small" id="qs"></div></div>
     <div id="area"></div>
-    <div class="fb" id="fb"></div>
+    <div class="fb" id="fb" aria-live="polite"></div>
     <div class="score" id="scw">${T("p.left",queue.length)}</div>
     <p class="note">${T("p.reviewnote")}</p>
   </div>`;
@@ -738,7 +744,7 @@ function startReview(items,x,g){
 function reviewDone(){
   const p=P; p.lock=true;
   app.innerHTML=`<div class="play"><div class="res"><div class="medal">🎉</div><div class="num">${T("p.reviewclear")}</div>
-    <div><button class="btn" onclick="go('#home')">${T("n.home")}</button></div></div></div>`;
+    <div>${p.task?`<button class="btn" onclick="route()">${T("r.again")}</button>`:`<button class="btn" onclick="go('#home')">${T("n.home")}</button>`}</div></div></div>`;
 }
 document.addEventListener("keydown",e=>{
   if(!P||!(timerId||P.review)||!P.cur||P.lock) return;
@@ -934,13 +940,14 @@ function renderMode(q){
   app.innerHTML=`<div class="mplay">
     ${task?`<div class="banner">${T("p.task",`${m.t}（${x.t}・${g}年）`)}</div>`:""}
     <div class="topbar">
-      <button class="back" onclick="stopTimer();M=null;go('#home')">${T("back")}</button>
+      ${task?`<button class="back" id="bk">${T("back.end")}</button>`:`<button class="back" onclick="stopTimer();M=null;go('#home')">${T("back")}</button>`}
       <span><b>${m.ico} ${m.t}</b> <span class="note">${x.t}・${g}年・${ruleName(rule)}</span></span>
-      <span class="timer" id="tm">${t}</span>
+      <span class="timer" id="tm" aria-hidden="true">${t}</span>
     </div>
     <div class="tbar" id="tbar"><i id="tb"></i></div>
     <div class="mgrid"><div id="mmain"></div><div class="side" id="mside"></div></div>
   </div>`;
+  if(task) $("#bk").onclick=()=>modeFinish();      // 授業モード：ホームへは行かず、結果の画面へ
   showQ(); drawSide();
   stopTimer(); let last=Date.now();
   timerId=setInterval(()=>{
@@ -958,8 +965,8 @@ function showQ(){
   M.phase="q"; M.cur=genChoice(M.x.id,M.g);
   const cls=["ca","cb","cc","cd"];
   $("#mmain").innerHTML=`<div class="q"><div class="big">${esc(M.cur.q)}${spkBtn(M.x.id,M.cur.q)}</div><div class="small">${esc(M.cur.small||"")}</div></div>
-    <div class="choices">${M.cur.ch.map((c,i)=>`<button class="choice ${cls[i]}" data-c="${esc(c)}">${chLabel(c,M.cur)}</button>`).join("")}</div>
-    <div class="fb" id="fb"></div>`;
+    <div class="choices">${M.cur.ch.map((c,i)=>`<button class="choice ${cls[i]}" data-c="${esc(c)}"><span class="kh" aria-hidden="true">${i+1}</span>${chLabel(c,M.cur)}</button>`).join("")}</div>
+    <div class="fb" id="fb" aria-live="polite"></div>`;
   $("#mmain").querySelectorAll("[data-c]").forEach(b=>b.onclick=()=>mPick(b));
 }
 function mPick(b){
@@ -1131,7 +1138,7 @@ function modeResult(){
     <div>${p.missObjs.length?`<button class="btn sub" id="redo">${T("r.redo")}</button>`:""}<button class="btn" id="again">${T("r.again")}</button>${p.task?"":`<button class="btn sub" onclick="go('#home')">${T("r.other")}</button>`}</div>
   </div></div>`;
   $("#again").onclick=()=>route();
-  const rd=$("#redo"); if(rd) rd.onclick=()=>startReview(p.missObjs,p.x,p.g);
+  const rd=$("#redo"); if(rd) rd.onclick=()=>startReview(p.missObjs,p.x,p.g,p.task);
   const cp=$("#cp"); if(cp) cp.onclick=()=>navigator.clipboard?.writeText(report).then(()=>cp.textContent=T("r.copied"),()=>{});
 }
 document.addEventListener("keydown",e=>{
@@ -1385,7 +1392,7 @@ function startNetGame(s){
   M={m,x,g:s.g,t:s.t,task:false,rule:ruleOf(s.rule),ev:evOf(s.rule),ok:mine.ok||0,ng:mine.ng||0,misses:[],missObjs:[],phase:"count",end,net:true,state:s,
      me:{n:mine.name,e:mine.emoji,v:mine.v,me:true},bots:[],over:false};
   app.innerHTML=`<div class="mplay">
-    <div class="topbar"><span class="note" style="white-space:nowrap">${T("l.room")} ${s.code}</span><span><b>${m.ico} ${m.t}</b> <span class="note">${x.t}・${s.g}年・${ruleName(s.rule)}</span></span><span class="timer" id="tm">${s.t}</span></div>
+    <div class="topbar"><span class="note" style="white-space:nowrap">${T("l.room")} ${s.code}</span><span><b>${m.ico} ${m.t}</b> <span class="note">${x.t}・${s.g}年・${ruleName(s.rule)}</span></span><span class="timer" id="tm" aria-hidden="true">${s.t}</span></div>
     <div class="tbar" id="tbar"><i id="tb"></i></div>
     <div class="mgrid"><div id="mmain"></div><div class="side" id="mside"></div></div></div>`;
   drawSide();
@@ -1428,7 +1435,7 @@ function netResult(){
     <table><tr><td>${T("r.ok")}</td><td>${T("r.n",M.ok)}</td></tr><tr><td>${T("r.acc")}</td><td>${acc}%</td></tr></table>
     ${M.misses.length?`<div class="miss"><b>${T("r.miss")}</b><br>${M.misses.slice(0,8).map(esc).join("<br>")}</div>`:""}
     <div>${M.missObjs.length?`<button class="btn sub" id="redo">${T("r.redo")}</button>`:""}<button class="btn" onclick="go('#home')">${T("n.home")}</button></div></div>${privacy()}</div>`;
-  const rd=$("#redo"); if(rd) rd.onclick=()=>startReview(p.missObjs,p.x,p.g);
+  const rd=$("#redo"); if(rd) rd.onclick=()=>startReview(p.missObjs,p.x,p.g,p.task);
 }
 function netFinishView(s){
   setLG(s.g);
@@ -1469,7 +1476,7 @@ function renderHost(){
   let last=null;
   const draw=s=>{
     last=s; const m=modeOf(s), x=gameOf(s), u=unitOf(s), ps=sorted(s.players);
-    const head=warn+`<div class="topbar"><button class="back" onclick="go('#teacher')">← 先生の画面</button><b>${m.ico} ${m.t}｜${x.t}（${s.g}年）｜${ruleName(s.rule)}</b><span class="timer" id="htm"></span></div>`+privacy();
+    const head=warn+`<div class="topbar"><button class="back" onclick="go('#teacher')">← 先生の画面</button><b>${m.ico} ${m.t}｜${x.t}（${s.g}年）｜${ruleName(s.rule)}</b><span class="timer" id="htm" aria-hidden="true"></span></div>`+privacy();
     if(s.status==="lobby"){
       app.innerHTML=`${head}<div class="q" style="text-align:center">
         <div>「🔑 コードで参加」から、この数字を入れてください</div>
@@ -1734,7 +1741,9 @@ function route(){
   const {path,q}=params();
   setLG(path==="home"||path==="modesetup"||path==="join"?ui.grade:0);
   // 課題リンク（task=1）で開いたゲームでは、ほかの画面への入口を隠す（授業モード）
-  document.body.classList.toggle("lesson",(path==="play"||path==="mode")&&q.get("task")==="1");
+  const lesson=(path==="play"||path==="mode")&&q.get("task")==="1";
+  document.body.classList.toggle("lesson",lesson);
+  const lg=$("#logo"); if(lg) lg.disabled=lesson;          // 授業モードではロゴからホームへ行けない
   window.scrollTo(0,0);
   if(!DATA_OK&&path!=="check"&&path!=="teacher"){
     app.innerHTML=`<div class="q">問題データ（data フォルダ）を読み込めませんでした。<br>index.html と同じ場所に data フォルダがあるか確認してください。</div>`; return;
