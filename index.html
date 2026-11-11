@@ -128,11 +128,17 @@ h2{font-size:20px;margin:20px 0 10px}
 .box.open{cursor:default;transform:none;font-size:22px;font-weight:bold;padding:30px 4px;background:#fff6e3}
 .box.dim{opacity:.35}
 .msg{font-size:24px;font-weight:bold;min-height:36px;margin:8px 0}
-.board{display:grid;grid-template-columns:repeat(6,1fr);gap:4px}
-.cell{position:relative;background:#faf7f0;border-radius:8px;min-height:40px;font-size:11px;color:var(--muted);padding:2px 3px;text-align:left}
+@media (min-width:761px){.mgrid.race{grid-template-columns:1fr 380px}}
+.board{display:grid;grid-template-columns:repeat(8,1fr);gap:3px}      /* すごろく盤：8列×5行（1〜40マス）。スタートは盤の上の帯 */
+.cell{position:relative;background:#faf7f0;border-radius:8px;min-height:52px;font-size:14px;line-height:1.2;color:var(--muted);padding:2px 3px;text-align:left}
 .cell.ev{background:#fff6e3}
 .cell.goal{background:#ffe7a8;font-weight:bold;color:var(--ink)}
-.cell .tk{position:absolute;bottom:1px;right:2px;font-size:16px;letter-spacing:-4px}
+.cell .evi{position:absolute;top:2px;right:2px;font-size:12px}
+.cell .tk,.startrow .tk{position:absolute;bottom:2px;right:2px;display:flex}
+.startrow{position:relative;min-height:34px;margin-bottom:6px;padding:4px 8px;background:#e8f4ee;border-radius:8px;font-size:14px;font-weight:bold;color:var(--ink);display:flex;align-items:center}
+.pc{font-size:24px;width:26px;height:26px;line-height:26px;text-align:center;margin-left:-12px;border-radius:50%;flex:none}
+.pc.me{outline:3px solid var(--main);background:#fff;position:relative;z-index:1}
+.rline{font-size:16px;font-weight:bold;margin:2px 0 8px}
 .dice{font-size:80px;margin:10px 0;display:inline-block}
 .dice.roll{animation:roll .5s linear infinite}
 @keyframes roll{to{transform:rotate(360deg)}}
@@ -292,6 +298,8 @@ const TX={
  "b.placeof":[(t,n)=>`${t}人中 ${n} 位！`,(t,n)=>`${t}にんの うち ${n}ばん！`],
  "b.done":["みんなでがんばった！","みんなで がんばった！"],
  "b.me":["あなた"],
+ "b.line.me":[v=>`あなた ${v}マス`],"b.line.1st":["（1位）","（1ばん）"],"b.line.top":[(n,v)=>`1位 ${n} ${v}マス`,(n,v)=>`1ばん ${n} ${v}マス`],
+ "b.start":["スタート"],
  /* 参加・待合室・対戦 */
  "j.title":["🔑 コードで参加","🔑 はいる"],
  "j.ask":["先生の画面に出ている<b>4けたの数字</b>を入れてね","せんせいの がめんに でている <b>4けたの すうじ</b>を いれてね"],
@@ -534,7 +542,7 @@ function renderGradePick(cb){
   setLG(0);
   app.innerHTML=`<div class="play">
     <div class="topbar"><button class="back" id="gb">${T("back")}</button><b></b><span></span></div>
-    <div class="q"><div class="big">${T("gr.title")}</div><div class="small">${T("gr.note")}</div></div>
+    <div class="q"><div class="big">${T("gr.title")}</div><div class="small">${TX["gr.note"][1]}</div></div>
     <div class="gradegrid">${[1,2,3,4,5,6].map(g=>`<button class="gbtn" data-g="${g}">${g}年</button>`).join("")}</div></div>`;
   $("#gb").onclick=()=>go("#home");
   app.querySelectorAll("[data-g]").forEach(b=>b.onclick=()=>{ ui.grade=+b.dataset.g; store.set("mh_ui",ui); cb(ui.grade); });
@@ -547,14 +555,15 @@ function openGame(x,g0){
 function renderHome(){
   setLG(ui.grade);
   const b=bests();
-  const list=GAMES.filter(x=>(ui.grade===0||x.g.includes(ui.grade))&&(ui.subj==="all"||x.s===ui.subj));
+  const easy=easyG(LG), subj=easy?"all":ui.subj;       // 1〜2年のホームは、きょうか・ほかのサイトを出さない
+  const list=GAMES.filter(x=>(ui.grade===0||x.g.includes(ui.grade))&&(subj==="all"||x.s===subj));
   app.innerHTML=`
     <button class="btn" id="quick" style="width:100%;margin:12px 0 0;font-size:22px;padding:18px">${T("home.quick")}</button>
     <p class="note" style="text-align:center">${T("home.quick.n")}</p>
     <h2>${T("home.grade")}</h2>
     <div class="pills">${[0,1,2,3,4,5,6].map(g=>`<button class="pill ${ui.grade===g?"on":""}" data-g="${g}">${g?g+"年":T("home.all")}</button>`).join("")}</div>
-    <h2>${T("home.subj")}</h2>
-    <div class="pills">${[["all",T("home.all")],...Object.keys(SUBJ).map(k=>[k,subjN(k)])].map(([k,n])=>`<button class="pill ${ui.subj===k?"on":""}" data-s="${k}">${n}</button>`).join("")}</div>
+    ${easy?"":`<h2>${T("home.subj")}</h2>
+    <div class="pills">${[["all",T("home.all")],...Object.keys(SUBJ).map(k=>[k,subjN(k)])].map(([k,n])=>`<button class="pill ${ui.subj===k?"on":""}" data-s="${k}">${n}</button>`).join("")}</div>`}
     <h2>${T("home.games")}</h2>
     ${list.length?`<div class="games">${list.map(x=>{
       const best=b[x.id]; const st=best?"★".repeat(best.medal)+"☆".repeat(3-best.medal):"☆☆☆";
@@ -566,10 +575,10 @@ function renderHome(){
     <h2>${T("home.battle")}</h2>
     <p class="note" style="margin-top:-4px">${T("home.battle.n")}</p>
     <div class="modes">${MODES.map(m=>`<button class="mode" data-m="${m.id}"><span class="ico">${m.ico}</span><span><span class="t">${m.t}</span><span class="d">${m.d}</span></span></button>`).join("")}</div>
-    <h2>${T("home.links")}</h2>
+    ${easy?"":`<h2>${T("home.links")}</h2>
     <div class="links">${LINKS.map(l=>`<a class="link" href="${l.u}" target="_blank" rel="noopener"><b>${esc(l.t)} ↗</b><span>${esc(l.d)}</span></a>`).join("")}</div>
     <p class="note">${T("home.links.n")}</p>
-    ${easyG(LG)?"":`<p class="note" style="text-align:center;margin-top:20px"><a href="#check">${T("home.check")}</a></p>`}`;   // 先生・ICT向けのリンクは、1〜2年には出さない
+    <p class="note" style="text-align:center;margin-top:20px"><a href="#check">${T("home.check")}</a></p>`}`;   // 先生・ICT向けのリンクは、1〜2年には出さない
   $("#quick").onclick=()=>withGrade(g=>{
     const pool=GAMES.filter(x=>x.g.includes(g)), x=pool[rnd(pool.length)];
     go(`#play?game=${x.id}&g=${g}&t=60`);
@@ -643,7 +652,7 @@ function renderPlay(q){
       <span class="timer" id="tm" aria-hidden="true">${t}</span>
     </div>
     ${info?`<div class="note" style="margin:-4px 0 8px">${esc(info)}</div>`:""}
-    ${x.g.length>1&&!task?`<div class="pills" style="justify-content:center">${x.g.map(n=>`<button class="pill ${n===g?"on":""}" data-g="${n}">${n}年</button>`).join("")}</div>`:""}
+    ${x.g.length>1&&!task&&!easyG(g)?`<div class="pills" style="justify-content:center">${x.g.map(n=>`<button class="pill ${n===g?"on":""}" data-g="${n}">${n}年</button>`).join("")}</div>`:""}
     <div class="tbar" id="tbar"><i id="tb"></i></div>
     <div class="q"><div class="big" id="qq"></div><div class="small" id="qs"></div></div>
     <div id="area"></div>
@@ -731,7 +740,7 @@ function finish(){
     nextMsg=need>0?T("r.next",nm,need):T("r.nextacc",nm,MEDAL_ACC[medal]);
   }
   const all=bests(), key=p.x.id, prev=all[key]||{score:0,medal:0};
-  const isNew=p.ok>prev.score && !p.task;
+  const isNew=p.ok>prev.score && !p.task, showNew=isNew&&p.ok>=2;      // 「いちばん たくさん できた！」は、正解が2問以上のときだけ
   if(medal>0) sfx("medal");
   if(medal===3||(isNew&&medal>0)) party();
   all[key]={score:Math.max(prev.score,p.ok),medal:Math.max(prev.medal,medal)};
@@ -742,7 +751,7 @@ function finish(){
     <div class="medal">${["🙂","🥉","🥈","🥇"][medal]}</div>
     <div class="num">${T("r.num",p.ok)}</div>
     <div style="font-size:17px;font-weight:bold;margin-top:6px">${esc(nextMsg)}</div>
-    ${isNew?`<div class="newbest">${T("r.new")}</div>`:""}
+    ${showNew?`<div class="newbest">${T("r.new")}</div>`:""}
     <table><tr><td>${T("r.answered")}</td><td>${T("r.n",total)}</td></tr><tr><td>${T("r.acc")}</td><td>${acc}%</td></tr><tr><td>${T("r.best")}</td><td>${T("r.n",all[key].score)}</td></tr></table>
     ${p.missObjs.length?missCards(p.missObjs,p.x):""}
     ${p.task?`<div class="miss"><b>${T("r.send")}</b><br><span id="rep">${esc(repFull)}</span><br><button class="btn sub" id="cp">${T("r.copy")}</button></div>`:""}
@@ -977,7 +986,7 @@ function renderMode(q){
       <span class="timer" id="tm" aria-hidden="true">${t}</span>
     </div>
     <div class="tbar" id="tbar"><i id="tb"></i></div>
-    <div class="mgrid"><div id="mmain"></div><div class="side" id="mside"></div></div>
+    <div class="mgrid${m.id==="race"?" race":""}"><div id="mmain"></div><div class="side" id="mside"></div></div>
   </div>`;
   if(task) $("#bk").onclick=()=>modeFinish();      // 授業モード：ホームへは行かず、結果の画面へ
   showQ(); drawSide();
@@ -1131,14 +1140,17 @@ function drawSide(){
     $("#mside").innerHTML=`<h3>${easy?T("b.rank.e"):T("b.rank")+(M.net?`（${ps.length}人）`:"")}</h3>${rankRows(easy?easyList(ps):topList(ps),p=>"🪙 "+p.v)}
       <p class="note">${T("b.right",M.ok)}</p>`;
   } else {
-    const cells=[];
-    for(let i=0;i<=GOAL;i++){
-      const tk=players().filter(p=>p.v===i).map(p=>p.e).join("");
-      const ev=M.ev[i];
-      cells.push(`<div class="cell ${ev?"ev":""} ${i===GOAL?"goal":""}">${i===0?"スタート":i===GOAL?"ゴール":i}${ev?" "+ev:""}<span class="tk">${tk}</span></div>`);
+    const cells=[], pcs=v=>players().filter(p=>p.v===v).map(p=>`<span class="pc${p.me?" me":""}">${p.e}</span>`).join("");
+    for(let i=1;i<=GOAL;i++){
+      const ev=M.ev[i], tk=pcs(i);
+      cells.push(`<div class="cell ${ev?"ev":""} ${i===GOAL?"goal":""}">${i}${i===GOAL?"🏁":""}${ev?`<span class="evi">${ev}</span>`:""}${tk?`<span class="tk">${tk}</span>`:""}</div>`);
     }
-    $("#mside").innerHTML=`<h3>${T("b.race")}</h3><div class="board">${cells.join("")}</div>
-      <div style="margin-top:8px">${rankRows(M.rule==="easy"?easyList(ps):topList(ps),p=>p.v+"マス")}</div>`;
+    const me=ps.find(p=>p.me), easy=M.rule==="easy";      // 盤の上の1行：あなたは何マス目か／1位はだれか（やさしいルールでは順位を出さない）
+    const line=T("b.line.me",me?me.v:0)+(easy?"":ps[0]&&ps[0].me?T("b.line.1st"):`／${T("b.line.top",ps[0].e+esc(ps[0].n),ps[0].v)}`);
+    const st=pcs(0);
+    $("#mside").innerHTML=`<h3>${T("b.race")}</h3><div class="rline">${line}</div>
+      <div class="startrow">${T("b.start")}${st?`<span class="tk">${st}</span>`:""}</div><div class="board">${cells.join("")}</div>
+      <div style="margin-top:8px">${rankRows(easy?easyList(ps):topList(ps),p=>p.v+"マス")}</div>`;
   }
 }
 function modeFinish(timeUp){
@@ -1434,7 +1446,7 @@ function startNetGame(s){
   app.innerHTML=`<div class="mplay">
     <div class="topbar"><span class="note" style="white-space:nowrap">${T("l.room")} ${s.code}</span><span><b>${m.ico} ${m.t}</b> <span class="note">${x.t}・${s.g}年・${ruleName(s.rule)}</span></span><span class="timer" id="tm" aria-hidden="true">${s.t}</span></div>
     <div class="tbar" id="tbar"><i id="tb"></i></div>
-    <div class="mgrid"><div id="mmain"></div><div class="side" id="mside"></div></div></div>`;
+    <div class="mgrid${m.id==="race"?" race":""}"><div id="mmain"></div><div class="side" id="mside"></div></div></div>`;
   drawSide();
   stopTimer();
   timerId=setInterval(()=>{
