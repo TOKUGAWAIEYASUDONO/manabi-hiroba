@@ -98,9 +98,10 @@ h2{font-size:20px;margin:18px 0 8px}
 .mb.hop{animation:hop .7s ease-out 1 both}
 .zones{display:grid;grid-template-columns:1fr;gap:14px;align-items:stretch}
 /* 区画の並べかた：すき間ができないように、区画の数（data-n）ごとに決める。 640px〜：2列、900px〜：3列（6分割で、バトルは残りをうめる） */
-@media (min-width:640px){.zones{grid-template-columns:repeat(2,1fr)} .zones[data-n="3"] .s-btl,.zones[data-n="5"] .s-btl{grid-column:1/-1}}
+@media (min-width:640px){.zones{grid-template-columns:repeat(2,1fr)} .zones[data-n="3"] .s-btl,.zones[data-n="5"] .s-btl{grid-column:1/-1}
+  .zones[data-n="3"] .s-btl .tiles,.zones[data-n="5"] .s-btl .tiles{grid-template-columns:repeat(2,1fr)}}
 @media (min-width:900px){.zones{grid-template-columns:repeat(6,1fr)} .zone{grid-column:span 2}
-  .zones[data-n="3"] .s-btl{grid-column:span 2} .zones[data-n="4"] .s-btl{grid-column:1/-1} .zones[data-n="5"] .s-btl{grid-column:span 4}
+  .zones[data-n="3"] .s-btl{grid-column:span 2} .zones[data-n="3"] .s-btl .tiles{grid-template-columns:1fr} .zones[data-n="4"] .s-btl{grid-column:1/-1} .zones[data-n="5"] .s-btl{grid-column:span 4}
   .zones[data-n="4"] .s-btl .tiles,.zones[data-n="5"] .s-btl .tiles{grid-template-columns:repeat(2,1fr)}}
 .zone{background:var(--zc);color:var(--zt,#fff);padding:10px 12px 14px;border-radius:6px 6px 18px 18px;border-top:8px solid var(--edge)}
 .zone h2{margin:0 0 8px;font-size:20px;letter-spacing:.08em;display:flex;align-items:center;gap:8px}
@@ -189,6 +190,7 @@ h2{font-size:20px;margin:18px 0 8px}
 .medal .art{width:112px;height:112px}
 .medrow{display:flex;align-items:flex-end;justify-content:center;gap:6px}
 .medrow .mb{width:72px;height:81px;margin-bottom:6px}
+.medrow .mb.big{width:112px;height:126px;margin:6px 0}
 .medalwrap.m3 .medal .art{filter:drop-shadow(0 0 10px rgba(242,194,48,.9))}
 .medalwrap.m3::before,.medalwrap.m2::before,.medalwrap.m1::before{content:"";position:absolute;inset:-6px;border-radius:50%;
   background:conic-gradient(from 0deg,rgba(242,194,48,0),rgba(242,194,48,.55),rgba(242,194,48,0),rgba(255,148,34,.5),rgba(242,194,48,0));animation:shine 3s linear 1;z-index:-1}
@@ -591,6 +593,8 @@ const FACE={"🐼":"panda","🐰":"usagi","🐸":"kaeru","🐱":"neko","🐶":"i
 const faceId=e=>"f-"+(FACE[e]||"smile");
 const face=e=>`<svg class="fc" aria-hidden="true" focusable="false"><use href="#${faceId(e)}"/></svg>`;
 const PIPS={1:[[32,32]],2:[[20,20],[44,44]],3:[[20,20],[32,32],[44,44]],4:[[20,20],[44,20],[20,44],[44,44]],5:[[20,20],[44,20],[32,32],[20,44],[44,44]],6:[[20,18],[44,18],[20,32],[44,32],[20,46],[44,46]]};
+/* 結果の上：メダル＋めばえ（メダルなしのときは「おしい」のめばえだけ）。動きは「ぴょん」と1回だけ */
+const medRow=m=>`<div class="medrow">${m?`<div class="medalwrap m${m}"><div class="medal">${msvg(m)}</div></div>`:""}${mbs(m?"h":"o","hop"+(m?"":" big"))}</div>`;
 const diceSvg=n=>`<svg class="art" viewBox="0 0 64 64" aria-hidden="true" focusable="false"><g stroke="var(--edge)" stroke-width="3.5" stroke-linejoin="round"><rect x="6" y="6" width="52" height="52" rx="12" fill="var(--paper)"/>${PIPS[n].map(([x,y])=>`<circle cx="${x}" cy="${y}" r="4.5" fill="${n===1?"var(--math)":"var(--edge)"}" stroke="none"/>`).join("")}</g></svg>`;
 function drawHeader(){
   const c=document.getElementById("hSound"), l=document.getElementById("licLink"), gb=document.getElementById("hGrade"), rb=document.getElementById("hRec");
@@ -1016,7 +1020,7 @@ function finish(){
   const report=`【${T0("g."+p.x.id+".t")}】${p.g}年 ${p.t}秒｜せいかい${p.ok}問／${total}問（正答率${acc}%）`;
   const repFull=report+missIds(p.missObjs,p.x);          // 課題リンクの結果の末尾に、まちがえた問題のID
   app.innerHTML=`<div class="play"><div class="res">
-    <div class="medrow"><div class="medalwrap m${medal}"><div class="medal">${msvg(medal)}</div></div>${mbs(medal?"h":"o","hop")}</div>
+    ${medRow(medal)}
     <div class="num">${T("r.num",p.ok)}</div>
     <div class="nextm">${medalize(esc(nextMsg))}</div>
     ${showNew?`<div class="newbest">${T("r.new")}</div>`:""}
@@ -1053,7 +1057,7 @@ function startReview(items,x,g,task){
 }
 function reviewDone(){
   const p=P; p.lock=true;
-  app.innerHTML=`<div class="play"><div class="res"><div class="medrow"><div class="medalwrap m3"><div class="medal">${msvg(3)}</div></div>${mbs("h","hop")}</div><div class="num">${T("p.reviewclear")}</div>
+  app.innerHTML=`<div class="play"><div class="res">${medRow(3)}<div class="num">${T("p.reviewclear")}</div>
     <div>${p.task?`<button class="btn" onclick="route()">${T("r.again")}</button>`:`<button class="btn" onclick="go('#home')">${T("n.home")}</button>`}</div></div></div>`;
 }
 document.addEventListener("keydown",e=>{
@@ -1582,7 +1586,7 @@ function modeResult(){
   const report=`【${T0("m."+p.m.id+".t")}／${T0("g."+p.x.id+".t")}】${p.g}年｜${place}位｜せいかい${p.ok}問／${total}問（正答率${acc}%）`;
   const repFull=report+missIds(p.missObjs,p.x);
   app.innerHTML=`<div class="play"><div class="res">
-    <div class="medrow"><div class="medalwrap m${easy?3:medal}"><div class="medal">${msvg(easy?3:medal)}</div></div>${mbs(easy||medal?"h":"o","hop")}</div>
+    ${medRow(easy?3:medal)}
     <div class="num">${easy?T("b.done"):T("b.place",place)}</div>
     <div style="margin:10px auto;max-width:320px">${rankRows(easy?easyList(ps):ps.map((q,i)=>[q,i+1]),q=>q.v+" "+unit)}</div>
     <div class="actions"><button class="btn again" id="again">${ic("rotate-ccw")}${T("r.again")}</button>
@@ -1890,7 +1894,7 @@ function netResult(){
   if(easy||place<=3) sfx("medal");
   if(easy||place===1) party();
   app.innerHTML=`<div class="play"><div class="res">
-    <div class="medrow"><div class="medalwrap m${easy?3:medal}"><div class="medal">${msvg(easy?3:medal)}</div></div>${mbs(easy||medal?"h":"o","hop")}</div>
+    ${medRow(easy?3:medal)}
     <div class="num">${easy?T("b.done"):T("b.placeof",ps.length,place)}</div>
     ${netResultHtml(s,NET.pid,easy)}
     <div class="actions"><button class="btn again" onclick="go('#home')">${T("n.home")}</button>
