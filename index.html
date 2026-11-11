@@ -429,6 +429,72 @@ textarea.fld{resize:vertical}
 @media (prefers-reduced-motion:reduce){
   *,*::before,*::after{animation:none!important;transition:none!important;scroll-behavior:auto!important}
 }
+
+/* ===== 単元から出題 ===== */
+.up{width:100%;max-width:1000px;margin:0 auto}
+.up.play{max-width:640px}
+.up .th2{margin:6px 0}
+.upf{display:grid;gap:4px}
+.pl{align-self:center;font-size:14px;margin-right:2px}
+.upsets{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:4px 0 8px}
+.pill.set{background:#fff3d6}
+.upanel{margin:0 0 12px;border-left-color:var(--accent)}
+.uwrap{display:grid;gap:8px;margin-top:6px}
+@media (min-width:1000px){.uwrap{grid-template-columns:minmax(0,1fr) 400px;gap:16px}
+  .uwrap>.upanel{grid-column:2;grid-row:1;position:sticky;top:8px;align-self:start;max-height:calc(100vh - 16px);overflow:auto}
+  .uwrap>.ucards{grid-column:1;grid-row:1}
+  .uwrap .ugrid{grid-template-columns:repeat(auto-fill,minmax(270px,1fr))}}
+.uphead{display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap}
+.uchips{display:flex;flex-wrap:wrap;gap:6px}
+.uchips.cen{justify-content:center;margin:10px 0}
+.uchip{display:inline-flex;align-items:center;gap:6px;background:#e1f0e3;border:2px solid var(--go);border-radius:22px;padding:4px 10px;min-height:44px;font-size:15px;font-weight:700;color:var(--ink);cursor:pointer}
+.uchip.static{cursor:default;box-shadow:none}
+.uchipw{display:inline-flex;gap:6px;align-items:center;flex-wrap:wrap;justify-content:center}
+.ucg{background:var(--board);color:#fff;border-radius:6px;padding:0 6px;font-size:13px}
+.ucp{color:#0f6a3a;font-size:13px}
+.ucx{color:var(--bad);font-size:14px}
+.inl{display:flex!important;align-items:center;gap:8px;grid-auto-flow:column;justify-content:start}
+.uacts{display:flex;flex-wrap:wrap;gap:8px}
+.uacts .btn{margin:0}
+.ugrp h3{margin:14px 0 6px;font-size:18px;border-bottom:3px solid var(--board);display:inline-block;padding-right:16px}
+.ugrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(290px,1fr));gap:10px}
+.ucardw{display:flex;gap:6px;align-items:stretch}
+.ucard{flex:1;min-width:0;display:flex;gap:10px;align-items:center;text-align:left;background:#fff;border:3px solid var(--edge);border-radius:12px;box-shadow:0 4px 0 var(--edge);padding:8px 10px;min-height:68px;cursor:pointer}
+.ucard:active{transform:translateY(3px);box-shadow:0 1px 0 var(--edge)}
+.ucard[aria-checked=true]{background:#e1f0e3;border-color:var(--go);box-shadow:0 4px 0 var(--go)}
+.ubox{flex:none;width:32px;height:32px;border:3px solid var(--edge);border-radius:8px;background:#fff;display:grid;place-items:center;font-size:20px;line-height:1}
+.ubody{display:flex;flex-direction:column;gap:2px;min-width:0}
+.ubody b{font-size:16px;line-height:1.3}
+.unote{font-size:13px;color:var(--muted);font-weight:400;line-height:1.35}
+.umeta{display:flex;gap:4px;flex-wrap:wrap}
+.utag{font-size:12px;background:#eef2ec;border-radius:6px;padding:0 6px;color:var(--muted)}
+.uexb{margin:0!important;flex:none;min-width:56px;padding:6px 8px!important}
+.up.kid .ugrid{grid-template-columns:repeat(auto-fill,minmax(260px,1fr))}
+.up.kid .ucard{min-height:92px}
+.up.kid .ubody b{font-size:21px}.up.kid .unote{font-size:15px}.up.kid .ubox{width:40px;height:40px;font-size:26px}
+.ufoot{position:sticky;bottom:0;background:linear-gradient(transparent,var(--field) 30%);padding:12px 0 6px;text-align:center;z-index:5}
+.ustart{font-size:22px!important;padding:14px 28px!important}
+.exsheet{width:min(100%,420px)} .exbg{align-items:center;justify-content:center;padding:14px}
+.uextext{white-space:pre-line;font-size:18px;line-height:1.6;margin:8px 0 14px}
+.uexrow{margin-top:8px}.uexrow .btn{margin:0}
+.q .big.long{font-size:clamp(22px,5.5vw,36px);line-height:1.5}
+#qq{white-space:pre-line}
+.umarks{display:flex;gap:6px;flex-wrap:wrap;justify-content:center;min-height:30px;font-size:22px;font-weight:800;margin-bottom:2px}
+.umarks .mo{color:#0f6a3a}.umarks .mt{color:#8a3b00}.umarks .mx{color:var(--bad)}
+.umarks.big{font-size:26px}
+.umr{margin:12px 0;text-align:center}
+.uans{display:flex;align-items:center;justify-content:center;gap:12px;min-height:66px;margin-bottom:10px;font-size:36px;font-weight:800}
+.ufld{display:inline-block;min-width:64px;padding:0 10px;border-bottom:5px solid var(--line);text-align:center}
+.ufld.at{border-bottom-color:var(--go);background:#e1f0e3}
+.ulab{font-size:16px;font-weight:700;color:var(--muted)}
+.ufrac{display:inline-flex;flex-direction:column;align-items:center}
+.ubar2{display:block;width:100%;height:4px;background:var(--ink);margin:2px 0}
+.pad .sk{font-size:16px}
+.unitrow{display:grid;grid-template-columns:repeat(auto-fit,minmax(72px,1fr));gap:8px;max-width:360px;margin:8px auto 0}
+.unitrow button{font-size:22px;min-height:48px;border:3px solid var(--edge);box-shadow:0 4px 0 var(--edge);border-radius:12px;background:var(--go);color:#fff;cursor:pointer}
+.unitrow button:active{transform:translateY(3px);box-shadow:0 1px 0 var(--edge)}
+.tile.unitgo{background:#fff3d6}
+.tile.unitgo .tico{display:grid;place-items:center}.tile.unitgo .tico .ic{width:34px;height:34px}
 </style>
 </head>
 <body>
@@ -523,6 +589,13 @@ textarea.fld{resize:vertical}
 <script src="data/calc.js"></script>
 <script src="data/choices.js"></script>
 <script src="data/quizlib.js"></script>
+<!-- 単元ごとの問題の型（単元から出題） -->
+<script src="data/gen/core.js"></script>
+<script src="data/gen/other.js"></script>
+<script src="data/gen/sansu-12.js"></script>
+<script src="data/gen/sansu-34.js"></script>
+<script src="data/gen/sansu-56.js"></script>
+<script src="data/units.js"></script>
 <script>
 /* ================= 画面の文言（1つの表） =================
    TX["キー"] = [ふつうの文言, 1〜2年の「やさしい文字」]（やさしい側がないものは同じ文言）。
@@ -700,7 +773,24 @@ const TX={
  "z.next":["つぎへ"],"z.finish":["結果を見る","けっかを みる"],
  "z.link.bad":["このリンクは使えません。先生にもう一度もらってください。","このリンクは つかえないよ。せんせいに もういちど もらってね。"],
  "e.qlate":["もう時間がおわりました","もう じかんが おわったよ"],
- "e.qbad":["この答えは使えません","この こたえは つかえないよ"]
+ "e.qbad":["この答えは使えません","この こたえは つかえないよ"],
+
+ /* 単元から出題・単元練習 */
+ "g.unit.t":["単元練習","たんげん れんしゅう"],
+ "u.pick":["単元をえらぶ","たんげんを えらぶ"],"u.pick.d":["いくつでも組み合わせて練習","いくつでも えらんで れんしゅう"],
+ "u.ex":["例題","れいだい"],"u.close":["とじる"],"u.grade":["学年","がくねん"],"u.all":["ぜんぶ"],
+ "u.sets":["おすすめの組み合わせ","おすすめ"],
+ "u.sel":[n=>`えらんだ単元：${n}`,n=>`えらんだ たんげん：${n}`],"u.clear":["ぜんぶはずす","ぜんぶ はずす"],
+ "u.none":["下のカードをタップして、単元をえらんでね","したの カードを タップして、たんげんを えらんでね"],
+ "u.ratio.k":[(n,k)=>`${n}問を ${k}つの単元に同じ数ずつ分けて出すよ`,(n,k)=>`${n}もんを ${k}この たんげんから おなじ かずずつ だすよ`],
+ "u.how":["答え方","こたえかた"],"u.type":["数字を入れる","すうじを いれる"],"u.c4":["4つからえらぶ","4つから えらぶ"],
+ "u.go":["練習をはじめる","れんしゅう スタート"],"u.bad":["このリンクは使えません。先生にもう一度もらってください。","このリンクは つかえないよ。せんせいに もういちど もらってね。"],
+ "u.intro":["この単元で練習するよ","この たんげんで れんしゅうするよ"],"u.1min":["1分でいくつとけるかな？","1ぷんで いくつ とけるかな？"],
+ "u.amari":["あまり"],"u.nextf":["つぎのらんへ","つぎの らんへ"],"u.del":["けす"],"u.pickunit":["単位をえらぶ","たんいを えらぶ"],
+ "u.retry":["❌ おしい！もう一度やってみよう","❌ おしい！ もういちど やってみよう"],
+ "u.ok2":["△ 2回目でせいかい！","△ 2かいめで せいかい！"],
+ "u.marks":["○ 1回で正解　△ 2回目で正解　× まちがい","○ 1かいで せいかい　△ 2かいめで せいかい　× まちがい"],
+ "u.marks.t":["○△×のきろく","○△×の きろく"]
 };
 /*TX-END*/
 let LG=0;                                   // いま見せている画面の学年（1〜2年なら「やさしい文字」）
@@ -956,6 +1046,12 @@ function modeTile(m,b){
   const mb=GAMES.reduce((n,x)=>Math.max(n,(b[m.id+"_"+x.id]||{}).medal||0),0);
   return `<button class="tile" data-m="${m.id}"><span class="tico">${svgU(m.art)}</span><span class="tbody"><span class="tt">${m.t}</span><span class="tstat">${stampsHtml(mb)}</span></span></button>`;
 }
+/* 「単元をえらぶ」：その教科に単元があるとき。1〜2年は自分の学年の単元があるときだけ */
+function unitTile(k){
+  if(!UNITS_OK||!SJR[k]) return "";
+  const g=ui.grade, has=UREADY.some(u=>u.subj===SJR[k]&&(g===0||(easyG(g)?u.g===g:true)));
+  return has?`<button class="tile unitgo" data-un="${SJR[k]}"><span class="tico">${ic("clipboard")}</span><span class="tbody"><span class="tt">${T("u.pick")}</span><span class="td">${T("u.pick.d")}</span></span></button>`:"";
+}
 function renderHome(){
   setLG(ui.grade);
   const b=bests(), easy=easyG(LG);
@@ -964,7 +1060,7 @@ function renderHome(){
   app.innerHTML=`<div class="home${easy?" easy":""}">
     ${easy?`<div class="guide">${mbs("n")}<span class="say">${T("home.guide")}</span></div>`:""}
     <button class="hero" id="quick">${easy?"":mbs("n")}${ic("zap")}<span><span class="ht">${T("home.quick")}</span><span class="hn">${T("home.quick.n")}</span></span></button>
-    <div class="zones" data-n="${zones.length+1}">${zones.map(([k,l])=>`<section class="zone s-${k}"><h2>${subjN(k)}</h2><div class="tiles">${l.map(x=>gameTile(x,b)).join("")}</div></section>`).join("")}
+    <div class="zones" data-n="${zones.length+1}">${zones.map(([k,l])=>`<section class="zone s-${k}"><h2>${subjN(k)}</h2><div class="tiles">${l.map(x=>gameTile(x,b)).join("")}${unitTile(k)}</div></section>`).join("")}
       <section class="zone s-btl"><h2>${ic("swords")}${T("home.battle")}</h2><div class="tiles">${MODES.map(m=>modeTile(m,b)).join("")}</div></section></div>
     ${zones.length?"":`<div class="empty">${T("home.empty")}</div>`}
     <div class="bottom">
@@ -985,6 +1081,7 @@ function renderHome(){
     withGrade(g0=>openGame(x,g0));
   });
   app.querySelectorAll("[data-m]").forEach(e=>e.onclick=()=>go(`#modesetup?m=${e.dataset.m}`));
+  app.querySelectorAll("[data-un]").forEach(e=>e.onclick=()=>go(`#units?kid=1&subj=${e.dataset.un}`));
 }
 /* 右上の学年：押すと選び直し */
 function openGradeSheet(){
@@ -1144,11 +1241,11 @@ function finish(){
     nextMsg=need>0?T("r.next",nm,need):T("r.nextacc",nm,MEDAL_ACC[medal]);
   }
   const all=bests(), key=p.x.id, prev=all[key]||{score:0,medal:0};
-  const isNew=p.ok>prev.score && !p.task, showNew=isNew&&p.ok>=2;      // 「いちばん たくさん できた！」は、正解が2問以上のときだけ
+  const isNew=p.ok>prev.score && !p.task && !p.u, showNew=isNew&&p.ok>=2;      // 「いちばん たくさん できた！」は、正解が2問以上のときだけ
   if(medal>0) sfx("medal");
   if(medal===3||(isNew&&medal>0)) party();
   all[key]={score:Math.max(prev.score,p.ok),medal:Math.max(prev.medal,medal)};
-  store.set("mh_best",all); refreshMedals();
+  if(!p.u){ store.set("mh_best",all); refreshMedals(); }       // 単元練習は、きろく・メダルの合計には入れない
   const report=`【${T0("g."+p.x.id+".t")}】${p.g}年 ${p.t}秒｜せいかい${p.ok}問／${total}問（正答率${acc}%）`;
   const repFull=report+missIds(p.missObjs,p.x);          // 課題リンクの結果の末尾に、まちがえた問題のID
   app.innerHTML=`<div class="play"><div class="res">
@@ -1158,11 +1255,12 @@ function finish(){
     ${showNew?`<div class="newbest">${T("r.new")}</div>`:""}
     <div class="actions"><button class="btn again" id="again">${ic("rotate-ccw")}${T("r.again")}</button>
       <div class="subs">${p.missObjs.length?`<button class="btn sub" id="redo">${T("r.redo")}</button>`:""}${p.task?"":`<button class="btn sub" onclick="go('#home')">${T("r.other")}</button>`}</div></div>
-    <div class="stats"><span>${T("r.answered")} <b>${T("r.n",total)}</b></span><span>${T("r.acc")} <b>${acc}%</b></span><span>${T("r.best")} <b>${T("r.n",all[key].score)}</b></span></div>
+    <div class="stats"><span>${T("r.answered")} <b>${T("r.n",total)}</b></span><span>${T("r.acc")} <b>${acc}%</b></span>${p.u?"":`<span>${T("r.best")} <b>${T("r.n",all[key].score)}</b></span>`}</div>
+    ${p.u?`<div class="umr"><b>${T("u.marks.t")}</b><div class="umarks big">${uMarksHtml(p.marks)}</div><div class="note">${esc(T("u.marks"))}</div></div>`:""}
     ${p.missObjs.length?missCards(p.missObjs,p.x):""}
     ${p.task?`<div class="miss"><b>${T("r.send")}</b><br><span id="rep">${esc(repFull)}</span><br><button class="btn sub" id="cp">${T("r.copy")}</button></div>`:""}
   </div></div>`;
-  $("#again").onclick=()=>route();
+  $("#again").onclick=()=>p.u?p.u.again():route();
   const rd=$("#redo"); if(rd) rd.onclick=()=>startReview(p.missObjs,p.x,p.g,p.task);
   const cp=$("#cp"); if(cp) cp.onclick=()=>{ navigator.clipboard?.writeText(repFull).then(()=>cp.textContent=T("r.copied"),()=>{}); };
 }
@@ -1194,6 +1292,7 @@ function reviewDone(){
 }
 document.addEventListener("keydown",e=>{
   if(!P||!(timerId||P.review)||!P.cur||P.lock) return;
+  if(P.u&&!P.review){ if(!e.ctrlKey&&!e.metaKey&&!e.altKey) uKeydown(e); return; }
   if(!P.cur.ch){
     if(/^[0-9.]$/.test(e.key)&&(e.key!=="."||P.g>=4)) key(e.key);
     else if(e.key==="Backspace") key("⌫");
@@ -1272,7 +1371,13 @@ function renderTeacher(q){
   app.innerHTML=`
     <h2 class="th2">${ic("graduation-cap")}先生の画面</h2>
     <p class="note">ログインは不要です。児童の名前などの個人情報は集めません。　<a href="#check">${ic("plug")} 接続テスト（友だち対戦が使えるか調べる）</a></p>
-    <div class="form" style="margin-top:12px;border-color:var(--go)">
+    <div class="form" style="margin-top:12px;border-color:var(--accent)">
+      <b style="font-size:18px">⑤ 単元から つくる（単元を組み合わせて出題）</b>
+      <span class="prep"><b>準備：なし</b>（問題は単元ごとの「型」から自動で作ります。正解はコードで計算するので、誤りは出ません）</span>
+      <span class="note">教科・学年・学習項目でしぼって、単元を何個でも組み合わせられます（学年をまたいでもOK）。そのままクイズ・たからばこ・すごろくで出題したり、先生のもんだいセットにして編集したり、短いリンク・QRにして児童に配ったりできます。</span>
+      <div><button class="btn" id="mku">単元をえらぶ</button></div>
+    </div>
+    <div class="form" style="margin-top:16px;border-color:var(--go)">
       <b style="font-size:18px">④ もんだいを つくる（先生のオリジナル）</b>
       <span class="prep"><b>準備：なし</b>（つくった問題は、この端末の中だけに保存されます）</span>
       <span class="note">4択・○×の問題を自分でつくって、教室のクイズ大会（Kahoot のような遊び方）や、たからばこ・すごろくで使えます。Excel やスプレッドシートの表を貼りつけて取り込んだり、ファイル・れんしゅう用リンクで書き出したりもできます。いま ${qsets.length} セットあります。</span>
@@ -1326,6 +1431,7 @@ function renderTeacher(q){
     if(v.startsWith("set:")){ $(gsel).innerHTML=[1,2,3,4,5,6].map(n=>`<option value="${n}">${n}年</option>`).join(""); const st=qsFind(v.slice(4)); $(gsel).value=String(st&&st.g?st.g:3); return; }
     const x=GAMES.find(y=>y.id===v); $(gsel).innerHTML=x.g.map(n=>`<option value="${n}">${n}年</option>`).join(""); };
   $("#mkq").onclick=()=>go("#make");
+  $("#mku").onclick=()=>go("#units");
   const setRule=()=>{ $("#nr").value=defaultRule(+$("#ngr").value); };
   $("#ng").onchange=()=>{ fillG("#ng","#ngr"); setRule(); }; fillG("#ng","#ngr"); setRule();
   $("#ngr").onchange=setRule;
@@ -2903,14 +3009,330 @@ function ensureMine(s){       // 先生のセットを1回だけ受け取る（�
     if(MINE&&NETLAST) startNetGame(NETLAST); else app.replaceChildren(h("div",{class:"play"},h("div",{class:"q"},T("e.comm"),h("br"),h("button",{type:"button",class:"btn",text:T("n.rejoin"),onclick:()=>go("#join")})))); });
 }
 
+/* ================= 単元から出題（単元の組み合わせ／ひとり用の単元練習） =================
+   データは data/units.js・data/gen/*.js（window.MH_UNITS）。画面は DOM 組み立て（textContent）だけで作る。
+   リンク（#u=単元ID,…&n=&t=&s=）は、単元IDを UNITS にあるものだけ、n・t・s を範囲内だけ受け付ける */
+const UN=window.MH_UNITS, UNITS_OK=!!(UN&&Array.isArray(UN.UNITS)&&UN.UNITS.length&&UN.unitPick);
+const SJ={sansu:"math",kokugo:"jp",shakai:"soc",eigo:"eng"}, SJR={math:"sansu",jp:"kokugo",soc:"shakai",eng:"eigo"};
+const SUBJ_JA={sansu:"算数",kokugo:"国語",shakai:"社会",eigo:"英語"};
+const UREADY=UNITS_OK?UN.UNITS.filter(u=>u.status==="ready"&&u.gen):[];
+const UBY={}; UREADY.forEach(u=>{ UBY[u.id]=u; });
+const UNITX={id:"unit",ico:"🧩",art:"a-soroban",s:"math",g:[1,2,3,4,5,6],type:"input"}; tget(UNITX,"t","g.unit.t");
+const USECS=[5,10,20,30,60,90,120], UNS=[10,20,30], UMAX=40;
+const uSeed=()=>1+Math.floor(Math.random()*899999);
+const uMaxG=ids=>Math.max(1,...ids.map(i=>UBY[i]?UBY[i].g:1));
+const uEasyDefault=ids=>ids.length>0&&ids.every(i=>UBY[i]&&UBY[i].g<=2);
+/* 選んだ単元と設定（この端末に保存） */
+let UPK=(()=>{ const v=store.get("mh_upick",null)||{};
+  return {sel:Array.isArray(v.sel)?[...new Set(v.sel)].filter(i=>UBY[i]).slice(0,UMAX):[],n:UNS.includes(v.n)?v.n:20,t:USECS.includes(v.t)?v.t:20,mix:v.mix!==false,choice:v.choice===true||v.choice===false?v.choice:null}; })();
+const uSave=()=>store.set("mh_upick",UPK);
+const uChoice=(ids,c)=>c===true||c===false?c:uEasyDefault(ids);
+/* リンク */
+function uHash(c){ return "#u="+c.ids.join(",")+"&n="+c.n+"&t="+c.t+"&s="+c.seed+(c.mix===false?"&m=0":"")+(c.choice===true?"&c=1":c.choice===false?"&c=0":""); }
+function uParse(hash){
+  const sp=new URLSearchParams(String(hash).replace(/^#/,""));
+  const ids=[...new Set((sp.get("u")||"").split(",").map(s=>s.trim()))].filter(i=>UBY[i]).slice(0,UMAX);
+  if(!ids.length) return null;
+  const num=(k,lo,hi,d)=>{ const v=sp.get(k); return v!==null&&/^\d{1,9}$/.test(v)&&+v>=lo&&+v<=hi?+v:d; };
+  return {ids,n:num("n",1,60,20),t:num("t",5,120,20),seed:num("s",0,999999999,1),mix:sp.get("m")!=="0",choice:sp.get("c")==="1"?true:sp.get("c")==="0"?false:null};
+}
+const upill=(label,on,fn)=>h("button",{type:"button",class:"pill small"+(on?" on":""),"aria-pressed":on?"true":"false",text:label,onclick:fn});
+/* 例題（ひとことの解き方）を見せる */
+function uEx(u){
+  if(document.getElementById("exsheet")) return;
+  const onKey=e=>{ if(e.key==="Escape") close(); };
+  const close=()=>{ el.remove(); document.removeEventListener("keydown",onKey); };
+  const ok=h("button",{type:"button",class:"btn",text:T("u.close"),onclick:close});
+  const el=h("div",{class:"sheetbg exbg",id:"exsheet",onclick:e=>{ if(e.target===el) close(); }},
+    h("div",{class:"sheet exsheet",role:"dialog","aria-modal":"true","aria-label":T("u.ex")},
+      h("h3",{text:T("u.ex")+"："+u.title}),h("p",{class:"uextext",text:u.ex||u.note||""}),ok));
+  document.addEventListener("keydown",onKey); document.body.appendChild(el); ok.focus();
+}
+/* 1問 → 画面用（答え方ごとに入力の長さを決める） */
+function uCur(it,forceChoice){
+  const u=UBY[it.unit], mode=(forceChoice||it.ans==="choice4"||!it.choices)?"choice4":it.ans;
+  const formula=/^[0-9.\s+−×÷()\/と]+$/.test(it.q), val=String(it.val);
+  const c={uid:it.unit,id:it.unit+": "+it.q,q:it.q,a:it.a,ch:it.choices,small:it.stem||(formula?"= ?":" "),rd:it.ruby,u:it,mode,ex:u?u.ex:"",title:u?u.title:"",tries:0,subj:it.subj};
+  if(mode==="num"||mode==="dec") c.len=[val.length];
+  else if(mode==="amari"){ const [a,b]=val.split("|"); c.len=[a.length,b.length]; }
+  else if(mode==="frac"){ const [w,n,d]=val.split("|"); c.len=w==="0"?[n.length,d.length]:[w.length,n.length,d.length]; }
+  else if(mode==="unit"){ const [n,un]=val.split("|"); c.len=[8]; c.dot=n.includes("."); c.units=uUnits(un); }
+  return c;
+}
+const UFAM=[["mm","cm","m","km"],["cm²","m²","km²","ha","a"],["mL","dL","L","kL","cm³","m³"],["g","kg","t"]];
+function uUnits(un){ const f=UFAM.find(x=>x.includes(un)); return f||[un]; }
+
+/* ---- 先生・児童の「単元をえらぶ」画面 ---- */
+function renderUnits(q){
+  stopTimer();
+  const kid=q.get("kid")==="1";
+  if(!UNITS_OK){ setLG(0); app.replaceChildren(h("div",{class:"q"},"単元のデータ（data/units.js）を読み込めませんでした。",h("br"),h("button",{type:"button",class:"btn",text:T("n.home"),onclick:()=>go("#home")}))); return; }
+  const kg=kid?ui.grade:0; setLG(kg);
+  const easy=easyG(kg), subjs=["sansu","kokugo","shakai","eigo"];
+  let subj=subjs.includes(q.get("subj"))?q.get("subj"):"sansu";
+  const pool=s=>UREADY.filter(u=>u.subj===s&&(!kid||!easy||u.g===kg));
+  let fg=kid&&kg&&pool(subj).some(u=>u.g===kg)?kg:0, fi="";
+  if(kid){ const keep=UPK.sel.filter(id=>UBY[id].subj===subj&&(!easy||UBY[id].g===kg)); if(keep.length!==UPK.sel.length){ UPK.sel=keep; } }
+  const root=h("div",{class:"up"+(kid?" kid":"")}), filt=h("div",{class:"upf"}), sets=h("div"), panel=h("div",{class:"form upanel"}), cards=h("div",{class:"ucards"}), msg=h("div",{class:"err",role:"alert"}), out=h("div",{class:"lkout"});
+  const chosen=()=>UPK.sel.filter(i=>UBY[i]);
+  /* かたまり1：しぼりこみ */
+  function drawFilter(){
+    const items=[...new Set(pool(subj).map(u=>u.item).filter(Boolean))], rows=[];
+    if(!kid) rows.push(h("div",{class:"pills"},h("b",{class:"pl",text:"教科"}),...subjs.map(s=>upill(SUBJ_JA[s],s===subj,()=>{ subj=s; fg=0; fi=""; drawFilter(); drawSets(); drawCards(); }))));
+    const gs=[...new Set(pool(subj).map(u=>u.g))].sort((a,b)=>a-b);
+    if(!(kid&&easy)&&gs.length>1) rows.push(h("div",{class:"pills"},h("b",{class:"pl",text:T("u.grade")}),upill(T("u.all"),fg===0,()=>{ fg=0; drawFilter(); drawCards(); }),...gs.map(g=>upill(g+"年",fg===g,()=>{ fg=g; drawFilter(); drawCards(); }))));
+    if(!kid&&items.length>1) rows.push(h("div",{class:"pills"},h("b",{class:"pl",text:"学習項目"}),upill("ぜんぶ",fi==="",()=>{ fi=""; drawFilter(); drawCards(); }),...items.map(it=>upill(it,fi===it,()=>{ fi=it; drawFilter(); drawCards(); }))));
+    filt.replaceChildren(...rows);
+  }
+  /* かたまり2：おすすめの組み合わせ */
+  function drawSets(){
+    const ok=(UN.UNIT_SETS||[]).map(s=>({s,us:s.units.filter(i=>UBY[i])})).filter(x=>x.us.length>1&&x.us.every(i=>UBY[i].subj===subj)&&(!kid||(!easy&&x.us.every(i=>UBY[i].g<=(kg||6)))));
+    sets.replaceChildren(...(ok.length?[h("div",{class:"upsets"},h("b",{class:"pl",text:kid?T("u.sets"):"おすすめの組み合わせ（タップで選ぶ）"}),
+      ...ok.map(x=>h("button",{type:"button",class:"pill small set",text:x.s.title,onclick:()=>{ UPK.sel=x.us.slice(0,UMAX); uSave(); paint(); drawPanel(); }})))]:[]));
+  }
+  /* かたまり3：カード */
+  function drawCards(){
+    const us=pool(subj).filter(u=>(!fg||u.g===fg)&&(!fi||u.item===fi)), byG={};
+    us.forEach(u=>(byG[u.g]=byG[u.g]||[]).push(u));
+    const groups=Object.keys(byG).sort((a,b)=>a-b).map(g=>h("section",{class:"ugrp"},h("h3",{text:g+"年"}),
+      h("div",{class:"ugrid"},...byG[g].map(u=>h("div",{class:"ucardw"},
+        h("button",{type:"button",class:"ucard",role:"checkbox","aria-checked":"false","data-id":u.id,onclick:()=>toggle(u.id)},
+          h("span",{class:"ubox","aria-hidden":"true"}),
+          h("span",{class:"ubody"},h("b",{text:u.title}),h("span",{class:"unote",text:u.note}),
+            h("span",{class:"umeta"},h("span",{class:"utag",text:u.g+"年"}),!kid&&u.item&&u.item!=="その他"?h("span",{class:"utag",text:u.item}):null))),
+        h("button",{type:"button",class:"btn sub s uexb",text:T("u.ex"),"aria-label":T("u.ex")+"："+u.title,onclick:()=>uEx(u)}))))));
+    cards.replaceChildren(...(groups.length?groups:[h("div",{class:"empty",text:"この条件の単元はありません"})]));
+    paint();
+  }
+  function paint(){ cards.querySelectorAll(".ucard").forEach(b=>{ const on=UPK.sel.includes(b.dataset.id); b.setAttribute("aria-checked",on?"true":"false"); b.firstChild.textContent=on?"✅":""; }); }
+  function toggle(id){
+    const i=UPK.sel.indexOf(id);
+    if(i>=0) UPK.sel.splice(i,1); else if(UPK.sel.length>=UMAX){ msg.textContent=`単元は${UMAX}個までです`; return; } else UPK.sel.push(id);
+    msg.textContent=""; uSave(); paint(); drawPanel();
+  }
+  /* かたまり4：えらんだ単元・設定・出題のボタン */
+  const cfg=()=>{ const ids=chosen(); return {ids,n:UPK.n,t:UPK.t,seed:uSeed(),mix:UPK.mix,choice:UPK.choice}; };
+  const need=()=>{ if(!chosen().length){ msg.textContent=T("u.none"); return false; } msg.textContent=""; return true; };
+  function uToQs(items,t){
+    const sec=USECS.find(s=>s>=t)||120;
+    const lab=(c,rb)=>{ const r=rb&&rb[c]; return r&&QZ.len(c)<=30?`｜${c}《${r}》`:c; };
+    return items.map(it=>{ const k=it.choices.indexOf(it.a); if(k<0||it.choices.length<2) return null;
+      return {t:"mc",q:(it.stem?it.stem+"　":"")+it.q,ch:it.choices.map(c=>lab(c,it.ruby)),ok:[k],sec,pt:"normal"}; }).filter(Boolean);
+  }
+  function makeSet(reuse){
+    const c=cfg(), items=UN.unitPick(c.ids,c.n,c.seed,c.mix), qs=uToQs(items,c.t);
+    if(!qs.length) throw new Error("問題を作れませんでした");
+    const title="単元："+c.ids.map(i=>UBY[i].title).join("・"), memo="単元から作成："+c.ids.join(",");
+    if(reuse){ const f=qsGet().find(s=>s.memo===reuse); if(f){ f.qs=QZ.draftSet({qs}).qs; f.title=QZ.cut(title,QZ.LIM.title); f.g=uMaxG(c.ids); f.upd=Date.now(); qsWrite(); return f; } }
+    if(qsGet().length>=50) throw new Error("セットは50個までです。使わないセットを消してください");
+    const s=qsNew(qs,QZ.cut(title,QZ.LIM.title),uMaxG(c.ids)); s.memo=QZ.cut(reuse||memo,QZ.LIM.memo); qsWrite(); return s;
+  }
+  function showLink(){
+    if(!need()) return; const c=cfg(), url=location.href.split("#")[0]+uHash(c);
+    const box=h("div",{class:"qrwrap"}), ta=h("textarea",{class:"fld",readOnly:true,rows:3,value:url,"aria-label":"単元リンク"});
+    out.replaceChildren(h("div",{class:"out"},h("b",{text:"単元リンク（短いリンク）"}),ta,copyBtn(()=>url),
+      h("a",{class:"btn sub s",href:url,target:"_blank",rel:"noopener",text:"ためしに開く ↗"}),
+      h("div",{class:"note",text:`${url.length}文字。このリンクを開いた児童は、同じ問題をひとりで練習できます（${c.n}問・1分スプリント）。シード固定なので、同じリンクなら同じ問題です。`}),
+      location.protocol==="file:"?h("div",{class:"banner"},"いま、ファイルを直接開いているので、このリンクはこの端末でしか開けません。公開されたページのアドレスで開いてから作ってください。"):null,box));
+    if(url.length<=QR_MAX) qrPut(box,url);
+  }
+  function drawPanel(){
+    out.replaceChildren();
+    const ids=chosen(), k=ids.length, per=k?Math.round(100/k):0, each=k?(UPK.n/k):0, eachTxt=Number.isInteger(each)?String(each):"約"+Math.round(each*10)/10;
+    const chips=k?h("div",{class:"uchips"},...ids.map(id=>h("button",{type:"button",class:"uchip","aria-label":UBY[id].title+" をはずす",onclick:()=>toggle(id)},
+      h("span",{class:"ucg",text:UBY[id].g+"年"}),h("span",{text:UBY[id].title}),h("span",{class:"ucp",text:per+"%"}),h("span",{class:"ucx","aria-hidden":"true",text:"✕"})))):h("div",{class:"note",text:T("u.none")});
+    const cho=uChoice(ids,UPK.choice);
+    const rows=[h("div",{class:"uphead"},h("b",{class:"fh",text:T("u.sel",k)}),k?h("button",{type:"button",class:"btn sub s",text:T("u.clear"),onclick:()=>{ UPK.sel=[]; uSave(); paint(); drawPanel(); }}):null),chips];
+    if(k) rows.push(h("div",{class:"note",text:kid?T("u.ratio.k",UPK.n,k):`${UPK.n}問を${k}単元で等分します（1単元あたり ${eachTxt}問・${per}%ずつ）`}));
+    if(!kid){
+      rows.push(h("div",{class:"pills"},h("b",{class:"pl",text:"問題数"}),...UNS.map(n=>upill(n+"問",UPK.n===n,()=>{ UPK.n=n; uSave(); drawPanel(); }))),
+        h("label",{class:"inl"},"クイズの制限時間（1問）",h("select",{onchange:e=>{ UPK.t=+e.target.value; uSave(); }},...USECS.map(s=>h("option",{value:s,selected:s===UPK.t,text:s+"秒"})))),
+        h("div",{class:"pills"},h("b",{class:"pl",text:"混ぜ方"}),upill("まぜる",UPK.mix,()=>{ UPK.mix=true; uSave(); drawPanel(); }),upill("単元の順番どおり",!UPK.mix,()=>{ UPK.mix=false; uSave(); drawPanel(); })));
+    }
+    rows.push(h("div",{class:"pills"},h("b",{class:"pl",text:T("u.how")}),upill(T("u.type"),!cho,()=>{ UPK.choice=false; uSave(); drawPanel(); }),upill(T("u.c4"),cho,()=>{ UPK.choice=true; uSave(); drawPanel(); })));
+    if(!kid){
+      const run=(fn)=>()=>{ if(!need()) return; try{ fn(); }catch(e){ msg.textContent=e.message; } };
+      rows.push(h("div",{class:"uacts"},
+        h("button",{type:"button",class:"btn",innerHTML:ic("users")+"この内容で出題（クイズ・たからばこ・すごろく）",onclick:run(()=>{ const s=makeSet("単元出題："+chosen().join(",")); go("#teacher?set="+s.id); })}),
+        h("button",{type:"button",class:"btn sub",innerHTML:ic("pencil")+"先生のもんだいセットにする（編集・書き出し）",onclick:run(()=>{ const s=makeSet(); go("#make?set="+s.id); })}),
+        h("button",{type:"button",class:"btn sub",innerHTML:ic("copy")+"リンクとQR",onclick:showLink}),
+        h("button",{type:"button",class:"btn sub",innerHTML:ic("play")+"ひとりで ためす",onclick:run(()=>{ go(uHash(cfg())); })})),
+        h("div",{class:"note",text:"「出題」と「セットにする」は、問題を4択にして先生のもんだいセットに保存します（出題は同じ単元なら上書き）。リンクとQRは単元IDと設定だけなので短く、開くたびに児童の端末で同じ問題を作ります。"}));
+    }
+    panel.replaceChildren(...rows,msg,out);
+    if(kid) startBtn.disabled=!k, startBtn.textContent=T("u.go");
+  }
+  const startBtn=h("button",{type:"button",class:"btn again ustart",text:T("u.go"),onclick:()=>{ if(!need()) return; uSave(); go(uHash({...cfg(),n:Math.min(UPK.n,20)})); }});
+  root.append(
+    h("div",{class:"topbar"},h("button",{type:"button",class:"back",innerHTML:kid?BK():ic("arrow-left")+"先生の画面",onclick:()=>go(kid?"#home":"#teacher")}),h("b"),h("span")),
+    h("h2",{class:"th2",innerHTML:kid?"":ic("check")+"単元から つくる",text:kid?`${SUBJ_JA[subj]&&easyG(kg)?T("subj."+SJ[subj]):SUBJ_JA[subj]}　${T("u.pick")}`:null}),
+    kid?null:h("p",{class:"note",text:"教科・学年でしぼって、単元をいくつでも選べます（学年をまたいでもOK）。選んだ単元を等分にまぜて出題します。"}),
+    filt,sets,h("div",{class:"uwrap"},panel,cards),kid?h("div",{class:"ufoot"},startBtn):null);
+  app.replaceChildren(root);
+  drawFilter(); drawSets(); drawCards(); drawPanel();
+}
+
+/* ---- リンクで開いたとき：紹介 → 1分スプリント ---- */
+function renderUnitLink(hash){
+  stopTimer(); const c=uParse(hash);
+  if(!UNITS_OK||!c){ setLG(0); app.replaceChildren(h("div",{class:"play"},h("div",{class:"q"},T("u.bad"),h("br"),h("button",{type:"button",class:"btn",text:T("n.home"),onclick:()=>go("#home")})))); return; }
+  const g=uMaxG(c.ids); setLG(g);
+  let choice=uChoice(c.ids,c.choice);
+  const how=h("div",{class:"pills",style:"justify-content:center"}), draw=()=>how.replaceChildren(upill(T("u.type"),!choice,()=>{ choice=false; draw(); }),upill(T("u.c4"),choice,()=>{ choice=true; draw(); }));
+  draw();
+  app.replaceChildren(h("div",{class:"play up"},
+    h("div",{class:"topbar"},h("button",{type:"button",class:"back",innerHTML:BK(),onclick:()=>go("#home")}),h("b"),h("span")),
+    h("div",{class:"q"},h("div",{class:"big",text:T("u.intro")}),h("div",{class:"small",text:T("u.1min")})),
+    h("div",{class:"uchips cen"},...c.ids.map(id=>h("span",{class:"uchipw"},h("span",{class:"uchip static"},h("span",{class:"ucg",text:UBY[id].g+"年"}),h("span",{text:UBY[id].title})),
+      h("button",{type:"button",class:"btn sub s uexb",text:T("u.ex"),"aria-label":T("u.ex")+"："+UBY[id].title,onclick:()=>uEx(UBY[id])})))),
+    how,h("div",{style:"margin-top:12px"},h("button",{type:"button",class:"btn again",id:"ugo",text:T("u.go"),onclick:()=>startUnitRun({...c,choice})}))));
+  const b=document.getElementById("ugo"); if(b) b.focus();
+}
+function startUnitRun(c){
+  stopTimer();
+  const ids=c.ids, g=uMaxG(ids), choice=uChoice(ids,c.choice); setLG(g);
+  const t=60;
+  P={x:UNITX,g,t,left:t,ok:0,ng:0,cur:null,inp:null,misses:[],missObjs:[],task:false,lock:false,over:false,chN:0,inN:0,marks:[],
+     u:{ids,n:c.n,seed:c.seed,mix:c.mix,choice,round:0,pool:UN.unitPick(ids,c.n,c.seed,c.mix),pi:0,
+        again:()=>startUnitRun({...c,seed:uSeed()})}};
+  const names=ids.map(i=>UBY[i].title).join("・");
+  app.innerHTML=`<div class="play pg">
+    <div class="topbar"><button class="back" onclick="stopTimer();go('#home')">${BK()}</button>
+      <span><b>${tico(UNITX)} ${T("g.unit.t")}</b> <span class="note" id="unm"></span></span><span class="timer" id="tm" aria-hidden="true">${t}</span></div>
+    <div class="tbar" id="tbar"><i id="tb"></i></div>
+    <div class="q"><div class="big" id="qq"></div><div class="small" id="qs"></div></div>
+    <div class="umarks" id="um" aria-label="${esc(T("u.marks"))}"></div>
+    <div class="fb" id="fb" aria-live="polite"></div>
+    <div id="area"></div>
+    <div class="uexrow"><button type="button" class="btn sub s" id="uexb">💡 ${T("u.ex")}</button></div>
+    <div class="score" id="scw">${T("p.score",0)}</div></div>`;
+  $("#unm").textContent=names.length>28?names.slice(0,27)+"…":names;
+  $("#uexb").onclick=()=>{ if(P&&P.cur&&P.u) uEx(UBY[P.cur.uid]); };
+  unitNext();
+  const end=Date.now()+t*1000, p=P;
+  timerId=setInterval(()=>{
+    if(P!==p){ stopTimer(); return; }
+    P.left=Math.max(0,(end-Date.now())/1000);
+    $("#tm").textContent=Math.ceil(P.left); $("#tb").style.width=(P.left/t*100)+"%";
+    const warn=P.left<=10; $("#tm").classList.toggle("warn",warn); $("#tbar").classList.toggle("warn",warn);
+    if(P.left<=0){ stopTimer(); timeUp(); }
+  },100);
+}
+function uMarksHtml(marks,max){
+  const m=max?marks.slice(-max):marks, cls={"○":"mo","△":"mt","×":"mx"};
+  return m.map(x=>`<span class="${cls[x]}">${x}</span>`).join("");
+}
+function unitNext(){
+  const U=P.u;
+  if(U.pi>=U.pool.length){ U.round++; U.pool=UN.unitPick(U.ids,U.n,U.seed+"-"+U.round,U.mix); U.pi=0; if(!U.pool.length) return finish(); }
+  const c=uCur(U.pool[U.pi++],U.choice); P.cur=c; P.inp={f:(c.len||[]).map(()=>""),at:0}; P.lock=false;
+  if(c.mode==="choice4") P.chN++; else P.inN++;
+  const qq=$("#qq"); qq.className="big"+(c.q.length>16?" long":""); qq.textContent=c.q;
+  if(c.subj==="eigo") qq.insertAdjacentHTML("beforeend",spkBtn("eigo",c.q));
+  $("#qs").textContent=c.small; $("#um").textContent=""; $("#um").insertAdjacentHTML("beforeend",uMarksHtml(P.marks,12));
+  const area=$("#area");
+  if(c.mode==="choice4"){
+    const cls=["ca","cb","cc","cd"];
+    area.innerHTML=`<div class="choices">${c.ch.map((x,i)=>`<button class="choice ${cls[i]}" data-c="${esc(x)}"><span class="kh" aria-hidden="true">${i+1}</span>${chLabel(x,c)}</button>`).join("")}</div>`;
+    area.querySelectorAll("[data-c]").forEach(b=>b.onclick=()=>uPick(b));
+    return;
+  }
+  const m=c.mode, dot=m==="dec"||(m==="unit"&&c.dot);
+  const sp=m==="amari"?`<button data-k="あまり" class="sk">${T("u.amari")}</button>`:m==="frac"?`<button data-k="▶" class="sk" aria-label="${esc(T("u.nextf"))}">▶</button>`:dot?`<button data-k=".">.</button>`:"";
+  const keys=["7","8","9","4","5","6","1","2","3"].map(k=>`<button data-k="${k}">${k}</button>`).join("")
+    +(sp?sp+`<button data-k="0">0</button>`:`<button data-k="0" class="zero">0</button>`)+`<button data-k="⌫" aria-label="${esc(T("u.del"))}">⌫</button>`;
+  const tail=m==="unit"?`<div class="unitrow">${c.units.map(u=>`<button data-u="${esc(u)}">${esc(u)}</button>`).join("")}</div>`
+    :`<div class="pad" style="margin-top:8px"><button class="ok" data-k="OK" style="grid-column:span 3">${T("pad.ok")}</button></div>`;
+  area.innerHTML=`<div class="uans" id="ans"></div><div class="pad">${keys}</div>${tail}`;
+  area.querySelectorAll("[data-k]").forEach(b=>b.onclick=()=>uKey(b.dataset.k));
+  area.querySelectorAll("[data-u]").forEach(b=>b.onclick=()=>uUnitTap(b.dataset.u));
+  uShowInp();
+}
+function uShowInp(){
+  const c=P.cur, I=P.inp, el=$("#ans"); if(!el||!c) return;
+  const box=i=>h("span",{class:"ufld"+(I.at===i?" at":""),text:I.f[i]||" "});
+  let kids;
+  if(c.mode==="amari") kids=[box(0),h("span",{class:"ulab",text:T("u.amari")}),box(1)];
+  else if(c.mode==="frac") kids=I.f.length===3?[box(0),h("span",{class:"ufrac"},box(1),h("i",{class:"ubar2"}),box(2))]:[h("span",{class:"ufrac"},box(0),h("i",{class:"ubar2"}),box(1))];
+  else if(c.mode==="unit") kids=[box(0),h("span",{class:"ulab",text:T("u.pickunit")})];
+  else kids=[box(0)];
+  el.replaceChildren(...kids);
+}
+function uKey(k){
+  if(!P||!P.u||P.lock||P.review||!P.cur) return;
+  const c=P.cur, I=P.inp, m=c.mode; if(m==="choice4") return;
+  if(k==="⌫"){ if(I.f[I.at]) I.f[I.at]=I.f[I.at].slice(0,-1); else if(I.at>0) I.at--; }
+  else if(k==="OK") return uSubmit();
+  else if(k==="あまり"){ if(m==="amari") I.at=1; }
+  else if(k==="▶"){ if(I.at<I.f.length-1) I.at++; }
+  else if(k==="."){ if((m==="dec"||(m==="unit"&&c.dot))&&!I.f[I.at].includes(".")&&I.f[I.at].length<7) I.f[I.at]=(I.f[I.at]||"0")+"."; }
+  else if(/^\d$/.test(k)){
+    const L=c.len[I.at]; let s=I.f[I.at];
+    if(s.length<L){ s+=k; I.f[I.at]=s; }
+    if(m!=="unit"&&s.length>=L){          // けたが そろったら、つぎの入力へ。さいごなら自動で判定（ネットレ方式）
+      if(I.at<I.f.length-1) I.at++; else { uShowInp(); return uSubmit(); }
+    }
+  }
+  uShowInp();
+}
+const uNorm=s=>String(s||"").replace(/^0+(?=\d)/,"");
+function uSubmit(){
+  const c=P.cur, f=P.inp.f, m=c.mode; let input;
+  if(m==="num"||m==="dec"){ if(!f[0]) return; input=f[0].replace(/\.$/,""); }
+  else if(m==="amari"){ if(!f[0]) return; input={q:uNorm(f[0]),r:uNorm(f[1]||"0")}; }
+  else if(m==="frac"){ const k=f.length===3?1:0; if(!f[k]||!f[k+1]||/^0+$/.test(f[k+1])) return; input={w:k?uNorm(f[0]||"0"):0,n:uNorm(f[k]),d:uNorm(f[k+1])}; }
+  else return;
+  uJudge(UN.check(c.u,input));
+}
+function uUnitTap(un){
+  if(!P||!P.u||P.lock||!P.cur||P.cur.mode!=="unit") return;
+  const f=P.inp.f[0]; if(!f) return;
+  uJudge(UN.check(P.cur.u,{num:uNorm(f.replace(/\.$/,"")),unit:un}));
+}
+function uPick(b){
+  if(!P||P.lock||b.disabled) return;
+  const right=b.dataset.c===P.cur.a;
+  if(right) $("#area").querySelectorAll(".choice").forEach(e=>{ if(e.dataset.c===P.cur.a) e.classList.add("right"); else e.classList.add("wrong"); });
+  else { b.classList.add("wrong"); b.disabled=true; }
+  uJudge(right);
+}
+/* ○△×：1回目で正解＝○、1回まちがえて正解＝△、2回まちがえたら×（答えを見せて次へ） */
+function uJudge(right){
+  const p=P, c=p.cur, fb=$("#fb"); p.lock=true;
+  sfx(right?"ok":"ng");
+  let mark, wait;
+  if(right){
+    mark=c.tries===0?"○":"△";
+    if(mark==="○"){ p.ok++; fb.className="fb ok"; fb.textContent=T("fb.ok"); wait=350; }
+    else { p.ng++; p.misses.push(`${c.q} → ${c.a}`); p.missObjs.push(c); fb.className="fb ok"; fb.textContent=T("u.ok2"); wait=700; }
+  } else {
+    c.tries++;
+    if(c.tries<2){ fb.className="fb ng"; fb.textContent=T("u.retry"); p.inp={f:(c.len||[]).map(()=>""),at:0}; if(c.mode!=="choice4") uShowInp(); p.lock=false; return; }
+    mark="×"; p.ng++; p.misses.push(`${c.q} → ${c.a}`); p.missObjs.push(c);
+    fb.className="fb ng"; fb.textContent=T("fb.ng",c.a); wait=1700;
+    if(c.mode==="choice4") $("#area").querySelectorAll(".choice").forEach(e=>{ if(e.dataset.c===c.a) e.classList.add("right"); else e.classList.add("wrong"); });
+  }
+  p.marks.push(mark); $("#um").innerHTML=uMarksHtml(p.marks,12);
+  $("#sc").textContent=p.ok;
+  setTimeout(()=>{ if(P!==p) return; if(p.left>0&&timerId){ fb.className="fb"; fb.textContent=""; unitNext(); } },wait);
+}
+function uKeydown(e){
+  const c=P.cur;
+  if(c.mode==="choice4"){ if(/^[1-4]$/.test(e.key)){ const b=$("#area").querySelectorAll(".choice")[+e.key-1]; if(b) uPick(b); } return; }
+  if(/^[0-9]$/.test(e.key)) uKey(e.key);
+  else if(e.key==="."||e.key===",") uKey(".");
+  else if(e.key==="Backspace") uKey("⌫");
+  else if(e.key==="Enter") uKey("OK");
+}
+
 /* ================= ルーター ================= */
 function route(){
   if(qzFlush){ qzFlush(); qzFlush=null; }
   stopTimer(); P=null; M=null; QK=null; QS=null; QH=null; ckStop(); prStop(); wakeOff();
   if(ES){ ES.close(); ES=null; }
-  const {path:path0,q}=params(), path=location.hash.startsWith("#q=")?"qlink":path0;
+  const {path:path0,q}=params(), path=location.hash.startsWith("#q=")?"qlink":location.hash.startsWith("#u=")?"ulink":path0;
   setLG(path==="home"||path==="modesetup"||path==="join"||path==="record"?ui.grade:0);
-  document.body.dataset.v=["check","play","setup","modesetup","mode","join","lobby","host","teacher","record","make","qlink"].includes(path)?path:"home";
+  document.body.dataset.v=["check","play","setup","modesetup","mode","join","lobby","host","teacher","record","make","qlink","units","ulink"].includes(path)?path:"home";
   // 課題リンク（task=1）で開いたゲームでは、ほかの画面への入口を隠す（授業モード）
   const lesson=(path==="play"||path==="mode")&&q.get("task")==="1";
   document.body.classList.toggle("lesson",lesson);
@@ -2930,6 +3352,8 @@ function route(){
   else if(path==="teacher") renderTeacher(q);
   else if(path==="make") renderMake(q);
   else if(path==="qlink") renderQuizLink(location.hash.slice(3));
+  else if(path==="units") renderUnits(q);
+  else if(path==="ulink") renderUnitLink(location.hash);
   else if(path==="record") renderRecord();
   else renderHome();
 }

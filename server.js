@@ -226,7 +226,7 @@ http.createServer(async (req, res) => {
       res.writeHead(200, { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "no-store" });
       return fs.createReadStream(PAGE).pipe(res);
     }
-    const dm = url.pathname.match(/^\/data\/([\w-]+\.js)$/);
+    const dm = url.pathname.match(/^\/data\/((?:gen\/)?[\w-]+\.js)$/);   // data/gen/*.js は単元ごとの問題の型
     if (req.method === "GET" && dm) {
       const f = path.join(DATA_DIR, dm[1]);
       if (!fs.existsSync(f)) return json(res, 404, { error: "not found" });
