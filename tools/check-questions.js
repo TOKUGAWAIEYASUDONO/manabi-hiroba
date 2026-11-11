@@ -181,7 +181,7 @@ for (let g = 1; g <= 6; g++) {
       if (d) { if (src[i] === "{") d++; else if (src[i] === "}") d--; continue; }
       o += src[i];
     } return o; };
-  for (const fn of ["renderHome", "renderGradePick", "renderSetup", "renderModeSetup", "renderJoin", "lobbyView", "finish", "modeResult", "netResult", "startReview", "reviewDone"]) {
+  for (const fn of ["renderHome", "renderRecord", "renderGradePick", "renderSetup", "renderModeSetup", "renderJoin", "lobbyView", "finish", "modeResult", "netResult", "startReview", "reviewDone"]) {
     const a = html.indexOf("function " + fn + "(");
     if (a < 0) { err("画面", `${fn} が見つからない`); continue; }
     const z = html.indexOf("\n}\n", a), body = html.slice(a, z).replace(/const report=`[^`]*`;/g, "").replace(/\/\*[\s\S]*?\*\//g, "").replace(/(^|\s)\/\/[^\n]*/g, "$1");
