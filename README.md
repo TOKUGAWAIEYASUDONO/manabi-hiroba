@@ -129,3 +129,8 @@ index.html は data フォルダと一緒に置くこと（ダブルクリック
 
 ## ひろばたんけん（コレクション v2）の長さ
 - 地図は 7×5。近道のとびらは 最大5つ（1問ずつ。まちがえると その近道がとじるだけ）、ゴール手前のとびらは 1つで 2問せいかいで ひらく（まちがえても何度でも）。1回 2〜3分ほどを目安にしている（`tools/test-collection.js` が地図の形を検査）。
+
+## 先生向け「学年・単元から さがす」（guide/）
+- `guide/` … 学年×教科ごとの単元の一覧（検索で見つかる静的ページ）・入口・先生の問題で遊ぶ（custom.html）。**生成物なので手で直さない**
+- `tools/build-guide.js` … data/units.js などから guide/・sitemap.xml・robots.txt を作る。`node tools/build-guide.js`（データを変えたら再実行して commit）。`data/textbook-order.js`（教科書会社ごとの並び）があれば、各ページに「教科書の順で見る」を足す
+- `tools/check-guide.js` … 全単元の掲載・リンク先ID・title/description/h1/canonical/JSON-LD・sitemap を検査。`node tools/check-guide.js`
