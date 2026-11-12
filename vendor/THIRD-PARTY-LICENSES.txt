@@ -228,3 +228,6 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
 - vendor/audio/bgm-ending.mp3（BGM（クイズ・すごろく））: Juhani Junkala「5 Chiptunes (Action)」ending / https://opengameart.org/content/5-chiptunes-action
 - vendor/img/planet.png（惑星（ロケット ステージ4。320px に縮小））: Kenney「Planets」planet00 / https://kenney.nl/assets/planets
 - vendor/img/coin.png（コイン（たからばこの大画面））: Kenney「Puzzle Pack 2」coin_01 / https://kenney.nl/assets/puzzle-pack-2
+
+## プロジェクト内で作成した共有画像（第三者素材ではない）
+- vendor/img/og-home.png：AI生成画像。Codex の画像生成で 2026-11-12 にこのプロジェクト向けに作成。実在の人物の写真ではない。上記 CC0 素材には含まれない。
