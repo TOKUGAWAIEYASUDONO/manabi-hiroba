@@ -8,7 +8,8 @@ const path = require("path");
 const crypto = require("crypto");
 const dir = path.join(__dirname, "..", "vendor"), out = path.join(dir, "SHA256SUMS.txt");
 const walk = (d, base = "") => fs.readdirSync(d, { withFileTypes: true }).flatMap(e => e.isDirectory() ? walk(path.join(d, e.name), base + e.name + "/") : [base + e.name]);
-const files = walk(dir).filter(f => f !== "SHA256SUMS.txt").sort();
+// 自作の共有カード画像は第三者提供の部品ではないため、同梱物一覧の対象外。
+const files = walk(dir).filter(f => f !== "SHA256SUMS.txt" && !/^img\/og-[^/]+\.png$/.test(f)).sort();
 const sha = f => crypto.createHash("sha256").update(fs.readFileSync(path.join(dir, f))).digest("hex");
 const now = files.map(f => [sha(f), f]);
 if (process.argv.includes("--write")) {

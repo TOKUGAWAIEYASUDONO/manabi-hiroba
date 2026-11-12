@@ -131,7 +131,7 @@ for (const u of ready) {
         if (ch.some(c => c !== it.a && +c === actual)) patternCounts.estimateWrong++;
       }
     }
-    if (u.id === "m3-jikan-keisan") { patternCounts.time++; if (/分後/.test(it.q)) patternCounts.timeAfter++; else if (/(\d+)時\d+分から (\d+)時/.test(it.q) && +RegExp.$1 !== +RegExp.$2) patternCounts.timeCross++; }
+    if (u.id === "m3-jikan-keisan") { patternCounts.time++; if (/分(?:後|前)/.test(it.q)) patternCounts.timeAfter++; else { const tm = it.q.match(/(\d+)時\d+分から\s*(\d+)時/); if (tm && tm[1] !== tm[2]) patternCounts.timeCross++; } }
     if (u.id === "m3-anzan") { patternCounts.mental++; if (/−/.test(it.q)) patternCounts.mentalMinus++; if (!/^\d{2} [＋+−] \d{2}$/.test(it.q)) err(u.id, `2けた±2けたでない ${tag}`); }
     if (u.id === "m5-seisu-shosu") { patternCounts.place.add(it.q.match(/(100倍|10倍|1\/100|1\/10)/)?.[0]); if (/\d+\.\d*0(?:\D|$)/.test(it.q + " " + it.a)) patternCounts.placeZero++; }
     if (u.id === "m1-nanbanme") patternCounts.ordinal.add(it.q.replace(/\d+/g, "#"));
@@ -165,12 +165,13 @@ for (const u of ready) {
   if (u.gen && u.ans !== "choice4" && !modes.has(u.ans)) err(u.id, `単元の答え方(${u.ans})と実際(${[...modes]})がちがう`);
 }
 if (patternCounts.estimateMismatch || patternCounts.estimateWrong) err("m4-wari-mitsumori", `本当の商と正解の不一致 ${patternCounts.estimateMismatch}件／本当の商が誤答 ${patternCounts.estimateWrong}件`);
-if (patternCounts.time && (patternCounts.timeCross + patternCounts.timeAfter) / patternCounts.time < 0.5) err("m3-jikan-keisan", "時をまたぐ問題・分後が5割未満");
+if (patternCounts.time && (patternCounts.timeCross + patternCounts.timeAfter) / patternCounts.time < 0.5) err("m3-jikan-keisan", "時をまたぐ問題・分後／分前が5割未満");
 if (patternCounts.mental && patternCounts.mentalMinus / patternCounts.mental < 0.4) err("m3-anzan", "ひき算が4割未満");
 if (patternCounts.place.size < 4 || patternCounts.placeZero) err("m5-seisu-shosu", `4種類不足または末尾0 ${patternCounts.placeZero}件`);
 if (N >= 30 && patternCounts.ordinal.size < 3) err("m1-nanbanme", "問題の型が3種類未満");
 if (patternCounts.addMinus) err("m1-add-2keta", "たしざん単元にひき算がある");
 console.log(`単元別検査：見積もり ${patternCounts.estimate}問・本当の商が誤答 ${patternCounts.estimateWrong}件／時刻の時またぎ・分後 ${patternCounts.timeCross + patternCounts.timeAfter}/${patternCounts.time}／暗算のひき算 ${patternCounts.mentalMinus}/${patternCounts.mental}`);
+console.log(`型の内訳：時こくと時間 ${patternCounts.timeCross + patternCounts.timeAfter}/${patternCounts.time}（${patternCounts.time ? Math.round(100 * (patternCounts.timeCross + patternCounts.timeAfter) / patternCounts.time) : 0}%）／あんざん・ひき算 ${patternCounts.mentalMinus}/${patternCounts.mental}（${patternCounts.mental ? Math.round(100 * patternCounts.mentalMinus / patternCounts.mental) : 0}%）／整数と小数 ${patternCounts.place.size}種類・末尾0 ${patternCounts.placeZero}件／なんばんめ ${patternCounts.ordinal.size}種類／1年たしざん・ひき算 ${patternCounts.addMinus}件`);
 
 /* ---------- 単元の並び・段階・おすすめ・later ---------- */
 const seriesSteps = {};

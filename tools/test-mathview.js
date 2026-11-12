@@ -25,6 +25,13 @@ assert.equal(nodes.filter(n=>n.tagName==='#text').map(n=>n.textContent).join('')
 assert.equal(view.parseClockQ('不明'),null);
 const svg=view.clockSVG(4,30,{doc,size:120}); assert.equal(svg.tagName,'svg'); assert.equal(svg.getAttribute('aria-label'),'4じ30ぷん');
 assert.equal(walk(svg).filter(n=>n.tagName==='text').length,12);
+for (const picture of [{kind:'tapes',blue:5,red:3},{kind:'cups',blue:4,red:7},{kind:'line',count:8,target:3}]) {
+  const art=view.pictureSVG(picture,doc);
+  assert.equal(art.tagName,'svg');
+  assert.ok(art.getAttribute('aria-label'));
+  assert.ok(walk(art).length>3);
+}
+assert.equal(view.pictureSVG({kind:'unknown'},doc),null);
 // Generate 1,000 questions in the same two templates as sansu-12.js.
 for(let i=0;i<1000;i++) {
   const h=i%12+1, fine=i%2===1, mark=fine ? (Math.floor(i/2)%11+1) : (Math.floor(i/2)%2 ? 6 : 12);

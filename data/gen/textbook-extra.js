@@ -1,16 +1,17 @@
-/* 図なしで解ける教科書単元の問題型。 */
+﻿/* 図なしで解ける教科書単元の問題型。 */
 (function (G) {
   const g = G.gens, { ch, numFb } = G;
   const pick = (r, a, wrong, min, max, loose) => ch(r, a, wrong.map(String), numFb(r, +a, { min, max }), { loose });
   g.ordinal1 = r => {
     const n = r.range(2, 8), mode = r.int(3), answer = mode === 0 ? n + 1 : mode === 1 ? n - 1 : 10 - n + 1;
     const q = mode === 0 ? `まえに ${n}人 います。つぎの 人は まえから なんばんめ？` : mode === 1 ? `まえから ${n}ばんめの 人の まえには なん人？` : `10人の れつで まえから ${n}ばんめ。うしろから なんばんめ？`;
-    return { q, a: String(answer), choices: pick(r, answer, [answer + 1, answer - 1, n], 1, 10, true) };
+    return { q, a: String(answer), choices: pick(r, answer, [answer + 1, answer - 1, n], 1, 10, true), picture: {kind:"line", count:mode===2?10:Math.min(10,n+1), target:mode===0?n+1:n} };
   };
   g.compareMeasure1 = (r, p) => {
-    const x = r.range(2, 15), y = r.range(2, 15), a = Math.max(x, y), unit = p.kind === "capacity" ? "コップ" : "つみき";
+    const x = r.range(2, 9), y = r.range(2, 9), a = Math.max(x, y), unit = p.kind === "capacity" ? "コップ" : "テープ";
     if (x === y) return g.compareMeasure1(r, p);
-    return { q: `おなじ ${unit}で くらべます。あおは ${x}こ、あかは ${y}こ。おおい ほうは なんこ？`, a: String(a), choices: pick(r, a, [Math.min(x, y), a + 1, a - 1], 1, 20, true) };
+    if (p.kind !== "capacity" && r.chance(0.5)) return {q:"どっちが ながい？", a:x>y?"あお":"あか", ans:"choice4", choices:["あお","あか","おなじ","わからない"], picture:{kind:"tapes", blue:x, red:y}};
+    return { q: `おなじ ${unit}で くらべます。あおは ${x}こ、あかは ${y}こ。おおい ほうは なんこ？`, a: String(a), choices: pick(r, a, [Math.min(x, y), a + 1, a - 1], 1, 20, true), picture:p.kind==="capacity"?{kind:"cups",blue:x,red:y}:{kind:"tapes",blue:x,red:y} };
   };
   g.groupAdd2 = r => {
     const a = r.range(2, 8), b = r.range(2, 9), c = 10 - a, n = a + b + c;
@@ -46,3 +47,4 @@
     return { q, a: `${n}${u}`, choices: ch(r, `${n}${u}`, [x + y + z, x * y, n + x, n * 2].map(v => `${v}${u}`), numFb(r, n, { min: 1, max: 1000, fmt: v => `${v}${u}` }), { loose: true }) };
   };
 })(window.MH_GEN);
+

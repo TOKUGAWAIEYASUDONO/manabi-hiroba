@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /* index.html の静的初回読み込み量。転送時間・圧縮量・動的通信は含めない。 */
-const fs = require('fs'), path = require('path');
+const fs = require('fs'), path = require('path'), zlib = require('zlib');
 const root = path.join(__dirname, '..');
 const html = fs.readFileSync(path.join(root, 'index.html'), 'utf8');
 const css = fs.readFileSync(path.join(root, 'vendor/fonts/biz-udpgothic.css'), 'utf8');
@@ -19,5 +19,6 @@ for (const face of css.matchAll(/@font-face\s*\{([^}]+)\}/g)) {
 for (const f of fontFiles) files.add(f);
 const bytes = f => fs.statSync(path.join(root, f)).size;
 console.log(`静的初回読み込み（未圧縮・キャッシュなし）: ${files.size}ファイル、${[...files].reduce((n,f)=>n+bytes(f),0)}バイト`);
+console.log(`静的初回読み込み（gzip 個別圧縮の概算）: ${[...files].reduce((n,f)=>n+zlib.gzipSync(fs.readFileSync(path.join(root,f))).length,0)}バイト`);
 console.log(`ホーム静的表示のフォント: ${fontFiles.size}ファイル、${[...fontFiles].reduce((n,f)=>n+bytes(f),0)}バイト`);
 console.log([...files].sort().map(f=>`${f}\t${bytes(f)}`).join('\n'));

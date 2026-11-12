@@ -31,6 +31,16 @@ const teachHref = u => `../index.html#units?pick=${u.id}`;   // 本体が ?pick=
 
 const byGS = new Map();
 for (const u of UNITS) { const k = u.g + "-" + u.subj; if (!byGS.has(k)) byGS.set(k, []); byGS.get(k).push(u); }
+// 東京書籍の最初の掲載位置を代表順とし、未掲載は従来順に残す。
+for (const [key, list] of byGS) {
+  const [g, subj] = key.split("-");
+  const rows = TB && TB[subj] && TB[subj].tosho && TB[subj].tosho.g[g];
+  if (!rows) continue;
+  const order = new Map();
+  for (const row of rows) for (const id of row.u || []) if (!order.has(id)) order.set(id, order.size);
+  const original = new Map(list.map((u, i) => [u.id, i]));
+  list.sort((a, b) => (order.get(a.id) ?? Infinity) - (order.get(b.id) ?? Infinity) || original.get(a.id) - original.get(b.id));
+}
 const pages = [];
 for (let g = 1; g <= 6; g++) for (const s of SUBJ_ORDER) if (byGS.has(g + "-" + s)) pages.push({ g, subj: s, file: pageName(g, s), units: byGS.get(g + "-" + s) });
 const T = u => plain(u.title);
