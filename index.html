@@ -569,6 +569,12 @@ body[data-v=host] .wrap{max-width:none;padding:0}
 @media (prefers-reduced-motion:reduce){.poplayer .pop{animation:popfade 1.2s linear both!important;transform:translate(-50%,-100%)!important}.poplayer .pop.side{transform:translate(0,-50%)!important}}
 .csvopt{background:#fff;color:var(--ink);border:2px solid var(--edge);border-radius:12px;padding:6px 12px;font-size:16px;display:inline-flex;align-items:center;gap:6px;margin:4px}
 .csvopt small{font-size:13px;opacity:.75}.csvopt input{width:22px;height:22px}
+.nmkeep{display:inline-flex;align-items:center;gap:8px;font-size:17px;margin:8px 0 2px;color:var(--chalk)}.nmkeep input{width:24px;height:24px}
+.nmreal{font-size:15px;margin-top:8px;line-height:1.5}.nmreal b{color:#ffe08a}
+.tguide{background:#fff;color:var(--ink);border:2px solid var(--edge);border-radius:12px;padding:6px 14px;margin:10px 0}
+.tguide summary{cursor:pointer;font-weight:700;font-size:16px;min-height:40px;display:flex;align-items:center;gap:6px}
+.tguide ol{margin:6px 0 8px 18px;padding:0;font-size:14px;line-height:1.6}.tguide li{margin:5px 0}
+.lockmsg{display:inline-flex;align-items:center;gap:6px;background:#fff3c4;color:#5b4300;border:2px solid #e0b030;border-radius:999px;padding:4px 14px;font-weight:700;margin:6px 0}
 @keyframes pxin{from{transform:translateX(30px);opacity:0}to{transform:none;opacity:1}}
 .px-race-w{padding-bottom:14px}
 .px-race{flex:1;display:grid;grid-template-columns:auto 1fr;gap:28px;align-items:stretch}
@@ -823,6 +829,7 @@ const TX={
  "fg.t":["ふりがな"],"fg.on":["あり"],"fg.off":["なし"],
  /* 前に映す大画面（先生の端末） */
  "px.fs":["全画面《ぜんがめん》"],"px.back":["先生《せんせい》の画面《がめん》"],"px.start":["スタート！"],"px.end":["ここで終《お》わる"],"px.copy":["結果《けっか》をコピー"],"px.new":["同《おな》じ設定《せってい》で新《あたら》しい部屋《へや》"],
+ "px.close":["入室《にゅうしつ》をしめきる"],"px.open":["しめきりを やめる"],"px.locked":["入室《にゅうしつ》はしめきりました"],
  "px.memo":["先生《せんせい》用《よう》"],"px.url":["参加《さんか》のアドレス："],"px.code":["コードで参加《さんか》"],"px.n":["参加《さんか》："],"px.nin":["人《にん》"],"px.none":["まだ誰《だれ》もいません"],
  "px.more":[n=>`ほか ${n}人《にん》`],"px.left":["のこり時間《じかん》"],"px.ev":["できごと"],"px.top3":["上位《じょうい》3人《にん》"],"px.masu":["マス"],
  "px.res":["結果《けっか》"],"px.avg":[(n,a)=>`${n}人《にん》・平均《へいきん》正答率《せいとうりつ》 ${a}%`],"px.ok":[(a,b)=>`正解《せいかい》 ${a}/${b}`],
@@ -941,6 +948,9 @@ const TX={
  "l.room":["部屋《へや》","へや"],"l.name":["あなたの名前《なまえ》","あなたの なまえ"],"l.change":["名前《なまえ》をかえる","なまえを かえる"],
  "nm.ask":["名前《なまえ》を入《い》れてね","なまえを いれてね"],
  "nm.hint":["1〜8文字《もじ》。ひらがな・カタカナ・漢字《かんじ》・英数字《えいすうじ》","1〜8もじ。ひらがな・カタカナ・かんじ・えいすうじ"],
+ "nm.real":["名前《なまえ》は、先生《せんせい》の大《おお》きな画面《がめん》にうつるよ（クラスの みんなに見《み》えます）。<b>本当《ほんとう》の名前《なまえ》は入《い》れないで</b>、あだ名《な》にしてね","なまえは せんせいの おおきな がめんに うつるよ（クラスの みんなに みえるよ）。<b>ほんとうの なまえは いれないで</b>、あだなに してね"],
+ "nm.keep":["この端末《たんまつ》は自分《じぶん》だけで使《つか》う（名前《なまえ》をおぼえておく）","この たんまつは じぶんだけ（なまえを おぼえておく）"],
+ "nm.keep2":["みんなで使《つか》うタブレットでは、チェックしないでね","みんなで つかう タブレットでは、チェックしないでね"],
  "nm.icon":["アイコンをかえる","アイコンを かえる"],"nm.save":["かえる","かえる"],"nm.cancel":["やめる","やめる"],
  "k.out":["部屋《へや》から出《で》ました。もう一度《いちど》入《はい》りたいときは、先生《せんせい》に聞《き》いてね。","へやから でたよ。もういちど はいりたいときは、せんせいに きいてね。"],
  "l.wait":["先生《せんせい》がスタートするのを待《ま》っています…","せんせいが スタートするのを まっているよ…"],
@@ -962,6 +972,9 @@ const TX={
  "e.noreply":["先生《せんせい》の端末《たんまつ》から返事《へんじ》がありません","せんせいの たんまつから へんじが ないよ"],
  "e.ended":["この対戦《たいせん》はもう終《お》わっています","この たいせんは もう おわっているよ"],
  "e.full":["部屋《へや》がいっぱいです","へやが いっぱいだよ"],
+ "e.started":["もう始《はじ》まっているので入《はい》れません","もう はじまっているから はいれないよ"],
+ "e.closed":["入室《にゅうしつ》はしめきられました","はいれる じかんは おわったよ"],
+ "e.rate":["しばらくしてから、もう一度《いちど》ためしてね","すこし まって、もういちど やってね"],
  "e.badinfo":["参加《さんか》情報《じょうほう》が正《ただ》しくありません","さんかの じょうほうが ちがうよ"],
  "e.noinfo":["参加《さんか》情報《じょうほう》が見《み》つかりません","さんかの じょうほうが みつからないよ"],
  "e.comm":["通信《つうしん》エラー","つうしんの エラーだよ"],"e.err":["エラー","エラーだよ"],
@@ -973,9 +986,9 @@ const TX={
  "e.noeasy":["やさしいルールの部屋《へや》では使《つか》えません","やさしいルールの へやでは できないよ"],
  "e.unknown":["不明《ふめい》な操作《そうさ》です","ふめいな そうさだよ"],
  "pv":[(s,nm)=>nm==="auto"?`${s?"対戦《たいせん》用《よう》サーバーに":"先生《せんせい》の端末《たんまつ》に"}送《おく》られるのは、自動《じどう》でつくニックネーム・正解数《せいかいすう》・点数《てんすう》だけです。名前《なまえ》やメールアドレスは集《あつ》めません。`
-         :`${s?"対戦《たいせん》用《よう》サーバーに":"先生《せんせい》の端末《たんまつ》に"}送《おく》られるのは、入《い》れた名前《なまえ》・正解数《せいかいすう》・点数《てんすう》だけです。名前《なまえ》は先生《せんせい》の画面《がめん》にだけ出《で》て、部屋《へや》が終《お》わると消《き》えます。`,
+         :`${s?"対戦《たいせん》用《よう》サーバーに":"先生《せんせい》の端末《たんまつ》に"}送《おく》られるのは、入《い》れた名前《なまえ》・正解数《せいかいすう》・点数《てんすう》だけです。名前《なまえ》は先生《せんせい》の大《おお》きな画面《がめん》にうつることがあり、クラスの みんなに見《み》えます。本当《ほんとう》の名前《なまえ》は入《い》れないでください。部屋《へや》が終《お》わると消《き》えます。`,
        (s,nm)=>nm==="auto"?`${s?"サーバーに":"せんせいの たんまつに"} おくられるのは、じどうで つく なまえと、せいかいの かずと、てんすう だけです。ほんとうの なまえは あつめません。`
-         :`${s?"サーバーに":"せんせいの たんまつに"} おくられるのは、いれた なまえと、せいかいの かずと、てんすう だけです。なまえは せんせいの がめんにだけ でて、へやが おわると きえるよ。`],
+         :`${s?"サーバーに":"せんせいの たんまつに"} おくられるのは、いれた なまえと、せいかいの かずと、てんすう だけです。なまえは せんせいの おおきな がめんに うつるよ（みんなに みえるよ）。ほんとうの なまえは いれないでね。へやが おわると きえるよ。`],
  /* 先生のもんだい・クイズ（Kahoot型）。やさしい側は小1の漢字だけ */
  "m.quiz.t":["クイズ"],
  "m.quiz.d":["先生《せんせい》の問題《もんだい》に、みんなで同時《どうじ》に答《こた》える。早《はや》く正解《せいかい》するほど高得点《こうとくてん》","せんせいの もんだいに、みんなで いっしょに こたえるよ"],
@@ -1066,12 +1079,12 @@ const TX={
  "col.tk.day":["きょうの たんけんは おしまい。また あした！"],
  "col.tk.got":["たんけんチケットを 1まい もらったよ！"],
  "col.ex.t":["ひろばたんけん"],
- "col.ex.intro":["とびらの 問題《もんだい》に 答《こた》えると、近道《ちかみち》が ひらくよ。まちがえても、遠《とお》まわりすれば だいじょうぶ！","とびらの もんだいを とくと、ちかみちが ひらくよ。まちがえても、ほかの みちを いけば だいじょうぶ！"],
+ "col.ex.intro":["とびらの 問題《もんだい》に 答《こた》えると、近道《ちかみち》が ひらくよ。まちがえても、遠《とお》まわりすれば だいじょうぶ！ ゴールの 手前《てまえ》の とびらは 2問《もん》だよ。","とびらの もんだいを とくと、ちかみちが ひらくよ。まちがえても、ほかの みちを いけば だいじょうぶ！ ゴールの てまえの とびらは 2もんだよ。"],
  "col.ex.note":["どんぐりは もらえないよ。ゴールで「たんけん メモ」が 1つ もらえるよ。"],
  "col.ex.start":["たんけんを はじめる"],
  "col.ex.tap":["いきたい ばしょを タップしてね。とびらを タップすると もんだいが 出《で》るよ。","いきたい ばしょを タップしてね。とびらを タップすると もんだいが でるよ。"],
  "col.ex.stuck":["そこへは まだ いけないよ。"],
- "col.ex.door":["とびらの もんだい！"],"col.ex.hint":["ヒント"],
+ "col.ex.door":["とびらの もんだい！"],"col.ex.door2":[i=>`ゴールの とびら！ ${i}もんめ（ぜんぶで 2もん）`],"col.ex.ok2":["せいかい！ あと 1もん！ つづけて こたえてね。"],"col.ex.hint":["ヒント"],
  "col.ex.ok":["せいかい！ とびらが ひらいたよ。"],
  "col.ex.ng":[a=>`ざんねん。こたえは ${a}。とびらは とじたよ。べつの みちを いこう！`],
  "col.ex.ngf":[a=>`おしい！ こたえは ${a}。もういちど ちょうせん！`],
@@ -1229,7 +1242,11 @@ const store={get(k,d){try{const v=localStorage.getItem(k);return v==null?d:JSON.
              set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}};
 const rnd=n=>Math.floor(Math.random()*n);
 const shuffle=a=>{a=[...a];for(let i=a.length-1;i>0;i--){const j=rnd(i+1);[a[i],a[j]]=[a[j],a[i]]}return a};
-const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const esc=s=>String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+/* 児童が入れた名前の覚えかた：ふつうは このタブの間だけ（sessionStorage）。「この たんまつは じぶんだけ」を入れたときだけ localStorage（mh_name）。外したら mh_name を消す */
+const nameLoad=()=>{ let v=store.get("mh_name",""); if(typeof v!=="string"||!v){ try{ v=JSON.parse(sessionStorage.getItem("mh_name_s")); }catch(e){ v=""; } } return typeof v==="string"?v:""; };
+const nameKeepOn=()=>typeof store.get("mh_name",null)==="string";
+function nameRemember(name,keep){ try{ sessionStorage.setItem("mh_name_s",JSON.stringify(name)); }catch(e){} if(keep) store.set("mh_name",name); else try{ localStorage.removeItem("mh_name"); }catch(e){} }
 /* ===== ふりがな：文言・問題の「漢字​《かんじ》」を、画面に出るとき <ruby> に組み立てる（innerHTML には入れない） =====
    読みは data/quizlib.js の rubyParts／plain を使う。「なし」のときは <rt> を CSS で隠すだけ（画面は作り直さない）。
    授業モードの課題リンクに fg=0/1 をつけると、先生が固定できる */
@@ -1926,7 +1943,7 @@ function exDraw(msgKey){
     cells+=`<button type="button" class="xt ${c==="F"?"d":c}${!me&&exNear(x,y)&&c!=="x"?" near":""}" data-x="${x}" data-y="${y}" aria-label="${esc(me?T("col.ex.a.me"):lab(c))}"${c==="x"?" disabled":""}>${ico}${me?svgU("h-acorn","me"):""}</button>`;
   }
   const q=E.q;
-  const panel=q?`<section class="exq" aria-live="polite"><h3>${T("col.ex.door")}</h3><div class="q"><div class="big${q.c.q.length>16?" long":""}" id="exqq"></div><div class="small" id="exqs"></div></div>
+  const panel=q?`<section class="exq" aria-live="polite"><h3>${q.fin?T("col.ex.door2",(E.fgot|0)+1):T("col.ex.door")}</h3><div class="q"><div class="big${q.c.q.length>16?" long":""}" id="exqq"></div><div class="small" id="exqs"></div></div>
       <div class="choices">${q.c.ch.map((x,i)=>`<button type="button" class="choice ${["ca","cb","cc","cd"][i]}" data-c="${esc(x)}"><span class="kh" aria-hidden="true">${i+1}</span>${chLabel(x,q.c)}</button>`).join("")}</div>
       <div class="fb" id="exfb" aria-live="polite"></div><div id="exhint"></div></section>`
     :`<p class="note" style="text-align:center" role="status">${T(msgKey||"col.ex.tap")}</p>`;
@@ -1969,7 +1986,9 @@ function exPick(b){
   const E=EX, q=E&&E.q; if(!q||q.lock||b.disabled) return;
   const c=q.c, right=b.dataset.c===c.a, fb=$("#exfb"); q.lock=true; sfx(right?"ok":"ng");
   const all=[...app.querySelectorAll(".exq .choice")];
-  if(right){ all.forEach(e=>e.classList.add(e.dataset.c===c.a?"right":"wrong")); fb.className="fb ok"; fb.textContent=T("col.ex.ok"); E.right++;
+  if(right){ all.forEach(e=>e.classList.add(e.dataset.c===c.a?"right":"wrong")); fb.className="fb ok"; E.right++;
+    if(q.fin&&(E.fgot|0)<1){ E.fgot=(E.fgot|0)+1; fb.textContent=T("col.ex.ok2"); setTimeout(()=>{ if(EX!==E) return; E.q=null; exAsk(q.x,q.y,true); },900); return; }      // ゴールの手前のとびらは 2もん せいかい
+    fb.textContent=T("col.ex.ok");
     setTimeout(()=>{ if(EX!==E) return; E.st[q.y][q.x]="o"; E.pos=[q.x,q.y]; E.steps++; E.q=null; exDraw(); },650); return; }
   E.wrong++;
   all.forEach(e=>{ if(e.dataset.c===c.a) e.classList.add("right"); else e.classList.add("wrong"); e.disabled=true; });
@@ -2085,6 +2104,16 @@ function colTeacherHtml(){
 }
 /*T-END*/
 /*T-BEGIN*/
+/* 先生向けの説明（README と同じ文）。児童の名前・通信・保存について */
+const TGUIDE=[
+  "名前は児童が自由に入力します。本名（名字）ではなく、あだ名を入れるよう声をかけてください。名前は先生の端末のメモリにだけ置き、部屋を閉じると消えます。",
+  "先生の画面を教室の大画面に映すと、児童の名前がクラス全員に見えます。上位の子と、動いた子の名前だけが出ます（最下位の子の名前は出しません）。全員の表は「先生だけ みる」を押したときだけ開きます。気になる名前は、名前を押すと「かえる／ニックネームにする／へやから だす」ができます。",
+  "共用の端末では、前の子の名前が次の子の入力欄に出ないよう、名前は初期設定では覚えません（このタブを閉じると消えます）。児童が「この たんまつは じぶんだけ」を選んだときだけ、その端末に名前を残します。共用の端末では選ばないよう伝えてください。",
+  "結果のCSV・コピーに名前を入れるかは先生が選べます（初期設定は入れません）。名前入りのファイルは、学校の個人情報の扱いに従って保管・削除してください。",
+  "4けたの部屋コードは、インターネット上の公開仲介サーバー（0.peerjs.com）を通じて端末どうしをつなぎます。コードを教室の外に出さず、全員がそろったら「入室をしめきる」を押してください。ゲームが始まったあとは入れません。同じ端末からの続けての参加は一定時間ごとに数を制限しています。コードを知られたときは、「先生の画面」にもどって部屋を作りなおすと新しいコードになります。",
+  "通信先は 0.peerjs.com（仲介）、stun.l.google.com（STUN）、*.turn.peerjs.com（直接つながらないときの中継）だけです。これらにはIPアドレスが届きますが、名前や得点は届きません（端末どうしの通信は暗号化されます）。",
+  "ひろば・どんぐり・ずかんは、この端末の記録だけで動き、名前・順位・外部送信はありません。授業で使わないときは「⑥」でオフにできます。リンクの col=0 でもオフにできます。"
+];
 function renderTeacher(q){
   setLG(0); QSETS=null; const qsets=qsGet();
   const opt=GAMES.map(x=>`<option value="${x.id}">${x.ico} ${x.t}（${subjN(x.s)}）</option>`).join("");
@@ -2093,6 +2122,8 @@ function renderTeacher(q){
   app.innerHTML=`
     <h2 class="th2">${ic("graduation-cap")}先生の画面</h2>
     <p class="note">ログインは不要です。友だち対戦で児童が入れた名前は、先生の端末のメモリにだけ置き、部屋を閉じると消えます（どこにも保存しません）。　<a href="#check">${ic("plug")} 接続テスト（友だち対戦が使えるか調べる）</a></p>
+    <details class="tguide" id="tguide"><summary>${ic("lock")} つかう まえに（児童の情報の あつかい・先生向けの説明）</summary>
+      <ol>${TGUIDE.map(t=>`<li>${esc(t)}</li>`).join("")}</ol></details>
     <div class="form" style="margin-top:12px;border-color:var(--accent)">
       <b style="font-size:18px">⑤ 単元から つくる（単元を組み合わせて出題）</b>
       <span class="prep"><b>準備：なし</b>（問題は単元ごとの「型」から自動で作ります。正解はコードで計算するので、誤りは出ません）</span>
@@ -2118,7 +2149,7 @@ function renderTeacher(q){
     <div class="form" style="margin-top:16px;border-color:var(--accent)">
       <b style="font-size:18px">③ クラスで友だち対戦（児童の端末を使う）</b>
       <span class="prep"><b>準備：児童の端末とネット接続</b>（先に接続テストをすると安心です）</span>
-      <span class="note">部屋を作ると4桁のコードが出ます。児童は「コードで参加」からコードを入れて、名前を入力します（名前は先生の画面にだけ出ます）。ふざけた名前は、先生の画面で名前を押すと変更・ニックネーム化・退出ができます。「なまえの きめかた」を自動ニックネームにすると、動物の名前になります。終わると全員の正解数・正答率が集まります。</span>
+      <span class="note">部屋を作ると4桁のコードが出ます。児童は「コードで参加」からコードを入れて、名前を入力します（名前は先生の画面に出ます。大画面に映すと、クラスの全員に見えます）。ふざけた名前は、先生の画面で名前を押すと変更・ニックネーム化・退出ができます。全員がそろったら「入室をしめきる」を押してください。ゲームが始まったあとは入れません。「なまえの きめかた」を自動ニックネームにすると、動物の名前になります。終わると全員の正解数・正答率が集まります。</span>
       <div class="tcols">
         <label>あそびかた<select id="nm">${[...MODES,QMODE].map(m=>`<option value="${m.id}">${m.ico} ${m.t}</option>`).join("")}</select></label>
         <label>問題<select id="ng">${opt}${setOpt}</select></label>
@@ -2624,12 +2655,28 @@ async function srvApi(name,body){
   return j;
 }
 function srvListen(code,onState,onLost){
-  /* 先生の画面は hostKey、児童の画面は自分の pid と token を添える（サーバーは、先生にだけ全員の名前を送る） */
-  const who=HOST&&HOST.code===code&&HOST.hostKey?"&hostKey="+encodeURIComponent(HOST.hostKey):NET&&NET.code===code?"&pid="+encodeURIComponent(NET.pid)+"&token="+encodeURIComponent(NET.token):"";
-  const es=new EventSource("/api/events?code="+encodeURIComponent(code)+who);
-  es.onmessage=e=>onState(JSON.parse(e.data));
-  es.onerror=()=>{ if(es.readyState===2) onLost(); };
-  return es;
+  /* 先生の画面は hostKey、児童の画面は自分の pid と token を、URL ではなく POST の本文で添える（URL はログやプロキシに残りうるため）。
+     サーバーは、先生にだけ全員の名前を送る。切れたら2秒後につなぎなおし、部屋が無ければ onLost */
+  const who=HOST&&HOST.code===code&&HOST.hostKey?{hostKey:HOST.hostKey}:NET&&NET.code===code?{pid:NET.pid,token:NET.token}:{};
+  const ctl=new AbortController(); let closed=false;
+  (async()=>{
+    while(!closed){
+      try{
+        const r=await fetch("/api/events",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({code,...who}),signal:ctl.signal});
+        if(r.status===404){ if(!closed) onLost(); return; }
+        const rd=r.body.getReader(), dec=new TextDecoder(); let buf="";
+        for(;;){
+          const {value,done}=await rd.read(); if(done) break;
+          buf+=dec.decode(value,{stream:true}); let i;
+          while((i=buf.indexOf("\n\n"))>=0){ const ev=buf.slice(0,i); buf=buf.slice(i+2);
+            const d=ev.split("\n").filter(l=>l.startsWith("data: ")).map(l=>l.slice(6)).join("\n");
+            if(d){ let s=null; try{ s=JSON.parse(d); }catch(e){} if(s&&!closed) onState(s); } }
+        }
+      }catch(e){ if(closed) return; }
+      if(!closed) await new Promise(ok=>setTimeout(ok,2000));
+    }
+  })();
+  return {close(){ closed=true; try{ctl.abort()}catch(e){}; }};
 }
 
 /* ---- 標準：先生の端末がサーバー役（P2P） ---- */
@@ -2651,16 +2698,16 @@ const NAME_ERR={empty:"名前を入れてね",long:"名前は8文字までです
 /* host=true（先生の画面）だけ、全員の名前と「いま答えたか」を持つ。児童の画面には、ほかの子の名前を入れない（name は空） */
 function hrPub(r,host){
   const nm=p=>host?p.name:"";
-  return {code:r.code,mode:r.mode,game:r.game,g:r.g,t:r.t,rule:r.rule,nm:r.nm,status:r.status,endAt:r.endAt,now:Date.now(),
+  return {code:r.code,mode:r.mode,game:r.game,g:r.g,t:r.t,rule:r.rule,nm:r.nm,status:r.status,closed:!!r.closed,endAt:r.endAt,now:Date.now(),
     gt:r.gt||"",
     players:[...r.players.values()].map(p=>r.qz
-      ?{pid:p.pid,name:nm(p),emoji:p.emoji,v:p.v,ok:p.ok,ng:p.ng,st:p.st|0,lp:p.lp|0,lc:p.lc|0,...(r.qz.phase==="end"?{rec:p.rec||""}:{}),...(host&&r.qz.phase==="q"&&r.qz.answeredBy(p.pid)?{a:1}:{})}
+      ?{pid:p.pid,name:nm(p),emoji:p.emoji,v:p.v,ok:p.ok,ng:p.ng,st:p.st|0,lp:p.lp|0,lc:p.lc|0,...(host&&r.qz.phase==="end"?{rec:p.rec||""}:{}),...(host&&r.qz.phase==="q"&&r.qz.answeredBy(p.pid)?{a:1}:{})}
       :{pid:p.pid,name:nm(p),emoji:p.emoji,v:p.v,ok:p.ok,ng:p.ng}),
     ...(r.qz?{quiz:r.qz.pub()}:{})};
 }
 function hrKid(r,conn,kid){      // その児童だけに、自分の名前（me）を添える
   const p=conn._pid&&r.players.get(conn._pid); kid=kid||hrPub(r,false);
-  return p?{...kid,me:p.name}:kid;
+  return p?{...kid,me:p.name,...(r.qz&&r.qz.phase==="end"?{myrec:p.rec||""}:{})}:kid;      // ○×の記録は、その子の分だけ
 }
 function hrBroadcast(r,now){
   const send=()=>{ r.timer=null; const kid=hrPub(r,false);
@@ -2683,12 +2730,20 @@ function hrEmoji(r){      // 名前を入力する部屋のアイコン：まだ
   const used=new Set([...r.players.values()].map(p=>p.emoji)), free=NICK_ANI.filter(a=>!used.has(a[1])), from=free.length?free:NICK_ANI;
   return from[rnd(from.length)][1];
 }
+/* 部屋に入れない状態：終わった／もう始まった（途中参加はできない）／先生が しめきった */
+const hrJoinBlock=r=>r.status==="ended"?[409,{error:"この対戦はもう終わっています"}]:r.status!=="lobby"?[409,{error:"もう始まっているので入れません"}]:r.closed?[409,{error:"入室はしめきられました"}]:null;
+/* join のくり返し制限：1つの接続から10秒に5回まで／部屋全体で1秒に10回まで（コードを当てる総当たり・部屋を埋める いたずら対策） */
+function hrRate(r,conn){
+  const now=Date.now(); conn._jt=(conn._jt||[]).filter(t=>now-t<10000); r.jt=(r.jt||[]).filter(t=>now-t<1000);
+  if(conn._jt.length>=5||r.jt.length>=10) return false;
+  conn._jt.push(now); r.jt.push(now); return true;
+}
 const hrNames=(r,except)=>[...r.players.values()].filter(q=>q!==except).map(q=>q.name);
 function hrApi(r,name,b){
   const pl=()=>{const p=r.players.get(b.pid); return p&&p.token===b.token?p:null;};
-  if(name==="info") return [200,{nm:r.nm}];
+  if(name==="info") return hrJoinBlock(r)||[200,{nm:r.nm}];
   if(name==="join"){
-    if(r.status==="ended") return [409,{error:"この対戦はもう終わっています"}];
+    const blk=hrJoinBlock(r); if(blk) return blk;
     if(r.players.size>=60) return [409,{error:"部屋がいっぱいです"}];
     let who;
     if(r.nm==="input"){      // 児童が入力した名前：長さ・文字・NG語を調べ、同じ名前には番号をつける（server.js と同じ検査）
@@ -2712,6 +2767,7 @@ function hrApi(r,name,b){
       for(const c of [...r.conns]) if(c._pid===p.pid){ try{c.send({type:"state",s:hrPub(r,false)})}catch(e){} c._pid=""; r.conns.delete(c); } }
     hrBroadcast(r,true); return [200,{ok:true}];
   }
+  if(name==="close"){ r.closed=!!b.on; hrBroadcast(r,true); return [200,{ok:true,closed:r.closed}]; }      // 先生：入室をしめきる／あける
   if(name==="start"){ if(!r.players.size) return [409,{error:"まだ誰も参加していません"}];
     for(const p of r.players.values()) Object.assign(p,{v:0,ok:0,ng:0});
     if(r.qz){ r.status="playing"; r.endAt=0; r.qz.begin(Date.now()); qzSync(r); hrBroadcast(r,true); return [200,{ok:true}]; }
@@ -2756,7 +2812,14 @@ function hrHandle(r,conn,m){
   let res;
   const body=m.body&&typeof m.body==="object"?m.body:{};
   if(m.name==="info") res=hrApi(r,"info",{});
-  else if(m.name==="join"){ res=hrApi(r,"join",{name:body.name}); if(res[0]===200){ r.conns.add(conn); conn._pid=res[1].pid; } }
+  else if(m.name==="join"){
+    if(!hrRate(r,conn)) res=[429,{error:"しばらくしてから、もう一度ためしてね"}];
+    else{
+      const old=!hrJoinBlock(r)&&conn._pid&&r.players.get(conn._pid);      // 同じ接続でもう一度入るときは、前の分を外す（1つの接続で人数をふやさない）
+      if(old){ r.players.delete(old.pid); if(r.qz) r.qz.remove(old.pid); conn._pid=""; }
+      res=hrApi(r,"join",{name:body.name}); if(res[0]===200){ r.conns.add(conn); conn._pid=res[1].pid; } else if(old) hrBroadcast(r);
+    }
+  }
   else if(m.name==="hello"){ const b=body, p=r.players.get(b.pid);
     if(p&&p.token===b.token){ r.conns.add(conn); conn._pid=p.pid; res=[200,{ok:true}]; } else res=[403,{error:"参加情報が見つかりません"}]; }
   else if(m.name==="reroll"||m.name==="rename"||m.name==="act"||m.name==="set") res=hrApi(r,m.name,body);
@@ -2778,8 +2841,9 @@ async function hrCreate(s){
     try{ await withTimeout(new Promise((ok,ng)=>{peer.on("open",ok);peer.on("error",ng);}),10000,"つなぎ役のサーバーに接続できませんでした"); }
     catch(e){ try{peer.destroy()}catch(_){} if(e&&e.type==="unavailable-id") continue;
       throw new Error("つなぎ役のサーバーに接続できませんでした"+(e&&e.type?"（"+e.type+"）":"")); }
-    const r={code,mode:s.mode,game:s.mode==="quiz"?"quiz":s.game,g:s.g,t:s.t,rule:ruleOf(s.rule),status:"lobby",endAt:0,players:new Map(),conns:new Set(),listeners:new Set(),timer:null,peer,gt:set?set.title:"",set:qz?null:set,qz,nm:s.nm==="auto"?"auto":"input"};
-    peer.on("connection",conn=>{ conn.on("data",m=>hrHandle(r,conn,m)); conn.on("close",()=>r.conns.delete(conn)); });
+    const r={code,mode:s.mode,game:s.mode==="quiz"?"quiz":s.game,g:s.g,t:s.t,rule:ruleOf(s.rule),status:"lobby",endAt:0,players:new Map(),conns:new Set(),allc:new Set(),closed:false,listeners:new Set(),timer:null,peer,gt:set?set.title:"",set:qz?null:set,qz,nm:s.nm==="auto"?"auto":"input"};
+    peer.on("connection",conn=>{ if(r.allc.size>=200){ try{conn.close()}catch(e){} return; }      // つながる数の上限（いたずら対策）
+      r.allc.add(conn); conn.on("data",m=>hrHandle(r,conn,m)); conn.on("close",()=>{ r.conns.delete(conn); r.allc.delete(conn); }); });
     peer.on("disconnected",()=>{ try{peer.reconnect()}catch(e){} });   // 途中参加できるよう仲介サーバーにつなぎ直す
     r.iv=setInterval(()=>{ if(r.status!=="playing") return;
       if(r.qz){ if(r.qz.tick(Date.now())){ qzSync(r); if(r.qz.phase==="end") hrEnd(r); else hrBroadcast(r,true); } }
@@ -2823,7 +2887,7 @@ function kcReq(name,body){
 async function api(name,body){
   if(NETMODE==="server") return srvApi(name,body);
   if(name==="create") return hrCreate(body);
-  if(name==="start"||name==="end"||name==="qnext"||name==="qreplay"||name==="hrename"||name==="hnick"||name==="kick"){
+  if(name==="start"||name==="end"||name==="qnext"||name==="qreplay"||name==="hrename"||name==="hnick"||name==="kick"||name==="close"){
     if(!HR||HR.code!==body.code) throw new Error("この端末で作った部屋ではありません");
     const [c,o]=hrApi(HR,name,body); if(c!==200) throw new Error(o.error); return o;
   }
@@ -2876,22 +2940,24 @@ function renderJoin(q){
   const draw=()=>{$("#dg").innerHTML=[0,1,2,3].map(i=>`<div class="digit ${i===code.length?"on":""}">${code[i]||""}</div>`).join("")};
   const busy=on=>{ $("#jpad").classList.toggle("hidden",on); $("#jauto").classList.toggle("hidden",!on); };
   let STEP="code";
-  const doJoin=async(code,name,replace)=>{
+  const doJoin=async(code,name,replace,keep)=>{
     const r=await api("join",{code,name});
     if(params().path!=="join") return;                         // つないでいる間にほかの画面へ移ったとき
     NET=r; MINE=null; NETSET_P=null; sset("mh_net",NET);
-    if(name) store.set("mh_name",name);                        // 次に入るときの初期値（この端末の localStorage だけ。きろくのバックアップには入れない）
+    if(name) nameRemember(name,!!keep);                        // 次に入るときの初期値：ふつうはこのタブだけ。「じぶんだけ」のときだけ localStorage（きろくのバックアップには入れない）
     if(replace) location.replace(location.href.split("#")[0]+"#lobby"); else go("#lobby");   // QRから来たときは、もどるボタンで自動参加に戻らないよう履歴を置きかえる
   };
   /* 名前を入れる画面（部屋の「なまえの きめかた」が「児童が入力」のとき） */
   const nameStep=(code,replace)=>{
     STEP="name";
-    let saved=store.get("mh_name",""); if(typeof saved!=="string"||!NM.check(saved).ok) saved="";
+    let saved=nameLoad(); if(!NM.check(saved).ok) saved="";
     app.innerHTML=`<div class="play">
       <div class="topbar"><button class="back" id="nback">${BK()}</button><b>${T("nm.ask")}</b><span></span></div>
       <div class="q"><div class="note">${T("l.room")} ${esc(code)}</div>
         <div style="margin:14px 0"><input class="nmi" id="nmi" type="text" maxlength="12" autocomplete="off" autocapitalize="off" spellcheck="false" aria-label="${esc(rbp(T("nm.ask")))}"></div>
-        <div class="note">${T("nm.hint")}</div><div class="err" id="nerr" role="alert"></div>
+        <div class="note">${T("nm.hint")}</div><div class="note nmreal">${T("nm.real")}</div>
+        <label class="nmkeep"><input type="checkbox" id="nkeep"${nameKeepOn()?" checked":""}> ${T("nm.keep")}</label><div class="note">${T("nm.keep2")}</div>
+        <div class="err" id="nerr" role="alert"></div>
         <button class="btn" id="nok">${T("j.go")}</button></div></div>`;
     const inp=$("#nmi"); inp.value=saved; inp.focus(); inp.select();
     $("#nback").onclick=()=>{ renderJoin(new URLSearchParams()); };
@@ -2899,7 +2965,7 @@ function renderJoin(q){
       const c=NM.check(inp.value);
       if(!c.ok) return $("#nerr").textContent=T("e.nm."+c.why);
       $("#nok").disabled=true; $("#nerr").textContent="";
-      try{ await doJoin(code,c.name,replace); }
+      try{ await doJoin(code,c.name,replace,$("#nkeep").checked); }
       catch(e){ if(params().path!=="join") return; $("#nok").disabled=false; $("#nerr").textContent=errMsg(e.message); }
     };
     $("#nok").onclick=submit;
@@ -2965,7 +3031,7 @@ function lobbyView(s){
   $("#rr").onclick=()=>{ LEDIT=true; $("#led").classList.remove("hidden"); const i=$("#nmi2"); i.value=me.name; i.focus(); i.select(); };
   const save=async()=>{
     const c=NM.check($("#nmi2").value); if(!c.ok) return $("#lerr").textContent=T("e.nm."+c.why);
-    try{ const r=await api("rename",{...NET,name:c.name}); NET={...NET,...r}; sset("mh_net",NET); store.set("mh_name",c.name); LEDIT=false; if(LSTATE) lobbyView({...LSTATE,players:LSTATE.players.map(p=>p.pid===NET.pid?{...p,name:r.name}:p)}); }
+    try{ const r=await api("rename",{...NET,name:c.name}); NET={...NET,...r}; sset("mh_net",NET); nameRemember(c.name,nameKeepOn()); LEDIT=false; if(LSTATE) lobbyView({...LSTATE,players:LSTATE.players.map(p=>p.pid===NET.pid?{...p,name:r.name}:p)}); }
     catch(e){ $("#lerr").textContent=errMsg(e.message); }
   };
   $("#lsv").onclick=save; $("#nmi2").onkeydown=e=>{ if(e.key==="Enter"){ e.preventDefault(); save(); } };
@@ -3067,7 +3133,7 @@ const clock=n=>n>=60?Math.floor(n/60)+":"+String(n%60).padStart(2,"0"):String(n)
 /*T-BEGIN*/
 /* ===== 先生の画面：名前の管理（かえる／ニックネームに／へやから出す）と、動いた子の名前の吹き出し ===== */
 let HLAST=null;                       // 先生の画面が最後に受け取った状態（名前を押したときに使う）
-const pxVis=(n,max)=>n>=4?Math.min(max,n-1):Math.min(max,n);        // 順位の表に名前を出す人数。4人以上のときは、最下位の子の名前は出さない
+const pxVis=(n,max)=>n>=2?Math.min(max,n-1):Math.min(max,n);        // 順位の表に名前を出す人数。4人以上のときは、最下位の子の名前は出さない
 /* 全員の名前つきの表は、大画面には出さない。「先生だけ みる」を押したときだけ開く（投影していないことを確かめてから） */
 function teacherOnly(content){
   const box=h("div",{class:"hidden",id:"tonly"},h("p",{class:"note",text:"※ 全員《ぜんいん》の名前《なまえ》が出《で》ます。大画面《だいがめん》に映《うつ》していないことを確《たし》かめてから、開《ひら》いてください。"}),content);
@@ -3075,8 +3141,8 @@ function teacherOnly(content){
   btn.onclick=()=>{ const open=box.classList.toggle("hidden")===false; btn.setAttribute("aria-expanded",open?"true":"false"); };
   return h("div",{style:"margin:12px 0;text-align:center"},btn,h("div",{style:"text-align:left"},box));
 }
-const csvWithNames=()=>{ const c=document.getElementById("csvn"); return !c||c.checked; };
-const csvOptHtml=()=>`<label class="csvopt"><input type="checkbox" id="csvn" checked> 結果に名前を入れる<small>（ファイルの扱いに注意）</small></label>`;
+const csvWithNames=()=>{ const c=document.getElementById("csvn"); return !!(c&&c.checked); };
+const csvOptHtml=()=>`<label class="csvopt"><input type="checkbox" id="csvn"> 結果に名前を入れる<small>（ふだんは入れません。ファイルの扱いに注意）</small></label>`;
 function nameMenuClose(){ const m=document.getElementById("nmenu"); if(m) m.remove(); }
 function nameMenu(pid){
   const p=HLAST&&HLAST.players.find(x=>x.pid===pid); if(!p||!HOST) return;
@@ -3219,14 +3285,15 @@ function renderHost(){
   function dockSet(k){
     if(dockKind===k) return; dockKind=k;
     const d=document.getElementById("pxdock");
-    const note=`<details class="px-note"><summary>${T("px.memo")}</summary><div class="pn">${warn()}${privacy()}<div class="note">${T("px.url")}${esc(joinUrl)}</div><div class="err" id="herr"></div></div></details>`;
+    const note=`<details class="px-note"><summary>${T("px.memo")}</summary><div class="pn">${warn()}${privacy()}<div class="note">${T("px.url")}${esc(joinUrl)}</div><div class="note">全員《ぜんいん》がそろったら「入室をしめきる」を押してください（ゲームが始まると、あとからは入れません）。コードを教室の外の人に知られたときは、「先生の画面」にもどって部屋を作りなおすと、新しいコードになります。名前が気になる子は、名前を押すと変えたり出したりできます。</div><div class="err" id="herr"></div></div></details>`;   //T
     const bk=`<button type="button" class="btn sub" onclick="go('#teacher')">${ic("arrow-left")}${T("px.back")}</button>`;
-    const main=k==="lobby"?`<button type="button" class="btn" id="hs">${T("px.start")}</button>`
+    const main=k==="lobby"?`<button type="button" class="btn sub" id="hcl" aria-pressed="false">${ic("lock")}<span id="hclt">${T("px.close")}</span></button><button type="button" class="btn" id="hs">${T("px.start")}</button>`
       :k==="end"?`${csvOptHtml()}<button type="button" class="btn sub" id="hc">${T("px.copy")}</button><button type="button" class="btn" id="hn">${T("px.new")}</button>`
       :`<button type="button" class="btn sub" id="he">${T("px.end")}</button>`;
     d.innerHTML=note+bk+main+fsBtn();
     const b=id=>document.getElementById(id);
     if(b("hs")) b("hs").onclick=()=>api("start",HOST).catch(err);
+    if(b("hcl")) b("hcl").onclick=()=>api("close",{...HOST,on:!(last&&last.closed)}).catch(err);      // 入室のしめきり（待合室でも参加を止める）
     if(b("he")) b("he").onclick=()=>{ if(confirm("対戦を終わりにしますか？")) api("end",HOST).catch(()=>{}); };   //T
     if(b("hn")) b("hn").onclick=async()=>{ try{ const r=await api("create",roomArgs(HOST)); HOST={...HOST,...r}; sset("mh_host",HOST); route(); }catch(e){ err(e); } };
     if(b("hc")) b("hc").onclick=()=>navigator.clipboard?.writeText(B.tsv()).then(()=>b("hc").textContent=T("r.copied"),()=>{});
@@ -3234,13 +3301,16 @@ function renderHost(){
   const lobbyBuild=s=>{
     px.className="px";
     px.innerHTML=`<div class="px-lobby"><div class="lcol"><div class="lead">${T("px.code")}</div><div class="bigcode">${s.code}</div>
-        <div class="cnt">${T("px.n")}<b id="pxn"></b>${T("px.nin")}</div><div class="chips" id="pxchips"></div></div>
+        <div class="cnt">${T("px.n")}<b id="pxn"></b>${T("px.nin")}</div><div class="lockmsg hidden" id="pxlock" role="status">${ic("lock")} ${T("px.locked")}</div><div class="chips" id="pxchips"></div></div>
       <div class="rcol"><div class="qrbox" id="qrbox"></div></div></div>`;
     showQr(document.getElementById("qrbox"),joinUrl);
   };
   const lobbyUpd=s=>{
     document.getElementById("pxn").textContent=s.players.length;
     const hs=document.getElementById("hs"); if(hs) hs.disabled=!s.players.length;
+    const cl=document.getElementById("hcl"), lk=document.getElementById("pxlock");      // しめきりの表示
+    if(cl){ document.getElementById("hclt").textContent=T(s.closed?"px.open":"px.close"); cl.setAttribute("aria-pressed",s.closed?"true":"false"); }
+    if(lk) lk.classList.toggle("hidden",!s.closed);
     const lim=B.allChips?60:12;      // 名前を押すと、名前をかえる／ニックネームにする／へやから出す
     const chips=s.players.slice(0,lim).map(p=>`<button type="button" class="chip nmb" data-pid="${esc(p.pid)}">${face(p.emoji)} ${esc(p.name)}</button>`).join("")
       +(s.players.length>lim?`<button type="button" class="chip more" id="pxmorebtn">${T("px.more",s.players.length-lim)}</button>`:"");

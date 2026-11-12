@@ -1,7 +1,7 @@
 /* まなびひろば：児童が入力する名前の検査（ブラウザ・先生の端末・server.js で同じものを使う）
    - 長さ（1〜8文字）と文字の種類（ひらがな・カタカナ・漢字・英数字。空白・記号・絵文字は不可）
    - 簡易のNG語リスト。出典なし・自作の短いリスト（下品・悪口・個人を傷つける語）。完全ではありません。
-     ひらがな／カタカナ／ローマ字、全角／半角、大文字／小文字のゆれを直してから、部分一致で調べます。
+     ひらがな／カタカナ／ローマ字、全角／半角、大文字／小文字のゆれを直してから、部分一致で調べます。漢字の悪口（馬鹿・死ね など）も別のリストで調べます。「しねしね」のようなくり返しも断ります。
      誤検出が多くなる短すぎる語は入れていません（2文字の語は EXACT に「その名前だけ」で入れたものがあります）。
    - 同じ名前には「ゆうと2」のように番号をつけます。 */
 (function(root){
@@ -16,6 +16,11 @@ const KANA_NG=[
 ];
 /* ちょうどその名前のときだけ断る語（短くて、ほかの名前の一部になりやすいもの） */
 const EXACT=["しね","くず","ごみ","かす","ぶす","はげ","えろ"];
+/* 漢字・かな混じりの語（部分一致。漢字は読みに直せないので、そのままの形で調べる）。短い一字の語は入れていない（「殺」「糞」は名前に使われないので入れた） */
+const KANJI_NG=[
+  "馬鹿","莫迦","阿呆","死ね","死んで","氏ね","殺す","殺し","殺せ","殺さ","殺意","糞","消えろ","消え失せ","黙れ","変態","気持ち悪","気持悪","きもち悪","不細工","ぶ細工",
+  "無能","低能","痴漢","強姦","淫乱","売春","自殺","首つり","首吊","外人","障害者","池沼","ガイジ","うんこ","便所","乳首","陰茎","精液"
+];
 /* 名前によくある並びで、NG語を含んでしまうもの（調べる前に取りのぞく） */
 const SAFE=["しばか","ひばか","さくそ","ひろくそ"].map(w=>w);
 /* 英語など（小文字の半角で書く。部分一致）。短い語（kill・ass など）は誤検出が多いので入れない */
@@ -68,11 +73,15 @@ function forms(s){
 }
 const NG_KANA=KANA_NG.map(norm);
 const NG_EXACT=new Set(EXACT.map(norm));
+const NG_KANJI=KANJI_NG.map(norm);
+const NG_REPEAT=EXACT.map(norm).concat(["死ね","氏ね","ばか","あほ"].map(norm));      // 「しねしね」のようなくり返しも断る
 
 function isNg(name){
   const f=forms(name), raw=norm(name);
   const rm=t=>SAFE.reduce((a,w)=>a.split(w).join(""),t);
-  if(NG_EXACT.has(raw)) return true;           // その名前だけ（ローマ字から直した形では調べない：shine など英語の語を断らないため）
+  if(NG_EXACT.has(raw)) return true;
+  for(const w of NG_REPEAT){ if(raw.length>=w.length*2&&raw.length%w.length===0&&raw===w.repeat(raw.length/w.length)) return true; }     // くり返し（しねしね・くずくず）
+  for(const w of NG_KANJI) if(raw.includes(w)) return true;           // その名前だけ（ローマ字から直した形では調べない：shine など英語の語を断らないため）
   for(const w of NG_KANA) if(rm(f.kana).includes(w)||rm(raw).includes(w)) return true;
   for(const w of LATIN_NG) if(f.latin.includes(w)) return true;
   return false;

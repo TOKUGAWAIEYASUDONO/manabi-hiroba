@@ -28,6 +28,19 @@ const ANI = [["パンダ", "🐼"], ["ウサギ", "🐰"], ["カエル", "🐸"]
   ["コアラ", "🐨"], ["ペンギン", "🐧"], ["トラ", "🐯"], ["ライオン", "🦁"], ["タコ", "🐙"], ["ヒヨコ", "🐤"]];
 
 const rooms = new Map();
+// join のくり返し制限（コードを当てる総当たり・部屋を埋めるいたずら対策）
+// 部屋全体で1秒に10回まで。同じ接続元（IPアドレス）からは、失敗した試し（コード違い・名前の不備）が10秒に5回まで、成功も10秒に30回まで
+// （教室の端末は同じ接続元に見えることがあるので、成功のほうはゆるくしている）
+const RATE_SCALE = Math.max(1, +process.env.JOIN_RATE_SCALE || 1);      // 回数の上限を何倍にするか（検査用。ふつうは 1 のまま）
+const hits = new Map();
+function hitOk(key, limit, ms, now) {
+  limit *= RATE_SCALE;
+  const a = (hits.get(key) || []).filter(t => now - t < ms);
+  if (a.length >= limit) { hits.set(key, a); return false; }
+  a.push(now); hits.set(key, a); return true;
+}
+function hitPeek(key, limit, ms, now) { return (hits.get(key) || []).filter(t => now - t < ms).length < limit * RATE_SCALE; }
+const TOO_MANY = [429, { error: "しばらくしてから、もう一度ためしてね" }];
 const rnd = n => crypto.randomInt(n);
 const id = () => crypto.randomBytes(9).toString("base64url");
 
@@ -45,6 +58,10 @@ function pickEmoji(room) {
   const free = ANI.filter(a => !used.has(a[1])), from = free.length ? free : ANI;
   return from[rnd(from.length)][1];
 }
+// 部屋に入れない状態：終わった／もう始まった（途中参加はできない）／先生が しめきった
+const joinBlock = room => room.status === "ended" ? [409, { error: "この対戦はもう終わっています" }]
+  : room.status !== "lobby" ? [409, { error: "もう始まっているので入れません" }]
+  : room.closed ? [409, { error: "入室はしめきられました" }] : null;
 const NAME_ERR = { empty: "名前を入れてね", long: "名前は8文字までです", chars: "使えない文字が入っています", ng: "その名前は使えません" };
 const allNames = (room, except) => [...room.players.values()].filter(q => q !== except).map(q => q.name);
 function newCode() {
@@ -55,10 +72,10 @@ function pub(room, host) {
   const nm = p => host ? p.name : "";
   return {
     code: room.code, mode: room.mode, game: room.game, g: room.g, t: room.t, rule: room.rule, nm: room.nm,
-    status: room.status, endAt: room.endAt, now: Date.now(),
+    status: room.status, closed: !!room.closed, endAt: room.endAt, now: Date.now(),
     gt: room.gt || "",
     players: [...room.players.values()].map(p => room.qz
-      ? { pid: p.pid, name: nm(p), emoji: p.emoji, v: p.v, ok: p.ok, ng: p.ng, st: p.st | 0, lp: p.lp | 0, lc: p.lc | 0, ...(room.qz.phase === "end" ? { rec: p.rec || "" } : {}), ...(host && room.qz.phase === "q" && room.qz.answeredBy(p.pid) ? { a: 1 } : {}) }
+      ? { pid: p.pid, name: nm(p), emoji: p.emoji, v: p.v, ok: p.ok, ng: p.ng, st: p.st | 0, lp: p.lp | 0, lc: p.lc | 0, ...(host && room.qz.phase === "end" ? { rec: p.rec || "" } : {}), ...(host && room.qz.phase === "q" && room.qz.answeredBy(p.pid) ? { a: 1 } : {}) }
       : { pid: p.pid, name: nm(p), emoji: p.emoji, v: p.v, ok: p.ok, ng: p.ng }),
     ...(room.qz ? { quiz: room.qz.pub() } : {})
   };
@@ -66,7 +83,8 @@ function pub(room, host) {
 // 児童の画面：全員ぶんは名前なし。自分の名前だけを me に添える（他の子の名前は入らない）
 function kidMsg(room, res, base) {
   const p = res.pid && room.players.get(res.pid);
-  return "data: " + base + (p ? ',"me":' + JSON.stringify(p.name) : "") + "}\n\n";
+  // クイズの終了後は、その子自身の○×の記録（myrec）だけを添える（ほかの子の記録は送らない）
+  return "data: " + base + (p ? ',"me":' + JSON.stringify(p.name) + (room.qz && room.qz.phase === "end" ? ',"myrec":' + JSON.stringify(p.rec || "") : "") : "") + "}\n\n";
 }
 // クイズの得点などを、部屋の参加者の表に写す
 function qzSync(room) {
@@ -94,6 +112,7 @@ setInterval(() => {
     else if (room.status === "playing" && now >= room.endAt) endRoom(room);
     if (now - room.created > 3 * 3600e3) { for (const r of room.clients) r.end(); rooms.delete(room.code); }
   }
+  for (const [k, a] of hits) { const f = a.filter(t => now - t < 10000); if (f.length) hits.set(k, f); else hits.delete(k); }
 }, 250);
 
 function body(req) {
@@ -135,20 +154,25 @@ const API = {
     return [200, { code: room.code, hostKey: room.hostKey, nm: room.nm }];
   },
   // 参加画面が、名前を入力させる部屋かどうかを知るための問い合わせ（部屋の中身は返さない）
-  info(b) {
+  info(b, ip) {
+    const now = Date.now();
+    if (!hitPeek("bad:" + ip, 5, 10000, now)) return TOO_MANY;
     const room = rooms.get(String(b.code));
-    if (!room) return [404, { error: "その部屋コードは見つかりません" }];
-    return [200, { nm: room.nm }];
+    if (!room) { hitOk("bad:" + ip, 5, 10000, now); return [404, { error: "その部屋コードは見つかりません" }]; }
+    return joinBlock(room) || [200, { nm: room.nm }];
   },
-  join(b) {
+  join(b, ip) {
+    const now = Date.now();
+    if (!hitPeek("bad:" + ip, 5, 10000, now) || !hitOk("ok:" + ip, 30, 10000, now)) return TOO_MANY;
     const room = rooms.get(String(b.code));
-    if (!room) return [404, { error: "その部屋コードは見つかりません" }];
-    if (room.status === "ended") return [409, { error: "この対戦はもう終わっています" }];
+    if (!room) { hitOk("bad:" + ip, 5, 10000, now); return [404, { error: "その部屋コードは見つかりません" }]; }
+    if (!hitOk("room:" + room.code, 10, 1000, now)) return TOO_MANY;
+    const blk = joinBlock(room); if (blk) return blk;
     if (room.players.size >= MAX_PLAYERS) return [409, { error: "部屋がいっぱいです" }];
     let who;
     if (room.nm === "input") {       // 児童が入力した名前：長さ・文字・NG語を調べ、同じ名前には番号をつける
       const c = NM.check(b.name);
-      if (!c.ok) return [400, { error: NAME_ERR[c.why], why: c.why }];
+      if (!c.ok) { hitOk("bad:" + ip, 5, 10000, now); return [400, { error: NAME_ERR[c.why], why: c.why }]; }
       who = { name: NM.dedupe(c.name, allNames(room)), emoji: pickEmoji(room) };
     } else who = nick(room);
     const p = { pid: id(), token: id(), ...who, v: 0, ok: 0, ng: 0 };
@@ -185,6 +209,13 @@ const API = {
     if (!p) return [403, { error: "先生の画面からのみ操作できます" }];
     Object.assign(p, nick(room, p)); broadcast(room, true);
     return [200, { ok: true }];
+  },
+  // 先生：入室をしめきる／あける（待合室でも参加を止める）
+  close(b) {
+    const room = rooms.get(String(b.code));
+    if (!room || room.hostKey !== b.hostKey) return [403, { error: "先生の画面からのみ操作できます" }];
+    room.closed = !!b.on; broadcast(room, true);
+    return [200, { ok: true, closed: room.closed }];
   },
   kick(b) {
     const room = rooms.get(String(b.code));
@@ -301,14 +332,16 @@ http.createServer(async (req, res) => {
       res.writeHead(200, { "Content-Type": vm[2] === "js" ? "text/javascript; charset=utf-8" : "text/plain; charset=utf-8" });
       return fs.createReadStream(f).pipe(res);
     }
-    if (req.method === "GET" && url.pathname === "/api/events") {
-      const room = rooms.get(url.searchParams.get("code") || "");
+    // 状態の配信（SSE 形式）。鍵（hostKey）や参加の token は URL に載せず、POST の本文で受け取る。GET は鍵なし（名前が見えない）の接続だけ
+    if (url.pathname === "/api/events" && (req.method === "GET" || req.method === "POST")) {
+      const q = req.method === "POST" ? await body(req) : {};
+      const room = rooms.get(String(req.method === "POST" ? q.code : url.searchParams.get("code") || ""));
       if (!room) return json(res, 404, { error: "部屋が見つかりません" });
       res.writeHead(200, { "Content-Type": "text/event-stream", "Cache-Control": "no-store", Connection: "keep-alive" });
       res.write("retry: 2000\n\n");
-      const hk = url.searchParams.get("hostKey"), pl = room.players.get(url.searchParams.get("pid") || "");
+      const hk = typeof q.hostKey === "string" ? q.hostKey : "", pl = room.players.get(typeof q.pid === "string" ? q.pid : "");
       res.host = !!hk && hk === room.hostKey;                                   // 先生の画面だけが全員の名前を受け取る
-      res.pid = !res.host && pl && pl.token === url.searchParams.get("token") ? pl.pid : "";
+      res.pid = !res.host && pl && pl.token === q.token ? pl.pid : "";
       res.write(res.host ? "data: " + JSON.stringify(pub(room, true)) + "\n\n" : kidMsg(room, res, JSON.stringify(pub(room, false)).slice(0, -1)));
       room.clients.add(res);
       const hb = setInterval(() => res.write(": ping\n\n"), 15000);
@@ -317,7 +350,7 @@ http.createServer(async (req, res) => {
     }
     const m = url.pathname.match(/^\/api\/(\w+)$/);
     if (req.method === "POST" && m && API[m[1]]) {
-      const [code, obj] = API[m[1]](await body(req));
+      const [code, obj] = API[m[1]](await body(req), req.socket.remoteAddress || "");
       return json(res, code, obj);
     }
     json(res, 404, { error: "not found" });

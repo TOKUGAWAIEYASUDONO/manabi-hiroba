@@ -4,7 +4,7 @@ const { spawn } = require("child_process");
 const path = require("path");
 const assert = require("assert");
 const PORT = 20000 + Math.floor(Math.random() * 20000);
-const srv = spawn(process.execPath, [path.join(__dirname, "..", "server.js")], { env: { ...process.env, PORT: String(PORT) }, stdio: "ignore" });
+const srv = spawn(process.execPath, [path.join(__dirname, "..", "server.js")], { env: { ...process.env, PORT: String(PORT), JOIN_RATE_SCALE: "1000" }, stdio: "ignore" });
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 const post = async (name, body) => { const r = await fetch(`http://127.0.0.1:${PORT}/api/${name}`, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) }); return { s: r.status, j: await r.json().catch(() => ({})) }; };
 const qs = [
@@ -45,7 +45,7 @@ let n = 0; const t = async (name, fn) => { try { await fn(); n++; console.log("o
     assert.strictEqual((await post("qnext", { code: r.code, hostKey: r.hostKey })).s, 200);     // 次の問題
     assert.strictEqual((await post("qnext", { code: r.code, hostKey: r.hostKey })).s, 200);     // しめきって見せる
     assert.strictEqual((await post("qnext", { code: r.code, hostKey: r.hostKey })).s, 200); assert.strictEqual((await post("qnext", { code: r.code, hostKey: r.hostKey })).s, 200); assert.strictEqual((await post("qnext", { code: r.code, hostKey: r.hostKey })).s, 200);
-    const es = await fetch(`http://127.0.0.1:${PORT}/api/events?code=${r.code}`); const d = JSON.parse(new TextDecoder().decode((await es.body.getReader().read()).value).split("data: ")[1].split("\n")[0]);
+    const es = await fetch(`http://127.0.0.1:${PORT}/api/events`, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ code: r.code, hostKey: r.hostKey }) }); const d = JSON.parse(new TextDecoder().decode((await es.body.getReader().read()).value).split("data: ")[1].split("\n")[0]);
     assert.strictEqual(d.status, "ended"); assert.strictEqual(d.quiz.phase, "end"); assert.strictEqual(d.quiz.stat.length, 3);
     const pa = d.players.find(p => p.pid === a.pid), pb = d.players.find(p => p.pid === b.pid);
     assert.ok(pa.v > 900 && pa.v <= 1000, "1問目の正解は500〜1000点 " + pa.v); assert.strictEqual(pb.v, 0); assert.strictEqual(pa.rec, "1--"); assert.ok(!("token" in pa));

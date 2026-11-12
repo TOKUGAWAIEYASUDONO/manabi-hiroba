@@ -178,8 +178,8 @@
   }
 
   /* ---------- ひろばたんけんの地図 ----------
-     7×5 マス。左下が スタート、右上が ゴール。ゴールの手前の とびら F は 1つだけで、かならず通る（まちがえても何度でも）。
-     とびら D（3〜4つ）は 近道：まちがえると とじるが、D を ぜんぶ 通らない 遠まわりの道が かならず ある（まちがえても 先へ進める）。
+     7×5 マス。左下が スタート、右上が ゴール。ゴールの手前の とびら F は 1つだけで、かならず通る（2問 せいかいで ひらく。まちがえても 何度でも）。
+     とびら D（3〜5つ）は 近道：まちがえると とじるが、D を ぜんぶ 通らない 遠まわりの道が かならず ある（まちがえても 先へ進める）。
      ひろばの 物が多いほど、かべが ぬけて 近道が ふえる（0〜3）。かざり用の 柱は (奇数, 奇数) の 6か所。
      マス：1 かべ／0 みち／2 とびら D／3 とびら F／4 スタート／5 ゴール */
   const MW = 7, MH = 5, DIRS = [[1, 0], [-1, 0], [0, 1], [0, -1]];
@@ -217,7 +217,7 @@
       path.reverse();
       const pas = path.filter(([a, b]) => (a % 2) !== (b % 2)), L = pas.length;     // 道の「あいだ」のマス
       if (L < 4) continue;
-      const F = pas[L - 1], c = Math.min(4, L - 1), D = [];
+      const F = pas[L - 1], c = Math.min(5, L - 1), D = [];
       for (let k = 0; k < c; k++) D.push(pas[Math.floor((k + 0.5) * (L - 1) / c)]);
       D.push(F);
       D.forEach(([a, b]) => { g[b][a] = 2; }); g[F[1]][F[0]] = 3;
@@ -255,7 +255,7 @@
         if (gap() >= 2) extra++; else g[b][a] = 1;
       }
       g[S0[1]][S0[0]] = 4; g[G0[1]][G0[0]] = 5;
-      return { W: MW, H: MH, grid: g.map(row => row.slice()), start: S0, goal: G0, doors: D.map(([a, b], i) => ({ x: a, y: b, final: i === c })),
+      return { W: MW, H: MH, grid: g.map(row => row.slice()), start: S0, goal: G0, doors: D.map(([a, b], i) => ({ x: a, y: b, final: i === c, q: i === c ? 2 : 1 })),
         short: bfs(g, false, S0)[G0[1]][G0[0]], long: bfs(g, true, S0)[G0[1]][G0[0]], loops: loops + extra };
     }
   }

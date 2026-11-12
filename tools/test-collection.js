@@ -310,17 +310,17 @@ t("バックアップ：メモの部分が中途半端な長さなら弾く", ()
   assert(C.hrParse(s)); assert.strictEqual(C.hrParse(s.slice(0, -4) + s.slice(-3)), null);
 });
 t("ひろばたんけんの地図：近道をぜんぶ閉じても遠まわりでゴールできる／ゴールの手前のとびらは かならず通る", () => {
-  let loops = 0;
+  let loops = 0, maxD = 0;
   for (const n of [0, 4, 8, 16]) for (let seed = 1; seed <= 300; seed++) {
     const m = C.explorerMap(seed, n); assert(m, "seed " + seed); const g = m.grid;
     assert.strictEqual(g.length, 5); assert(g.every(r => r.length === 7));
     assert(m.long >= m.short + 2, `遠まわりが近道より長い seed ${seed}/${n}: ${m.short} ${m.long}`); assert(m.short >= 6 && m.long <= 30, `${m.short} ${m.long}`);
-    assert.strictEqual(m.doors.filter(d => d.final).length, 1); assert(m.doors.length >= 4 && m.doors.length <= 5);
+    assert.strictEqual(m.doors.filter(d => d.final).length, 1); assert(m.doors.length >= 4 && m.doors.length <= 6, "近道は最大5つ＋ゴール手前1つ"); assert.strictEqual(m.doors.filter(d => !d.final).length <= 5, true); assert.strictEqual(m.doors.find(d => d.final).q, 2, "ゴール手前のとびらは2問"); assert(m.doors.filter(d => !d.final).every(d => d.q === 1)); maxD = Math.max(maxD, m.doors.length - 1);
     const gx = m.goal[0], gy = m.goal[1], open = [[gx - 1, gy], [gx, gy + 1]].filter(([x, y]) => g[y] && g[y][x] !== undefined && g[y][x] !== 1);
     assert.strictEqual(open.length, 1); const F = m.doors.find(d => d.final); assert.deepStrictEqual(open[0], [F.x, F.y]); assert.strictEqual(g[F.y][F.x], 3);
     loops += m.loops;
   }
-  assert(loops > 0);
+  assert(loops > 0); assert.strictEqual(maxD, 5, "近道が5つの地図もある");
 });
 t("ひろばたんけんの地図：ひろばの物が多いほど、かべがぬける（最大3）／同じ入力なら同じ地図", () => {
   const a = C.explorerMap(77, 0), b = C.explorerMap(77, 16);

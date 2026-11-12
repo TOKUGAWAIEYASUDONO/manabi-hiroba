@@ -218,7 +218,9 @@ function analyzeText(text,o){
 }
 
 /* ---------- 書き出し ---------- */
-const csvCell=s=>{ s=String(s); return /[",\r\n]/.test(s)?'"'+s.replace(/"/g,'""')+'"':s; };
+/* 表計算ソフトで数式として実行されないよう、= + - @ タブ 改行 で始まる文字列には ' を付ける（ただの数字は そのまま） */
+const csvSafe=s=>typeof s==="string"&&/^[=+\-@\t\r]/.test(s)&&!/^[+-]?\d+(\.\d+)?$/.test(s)?"'"+s:s;
+const csvCell=s=>{ s=String(csvSafe(s)); return /[",\r\n]/.test(s)?'"'+s.replace(/"/g,'""')+'"':s; };
 const CSV_HEAD=["問題文","選択肢1","選択肢2","選択肢3","選択肢4","制限時間(秒)","正解の番号","得点"];
 function toCsv(set){
   const rows=[CSV_HEAD];
