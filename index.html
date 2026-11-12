@@ -496,6 +496,75 @@ textarea.fld{resize:vertical}
 .unitrow button:active{transform:translateY(3px);box-shadow:0 1px 0 var(--edge)}
 .tile.unitgo{background:#fff3d6}
 .tile.unitgo .tico{display:grid;place-items:center}.tile.unitgo .tico .ic{width:34px;height:34px}
+/* ===== ふりがな（<ruby>）。「なし」のときは読みを隠すだけ ===== */
+ruby{ruby-position:over}
+rt{font-size:.5em;line-height:1;font-weight:400;letter-spacing:0}
+body.nofg rt{display:none}
+body:not(.nofg) :is(p,div,span,b,button,h1,h2,h3,td,th,label,summary,li):has(>ruby){line-height:1.75}
+body:not(.nofg) .q .big:has(ruby),body:not(.nofg) .hero .ht:has(ruby){line-height:1.5}
+.q .small:has(ruby){margin-top:16px}
+.ubk h4{margin:8px 0 2px}
+.hbtn.fgb{font-size:14px;gap:4px;flex-direction:column;line-height:1.05;padding:0 8px}
+.hbtn.fgb b{font-size:15px}
+@media (max-width:430px){.hbtn.fgb{font-size:10px;padding:0 3px;min-width:38px}.hbtn.fgb b{font-size:12px} header .logo{font-size:16px} #hRec{font-size:12px;padding:0 6px;gap:3px} #hRec b{font-size:15px} .hbtn#hGrade{padding:0 6px}}
+/* ===== 前に映す大画面（先生の端末）：2〜3m 離れても読める。最小 28px ===== */
+body[data-v=host] header,body[data-v=host] .foot{display:none}
+body[data-v=host] .wrap{max-width:none;padding:0}
+.px{flex:1;display:flex;flex-direction:column;min-height:100dvh;background:var(--board);color:#fff;padding:14px 26px 92px;font-size:28px;line-height:1.3;overflow:hidden}
+.px .note,.px .chip,.px .hrank .note{font-size:28px}
+.px-dock{position:fixed;right:14px;bottom:12px;display:flex;gap:10px;align-items:center;justify-content:flex-end;flex-wrap:wrap;max-width:calc(100vw - 28px);z-index:25}
+.px-dock .btn{font-size:20px;padding:8px 18px;min-height:52px}
+.px-note{background:#fff;color:var(--ink);border:3px solid var(--edge);border-radius:12px;position:relative}
+.px-note summary{cursor:pointer;padding:12px 16px;font-size:18px;font-weight:700;min-height:52px;display:flex;align-items:center}
+.px-note .pn{position:absolute;right:0;bottom:60px;width:min(560px,92vw);background:#fff;border:3px solid var(--edge);border-radius:12px;padding:10px 14px;font-size:15px;max-height:60vh;overflow:auto}
+.px-note .note{font-size:14px}
+.px-lobby{flex:1;display:grid;grid-template-columns:1.1fr 1fr;gap:28px;align-items:center}
+.px-lobby .lead{font-size:44px;font-weight:800}
+.px .bigcode{font-size:min(17vw,30vh);line-height:1;letter-spacing:.06em;color:#ffe066;margin:6px 0}
+.px-lobby .cnt{font-size:40px;font-weight:700}.px-lobby .cnt b{font-size:56px;margin:0 6px;color:#ffe066}
+.px-lobby .chips{justify-content:flex-start;margin:8px 0 0}
+.px-lobby .chip{font-size:28px;display:inline-flex;align-items:center;gap:6px}
+.px .fc{width:40px;height:40px;vertical-align:middle}
+.px-lobby .qrbox svg{width:min(56vh,44vw);height:auto;margin:0 auto;border-radius:14px;padding:8px}
+.px-lobby .qrbox .note{color:var(--chalk);font-size:28px}
+.px-play{flex:1;display:grid;grid-template-columns:1fr 380px;gap:28px}
+.px-ttl{font-size:32px;font-weight:800;margin-bottom:10px}
+.px-bars{position:relative;margin-top:6px}
+.px-row{position:absolute;left:0;right:0;height:52px;display:flex;align-items:center;gap:14px;transition:top .5s ease}
+.px-row .rk{width:36px;font-size:34px;font-weight:800;text-align:center;color:#ffe066}
+.px-row .nm{width:300px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:28px;font-weight:700}
+.px-row .bar{flex:1;height:36px;background:rgba(255,255,255,.16);border-radius:18px;overflow:hidden}
+.px-row .bar i{display:block;height:100%;background:var(--sun);border-radius:18px;transition:width .5s ease}
+.px-row .val{width:170px;text-align:right;font-size:32px;font-weight:800}
+.px-more{font-size:28px;color:var(--chalk);margin:8px 0}
+.px-tl{font-size:28px;color:var(--chalk)}
+.px-timer{font-size:min(16vh,130px);font-weight:800;line-height:1;color:#ffe066;font-variant-numeric:tabular-nums}
+.px-timer.warn{color:#ff8a7a}
+.px-h{font-size:28px;margin:14px 0 6px;color:var(--chalk)}
+.px-ev{display:flex;flex-direction:column;gap:6px}
+.px-ev .e{background:rgba(255,255,255,.14);border-radius:10px;padding:4px 12px;font-size:28px;line-height:1.25}
+.px-ev .e.dim{opacity:.7}
+.px-ev .e.new{animation:pxin .5s ease-out}
+@keyframes pxin{from{transform:translateX(30px);opacity:0}to{transform:none;opacity:1}}
+.px-race-w{padding-bottom:14px}
+.px-race{flex:1;display:grid;grid-template-columns:auto 1fr;gap:28px;align-items:stretch}
+.px-bd .sgbd{height:calc(100dvh - 28px);width:auto;max-width:none}
+.px-race .px-r{padding-bottom:84px}
+.px-top .r{display:flex;align-items:center;gap:12px;font-size:32px;font-weight:700;margin-bottom:4px}
+.px-top .rk{color:#ffe066;width:36px;text-align:center;font-size:36px}
+.px-top .nm{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.px-end .hrank{font-size:30px;margin-bottom:8px;color:var(--ink)}
+.px-end .hrank.t1{background:#fff3c4}
+.px-h2{font-size:40px;margin:6px 0 14px;display:flex;align-items:center;gap:12px}
+.px-h2 small{font-size:28px;font-weight:400;color:var(--chalk)}
+.qzh{padding:12px 16px 92px}
+.qzh-ctl{position:fixed;right:14px;bottom:12px;margin:0;z-index:25}
+.qzh-ctl .btn{font-size:20px;min-height:52px}
+@media (max-width:900px){.px{overflow:auto}.px-lobby,.px-play,.px-race{grid-template-columns:1fr}.px-bd .sgbd{height:auto;width:100%}.px-row .nm{width:140px}}
+/* ===== 児童の端末：自分がやることだけ（全体の順位表は出さない） ===== */
+.mgrid.net{grid-template-columns:1fr}
+.mgrid.net .side{order:-1;display:flex;gap:14px;align-items:center;justify-content:center;flex-wrap:wrap;padding:8px 12px;font-size:20px;font-weight:700}
+.mgrid.net .side .me1{display:inline-flex;align-items:center;gap:6px}
 </style>
 </head>
 <body>
@@ -527,6 +596,7 @@ textarea.fld{resize:vertical}
 <symbol id="i-clipboard" viewBox="0 0 24 24"><rect width="8" height="4" x="8" y="2" rx="1" ry="1" /> <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2" /></symbol>
 <symbol id="i-book-open" viewBox="0 0 24 24"><path d="M12 5v16" /> <path d="M20.001 19A2 2 0 0022 17V5a2 2 0 00-1.999-2L16 3.002A5 5 0 0012 5a5 5 0 00-4-2H4a2 2 0 00-2 2v12a2 2 0 001.999 2H8a5 5 0 014 2 5 5 0 014-2z" /></symbol>
 <symbol id="i-rotate-ccw" viewBox="0 0 24 24"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8" /> <path d="M3 3v5h5" /></symbol>
+<symbol id="i-maximize" viewBox="0 0 24 24"><path d="M8 3H5a2 2 0 0 0-2 2v3" /> <path d="M21 8V5a2 2 0 0 0-2-2h-3" /> <path d="M3 16v3a2 2 0 0 0 2 2h3" /> <path d="M16 21h3a2 2 0 0 0 2-2v-3" /></symbol>
 </defs></svg>
 <!--ART-BEGIN-->
 <svg xmlns="http://www.w3.org/2000/svg" style="position:absolute;width:0;height:0;overflow:hidden" aria-hidden="true" focusable="false"><defs>
@@ -579,6 +649,7 @@ textarea.fld{resize:vertical}
   <span class="sp"></span>
   <button class="hbtn hx" id="hGrade" onclick="openGradeSheet()"></button>
   <button class="hbtn hx" id="hRec" onclick="go('#record')"></button>
+  <button class="hbtn fgb" id="hFg" onclick="toggleFg()"></button>
   <button class="hbtn snd" id="hSound" onclick="toggleSound()"></button>
 </header>
 
@@ -605,201 +676,212 @@ textarea.fld{resize:vertical}
 /*TX-BEGIN*/
 const TX={
  /* ヘッダー・共通 */
- "h.join":["コードで参加","はいる"],
- "h.teacher":["先生の画面","せんせい"],
+ "h.join":["コードで参加《さんか》","はいる"],
+ "h.teacher":["先生《せんせい》の画面《がめん》","せんせい"],
  "back":["もどる"],"back.end":["ここでおわる","ここで おわる"],
- "sec":["秒","びょう"],
- "subj.math":["算数","さんすう"],"subj.jp":["国語","こくご"],"subj.soc":["社会","しゃかい"],"subj.eng":["英語","えいご"],
+ "sec":["秒《びょう》","びょう"],
+ "subj.math":["算数《さんすう》","さんすう"],"subj.jp":["国語《こくご》","こくご"],"subj.soc":["社会《しゃかい》","しゃかい"],"subj.eng":["英語《えいご》","えいご"],
  "n.home":["ホームへ"],
+ "fg.t":["ふりがな"],"fg.on":["あり"],"fg.off":["なし"],
+ /* 前に映す大画面（先生の端末） */
+ "px.fs":["全画面《ぜんがめん》"],"px.back":["先生《せんせい》の画面《がめん》"],"px.start":["スタート！"],"px.end":["ここで終《お》わる"],"px.copy":["結果《けっか》をコピー"],"px.new":["同《おな》じ設定《せってい》で新《あたら》しい部屋《へや》"],
+ "px.memo":["先生《せんせい》用《よう》"],"px.url":["参加《さんか》のアドレス："],"px.code":["コードで参加《さんか》"],"px.n":["参加《さんか》："],"px.nin":["人《にん》"],"px.none":["まだ誰《だれ》もいません"],
+ "px.more":[n=>`ほか ${n}人《にん》`],"px.left":["のこり時間《じかん》"],"px.ev":["できごと"],"px.top3":["上位《じょうい》3人《にん》"],"px.masu":["マス"],
+ "px.res":["結果《けっか》"],"px.avg":[(n,a)=>`${n}人《にん》・平均《へいきん》正答率《せいとうりつ》 ${a}%`],"px.ok":[(a,b)=>`正解《せいかい》 ${a}/${b}`],
+ "px.ev.get":[(w,n)=>`${w} が たからばこを あけた！ 🪙 +${n}`],"px.ev.lose":[(w,n)=>`${w} は コインを ${n}まい おとした…`],
+ "px.ev.move":[(w,n)=>`${w} が ${n}マス すすんだ！`],"px.ev.back":[(w,n)=>`${w} が ${n}マス もどった…`],"px.ev.goal":[w=>`${w} が ゴール！ 🏁`],
+ "px.ev.none":["もんだいに こたえて すすもう！"],
  /* ゲーム */
- "g.calc.t":["計算スプリント","けいさん スプリント"],"g.calc.d":["時間内に何問とけるかな？学年に合わせた計算","じかんの なかで いくつ とけるかな？"],
- "g.kuku.t":["九九チャレンジ","くく チャレンジ"],"g.kuku.d":["九九をすばやく答えよう","くくを はやく こたえよう"],
- "g.kanji.t":["漢字よみクイズ","かんじ よみクイズ"],"g.kanji.d":["漢字の読みを4つから選ぼう","かんじの よみを 4つから えらぼう"],
- "g.kencho.t":["県庁所在地クイズ"],"g.kencho.d":["都道府県の県庁がある市は？"],
- "g.eigo.t":["英単語クイズ"],"g.eigo.d":["英語の意味を選ぼう"],
- "q.kanji":["この漢字の読みは？","この かんじの よみは？"],"q.kencho":["県庁所在地は？"],"q.eigo":["意味は？"],
+ "g.calc.t":["計算《けいさん》スプリント","けいさん スプリント"],"g.calc.d":["時間内《じかんない》に何《なん》問《もん》とけるかな？学年《がくねん》に合《あ》わせた計算《けいさん》","じかんの なかで いくつ とけるかな？"],
+ "g.kuku.t":["九九《くく》チャレンジ","くく チャレンジ"],"g.kuku.d":["九九《くく》をすばやく答《こた》えよう","くくを はやく こたえよう"],
+ "g.kanji.t":["漢字《かんじ》よみクイズ","かんじ よみクイズ"],"g.kanji.d":["漢字《かんじ》の読《よ》みを4つから選《えら》ぼう","かんじの よみを 4つから えらぼう"],
+ "g.kencho.t":["県庁所在地《けんちょうしょざいち》クイズ"],"g.kencho.d":["都道府県《とどうふけん》の県庁《けんちょう》がある市《し》は？"],
+ "g.eigo.t":["英単語《えいたんご》クイズ"],"g.eigo.d":["英語《えいご》の意味《いみ》を選《えら》ぼう"],
+ "q.kanji":["この漢字《かんじ》の読《よ》みは？","この かんじの よみは？"],"q.kencho":["県庁所在地《けんちょうしょざいち》は？"],"q.eigo":["意味《いみ》は？"],
  /* バトルモード・ルール */
  "m.chest.t":["たからばこラッシュ","たからばこ ラッシュ"],
- "m.chest.d":["正解するとたからばこを1つ開けられる。コインを一番集めた人の勝ち！","せいかいすると たからばこを 1つ あけられるよ。コインを いちばん あつめた ひとの かち！"],
+ "m.chest.d":["正解《せいかい》するとたからばこを1つ開《あ》けられる。コインを一番《いちばん》集《あつ》めた人《ひと》の勝《か》ち！","せいかいすると たからばこを 1つ あけられるよ。コインを いちばん あつめた ひとの かち！"],
  "m.race.t":["すごろくレース","すごろく レース"],
- "m.race.d":["正解するとサイコロをふれる。先にゴールした人の勝ち！","せいかいすると サイコロを ふれるよ。さきに ゴールした ひとの かち！"],
- "ru.normal.d":["うばう・入れかえ・もどる もある","うばう・いれかえ・もどる も あるよ"],
+ "m.race.d":["正解《せいかい》するとサイコロをふれる。先《さき》にゴールした人《ひと》の勝《か》ち！","せいかいすると サイコロを ふれるよ。さきに ゴールした ひとの かち！"],
+ "ru.normal.d":["うばう・入《い》れかえ・もどる もある","うばう・いれかえ・もどる も あるよ"],
  "ru.easy.d":["コインがへらない・もどらない","コインが へらない・もどらない"],
- "ru.auto":["おまかせ"],"ru.auto.d":["1〜2年の問題ならやさしい","1〜2ねんの もんだいなら やさしい"],
+ "ru.auto":["おまかせ"],"ru.auto.d":["1〜2年《ねん》の問題《もんだい》ならやさしい","1〜2ねんの もんだいなら やさしい"],
 /* ホーム */
- "home.quick":["1分であそぶ","1ぷん あそぶ"],
+ "home.quick":["1分《ぷん》であそぶ","1ぷん あそぶ"],
  "home.guide":["いっしょに あそぼう！"],
- "home.quick.n":["ワンタップで、学年に合ったゲームがはじまります","ボタンを 1かい おすと はじまるよ"],
+ "home.quick.n":["ワンタップで、学年《がくねん》に合《あ》ったゲームがはじまります","ボタンを 1かい おすと はじまるよ"],
  "home.all":["ぜんぶ"],
- "home.empty":["この学年のゲームはじゅんび中です","この ゲームは じゅんびちゅう です"],
- "home.battle":["バトル（2〜3分）","たいせん（2〜3ふん）"],
- "h.gradepick":["学年をえらぶ","がくねんを えらぶ"],"h.gradeq":["何年生？","なんねんせい？"],
+ "home.empty":["この学年《がくねん》のゲームはじゅんび中《ちゅう》です","この ゲームは じゅんびちゅう です"],
+ "home.battle":["バトル（2〜3分《ぷん》）","たいせん（2〜3ふん）"],
+ "h.gradepick":["学年《がくねん》をえらぶ","がくねんを えらぶ"],"h.gradeq":["何《なん》年生《ねんせい》？","なんねんせい？"],
  "h.rec":["きろく"],
- "h.best":[n=>`ベスト ${n}問`,n=>`いちばん ${n}もん`],"h.best0":["ベスト まだ","まだ あそんでないよ"],
+ "h.best":[n=>`ベスト ${n}問《もん》`,n=>`いちばん ${n}もん`],"h.best0":["ベスト まだ","まだ あそんでないよ"],
  "h.careful":[m=>`${m}まで ていねいに`,m=>`${m}まで ていねいに`],
- "home.links":["ほかの学習サイト","ほかの サイト"],
- "home.links.n":["※ ほかのサイトは紹介のみです。学校で使えるかどうかは先生に聞いてね。","※ ほかの サイトは しょうかいだけ です。つかえるか せんせいに きいてね。"],
- "lk.sushi.t":["寿司打","すしだ"],"lk.sushi.d":["回転ずしのタイピングゲーム","タイピングの ゲーム"],
- "lk.kahoot.t":["Kahoot!（参加用）","Kahoot!"],"lk.kahoot.d":["先生のクイズに参加するときに使うページ","せんせいの クイズに はいる ときに つかうよ"],
- "lk.nhk.t":["NHK for School"],"lk.nhk.d":["教科ごとの学習動画","きょうかごとの どうが"],
- "home.check":["接続テスト（先生・ICT担当の方へ）"],
+ "home.links":["ほかの学習《がくしゅう》サイト","ほかの サイト"],
+ "home.links.n":["※ ほかのサイトは紹介《しょうかい》のみです。学校《がっこう》で使《つか》えるかどうかは先生《せんせい》に聞《き》いてね。","※ ほかの サイトは しょうかいだけ です。つかえるか せんせいに きいてね。"],
+ "lk.sushi.t":["寿司打《すしだ》","すしだ"],"lk.sushi.d":["回転《かいてん》ずしのタイピングゲーム","タイピングの ゲーム"],
+ "lk.kahoot.t":["Kahoot!（参加《さんか》用《よう》）","Kahoot!"],"lk.kahoot.d":["先生《せんせい》のクイズに参加《さんか》するときに使《つか》うページ","せんせいの クイズに はいる ときに つかうよ"],
+ "lk.nhk.t":["NHK for School"],"lk.nhk.d":["教科《きょうか》ごとの学習《がくしゅう》動画《どうが》","きょうかごとの どうが"],
+ "home.check":["接続《せつぞく》テスト（先生《せんせい》・ICT担当《たんとう》の方《かた》へ）"],
  /* じぶんのきろく（ログインなし。端末の中だけ） */
  "rec.t":["じぶんの きろく"],
  "rec.total":["メダルの ごうけい"],
  "rec.book":["ゲームごとの スタンプ"],
  "rec.battle":[n=>`たいせんの メダル：${n}こ`],
+ "rec.unit":["たんげん"],"rec.unit.none":["まだ たんげん れんしゅうを していません"],"u.best":[n=>`○ ${n}こ`],
  "rec.none":["まだ あそんでいません","まだ あそんでないよ"],
- "rec.safe":["記録は、この端末の中だけに残ります。名前やIDは集めません。","きろくは、この たんまつの なかだけに のこるよ。なまえは あつめないよ。"],
+ "rec.safe":["記録《きろく》は、この端末《たんまつ》の中《なか》だけに残《のこ》ります。名前《なまえ》やIDは集《あつ》めません。","きろくは、この たんまつの なかだけに のこるよ。なまえは あつめないよ。"],
  "rec.bk":["バックアップ（ひきつぎ）"],
- "rec.bk.safari":["ときどきバックアップをとってね。iPad（Safari）は、長く使わないと記録が消えることがあります。","ときどき バックアップを してね。iPad（Safari）は、ながく つかわないと きろくが きえる ことが あるよ。"],
- "rec.bk.make":["バックアップの文字を出す","バックアップの もじを だす"],
- "rec.bk.hint":["この文字をメモしておくと、あとで読みこめます。","この もじを メモしておくと、あとで よみこめるよ。"],
- "rec.bk.read":["バックアップの文字を入れて読みこむ","バックアップの もじを いれて よみこむ"],
- "rec.bk.go":["読みこむ","よみこむ"],
- "rec.bk.ok":["読みこみました。メダル・ベスト・学年が入りました。","よみこんだよ！"],
- "rec.bk.ng":["この文字は使えません。写しまちがいがないか見てね。","この もじは つかえないよ。うつしまちがいが ないか みてね。"],
- "rec.bk.empty":["文字を入れてね","もじを いれてね"],
- "gr.title":["なんねんせい？"],"gr.note":["えらんだ学年はおぼえておきます（あとで変えられます）","えらんだ がくねんは おぼえておくよ（あとで かえられるよ）"],
+ "rec.bk.safari":["ときどきバックアップをとってね。iPad（Safari）は、長《なが》く使《つか》わないと記録《きろく》が消《き》えることがあります。","ときどき バックアップを してね。iPad（Safari）は、ながく つかわないと きろくが きえる ことが あるよ。"],
+ "rec.bk.make":["バックアップの文字《もじ》を出《だ》す","バックアップの もじを だす"],
+ "rec.bk.hint":["この文字《もじ》をメモしておくと、あとで読《よ》みこめます。","この もじを メモしておくと、あとで よみこめるよ。"],
+ "rec.bk.read":["バックアップの文字《もじ》を入《い》れて読《よ》みこむ","バックアップの もじを いれて よみこむ"],
+ "rec.bk.go":["読《よ》みこむ","よみこむ"],
+ "rec.bk.ok":["読《よ》みこみました。メダル・ベスト・学年《がくねん》が入《はい》りました。","よみこんだよ！"],
+ "rec.bk.ng":["この文字《もじ》は使《つか》えません。写《うつ》しまちがいがないか見《み》てね。","この もじは つかえないよ。うつしまちがいが ないか みてね。"],
+ "rec.bk.empty":["文字《もじ》を入《い》れてね","もじを いれてね"],
+ "gr.title":["なんねんせい？"],"gr.note":["えらんだ学年《がくねん》はおぼえておきます（あとで変《か》えられます）","えらんだ がくねんは おぼえておくよ（あとで かえられるよ）"],
  /* 九九・県庁所在地の選びかた */
- "st.kuku":["どの段をやる？（いくつでも）","どの だんを やる？（いくつでも）"],
+ "st.kuku":["どの段《だん》をやる？（いくつでも）","どの だんを やる？（いくつでも）"],
  "st.order":["じゅんばん"],"st.start":["スタート！"],
- "k.all":["ぜんぶの段","ぜんぶの だん"],"k.dan":[n=>`${n}の段`,n=>`${n}の だん`],
- "k.up":["上り","のぼり"],"k.down":["下り","くだり"],"k.rand":["ばらばら"],
- "st.kencho":["どの県を出す？","どの けんを だす？"],
- "kc.all":["ぜんぶの県","ぜんぶの けん"],"kc.diff":["県名と市名がちがう県だけ","けんの なまえと しの なまえが ちがう けんだけ"],
+ "k.all":["ぜんぶの段《だん》","ぜんぶの だん"],"k.dan":[n=>`${n}の段《だん》`,n=>`${n}の だん`],
+ "k.up":["上《のぼ》り","のぼり"],"k.down":["下《くだ》り","くだり"],"k.rand":["ばらばら"],
+ "st.kencho":["どの県《けん》を出《だ》す？","どの けんを だす？"],
+ "kc.all":["ぜんぶの県《けん》","ぜんぶの けん"],"kc.diff":["県名《けんめい》と市名《しめい》がちがう県《けん》だけ","けんの なまえと しの なまえが ちがう けんだけ"],
  /* プレイ */
- "p.task":[t=>`先生からの課題：${t}`,t=>`せんせいからの かだい：${t}`],
- "p.score":[n=>`せいかい <b id="sc">${n}</b> 問`,n=>`せいかい <b id="sc">${n}</b> もん`],
+ "p.task":[t=>`先生《せんせい》からの課題《かだい》：${t}`,t=>`せんせいからの かだい：${t}`],
+ "p.score":[n=>`せいかい <b id="sc">${n}</b> 問《もん》`,n=>`せいかい <b id="sc">${n}</b> もん`],
  "fb.ok":["⭕ せいかい！"],"fb.ng":[a=>`❌ こたえは ${a}`],
  "p.end":["おわり！"],
  "p.review":["ふくしゅう"],"p.left":[n=>`のこり ${n} もん`],
  "p.reviewclear":["ふくしゅうクリア！","ふくしゅう クリア！"],
- "p.reviewnote":["ふくしゅうは記録に入りません","ふくしゅうは きろくに はいらないよ"],
+ "p.reviewnote":["ふくしゅうは記録《きろく》に入《はい》りません","ふくしゅうは きろくに はいらないよ"],
  "pad.ok":["こたえる"],
  /* 結果 */
- "r.num":[n=>`${n} 問 せいかい`,n=>`${n} もん せいかい`],
- "r.new":["★ 自己ベスト更新！","★ いちばん たくさん できた！"],
- "r.answered":["答えた数","こたえた かず"],"r.n":[n=>`${n} 問`,n=>`${n} もん`],
- "r.acc":["正答率","せいかいの わりあい"],"r.best":["自己ベスト","いちばん よかった"],"r.ok":["せいかい"],
- "r.miss":["まちがえた問題（ふくしゅうしよう）","まちがえた もんだい（もういちど やろう）"],
- "r.send":["先生に送る結果","せんせいに おくる けっか"],
- "r.ans":["こたえ"],"r.bad":["？ この もんだい、おかしい"],"r.badid":["問題ID","もんだいID"],"r.bad2":["せんせいに みせてね"],"r.ids":["まちがえた問題"],
+ "r.num":[n=>`${n} 問《もん》 せいかい`,n=>`${n} もん せいかい`],
+ "r.new":["★ 自己《じこ》ベスト更新《こうしん》！","★ いちばん たくさん できた！"],
+ "r.answered":["答《こた》えた数《かず》","こたえた かず"],"r.n":[n=>`${n} 問《もん》`,n=>`${n} もん`],
+ "r.acc":["正答率《せいとうりつ》","せいかいの わりあい"],"r.best":["自己《じこ》ベスト","いちばん よかった"],"r.ok":["せいかい"],
+ "r.miss":["まちがえた問題《もんだい》（ふくしゅうしよう）","まちがえた もんだい（もういちど やろう）"],
+ "r.send":["先生《せんせい》に送《おく》る結果《けっか》","せんせいに おくる けっか"],
+ "r.ans":["こたえ"],"r.bad":["？ この もんだい、おかしい"],"r.badid":["問題《もんだい》ID","もんだいID"],"r.bad2":["せんせいに みせてね"],"r.ids":["まちがえた問題《もんだい》"],
  "r.copy":["コピーする"],"r.copied":["コピーしました"],
- "r.again":["もう一回","もういっかい"],"r.other":["ほかのゲーム","ほかの ゲーム"],
- "r.redo":["まちがえた問題だけもう一回","まちがえた もんだいだけ もういっかい"],
- "r.next":[(m,n)=>`${m}まで あと ${n} 問`,(m,n)=>`${m}まで あと ${n} もん`],
- "r.nextacc":[(m,p)=>`${m}まで 正答率を ${p}%以上に`,(m,p)=>`${m}まで せいかいの わりあいを ${p}%いじょうに`],
+ "r.again":["もう一回《いっかい》","もういっかい"],"r.other":["ほかのゲーム","ほかの ゲーム"],
+ "r.redo":["まちがえた問題《もんだい》だけもう一回《いっかい》","まちがえた もんだいだけ もういっかい"],
+ "r.next":[(m,n)=>`${m}まで あと ${n} 問《もん》`,(m,n)=>`${m}まで あと ${n} もん`],
+ "r.nextacc":[(m,p)=>`${m}まで 正答率《せいとうりつ》を ${p}%以上《いじょう》に`,(m,p)=>`${m}まで せいかいの わりあいを ${p}%いじょうに`],
  "r.top":["🥇 さいこう！"],
  /* バトルモード */
- "ms.which":["どの問題でたたかう？","どの もんだいで たたかう？"],
- "ms.time":["時間","じかん"],"ms.2":["2分","2ふん"],"ms.3":["3分","3ふん"],"ms.rule":["ルール"],
+ "ms.which":["どの問題《もんだい》でたたかう？","どの もんだいで たたかう？"],
+ "ms.time":["時間《じかん》","じかん"],"ms.2":["2分《ふん》","2ふん"],"ms.3":["3分《ぷん》","3ふん"],"ms.rule":["ルール"],
  "b.pick":["たからばこを1つえらんでね"],
  "b.get":[n=>`コイン ${n} まいゲット！`],"b.x2":["コインが2ばいになった！"],
- "b.lose":["あっ、コインを少し落とした…","あっ、コインを すこし おとした…"],
+ "b.lose":["あっ、コインを少《すこ》し落《お》とした…","あっ、コインを すこし おとした…"],
  "b.steal":[(w,n)=>`${w}から ${n} まいもらった！`],
- "b.swap":[w=>`${w}とコインを入れかえた！`,w=>`${w}と コインを いれかえた！`],
+ "b.swap":[w=>`${w}とコインを入《い》れかえた！`,w=>`${w}と コインを いれかえた！`],
  "b.none":["からっぽだった…"],
- "c.x2":["✨ 2ばい"],"c.lose":["💸 コインを落とす","💸 コインを おとす"],"c.steal":["🦝 うばう"],
- "c.swap":["🔄 入れかえ","🔄 いれかえ"],"c.none":["💨 からっぽ"],
+ "c.x2":["✨ 2ばい"],"c.lose":["💸 コインを落《お》とす","💸 コインを おとす"],"c.steal":["🦝 うばう"],
+ "c.swap":["🔄 入《い》れかえ","🔄 いれかえ"],"c.none":["💨 からっぽ"],
  "c.swapdone":["🔄 こうかん","🔄 いれかえ"],
- "c.table":["たからばこから出る確率","たからばこから でる かくりつ"],
- "c.q":["確率を見る","かくりつを みる"],
+ "c.table":["たからばこから出《で》る確率《かくりつ》","たからばこから でる かくりつ"],
+ "c.q":["確率《かくりつ》を見《み》る","かくりつを みる"],
  "b.roll":["サイコロをふる"],"b.go":[n=>`${n} すすむ！`],"b.star":[" ⭐でさらに3すすむ！"],"b.swirl":[" 🌀で2もどる…"],
  "b.rank":["ランキング"],"b.rank.e":["がんばってる みんな"],
- "b.race":["すごろく"],"b.right":[n=>`正解${n}問`,n=>`せいかい ${n} もん`],
- "b.place":[n=>`${n} 位！`,n=>`${n} ばん！`],
- "b.placeof":[(t,n)=>`${t}人中 ${n} 位！`,(t,n)=>`${t}にんの うち ${n}ばん！`],
+ "b.race":["すごろく"],"b.right":[n=>`正解《せいかい》${n}問《もん》`,n=>`せいかい ${n} もん`],
+ "b.place":[n=>`${n} 位《い》！`,n=>`${n} ばん！`],
+ "b.placeof":[(t,n)=>`${t}人中《にんちゅう》 ${n} 位《い》！`,(t,n)=>`${t}にんの うち ${n}ばん！`],
  "b.done":["みんなでがんばった！","みんなで がんばった！"],
  "b.me":["あなた"],
- "b.line.me":[v=>`あなた ${v}マス`],"b.line.1st":["（1位）","（1ばん）"],"b.line.top":[(n,v)=>`1位 ${n} ${v}マス`,(n,v)=>`1ばん ${n} ${v}マス`],
+ "b.line.me":[v=>`あなた ${v}マス`],"b.line.1st":["（1位《い》）","（1ばん）"],"b.line.top":[(n,v)=>`1位《い》 ${n} ${v}マス`,(n,v)=>`1ばん ${n} ${v}マス`],
  "b.start":["スタート"],
  /* 参加・待合室・対戦 */
- "j.title":["コードで参加","はいる"],
- "j.ask":["先生の画面に出ている<b>4けたの数字</b>を入れてね","せんせいの がめんに でている <b>4けたの すうじ</b>を いれてね"],
- "j.nonet":["このページは友だち対戦に使えません。<br>先生に教えてもらったアドレスを開いてね。","この ページでは たいせんが できないよ。<br>せんせいに おしえて もらった アドレスを ひらいてね。"],
+ "j.title":["コードで参加《さんか》","はいる"],
+ "j.ask":["先生《せんせい》の画面《がめん》に出《で》ている<b>4けたの数字《すうじ》</b>を入《い》れてね","せんせいの がめんに でている <b>4けたの すうじ</b>を いれてね"],
+ "j.nonet":["このページは友《とも》だち対戦《たいせん》に使《つか》えません。<br>先生《せんせい》に教《おし》えてもらったアドレスを開《ひら》いてね。","この ページでは たいせんが できないよ。<br>せんせいに おしえて もらった アドレスを ひらいてね。"],
  "j.auto":["つないでいます…","つないでいるよ…"],
- "j.go":["参加","はいる"],"j.need":["4けた入れてね","4けた いれてね"],
- "l.room":["部屋","へや"],"l.name":["あなたの名前","あなたの なまえ"],"l.change":["名前をかえる","なまえを かえる"],
- "l.wait":["先生がスタートするのを待っています…","せんせいが スタートするのを まっているよ…"],
- "l.n":[n=>`参加している人：${n}人`,n=>`いる ひと：${n}にん`],
+ "j.go":["参加《さんか》","はいる"],"j.need":["4けた入《い》れてね","4けた いれてね"],
+ "l.room":["部屋《へや》","へや"],"l.name":["あなたの名前《なまえ》","あなたの なまえ"],"l.change":["名前《なまえ》をかえる","なまえを かえる"],
+ "l.wait":["先生《せんせい》がスタートするのを待《ま》っています…","せんせいが スタートするのを まっているよ…"],
+ "l.n":[n=>`参加《さんか》している人《ひと》：${n}人《にん》`,n=>`いる ひと：${n}にん`],
  "n.soon":["まもなくスタート！","もうすぐ スタート！"],
- "n.finished":["対戦は終わりました","たいせんは おわったよ"],
- "n.lost":["先生の端末との接続が切れました。<br>対戦が終わったか、先生の画面が閉じられたのかもしれません。","せんせいの たんまつと つながらなくなったよ。<br>たいせんが おわったのかも しれないよ。"],
- "n.rejoin":["もう一度コードを入れる","もういちど コードを いれる"],
+ "n.finished":["対戦《たいせん》は終《お》わりました","たいせんは おわったよ"],
+ "n.lost":["先生《せんせい》の端末《たんまつ》との接続《せつぞく》が切《き》れました。<br>対戦《たいせん》が終《お》わったか、先生《せんせい》の画面《がめん》が閉《と》じられたのかもしれません。","せんせいの たんまつと つながらなくなったよ。<br>たいせんが おわったのかも しれないよ。"],
+ "n.rejoin":["もう一度《いちど》コードを入《い》れる","もういちど コードを いれる"],
  "ft.lic":["つかっているソフトのライセンス","つかっている ソフトの ライセンス"],
- "snd.on":["音を出す（いまは出ない）","おとを だす（いまは でない）"],"snd.off":["音を止める（いまは出る）","おとを とめる（いまは でる）"],
- "qr.t":["このQRコードを読みとって参加","この QRコードを よみとって はいる"],
+ "snd.on":["音《おと》を出《だ》す（いまは出《で》ない）","おとを だす（いまは でない）"],"snd.off":["音《おと》を止《と》める（いまは出《で》る）","おとを とめる（いまは でる）"],
+ "qr.t":["このQRコードを読《よ》みとって参加《さんか》","この QRコードを よみとって はいる"],
  /* 参加・待合室のエラー（先生の端末から来る文もここで言いかえる。ふつうの文言と一字一句同じにすること） */
- "e.load":["通信の部品を読み込めませんでした（ネット接続を確認してください）","つうしんの ぶひんが よみこめなかったよ。ネットを たしかめてね"],
- "e.relay":["つなぎ役のサーバーに接続できませんでした","つなぐ サーバーに つながらなかったよ"],
- "e.nopeer":["その部屋コードは見つかりません","その へやの コードは みつからないよ"],
- "e.noteacher":["先生の端末につながりませんでした","せんせいの たんまつに つながらなかったよ"],
- "e.noteacher2":["先生の端末につながりませんでした（学校のネットワークで止められているかもしれません）","せんせいの たんまつに つながらなかったよ。がっこうの ネットで とめられて いるかも"],
- "e.cut":["先生の端末との接続が切れました","せんせいの たんまつと つながらなくなったよ"],
- "e.noreply":["先生の端末から返事がありません","せんせいの たんまつから へんじが ないよ"],
- "e.ended":["この対戦はもう終わっています","この たいせんは もう おわっているよ"],
- "e.full":["部屋がいっぱいです","へやが いっぱいだよ"],
- "e.badinfo":["参加情報が正しくありません","さんかの じょうほうが ちがうよ"],
- "e.noinfo":["参加情報が見つかりません","さんかの じょうほうが みつからないよ"],
- "e.comm":["通信エラー","つうしんの エラーだよ"],"e.err":["エラー","エラーだよ"],
- "e.cannot":["今は変えられません","いまは かえられないよ"],
- "e.notplaying":["対戦中ではありません","たいせんちゅうじゃ ないよ"],
- "e.nomode":["この遊び方では使えない操作です","この あそびかたでは できないよ"],
- "e.noeasy":["やさしいルールの部屋では使えません","やさしいルールの へやでは できないよ"],
- "e.unknown":["不明な操作です","ふめいな そうさだよ"],
- "pv":[s=>`${s?"対戦用サーバーに":"先生の端末に"}送られるのは、自動でつくニックネーム・正解数・点数だけです。名前やメールアドレスは集めません。`,
+ "e.load":["通信《つうしん》の部品《ぶひん》を読《よ》み込《こ》めませんでした（ネット接続《せつぞく》を確認《かくにん》してください）","つうしんの ぶひんが よみこめなかったよ。ネットを たしかめてね"],
+ "e.relay":["つなぎ役《やく》のサーバーに接続《せつぞく》できませんでした","つなぐ サーバーに つながらなかったよ"],
+ "e.nopeer":["その部屋《へや》コードは見《み》つかりません","その へやの コードは みつからないよ"],
+ "e.noteacher":["先生《せんせい》の端末《たんまつ》につながりませんでした","せんせいの たんまつに つながらなかったよ"],
+ "e.noteacher2":["先生《せんせい》の端末《たんまつ》につながりませんでした（学校《がっこう》のネットワークで止《と》められているかもしれません）","せんせいの たんまつに つながらなかったよ。がっこうの ネットで とめられて いるかも"],
+ "e.cut":["先生《せんせい》の端末《たんまつ》との接続《せつぞく》が切《き》れました","せんせいの たんまつと つながらなくなったよ"],
+ "e.noreply":["先生《せんせい》の端末《たんまつ》から返事《へんじ》がありません","せんせいの たんまつから へんじが ないよ"],
+ "e.ended":["この対戦《たいせん》はもう終《お》わっています","この たいせんは もう おわっているよ"],
+ "e.full":["部屋《へや》がいっぱいです","へやが いっぱいだよ"],
+ "e.badinfo":["参加《さんか》情報《じょうほう》が正《ただ》しくありません","さんかの じょうほうが ちがうよ"],
+ "e.noinfo":["参加《さんか》情報《じょうほう》が見《み》つかりません","さんかの じょうほうが みつからないよ"],
+ "e.comm":["通信《つうしん》エラー","つうしんの エラーだよ"],"e.err":["エラー","エラーだよ"],
+ "e.cannot":["今《いま》は変《か》えられません","いまは かえられないよ"],
+ "e.notplaying":["対戦中《たいせんちゅう》ではありません","たいせんちゅうじゃ ないよ"],
+ "e.nomode":["この遊《あそ》び方《かた》では使《つか》えない操作《そうさ》です","この あそびかたでは できないよ"],
+ "e.noeasy":["やさしいルールの部屋《へや》では使《つか》えません","やさしいルールの へやでは できないよ"],
+ "e.unknown":["不明《ふめい》な操作《そうさ》です","ふめいな そうさだよ"],
+ "pv":[s=>`${s?"対戦《たいせん》用《よう》サーバーに":"先生《せんせい》の端末《たんまつ》に"}送《おく》られるのは、自動《じどう》でつくニックネーム・正解数《せいかいすう》・点数《てんすう》だけです。名前《なまえ》やメールアドレスは集《あつ》めません。`,
        s=>`${s?"サーバーに":"せんせいの たんまつに"} おくられるのは、じどうで つく なまえと、せいかいの かずと、てんすう だけです。ほんとうの なまえは あつめません。`],
  /* 先生のもんだい・クイズ（Kahoot型）。やさしい側は小1の漢字だけ */
  "m.quiz.t":["クイズ"],
- "m.quiz.d":["先生の問題に、みんなで同時に答える。早く正解するほど高得点","せんせいの もんだいに、みんなで いっしょに こたえるよ"],
+ "m.quiz.d":["先生《せんせい》の問題《もんだい》に、みんなで同時《どうじ》に答《こた》える。早《はや》く正解《せいかい》するほど高得点《こうとくてん》","せんせいの もんだいに、みんなで いっしょに こたえるよ"],
  "z.solo":["ひとりで れんしゅう"],
- "z.n":[n=>`全部で ${n}問`,n=>`${n}もん あるよ`],
+ "z.n":[n=>`全部《ぜんぶ》で ${n}問《もん》`,n=>`${n}もん あるよ`],
  "z.start":["スタート！"],
  "z.qn":[(i,n)=>`${i} / ${n}`],
- "z.pick":["答えをえらんでね","こたえを えらんでね"],
- "z.sent":["答えました。みんなを待っています…","こたえたよ！ みんなを まっているよ…"],
- "z.right":["⭕ 正解！","⭕ せいかい！"],
- "z.wrong":["❌ 残念…","❌ ざんねん…"],
- "z.none":["⏰ 時間切れ…","⏰ じかんぎれ…"],
- "z.pts":[n=>`+${n} 点`,n=>`+${n} てん`],
- "z.streak":[n=>`🔥 ${n}問 連続正解！`,n=>`🔥 ${n}もん れんぞく せいかい！`],
- "z.score":[n=>`いまの点数 ${n}`,n=>`いまの てんすう ${n}`],
- "z.rank":[(r,t)=>`${t}人中 ${r}位`,(r,t)=>`${t}にんの うち ${r}ばん`],
- "z.wait":["次の問題を待っています","つぎの もんだいを まっているよ"],
- "z.board":["上位5人","いまの じゅんい"],
- "z.all":[n=>`みんなで ${n}問 正解！`,n=>`みんなで ${n}もん せいかい！`],
- "z.unit":["点","てん"],
- "z.total":[n=>`合計 ${n} 点`,n=>`ぜんぶで ${n} てん`],
- "z.okn":[(a,b)=>`正解 ${a} / ${b}問`,(a,b)=>`せいかい ${a} / ${b}もん`],
- "z.next":["つぎへ"],"z.finish":["結果を見る","けっかを みる"],
- "z.link.bad":["このリンクは使えません。先生にもう一度もらってください。","このリンクは つかえないよ。せんせいに もういちど もらってね。"],
- "e.qlate":["もう時間がおわりました","もう じかんが おわったよ"],
- "e.qbad":["この答えは使えません","この こたえは つかえないよ"],
+ "z.pick":["答《こた》えをえらんでね","こたえを えらんでね"],
+ "z.sent":["答《こた》えました。みんなを待《ま》っています…","こたえたよ！ みんなを まっているよ…"],
+ "z.right":["⭕ 正解《せいかい》！","⭕ せいかい！"],
+ "z.wrong":["❌ 残念《ざんねん》…","❌ ざんねん…"],
+ "z.none":["⏰ 時間《じかん》切《き》れ…","⏰ じかんぎれ…"],
+ "z.pts":[n=>`+${n} 点《てん》`,n=>`+${n} てん`],
+ "z.streak":[n=>`🔥 ${n}問《もん》 連続《れんぞく》正解《せいかい》！`,n=>`🔥 ${n}もん れんぞく せいかい！`],
+ "z.score":[n=>`いまの点数《てんすう》 ${n}`,n=>`いまの てんすう ${n}`],
+ "z.rank":[(r,t)=>`${t}人中《にんちゅう》 ${r}位《い》`,(r,t)=>`${t}にんの うち ${r}ばん`],
+ "z.wait":["次《つぎ》の問題《もんだい》を待《ま》っています","つぎの もんだいを まっているよ"],
+ "z.board":["上位《じょうい》5人《にん》","いまの じゅんい"],
+ "z.all":[n=>`みんなで ${n}問《もん》 正解《せいかい》！`,n=>`みんなで ${n}もん せいかい！`],
+ "z.unit":["点《てん》","てん"],
+ "z.total":[n=>`合計《ごうけい》 ${n} 点《てん》`,n=>`ぜんぶで ${n} てん`],
+ "z.okn":[(a,b)=>`正解《せいかい》 ${a} / ${b}問《もん》`,(a,b)=>`せいかい ${a} / ${b}もん`],
+ "z.next":["つぎへ"],"z.finish":["結果《けっか》を見《み》る","けっかを みる"],
+ "z.link.bad":["このリンクは使《つか》えません。先生《せんせい》にもう一度《いちど》もらってください。","このリンクは つかえないよ。せんせいに もういちど もらってね。"],
+ "e.qlate":["もう時間《じかん》がおわりました","もう じかんが おわったよ"],
+ "e.qbad":["この答《こた》えは使《つか》えません","この こたえは つかえないよ"],
 
  /* 単元から出題・単元練習 */
- "g.unit.t":["単元練習","たんげん れんしゅう"],
- "u.pick":["単元をえらぶ","たんげんを えらぶ"],"u.pick.d":["いくつでも組み合わせて練習","いくつでも えらんで れんしゅう"],
- "u.ex":["例題","れいだい"],"u.close":["とじる"],"u.grade":["学年","がくねん"],"u.all":["ぜんぶ"],
- "u.sets":["おすすめの組み合わせ","おすすめ"],
- "u.sel":[n=>`えらんだ単元：${n}`,n=>`えらんだ たんげん：${n}`],"u.clear":["ぜんぶはずす","ぜんぶ はずす"],
- "u.none":["下のカードをタップして、単元をえらんでね","したの カードを タップして、たんげんを えらんでね"],
- "u.ratio.k":[(n,k)=>`${n}問を ${k}つの単元に同じ数ずつ分けて出すよ`,(n,k)=>`${n}もんを ${k}この たんげんから おなじ かずずつ だすよ`],
- "u.how":["答え方","こたえかた"],"u.type":["数字を入れる","すうじを いれる"],"u.c4":["4つからえらぶ","4つから えらぶ"],
- "u.go":["練習をはじめる","れんしゅう スタート"],"u.bad":["このリンクは使えません。先生にもう一度もらってください。","このリンクは つかえないよ。せんせいに もういちど もらってね。"],
- "u.intro":["この単元で練習するよ","この たんげんで れんしゅうするよ"],"u.1min":["1分でいくつとけるかな？","1ぷんで いくつ とけるかな？"],
- "u.amari":["あまり"],"u.nextf":["つぎのらんへ","つぎの らんへ"],"u.del":["けす"],"u.pickunit":["単位をえらぶ","たんいを えらぶ"],
- "u.retry":["❌ おしい！もう一度やってみよう","❌ おしい！ もういちど やってみよう"],
- "u.ok2":["△ 2回目でせいかい！","△ 2かいめで せいかい！"],
- "u.marks":["○ 1回で正解　△ 2回目で正解　× まちがい","○ 1かいで せいかい　△ 2かいめで せいかい　× まちがい"],
+ "g.unit.t":["単元《たんげん》練習《れんしゅう》","たんげん れんしゅう"],
+ "u.pick":["単元《たんげん》をえらぶ","たんげんを えらぶ"],"u.pick.d":["いくつでも組《く》み合《あ》わせて練習《れんしゅう》","いくつでも えらんで れんしゅう"],
+ "u.ex":["例題《れいだい》","れいだい"],"u.close":["とじる"],"u.grade":["学年《がくねん》","がくねん"],"u.all":["ぜんぶ"],
+ "u.sets":["おすすめの組《く》み合《あ》わせ","おすすめ"],
+ "u.sel":[n=>`えらんだ単元《たんげん》：${n}`,n=>`えらんだ たんげん：${n}`],"u.clear":["ぜんぶはずす","ぜんぶ はずす"],
+ "u.none":["下《した》のカードをタップして、単元《たんげん》をえらんでね","したの カードを タップして、たんげんを えらんでね"],
+ "u.ratio.k":[(n,k)=>`${n}問《もん》を ${k}つの単元《たんげん》に同《おな》じ数《かず》ずつ分《わ》けて出《だ》すよ`,(n,k)=>`${n}もんを ${k}この たんげんから おなじ かずずつ だすよ`],
+ "u.how":["答《こた》え方《かた》","こたえかた"],"u.type":["数字《すうじ》を入《い》れる","すうじを いれる"],"u.c4":["4つからえらぶ","4つから えらぶ"],
+ "u.go":["練習《れんしゅう》をはじめる","れんしゅう スタート"],"u.bad":["このリンクは使《つか》えません。先生《せんせい》にもう一度《いちど》もらってください。","このリンクは つかえないよ。せんせいに もういちど もらってね。"],
+ "u.intro":["この単元《たんげん》で練習《れんしゅう》するよ","この たんげんで れんしゅうするよ"],"u.1min":["1分《ぷん》でいくつとけるかな？","1ぷんで いくつ とけるかな？"],
+ "u.amari":["あまり"],"u.nextf":["つぎのらんへ","つぎの らんへ"],"u.del":["けす"],"u.pickunit":["単位《たんい》をえらぶ","たんいを えらぶ"],
+ "u.retry":["❌ おしい！もう一度《いちど》やってみよう","❌ おしい！ もういちど やってみよう"],
+ "u.ok2":["△ 2回《かい》目《め》でせいかい！","△ 2かいめで せいかい！"],
+ "u.marks":["○ 1回《かい》で正解《せいかい》　△ 2回《かい》目《め》で正解《せいかい》　× まちがい","○ 1かいで せいかい　△ 2かいめで せいかい　× まちがい"],
  "u.marks.t":["○△×のきろく","○△×の きろく"]
 };
 /*TX-END*/
+const rbp=s=>{ const Q=window.MH_QUIZ; return Q?Q.plain(s):String(s==null?"":s).replace(/《[^《》]*》/g,""); };   // 読みを除いた本文
 let LG=0;                                   // いま見せている画面の学年（1〜2年なら「やさしい文字」）
 const easyG=g=>g===1||g===2;
 function T(k,...a){ const e=TX[k]; if(!e) return k; const v=(easyG(LG)&&e[1]!=null)?e[1]:e[0]; return typeof v==="function"?v(...a):v; }
-function T0(k,...a){ const v=TX[k][0]; return typeof v==="function"?v(...a):v; }   // 先生に送る結果など、いつも「ふつうの文言」にしたいとき
+function T0(k,...a){ const v=TX[k][0]; return rbp(typeof v==="function"?v(...a):v); }   // 先生に送る結果など、いつも「ふつうの文言」（読みなしの文字）にしたいとき
 const ERRKEYS=Object.keys(TX).filter(k=>k.startsWith("e."));
-function errMsg(m){ m=String(m||""); const base=m.replace(/（[a-z-]+）$/,""); for(const k of ERRKEYS) if(TX[k][0]===m||TX[k][0]===base) return T(k); return m; }
+function errMsg(m){ m=String(m||""); const base=m.replace(/（[a-z-]+）$/,""); for(const k of ERRKEYS){ const z=rbp(TX[k][0]); if(z===m||z===base) return T(k); } return m; }
 function setLG(g){ LG=g||0; drawHeader(); }
 /* 道具アイコン：Lucide（ISC）を、ページの先頭にある <symbol> から使う */
 const ic=(n,c)=>`<svg class="ic${c?" "+c:""}" aria-hidden="true" focusable="false"><use href="#i-${n}"/></svg>`;
@@ -821,8 +903,10 @@ const diceSvg=n=>`<svg class="art" viewBox="0 0 64 64" aria-hidden="true" focusa
 function drawHeader(){
   const c=document.getElementById("hSound"), l=document.getElementById("licLink"), gb=document.getElementById("hGrade"), rb=document.getElementById("hRec");
   if(l) l.textContent=T("ft.lic");
-  if(gb){ gb.innerHTML=(ui.grade?`<b>${ui.grade}年</b>`:T("h.gradepick"))+ic("chevron-down"); gb.setAttribute("aria-label",T("h.gradeq")); }
+  if(gb){ gb.innerHTML=(ui.grade?`<b>${ui.grade}年《ねん》</b>`:T("h.gradepick"))+ic("chevron-down"); gb.setAttribute("aria-label",T("h.gradeq")); }
   if(rb){ rb.innerHTML=`${msvg(3)}<b id="hRecN">${medalTotal()}</b>${T("h.rec")}`; rb.setAttribute("aria-label",T("rec.t")); }
+  const fb=document.getElementById("hFg");
+  if(fb){ fb.classList.toggle("hidden",FGFIX!==null); fb.innerHTML=`${T("fg.t")}<b>${T(fgOn()?"fg.on":"fg.off")}</b>`; fb.setAttribute("aria-pressed",fgOn()); fb.setAttribute("aria-label",T("fg.t")+" "+T(fgOn()?"fg.on":"fg.off")); }
   if(c){ c.classList.toggle("hidden",SND_DEAD); c.innerHTML=ic(SND?"volume-2":"volume-x"); c.setAttribute("aria-label",T(SND?"snd.off":"snd.on")); c.title=T(SND?"snd.off":"snd.on"); c.setAttribute("aria-pressed",SND); }
 }
 /* ===== 必要なときだけ読み込む部品（vendor/ に同梱。外部には通信しない） ===== */
@@ -888,7 +972,7 @@ const QD=window.MH_QUESTIONS||{kanji:[],kencho:[],eigo:[]};
 const KANJI={}; for(const x of QD.kanji) (KANJI[x.g]=KANJI[x.g]||[]).push(x);
 const KENCHO=QD.kencho, EIGO=QD.eigo;
 /* 県名と市名がちがう県（東京は都庁が新宿区なので、ちがうほうに入れる） */
-const kDiff=x=>x.a.includes("（")||x.q.replace(/[都道府県]$/,"")!==x.a.replace(/市$/,"");
+const kDiff=x=>{ const a=rbp(x.a), q=rbp(x.q); return a.includes("（")||q.replace(/[都道府県]$/,"")!==a.replace(/市$/,""); };
 
 
 /* ゲーム一覧（自分で作るゲーム）。名前（t）と説明（d）は上の表 TX から取る */
@@ -917,6 +1001,40 @@ const store={get(k,d){try{const v=localStorage.getItem(k);return v==null?d:JSON.
 const rnd=n=>Math.floor(Math.random()*n);
 const shuffle=a=>{a=[...a];for(let i=a.length-1;i>0;i--){const j=rnd(i+1);[a[i],a[j]]=[a[j],a[i]]}return a};
 const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+/* ===== ふりがな：文言・問題の「漢字​《かんじ》」を、画面に出るとき <ruby> に組み立てる（innerHTML には入れない） =====
+   読みは data/quizlib.js の rubyParts／plain を使う。「なし」のときは <rt> を CSS で隠すだけ（画面は作り直さない）。
+   授業モードの課題リンクに fg=0/1 をつけると、先生が固定できる */
+const FGK="mh_fg";
+let FG=store.get(FGK,true)!==false, FGFIX=null;
+const fgOn=()=>FGFIX!==null?FGFIX:FG;
+function fgApply(){ document.body.classList.toggle("nofg",!fgOn()); }
+function toggleFg(){ if(FGFIX!==null) return; FG=!FG; store.set(FGK,FG); fgApply(); drawHeader(); }
+const FG_PLAIN=new Set(["OPTION","TEXTAREA","TITLE","SCRIPT","STYLE"]), FG_ATTR=["aria-label","title","placeholder","alt"];
+function fgText(n){
+  const s=n.nodeValue; if(!s||s.indexOf("《")<0) return;
+  const p=n.parentNode; if(!p) return;
+  if(p.nodeType!==1||FG_PLAIN.has(p.nodeName)||p.namespaceURI==="http://www.w3.org/2000/svg"||(p.closest&&p.closest("rt"))){ if(rbParts(s)) n.nodeValue=rbp(s); return; }
+  if(!rbParts(s)) return;          // 《》があっても読みの形でないとき（書き方の説明など）は、そのまま
+  p.replaceChild(rubyNode(s),n);
+}
+const rbParts=s=>{ const Q=window.MH_QUIZ; return Q&&Q.rubyParts(s).some(x=>x.b!=null); };
+function fgAttr(el){ for(const a of FG_ATTR){ const v=el.getAttribute&&el.getAttribute(a); if(v&&v.indexOf("《")>=0&&rbParts(v)) el.setAttribute(a,rbp(v)); } }
+function fgWalk(root){
+  if(root.nodeType===3) return fgText(root);
+  if(root.nodeType!==1) return;
+  fgAttr(root);
+  const w=document.createTreeWalker(root,5), ts=[]; let n;
+  while((n=w.nextNode())){ if(n.nodeType===3){ if(n.nodeValue.indexOf("《")>=0) ts.push(n); } else fgAttr(n); }
+  ts.forEach(fgText);
+}
+new MutationObserver(ms=>{ for(const m of ms){
+  if(m.type==="childList") m.addedNodes.forEach(fgWalk);
+  else if(m.type==="characterData") fgText(m.target);
+  else if(m.type==="attributes") fgAttr(m.target);
+} }).observe(document.body,{childList:true,subtree:true,characterData:true,attributes:true,attributeFilter:FG_ATTR});
+function fgFromHash(){      // 課題リンクの fg=0/1。あれば児童は変えられない
+  const m=/[?&#]fg=([01])(?![0-9])/.exec(location.hash); FGFIX=m?m[1]==="1":null; fgApply(); drawHeader();
+}
 function go(h){ if(location.hash===h) route(); else location.hash=h; }
 function params(){ const [p,q]=location.hash.slice(1).split("?"); return {path:p||"home",q:new URLSearchParams(q||"")}; }
 let ui=store.get("mh_ui",{grade:0,subj:"all"});
@@ -927,7 +1045,7 @@ function medalTotal(){ return Object.values(bests()).reduce((n,b)=>n+(b.medal||0
 function refreshMedals(){ const n=document.getElementById("hRecN"); if(n) n.textContent=medalTotal(); }
 /* 画面を寝かせない（先生の部屋画面だけ。対応していない端末や失敗したときは、なにもしない） */
 let WL=null, WLS=0;                          // WLS：0 まだ／1 取れた／2 取れなかった（文言は、取れたときだけ「暗くならない」と言う）
-const wlText=()=>WLS===1?"画面が暗くならないようにしています。":WLS===2?"この端末では、画面が暗くなるのを止められませんでした。端末の設定で、スリープまでの時間を長めにしてください。":"";
+const wlText=()=>WLS===1?"画面《がめん》が暗《くら》くならないようにしています。":WLS===2?"この端末《たんまつ》では、画面《がめん》が暗《くら》くなるのを止《と》められませんでした。端末《たんまつ》の設定《せってい》で、スリープまでの時間《じかん》を長《なが》めにしてください。":"";
 const wlShow=()=>{ const el=document.getElementById("wlmsg"); if(el) el.textContent=wlText(); };
 async function wakeOn(){
   try{
@@ -943,11 +1061,11 @@ function wakeOff(){ const w=WL; WL=null; WLS=0; try{ if(w) w.release(); }catch(e
 document.addEventListener("visibilitychange",()=>{ if(document.visibilityState==="visible"&&params().path==="host") wakeOn(); });
 /* 英単語の読み上げ（端末の読み上げ機能。外部には通信しない。対応していない端末ではボタンを出さない） */
 const spkOK=()=>{ try{ return "speechSynthesis" in window && typeof SpeechSynthesisUtterance!=="undefined"; }catch(e){ return false; } };
-const spkBtn=(id,w)=>id==="eigo"&&spkOK()?`<button class="spk" data-w="${esc(w)}" aria-label="よみあげ">${ic("volume-2")}</button>`:"";
-function speak(w){ try{ speechSynthesis.cancel(); const u=new SpeechSynthesisUtterance(w); u.lang="en-US"; u.rate=.85; speechSynthesis.speak(u); }catch(e){} }
+const spkBtn=(id,w)=>id==="eigo"&&spkOK()?`<button class="spk" data-w="${esc(rbp(w))}" aria-label="よみあげ">${ic("volume-2")}</button>`:"";
+function speak(w){ try{ speechSynthesis.cancel(); const u=new SpeechSynthesisUtterance(rbp(w)); u.lang="en-US"; u.rate=.85; speechSynthesis.speak(u); }catch(e){} }
 document.addEventListener("click",e=>{ const b=e.target.closest&&e.target.closest(".spk"); if(b) speak(b.dataset.w); });
 /* 4択のボタンの文字（県庁所在地は市の名前にふりがなをつける） */
-const chLabel=(c,q)=>q&&q.rd&&q.rd[c]?`<ruby>${esc(c)}<rt>${esc(q.rd[c])}</rt></ruby>`:esc(c);
+const chLabel=(c,q)=>esc(c);      // 読みは文字の中の《》。画面に出るとき fgWalk が <ruby> にする
 
 /* ===== まちがえた問題：1問1カード。「？この もんだい、おかしい」で問題IDを出す（画面に出すだけ。どこにも送らない） ===== */
 const qidOf=(o,x)=>o.id||`${x.id}: ${o.q}`;            // 計算など毎回つくる問題には ID がないので、ゲーム名と式を使う
@@ -984,8 +1102,7 @@ function makeKencho(only){
   add(KENCHO.filter(y=>y.rg===item.rg));
   for(const r of ((RG[item.rg]||{}).near||[])) if(out.length<3) add(KENCHO.filter(y=>y.rg===r));
   if(out.length<3) add(KENCHO);
-  const rd={}; for(const y of [item,...out]) if(y.r) rd[y.a]=y.r;
-  return {id:item.id,q:item.q,a:item.a,ch:shuffle([item.a,...out.map(y=>y.a)]),small:T("q.kencho"),rd};
+  return {id:item.id,q:item.q,a:item.a,ch:shuffle([item.a,...out.map(y=>y.a)]),small:T("q.kencho")};
 }
 function gen(id,g,opt){
   if(id==="mine") return genMine();
@@ -1019,7 +1136,7 @@ function renderGradePick(cb){
   app.innerHTML=`<div class="play">
     <div class="topbar"><button class="back" id="gb">${BK()}</button><b></b><span></span></div>
     <div class="q"><div class="big">${T("gr.title")}</div><div class="small">${TX["gr.note"][1]}</div></div>
-    <div class="gradegrid">${[1,2,3,4,5,6].map(g=>`<button class="gbtn" data-g="${g}">${g}年</button>`).join("")}</div></div>`;
+    <div class="gradegrid">${[1,2,3,4,5,6].map(g=>`<button class="gbtn" data-g="${g}">${g}年《ねん》</button>`).join("")}</div></div>`;
   $("#gb").onclick=()=>go("#home");
   app.querySelectorAll("[data-g]").forEach(b=>b.onclick=()=>{ ui.grade=+b.dataset.g; store.set("mh_ui",ui); cb(ui.grade); });
 }
@@ -1089,7 +1206,7 @@ function openGradeSheet(){
   if(document.getElementById("gsheet")) return;
   const el=document.createElement("div"); el.className="sheetbg"; el.id="gsheet";
   el.innerHTML=`<div class="sheet" role="dialog" aria-modal="true" aria-label="${T("h.gradeq")}"><h3>${T("h.gradeq")}</h3>
-    <div class="gradegrid">${[1,2,3,4,5,6].map(g=>`<button class="gbtn" data-g="${g}">${g}年</button>`).join("")}</div></div>`;
+    <div class="gradegrid">${[1,2,3,4,5,6].map(g=>`<button class="gbtn" data-g="${g}">${g}年《ねん》</button>`).join("")}</div></div>`;
   const onKey=e=>{ if(e.key==="Escape") close(); };
   const close=()=>{ el.remove(); document.removeEventListener("keydown",onKey); };
   el.onclick=e=>{ if(e.target===el) close(); };
@@ -1150,10 +1267,10 @@ function renderPlay(q){
   P={x,g,t,left:t,ok:0,ng:0,cur:null,inp:"",misses:[],missObjs:[],task,lock:false,over:false,opt,kuku,chN:0,inN:0};
   const info=kuku?kukuLabel(kuku):(opt.k==="diff"?T("kc.diff"):"");
   app.innerHTML=`<div class="play pg">
-    ${task?`<div class="banner">${ic("pencil")} ${T("p.task",`${x.t}（${g}年・${t}${T("sec")}）`)}</div>`:""}
+    ${task?`<div class="banner">${ic("pencil")} ${T("p.task",`${x.t}（${g}年《ねん》・${t}${T("sec")}）`)}</div>`:""}
     <div class="topbar">
       ${task?`<button class="back" id="bk">${ic("x")}${T("back.end")}</button>`:`<button class="back" onclick="stopTimer();go('#home')">${BK()}</button>`}
-      <span><b>${tico(x)} ${x.t}</b> <span class="note">${g}年${info?"・"+esc(info):""}</span></span>
+      <span><b>${tico(x)} ${x.t}</b> <span class="note">${g}年《ねん》${info?"・"+esc(info):""}</span></span>
       <span class="timer" id="tm" aria-hidden="true">${t}</span>
     </div>
     <div class="tbar" id="tbar"><i id="tb"></i></div>
@@ -1246,8 +1363,9 @@ function finish(){
   if(medal>0) sfx("medal");
   if(medal===3||(isNew&&medal>0)) party();
   all[key]={score:Math.max(prev.score,p.ok),medal:Math.max(prev.medal,medal)};
-  if(!p.u){ store.set("mh_best",all); refreshMedals(); }       // 単元練習は、きろく・メダルの合計には入れない
-  const report=`【${T0("g."+p.x.id+".t")}】${p.g}年 ${p.t}秒｜せいかい${p.ok}問／${total}問（正答率${acc}%）`;
+  let ures=null;
+  if(!p.u){ store.set("mh_best",all); refreshMedals(); } else ures=uRecord(p);       // 単元練習は、単元ごとのきろく（u:単元ID）に残す
+  const report=`【${T0("g."+p.x.id+".t")}】${p.g}年 ${p.t}秒｜せいかい${p.ok}問／${total}問（正答率${acc}%）`;   //T
   const repFull=report+missIds(p.missObjs,p.x);          // 課題リンクの結果の末尾に、まちがえた問題のID
   app.innerHTML=`<div class="play"><div class="res">
     ${medRow(medal)}
@@ -1257,7 +1375,7 @@ function finish(){
     <div class="actions"><button class="btn again" id="again">${ic("rotate-ccw")}${T("r.again")}</button>
       <div class="subs">${p.missObjs.length?`<button class="btn sub" id="redo">${T("r.redo")}</button>`:""}${p.task?"":`<button class="btn sub" onclick="go('#home')">${T("r.other")}</button>`}</div></div>
     <div class="stats"><span>${T("r.answered")} <b>${T("r.n",total)}</b></span><span>${T("r.acc")} <b>${acc}%</b></span>${p.u?"":`<span>${T("r.best")} <b>${T("r.n",all[key].score)}</b></span>`}</div>
-    ${p.u?`<div class="umr"><b>${T("u.marks.t")}</b><div class="umarks big">${uMarksHtml(p.marks)}</div><div class="note">${esc(T("u.marks"))}</div></div>`:""}
+    ${p.u?`<div class="umr"><b>${T("u.marks.t")}</b><div class="umarks big">${uMarksHtml(p.marks)}</div><div class="note">${esc(T("u.marks"))}</div>${ures&&ures.length?`<div class="ubk">${ures.map(r=>`<div class="stamp"><span class="sn">${esc(UBY[r.id].title)}<small>${T("u.best",r.o)}</small></span><span class="slots" aria-hidden="true">${MEDAL_ICO.map((em,i)=>`<span class="slot${r.medal>i?" on":""}">${msvg(r.medal>i?i+1:0)}</span>`).join("")}</span></div>`).join("")}</div>`:""}</div>`:""}
     ${p.missObjs.length?missCards(p.missObjs,p.x):""}
     ${p.task?`<div class="miss"><b>${T("r.send")}</b><br><span id="rep">${esc(repFull)}</span><br><button class="btn sub" id="cp">${T("r.copy")}</button></div>`:""}
   </div></div>`;
@@ -1274,13 +1392,7 @@ function startReview(items,x,g,task){
   app.innerHTML=`<div class="play pg">
     <div class="topbar">
       ${task?`<button class="back" onclick="reviewDone()">${ic("x")}${T("back.end")}</button>`:`<button class="back" onclick="go('#home')">${BK()}</button>`}
-      <span><b>${tico(x)} ${T("p.review")}</b> <span class="note">${x.t}・${g}年</span></span>
-      <span class="timer" id="tm" aria-hidden="true"></span>
-    </div>
-    <div class="q"><div class="big" id="qq"></div><div class="small" id="qs"></div></div>
-    <div class="fb" id="fb" aria-live="polite"></div>
-    <div id="area"></div>
-    <div class="score" id="scw">${T("p.left",queue.length)}</div>
+      <span><b>${tico(x)} ${T("p.review")}</b> <span class="note">${x.t}・${g}年《ねん》</span></span>      <span class="timer" id="tm" aria-hidden="true"></span>    </div>    <div class="q"><div class="big" id="qq"></div><div class="small" id="qs"></div></div>    <div class="fb" id="fb" aria-live="polite"></div>    <div id="area"></div>    <div class="score" id="scw">"scw">${T("p.left",queue.length)}</div>
     <p class="note">${T("p.reviewnote")}</p>
   </div>`;
   window.scrollTo(0,0);
@@ -1309,33 +1421,73 @@ document.addEventListener("keydown",e=>{
    正しいときだけ、いまの きろくより大きい数字を残す形で反映する（きろくは減らない） */
 const bkeys=()=>[...GAMES.map(x=>x.id),...MODES.flatMap(m=>GAMES.map(x=>m.id+"_"+x.id))];
 function bkSum(t){ let h=7; for(const c of t) h=(h*31+c.charCodeAt(0))%46656; return h.toString(36).toUpperCase().padStart(3,"0"); }
-function bkMake(){
+const uHash4=id=>{ let h=7; for(const c of id) h=(h*131+c.charCodeAt(0))%1679616; return h.toString(36).toUpperCase().padStart(4,"0"); };
+const b36=(n,w)=>Math.min(Math.pow(36,w)-1,Math.max(0,n|0)).toString(36).toUpperCase().padStart(w,"0");
+function bkMake(){      // v2：v1 に「単元ごとのベスト・メダル」を足した形（v1 の文字もそのまま読める）
   const b=bests(); let body=String(Math.min(6,Math.max(0,ui.grade|0)));
-  for(const k of bkeys()){ const e=b[k]||{}; body+=Math.min(1295,Math.max(0,e.score|0)).toString(36).toUpperCase().padStart(2,"0")+Math.min(3,Math.max(0,e.medal|0)); }
-  return ("MH1"+body+bkSum("MH1"+body)).match(/.{1,6}/g).join("-");        // 読みやすいよう6文字ごとに区切る
+  for(const k of bkeys()){ const e=b[k]||{}; body+=b36(e.score,2)+Math.min(3,Math.max(0,e.medal|0)); }
+  const us=(typeof UREADY!=="undefined"?UREADY:[]).filter(u=>b["u:"+u.id]&&(b["u:"+u.id].score||b["u:"+u.id].medal)).slice(0,300);
+  body+=b36(us.length,2)+us.map(u=>{ const e=b["u:"+u.id]; return uHash4(u.id)+b36(e.score,2)+Math.min(3,Math.max(0,e.medal|0)); }).join("");
+  return ("MH2"+body+bkSum("MH2"+body)).match(/.{1,6}/g).join("-");        // 読みやすいよう6文字ごとに区切る
 }
 function bkRead(str){
   const t=String(str||"").toUpperCase().replace(/[^0-9A-Z]/g,""), ks=bkeys();       // 区切りや空白は無視
-  if(t.length!==3+1+ks.length*3+3||!t.startsWith("MH1")) return null;
-  const body=t.slice(3,-3); if(bkSum("MH1"+body)!==t.slice(-3)||!/^[0-6]$/.test(body[0])) return null;
+  const v=t.slice(0,3); if(v!=="MH1"&&v!=="MH2") return null;
+  const base=1+ks.length*3;
+  if(t.length<3+base+3||(v==="MH1"&&t.length!==3+base+3)) return null;
+  const body=t.slice(3,-3); if(bkSum(v+body)!==t.slice(-3)||!/^[0-6]$/.test(body[0])) return null;
   const out={}; let p=1;
   for(const k of ks){
     const sc=body.slice(p,p+2), m=body[p+2]; p+=3;
     if(!/^[0-9A-Z]{2}$/.test(sc)||!/^[0-3]$/.test(m)) return null;
     out[k]={score:parseInt(sc,36),medal:+m};
   }
-  return {g:+body[0],b:out};
+  const u={};
+  if(v==="MH2"){
+    const n=parseInt(body.slice(p,p+2),36); p+=2;
+    if(!(n>=0)||body.length!==p+n*7) return null;
+    for(let i=0;i<n;i++,p+=7){ const h=body.slice(p,p+4), sc=body.slice(p+4,p+6), m=body[p+6];
+      if(!/^[0-9A-Z]{4}$/.test(h)||!/^[0-9A-Z]{2}$/.test(sc)||!/^[0-3]$/.test(m)) return null;
+      u[h]={score:parseInt(sc,36),medal:+m}; }
+  }
+  return {g:+body[0],b:out,u};
 }
 function bkApply(r){
   const all=bests();
   for(const k in r.b){ const c=all[k]||{score:0,medal:0}, n=r.b[k];
     if(n.score||n.medal) all[k]={score:Math.max(c.score||0,n.score),medal:Math.max(c.medal||0,n.medal)}; }
+  for(const u of (typeof UREADY!=="undefined"?UREADY:[])){ const n=r.u&&r.u[uHash4(u.id)]; if(!n) continue;
+    const c=all["u:"+u.id]||{score:0,medal:0}; all["u:"+u.id]={score:Math.max(c.score||0,n.score),medal:Math.max(c.medal||0,n.medal)}; }
   store.set("mh_best",all);
   if(r.g){ ui.grade=r.g; store.set("mh_ui",ui); }
 }
+/* 単元練習の記録：教科ごとに、挑戦した単元とメダル */
+function unitBook(b){
+  if(!UNITS_OK) return "";
+  const subs=[["sansu","math"],["kokugo","jp"],["shakai","soc"],["eigo","eng"]];
+  const secs=subs.map(([sj,k])=>{
+    const us=UREADY.filter(u=>u.subj===sj&&b["u:"+u.id]&&(b["u:"+u.id].score||b["u:"+u.id].medal));
+    if(!us.length) return "";
+    return `<div class="ubk"><h4>${subjN(k)}</h4>${us.map(u=>{ const e=b["u:"+u.id], m=e.medal|0;
+      return `<div class="stamp"><span class="sn">${esc(u.title)}<small>${u.g}年《ねん》・${T("u.best",e.score)}</small></span><span class="slots" aria-hidden="true">${MEDAL_ICO.map((em,i)=>`<span class="slot${m>i?" on":""}">${msvg(m>i?i+1:0)}</span>`).join("")}</span></div>`; }).join("")}</div>`;
+  }).join("");
+  return `<div class="book unitbook"><h3>${T("rec.unit")}</h3>${secs||`<div class="note" style="padding:8px 0">${T("rec.unit.none")}</div>`}</div>`;
+}
+function uRecord(p){       // 単元ごとのベストとメダルを残す（キー u:<単元ID>）。メダルの合計にも入る
+  const st=p.uSt||{}, ids=Object.keys(st).filter(i=>UBY[i]), k=Math.max(1,ids.length), all=bests();
+  const need=[3,5,8].map(v=>Math.max(2,Math.ceil(v/k))), AC=[60,75,90], res=[];
+  for(const id of ids){
+    const s=st[id], acc=s.n?s.o/s.n*100:0; let medal=0;
+    for(let i=0;i<3;i++) if(s.o>=need[i]&&acc>=AC[i]) medal=i+1;
+    const key="u:"+id, prev=all[key]||{score:0,medal:0};
+    all[key]={score:Math.max(prev.score,s.o),medal:Math.max(prev.medal,medal)};
+    res.push({id,medal,o:s.o,n:s.n});
+  }
+  store.set("mh_best",all); refreshMedals(); return res;
+}
 function renderRecord(msg){
   setLG(ui.grade);
-  const b=bests(), tot=medalTotal(), btl=Object.keys(b).filter(k=>k.includes("_")).reduce((n,k)=>n+(b[k].medal||0),0);
+  const b=bests(), tot=medalTotal(), btl=Object.keys(b).filter(k=>!k.startsWith("u:")&&k.includes("_")).reduce((n,k)=>n+(b[k].medal||0),0);
   app.innerHTML=`<div class="rec">
     <div class="topbar"><button class="back" onclick="go('#home')">${BK()}</button><b>${T("rec.t")}</b><span></span></div>
     <div class="rectotal"><span class="e" aria-hidden="true">${msvg(3)}</span><span class="n">${tot}</span><span class="l">${T("rec.total")}</span></div>
@@ -1344,6 +1496,7 @@ function renderRecord(msg){
         return `<div class="stamp"><span class="sico" aria-hidden="true">${svgU(x.art)}</span><span class="sn">${x.t}<small>${e?T("h.best",e.score):T("rec.none")}</small></span>
           <span class="slots" aria-hidden="true">${MEDAL_ICO.map((em,i)=>`<span class="slot${m>i?" on":""}">${msvg(m>i?i+1:0)}</span>`).join("")}</span></div>`; }).join("")}
       <div class="note" style="padding:8px 0 6px">${T("rec.battle",btl)}</div></div>
+    ${unitBook(b)}
     <p class="note">${T("rec.safe")}</p>
     <div class="bak"><h3>${ic("save")} ${T("rec.bk")}</h3>
       <p class="note" style="margin:0">${T("rec.bk.safari")}</p>
@@ -1364,6 +1517,7 @@ function renderRecord(msg){
   };
 }
 
+/*T-BEGIN*/
 function renderTeacher(q){
   setLG(0); QSETS=null; const qsets=qsGet();
   const opt=GAMES.map(x=>`<option value="${x.id}">${x.ico} ${x.t}（${subjN(x.s)}）</option>`).join("");
@@ -1424,6 +1578,7 @@ function renderTeacher(q){
       <label>あそびかた<select id="tm2"><option value="">ふつう（時間内に何問とけるか）</option>${MODES.map(m=>`<option value="${m.id}">${m.ico} ${m.t}（CPUとたいせん）</option>`).join("")}</select></label>
       <label id="trl" class="hidden">ルール（バトルモードのとき）<select id="tr">${RULES.map(r=>`<option value="${r.id}">${r.t}（${r.d}）</option>`).join("")}</select></label>
       <label>制限時間<select id="tt"><option value="30">30秒</option><option value="60" selected>60秒</option><option value="90">90秒</option><option value="120">120秒</option></select></label>
+      <label>ふりがな<select id="tfg"><option value="">児童の設定のまま</option><option value="1">いつも あり</option><option value="0">いつも なし</option></select></label>
       <button class="btn" id="mk">リンクを作る</button>
       <div class="out hidden" id="lo"></div>
     </div>
@@ -1467,13 +1622,13 @@ function renderTeacher(q){
   app.querySelectorAll("[data-td]").forEach(b=>b.onclick=()=>b.classList.toggle("on"));
   $("#pg").onchange=()=>fillG("#pg","#pgr"); fillG("#pg","#pgr");
   $("#mk").onclick=()=>{
-    const md=$("#tm2").value, base=location.href.split("#")[0], gid=$("#tg").value;
+    const md=$("#tm2").value, base=location.href.split("#")[0], gid=$("#tg").value, fgp=$("#tfg").value?"&fg="+$("#tfg").value:"";
     let extra="";      // 九九の段・順番、県庁所在地のえらびかた
     if(gid==="kuku"){ const d=[...app.querySelectorAll("[data-td].on")].map(e=>e.dataset.td); extra=(d.length?"&d="+d.join(","):"")+"&o="+$("#tko").value; }
     else if(gid==="kencho"&&$("#tkk").value) extra="&k="+$("#tkk").value;
     const url=md
-      ? base+`#mode?m=${md}&game=${$("#tg").value}&g=${$("#tgr").value}&t=${Math.max(120,+$("#tt").value)}&r=${ruleOf($("#tr").value)}&task=1`
-      : base+`#play?game=${$("#tg").value}&g=${$("#tgr").value}&t=${$("#tt").value}${extra}&task=1`;
+      ? base+`#mode?m=${md}&game=${$("#tg").value}&g=${$("#tgr").value}&t=${Math.max(120,+$("#tt").value)}&r=${ruleOf($("#tr").value)}&task=1${fgp}`
+      : base+`#play?game=${$("#tg").value}&g=${$("#tgr").value}&t=${$("#tt").value}${extra}&task=1${fgp}`;
     const lo=$("#lo"); lo.classList.remove("hidden");
     lo.innerHTML=`<b>課題リンク</b><br><span id="lu">${esc(url)}</span><br><button class="btn sub" id="lc">コピー</button> <a href="${esc(url)}" target="_blank">試しに開く ↗</a>`;
     $("#lc").onclick=()=>navigator.clipboard?.writeText(url).then(()=>$("#lc").textContent="コピーしました",()=>{});
@@ -1483,6 +1638,7 @@ function renderTeacher(q){
   if(want&&qsFind(want)){ $("#nm").value="quiz"; $("#ng").value="set:"+want; fillG("#ng","#ngr"); setRule(); syncMode(); $("#mkroom").closest(".form").scrollIntoView(); }
 }
 
+/*T-END*/
 /* ================= 教室で映す ================= */
 function startProjector(id,g,n,sec){
   setLG(0);
@@ -1496,12 +1652,12 @@ function startProjector(id,g,n,sec){
   function show(){
     const q=qs[i]; let left=sec;
     const draw=(reveal)=>{
-      el.innerHTML=`<div class="ptop"><span>${x.ico} ${x.t}（${g}年）</span><span>${i+1} / ${qs.length}</span><span class="count">${reveal?"":left}</span></div>
+      el.innerHTML=`<div class="ptop"><span>${x.ico} ${x.t}（${g}年《ねん》）</span><span>${i+1} / ${qs.length}</span><span class="count">${reveal?"":left}</span></div>
         <div class="pq"><div>${esc(q.q)}<div style="font-size:.35em;opacity:.7;margin-top:10px">${esc(q.small||"")}</div></div></div>
         <div class="pc">${q.ch.map((c,k)=>`<div class="${reveal&&c!==q.a?"dim":""}" style="background:${cols[k]};color:${fgs[k]}">${lab[k]}. ${chLabel(c,q)}${reveal&&c===q.a?" ⭕":""}</div>`).join("")}</div>
         <div class="pbtns">${reveal
-          ?(i<qs.length-1?`<button class="btn" id="nx">次の問題 →</button>`:`<button class="btn" id="fin">おわり</button>`)
-          :`<button class="btn sub" id="rv">答えを見せる</button>`}
+          ?(i<qs.length-1?`<button class="btn" id="nx">次《つぎ》の問題《もんだい》 →</button>`:`<button class="btn" id="fin">おわり</button>`)
+          :`<button class="btn sub" id="rv">答《こた》えを見《み》せる</button>`}
           <button class="btn sub" id="cl">とじる</button></div>`;
       el.querySelector("#cl").onclick=close;
       const rv=el.querySelector("#rv"); if(rv) rv.onclick=()=>{clearInterval(tid);draw(true)};
@@ -1577,10 +1733,10 @@ function renderMode(q){
      bots:BOTS.map((b,i)=>({...b,v:0,wait:rr(2,5)*botK(g),spd:[1,1.15,0.85][i]})),
      over:false};
   app.innerHTML=`<div class="mplay${m.id==="race"?" racew":""}">
-    ${task?`<div class="banner">${ic("pencil")} ${T("p.task",`${m.t}（${x.t}・${g}年）`)}</div>`:""}
+    ${task?`<div class="banner">${ic("pencil")} ${T("p.task",`${m.t}（${x.t}・${g}年《ねん》）`)}</div>`:""}
     <div class="topbar">
       ${task?`<button class="back" id="bk">${ic("x")}${T("back.end")}</button>`:`<button class="back" onclick="stopTimer();M=null;go('#home')">${BK()}</button>`}
-      <span><b>${svgU(m.art,"ti")} ${m.t}</b> <span class="note">${x.t}・${g}年・${ruleName(rule)}</span></span>
+      <span><b>${svgU(m.art,"ti")} ${m.t}</b> <span class="note">${x.t}・${g}年《ねん》・${ruleName(rule)}</span></span>
       <span class="timer" id="tm" aria-hidden="true">${t}</span>
     </div>
     <div class="tbar" id="tbar"><i id="tb"></i></div>
@@ -1734,9 +1890,14 @@ function botTick(dt){
 function drawSide(){
   if(!M) return;
   const ps=[...players()].sort((a,b)=>b.v-a.v);
+  if(M.net){          // 児童の端末：自分の点と順位だけ。全体の順位表と盤は前の大画面で見る
+    const i=ps.findIndex(p=>p.me), me=ps[i]||M.me, easy=M.rule==="easy";
+    $("#mside").innerHTML=`<span class="me1">${face(M.me.e)}<b>${esc(M.me.n)}</b></span><span>${M.m.id==="chest"?"🪙 "+me.v:T("b.line.me",me.v)}</span>${easy?"":`<span>${T("z.rank",i+1,ps.length)}</span>`}`;
+    return;
+  }
   if(M.m.id==="chest"){
     const easy=M.rule==="easy";
-    $("#mside").innerHTML=`<h3>${ic("trophy")} ${easy?T("b.rank.e"):T("b.rank")+(M.net?`（${ps.length}人）`:"")}</h3>${rankRows(easy?easyList(ps):topList(ps),p=>"🪙 "+p.v)}
+    $("#mside").innerHTML=`<h3>${ic("trophy")} ${easy?T("b.rank.e"):T("b.rank")+(M.net?`（${ps.length}人《にん》）`:"")}</h3>${rankRows(easy?easyList(ps):topList(ps),p=>"🪙 "+p.v)}
       <p class="note">${T("b.right",M.ok)}</p>`;
   } else {
     const me=ps.find(p=>p.me), easy=M.rule==="easy";      // 盤の上の1行：あなたは何マス目か／1位はだれか（やさしいルールでは順位を出さない）
@@ -1800,7 +1961,7 @@ function layoutPieces(){
   if(!M||!M.pk) return;
   const g={}; for(const k in M.pk){ const o=M.pk[k]; (g[o.shown]=g[o.shown]||[]).push(o); }
   for(const c in g){ const a=g[c], b=cellXY(+c);
-    a.forEach((o,k)=>{ const dx=(k-(a.length-1)/2)*(a.length>4?9:16), dy=-20+(+c===0?0:0);
+    a.forEach((o,k)=>{ const dx=(k-(a.length-1)/2)*(a.length>12?4:a.length>4?9:16), dy=-20+(+c===0?0:0);
       o.el.style.transform=`translate(${(b.x+dx).toFixed(1)}px,${(b.y+dy).toFixed(1)}px)`; }); }
 }
 function stepPiece(o){
@@ -1849,7 +2010,7 @@ function modeResult(){
   const easy=p.rule==="easy";      // やさしいルール：順位の数字と最下位は出さない
   if(easy||place<=3) sfx("medal");
   if(easy||place===1) party();       // 1位（やさしいルールでは全員）
-  const report=`【${T0("m."+p.m.id+".t")}／${T0("g."+p.x.id+".t")}】${p.g}年｜${place}位｜せいかい${p.ok}問／${total}問（正答率${acc}%）`;
+  const report=`【${T0("m."+p.m.id+".t")}／${T0("g."+p.x.id+".t")}】${p.g}年｜${place}位｜せいかい${p.ok}問／${total}問（正答率${acc}%）`;   //T
   const repFull=report+missIds(p.missObjs,p.x);
   app.innerHTML=`<div class="play"><div class="res">
     ${medRow(easy?3:medal)}
@@ -1870,6 +2031,7 @@ document.addEventListener("keydown",e=>{
   const b=$("#mmain").querySelectorAll(".choice")[+e.key-1]; if(b) mPick(b);
 });
 
+/*T-BEGIN*/
 /* ================= 友だち対戦（サーバー接続） ================= */
 /* 通信の方式
    p2p（標準）：先生の端末がサーバー役。端末どうしは WebRTC で直接つながる。最初の仲介だけ PeerJS の公開サーバーを使う
@@ -2080,10 +2242,11 @@ function listen(code,onState,onLost){
     }catch(e){ if(!closed) onLost(); }
   })();
 }
+/*T-END*/
 const modeOf=s=>s.mode==="quiz"?QMODE:MODES.find(m=>m.id===s.mode), gameOf=s=>(s.game==="mine"||s.game==="quiz")?MINEGAME(s.gt):GAMES.find(x=>x.id===s.game);
 /* 集めている情報の表示（待合室・結果・先生の部屋画面） */
 const privacy=()=>`<p class="note privacy" style="text-align:center">${ic("lock")} ${T("pv",NETMODE==="server")}</p>`;
-const unitOf=s=>s.mode==="chest"?"コイン":s.mode==="quiz"?"点":"マス";
+const unitOf=s=>s.mode==="chest"?"コイン":s.mode==="quiz"?"点《てん》":"マス";
 const sorted=ps=>[...ps].sort((a,b)=>b.v-a.v||b.ok-a.ok);
 
 /* --- 児童：コードを入れて参加 --- */
@@ -2135,13 +2298,12 @@ function lobbyView(s){
   setLG(s.g);
   const me=s.players.find(p=>p.pid===NET.pid);
   app.innerHTML=`<div class="play">
-    <div class="q"><div class="note">${T("l.room")} ${s.code}｜${modeOf(s).ico} ${modeOf(s).t}｜${gameOf(s).t}（${s.g}年）｜${ruleName(s.rule)}</div>
+    <div class="q"><div class="note">${T("l.room")} ${s.code}・${modeOf(s).ico} ${modeOf(s).t}・${gameOf(s).t}（${s.g}年《ねん》）・${ruleName(s.rule)}</div>
       <div style="margin-top:14px">${T("l.name")}</div>
       <div style="font-size:44px;font-weight:bold">${face(me.emoji)} ${esc(me.name)}</div>
       <button class="btn sub" id="rr">${T("l.change")}</button>
       <p style="font-size:20px">${T("l.wait")}</p>
       <div class="note">${T("l.n",s.players.length)}</div>
-      <div class="chips">${s.players.map(p=>`<span class="chip">${face(p.emoji)} ${esc(p.name)}</span>`).join("")}</div>
     </div>${privacy()}</div>`;
   $("#rr").onclick=()=>api("reroll",NET).then(r=>{NET={...NET,...r};sset("mh_net",NET);}).catch(()=>{});
 }
@@ -2152,10 +2314,10 @@ function startNetGame(s){
   const mine=s.players.find(p=>p.pid===NET.pid);
   M={m,x,g:s.g,t:s.t,task:false,rule:ruleOf(s.rule),ev:evOf(s.rule),ok:mine.ok||0,ng:mine.ng||0,misses:[],missObjs:[],phase:"count",end,net:true,state:s,
      me:{n:mine.name,e:mine.emoji,v:mine.v,me:true},bots:[],over:false};
-  app.innerHTML=`<div class="mplay${m.id==="race"?" racew":""}">
-    <div class="topbar"><span class="note" style="white-space:nowrap">${T("l.room")} ${s.code}</span><span><b>${m.ico} ${m.t}</b> <span class="note">${x.t}・${s.g}年・${ruleName(s.rule)}</span></span><span class="timer" id="tm" aria-hidden="true">${s.t}</span></div>
+  app.innerHTML=`<div class="mplay">
+    <div class="topbar"><span class="note" style="white-space:nowrap">${T("l.room")} ${s.code}</span><span><b>${m.ico} ${m.t}</b> <span class="note">${x.t}・${s.g}年《ねん》・${ruleName(s.rule)}</span></span><span class="timer" id="tm" aria-hidden="true">${s.t}</span></div>
     <div class="tbar" id="tbar"><i id="tb"></i></div>
-    <div class="mgrid${m.id==="race"?" race":""}"><div id="mmain"></div><div class="side" id="mside"></div></div></div>`;
+    <div class="mgrid net"><div id="mmain"></div><div class="side" id="mside"></div></div></div>`;
   drawSide();
   stopTimer();
   timerId=setInterval(()=>{
@@ -2175,7 +2337,8 @@ function startNetGame(s){
 function netResultHtml(s,meId,easy){
   const ps=sorted(s.players), u=s.mode==="quiz"?T("z.unit"):unitOf(s);
   const rows=ps.map(p=>({n:p.name,e:p.emoji,v:p.v,me:p.pid===meId}));
-  return `<div style="margin:10px auto;max-width:360px">${rankRows(easy?easyList(rows):rows.slice(0,10).map((p,i)=>[p,i+1]),p=>p.v+" "+u)}</div>`;
+  const i=rows.findIndex(p=>p.me);          // 児童の端末：自分の行だけ（全体の順位表は前の画面）
+  return i<0?"":`<div style="margin:10px auto;max-width:360px">${rankRows([[rows[i],easy?0:i+1]],p=>p.v+" "+u)}</div>`;
 }
 function netFinish(){
   if(!M||M.over) return; M.over=true; stopTimer();
@@ -2225,63 +2388,138 @@ async function netBox(k,btn){
   const mm=M; setTimeout(()=>M===mm&&showQ(),1300);
 }
 
-/* --- 先生：部屋の画面 --- */
+/* --- 先生：前に映す大画面（プロジェクター・電子黒板用）。児童の端末とは画面を分ける ---
+   待合室＝コードとQRを最大／たからばこ＝順位の棒・のこり時間・できごと／すごろく＝盤を画面いっぱい＋上位3人。
+   文字は最小28px。先生の操作ボタンは右下の dock にまとめる。通信のデータは変えず、できごとは前回の状態との差から作る */
+const fsOK=()=>{ const d=document; return !!(d.fullscreenEnabled||d.webkitFullscreenEnabled); };
+function toggleFs(){
+  try{ const d=document, el=d.documentElement;
+    const r=(d.fullscreenElement||d.webkitFullscreenElement)?(d.exitFullscreen||d.webkitExitFullscreen).call(d):(el.requestFullscreen||el.webkitRequestFullscreen).call(el);
+    if(r&&r.catch) r.catch(()=>{});
+  }catch(e){}
+}
+const fsBtn=()=>fsOK()?`<button type="button" class="btn sub" id="pxfs" onclick="toggleFs()">${ic("maximize")}${T("px.fs")}</button>`:"";
+const clock=n=>n>=60?Math.floor(n/60)+":"+String(n%60).padStart(2,"0"):String(n);
+function pxEvents(s,prev,evs){      // 前回との差から「できごと」を作る（新しい順に最大5つ）
+  if(!prev) return;
+  const was=new Map(prev.players.map(p=>[p.pid,p])), out=[];
+  for(const p of s.players){
+    const o=was.get(p.pid); if(!o||p.v===o.v) continue;
+    const d=p.v-o.v, w=`${face(p.emoji)}<b>${esc(p.name)}</b>`;
+    if(s.mode==="chest") out.push([Math.abs(d),d>0?T("px.ev.get",w,d):T("px.ev.lose",w,-d)]);
+    else if(p.v>=GOAL) out.push([99,T("px.ev.goal",w)]);
+    else out.push([Math.abs(d),d>0?T("px.ev.move",w,d):T("px.ev.back",w,-d)]);
+  }
+  out.sort((a,b)=>b[0]-a[0]);
+  for(const e of out.slice(0,3)) evs.unshift(e[1]);
+  evs.length=Math.min(evs.length,s.mode==="race"?3:4);
+}
 function renderHost(){
   setLG(0);
   HOST=HOST||sget("mh_host"); if(!HOST) return go("#teacher");
   if(NETMODE==="p2p"&&(!HR||HR.code!==HOST.code)){
-    app.innerHTML=`<div class="q">この部屋はもうありません。<br>先生の端末がサーバー役なので、ページを開き直すと部屋は消えます。<br><button class="btn" onclick="go('#teacher')">新しい部屋を作る</button></div>`; return;
+    app.innerHTML=`<div class="q">この部屋はもうありません。<br>先生の端末がサーバー役なので、ページを開き直すと部屋は消えます。<br><button class="btn" onclick="go('#teacher')">新しい部屋を作る</button></div>`; return;   //T
   }
-  const warn=()=>NETMODE==="p2p"?`<div class="banner">${ic("triangle-alert")} この端末がサーバー役です。対戦が終わるまで、この画面を閉じないでください。<span id="wlmsg" style="display:block">${wlText()}</span></div>`:"";
+  const warn=()=>NETMODE==="p2p"?`<div class="banner">${ic("triangle-alert")} この端末がサーバー役です。対戦が終わるまで、この画面を閉じないでください。<span id="wlmsg" style="display:block">${wlText()}</span></div>`:"";   //T
   wakeOn();          // 画面のスリープを防ぐ（対応端末のみ。他の画面へ移ると route() で解放）
   const joinUrl=location.origin+location.pathname+(NETMODE==="server"?"?net=server":"")+"#join?code="+HOST.code;
-  let last=null;
-  const draw=s=>{
-    last=s; const m=modeOf(s), x=gameOf(s), u=unitOf(s), ps=sorted(s.players);
-    if(s.mode==="quiz"&&s.status!=="lobby") return qzHostDraw(s,warn);
-    const head=warn()+`<div class="topbar"><button class="back" onclick="go('#teacher')">${ic("arrow-left")}先生の画面</button><b>${m.ico} ${m.t}｜${x.t}（${s.g}年）｜${ruleName(s.rule)}</b><span class="timer" id="htm" aria-hidden="true"></span></div>`+privacy();
-    if(s.status==="lobby"){
-      app.innerHTML=`${head}<div class="q lobby2">
-        <div class="lcol">
-          <div>「コードで参加」から、この数字を入れてください。QRコードを読みとってもOK</div>
-          <div class="bigcode">${s.code}</div>
-          <div class="qrbox" id="qrbox"></div>
-          <div class="note">または このアドレスを開く：${esc(joinUrl)}</div>
-        </div>
-        <div class="rcol">
-          <div style="font-size:24px">参加：<b>${s.players.length}</b> 人</div>
-          <button class="btn" id="hs" style="font-size:24px;padding:16px 36px" ${s.players.length?"":"disabled style='opacity:.5;font-size:24px;padding:16px 36px'"}>スタート！</button><div class="err" id="herr"></div>
-          <div class="chips">${s.players.map(p=>`<span class="chip">${face(p.emoji)} ${esc(p.name)}</span>`).join("")||`<span class="note">まだ誰もいません</span>`}</div>
-        </div></div>`;
-      $("#hs").onclick=()=>api("start",HOST).catch(e=>$("#herr").textContent=e.message);
-      showQr($("#qrbox"),joinUrl);
-    } else if(s.status==="playing"){
-      app.innerHTML=`${head}<h2 class="th2">${ic("trophy")}リアルタイム順位（${ps.length}人）</h2>
-        ${ps.slice(0,8).map((p,i)=>`<div class="hrank"><b>${i+1}</b><span>${face(p.emoji)} ${esc(p.name)}</span><span>${p.v} ${u}</span><span class="note">正解 ${p.ok}</span></div>`).join("")}
-        ${ps.length>8?`<p style="font-size:24px;text-align:center;margin:8px 0">ほか ${ps.length-8} 人</p>`:""}
-        <div style="text-align:center"><button class="btn sub" id="he">ここで終わる</button></div>`;
-      $("#he").onclick=()=>{ if(confirm("対戦を終わりにしますか？")) api("end",HOST).catch(()=>{}); };
-    } else {
-      const rows=ps.map((p,i)=>{const t=p.ok+p.ng;return {i:i+1,p,t,acc:t?Math.round(p.ok/t*100):0}});
-      const ans=rows.filter(r=>r.t>0);   // 1問も答えていない人は平均に入れない
-      const avg=ans.length?Math.round(ans.reduce((n,r)=>n+r.acc,0)/ans.length):0;
-      const tsv=["順位\t名前\t"+u+"\t正解\t解答数\t正答率",...rows.map(r=>`${r.i}\t${r.p.name}\t${r.p.v}\t${r.p.ok}\t${r.t}\t${r.acc}%`)].join("\n");
-      app.innerHTML=`${head}<h2 class="th2">${ic("flag")}結果（${ps.length}人・クラスの平均正答率 ${avg}%）</h2>
-        <table class="rtable"><tr><th>順位</th><th>名前</th><th>${u}</th><th>正解</th><th>正答率</th></tr>
-        ${rows.map(r=>`<tr><td>${r.i}</td><td>${face(r.p.emoji)} ${esc(r.p.name)}</td><td>${r.p.v}</td><td>${r.p.ok} / ${r.t}</td><td>${r.t?r.acc+"%":"−"}</td></tr>`).join("")}</table>
-        <p class="note">※ 名前は自動でつけたニックネームです。だれがどの名前かは、必要なら授業中に確認してください。</p>
-        <div style="text-align:center"><button class="btn sub" id="hc">結果をコピー（表計算に貼れます）</button><button class="btn" id="hn">同じ設定で新しい部屋</button></div>`;
-      $("#hc").onclick=()=>navigator.clipboard?.writeText(tsv).then(()=>$("#hc").textContent="コピーしました",()=>{});
-      $("#hn").onclick=async()=>{ try{ const r=await api("create",roomArgs(HOST)); HOST={...HOST,...r}; sset("mh_host",HOST); route(); }catch(e){ $("#hn").insertAdjacentText("afterend",e.message); } };
-    }
+  let last=null, off=0, prev=null, kind="", dockKind="", B={}, evs=[];
+  M=null;
+  app.innerHTML=`<div class="px" id="px"></div><div class="px-dock" id="pxdock"></div>`;
+  const px=document.getElementById("px");
+  const err=e=>{ const el=document.getElementById("herr"); if(el) el.textContent=errMsg(e&&e.message); };
+  function dockSet(k){
+    if(dockKind===k) return; dockKind=k;
+    const d=document.getElementById("pxdock");
+    const note=`<details class="px-note"><summary>${T("px.memo")}</summary><div class="pn">${warn()}${privacy()}<div class="note">${T("px.url")}${esc(joinUrl)}</div><div class="err" id="herr"></div></div></details>`;
+    const bk=`<button type="button" class="btn sub" onclick="go('#teacher')">${ic("arrow-left")}${T("px.back")}</button>`;
+    const main=k==="lobby"?`<button type="button" class="btn" id="hs">${T("px.start")}</button>`
+      :k==="end"?`<button type="button" class="btn sub" id="hc">${T("px.copy")}</button><button type="button" class="btn" id="hn">${T("px.new")}</button>`
+      :`<button type="button" class="btn sub" id="he">${T("px.end")}</button>`;
+    d.innerHTML=note+bk+main+fsBtn();
+    const b=id=>document.getElementById(id);
+    if(b("hs")) b("hs").onclick=()=>api("start",HOST).catch(err);
+    if(b("he")) b("he").onclick=()=>{ if(confirm("対戦を終わりにしますか？")) api("end",HOST).catch(()=>{}); };   //T
+    if(b("hn")) b("hn").onclick=async()=>{ try{ const r=await api("create",roomArgs(HOST)); HOST={...HOST,...r}; sset("mh_host",HOST); route(); }catch(e){ err(e); } };
+    if(b("hc")) b("hc").onclick=()=>navigator.clipboard?.writeText(B.tsv).then(()=>b("hc").textContent=T("r.copied"),()=>{});
+  }
+  const lobbyBuild=s=>{
+    px.className="px";
+    px.innerHTML=`<div class="px-lobby"><div class="lcol"><div class="lead">${T("px.code")}</div><div class="bigcode">${s.code}</div>
+        <div class="cnt">${T("px.n")}<b id="pxn"></b>${T("px.nin")}</div><div class="chips" id="pxchips"></div></div>
+      <div class="rcol"><div class="qrbox" id="qrbox"></div></div></div>`;
+    showQr(document.getElementById("qrbox"),joinUrl);
   };
-  let off=0;
-  listen(HOST.code,s=>{ off=s.now-Date.now(); draw(s); },()=>{ app.innerHTML=`<div class="q">部屋が見つかりません。<br><button class="btn" onclick="go('#teacher')">先生の画面へ</button></div>`; });
+  const lobbyUpd=s=>{
+    document.getElementById("pxn").textContent=s.players.length;
+    const hs=document.getElementById("hs"); if(hs) hs.disabled=!s.players.length;
+    document.getElementById("pxchips").innerHTML=s.players.slice(0,8).map(p=>`<span class="chip">${face(p.emoji)} ${esc(p.name)}</span>`).join("")
+      +(s.players.length>8?`<span class="chip more">${T("px.more",s.players.length-8)}</span>`:"")||`<span class="chip more">${T("px.none")}</span>`;
+  };
+  const RH=58;
+  const chestBuild=(s,m,x)=>{
+    px.className="px";
+    px.innerHTML=`<div class="px-play"><div class="px-l"><div class="px-ttl">${m.ico} ${m.t}・${x.t}</div><div class="px-bars" id="pxbars"></div><div class="px-more" id="pxmore"></div></div>
+      <div class="px-r"><div class="px-tl">${T("px.left")}</div><div class="px-timer" id="pxt"></div><h3 class="px-h">${T("px.ev")}</h3><div class="px-ev" id="pxev"></div></div></div>`;
+    B.rows=new Map();
+  };
+  const chestUpd=s=>{
+    const ps=sorted(s.players), max=Math.max(1,...ps.map(p=>p.v)), box=document.getElementById("pxbars");
+    box.style.height=Math.max(1,Math.min(8,ps.length))*RH+"px";
+    ps.forEach((p,i)=>{
+      let r=B.rows.get(p.pid);
+      if(!r){ r=document.createElement("div"); r.className="px-row"; r.innerHTML=`<span class="rk"></span>${face(p.emoji)}<span class="nm"></span><span class="bar"><i></i></span><span class="val"></span>`; r.querySelector(".nm").textContent=p.name; box.appendChild(r); B.rows.set(p.pid,r); }
+      r.style.display=i<8?"":"none"; r.style.top=i*RH+"px";
+      r.querySelector(".rk").textContent=i+1; r.querySelector(".bar i").style.width=Math.max(3,Math.round(p.v/max*100))+"%"; r.querySelector(".val").textContent="🪙 "+p.v;
+    });
+    document.getElementById("pxmore").textContent=ps.length>8?T("px.more",ps.length-8):"";
+  };
+  const raceBuild=(s,m,x)=>{
+    px.className="px px-race-w";
+    px.innerHTML=`<div class="px-race"><div class="px-bd" id="pxbd">${boardSvg(evOf(s.rule))}</div>
+      <div class="px-r"><div class="px-ttl">${m.ico} ${m.t}・${x.t}</div><div class="px-tl">${T("px.left")}</div><div class="px-timer" id="pxt"></div>
+        <h3 class="px-h">${T("px.top3")}</h3><div class="px-top" id="pxtop"></div><div class="px-more" id="pxmore"></div>
+        <h3 class="px-h">${T("px.ev")}</h3><div class="px-ev" id="pxev"></div></div></div>`;
+    M={pk:{},host:true};
+  };
+  const raceUpd=s=>{
+    const ps=sorted(s.players);
+    document.getElementById("pxtop").innerHTML=ps.slice(0,3).map((p,i)=>`<div class="r"><span class="rk">${i+1}</span>${face(p.emoji)}<span class="nm">${esc(p.name)}</span><span class="val">${p.v}${T("px.masu")}</span></div>`).join("");
+    document.getElementById("pxmore").textContent=ps.length>3?T("px.more",ps.length-3):"";
+    if(M&&M.pk) syncPieces(s.players.map(p=>({n:p.name,e:p.emoji,v:p.v,me:false})));
+  };
+  const endBuild=s=>{
+    M=null; px.className="px";
+    const ps=sorted(s.players), rows=ps.map((p,i)=>{const t=p.ok+p.ng;return {i:i+1,p,t,acc:t?Math.round(p.ok/t*100):0}});
+    const ans=rows.filter(r=>r.t>0), avg=ans.length?Math.round(ans.reduce((n,r)=>n+r.acc,0)/ans.length):0, u=rbp(unitOf(s));
+    B.tsv=["順位\t名前\t"+u+"\t正解\t解答数\t正答率",...rows.map(r=>`${r.i}\t${r.p.name}\t${r.p.v}\t${r.p.ok}\t${r.t}\t${r.acc}%`)].join("\n");   //T
+    const val=p=>s.mode==="chest"?"🪙 "+p.v:p.v+T("px.masu");
+    px.innerHTML=`<div class="px-end"><h2 class="px-h2">${ic("flag")}${T("px.res")}<small>${T("px.avg",ps.length,avg)}</small></h2>
+      ${rows.slice(0,8).map(r=>`<div class="hrank ${r.i<=3?"t"+r.i:""}"><b>${r.i}</b><span>${face(r.p.emoji)} ${esc(r.p.name)}</span><span>${val(r.p)}</span><span class="note">${T("px.ok",r.p.ok,r.t)}</span></div>`).join("")}
+      ${rows.length>8?`<p class="px-more">${T("px.more",rows.length-8)}</p>`:""}</div>`;
+  };
+  const draw=s=>{
+    last=s; const m=modeOf(s), x=gameOf(s);
+    if(s.mode==="quiz"&&s.status!=="lobby"){ kind="quiz"; return qzHostDraw(s,()=>""); }
+    const k=s.status==="lobby"?"lobby":s.status==="playing"?s.mode:"end";
+    if(k!==kind){ kind=k; evs=[]; prev=null; dockSet(k==="chest"||k==="race"?"play":k);
+      if(k==="lobby") lobbyBuild(s); else if(k==="chest") chestBuild(s,m,x); else if(k==="race") raceBuild(s,m,x); else endBuild(s); }
+    if(k==="lobby") lobbyUpd(s); else if(k==="chest") chestUpd(s); else if(k==="race") raceUpd(s);
+    if(k==="chest"||k==="race"){
+      pxEvents(s,prev,evs);
+      const ev=document.getElementById("pxev");
+      if(ev) ev.innerHTML=evs.length?evs.map((e,i)=>`<div class="e${i?"":" new"}">${e}</div>`).join(""):`<div class="e dim">${T("px.ev.none")}</div>`;
+    }
+    prev=s;
+  };
+  listen(HOST.code,s=>{ off=s.now-Date.now(); draw(s); },()=>{ app.innerHTML=`<div class="q">部屋が見つかりません。<br><button class="btn" onclick="go('#teacher')">先生の画面へ</button></div>`; });   //T
   stopTimer();
-  timerId=setInterval(()=>{ const t=$("#htm"); if(t&&last&&last.status==="playing") t.textContent=Math.max(0,Math.ceil((last.endAt-off-Date.now())/1000))+"秒";
+  timerId=setInterval(()=>{ const t=document.getElementById("pxt");
+    if(t&&last&&last.status==="playing"){ const n=Math.max(0,Math.ceil((last.endAt-off-Date.now())/1000)); t.textContent=clock(n); t.classList.toggle("warn",n<=10); }
     if(last&&last.mode==="quiz") qzHostTick(last,off); },250);
 }
 
+/*T-BEGIN*/
 /* ================= 接続テスト（#check） ================= */
 /* 1台テスト：同じ端末の中で2つの接続（Peer）を作り、メッセージを往復させる。
      → 部品の読み込み・仲介サーバーへの接続はわかるが、別の端末とつながるかはわからない
@@ -2604,6 +2842,9 @@ async function readFileText(f){
   catch(e){ try{ return new TextDecoder("shift_jis").decode(buf); }catch(e2){ throw new Error("文字コードが読めませんでした"); } }
 }
 const STX={ok:"✅",warn:"⚠️",ng:"❌"};
+/* 読み（《》）のない漢字を探す。注意を出すだけで、取り込みは止めない */
+const noRuby=text=>{ const s=new Set(); for(const p of QZ.rubyParts(text)) if(p.t) for(const c of p.t) if(/[㐀-䶿一-鿿々〆ヶ]/.test(c)) s.add(c); return [...s]; };
+const noRubyMsg=texts=>{ const s=new Set(); texts.forEach(t=>noRuby(t).forEach(c=>s.add(c))); return s.size?"ふりがなの ない 漢字："+[...s].slice(0,30).join(" ")+(s.size>30?" …":""):""; };
 function importPanel(o){
   let a=null, timer=0;
   const ta=h("textarea",{class:"fld imp-ta",rows:5,spellcheck:false,placeholder:"ここに貼りつけ（Excel・スプレッドシートで表を選んでコピー → ここに貼りつけ）","aria-label":"表を貼りつける場所"});
@@ -2619,6 +2860,7 @@ function importPanel(o){
     if(a.error){ prev.append(h("div",{class:"err",text:a.error})); return; }
     const c={ok:0,warn:0,ng:0}; a.rows.forEach(r=>c[r.status]++);
     prev.append(h("p",{class:"pvsum"},`✅ ${c.ok}件　⚠️ ${c.warn}件（直して取り込む）　❌ ${c.ng}件（取り込まない）`,a.header?"　（1行目は見出しとして飛ばしました）":""));
+    { const nm=noRubyMsg(good().map(r=>r.q)); if(nm) prev.append(h("p",{class:"note fgw",text:nm})); }
     if(!a.rows.length){ prev.append(h("div",{class:"empty",text:"取り込める行が見つかりません"})); return; }
     const t=h("table",{class:"pvt"},h("thead",null,h("tr",null,["行","判定","問題文","選択肢","時間","正解","メモ"].map(x=>h("th",{text:x})))));
     const tb=h("tbody"); t.append(tb);
@@ -2644,7 +2886,7 @@ function importPanel(o){
     h("details",{class:"imp-help"},h("summary",{text:"表の書きかた（列の順番）"}),
       h("div",{class:"note"},"1行に1問。列の順番は ",h("b",{text:"問題文 ｜ 選択肢1 ｜ 選択肢2 ｜ 選択肢3 ｜ 選択肢4 ｜ 制限時間(秒) ｜ 正解の番号 ｜（得点）"}),"。Kahoot のテンプレートと同じ順です。1行目が見出しなら自動で飛ばします。",
         h("br"),"制限時間は 5・10・20・30・60・90・120 のどれか（空欄や範囲外は20秒になります）。正解の番号は 1〜4（複数なら 1,3）。選択肢が「○」と「×」だけの行は○×問題になります。得点は ふつう／2ばい／なし。",
-        h("br"),"ルビは 漢字《かんじ》 の形で書けます。Excel のファイル（.xlsx）は読めないので、Excel で表を選んでコピーして貼りつけるか、「CSV（UTF-8）」で保存したファイルを選んでください。")),
+        h("br"),"ルビは 漢字​《かんじ》 の形で書けます。Excel のファイル（.xlsx）は読めないので、Excel で表を選んでコピーして貼りつけるか、「CSV（UTF-8）」で保存したファイルを選んでください。")),
     h("div",{class:"imp-row"},h("button",{type:"button",class:"btn sub s",innerHTML:ic("download")+"テンプレートCSVをダウンロード",onclick:()=>dl("mondai-template.csv","text/csv;charset=utf-8",QZ.templateCsv())}),
       h("label",{class:"fileL"},h("span",{text:"CSV・JSONファイルを選ぶ："}),file)),
     ta,prev,o.askTitle?h("label",{class:"lbl"},h("span",{text:"セットの名前"}),title):null,err,go2);
@@ -2678,11 +2920,11 @@ function makeEdit(set){
     /* 開いているとき：編集フォーム */
     const typ=h("div",{class:"pills"},...[["mc","4択"],["tf","○×"]].map(([v,l])=>h("button",{type:"button",class:"pill small"+(q.t===v?" on":""),"aria-pressed":String(q.t===v),text:l,onclick:()=>{
       if(q.t===v) return; q.t=v; if(v==="tf"){ q.ch=QZ.TF_CH.slice(); q.ok=q.ok.length&&q.ok[0]<2?[q.ok[0]]:[0]; } else { q.ch=["","","",""]; q.ok=[]; } drawQ(); save(); }})));
-    const ta=h("textarea",{class:"fld",rows:2,maxLength:QZ.LIM.q,value:q.q,"aria-label":"問題文",placeholder:"問題文（120字まで）。ルビは 漢字《かんじ》 の形で書けます"});
-    const cnt=h("span",{class:"note"}), rv=h("div",{class:"rv hidden","aria-label":"表示のプレビュー"});
-    const upd=()=>{ cnt.textContent=`${QZ.len(ta.value)} / ${QZ.LIM.q}字`; const hasR=QZ.rubyParts(ta.value).some(p=>p.b!=null); rv.classList.toggle("hidden",!hasR); if(hasR) rich(rv,ta.value); };
+    const ta=h("textarea",{class:"fld",rows:2,maxLength:QZ.LIM.q,value:q.q,"aria-label":"問題文",placeholder:"問題文（120字まで）。ルビは 漢字​《かんじ》 の形で書けます"});
+    const cnt=h("span",{class:"note"}), rv=h("div",{class:"rv hidden","aria-label":"表示のプレビュー"}), fw=h("div",{class:"note fgw"});
+    const upd=()=>{ cnt.textContent=`${QZ.len(ta.value)} / ${QZ.LIM.q}字`; const hasR=QZ.rubyParts(ta.value).some(p=>p.b!=null); rv.classList.toggle("hidden",!hasR); if(hasR) rich(rv,ta.value); fw.textContent=noRubyMsg([ta.value,...q.ch]); };
     ta.addEventListener("input",()=>{ q.q=ta.value; upd(); refresh(); later(); }); upd();
-    const body=h("div",{class:"qb"},h("div",null,h("b",{class:"lb",text:"種類"}),typ),h("div",null,h("b",{class:"lb",text:"問題文"}),ta,cnt,rv));
+    const body=h("div",{class:"qb"},h("div",null,h("b",{class:"lb",text:"種類"}),typ),h("div",null,h("b",{class:"lb",text:"問題文"}),ta,cnt,rv,fw));
     if(q.t==="mc"){
       const rows=h("div",{class:"crows"});
       for(let k=0;k<4;k++){
@@ -2765,6 +3007,7 @@ function exportPanel(set){
     h("div",{class:"note",text:".json はほかの先生に渡して、取り込みで読み込めます。CSV は Excel やスプレッドシートで開けて、取り込みにも使えます。"}),msg,out);
 }
 
+/*T-END*/
 /* ================= れんしゅう用リンク（#q=）：ひとりで解く ================= */
 let QS=null, QTOK=0;
 async function renderQuizLink(code){
@@ -2876,11 +3119,10 @@ function qzKidDraw(){
     return;
   }
   if(Z.phase==="board"){
-    const rows=ps.slice(0,5).map((p,i)=>[{n:p.name,e:p.emoji,v:p.v,me:p.pid===NET.pid},i+1]);
-    if(place>5) rows.push([{n:me.name,e:me.emoji,v:me.v,me:true},place]);
+    const rows=[[{n:me.name,e:me.emoji,v:me.v,me:true},place]];      // 自分だけ。上位の表は前の画面
     const box=h("div",{style:"margin:10px auto;max-width:360px"});
     box.innerHTML=rankRows(rows,p=>p.v+"");          // 名前は esc 済み（ニックネームだけ）
-    app.replaceChildren(h("div",{class:"play"},h("div",{class:"res"},h("div",{class:"num",text:T("z.board")}),box,h("div",{class:"fb",text:T("z.wait")}))));
+    app.replaceChildren(h("div",{class:"play"},h("div",{class:"res"},h("div",{class:"num",text:T("z.rank",place,ps.length)}),box,h("div",{class:"fb",text:T("z.wait")}))));
   }
 }
 function qzKidEnd(s,Z,me){
@@ -2915,10 +3157,10 @@ function qzHostDraw(s,warnHtml){
   QH=QH||{}; QH.s=s;
   if(QH.key===key){ qzHostLive(s); return; }
   QH.key=key;
-  const ps=sorted(s.players), top=(extra)=>h("div",{class:"qzh-top"},h("button",{type:"button",class:"back",innerHTML:ic("arrow-left")+"先生の画面",onclick:()=>go("#teacher")}),h("b",{text:`${s.gt||"クイズ"}`}),extra);
+  const ps=sorted(s.players), top=(extra)=>h("div",{class:"qzh-top"},h("button",{type:"button",class:"back",innerHTML:ic("arrow-left")+"先生《せんせい》の画面《がめん》",onclick:()=>go("#teacher")}),h("b",{text:`${s.gt||"クイズ"}`}),extra);
   const wrapWarn=h("div"); wrapWarn.innerHTML=warnHtml();
-  const ctl=(...b)=>h("div",{class:"qzh-ctl"},...b);
-  const endBtn=()=>h("button",{type:"button",class:"btn sub",text:"ここで終わる",onclick:()=>{ if(confirm("クイズを終わりにしますか？")) api("end",HOST).catch(()=>{}); }});
+  const ctl=(...b)=>h("div",{class:"qzh-ctl"},...b,fsOK()?h("button",{type:"button",class:"btn sub",innerHTML:ic("maximize")+T("px.fs"),onclick:toggleFs}):null);
+  const endBtn=()=>h("button",{type:"button",class:"btn sub",text:"ここで終《お》わる",onclick:()=>{ if(confirm("クイズを終《お》わりにしますか？")) api("end",HOST).catch(()=>{}); }});
   if(s.status==="playing"&&(Z.phase==="q"||Z.phase==="reveal")){
     const q=Z.q, rev=Z.phase==="reveal", dist=Z.dist||[], tot=Math.max(1,dist.reduce((a,b)=>a+b,0));
     const tiles=q.ch.map((_,i)=>{ const b=qzChoiceBtn(q,i); b.tabIndex=-1; b.classList.add("locked");
@@ -2927,28 +3169,28 @@ function qzHostDraw(s,warnHtml){
       return b; });
     const last=Z.idx>=Z.n-1;
     app.replaceChildren(h("div",{class:"qzh"},wrapWarn,
-      h("div",{class:"qzh-top"},h("b",{text:T0("z.qn",Z.idx+1,Z.n)}),h("span",{id:"qa",text:`${Z.answered} / ${Z.total} 人が答えた`}),h("span",{class:"timer",id:"qt","aria-hidden":"true",text:rev?"":String(q.sec)})),
+      h("div",{class:"qzh-top"},h("b",{text:T0("z.qn",Z.idx+1,Z.n)}),h("span",{id:"qa",text:`${Z.answered} / ${Z.total} 人《にん》が答《こた》えた`}),h("span",{class:"timer",id:"qt","aria-hidden":"true",text:rev?"":String(q.sec)})),
       h("div",{class:"tbar",id:"qtbar"},h("i",{id:"qb",style:rev?"width:0":"width:100%"})),
-      h("div",{class:"q qzhq"},rich(h("div",{class:"big"}),q.q),h("div",{class:"small",text:`${q.t==="tf"?"○×":"4択"}・${q.sec}秒・得点 ${QZ.PT_JA[q.pt]}${rev&&q.ok.length>1?"・どれを選んでも正解":""}`})),
+      h("div",{class:"q qzhq"},rich(h("div",{class:"big"}),q.q),h("div",{class:"small",text:`${q.t==="tf"?"○×":"4択《たく》"}・${q.sec}秒《びょう》・得点《とくてん》 ${QZ.PT_JA[q.pt]}${rev&&q.ok.length>1?"・どれを選《えら》んでも正解《せいかい》":""}`})),
       h("div",{class:"qzh-grid"+(q.t==="tf"?" tf2":"")},...tiles),
-      ctl(rev?h("button",{type:"button",class:"btn",id:"qnx",text:last?"結果を見る →":"つぎへ →",onclick:()=>api("qnext",HOST).catch(()=>{})})
-            :h("button",{type:"button",class:"btn",id:"qnx",text:"しめきって正解を見せる",onclick:()=>api("qnext",HOST).catch(()=>{})}),endBtn()),
+      ctl(rev?h("button",{type:"button",class:"btn",id:"qnx",text:last?"結果《けっか》を見《み》る →":"つぎへ →",onclick:()=>api("qnext",HOST).catch(()=>{})})
+            :h("button",{type:"button",class:"btn",id:"qnx",text:"しめきって正解《せいかい》を見《み》せる",onclick:()=>api("qnext",HOST).catch(()=>{})}),endBtn()),
       h("div",{class:"err",id:"herr"})));
     qzHostLive(s); return;
   }
   if(s.status==="playing"&&Z.phase==="board"){
     const rows=ps.slice(0,5);
-    const box=h("div",{style:"max-width:640px;margin:0 auto"}); box.innerHTML=rows.map((p,i)=>`<div class="hrank"><b>${i+1}</b><span>${face(p.emoji)} ${esc(p.name)}</span><span>${p.v} 点</span><span class="note">正解 ${p.ok}</span></div>`).join("");
-    app.replaceChildren(h("div",{class:"qzh"},wrapWarn,top(h("span",{text:`${Z.idx+1} / ${Z.n} 問が終わりました`})),
-      h("h2",{class:"th2",innerHTML:ic("trophy")+"ここまでの 上位5人"}),box,ctl(h("button",{type:"button",class:"btn",id:"qnx",text:"つぎへ →",onclick:()=>api("qnext",HOST).catch(()=>{})}),endBtn()),h("div",{class:"err",id:"herr"})));
+    const box=h("div",{style:"max-width:640px;margin:0 auto"}); box.innerHTML=rows.map((p,i)=>`<div class="hrank"><b>${i+1}</b><span>${face(p.emoji)} ${esc(p.name)}</span><span>${p.v} 点《てん》</span><span class="note">正解《せいかい》 ${p.ok}</span></div>`).join("");
+    app.replaceChildren(h("div",{class:"qzh"},wrapWarn,top(h("span",{text:`${Z.idx+1} / ${Z.n} 問《もん》が終《お》わりました`})),
+      h("h2",{class:"th2",innerHTML:ic("trophy")+"ここまでの 上位《じょうい》5人《にん》"}),box,ctl(h("button",{type:"button",class:"btn",id:"qnx",text:"つぎへ →",onclick:()=>api("qnext",HOST).catch(()=>{})}),endBtn()),h("div",{class:"err",id:"herr"})));
     return;
   }
   /* 終わり：表彰台・結果表・問題ごとの正答率 */
   const stat=Z.stat||[], list=Z.list||[], easy=Z.easy||ruleOf(s.rule)==="easy";
   const low=stat.map((x,i)=>x.tot&&x.ok/x.tot<.6?i:-1).filter(i=>i>=0);
   const pod=h("div",{class:"podium"});
-  if(!easy) for(const k of [1,0,2]){ const p=ps[k]; if(!p) continue; const d=h("div",{class:"pod p"+(k+1)},h("div",{class:"pn",text:["🥇","🥈","🥉"][k]})); d.append(h("div",{class:"pnm",text:p.name}),h("div",{class:"pv",text:p.v+" 点"})); pod.append(d); }
-  const tb=h("table",{class:"rtable"},h("thead",null,h("tr",null,["順位","名前","点数","正解","正答率"].map(x=>h("th",{text:x})))));
+  if(!easy) for(const k of [1,0,2]){ const p=ps[k]; if(!p) continue; const d=h("div",{class:"pod p"+(k+1)},h("div",{class:"pn",text:["🥇","🥈","🥉"][k]})); d.append(h("div",{class:"pnm",text:p.name}),h("div",{class:"pv",text:p.v+" 点《てん》"})); pod.append(d); }
+  const tb=h("table",{class:"rtable"},h("thead",null,h("tr",null,["順位《じゅんい》","名前《なまえ》","点数《てんすう》","正解《せいかい》","正答率《せいとうりつ》"].map(x=>h("th",{text:x})))));
   const tbody=h("tbody"); tb.append(tbody);
   ps.forEach((p,i)=>{ const t=p.ok+p.ng; const tr=h("tr",null,h("td",{text:String(i+1)}),h("td"),h("td",{text:String(p.v)}),h("td",{text:`${p.ok} / ${t}`}),h("td",{text:t?Math.round(p.ok/t*100)+"%":"−"})); tr.children[1].innerHTML=`${face(p.emoji)} ${esc(p.name)}`; tbody.append(tr); });
   const acc=h("div",{class:"accl"},...stat.map((x,i)=>{ const pc=x.tot?Math.round(x.ok/x.tot*100):0;
@@ -2957,16 +3199,16 @@ function qzHostDraw(s,warnHtml){
   const herr=h("div",{class:"err",id:"herr"});
   app.replaceChildren(h("div",{class:"qzh"},wrapWarn,top(h("span")),
     h("h2",{class:"th2",innerHTML:ic("flag")+"クイズ けっか"}),
-    easy?h("div",{class:"q"},h("div",{class:"big",text:T0("z.all",Z.all||0)}),h("div",{class:"small",text:"やさしいルールなので、児童の画面には順位を出していません。"})):pod,
-    h("h3",{text:"結果（ニックネームと点数）"}),h("div",{style:"overflow:auto"},tb),
-    h("p",{class:"note",text:"※ 名前は自動でつけたニックネームです。"}),
-    h("h3",{text:"問題ごとの正答率（赤は60%未満）"}),acc,
-    ctl(h("button",{type:"button",class:"btn sub",innerHTML:ic("download")+"結果をCSVで保存",onclick:()=>dl("kekka.csv","text/csv;charset=utf-8",csv())}),
-      low.length?h("button",{type:"button",class:"btn",innerHTML:ic("rotate-ccw")+`正答率の低い ${low.length}問を、もう一度出す`,onclick:()=>api("qreplay",HOST).catch(e=>{ herr.textContent=e.message; })}):null,
-      h("button",{type:"button",class:"btn sub",text:"同じ設定で新しい部屋",onclick:async()=>{ try{ const r=await api("create",roomArgs(HOST)); HOST={...r,...hostPlain(HOST)}; sset("mh_host",HOST); route(); }catch(e){ herr.textContent=e.message; } }})),herr));
+    easy?h("div",{class:"q"},h("div",{class:"big",text:T("z.all",Z.all||0)}),h("div",{class:"small",text:"やさしいルールなので、児童《じどう》の画面《がめん》には順位《じゅんい》を出《だ》していません。"})):pod,
+    h("h3",{text:"結果《けっか》（ニックネームと点数《てんすう》）"}),h("div",{style:"overflow:auto"},tb),
+    h("p",{class:"note",text:"※ 名前《なまえ》は自動《じどう》でつけたニックネームです。"}),
+    h("h3",{text:"問題《もんだい》ごとの正答率《せいとうりつ》（赤《あか》は60%未満《みまん》）"}),acc,
+    ctl(h("button",{type:"button",class:"btn sub",innerHTML:ic("download")+"結果《けっか》をCSVで保存《ほぞん》",onclick:()=>dl("kekka.csv","text/csv;charset=utf-8",csv())}),
+      low.length?h("button",{type:"button",class:"btn",innerHTML:ic("rotate-ccw")+`正答率《せいとうりつ》の低《ひく》い ${low.length}問《もん》を、もう一度《いちど》出《だ》す`,onclick:()=>api("qreplay",HOST).catch(e=>{ herr.textContent=e.message; })}):null,
+      h("button",{type:"button",class:"btn sub",text:"同《おな》じ設定《せってい》で新《あたら》しい部屋《へや》",onclick:async()=>{ try{ const r=await api("create",roomArgs(HOST)); HOST={...r,...hostPlain(HOST)}; sset("mh_host",HOST); route(); }catch(e){ herr.textContent=e.message; } }})),herr));
 }
 function qzHostLive(s){
-  const Z=s.quiz, qa=document.getElementById("qa"); if(qa&&Z) qa.textContent=`${Z.answered} / ${Z.total} 人が答えた`;
+  const Z=s.quiz, qa=document.getElementById("qa"); if(qa&&Z) qa.textContent=`${Z.answered} / ${Z.total} 人《にん》が答《こた》えた`;
 }
 function qzHostTick(s,off){
   const Z=s.quiz; if(!Z||Z.phase!=="q"||s.status!=="playing") return;
@@ -2978,13 +3220,13 @@ function qzHostTick(s,off){
 const hostPlain=H=>({mode:H.mode,game:H.game,g:H.g,t:H.t,rule:H.rule,setId:H.setId||"",gt:H.gt||""});
 function roomArgs(H){
   const s=hostPlain(H);
-  if(s.setId){ const st=qsFind(s.setId), f=st&&qsFinal(st); if(!f||!f.ok) throw new Error("もんだいのセットが見つかりません（④で確認してください）"); s.qs=f.set.qs; s.gt=f.set.title; }
+  if(s.setId){ const st=qsFind(s.setId), f=st&&qsFinal(st); if(!f||!f.ok) throw new Error("もんだいのセットが見《み》つかりません（④で確認《かくにん》してください）"); s.qs=f.set.qs; s.gt=f.set.title; }
   return s;
 }
 
 /* ================= たからばこ・すごろくで先生のもんだいを使う（児童の端末） ================= */
 let MINE=null, NETSET_P=null, NETLAST=null;
-const MINEGAME=t=>({id:"mine",ico:"📝",art:"a-kanji",s:"jp",g:[1,2,3,4,5,6],type:"choice",t:t||"先生の問題"});
+const MINEGAME=t=>({id:"mine",ico:"📝",art:"a-kanji",s:"jp",g:[1,2,3,4,5,6],type:"choice",t:t||"先生《せんせい》の問題《もんだい》"});
 function genMine(){
   if(!MINE||!MINE.qs.length) return null;
   if(MINE.i>=MINE.order.length){ MINE.order=shuffle(MINE.qs.map((_,i)=>i)); MINE.i=0; }
@@ -3015,7 +3257,7 @@ function ensureMine(s){       // 先生のセットを1回だけ受け取る（�
    リンク（#u=単元ID,…&n=&t=&s=）は、単元IDを UNITS にあるものだけ、n・t・s を範囲内だけ受け付ける */
 const UN=window.MH_UNITS, UNITS_OK=!!(UN&&Array.isArray(UN.UNITS)&&UN.UNITS.length&&UN.unitPick);
 const SJ={sansu:"math",kokugo:"jp",shakai:"soc",eigo:"eng"}, SJR={math:"sansu",jp:"kokugo",soc:"shakai",eng:"eigo"};
-const SUBJ_JA={sansu:"算数",kokugo:"国語",shakai:"社会",eigo:"英語"};
+const SUBJ_JA={sansu:"算数《さんすう》",kokugo:"国語《こくご》",shakai:"社会《しゃかい》",eigo:"英語《えいご》"};
 const UREADY=UNITS_OK?UN.UNITS.filter(u=>u.status==="ready"&&u.gen):[];
 const UBY={}; UREADY.forEach(u=>{ UBY[u.id]=u; });
 const UNITX={id:"unit",ico:"🧩",art:"a-soroban",s:"math",g:[1,2,3,4,5,6],type:"input"}; tget(UNITX,"t","g.unit.t");
@@ -3053,7 +3295,7 @@ function uEx(u){
 function uCur(it,forceChoice){
   const u=UBY[it.unit], mode=(forceChoice||it.ans==="choice4"||!it.choices)?"choice4":it.ans;
   const formula=/^[0-9.\s+−×÷()\/と]+$/.test(it.q), val=String(it.val);
-  const c={uid:it.unit,id:it.unit+": "+it.q,q:it.q,a:it.a,ch:it.choices,small:it.stem||(formula?"= ?":" "),rd:it.ruby,u:it,mode,ex:u?u.ex:"",title:u?u.title:"",tries:0,subj:it.subj};
+  const c={uid:it.unit,id:it.unit+": "+it.q,q:it.q,a:it.a,ch:it.choices,small:it.stem||(formula?"= ?":" "),u:it,mode,ex:u?u.ex:"",title:u?u.title:"",tries:0,subj:it.subj};
   if(mode==="num"||mode==="dec") c.len=[val.length];
   else if(mode==="amari"){ const [a,b]=val.split("|"); c.len=[a.length,b.length]; }
   else if(mode==="frac"){ const [w,n,d]=val.split("|"); c.len=w==="0"?[n.length,d.length]:[w.length,n.length,d.length]; }
@@ -3067,7 +3309,7 @@ function uUnits(un){ const f=UFAM.find(x=>x.includes(un)); return f||[un]; }
 function renderUnits(q){
   stopTimer();
   const kid=q.get("kid")==="1";
-  if(!UNITS_OK){ setLG(0); app.replaceChildren(h("div",{class:"q"},"単元のデータ（data/units.js）を読み込めませんでした。",h("br"),h("button",{type:"button",class:"btn",text:T("n.home"),onclick:()=>go("#home")}))); return; }
+  if(!UNITS_OK){ setLG(0); app.replaceChildren(h("div",{class:"q"},"単元《たんげん》のデータ（data/units.js）を読《よ》み込《こ》めませんでした。",h("br"),h("button",{type:"button",class:"btn",text:T("n.home"),onclick:()=>go("#home")}))); return; }
   const kg=kid?ui.grade:0; setLG(kg);
   const easy=easyG(kg), subjs=["sansu","kokugo","shakai","eigo"];
   let subj=subjs.includes(q.get("subj"))?q.get("subj"):"sansu";
@@ -3079,36 +3321,36 @@ function renderUnits(q){
   /* かたまり1：しぼりこみ */
   function drawFilter(){
     const items=[...new Set(pool(subj).map(u=>u.item).filter(Boolean))], rows=[];
-    if(!kid) rows.push(h("div",{class:"pills"},h("b",{class:"pl",text:"教科"}),...subjs.map(s=>upill(SUBJ_JA[s],s===subj,()=>{ subj=s; fg=0; fi=""; drawFilter(); drawSets(); drawCards(); }))));
+    if(!kid) rows.push(h("div",{class:"pills"},h("b",{class:"pl",text:"教科《きょうか》"}),...subjs.map(s=>upill(SUBJ_JA[s],s===subj,()=>{ subj=s; fg=0; fi=""; drawFilter(); drawSets(); drawCards(); }))));
     const gs=[...new Set(pool(subj).map(u=>u.g))].sort((a,b)=>a-b);
-    if(!(kid&&easy)&&gs.length>1) rows.push(h("div",{class:"pills"},h("b",{class:"pl",text:T("u.grade")}),upill(T("u.all"),fg===0,()=>{ fg=0; drawFilter(); drawCards(); }),...gs.map(g=>upill(g+"年",fg===g,()=>{ fg=g; drawFilter(); drawCards(); }))));
-    if(!kid&&items.length>1) rows.push(h("div",{class:"pills"},h("b",{class:"pl",text:"学習項目"}),upill("ぜんぶ",fi==="",()=>{ fi=""; drawFilter(); drawCards(); }),...items.map(it=>upill(it,fi===it,()=>{ fi=it; drawFilter(); drawCards(); }))));
+    if(!(kid&&easy)&&gs.length>1) rows.push(h("div",{class:"pills"},h("b",{class:"pl",text:T("u.grade")}),upill(T("u.all"),fg===0,()=>{ fg=0; drawFilter(); drawCards(); }),...gs.map(g=>upill(g+"年《ねん》",fg===g,()=>{ fg=g; drawFilter(); drawCards(); }))));
+    if(!kid&&items.length>1) rows.push(h("div",{class:"pills"},h("b",{class:"pl",text:"学習《がくしゅう》項目《こうもく》"}),upill("ぜんぶ",fi==="",()=>{ fi=""; drawFilter(); drawCards(); }),...items.map(it=>upill(it,fi===it,()=>{ fi=it; drawFilter(); drawCards(); }))));
     filt.replaceChildren(...rows);
   }
   /* かたまり2：おすすめの組み合わせ */
   function drawSets(){
     const ok=(UN.UNIT_SETS||[]).map(s=>({s,us:s.units.filter(i=>UBY[i])})).filter(x=>x.us.length>1&&x.us.every(i=>UBY[i].subj===subj)&&(!kid||(!easy&&x.us.every(i=>UBY[i].g<=(kg||6)))));
-    sets.replaceChildren(...(ok.length?[h("div",{class:"upsets"},h("b",{class:"pl",text:kid?T("u.sets"):"おすすめの組み合わせ（タップで選ぶ）"}),
+    sets.replaceChildren(...(ok.length?[h("div",{class:"upsets"},h("b",{class:"pl",text:kid?T("u.sets"):"おすすめの組《く》み合《あ》わせ（タップで選《えら》ぶ）"}),
       ...ok.map(x=>h("button",{type:"button",class:"pill small set",text:x.s.title,onclick:()=>{ UPK.sel=x.us.slice(0,UMAX); uSave(); paint(); drawPanel(); }})))]:[]));
   }
   /* かたまり3：カード */
   function drawCards(){
     const us=pool(subj).filter(u=>(!fg||u.g===fg)&&(!fi||u.item===fi)), byG={};
     us.forEach(u=>(byG[u.g]=byG[u.g]||[]).push(u));
-    const groups=Object.keys(byG).sort((a,b)=>a-b).map(g=>h("section",{class:"ugrp"},h("h3",{text:g+"年"}),
+    const groups=Object.keys(byG).sort((a,b)=>a-b).map(g=>h("section",{class:"ugrp"},h("h3",{text:g+"年《ねん》"}),
       h("div",{class:"ugrid"},...byG[g].map(u=>h("div",{class:"ucardw"},
         h("button",{type:"button",class:"ucard",role:"checkbox","aria-checked":"false","data-id":u.id,onclick:()=>toggle(u.id)},
           h("span",{class:"ubox","aria-hidden":"true"}),
           h("span",{class:"ubody"},h("b",{text:u.title}),h("span",{class:"unote",text:u.note}),
-            h("span",{class:"umeta"},h("span",{class:"utag",text:u.g+"年"}),!kid&&u.item&&u.item!=="その他"?h("span",{class:"utag",text:u.item}):null))),
+            h("span",{class:"umeta"},h("span",{class:"utag",text:u.g+"年《ねん》"}),!kid&&u.item&&u.item!=="その他《ほか》"?h("span",{class:"utag",text:u.item}):null))),
         h("button",{type:"button",class:"btn sub s uexb",text:T("u.ex"),"aria-label":T("u.ex")+"："+u.title,onclick:()=>uEx(u)}))))));
-    cards.replaceChildren(...(groups.length?groups:[h("div",{class:"empty",text:"この条件の単元はありません"})]));
+    cards.replaceChildren(...(groups.length?groups:[h("div",{class:"empty",text:"この条件《じょうけん》の単元《たんげん》はありません"})]));
     paint();
   }
   function paint(){ cards.querySelectorAll(".ucard").forEach(b=>{ const on=UPK.sel.includes(b.dataset.id); b.setAttribute("aria-checked",on?"true":"false"); b.firstChild.textContent=on?"✅":""; }); }
   function toggle(id){
     const i=UPK.sel.indexOf(id);
-    if(i>=0) UPK.sel.splice(i,1); else if(UPK.sel.length>=UMAX){ msg.textContent=`単元は${UMAX}個までです`; return; } else UPK.sel.push(id);
+    if(i>=0) UPK.sel.splice(i,1); else if(UPK.sel.length>=UMAX){ msg.textContent=`単元《たんげん》は${UMAX}個《こ》までです`; return; } else UPK.sel.push(id);
     msg.textContent=""; uSave(); paint(); drawPanel();
   }
   /* かたまり4：えらんだ単元・設定・出題のボタン */
@@ -3116,58 +3358,57 @@ function renderUnits(q){
   const need=()=>{ if(!chosen().length){ msg.textContent=T("u.none"); return false; } msg.textContent=""; return true; };
   function uToQs(items,t){
     const sec=USECS.find(s=>s>=t)||120;
-    const lab=(c,rb)=>{ const r=rb&&rb[c]; return r&&QZ.len(c)<=30?`｜${c}《${r}》`:c; };
     return items.map(it=>{ const k=it.choices.indexOf(it.a); if(k<0||it.choices.length<2) return null;
-      return {t:"mc",q:(it.stem?it.stem+"　":"")+it.q,ch:it.choices.map(c=>lab(c,it.ruby)),ok:[k],sec,pt:"normal"}; }).filter(Boolean);
+      return {t:"mc",q:(it.stem?it.stem+"　":"")+it.q,ch:it.choices,ok:[k],sec,pt:"normal"}; }).filter(Boolean);
   }
   function makeSet(reuse){
     const c=cfg(), items=UN.unitPick(c.ids,c.n,c.seed,c.mix), qs=uToQs(items,c.t);
-    if(!qs.length) throw new Error("問題を作れませんでした");
-    const title="単元："+c.ids.map(i=>UBY[i].title).join("・"), memo="単元から作成："+c.ids.join(",");
+    if(!qs.length) throw new Error("問題《もんだい》を作《つく》れませんでした");
+    const title="単元："+c.ids.map(i=>UBY[i].title).join("・"), memo="単元から作成："+c.ids.join(",");   //T
     if(reuse){ const f=qsGet().find(s=>s.memo===reuse); if(f){ f.qs=QZ.draftSet({qs}).qs; f.title=QZ.cut(title,QZ.LIM.title); f.g=uMaxG(c.ids); f.upd=Date.now(); qsWrite(); return f; } }
-    if(qsGet().length>=50) throw new Error("セットは50個までです。使わないセットを消してください");
+    if(qsGet().length>=50) throw new Error("セットは50個《こ》までです。使《つか》わないセットを消《け》してください");
     const s=qsNew(qs,QZ.cut(title,QZ.LIM.title),uMaxG(c.ids)); s.memo=QZ.cut(reuse||memo,QZ.LIM.memo); qsWrite(); return s;
   }
   function showLink(){
     if(!need()) return; const c=cfg(), url=location.href.split("#")[0]+uHash(c);
-    const box=h("div",{class:"qrwrap"}), ta=h("textarea",{class:"fld",readOnly:true,rows:3,value:url,"aria-label":"単元リンク"});
-    out.replaceChildren(h("div",{class:"out"},h("b",{text:"単元リンク（短いリンク）"}),ta,copyBtn(()=>url),
-      h("a",{class:"btn sub s",href:url,target:"_blank",rel:"noopener",text:"ためしに開く ↗"}),
-      h("div",{class:"note",text:`${url.length}文字。このリンクを開いた児童は、同じ問題をひとりで練習できます（${c.n}問・1分スプリント）。シード固定なので、同じリンクなら同じ問題です。`}),
-      location.protocol==="file:"?h("div",{class:"banner"},"いま、ファイルを直接開いているので、このリンクはこの端末でしか開けません。公開されたページのアドレスで開いてから作ってください。"):null,box));
+    const box=h("div",{class:"qrwrap"}), ta=h("textarea",{class:"fld",readOnly:true,rows:3,value:url,"aria-label":"単元《たんげん》リンク"});
+    out.replaceChildren(h("div",{class:"out"},h("b",{text:"単元《たんげん》リンク（短《みじか》いリンク）"}),ta,copyBtn(()=>url),
+      h("a",{class:"btn sub s",href:url,target:"_blank",rel:"noopener",text:"ためしに開《ひら》く ↗"}),
+      h("div",{class:"note",text:`${url.length}文字《もじ》。このリンクを開《ひら》いた児童《じどう》は、同《おな》じ問題《もんだい》をひとりで練習《れんしゅう》できます（${c.n}問《もん》・1分《ぷん》スプリント）。シード固定《こてい》なので、同《おな》じリンクなら同《おな》じ問題《もんだい》です。`}),
+      location.protocol==="file:"?h("div",{class:"banner"},"いま、ファイルを直接《ちょくせつ》開《ひら》いているので、このリンクはこの端末《たんまつ》でしか開《あ》けません。公開《こうかい》されたページのアドレスで開《ひら》いてから作《つく》ってください。"):null,box));
     if(url.length<=QR_MAX) qrPut(box,url);
   }
   function drawPanel(){
     out.replaceChildren();
-    const ids=chosen(), k=ids.length, per=k?Math.round(100/k):0, each=k?(UPK.n/k):0, eachTxt=Number.isInteger(each)?String(each):"約"+Math.round(each*10)/10;
+    const ids=chosen(), k=ids.length, per=k?Math.round(100/k):0, each=k?(UPK.n/k):0, eachTxt=Number.isInteger(each)?String(each):"約《やく》"+Math.round(each*10)/10;
     const chips=k?h("div",{class:"uchips"},...ids.map(id=>h("button",{type:"button",class:"uchip","aria-label":UBY[id].title+" をはずす",onclick:()=>toggle(id)},
-      h("span",{class:"ucg",text:UBY[id].g+"年"}),h("span",{text:UBY[id].title}),h("span",{class:"ucp",text:per+"%"}),h("span",{class:"ucx","aria-hidden":"true",text:"✕"})))):h("div",{class:"note",text:T("u.none")});
+      h("span",{class:"ucg",text:UBY[id].g+"年《ねん》"}),h("span",{text:UBY[id].title}),h("span",{class:"ucp",text:per+"%"}),h("span",{class:"ucx","aria-hidden":"true",text:"✕"})))):h("div",{class:"note",text:T("u.none")});
     const cho=uChoice(ids,UPK.choice);
     const rows=[h("div",{class:"uphead"},h("b",{class:"fh",text:T("u.sel",k)}),k?h("button",{type:"button",class:"btn sub s",text:T("u.clear"),onclick:()=>{ UPK.sel=[]; uSave(); paint(); drawPanel(); }}):null),chips];
-    if(k) rows.push(h("div",{class:"note",text:kid?T("u.ratio.k",UPK.n,k):`${UPK.n}問を${k}単元で等分します（1単元あたり ${eachTxt}問・${per}%ずつ）`}));
+    if(k) rows.push(h("div",{class:"note",text:kid?T("u.ratio.k",UPK.n,k):`${UPK.n}問《もん》を${k}単元《たんげん》で等分《とうぶん》します（1単元《たんげん》あたり ${eachTxt}問《もん》・${per}%ずつ）`}));
     if(!kid){
-      rows.push(h("div",{class:"pills"},h("b",{class:"pl",text:"問題数"}),...UNS.map(n=>upill(n+"問",UPK.n===n,()=>{ UPK.n=n; uSave(); drawPanel(); }))),
-        h("label",{class:"inl"},"クイズの制限時間（1問）",h("select",{onchange:e=>{ UPK.t=+e.target.value; uSave(); }},...USECS.map(s=>h("option",{value:s,selected:s===UPK.t,text:s+"秒"})))),
-        h("div",{class:"pills"},h("b",{class:"pl",text:"混ぜ方"}),upill("まぜる",UPK.mix,()=>{ UPK.mix=true; uSave(); drawPanel(); }),upill("単元の順番どおり",!UPK.mix,()=>{ UPK.mix=false; uSave(); drawPanel(); })));
+      rows.push(h("div",{class:"pills"},h("b",{class:"pl",text:"問題数《もんだいすう》"}),...UNS.map(n=>upill(n+"問《もん》",UPK.n===n,()=>{ UPK.n=n; uSave(); drawPanel(); }))),
+        h("label",{class:"inl"},"クイズの制限《せいげん》時間《じかん》（1問《もん》）",h("select",{onchange:e=>{ UPK.t=+e.target.value; uSave(); }},...USECS.map(s=>h("option",{value:s,selected:s===UPK.t,text:s+"秒《びょう》"})))),
+        h("div",{class:"pills"},h("b",{class:"pl",text:"混《ま》ぜ方《かた》"}),upill("まぜる",UPK.mix,()=>{ UPK.mix=true; uSave(); drawPanel(); }),upill("単元《たんげん》の順番《じゅんばん》どおり",!UPK.mix,()=>{ UPK.mix=false; uSave(); drawPanel(); })));
     }
     rows.push(h("div",{class:"pills"},h("b",{class:"pl",text:T("u.how")}),upill(T("u.type"),!cho,()=>{ UPK.choice=false; uSave(); drawPanel(); }),upill(T("u.c4"),cho,()=>{ UPK.choice=true; uSave(); drawPanel(); })));
     if(!kid){
       const run=(fn)=>()=>{ if(!need()) return; try{ fn(); }catch(e){ msg.textContent=e.message; } };
       rows.push(h("div",{class:"uacts"},
-        h("button",{type:"button",class:"btn",innerHTML:ic("users")+"この内容で出題（クイズ・たからばこ・すごろく）",onclick:run(()=>{ const s=makeSet("単元出題："+chosen().join(",")); go("#teacher?set="+s.id); })}),
-        h("button",{type:"button",class:"btn sub",innerHTML:ic("pencil")+"先生のもんだいセットにする（編集・書き出し）",onclick:run(()=>{ const s=makeSet(); go("#make?set="+s.id); })}),
+        h("button",{type:"button",class:"btn",innerHTML:ic("users")+"この内容で出題（クイズ・たからばこ・すごろく）",onclick:run(()=>{ const s=makeSet("単元出題："+chosen().join(",")); go("#teacher?set="+s.id); })}),   //T
+        h("button",{type:"button",class:"btn sub",innerHTML:ic("pencil")+"先生《せんせい》のもんだいセットにする（編集《へんしゅう》・書《か》き出《だ》し）",onclick:run(()=>{ const s=makeSet(); go("#make?set="+s.id); })}),
         h("button",{type:"button",class:"btn sub",innerHTML:ic("copy")+"リンクとQR",onclick:showLink}),
         h("button",{type:"button",class:"btn sub",innerHTML:ic("play")+"ひとりで ためす",onclick:run(()=>{ go(uHash(cfg())); })})),
-        h("div",{class:"note",text:"「出題」と「セットにする」は、問題を4択にして先生のもんだいセットに保存します（出題は同じ単元なら上書き）。リンクとQRは単元IDと設定だけなので短く、開くたびに児童の端末で同じ問題を作ります。"}));
+        h("div",{class:"note",text:"「出題《しゅつだい》」と「セットにする」は、問題《もんだい》を4択《たく》にして先生《せんせい》のもんだいセットに保存《ほぞん》します（出題《しゅつだい》は同《おな》じ単元《たんげん》なら上書《うわが》き）。リンクとQRは単元《たんげん》IDと設定《せってい》だけなので短《みじか》く、開《ひら》くたびに児童《じどう》の端末《たんまつ》で同《おな》じ問題《もんだい》を作《つく》ります。"}));
     }
     panel.replaceChildren(...rows,msg,out);
     if(kid) startBtn.disabled=!k, startBtn.textContent=T("u.go");
   }
   const startBtn=h("button",{type:"button",class:"btn again ustart",text:T("u.go"),onclick:()=>{ if(!need()) return; uSave(); go(uHash({...cfg(),n:Math.min(UPK.n,20)})); }});
   root.append(...[
-    h("div",{class:"topbar"},h("button",{type:"button",class:"back",innerHTML:kid?BK():ic("arrow-left")+"先生の画面",onclick:()=>go(kid?"#home":"#teacher")}),h("b"),h("span")),
-    h("h2",{class:"th2",innerHTML:kid?"":ic("check")+"単元から つくる",text:kid?`${SUBJ_JA[subj]&&easyG(kg)?T("subj."+SJ[subj]):SUBJ_JA[subj]}　${T("u.pick")}`:null}),
-    kid?null:h("p",{class:"note",text:"教科・学年でしぼって、単元をいくつでも選べます（学年をまたいでもOK）。選んだ単元を等分にまぜて出題します。"}),
+    h("div",{class:"topbar"},h("button",{type:"button",class:"back",innerHTML:kid?BK():ic("arrow-left")+"先生《せんせい》の画面《がめん》",onclick:()=>go(kid?"#home":"#teacher")}),h("b"),h("span")),
+    h("h2",{class:"th2",innerHTML:kid?"":ic("check")+"単元《たんげん》から つくる",text:kid?`${SUBJ_JA[subj]&&easyG(kg)?T("subj."+SJ[subj]):SUBJ_JA[subj]}　${T("u.pick")}`:null}),
+    kid?null:h("p",{class:"note",text:"教科《きょうか》・学年《がくねん》でしぼって、単元《たんげん》をいくつでも選《えら》べます（学年《がくねん》をまたいでもOK）。選《えら》んだ単元《たんげん》を等分《とうぶん》にまぜて出題《しゅつだい》します。"}),
     filt,sets,h("div",{class:"uwrap"},panel,cards),kid?h("div",{class:"ufoot"},startBtn):null].filter(Boolean));
   app.replaceChildren(root);
   drawFilter(); drawSets(); drawCards(); drawPanel();
@@ -3184,7 +3425,7 @@ function renderUnitLink(hash){
   app.replaceChildren(h("div",{class:"play up"},
     h("div",{class:"topbar"},h("button",{type:"button",class:"back",innerHTML:BK(),onclick:()=>go("#home")}),h("b"),h("span")),
     h("div",{class:"q"},h("div",{class:"big",text:T("u.intro")}),h("div",{class:"small",text:T("u.1min")})),
-    h("div",{class:"uchips cen"},...c.ids.map(id=>h("span",{class:"uchipw"},h("span",{class:"uchip static"},h("span",{class:"ucg",text:UBY[id].g+"年"}),h("span",{text:UBY[id].title})),
+    h("div",{class:"uchips cen"},...c.ids.map(id=>h("span",{class:"uchipw"},h("span",{class:"uchip static"},h("span",{class:"ucg",text:UBY[id].g+"年《ねん》"}),h("span",{text:UBY[id].title})),
       h("button",{type:"button",class:"btn sub s uexb",text:T("u.ex"),"aria-label":T("u.ex")+"："+UBY[id].title,onclick:()=>uEx(UBY[id])})))),
     how,h("div",{style:"margin-top:12px"},h("button",{type:"button",class:"btn again",id:"ugo",text:T("u.go"),onclick:()=>startUnitRun({...c,choice})}))));
   const b=document.getElementById("ugo"); if(b) b.focus();
@@ -3207,7 +3448,7 @@ function startUnitRun(c){
     <div id="area"></div>
     <div class="uexrow"><button type="button" class="btn sub s" id="uexb">💡 ${T("u.ex")}</button></div>
     <div class="score" id="scw">${T("p.score",0)}</div></div>`;
-  $("#unm").textContent=names.length>28?names.slice(0,27)+"…":names;
+  $("#unm").textContent=rbp(names).length>28?rbp(names).slice(0,27)+"…":names;
   $("#uexb").onclick=()=>{ if(P&&P.cur&&P.u) uEx(UBY[P.cur.uid]); };
   unitNext();
   const end=Date.now()+t*1000, p=P;
@@ -3228,7 +3469,7 @@ function unitNext(){
   if(U.pi>=U.pool.length){ U.round++; U.pool=UN.unitPick(U.ids,U.n,U.seed+"-"+U.round,U.mix); U.pi=0; if(!U.pool.length) return finish(); }
   const c=uCur(U.pool[U.pi++],U.choice); P.cur=c; P.inp={f:(c.len||[]).map(()=>""),at:0}; P.lock=false;
   if(c.mode==="choice4") P.chN++; else P.inN++;
-  const qq=$("#qq"); qq.className="big"+(c.q.length>16?" long":""); qq.textContent=c.q;
+  const qq=$("#qq"); qq.className="big"+(rbp(c.q).length>16?" long":""); qq.textContent=c.q;
   if(c.subj==="eigo") qq.insertAdjacentHTML("beforeend",spkBtn("eigo",c.q));
   $("#qs").textContent=c.small; $("#um").textContent=""; $("#um").insertAdjacentHTML("beforeend",uMarksHtml(P.marks,12));
   const area=$("#area");
@@ -3242,7 +3483,7 @@ function unitNext(){
   const sp=m==="amari"?`<button data-k="あまり" class="sk">${T("u.amari")}</button>`:m==="frac"?`<button data-k="▶" class="sk ar" aria-label="${esc(T("u.nextf"))}">▶</button>`:dot?`<button data-k=".">.</button>`:"";
   const keys=["7","8","9","4","5","6","1","2","3"].map(k=>`<button data-k="${k}">${k}</button>`).join("")
     +(sp?sp+`<button data-k="0">0</button>`:`<button data-k="0" class="zero">0</button>`)+`<button data-k="⌫" aria-label="${esc(T("u.del"))}">⌫</button>`;
-  const tail=m==="unit"?`<div class="unitrow">${c.units.map(u=>`<button data-u="${esc(u)}">${esc(u)}</button>`).join("")}</div>`
+  const tail=m==="unit"?`<div class="unitrow">${c.units.map(u=>`<button data-u="${esc(u)}">${esc(UN.ruby?UN.ruby(u):u)}</button>`).join("")}</div>`
     :`<div class="pad" style="margin-top:8px"><button class="ok" data-k="OK" style="grid-column:span 3">${T("pad.ok")}</button></div>`;
   area.innerHTML=`<div class="uans" id="ans"></div><div class="pad">${keys}</div>${tail}`;
   area.querySelectorAll("[data-k]").forEach(b=>b.onclick=()=>uKey(b.dataset.k));
@@ -3314,6 +3555,7 @@ function uJudge(right){
     if(c.mode==="choice4") $("#area").querySelectorAll(".choice").forEach(e=>{ if(e.dataset.c===c.a) e.classList.add("right"); else e.classList.add("wrong"); });
   }
   p.marks.push(mark); $("#um").innerHTML=uMarksHtml(p.marks,12);
+  p.uSt=p.uSt||{}; const us=p.uSt[c.uid]=p.uSt[c.uid]||{n:0,o:0}; us.n++; if(mark==="○") us.o++;
   $("#sc").textContent=p.ok;
   setTimeout(()=>{ if(P!==p) return; if(p.left>0&&timerId){ fb.className="fb"; fb.textContent=""; unitNext(); } },wait);
 }
@@ -3328,6 +3570,7 @@ function uKeydown(e){
 
 /* ================= ルーター ================= */
 function route(){
+  fgFromHash();
   if(qzFlush){ qzFlush(); qzFlush=null; }
   stopTimer(); P=null; M=null; QK=null; QS=null; QH=null; ckStop(); prStop(); wakeOff();
   if(ES){ ES.close(); ES=null; }
@@ -3340,7 +3583,7 @@ function route(){
   const lg=$("#logo"); if(lg) lg.disabled=lesson;          // 授業モードではロゴからホームへ行けない
   window.scrollTo(0,0);
   if(!DATA_OK&&path!=="check"&&path!=="teacher"&&path!=="make"&&path!=="qlink"){
-    app.innerHTML=`<div class="q">問題データ（data フォルダ）を読み込めませんでした。<br>index.html と同じ場所に data フォルダがあるか確認してください。</div>`; return;
+    app.innerHTML=`<div class="q">問題《もんだい》データ（data フォルダ）を読《よ》み込《こ》めませんでした。<br>index.html と同《おな》じ場所《ばしょ》に data フォルダがあるか確認《かくにん》してください。</div>`; return;
   }
   if(path==="check") renderCheck();
   else if(path==="play") renderPlay(q);
@@ -3359,7 +3602,7 @@ function route(){
   else renderHome();
 }
 window.addEventListener("hashchange",route);
-drawHeader(); refreshMedals(); route();
+fgFromHash(); fgWalk(document.body); refreshMedals(); route();
 </script>
 </body>
 </html>
