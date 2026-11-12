@@ -115,7 +115,7 @@ window.MH_UNITS = (function () {
   U("m5-tsubun", M, 5, "A", "分数", "通分", "tsubun5", {}, { base: "A(4)イ 通分", series: "分数", step: 7, label: "通分", max: 90, note: "分母を そろえる", ex: "分母を おなじに することを 通分と いうよ。\n1/3 = □/12 は、3を 4倍すると 12 だから、分子も 4倍して 4/12。" });
   U("m5-bunsu-add", M, 5, "A", "分数", "分数の たし算（分母がちがう）", "bunsuAddSub5", { op: "+" }, { base: "A(4)イ 異分母分数の加法", series: "分数", step: 8, label: "異分母たし算", max: 130, note: "通分して たす", ex: "まず 通分して 分母を そろえてから 分子を たすよ。\n答えは 約分を わすれずに。" });
   U("m5-bunsu-sub", M, 5, "A", "分数", "分数の ひき算（分母がちがう）", "bunsuAddSub5", { op: "−" }, { base: "A(4)イ 異分母分数の減法", series: "分数", step: 8, label: "異分母ひき算", max: 130, note: "通分して ひく", ex: "まず 通分して 分母を そろえてから 分子を ひくよ。\n答えは 約分を わすれずに。" });
-  U("m5-bunsu-int", M, 5, "A", "分数", "分数の かけ算と わり算（整数）", "bunsuMul6", { op: "int" }, { base: "A(4)ア 分数×整数・分数÷整数", series: "分数", step: 10, label: "分数×整数・÷整数", max: 90, note: "分数 × 整数・分数 ÷ 整数", ex: "分数 × 整数 は 分子に 整数を かけるよ。\n分数 ÷ 整数 は 分母に 整数を かけるよ。" });
+  U("m5-bunsu-int", M, 6, "A", "分数", "分数の かけ算と わり算（整数）", "bunsuMul6", { op: "int" }, { base: "6年 A(1) 分数×整数・分数÷整数（現行教科書は6年。IDは互換のため据え置き）", series: "分数", step: 10, label: "分数×整数・÷整数", max: 90, note: "分数 × 整数・分数 ÷ 整数", ex: "分数 × 整数 は 分子に 整数を かけるよ。\n分数 ÷ 整数 は 分母に 整数を かけるよ。" });
   U("m5-naikaku", M, 5, "B", "図形", "図形の 角（内角の和）", "naikaku5", { loose: true }, { base: "B(1)ア 三角形・四角形・多角形の角", max: 1800, note: "内角の 和", ex: "三角形の 3つの 角の 和は 180度、 四角形は 360度。\nn角形は (n − 2) × 180度 だよ。" });
   U("m5-menseki-sankaku", M, 5, "B", "図形", "図形の 面積（三角形・平行四辺形）", "menseki5", { kinds: ["tri", "para"] }, { base: "B(3)ア 三角形・平行四辺形の面積", series: "面積", step: 3, label: "三角形・平行四辺形", max: 300, note: "底辺 × 高さ（÷2）", ex: "平行四辺形は 底辺 × 高さ。\n三角形は その 半分だから 底辺 × 高さ ÷ 2。" });
   U("m5-menseki-daikei", M, 5, "B", "図形", "図形の 面積（台形・ひし形）", "menseki5", { kinds: ["trap", "rhom"] }, { base: "B(3)ア 台形・ひし形の面積", series: "面積", step: 4, label: "台形・ひし形", max: 300, note: "(上底＋下底) × 高さ ÷ 2", ex: "台形は (上底 + 下底) × 高さ ÷ 2。\nひし形は 対角線 × 対角線 ÷ 2。" });
@@ -127,7 +127,7 @@ window.MH_UNITS = (function () {
   U("m6-moji", M, 6, "A", "□の数", "文字と 式", "moji6", {}, { base: "A(2)ア 文字を用いた式", max: 150, note: "x に 数を 入れる", ex: "x に 数を 入れて 計算するよ。\nx = 3 のとき 2 × x + 1 は 2 × 3 + 1 = 7。" });
   U("m6-bunsu-kake", M, 6, "A", "分数", "分数の かけ算", "bunsuMul6", { op: "×" }, { base: "A(1)ア 分数×分数", series: "分数", step: 11, label: "分数×分数", max: 90, note: "分数 × 分数", ex: "分母どうし、分子どうしを かけるよ。\n計算の とちゅうで 約分すると らくだよ。" });
   U("m6-bunsu-wari", M, 6, "A", "分数", "分数の わり算", "bunsuMul6", { op: "÷" }, { base: "A(1)ア 分数÷分数", series: "分数", step: 12, label: "分数÷分数", max: 90, note: "分数 ÷ 分数", ex: "わる数の 分母と 分子を ひっくりかえして かけるよ。\n2/3 ÷ 4/5 = 2/3 × 5/4。" });
-  U("m6-hayasa", M, 6, "C", "その他", "速さ", "hayasa5", { loose: true }, { base: "C(2)ア 速さ（異種の2量の割合）", max: 1000, note: "道のり ÷ 時間", ex: "速さ = 道のり ÷ 時間、 道のり = 速さ × 時間。\n時速 60km で 2時間 なら 60 × 2 = 120km。" });
+  U("m6-hayasa", M, 5, "C", "その他", "速さ", "hayasa5", { loose: true }, { base: "5年 C(2) 速さ（現行教科書は5年。IDは互換のため据え置き）", max: 1000, note: "道のり ÷ 時間", ex: "速さ = 道のり ÷ 時間、 道のり = 速さ × 時間。\n時速 60km で 2時間 なら 60 × 2 = 120km。" });
   U("m6-hirei", M, 6, "C", "その他", "比例と 反比例", "hirei6", {}, { base: "C(1)ア 比例・反比例", max: 120, note: "x と y の 関係", ex: "比例は x が 2倍に なると y も 2倍。\n反比例は x が 2倍に なると y は 半分。" });
   U("m6-hi-kantan", M, 6, "C", "その他", "比と 比の値（かんたんにする）", "hiKantan6", { loose: true }, { base: "C(2)ア 比・比の値", series: "比", step: 1, label: "かんたんにする", max: 90, note: "比を かんたんにする・比の値", ex: "比の 両方を おなじ 数で わって かんたんに するよ。\n6:9 は 3で わって 2:3。" });
   U("m6-hi-tokku", M, 6, "C", "その他", "比と 比の値（等しい比）", "hiEq6", {}, { base: "C(2)ア 等しい比", series: "比", step: 2, label: "等しい比", max: 90, note: "2:3 ＝ 6:□", ex: "2:3 = 6:□ は、2を 3倍すると 6。\n3も 3倍して □ は 9。" });
@@ -247,7 +247,7 @@ window.MH_UNITS = (function () {
     { id: "set-tashihiki-12", title: "たし算・ひき算（1〜2年）", units: ["m1-add10", "m1-sub10", "m1-add-kuriage", "m1-sub-kurisage", "m2-add-hissan", "m2-sub-hissan"] },
     { id: "set-tani", title: "単位のまとめ（2〜6年）", units: ["m2-nagasa", "m2-kasa", "m3-nagai", "m3-omosa", "m4-menseki-tan", "m6-tani"] },
     { id: "set-taiseki", title: "体積のまとめ（5〜6年）", units: ["m5-taiseki", "m6-chuutai", "m6-tani"] },
-    { id: "set-wariai", title: "割合・比・速さのまとめ（5〜6年）", units: ["m5-tan-ryou", "m5-hyakubun", "m6-hayasa", "m6-hirei", "m6-hi-kantan", "m6-hi-tokku"] },
+    { id: "set-wariai", title: "割合・速さ・比のまとめ（5〜6年）", units: ["m5-tan-ryou", "m5-hyakubun", "m6-hayasa", "m6-hirei", "m6-hi-kantan", "m6-hi-tokku"] },
     { id: "set-hissan-all", title: "ひっ算のまとめ（2〜4年）", units: ["m2-add-hissan", "m2-sub-hissan", "m3-add-hissan", "m3-sub-hissan", "m3-kake-hissan1", "m3-kake-hissan2", "m4-wari-21", "m4-kake-32"] },
     { id: "set-kokugo-kanji-34", title: "漢字の読み（3〜4年）", units: ["j3-kanji-yomi", "j4-kanji-yomi"] }
   ];

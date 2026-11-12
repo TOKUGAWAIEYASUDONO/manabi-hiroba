@@ -36,7 +36,8 @@
     "e5-color","e5-school","e6-all"
   ];
   const IDX = {}; UNIT_IDS.forEach((id, i) => { IDX[id] = i; });
-  const uGrade = id => +id[1];
+  const GRADE_FIX = { "m6-hayasa": 5, "m5-bunsu-int": 6 }; /* 現行教科書に合わせて学年を直した単元（IDは互換のため据え置き） */
+  const uGrade = id => GRADE_FIX[id] || +id[1];
   /* 教科の成果（固定ゾーン）。track：play 算数＝遊具／lib 国語＝図書館／flag 英語＝国旗。need：その教科で「できた」以上の単元の数 */
   const PARTS = [
     { id: "slide", art: "d-slide", track: "play", need: 1 }, { id: "swing", art: "d-swing", track: "play", need: 3 },

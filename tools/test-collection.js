@@ -16,7 +16,8 @@ t("単元の ID 表：units.js の ready な単元と同じ（新しい単元が
   const ready = ctx.MH_UNITS.UNITS.filter(u => u.status === "ready" && u.gen), SJ = { sansu: "m", kokugo: "j", shakai: "s", eigo: "e" };
   assert.strictEqual(new Set(C.UNIT_IDS).size, C.UNIT_IDS.length);
   assert.deepStrictEqual([...ready.map(u => u.id)].sort(), [...C.UNIT_IDS].sort());
-  for (const u of ready) { assert.strictEqual(u.id[0], SJ[u.subj]); assert.strictEqual(+u.id[1], u.g); }
+  const GFIX = { "m6-hayasa": 5, "m5-bunsu-int": 6 };
+  for (const u of ready) { assert.strictEqual(u.id[0], SJ[u.subj]); assert.strictEqual(GFIX[u.id] || +u.id[1], u.g); }
   assert(C.UNIT_IDS.length * 4 + 3 < 46656);
 });
 t("かざりの値段の合計は 380", () => assert.strictEqual(C.PRICE_TOTAL, 380));
