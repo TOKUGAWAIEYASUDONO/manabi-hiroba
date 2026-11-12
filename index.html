@@ -565,6 +565,85 @@ body[data-v=host] .wrap{max-width:none;padding:0}
 .mgrid.net{grid-template-columns:1fr}
 .mgrid.net .side{order:-1;display:flex;gap:14px;align-items:center;justify-content:center;flex-wrap:wrap;padding:8px 12px;font-size:20px;font-weight:700}
 .mgrid.net .side .me1{display:inline-flex;align-items:center;gap:6px}
+/* ===== コレクション（じぶんの ひろば・ずかん・どんぐり） ===== */
+.door{border:3px solid var(--edge);box-shadow:0 4px 0 var(--edge);cursor:pointer;width:100%;margin-top:12px;background:#fff;border-radius:16px;padding:8px 14px;display:flex;align-items:center;gap:12px;text-align:left;min-height:64px}
+.door .art{width:44px;height:44px;flex:none}
+.door .dt{flex:1;font-weight:800;font-size:20px;line-height:1.25;white-space:nowrap}
+.door .dt small{display:block;font-weight:400;font-size:14px;color:var(--muted)}
+.door .new{background:var(--sun);border:2px solid var(--edge);border-radius:999px;padding:2px 8px;font-size:12px;font-weight:800;color:var(--ink);white-space:nowrap}
+.home.easy .door{min-height:84px}.home.easy .door .dt{font-size:24px}
+.door:active{transform:translateY(3px);box-shadow:0 1px 0 var(--edge)}
+.hb,.zk{width:100%;max-width:720px;margin:0 auto}
+.hb .acn{display:inline-flex;align-items:center;gap:4px;background:#fff;border:3px solid var(--edge);border-radius:999px;padding:2px 12px 2px 6px;font-size:18px}
+.hb .acn .art{width:28px;height:28px}
+.hmsg{background:#fff;border:2px solid var(--line);border-left:8px solid var(--sun);border-radius:4px 14px 14px 4px;padding:10px 14px;margin:8px 0;font-weight:700;line-height:1.5}
+.hmsg .art{display:inline-block;width:28px;height:28px;vertical-align:middle}
+.hmsg.done{border-left-color:var(--go)}
+.hscene{background:#bfe3b0;border:4px solid var(--edge);border-radius:16px;padding:8px;display:grid;gap:8px;margin-top:8px}
+.hscene.t1{background:#f0d9a8}.hscene.t2{background:#e4eef6}
+.fz{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;background:rgba(255,255,255,.4);border-radius:10px;padding:6px}
+.fs{display:flex;flex-direction:column;align-items:center;gap:2px;min-width:0}
+.fsb{aspect-ratio:1;width:100%;position:relative}
+.fs .art{position:absolute;inset:0;width:100%;height:100%}
+.fs.on .art{filter:drop-shadow(0 4px 0 rgba(22,55,42,.28))}
+.fs.off .fsb{border:3px dashed rgba(22,55,42,.4);border-radius:12px}
+.fs .cap{font-size:11px;font-weight:700;color:var(--ink);text-align:center;line-height:1.25}
+.fs.off .cap{color:var(--muted);font-weight:400}
+.nx{display:flex;align-items:center;gap:10px;flex-wrap:wrap;background:rgba(255,255,255,.6);border-radius:10px;padding:6px 10px}
+.nx b{font-size:15px}
+.nx .nxs{display:flex;gap:8px}
+.nx .nxs .art{width:44px;height:44px}
+.sil{filter:brightness(0) opacity(.25)}
+.nx small{flex-basis:100%;font-size:12px;color:var(--muted)}
+.gridh{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+.hc{aspect-ratio:1;min-height:48px;background:rgba(255,255,255,.6);border:3px dashed rgba(22,55,42,.4);border-radius:12px;padding:4px;display:flex;align-items:center;justify-content:center;cursor:pointer}
+.hc.on{background:#fff;border:3px solid var(--edge);box-shadow:0 4px 0 var(--edge)}
+.hc.sel{outline:4px solid var(--sun);outline-offset:2px}
+.hc{position:relative}
+.hc .art{position:absolute;inset:5px;width:calc(100% - 10px);height:calc(100% - 10px);filter:drop-shadow(0 3px 0 rgba(22,55,42,.28))}
+.hbar{display:flex;align-items:center;gap:8px;flex-wrap:wrap;background:#fff;border:2px solid var(--line);border-left:8px solid var(--sun);border-radius:4px 14px 14px 4px;padding:8px 12px;margin-top:10px;font-weight:700}
+.hbar span{flex:1;min-width:180px}
+.btn.s{padding:8px 16px;font-size:16px}
+.hops{display:flex;gap:10px;margin:12px 0 4px}
+.hops .btn{flex:1;margin:0;display:flex;align-items:center;justify-content:center;gap:6px;min-height:54px;font-size:20px}
+.hops .btn .art{width:28px;height:28px}
+.shop{background:#fff;border:2px solid var(--line);border-radius:4px;padding:4px 12px 8px;margin:8px 0}
+.shop h3{margin:8px 0 2px;font-size:17px}
+.shop .row{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:2px dotted var(--line)}
+.shop .row:last-child{border-bottom:0}
+.shop .row>.art{width:48px;height:48px}
+.shop .row .nm{flex:1;font-weight:700;font-size:17px}
+.shop .row .btn{margin:0;min-width:96px;display:inline-flex;align-items:center;justify-content:center;gap:4px}
+.shop .row .btn .art{width:22px;height:22px}
+.zks{margin:12px 0;border:3px solid var(--edge);border-radius:12px;background:#fff;overflow:hidden}
+.zks h2{margin:0;padding:6px 12px;font-size:18px;color:#fff;background:var(--math)}
+.zk-jp h2{background:var(--jp)}.zk-eng h2{background:var(--eng)}.zk-soc h2{background:var(--soc);color:var(--ink)}
+.zks details{padding:0 10px}
+.zks summary{cursor:pointer;font-weight:800;font-size:17px;padding:10px 0;display:flex;gap:10px;align-items:center;min-height:44px}
+.zkn{font-weight:400;font-size:14px;color:var(--muted)}
+.zko{border-top:2px dotted var(--line)}
+.zko>summary{font-size:15px;color:var(--muted)}
+.sks{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:8px;padding:0 0 12px}
+.sk{min-height:64px;border-radius:12px;padding:6px 8px;text-align:left;font-size:13px;line-height:1.4;display:flex;gap:6px;align-items:flex-start;background:transparent;border:3px dashed var(--line);color:var(--muted);font-weight:400;cursor:pointer}
+.sk.s1{background:#fff;border:3px solid var(--sc);color:var(--ink);font-weight:700}
+.sk.s2{background:var(--sb);border:3px solid var(--edge);box-shadow:0 3px 0 var(--edge);color:var(--ink);font-weight:700}
+.sk.s3{background:var(--sb);border:3px solid var(--edge);box-shadow:0 0 0 3px var(--gold),0 5px 0 3px var(--edge);color:var(--ink);font-weight:700;margin-bottom:3px}
+.sk .skm{flex:none;width:20px;height:20px;display:inline-flex;align-items:center;justify-content:center}
+.sk .skm .ic{width:20px;height:20px}
+.sk .skm .art{width:22px;height:22px}
+.sk.pend .skm .ic{color:var(--sc)}
+.zkmsg{position:sticky;bottom:8px;background:#fff;border:3px solid var(--edge);border-radius:12px;padding:0 14px;margin:8px 0;display:none}
+.zkmsg:not(:empty){display:block;padding:10px 14px;box-shadow:0 4px 0 var(--edge)}
+.zkmsg span{margin-left:10px;font-size:13px;color:var(--muted)}
+.zkmsg p{margin:6px 0}
+.acl{display:flex;gap:10px;align-items:center;justify-content:center;flex-wrap:wrap;background:#fff;border:2px solid var(--line);border-left:8px solid var(--sun);border-radius:4px 14px 14px 4px;padding:8px 12px;margin:10px auto;max-width:520px;text-align:left}
+.acl .art{width:40px;height:40px;flex:none}
+.acl .acb{flex:1;min-width:160px;font-size:15px;line-height:1.5}
+.acl .acb b{display:block;font-size:20px}
+.hqr{width:min(100%,220px);margin:8px 0}.hqr svg{width:100%;height:auto;display:block}
+.ac{width:1.3em;height:1.3em;vertical-align:-.3em;display:inline-block}
+@media (min-width:700px){.fz{grid-template-columns:repeat(8,1fr)}.gridh{grid-template-columns:repeat(6,1fr)}.hscene{padding:12px;gap:12px}.fs .cap{font-size:12px}}
+@media (prefers-reduced-motion:reduce){.door,.hc{transition:none}}
 </style>
 </head>
 <body>
@@ -596,6 +675,7 @@ body[data-v=host] .wrap{max-width:none;padding:0}
 <symbol id="i-clipboard" viewBox="0 0 24 24"><rect width="8" height="4" x="8" y="2" rx="1" ry="1" /> <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2" /></symbol>
 <symbol id="i-book-open" viewBox="0 0 24 24"><path d="M12 5v16" /> <path d="M20.001 19A2 2 0 0022 17V5a2 2 0 00-1.999-2L16 3.002A5 5 0 0012 5a5 5 0 00-4-2H4a2 2 0 00-2 2v12a2 2 0 001.999 2H8a5 5 0 014 2 5 5 0 014-2z" /></symbol>
 <symbol id="i-rotate-ccw" viewBox="0 0 24 24"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8" /> <path d="M3 3v5h5" /></symbol>
+<symbol id="i-moon" viewBox="0 0 24 24"><path d="M20.985 12.486a9 9 0 1 1-9.473-9.472c.405-.022.617.46.402.803a6 6 0 0 0 8.268 8.268c.344-.215.825-.004.803.401" /></symbol>
 <symbol id="i-maximize" viewBox="0 0 24 24"><path d="M8 3H5a2 2 0 0 0-2 2v3" /> <path d="M21 8V5a2 2 0 0 0-2-2h-3" /> <path d="M3 16v3a2 2 0 0 0 2 2h3" /> <path d="M16 21h3a2 2 0 0 0 2-2v-3" /></symbol>
 </defs></svg>
 <!--ART-BEGIN-->
@@ -642,6 +722,7 @@ body[data-v=host] .wrap{max-width:none;padding:0}
 <symbol id="d-flag" viewBox="0 0 64 64"><g stroke="var(--edge)" stroke-width="3.5" stroke-linejoin="round" stroke-linecap="round"><path d="M16 60V6" fill="none"/><path d="M16 8h38l-8 11 8 11H16z" fill="var(--math)"/><circle cx="16" cy="60" r="3" fill="var(--edge)"/></g></symbol>
 <symbol id="d-star" viewBox="0 0 24 24"><path d="M12 2.5l2.9 6.2 6.8.8-5 4.7 1.3 6.7L12 17.5l-6 3.4 1.3-6.7-5-4.7 6.8-.8z" fill="var(--soc)" stroke="var(--edge)" stroke-width="2" stroke-linejoin="round"/></symbol>
 <symbol id="d-swirl" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10.5" fill="var(--eng)" stroke="var(--edge)" stroke-width="2"/><path d="M12 12a1.5 1.5 0 1 1 2 1.4 3.5 3.5 0 1 1-4.8-4.3 5.5 5.5 0 1 1 7 6.8" fill="none" stroke="var(--paper)" stroke-width="2.2" stroke-linecap="round"/></symbol>
+<symbol id="h-acorn" viewBox="0 0 64 64"><g stroke="var(--edge)" stroke-width="3.5" stroke-linejoin="round" stroke-linecap="round"><path d="M32 6v7" fill="none"/><path d="M12 30Q10 12 32 12Q54 12 52 30z" fill="var(--btl)"/><path d="M16 30h32Q48 56 32 60Q16 56 16 30z" fill="var(--bronze)"/><path d="M24 40q2 8 6 12" fill="none" stroke="var(--paper)" stroke-width="2.5" opacity=".75"/></g></symbol>
 </defs></svg>
 <!--ART-END-->
 <header>
@@ -668,6 +749,7 @@ body[data-v=host] .wrap{max-width:none;padding:0}
 <script src="data/gen/sansu-34.js"></script>
 <script src="data/gen/sansu-56.js"></script>
 <script src="data/units.js"></script>
+<script src="data/collection.js"></script>
 <script>
 /* ================= 画面の文言（1つの表） =================
    TX["キー"] = [ふつうの文言, 1〜2年の「やさしい文字」]（やさしい側がないものは同じ文言）。
@@ -872,7 +954,52 @@ const TX={
  "u.retry":["❌ おしい！もう一度《いちど》やってみよう","❌ おしい！ もういちど やってみよう"],
  "u.ok2":["△ 2回《かい》目《め》でせいかい！","△ 2かいめで せいかい！"],
  "u.marks":["○ 1回《かい》で正解《せいかい》　△ 2回《かい》目《め》で正解《せいかい》　× まちがい","○ 1かいで せいかい　△ 2かいめで せいかい　× まちがい"],
- "u.marks.t":["○△×のきろく","○△×の きろく"]
+ "u.marks.t":["○△×のきろく","○△×の きろく"],
+ /* コレクション（じぶんの ひろば・ずかん・どんぐり）。児童向けの文言は 全部《》つき。1〜2年（右）は ひらがな */
+ "col.name":["じぶんの ひろば"],
+ "col.door.d":[n=>`どんぐり ${n}こ`],"col.door.new":["あたらしい！"],
+ "col.shop":["おみせ"],"col.zukan":["ずかん"],"col.zukan.t":["たんげん ずかん"],
+ "col.gift":["どんぐりくんから、はじめの どんぐり 5こ！"],
+ "col.cap":["きょうの どんぐりは ここまで。また あした！"],
+ "col.next":["つぎは なにが くる？"],
+ "col.next.how":["単元《たんげん》を「できた」に すると、ふえるよ。","たんげんを「できた」に すると、ふえるよ。"],
+ "col.p.school":["がっこう"],"col.p.slide":["すべりだい"],"col.p.swing":["ブランコ"],"col.p.bar":["てつぼう"],"col.p.jungle":["ジャングルジム"],
+ "col.p.book1":["ほんばこ"],"col.p.lib":["としょかん"],"col.p.flagjp":["にほんの はた"],"col.p.flagus":["アメリカの はた"],
+ "col.d.tree":["き"],"col.d.flower":["はなだん"],"col.d.bench":["ベンチ"],"col.d.hutch":["うさぎごや"],"col.d.pond":["いけ"],"col.d.clock":["とけいとう"],"col.d.rainbow":["にじ"],
+ "col.grid":["かざりを おく ばしょ"],"col.cell":[n=>`あいている ばしょ ${n}`],
+ "col.grid.pick":["おく ばしょを タップしてね。"],
+ "col.grid.move":["うごかす ばしょを タップするか、「しまう」を おしてね。"],
+ "col.price":[n=>`${n}こ`],"col.put":["おく"],"col.store":["しまう"],"col.cancel":["やめる"],"col.placed":["おいてあるよ"],
+ "col.done":["かんせい！ ひろばが いっぱいに なったよ。"],
+ "col.done.on":[(m,d)=>`かんせいした 日《ひ》：${m}月《がつ》${d}日《にち》`,(m,d)=>`かんせいした ひ：${m}がつ ${d}にち`],
+ "col.done.n":["どんぐりは もう ふえません。ずかんを うめよう。"],
+ "col.theme":["もようがえ"],"col.theme.0":["みどり"],"col.theme.1":["あき"],"col.theme.2":["ゆき"],
+ "col.local":["ひろばは、その 端末《たんまつ》の ものです。ほかの 端末《たんまつ》では、あたらしく はじまります。","ひろばは、その たんまつの ものです。ほかの たんまつでは、あたらしく はじまるよ。"],
+ "col.err":["ひろばの 絵《え》を 読《よ》みこめませんでした。もういちど ひらいてね。","ひろばの えを よみこめなかったよ。もういちど ひらいてね。"],
+ "col.r.get":[n=>`どんぐり +${n}こ`],
+ "col.r.can":[t=>`「${t}」が できた！`],"col.r.master":[t=>`「${t}」が マスター！`],
+ "col.r.found":["ずかんに シールが はれたよ"],
+ "col.r.pend":["あした もういちど やると、シールに いろが つくよ"],
+ "col.r.first":["きょうの 1かいめ！"],"col.r.quiz":["クイズに さんか！"],
+ "col.r.part":["ひろばに あたらしい ものが きたよ！"],
+ "col.r.day1":["単元《たんげん》れんしゅうを すると、ずかんに シールが はれるよ","たんげんれんしゅうを すると、ずかんに シールが はれるよ"],
+ "col.r.go":["ひろばを みる"],
+ "col.s.0":["まだ"],"col.s.1":["みつけた"],"col.s.2":["できた"],"col.s.3":["マスター"],
+ "col.zk.hint0":[t=>`「${t}」は、単元《たんげん》れんしゅうで ふえるよ。`,t=>`「${t}」は、たんげんれんしゅうで ふえるよ。`],
+ "col.zk.hint1":["あした もういちど、7わり いじょう せいかい だと、いろが つくよ。"],
+ "col.zk.hint1b":["5もん いじょう こたえて、7わり いじょう せいかい だと、あしたの もういちどで いろが つくよ。"],
+ "col.zk.hint2":["できた！ べつの 日《ひ》に もういちど、9わり いじょう せいかい だと、マスター。","できた！ べつの ひに もういちど、9わり いじょう せいかい だと、マスター。"],
+ "col.zk.hint3":["マスター！ よく がんばったね。"],
+ "col.zk.go":["れんしゅうする"],
+ "col.zk.page":[g=>`${g}年《ねん》`,g=>`${g}ねん`],
+ "col.zk.other":["ほかの 学年《がくねん》の ページ","ほかの ねんの ページ"],
+ "col.zk.n":[(a,b)=>`${a} / ${b}`],"col.zk.all":[(a,b)=>`できた ${a} / ${b}`],
+ "col.zk.note":["すきな ところから うめて いいよ。たんげんを おすと、くわしく みられるよ。"],
+ "col.bk":["ひろばの もじ（ひきつぎ）"],
+ "col.bk.make":["ひろばの もじを だす"],
+ "col.bk.hint":["この もじを メモするか、QRコードを 印刷《いんさつ》しておくと、あとで よみこめます。","この もじを メモするか、QRコードを プリントしておくと、あとで よみこめるよ。"],
+ "col.bk.read":["ひろばの もじを いれて よみこむ"],
+ "col.bk.ok":["ひろばの きろくを よみこみました。","ひろばの きろくを よみこんだよ！"]
 };
 /*TX-END*/
 const rbp=s=>{ const Q=window.MH_QUIZ; return Q?Q.plain(s):String(s==null?"":s).replace(/《[^《》]*》/g,""); };   // 読みを除いた本文
@@ -1178,6 +1305,7 @@ function renderHome(){
   app.innerHTML=`<div class="home${easy?" easy":""}">
     ${easy?`<div class="guide">${mbs("n")}<span class="say">${T("home.guide")}</span></div>`:""}
     <button class="hero" id="quick">${easy?"":mbs("n")}${ic("zap")}<span><span class="ht">${T("home.quick")}</span><span class="hn">${T("home.quick.n")}</span></span></button>
+    ${COLOK?colDoor():""}
     <div class="zones" data-n="${zones.length+1}">${zones.map(([k,l])=>`<section class="zone s-${k}"><h2>${subjN(k)}</h2><div class="tiles">${l.map(x=>gameTile(x,b)).join("")}${unitTile(k)}</div></section>`).join("")}
       <section class="zone s-btl"><h2>${ic("swords")}${T("home.battle")}</h2><div class="tiles">${MODES.map(m=>modeTile(m,b)).join("")}</div></section></div>
     ${zones.length?"":`<div class="empty">${T("home.empty")}</div>`}
@@ -1193,6 +1321,7 @@ function renderHome(){
     const pool=GAMES.filter(x=>x.g.includes(g)), x=pool[rnd(pool.length)];
     go(`#play?game=${x.id}&g=${g}&t=60`);
   });
+  const dr=$("#colDoor"); if(dr) dr.onclick=()=>go("#hiroba");
   $("#hJoin2").onclick=()=>go("#join"); $("#hTeach2").onclick=()=>go("#teacher");
   app.querySelectorAll("[data-id]").forEach(e=>e.onclick=()=>{
     const x=GAMES.find(y=>y.id===e.dataset.id);
@@ -1365,12 +1494,14 @@ function finish(){
   all[key]={score:Math.max(prev.score,p.ok),medal:Math.max(prev.medal,medal)};
   let ures=null;
   if(!p.u){ store.set("mh_best",all); refreshMedals(); } else ures=uRecord(p);       // 単元練習は、単元ごとのきろく（u:単元ID）に残す
+  const colHtml=COLOK?colRunPlay(p):"";
   const report=`【${T0("g."+p.x.id+".t")}】${p.g}年 ${p.t}秒｜せいかい${p.ok}問／${total}問（正答率${acc}%）`;   //T
   const repFull=report+missIds(p.missObjs,p.x);          // 課題リンクの結果の末尾に、まちがえた問題のID
   app.innerHTML=`<div class="play"><div class="res">
     ${medRow(medal)}
     <div class="num">${T("r.num",p.ok)}</div>
     <div class="nextm">${medalize(esc(nextMsg))}</div>
+    ${colHtml}
     ${showNew?`<div class="newbest">${T("r.new")}</div>`:""}
     <div class="actions"><button class="btn again" id="again">${ic("rotate-ccw")}${T("r.again")}</button>
       <div class="subs">${p.missObjs.length?`<button class="btn sub" id="redo">${T("r.redo")}</button>`:""}${p.task?"":`<button class="btn sub" onclick="go('#home')">${T("r.other")}</button>`}</div></div>
@@ -1503,20 +1634,214 @@ function renderRecord(msg){
       <div><button class="btn" id="bkMake">${T("rec.bk.make")}</button></div>
       <div id="bkOut" class="hidden"><div class="code" id="bkCode"></div><p class="note">${T("rec.bk.hint")}</p><button class="btn sub" id="bkCopy">${ic("copy")}${T("r.copy")}</button></div>
       <label for="bkIn"><b>${T("rec.bk.read")}</b></label>
-      <input id="bkIn" type="text" maxlength="80" autocomplete="off" autocapitalize="characters" spellcheck="false" aria-describedby="bkMsg">
+      <input id="bkIn" type="text" maxlength="240" autocomplete="off" autocapitalize="characters" spellcheck="false" aria-describedby="bkMsg">
       <div><button class="btn" id="bkGo">${ic("upload")}${T("rec.bk.go")}</button></div>
       <div id="bkMsg" role="status" class="${msg?"okmsg":""}">${msg||""}</div></div>
+    ${COLOK?colBackupHtml():""}
   </div>`;
+  colBackupBind();
   $("#bkMake").onclick=()=>{ $("#bkCode").textContent=bkMake(); $("#bkOut").classList.remove("hidden"); };
   $("#bkCopy").onclick=()=>navigator.clipboard?.writeText($("#bkCode").textContent).then(()=>$("#bkCopy").textContent=T("r.copied"),()=>{});
   $("#bkGo").onclick=()=>{
     const m=$("#bkMsg"), v=$("#bkIn").value.trim();
     if(!v){ m.className="err"; m.textContent=T("rec.bk.empty"); return; }
+    if(/^HR1/i.test(v.replace(/[^0-9A-Za-z]/g,""))){ if(!colImport(v)){ m.className="err"; m.textContent=T("rec.bk.ng"); return; } renderRecord(T("col.bk.ok")); return; }      // ひろばの文字（HR1）も、ここに入れてよい
     const r=bkRead(v); if(!r){ m.className="err"; m.textContent=T("rec.bk.ng"); return; }
     bkApply(r); refreshMedals(); renderRecord(T("rec.bk.ok"));
   };
 }
 
+/* ================= コレクション（ひろば・ずかん・どんぐり）。中身は data/collection.js ================= */
+const COL=window.MH_COL, COLOK=!!COL;
+const COLK="mh_col", COLCFG="mh_colcfg";                  // COLCFG：先生が端末に保存するオン／オフ
+let COLS=null, COLH=false, LESSON=false, QKA=0, HS={sel:null,shop:false,gift:0,cap:0,done:0};
+const colToday=()=>COL.dayNum(new Date());
+function colGet(){ if(!COLS) COLS=COL.clean(store.get(COLK,null),colToday()); return COLS; }
+function colSave(){ if(COLS) store.set(COLK,COLS); }
+const colCfgOn=()=>{ const c=store.get(COLCFG,null); return !(c&&c.on===0); };
+function colSetOn(v){ store.set(COLCFG,{on:v?1:0}); }
+/* オフが勝つ：端末のオフ、またはリンクの col=0 のどちらかでオフ。リンクの col=1 では オンにならない */
+const colMode=()=>(!COLOK||!colCfgOn()||COLH)?"off":"on";
+function colTouch(){ const S=colGet(); COL.sync(S,colToday()); colSave(); return S; }
+const acornSvg=c=>svgU("h-acorn",c);
+const colStageSum=S=>COL.UNIT_IDS.reduce((n,id)=>n+COL.stage(S,id),0);
+const colHave=S=>COL.parts(S).filter(p=>p.have).length;
+/* ホームの入口 */
+function colDoor(){
+  if(colMode()!=="on") return "";
+  const S=colTouch(), nw=colHave(S)>S.vp||colStageSum(S)>S.vz;
+  return `<button class="door" id="colDoor">${acornSvg()}<span class="dt">${T("col.name")}<small>${T("col.door.d",COL.balance(S))}</small></span>${nw?`<span class="new">${T("col.door.new")}</span>`:""}</button>`;
+}
+/* 結果画面のどんぐりの1行。学習の流れを止めない。初日は何も増えなくても出す */
+function colRun(info){
+  if(colMode()==="off") return "";
+  const S=colGet(), today=colToday();
+  const r=COL.recordRun(S,{today,grade:ui.grade|0,units:info.units||[],answered:info.answered|0,correct:info.correct|0,quiz:!!info.quiz});
+  colSave();
+  if(info.quiet||r.blocked) return "";           // 授業モードは記録だけ。日付がもどっているときは何も出さない
+  const ttl=id=>UBY[id]?UBY[id].title:"", L=[], ev=t=>r.events.filter(e=>e.t===t);
+  ev("can").slice(0,2).forEach(e=>L.push(T("col.r.can",ttl(e.id))));
+  ev("master").slice(0,2).forEach(e=>L.push(T("col.r.master",ttl(e.id))));
+  if(ev("found").length) L.push(T("col.r.found"));
+  if(ev("pend").length) L.push(T("col.r.pend"));
+  if(ev("first").length) L.push(T("col.r.first"));
+  if(ev("quiz").length) L.push(T("col.r.quiz"));
+  if(r.newParts.length) L.push(T("col.r.part"));
+  if(r.capFirst){ L.push(T("col.cap")); S.day.shown=1; colSave(); }
+  if(!L.length&&!r.paid&&S.d0===today) L.push(T("col.r.day1"));
+  if(!L.length&&!r.paid) return "";
+  return `<div class="acl" role="status">${acornSvg()}<div class="acb">${r.paid>0?`<b>${T("col.r.get",r.paid)}</b>`:""}${L.map(l=>`<div>${esc(l)}</div>`).join("")}</div><button type="button" class="btn sub s" onclick="go('#hiroba')">${T("col.r.go")}</button></div>`;
+}
+function colRunPlay(p){      // finish() から：単元ごとの正解数と、ゲーム全体の正解数
+  const units=p.u&&p.uSt?Object.keys(p.uSt).map(id=>({id,n:p.uSt[id].n,o:p.uSt[id].o})):[];
+  return colRun({units,answered:p.ok+p.ng,correct:p.ok,quiet:!!p.task});
+}
+
+/* ----- じぶんの ひろば ----- */
+function renderHiroba(){
+  if(colMode()!=="on") return go("#home");
+  setLG(ui.grade); HS={sel:null,shop:false,gift:0,cap:0,done:0};
+  app.innerHTML=`<div class="hb"></div>`;
+  loadScript("data/hiroba-art.js",()=>!!document.getElementById("hiroba-art")).then(()=>{ if(params().path==="hiroba") hbDraw(true); },()=>{ app.innerHTML=`<div class="q">${T("col.err")}</div>`; });
+}
+function hbDraw(first){
+  const S=colTouch(), today=colToday(), P=COL.parts(S), pm={}; P.forEach(p=>{ pm[p.id]=p; });
+  if(first){
+    HS.gift=COL.claimGift(S,today);
+    if(S.day.cap&&!S.day.shown){ HS.cap=1; S.day.shown=1; }
+    S.vp=colHave(S); S.vz=colStageSum(S); colSave();
+  }
+  const sel=HS.sel, bal=COL.balance(S), D={}; COL.DECOR.forEach(d=>{ D[d.id]=d; });
+  const slot=(art,key,on)=>`<div class="fs ${on?"on":"off"}"><div class="fsb">${on?svgU(art):""}</div><span class="cap">${on?T("col.p."+key):"？"}</span></div>`;
+  const lib=pm.lib.have?pm.lib:pm.book1.have?pm.book1:null;
+  const fz=`<div class="fs on"><div class="fsb">${svgU("h-school")}</div><span class="cap">${T("col.p.school")}</span></div>`
+    +slot(lib?lib.art:"",lib?lib.id:"book1",!!lib)
+    +["slide","swing","bar","jungle","flagjp","flagus"].map(id=>slot(pm[id].art,id,pm[id].have)).join("");
+  const nx=[...new Set(P.filter(p=>p.next).map(p=>p.art))];
+  const cells=[]; for(let c=1;c<=COL.CELLS;c++){
+    const id=COL.cellOf(S,c);
+    cells.push(`<button type="button" class="hc${id?" on":""}${id&&sel===id?" sel":""}" data-c="${c}" aria-label="${id?T("col.d."+id):T("col.cell",c)}"${id&&sel===id?' aria-pressed="true"':""}>${id?svgU(D[id].art):""}</button>`);
+  }
+  const bar=sel?`<div class="hbar" role="status"><span>${T(S.pl[sel]?"col.grid.move":"col.grid.pick")}</span>${S.pl[sel]?`<button type="button" class="btn sub s" id="hbStore">${T("col.store")}</button>`:""}<button type="button" class="btn sub s" id="hbCancel">${T("col.cancel")}</button></div>`:"";
+  const shop=COL.DECOR.map(d=>{ const own=S.own.includes(d.id), placed=d.id in S.pl;
+    const act=!own?`<button type="button" class="btn s" data-buy="${d.id}"${bal<d.price?" disabled":""}>${acornSvg("ac")}${T("col.price",d.price)}</button>`
+      :placed?`<span class="note">${T("col.placed")}</span>`:`<button type="button" class="btn s" data-put="${d.id}">${T("col.put")}</button>`;
+    return `<div class="row">${svgU(d.art)}<span class="nm">${T("col.d."+d.id)}</span>${act}</div>`; }).join("");
+  const dd=S.done?COL.dayDate(S.done):null;
+  const done=S.done?`<div class="hmsg done">${HS.done?`<b>${T("col.done")}</b><br>`:""}${T("col.done.on",dd.getUTCMonth()+1,dd.getUTCDate())}<br>${T("col.done.n")}
+    <div class="pills" style="margin-top:8px"><b class="pl">${T("col.theme")}</b>${[0,1,2].map(i=>`<button type="button" class="pill small${S.theme===i?" on":""}" data-th="${i}" aria-pressed="${S.theme===i}">${T("col.theme."+i)}</button>`).join("")}</div></div>`:"";
+  const root=app.querySelector(".hb"); if(!root) return;
+  root.innerHTML=`<div class="topbar"><button class="back" onclick="go('#home')">${BK()}</button><b>${T("col.name")}</b><span class="acn" aria-label="${esc(T("col.door.d",bal))}">${acornSvg()}<b>${bal}</b></span></div>
+    ${HS.gift?`<div class="hmsg">${acornSvg("ac")} ${T("col.gift")}</div>`:""}
+    ${HS.cap?`<div class="hmsg">${T("col.cap")}</div>`:""}
+    ${done}
+    <div class="hscene t${S.theme}">
+      <div class="fz">${fz}</div>
+      ${nx.length?`<div class="nx"><b>${T("col.next")}</b><span class="nxs">${nx.map(a=>svgU(a,"sil")).join("")}</span><small>${T("col.next.how")}</small></div>`:""}
+      <div class="gridh" role="group" aria-label="${esc(T("col.grid"))}">${cells.join("")}</div>
+    </div>
+    ${bar}
+    <div class="hops"><button type="button" class="btn" id="hbShop" aria-expanded="${HS.shop}">${acornSvg("ac")}${T("col.shop")}</button><button type="button" class="btn" id="hbZk">${ic("book-open")}${T("col.zukan")}</button></div>
+    <section class="shop${HS.shop?"":" hidden"}" id="shopBox"><h3>${T("col.shop")}</h3>${shop}</section>
+    <p class="note">${T("col.local")}</p>`;
+  root.querySelectorAll("[data-c]").forEach(b=>b.onclick=()=>hbCell(+b.dataset.c));
+  root.querySelectorAll("[data-buy]").forEach(b=>b.onclick=()=>{ if(COL.buy(S,b.dataset.buy)){ HS.sel=b.dataset.buy; HS.shop=false; sfx("ok"); colSave(); hbDraw(false); } });
+  root.querySelectorAll("[data-put]").forEach(b=>b.onclick=()=>{ HS.sel=b.dataset.put; HS.shop=false; hbDraw(false); });
+  root.querySelectorAll("[data-th]").forEach(b=>b.onclick=()=>{ S.theme=+b.dataset.th; colSave(); hbDraw(false); });
+  const q=id=>root.querySelector(id);
+  q("#hbShop").onclick=()=>{ HS.shop=!HS.shop; hbDraw(false); };
+  q("#hbZk").onclick=()=>go("#zukan");
+  if(q("#hbStore")) q("#hbStore").onclick=()=>{ COL.unplace(S,HS.sel); HS.sel=null; colSave(); hbDraw(false); };
+  if(q("#hbCancel")) q("#hbCancel").onclick=()=>{ HS.sel=null; hbDraw(false); };
+}
+function hbCell(c){
+  const S=colGet(), id=COL.cellOf(S,c);
+  if(HS.sel){
+    if(id===HS.sel) HS.sel=null;
+    else if(id) HS.sel=id;
+    else { COL.place(S,HS.sel,c); HS.sel=null; if(COL.checkDone(S,colToday())){ HS.done=1; sfx("medal"); party(); } colSave(); }
+  } else if(id) HS.sel=id;
+  hbDraw(false);
+  const f=app.querySelector(`[data-c="${c}"]`); if(f) f.focus();
+}
+
+/* ----- たんげん ずかん ----- */
+function renderZukan(){
+  if(colMode()!=="on"||!UNITS_OK) return go("#home");
+  setLG(ui.grade);
+  const S=colTouch(), g=ui.grade|0, sum=COL.summary(S);
+  S.vz=colStageSum(S); colSave();
+  const stk=u=>{ const st=COL.stage(S,u.id), pend=COL.pending(S,u.id), k=SJ[u.subj];
+    const mark=st===3?svgU("d-star","skstar"):st===2?ic("check"):pend?ic("moon"):"";
+    return `<button type="button" class="sk s${st}${pend?" pend":""}" data-id="${u.id}" style="--sc:var(--${k});--sb:${SUBJ[k].bg}" aria-label="${esc(rbp(u.title))}：${T("col.s."+st)}"><span class="skm">${mark}</span><span class="skt">${esc(u.title)}</span></button>`; };
+  const sec=[["sansu","math"],["kokugo","jp"],["shakai","soc"],["eigo","eng"]].map(([sj,k])=>{
+    const us=UREADY.filter(u=>u.subj===sj); if(!us.length) return "";
+    const gs=[...new Set(us.map(u=>u.g))].sort((a,b)=>a-b), has=g&&gs.includes(g);
+    const page=(gr,open)=>{ const l=us.filter(u=>u.g===gr), n=l.filter(u=>COL.stage(S,u.id)>=2).length;
+      return `<details class="zkp"${open?" open":""}><summary>${T("col.zk.page",gr)}<span class="zkn">${T("col.zk.n",n,l.length)}</span></summary><div class="sks">${l.map(stk).join("")}</div></details>`; };
+    const rest=gs.filter(x=>x!==g);
+    const body=has?page(g,true)+(rest.length?`<details class="zko"><summary>${T("col.zk.other")}</summary>${rest.map(x=>page(x,false)).join("")}</details>`:""):gs.map((x,i)=>page(x,i===0)).join("");
+    return `<section class="zks zk-${k}"><h2>${subjN(k)}</h2>${body}</section>`;
+  }).join("");
+  app.innerHTML=`<div class="zk"><div class="topbar"><button class="back" onclick="go('#hiroba')">${BK()}</button><b>${T("col.zukan.t")}</b><span class="note">${T("col.zk.all",sum.can,sum.total)}</span></div>
+    <p class="note">${T("col.zk.note")}</p>${sec}
+    <div class="zkmsg" id="zkmsg" role="status" aria-live="polite"></div>
+    <p class="note">${T("col.local")}</p></div>`;
+  app.querySelectorAll(".sk").forEach(b=>b.onclick=()=>{
+    const u=UBY[b.dataset.id], st=COL.stage(S,u.id), pend=COL.pending(S,u.id);
+    const t=st===0?T("col.zk.hint0",u.title):st===1?T(pend?"col.zk.hint1":"col.zk.hint1b"):st===2?T("col.zk.hint2"):T("col.zk.hint3");
+    const box=$("#zkmsg"); box.innerHTML=`<b>${esc(u.title)}</b><span>${esc(T("col.s."+st))}</span><p>${esc(t)}</p><button type="button" class="btn s" id="zkgo">${T("col.zk.go")}</button>`;
+    $("#zkgo").onclick=()=>go(uHash({ids:[u.id],n:20,t:20,seed:uSeed(),mix:true,choice:null}));
+    box.scrollIntoView({block:"nearest"});
+  });
+}
+
+/* ----- ひろばの バックアップ（きろく画面）。QR は 同梱の qrcode-generator ----- */
+function colBackupHtml(){
+  if(colMode()!=="on") return "";
+  return `<div class="bak"><h3>${ic("save")} ${T("col.bk")}</h3>
+    <p class="note" style="margin:0">${T("col.local")}</p>
+    <div><button class="btn" id="hrMake">${T("col.bk.make")}</button></div>
+    <div id="hrOut" class="hidden"><div class="code" id="hrCode"></div><div id="hrQr" class="hqr"></div><p class="note">${T("col.bk.hint")}</p><button class="btn sub" id="hrCopy">${ic("copy")}${T("r.copy")}</button></div>
+    <label for="hrIn"><b>${T("col.bk.read")}</b></label>
+    <input id="hrIn" type="text" maxlength="260" autocomplete="off" autocapitalize="characters" spellcheck="false" aria-describedby="hrMsg">
+    <div><button class="btn" id="hrGo">${ic("upload")}${T("rec.bk.go")}</button></div>
+    <div id="hrMsg" role="status"></div></div>`;
+}
+function hrQr(box,text){
+  loadScript("vendor/qrcode-generator-2.0.4.js",()=>typeof qrcode==="function").then(()=>{
+    const q=qrcode(0,"L"); q.addData(text.replace(/[^0-9A-Z]/g,"")); q.make(); box.innerHTML=q.createSvgTag({cellSize:4,margin:4,scalable:true});
+  }).catch(()=>{});
+}
+function colImport(v){        // 形式チェックを通った物だけ反映。記録は減らない合成
+  const r=colMode()==="on"?COL.hrParse(v):null; if(!r) return false;
+  const S=colGet(); COL.hrMerge(S,r,colToday()); colSave(); return true;
+}
+function colBackupBind(){
+  const mk=$("#hrMake"); if(!mk) return;
+  mk.onclick=()=>{ const s=COL.hrMake(colTouch()); $("#hrCode").textContent=s; $("#hrOut").classList.remove("hidden"); hrQr($("#hrQr"),s); };
+  $("#hrCopy").onclick=()=>navigator.clipboard?.writeText($("#hrCode").textContent).then(()=>$("#hrCopy").textContent=T("r.copied"),()=>{});
+  $("#hrGo").onclick=()=>{
+    const m=$("#hrMsg"), v=$("#hrIn").value.trim();
+    if(!v){ m.className="err"; m.textContent=T("rec.bk.empty"); return; }
+    if(!colImport(v)){ m.className="err"; m.textContent=T("rec.bk.ng"); return; }
+    m.className="okmsg"; m.textContent=T("col.bk.ok");
+  };
+}
+/*T-BEGIN*/
+function colTeacherHtml(){
+  if(!COLOK) return "";
+  const on=colCfgOn();
+  return `<div class="form" style="margin-top:16px">
+      <b style="font-size:18px">⑥ ひろば（どんぐり・ずかん）の せってい</b>
+      <span class="prep"><b>準備：なし</b>（この端末の中だけに保存されます）</span>
+      <span class="note">勉強したあとが形になる「じぶんの ひろば」です。ランキング・くじ・課金・広告はありません。どんぐりは 1日 20こまでで、授業モード（課題リンク）では画面に出ません。</span>
+      <label style="display:flex;gap:10px;align-items:center;font-size:16px"><input type="checkbox" id="colOn"${on?" checked":""} style="width:24px;height:24px"> この端末で ひろば・ずかん・どんぐりを つかう</label>
+      <span class="note">オフにすると、ホーム・結果画面・きろく画面から ひろばが消えます（学習のきろくは今まで通り）。課題リンクの末尾に <b>&amp;col=0</b> を付けると、そのリンクだけ ひろばを出しません。<b>オフが優先</b>なので、オフの端末では、リンクに col=1 を付けてもオンになりません。</span>
+      <span class="note">端末が変わると、ひろばは新しく始まります（引きつぎは「きろく」画面のバックアップ文字・QR。ひろばは原則その端末のものです）。</span>
+    </div>`;
+}
+/*T-END*/
 /*T-BEGIN*/
 function renderTeacher(q){
   setLG(0); QSETS=null; const qsets=qsGet();
@@ -1582,11 +1907,13 @@ function renderTeacher(q){
       <button class="btn" id="mk">リンクを作る</button>
       <div class="out hidden" id="lo"></div>
     </div>
+    ${colTeacherHtml()}
     <div class="banner" style="margin-top:16px"><b>次の段階で追加する予定：</b>単元ごとのつまずき分析、学校のアカウントでのログイン。</div>`;
   const fillG=(sel,gsel)=>{ const v=$(sel).value;
     if(v.startsWith("set:")){ $(gsel).innerHTML=[1,2,3,4,5,6].map(n=>`<option value="${n}">${n}年</option>`).join(""); const st=qsFind(v.slice(4)); $(gsel).value=String(st&&st.g?st.g:3); return; }
     const x=GAMES.find(y=>y.id===v); $(gsel).innerHTML=x.g.map(n=>`<option value="${n}">${n}年</option>`).join(""); };
   $("#mkq").onclick=()=>go("#make");
+  const co=$("#colOn"); if(co) co.onchange=()=>colSetOn(co.checked);
   $("#mku").onclick=()=>go("#units");
   const setRule=()=>{ $("#nr").value=defaultRule(+$("#ngr").value); };
   $("#ng").onchange=()=>{ fillG("#ng","#ngr"); setRule(); }; fillG("#ng","#ngr"); setRule();
@@ -3082,7 +3409,7 @@ function qzKidState(s){
 }
 function qzKidPress(i){
   const K=QK; if(!K||K.Z.phase!=="q"||K.chosen>=0) return;
-  K.chosen=i; sfx("ok");
+  K.chosen=i; QKA++; sfx("ok");
   document.querySelectorAll(".qzc").forEach(b=>{ b.classList.add("locked"); if(+b.dataset.i===i) b.classList.add("mine"); else b.classList.add("dim"); });
   const fb=document.getElementById("fb"); if(fb) fb.textContent=T("z.sent");
   const idx=K.Z.idx;
@@ -3129,6 +3456,7 @@ function qzKidEnd(s,Z,me){
   stopTimer();
   if(QK&&QK.key==="end") return;
   QK={key:"end",ended:true};
+  const colHtml=COLOK?colRun({units:[],answered:QKA,correct:me.ok,quiz:true}):"";
   const ps=sorted(s.players), place=ps.findIndex(p=>p.pid===NET.pid)+1, easy=Z.easy||ruleOf(s.rule)==="easy";
   const medal=place===1?3:place===2?2:place===3?1:0;
   if(easy||place<=3) sfx("medal"); if(easy||place===1) party();
@@ -3136,7 +3464,7 @@ function qzKidEnd(s,Z,me){
   app.replaceChildren(h("div",{class:"play"},h("div",{class:"res"},
     h("div",{innerHTML:medRow(easy?3:medal)}),
     h("div",{class:"num",text:easy?T("z.all",Z.all):T("b.placeof",ps.length,place)}),
-    easy?null:h("div",{class:"nextm",text:T("z.total",me.v)}),box,
+    easy?null:h("div",{class:"nextm",text:T("z.total",me.v)}),box,h("div",{innerHTML:colHtml}),
     h("div",{class:"actions"},h("button",{type:"button",class:"btn again",text:T("n.home"),onclick:()=>go("#home")})),
     h("div",{class:"stats"},h("span",null,h("b",{text:T("z.okn",me.ok,Z.n)})))),
     h("div",{innerHTML:privacy()})));
@@ -3570,16 +3898,16 @@ function uKeydown(e){
 
 /* ================= ルーター ================= */
 function route(){
-  fgFromHash();
+  fgFromHash(); COLH=/[?&#]col=0(?![0-9])/.test(location.hash); COLS=null; QKA=0;
   if(qzFlush){ qzFlush(); qzFlush=null; }
   stopTimer(); P=null; M=null; QK=null; QS=null; QH=null; ckStop(); prStop(); wakeOff();
   if(ES){ ES.close(); ES=null; }
   const {path:path0,q}=params(), path=location.hash.startsWith("#q=")?"qlink":location.hash.startsWith("#u=")?"ulink":path0;
   setLG(path==="home"||path==="modesetup"||path==="join"||path==="record"?ui.grade:0);
-  document.body.dataset.v=["check","play","setup","modesetup","mode","join","lobby","host","teacher","record","make","qlink","units","ulink"].includes(path)?path:"home";
+  document.body.dataset.v=["check","play","setup","modesetup","mode","join","lobby","host","teacher","record","make","qlink","units","ulink","hiroba","zukan"].includes(path)?path:"home";
   // 課題リンク（task=1）で開いたゲームでは、ほかの画面への入口を隠す（授業モード）
   const lesson=(path==="play"||path==="mode")&&q.get("task")==="1";
-  document.body.classList.toggle("lesson",lesson);
+  LESSON=lesson; document.body.classList.toggle("lesson",lesson);
   const lg=$("#logo"); if(lg) lg.disabled=lesson;          // 授業モードではロゴからホームへ行けない
   window.scrollTo(0,0);
   if(!DATA_OK&&path!=="check"&&path!=="teacher"&&path!=="make"&&path!=="qlink"){
@@ -3599,6 +3927,8 @@ function route(){
   else if(path==="units") renderUnits(q);
   else if(path==="ulink") renderUnitLink(location.hash);
   else if(path==="record") renderRecord();
+  else if(path==="hiroba"&&COLOK) renderHiroba();
+  else if(path==="zukan"&&COLOK) renderZukan();
   else renderHome();
 }
 window.addEventListener("hashchange",route);
