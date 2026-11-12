@@ -299,7 +299,7 @@ t("バックアップ：たんけんメモも往復する。メモが無けれ�
   const S = C.fresh(D); S.u["m3-amari"] = [2, 0, D]; S.tk.n = 3;
   const plain = C.hrMake(S); S.mo = ["school", "clock"]; S.mu = ["m3-amari", C.UNIT_IDS[115]];
   const withMemo = C.hrMake(S), r = C.hrParse(withMemo);
-  assert.strictEqual(withMemo.replace(/-/g, "").length - plain.replace(/-/g, "").length, 28);
+  assert.strictEqual(withMemo.replace(/-/g, "").length - plain.replace(/-/g, "").length, 32);
   assert.deepStrictEqual(r.mo.slice().sort(), ["clock", "school"]); assert.deepStrictEqual(r.mu.slice().sort(), ["m3-amari", C.UNIT_IDS[115]].sort());
   const L = C.fresh(D + 3); C.hrMerge(L, r, D + 3); assert.strictEqual(L.mo.length, 2); assert.strictEqual(L.mu.length, 2); assert.strictEqual(L.tk.n, 0);
   C.hrMerge(L, r, D + 3); assert.strictEqual(L.mo.length, 2);                                // くり返しても増えない

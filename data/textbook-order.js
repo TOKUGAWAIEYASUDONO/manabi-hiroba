@@ -10,15 +10,15 @@ var TEXTBOOK_ORDER = {
     tosho: { name: "東京書籍", book: "新編 新しい算数", src: "https://ten.tokyo-shoseki.co.jp/text/shou/sansu/keikaku/ （略案PDF https://ten.tokyo-shoseki.co.jp/text/shou/sansu/data/sansu_keikaku_ryakuan_N_20240131.pdf のNに学年）", note: "1〜6年を確認。学期は3学期制の区分（略案）。", g: {
       1: [
         { t: "なかまづくりとかず", u: ["m1-kazoeru", "m1-kazu-kurabe", "m1-ikutsu-to-ikutsu"], term: "1学期" },
-        { t: "なんばんめ", u: [], term: "1学期" },
+        { t: "なんばんめ", u: ["m1-nanbanme"], term: "1学期" },
         { t: "あわせていくつ ふえるといくつ", u: ["m1-add10"], term: "1学期" },
         { t: "のこりはいくつ ちがいはいくつ", u: ["m1-sub10"], term: "1学期" },
-        { t: "どちらがながい", u: [], term: "1学期" },
+        { t: "どちらがながい", u: ["m1-nagasa-kurabe"], term: "1学期" },
         { t: "わかりやすくせいりしよう", u: [], term: "2学期" },
         { t: "10よりおおきいかず", u: ["m1-juu-to-ichi", "m1-narabi"], term: "2学期" },
         { t: "なんじなんじはん", u: ["m1-tokei"], term: "2学期" },
         { t: "3つのかずのけいさん", u: ["m1-add3"], term: "2学期" },
-        { t: "どちらがおおい", u: [], term: "2学期" },
+        { t: "どちらがおおい", u: ["m1-kasa-kurabe"], term: "2学期" },
         { t: "たしざん", u: ["m1-add-kuriage"], term: "2学期" },
         { t: "かたちあそび", u: ["m1-katachi"], term: "2学期" },
         { t: "ひきざん", u: ["m1-sub-kurisage"], term: "2学期" },
@@ -36,7 +36,7 @@ var TEXTBOOK_ORDER = {
         { t: "3けたの数", u: ["m2-keta3", "m2-keta3-kurabe"], term: "1学期" },
         { t: "水のかさのたんい", u: ["m2-kasa"], term: "1学期" },
         { t: "時こくと時間", u: ["m2-jikan"], term: "1学期" },
-        { t: "計算のくふう", u: [], term: "2学期" },
+        { t: "計算のくふう", u: ["m2-keisan-kufu"], term: "2学期" },
         { t: "たし算とひき算のひっ算", u: ["m2-add-hissan", "m2-sub-hissan"], term: "2学期" },
         { t: "長方形と正方形", u: ["m2-zukei"], term: "2学期" },
         { t: "かけ算(1)", u: ["m2-kuku-low", "m2-kake-bunsho"], term: "2学期" },
@@ -49,16 +49,16 @@ var TEXTBOOK_ORDER = {
       ],
       3: [
         { t: "かけ算", u: ["m3-kake-kimari"], term: "1学期" },
-        { t: "時こくと時間のもとめ方", u: [], term: "1学期" },
+        { t: "時こくと時間のもとめ方", u: ["m3-jikan-keisan"], term: "1学期" },
         { t: "わり算", u: ["m3-wari99", "m3-wari-bunsho"], term: "1学期" },
         { t: "たし算とひき算の筆算", u: ["m3-add-hissan", "m3-sub-hissan"], term: "1学期" },
         { t: "長いものの長さのはかり方と表し方", u: ["m3-nagai"], term: "1学期" },
         { t: "ぼうグラフと表", u: ["m3-hyo"], term: "1学期" },
-        { t: "暗算", u: [], term: "1学期" },
+        { t: "暗算", u: ["m3-anzan"], term: "1学期" },
         { t: "あまりのあるわり算", u: ["m3-amari"], term: "2学期" },
         { t: "大きい数のしくみ", u: ["m3-man"], term: "2学期" },
         { t: "かけ算の筆算(1)", u: ["m3-kake-hissan1"], term: "2学期" },
-        { t: "大きい数のわり算、分数とわり算", u: [], term: "2学期" },
+        { t: "大きい数のわり算、分数とわり算", u: ["m3-ookii-wari"], term: "2学期" },
         { t: "円と球", u: ["m3-en"], term: "2学期" },
         { t: "小数", u: ["m3-shosu"], term: "2学期" },
         { t: "重さのたんいとはかり方", u: ["m3-omosa"], term: "2学期" },
@@ -88,7 +88,7 @@ var TEXTBOOK_ORDER = {
         { t: "直方体と立方体", u: ["m4-chokuhoutai"], term: "3学期" }
       ],
       5: [
-        { t: "整数と小数", u: [], term: "1学期" },
+        { t: "整数と小数", u: ["m5-seisu-shosu"], term: "1学期" },
         { t: "直方体や立方体の体積", u: ["m5-taiseki"], term: "1学期" },
         { t: "比例", u: [], term: "1学期" },
         { t: "小数のかけ算", u: ["m5-shosu-kake"], term: "1学期" },
@@ -117,7 +117,7 @@ var TEXTBOOK_ORDER = {
         { t: "データの調べ方", u: ["m6-daihyou"], term: "2学期" },
         { t: "円の面積", u: ["m6-en-menseki"], term: "2学期" },
         { t: "角柱と円柱の体積", u: ["m6-chuutai"], term: "2学期" },
-        { t: "およその面積と体積", u: [], term: "2学期" },
+        { t: "およその面積と体積", u: ["m6-oyoso-menseki"], term: "2学期" },
         { t: "比例と反比例", u: ["m6-hirei"], term: "2学期" },
         { t: "並べ方と組み合わせ方", u: ["m6-baai"], term: "2学期" },
         { t: "算数のしあげ", u: [], term: "3学期" }
@@ -183,7 +183,7 @@ var TEXTBOOK_ORDER = {
         { t: "直方体と立方体", u: ["m4-chokuhoutai"] }
       ],
       5: [
-        { t: "整数と小数", u: [] },
+        { t: "整数と小数", u: ["m5-seisu-shosu"] },
         { t: "体積", u: ["m5-taiseki"] },
         { t: "比例", u: [] },
         { t: "小数のかけ算", u: ["m5-shosu-kake"] },
@@ -215,14 +215,14 @@ var TEXTBOOK_ORDER = {
         { t: "比とその利用", u: ["m6-hi-kantan", "m6-hi-tokku"] },
         { t: "図形の拡大と縮小", u: ["m6-kakudai"] },
         { t: "比例と反比例", u: ["m6-hirei"] },
-        { t: "およその形と大きさ", u: [] }
+        { t: "およその形と大きさ", u: ["m6-oyoso-menseki"] }
       ]
     } },
     gakuto: { name: "学校図書", book: "みんなと学ぶ 小学校算数", src: "https://r6-sho.gakuto-plus.jp/wp-content/uploads/sansu_separate.pdf （内容解説資料2 単元一覧表・令和6年度用）", note: "1〜6年を確認。学期は単元一覧表の区分。", g: {
       1: [
         { t: "10までのかず", u: ["m1-kazoeru", "m1-kazu-kurabe"], term: "1学期" },
         { t: "いくつといくつ", u: ["m1-ikutsu-to-ikutsu"], term: "1学期" },
-        { t: "なんばんめかな", u: [], term: "1学期" },
+        { t: "なんばんめかな", u: ["m1-nanbanme"], term: "1学期" },
         { t: "あわせていくつ ふえるといくつ", u: ["m1-add10"], term: "1学期" },
         { t: "のこりはいくつ ちがいはいくつ", u: ["m1-sub10"], term: "1学期" },
         { t: "いくつあるかな", u: [], term: "2学期" },
@@ -310,7 +310,7 @@ var TEXTBOOK_ORDER = {
         { t: "4年のまとめ", u: [], term: "3学期" }
       ],
       5: [
-        { t: "小数と整数", u: [], term: "1学期" },
+        { t: "小数と整数", u: ["m5-seisu-shosu"], term: "1学期" },
         { t: "合同な図形", u: ["m5-goudou"], term: "1学期" },
         { t: "比例", u: [], term: "1学期" },
         { t: "平均", u: ["m5-heikin"], term: "1学期" },
@@ -353,7 +353,7 @@ var TEXTBOOK_ORDER = {
     kyoiku: { name: "教育出版", book: "小学算数", src: "https://www.kyoiku-shuppan.co.jp/textbook/shou/sansu/files/r6sansu_haitouhyou-tangakunen_2404.pdf （令和6年度版 単元配当表・全学年）", note: "1〜6年を確認。学期は単元配当表の月の区分から読み取り。", g: {
       1: [
         { t: "いくつかな", u: ["m1-kazoeru", "m1-kazu-kurabe"], term: "1学期" },
-        { t: "なんばんめ", u: [], term: "1学期" },
+        { t: "なんばんめ", u: ["m1-nanbanme"], term: "1学期" },
         { t: "いまなんじ", u: ["m1-tokei"], term: "1学期" },
         { t: "いくつといくつ", u: ["m1-ikutsu-to-ikutsu"], term: "1学期" },
         { t: "ぜんぶでいくつ", u: ["m1-add10"], term: "1学期" },
@@ -430,7 +430,7 @@ var TEXTBOOK_ORDER = {
         { t: "分数の大きさとたし算、ひき算", u: ["m4-bunsu-kawaru", "m4-bunsu-mixed"], term: "3学期" }
       ],
       5: [
-        { t: "整数と小数", u: [], term: "1学期" },
+        { t: "整数と小数", u: ["m5-seisu-shosu"], term: "1学期" },
         { t: "体積", u: ["m5-taiseki"], term: "1学期" },
         { t: "2つの量の変わり方", u: [], term: "1学期" },
         { t: "小数のかけ算", u: ["m5-shosu-kake"], term: "1学期" },
@@ -466,14 +466,14 @@ var TEXTBOOK_ORDER = {
       1: [
         { t: "かずや かたちで たのしく", u: [], term: "4月中旬" },
         { t: "10までの かず", u: ["m1-kazoeru", "m1-kazu-kurabe"], term: "4月下旬〜5月中旬" },
-        { t: "なんばんめ", u: [], term: "5月中旬" },
+        { t: "なんばんめ", u: ["m1-nanbanme"], term: "5月中旬" },
         { t: "いくつと いくつ", u: ["m1-ikutsu-to-ikutsu"], term: "5月下旬" },
         { t: "あわせて いくつと ふえると いくつ", u: ["m1-add10"], term: "6月上旬〜6月中旬" },
         { t: "のこりは いくつと ちがいは いくつ", u: ["m1-sub10"], term: "6月下旬〜7月上旬" },
         { t: "かずを せいりしよう", u: [], term: "7月上旬" },
         { t: "10より おおきい かず", u: ["m1-juu-to-ichi", "m1-narabi"], term: "9月上旬〜9月中旬" },
         { t: "なんじ なんじはん", u: ["m1-tokei"], term: "9月中旬" },
-        { t: "どちらが ながい", u: [], term: "9月下旬" },
+        { t: "どちらが ながい", u: ["m1-nagasa-kurabe"], term: "9月下旬" },
         { t: "ふえたり へったり", u: [], term: "9月下旬〜10月上旬" },
         { t: "たしざん", u: ["m1-add-kuriage"], term: "10月中旬〜10月下旬" },
         { t: "かたちあそび", u: ["m1-katachi"], term: "10月下旬〜11月上旬" },
@@ -508,7 +508,7 @@ var TEXTBOOK_ORDER = {
       3: [
         { t: "かけ算", u: ["m3-kake-kimari"], term: "4月中旬〜4月下旬" },
         { t: "わり算", u: ["m3-wari99", "m3-wari-bunsho"], term: "4月下旬〜5月中旬" },
-        { t: "時間の計算と短い時間", u: [], term: "5月中旬" },
+        { t: "時間の計算と短い時間", u: ["m3-jikan-keisan"], term: "5月中旬" },
         { t: "たし算とひき算", u: ["m3-add-hissan", "m3-sub-hissan"], term: "5月下旬〜6月上旬" },
         { t: "ぼうグラフ", u: ["m3-hyo"], term: "6月中旬〜6月下旬" },
         { t: "あまりのあるわり算", u: ["m3-amari"], term: "7月上旬〜7月中旬" },
@@ -540,12 +540,12 @@ var TEXTBOOK_ORDER = {
         { t: "面積", u: ["m4-menseki", "m4-menseki-tan"], term: "11月上旬〜11月下旬" },
         { t: "分数", u: ["m4-bunsu-kawaru", "m4-bunsu-mixed"], term: "11月下旬〜12月上旬" },
         { t: "変わり方", u: ["m4-henka"], term: "1月中旬" },
-        { t: "計算の見積もり", u: [], term: "1月中旬" },
+        { t: "計算の見積もり", u: ["m4-wari-mitsumori"], term: "1月中旬" },
         { t: "小数のかけ算とわり算", u: ["m4-shosu-kake", "m4-shosu-wari"], term: "1月下旬〜2月中旬" },
         { t: "直方体と立方体", u: ["m4-chokuhoutai"], term: "2月中旬〜3月上旬" }
       ],
       5: [
-        { t: "整数と小数のしくみ", u: [], term: "4月中旬" },
+        { t: "整数と小数のしくみ", u: ["m5-seisu-shosu"], term: "4月中旬" },
         { t: "体積", u: ["m5-taiseki"], term: "4月中旬〜4月下旬" },
         { t: "2つの量の変わり方", u: [], term: "5月上旬〜5月中旬" },
         { t: "小数のかけ算", u: ["m5-shosu-kake"], term: "5月中旬〜5月下旬" },
@@ -576,7 +576,7 @@ var TEXTBOOK_ORDER = {
         { t: "場合の数", u: ["m6-baai"], term: "9月下旬〜10月上旬" },
         { t: "比", u: ["m6-hi-kantan", "m6-hi-tokku"], term: "10月中旬〜10月下旬" },
         { t: "拡大図と縮図", u: ["m6-kakudai"], term: "10月下旬〜11月上旬" },
-        { t: "およその面積と体積", u: [], term: "11月上旬" },
+        { t: "およその面積と体積", u: ["m6-oyoso-menseki"], term: "11月上旬" },
         { t: "比例と反比例", u: ["m6-hirei"], term: "11月中旬〜12月上旬" }
       ]
     } },
@@ -584,7 +584,7 @@ var TEXTBOOK_ORDER = {
       1: [
         { t: "なかよし", u: [], term: "1学期" },
         { t: "10までの かず", u: ["m1-kazoeru", "m1-kazu-kurabe"], term: "1学期" },
-        { t: "なんばんめ", u: [], term: "1学期" },
+        { t: "なんばんめ", u: ["m1-nanbanme"], term: "1学期" },
         { t: "いくつと いくつ", u: ["m1-ikutsu-to-ikutsu"], term: "1学期" },
         { t: "あわせて いくつ ふえると いくつ", u: ["m1-add10"], term: "1学期" },
         { t: "のこりは いくつ ちがいは いくつ", u: ["m1-sub10"], term: "1学期" },
@@ -593,11 +593,11 @@ var TEXTBOOK_ORDER = {
         { t: "なんじ なんじはん", u: ["m1-tokei"], term: "2学期" },
         { t: "たしざんカード ひきざんカード", u: [], term: "2学期" },
         { t: "3つの かずの けいさん", u: ["m1-add3"], term: "2学期" },
-        { t: "ながさくらべ", u: [], term: "2学期" },
+        { t: "ながさくらべ", u: ["m1-nagasa-kurabe"], term: "2学期" },
         { t: "たしざん", u: ["m1-add-kuriage"], term: "2学期" },
         { t: "ひろさくらべ", u: [], term: "2学期" },
         { t: "ひきざん", u: ["m1-sub-kurisage"], term: "2学期" },
-        { t: "かさくらべ", u: [], term: "2学期" },
+        { t: "かさくらべ", u: ["m1-kasa-kurabe"], term: "2学期" },
         { t: "いろいろな かたち", u: ["m1-katachi"], term: "2学期" },
         { t: "大きな かず", u: ["m1-juu-to-ichi", "m1-add-2keta"], term: "3学期" },
         { t: "なんじなんぷん", u: ["m1-tokei-fun"], term: "3学期" },
@@ -661,7 +661,7 @@ var TEXTBOOK_ORDER = {
         { t: "直方体と立方体", u: ["m4-chokuhoutai"], term: "3学期" }
       ],
       5: [
-        { t: "整数と小数", u: [], term: "1学期" },
+        { t: "整数と小数", u: ["m5-seisu-shosu"], term: "1学期" },
         { t: "図形の角の大きさ", u: ["m5-naikaku"], term: "1学期" },
         { t: "2つの量の変わり方", u: [], term: "1学期" },
         { t: "小数のかけ算", u: ["m5-shosu-kake"], term: "1学期" },
@@ -693,7 +693,7 @@ var TEXTBOOK_ORDER = {
         { t: "比", u: ["m6-hi-kantan", "m6-hi-tokku"], term: "2学期" },
         { t: "拡大図と縮図", u: ["m6-kakudai"], term: "2学期" },
         { t: "比例と反比例", u: ["m6-hirei"], term: "3学期" },
-        { t: "およその面積や体積", u: [], term: "3学期" },
+        { t: "およその面積や体積", u: ["m6-oyoso-menseki"], term: "3学期" },
         { t: "6年間のまとめ", u: [], term: "3学期" }
       ]
     } }

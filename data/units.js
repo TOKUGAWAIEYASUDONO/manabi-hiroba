@@ -140,6 +140,17 @@ window.MH_UNITS = (function () {
   U("m6-tani", M, 6, "C", "単位", "いろいろな 単位", "tani6", { loose: true }, { base: "C(2)イ 体積・重さの単位（要確認）", series: "単位", step: 1, label: "L・m³・kL", max: 9000000, note: "L・m³・kL・t", ex: "1L は 1000cm³、 1m³ は 1000L、 1kL は 1000L だよ。\nたんいの かんけいを おぼえよう。" });
 
   /* ============ 図が要る単元（あとで）：gen なし ============ */
+  /* 図なしで取り組める教科書の単元 */
+  U("m1-nanbanme", M, 1, "A", "数をおぼえる", "なんばんめ", "ordinal1", { loose: true }, { base: "A(1)ア 数の順序", max: 10, note: "まえから なんばんめ", ex: "まえから 1ばんめ、2ばんめと かぞえるよ。\nまえに 3人 いたら 4ばんめ。" });
+  U("m1-nagasa-kurabe", M, 1, "C", "単位", "ながさくらべ", "compareMeasure1", { kind: "length", loose: true }, { base: "C(1)ア 長さの比較", max: 20, note: "おなじ ものさしで くらべる", ex: "おなじ つみきを つかって くらべよう。\nつみきが おおい ほうが ながいよ。" });
+  U("m1-kasa-kurabe", M, 1, "C", "単位", "かさくらべ", "compareMeasure1", { kind: "capacity", loose: true }, { base: "C(1)ア かさの比較", max: 20, note: "おなじ コップで くらべる", ex: "おなじ コップに いれて くらべよう。\nコップの かずが おおい ほうが おおいよ。" });
+  U("m2-keisan-kufu", M, 2, "A", "計算のきまり", "けいさんの くふう", "groupAdd2", {}, { base: "A(2)イ 加法の結合法則", max: 100, note: "10に なる くみを さがす", ex: "8 + 5 + 2 は 8 + 2 を さきに たすよ。\n10 + 5 = 15。" });
+  U("m3-jikan-keisan", M, 3, "C", "単位", "時こくと時間のもとめ方", "timeCalc3", { loose: true }, { base: "C(2)ア 時間の計算", max: 60, note: "時こくの さ・たし算", ex: "9時20分から 10時まで 40分。\n10時から 10時15分まで 15分。あわせて 55分。" });
+  U("m3-anzan", M, 3, "A", "たし算", "あんざん", "mental3", {}, { base: "A(2)イ 暗算", max: 999, note: "くらいごとに たしひき", ex: "430 + 20 は 十のくらいだけ たすよ。\n答えは 450。" });
+  U("m3-ookii-wari", M, 3, "A", "わり算", "大きい数の わり算", "largeDiv3", {}, { base: "A(4)ア 簡単な除法", max: 900, note: "何十・何百を わる", ex: "120 ÷ 3 は 12 ÷ 3 = 4 を つかうよ。\n答えは 40。" });
+  U("m4-wari-mitsumori", M, 4, "A", "わり算", "わり算の みつもり", "divEstimate4", { loose: true }, { base: "A(3)ア 除法の計算の見積もり", max: 1000, note: "わる数を およその数に する", ex: "およそ 240 ÷ 30 は 8。\nだいたいの 商を 先に 考えよう。" });
+  U("m5-seisu-shosu", M, 5, "A", "数をおぼえる", "整数と小数の しくみ", "placeValue5", {}, { base: "A(1)ア 整数と小数の十進構造", max: 9999, note: "10倍と 小数点", ex: "3.4を 10倍すると 34。\n小数点を 右へ 1けた うつすよ。" });
+  U("m6-oyoso-menseki", M, 6, "B", "図形", "およその 面積と体積", "approxVolume6", { loose: true }, { base: "B(2)イ およその面積と体積", max: 1000, note: "長方形や 直方体と みなす", ex: "たて 5cm、よこ 8cm の 長方形と みなすと、\n面積は およそ 5 × 8 = 40cm²。" });
   const later = (id, g, area, item, title, base) => U(id, M, g, area, item, title, null, {}, { base, note: "図が要るので後回し" });
   later("m1-katachi", 1, "B", "図形", "いろいろな かたち・かたちづくり", "B(1)ア 身の回りの形");
   later("m2-hako", 2, "B", "図形", "はこの 形", "B(1)イ 箱の形");

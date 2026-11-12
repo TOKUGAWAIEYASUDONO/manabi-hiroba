@@ -33,7 +33,9 @@
     "m6-daihyou","m6-bunsu-shosu","m6-tani","j1-kanji-yomi","j2-kanji-yomi","j3-kanji-yomi","j4-kanji-yomi",
     "j5-kanji-yomi","j6-kanji-yomi","s4-kencho-th","s4-kencho-kt","s4-kencho-cb","s4-kencho-kn","s4-kencho-cg",
     "s4-kencho-sk","s4-kencho-ky","s4-kencho-all","e5-food","e5-animal","e5-action","e5-place","e5-daymonth",
-    "e5-color","e5-school","e6-all","m1-tokei-fun","m2-keta4"
+    "e5-color","e5-school","e6-all","m1-tokei-fun","m2-keta4",
+    "m1-nanbanme","m1-nagasa-kurabe","m1-kasa-kurabe","m2-keisan-kufu","m3-jikan-keisan",
+    "m3-anzan","m3-ookii-wari","m4-wari-mitsumori","m5-seisu-shosu","m6-oyoso-menseki"
   ];
   const IDX = {}; UNIT_IDS.forEach((id, i) => { IDX[id] = i; });
   const GRADE_FIX = { "m6-hayasa": 5, "m5-bunsu-int": 6 }; /* 現行教科書に合わせて学年を直した単元（IDは互換のため据え置き） */
