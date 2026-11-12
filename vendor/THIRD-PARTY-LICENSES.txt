@@ -208,3 +208,22 @@ INCLUDING ANY GENERAL, SPECIAL, INDIRECT, INCIDENTAL, OR CONSEQUENTIAL
 DAMAGES, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 FROM, OUT OF THE USE OR INABILITY TO USE THE FONT SOFTWARE OR FROM
 OTHER DEALINGS IN THE FONT SOFTWARE.
+
+
+## 効果音・BGM・絵（vendor/audio/、vendor/img/）— CC0 1.0（パブリックドメイン。クレジットは任意、感謝として記載）
+素材は patch.gg（https://patch.gg ）の公開 API で CC0・非AI と確認したものを取得した（元は Kenney https://kenney.nl と OpenGameArt の Juhani Junkala https://opengameart.org ）。
+ライセンス: https://creativecommons.org/publicdomain/zero/1.0/ 。元の ogg を mp3 に変換して使っている（planet だけ 320px に縮小）。
+
+- vendor/audio/ok.mp3（正解）: Kenney「Interface Sounds」confirmation_001 / https://kenney.nl/assets/interface-sounds
+- vendor/audio/ng.mp3（まちがい（やさしい音・小さめ））: Kenney「Interface Sounds」error_001 / https://kenney.nl/assets/interface-sounds
+- vendor/audio/click.mp3（ボタン）: Kenney「Interface Sounds」click_001 / https://kenney.nl/assets/interface-sounds
+- vendor/audio/tick.mp3（カウントダウン）: Kenney「Interface Sounds」tick_001 / https://kenney.nl/assets/interface-sounds
+- vendor/audio/open.mp3（たからばこを あける）: Kenney「Interface Sounds」open_001 / https://kenney.nl/assets/interface-sounds
+- vendor/audio/coin.mp3（コイン・どんぐり）: Kenney「RPG Audio」handleCoins2 / https://kenney.nl/assets/rpg-audio
+- vendor/audio/medal.mp3（メダル・クリアのファンファーレ）: Kenney「Music Jingles」jingles_NES00 / https://kenney.nl/assets/music-jingles
+- vendor/audio/launch.mp3（ロケット はっしゃ）: Kenney「Sci-Fi Sounds」thrusterFire_000 / https://kenney.nl/assets/sci-fi-sounds
+- vendor/audio/star.mp3（ほし）: Kenney「Digital Audio」powerUp10 / https://kenney.nl/assets/digital-audio
+- vendor/audio/bgm-adventure.mp3（BGM（ロケット・たからばこ））: Juhani Junkala「4 Chiptunes (Adventure)」stage_1 / https://opengameart.org/content/4-chiptunes-adventure
+- vendor/audio/bgm-ending.mp3（BGM（クイズ・すごろく））: Juhani Junkala「5 Chiptunes (Action)」ending / https://opengameart.org/content/5-chiptunes-action
+- vendor/img/planet.png（惑星（ロケット ステージ4。320px に縮小））: Kenney「Planets」planet00 / https://kenney.nl/assets/planets
+- vendor/img/coin.png（コイン（たからばこの大画面））: Kenney「Puzzle Pack 2」coin_01 / https://kenney.nl/assets/puzzle-pack-2

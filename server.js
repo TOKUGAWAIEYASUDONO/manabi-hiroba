@@ -352,6 +352,13 @@ http.createServer(async (req, res) => {
       res.writeHead(200, { "Content-Type": vm[2] === "js" ? "text/javascript; charset=utf-8" : "text/plain; charset=utf-8" });
       return fs.createReadStream(f).pipe(res);
     }
+    const am = url.pathname.match(/^\/vendor\/(audio\/[\w-]+\.mp3|img\/[\w-]+\.png)$/);   // 効果音・BGM・絵（CC0 の素材。vendor/THIRD-PARTY-LICENSES.txt）
+    if (req.method === "GET" && am) {
+      const f = path.join(__dirname, "vendor", am[1]);
+      if (!fs.existsSync(f)) return json(res, 404, { error: "not found" });
+      res.writeHead(200, { "Content-Type": am[1].endsWith(".mp3") ? "audio/mpeg" : "image/png", "Cache-Control": "public, max-age=86400" });
+      return fs.createReadStream(f).pipe(res);
+    }
     // 状態の配信（SSE 形式）。鍵（hostKey）や参加の token は URL に載せず、POST の本文で受け取る。GET は鍵なし（名前が見えない）の接続だけ
     if (url.pathname === "/api/events" && (req.method === "GET" || req.method === "POST")) {
       const q = req.method === "POST" ? await body(req) : {};

@@ -49,6 +49,7 @@ index.html は data フォルダと一緒に置くこと（ダブルクリック
 ## 同梱している部品（vendor/）
 外部（CDN）からは読み込まない。ライセンス全文は `vendor/THIRD-PARTY-LICENSES.txt`。
 - PeerJS 1.5.5（MIT）・qrcode-generator 2.0.4（MIT）・canvas-confetti 1.9.4（ISC）・ZzFX 1.4.0（MIT）
+- 効果音・BGM・絵（CC0）：`vendor/audio/*.mp3`・`vendor/img/*.png`（約 0.8MB）。作者は Kenney（kenney.nl）と Juhani Junkala（OpenGameArt）。patch.gg（公開素材の検索）で CC0・非AI と確認して取得。クレジットは任意だが感謝として載せる。一覧と元URLは `vendor/THIRD-PARTY-LICENSES.txt`。音は「音オン」のときだけ読み込み、読めなければ ZzFX の音にもどる。BGM は先生の大画面の「BGM」ボタンを押したときだけ（初期オフ）
 - アイコン：Lucide 1.71.0（ISC）。使う分だけを `index.html` の先頭に `<symbol>` として入れている（`#i-名前`）
 - フォント：BIZ UDPGothic（OFL-1.1、@fontsource 5.3.0）。`vendor/fonts/biz-udpgothic.css` と `vendor/fonts/files/*.woff2`（使う文字を含む分割ファイルだけ）。font-display:swap。読み込めなくても端末のフォントで表示される。文言を増やして新しい漢字を使ったときは、フォントの分割ファイルを作り直す
 

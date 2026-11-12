@@ -1,5 +1,5 @@
 /* まなびひろば「ロケット はっしゃ」の絵（SVG の symbol）。ロケットのモードに入るときだけ読みこむ（index.html の loadScript）。
-   描き方は hiroba-art.js と同じ：太い線 3.5・丸い角／色は CSS 変数だけ（背景の空と宇宙の色だけは、この絵の中で決める）／文字なし／aria-hidden で使う。
+   描き方は hiroba-art.js と同じ：太い線 3.5・丸い角／色は CSS 変数だけ（背景の空と宇宙の色だけは、この絵の中で決める。ステージ4の惑星だけ vendor/img/planet.png）／文字なし／aria-hidden で使う。
    中身：ロケット rk-rocket・脇のブースター rk-side・炎 rk-fl1 rk-fl2・発射台 rk-pad・流れ星 rk-star・ブーストの絵 rk-bolt・
          せーのの的 rk-ring・ほしの印 rk-gem・ステージ背景 rk-bg0〜rk-bg5（地上・くも・そら・うちゅう・つき・ほし）・雲 rk-cloud */
 (function () {
@@ -52,7 +52,7 @@
     P("rk-bg4", "0 0 1280 720",
       '<defs><linearGradient id="rk-g4" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#0b0d2b"/><stop offset="1" stop-color="#2b2f78"/></linearGradient></defs>' +
       '<rect width="1280" height="720" fill="url(#rk-g4)"/>' + stars([[90, 90, 3], [300, 160, 2.5], [520, 80, 3], [760, 130, 2], [980, 70, 3], [1180, 160, 2.5], [200, 330, 2], [1100, 330, 2]]) +
-      '<circle cx="1050" cy="190" r="56" fill="#3f8ee8"/><path d="M1020 160c14-12 36-8 40 8 4 14-12 16-20 28-8 10-26 4-24-12 2-10 0-16 4-24z" fill="#58b368"/>' +
+      '<clipPath id="rk-pc"><circle cx="225" cy="245" r="72"/></clipPath><image href="vendor/img/planet.png" x="150" y="170" width="150" height="150" clip-path="url(#rk-pc)"/>' +      /* 惑星（CC0・Kenney）。ここだけ画像を使う */
       '<ellipse cx="560" cy="860" rx="1000" ry="300" fill="#d9d9de"/><ellipse cx="260" cy="650" rx="70" ry="20" fill="#b9bac4"/><ellipse cx="860" cy="640" rx="90" ry="24" fill="#b9bac4"/><ellipse cx="620" cy="700" rx="50" ry="14" fill="#b9bac4"/>'),
     P("rk-bg5", "0 0 1280 720",
       '<defs><linearGradient id="rk-g5" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2a0f5e"/><stop offset="1" stop-color="#7a3fbf"/></linearGradient></defs>' +

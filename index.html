@@ -539,6 +539,7 @@ body[data-v=host] .wrap{max-width:none;padding:0}
 .px-row .bar{flex:1;height:36px;background:rgba(255,255,255,.16);border-radius:18px;overflow:hidden}
 .px-row .bar i{display:block;height:100%;background:var(--sun);border-radius:18px;transition:width .5s ease}
 .px-row .val{width:170px;text-align:right;font-size:32px;font-weight:800}
+.coin{width:1em;height:1em;vertical-align:-.12em;margin-right:.2em}
 .px-more{font-size:28px;color:var(--chalk);margin:8px 0}
 .px-tl{font-size:28px;color:var(--chalk)}
 .px-timer{font-size:min(16vh,130px);font-weight:800;line-height:1;color:#ffe066;font-variant-numeric:tabular-nums}
@@ -823,6 +824,7 @@ body[data-v=host] .wrap{max-width:none;padding:0}
 <symbol id="i-book-open" viewBox="0 0 24 24"><path d="M12 5v16" /> <path d="M20.001 19A2 2 0 0022 17V5a2 2 0 00-1.999-2L16 3.002A5 5 0 0012 5a5 5 0 00-4-2H4a2 2 0 00-2 2v12a2 2 0 001.999 2H8a5 5 0 014 2 5 5 0 014-2z" /></symbol>
 <symbol id="i-rotate-ccw" viewBox="0 0 24 24"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8" /> <path d="M3 3v5h5" /></symbol>
 <symbol id="i-moon" viewBox="0 0 24 24"><path d="M20.985 12.486a9 9 0 1 1-9.473-9.472c.405-.022.617.46.402.803a6 6 0 0 0 8.268 8.268c.344-.215.825-.004.803.401" /></symbol>
+<symbol id="i-music" viewBox="0 0 24 24"><path d="M9 18V5l12-2v13" /> <circle cx="6" cy="18" r="3" /> <circle cx="18" cy="16" r="3" /></symbol>
 <symbol id="i-maximize" viewBox="0 0 24 24"><path d="M8 3H5a2 2 0 0 0-2 2v3" /> <path d="M21 8V5a2 2 0 0 0-2-2h-3" /> <path d="M3 16v3a2 2 0 0 0 2 2h3" /> <path d="M16 21h3a2 2 0 0 0 2-2v-3" /></symbol>
 </defs></svg>
 <!--ART-BEGIN-->
@@ -1283,26 +1285,99 @@ function loadScript(src,have){
   });
   return scriptP[src];
 }
-/* ===== 効果音（ZzFX）。はじめはオフ。ヘッダーの🔇／🔊で切りかえ、設定は端末に保存 ===== */
-const SFX={                      // 小さめ・短め（0.3秒以内）・やさしい音（サイン波）
+/* ===== 効果音：CC0 の素材（vendor/audio/、Web Audio で再生）。はじめはオフ。ヘッダーの🔇／🔊で切りかえ、設定は端末に保存
+   素材は「音がオン」のときだけ読みこむ（オフのあいだは通信しない）。読みこめない／file:// のときは ZzFX の小さな音にもどる。
+   音量は控えめ。まちがいの音はとくに小さく、やさしい音にしている ===== */
+const SFX={                      // ZzFX（予備）：小さめ・短め（0.3秒以内）・やさしい音（サイン波）
   ok:[.7,0,660,.01,.05,.12,0,1,0,0,220,.05],            // ピンポン
   ng:[.6,0,260,.01,.05,.14,0,1,-5],                    // ポーン（下がる）
-  end:[.7,0,520,.01,.07,.16,0,1,0,0,-130,.08],         // 時間切れ（下がる2音）
+  end:[.7,0,520,.01,.07,.16,0,1,0,0,-130,.08],         // 時間切れ（下がる2音）。素材は使わない
   medal:[.7,0,660,.01,.07,.18,0,1,0,0,330,.07]         // メダル（上がる2音）
+};
+const ASET={      // 名前:[vendor/audio/ のファイル名（.mp3 なし）、音量、ながさ（秒。長い音だけ。おわりは小さくして止める）]
+  ok:["ok",.5], ng:["ng",.22], click:["click",.35], coin:["coin",.45], medal:["medal",.45],
+  launch:["launch",.3,2.6], tick:["tick",.4], star:["star",.45], open:["open",.45]
 };
 const HAS_AUDIO=!!(window.AudioContext||window.webkitAudioContext);
 let SND=false, SND_DEAD=!HAS_AUDIO;     // 音が出せない端末（AudioContext なし／部品の読み込み失敗）では、止めて再試行しない
 try{ SND=JSON.parse(localStorage.getItem("mh_sound"))===true; }catch(e){}
-function sfx(k){
-  if(!SND||SND_DEAD) return;
-  if(typeof zzfx!=="function"){ loadScript("vendor/zzfx-1.4.0.micro.min.js",()=>typeof zzfx==="function").then(()=>{ try{ zzfxV=.15; }catch(e){} sfx(k); }).catch(()=>{ SND_DEAD=true; drawHeader(); }); return; }
+let AC=null, ADEAD=false, AWARM=false, ALAST=0;     // ADEAD＝素材が読めなかった（以後は ZzFX）
+const ABUF={}, ABP={};
+function acx(){ if(!AC){ const C=window.AudioContext||window.webkitAudioContext; AC=new C(); } return AC; }
+function aload(id){
+  if(ABUF[id]) return Promise.resolve(ABUF[id]);
+  if(!ABP[id]) ABP[id]=fetch("vendor/audio/"+id+".mp3").then(r=>{ if(!r.ok) throw new Error("audio "+id); return r.arrayBuffer(); })
+    .then(b=>new Promise((ok,ng)=>{ const p=acx().decodeAudioData(b,ok,ng); if(p&&p.catch) p.catch(ng); }))
+    .then(b=>(ABUF[id]=b)).catch(e=>{ delete ABP[id]; throw e; });
+  return ABP[id];
+}
+function aplay(buf,vol,dur,loop){
+  const c=acx(), s=c.createBufferSource(), g=c.createGain(), t=c.currentTime;
+  s.buffer=buf; s.loop=!!loop; g.gain.value=vol;
+  if(dur){ g.gain.setValueAtTime(vol,t+Math.max(0,dur-.6)); g.gain.linearRampToValueAtTime(0,t+dur); s.stop(t+dur+.05); }
+  s.connect(g); g.connect(c.destination); s.start(0);
+  return {s,g};
+}
+function zz(k){
+  if(!SFX[k]) return;
+  if(typeof zzfx!=="function"){ loadScript("vendor/zzfx-1.4.0.micro.min.js",()=>typeof zzfx==="function").then(()=>{ try{ zzfxV=.15; }catch(e){} zz(k); }).catch(()=>{ SND_DEAD=true; drawHeader(); }); return; }
   try{ if(zzfxX.state==="suspended") zzfxX.resume(); zzfx(...SFX[k]); }catch(e){ SND_DEAD=true; drawHeader(); }
 }
+function sfx(k){
+  if(!SND||SND_DEAD) return;
+  const a=ASET[k]; if(k!=="click") ALAST=Date.now();
+  if(!a||ADEAD) return zz(k);
+  const t0=Date.now();
+  try{
+    const c=acx(); if(c.state!=="running"&&c.resume) c.resume().catch(()=>{});
+    aload(a[0]).then(b=>{ if(Date.now()-t0<1500) aplay(b,a[1],a[2]); }).catch(()=>{ ADEAD=true; zz(k); });      // 遅れすぎた音は鳴らさない
+  }catch(e){ ADEAD=true; zz(k); }
+}
+/* iPad など：最初のタップで音を有効にする（そのとき、よく使う音を先に読みこむ。音がオフなら何もしない） */
+function audioUnlock(){
+  if(!(SND||BGMON)||SND_DEAD) return;
+  try{
+    const c=acx(); if(c.state!=="running"&&c.resume) c.resume().catch(()=>{});
+    if(!AWARM){ AWARM=true; const s=c.createBufferSource(); s.buffer=c.createBuffer(1,1,22050); s.connect(c.destination); s.start(0); }
+    if(SND&&!ADEAD) ["ok","ng","click","coin","medal"].forEach(k=>aload(ASET[k][0]).catch(()=>{ ADEAD=true; }));
+  }catch(e){}
+}
+["pointerdown","touchend","click","keydown"].forEach(ev=>document.addEventListener(ev,audioUnlock,{capture:true,passive:true}));
+/* ボタンの音：ボタンを押したとき（ほかの音が出るボタンでは重ねない。答えのボタンは正解・まちがいの音だけ） */
+document.addEventListener("click",e=>{
+  const b=e.target&&e.target.closest&&e.target.closest("button.btn,a.btn,button.back");
+  if(b&&!b.disabled&&!b.classList.contains("choice")&&Date.now()-ALAST>180) sfx("click");
+});
 function toggleSound(){
   if(SND_DEAD) return;
   SND=!SND; try{ localStorage.setItem("mh_sound",JSON.stringify(SND)); }catch(e){}
-  drawHeader(); if(SND) sfx("ok");
+  drawHeader(); if(SND){ audioUnlock(); sfx("ok"); }
 }
+/* ===== BGM：先生の大画面（ロケット・クイズ・たからばこ・すごろく）だけ。先生が「BGM」を押したときだけ流れる（はじめはオフ・くりかえし・小さめ）。
+   児童の端末では流さない。大画面を離れる・画面が隠れる・対戦が終わると止まる。全画面でも止まらない ===== */
+let BGMON=false, BGMN=null;
+const bgmBtn=()=>`<button type="button" class="btn sub pxbgm" aria-pressed="${BGMON}" onclick="toggleBgm()">${ic("music")}BGM <b>${BGMON?"オン":"オフ"}</b></button>`;
+const bgmBtnUpd=()=>document.querySelectorAll(".pxbgm").forEach(b=>{ b.setAttribute("aria-pressed",BGMON); b.innerHTML=ic("music")+"BGM <b>"+(BGMON?"オン":"オフ")+"</b>"; });
+function bgmStop(){
+  const n=BGMN; BGMN=null;
+  if(n&&n.s){ try{ const t=AC.currentTime; n.g.gain.cancelScheduledValues(t); n.g.gain.setValueAtTime(n.g.gain.value,t); n.g.gain.linearRampToValueAtTime(0,t+.3); n.s.stop(t+.35); }catch(e){} }
+}
+function bgmSync(){
+  const s=HLAST, on=BGMON&&!document.hidden&&params().path==="host"&&s&&(s.status==="lobby"||s.status==="playing")&&!(s.co&&s.co.ph==="end");
+  if(!on){ bgmStop(); return; }
+  const id=s.mode==="quiz"||s.mode==="race"?"bgm-ending":"bgm-adventure";
+  if(BGMN&&BGMN.id===id) return;
+  bgmStop(); const tok=BGMN={id,s:null,g:null};
+  aload(id).then(b=>{ if(BGMN!==tok||!BGMON) return; const p=aplay(b,.14,0,true); tok.s=p.s; tok.g=p.g; })
+    .catch(()=>{ if(BGMN===tok) BGMN=null; BGMON=false; bgmBtnUpd(); });      // 読みこめなかったら、オフにもどす
+}
+function toggleBgm(){
+  if(!HAS_AUDIO) return;
+  BGMON=!BGMON; bgmBtnUpd();
+  if(BGMON){ try{ const c=acx(); if(c.state!=="running") c.resume(); }catch(e){ BGMON=false; bgmBtnUpd(); return; } audioUnlock(); }
+  bgmSync();
+}
+document.addEventListener("visibilitychange",()=>{ if(BGMON) bgmSync(); });
 /* ===== 紙吹雪（2秒以内。動きを減らす設定のときは出さない。必要なときだけ読み込む） ===== */
 const reduceMotion=()=>{ try{ return matchMedia("(prefers-reduced-motion: reduce)").matches; }catch(e){ return false; } };
 function party(){
@@ -1924,6 +1999,7 @@ function colRun(info){
   const S=colGet(), today=colToday();
   const r=COL.recordRun(S,{today,grade:ui.grade|0,units:info.units||[],answered:info.answered|0,correct:info.correct|0,quiz:!!info.quiz});
   colSave();
+  if(r.paid>0&&!info.quiet&&!r.blocked) setTimeout(()=>sfx("coin"),700);      // どんぐりがふえたとき（メダルの音のあと）
   if(info.quiet||r.blocked) return "";           // 授業モードは記録だけ。日付がもどっているときは何も出さない
   const ttl=id=>UBY[id]?UBY[id].title:"", L=[], ev=t=>r.events.filter(e=>e.t===t);
   ev("can").slice(0,2).forEach(e=>L.push(T("col.r.can",ttl(e.id))));
@@ -1997,7 +2073,7 @@ function hbDraw(first){
     <section class="shop${HS.shop?"":" hidden"}" id="shopBox"><h3>${T("col.shop")}</h3>${shop}</section>
     <p class="note">${T("col.local")}</p>`;
   root.querySelectorAll("[data-c]").forEach(b=>b.onclick=()=>hbCell(+b.dataset.c));
-  root.querySelectorAll("[data-buy]").forEach(b=>b.onclick=()=>{ if(COL.buy(S,b.dataset.buy)){ HS.sel=b.dataset.buy; HS.shop=false; sfx("ok"); colSave(); hbDraw(false); } });
+  root.querySelectorAll("[data-buy]").forEach(b=>b.onclick=()=>{ if(COL.buy(S,b.dataset.buy)){ HS.sel=b.dataset.buy; HS.shop=false; sfx("coin"); colSave(); hbDraw(false); } });
   root.querySelectorAll("[data-put]").forEach(b=>b.onclick=()=>{ HS.sel=b.dataset.put; HS.shop=false; hbDraw(false); });
   root.querySelectorAll("[data-th]").forEach(b=>b.onclick=()=>{ S.theme=+b.dataset.th; colSave(); hbDraw(false); });
   const q=id=>root.querySelector(id);
@@ -2553,7 +2629,7 @@ function openBox(btn){
   else if(k==="steal"){ const n=Math.round(L.v*0.2); L.v-=n; M.me.v+=n; label=`🦝 +${n}`; msg=T("b.steal",`${face(L.e)}${esc(L.n)}`,n); }
   else if(k==="swap"){ if(L.v>M.me.v){ [L.v,M.me.v]=[M.me.v,L.v]; label=T("c.swapdone"); msg=T("b.swap",`${face(L.e)}${esc(L.n)}`); } else { M.me.v+=20; label="🪙 +20"; msg=T("b.get",20); } }
   else { label=T("c.none"); msg=T("b.none"); }
-  btn.classList.add("open"); btn.textContent=label;
+  btn.classList.add("open"); btn.textContent=label; sfx(k[0]==="+"?"coin":"open");
   $("#mmain").querySelectorAll(".box").forEach(b=>{ if(b!==btn) b.classList.add("dim"); });
   $("#msg").innerHTML=msg; drawSide();
   const mm=M; setTimeout(()=>M===mm&&showQ(),1300);
@@ -3065,6 +3141,7 @@ const modeOf=s=>s.mode==="quiz"?QMODE:s.mode==="rocket"?RKMODE:MODES.find(m=>m.i
 let LASTNM="input";      // いまの部屋の「なまえの きめかた」（input＝児童が入力／auto＝自動ニックネーム）
 const privacy=()=>`<p class="note privacy" style="text-align:center">${ic("lock")} ${T("pv",NETMODE==="server",LASTNM)}</p>`;
 const unitOf=s=>s.mode==="chest"?"コイン":s.mode==="quiz"?"点《てん》":"マス";
+const COIN=`<img class="coin" src="vendor/img/coin.png" alt="" width="30" height="30">`;      // コイン（CC0・Kenney）。大画面の たからばこ の表だけ
 const sorted=ps=>[...ps].sort((a,b)=>b.v-a.v||b.ok-a.ok);
 
 /* --- 児童：コードを入れて参加 --- */
@@ -3197,7 +3274,7 @@ function startNetGame(s){
     const now=Date.now();
     if(M.phase==="count"){
       const c=Math.ceil((startAt-now)/1000);
-      if(c>0){ $("#mmain").innerHTML=`<div class="q"><div>${T("n.soon")}</div><div class="countdown">${c}</div></div>`; return; }
+      if(c>0){ if(M.tk!==c){ M.tk=c; sfx("tick"); } $("#mmain").innerHTML=`<div class="q"><div>${T("n.soon")}</div><div class="countdown">${c}</div></div>`; return; }
       showQ();
     }
     const left=Math.max(0,(M.end-now)/1000);
@@ -3254,6 +3331,7 @@ async function netBox(k,btn){
     }catch(e){ return; }
   }
   if(!M||M.over) return;
+  sfx(op==="add"?"coin":"open");
   btn.classList.add("open"); btn.innerHTML=label;
   $("#mmain").querySelectorAll(".box").forEach(b=>{ if(b!==btn) b.classList.add("dim"); });
   $("#msg").innerHTML=msg;
@@ -3433,7 +3511,7 @@ function renderHost(){
       :k==="rkend"?`<button type="button" class="btn" id="hn">${T("px.new")}</button>`
       :k==="end"?`${csvOptHtml()}<button type="button" class="btn sub" id="hc">${T("px.copy")}</button><button type="button" class="btn" id="hn">${T("px.new")}</button>`
       :`<button type="button" class="btn sub" id="he">${T("px.end")}</button>`;
-    d.innerHTML=note+bk+main+fsBtn();
+    d.innerHTML=note+bk+main+fsBtn()+bgmBtn();
     const b=id=>document.getElementById(id);
     if(b("hs")) b("hs").onclick=()=>api("start",HOST).catch(err);
     if(b("hcl")) b("hcl").onclick=()=>api("close",{...HOST,on:!(last&&last.closed)}).catch(err);      // 入室のしめきり（待合室でも参加を止める）
@@ -3477,7 +3555,7 @@ function renderHost(){
       if(r.dataset.e!==p.emoji){ r.dataset.e=p.emoji; r.querySelector(".ic").innerHTML=face(p.emoji); }
       r.querySelector(".nm").textContent=p.name;
       r.style.display=i<vis?"":"none"; r.style.top=i*RH+"px";
-      r.querySelector(".rk").textContent=i+1; r.querySelector(".bar i").style.width=Math.max(3,Math.round(p.v/max*100))+"%"; r.querySelector(".val").textContent="🪙 "+p.v;
+      r.querySelector(".rk").textContent=i+1; r.querySelector(".bar i").style.width=Math.max(3,Math.round(p.v/max*100))+"%"; r.querySelector(".val").innerHTML=COIN+p.v;
     });
     document.getElementById("pxmore").textContent=ps.length>vis?T("px.more",ps.length-vis):"";
   };
@@ -3503,7 +3581,7 @@ function renderHost(){
     const ps=sorted(s.players), rows=ps.map((p,i)=>{const t=p.ok+p.ng;return {i:i+1,p,t,acc:t?Math.round(p.ok/t*100):0}});
     const ans=rows.filter(r=>r.t>0), avg=ans.length?Math.round(ans.reduce((n,r)=>n+r.acc,0)/ans.length):0, u=rbp(unitOf(s)), vis=pxVis(rows.length,8);
     B.tsv=()=>{ const wn=csvWithNames(); return ["順位\t名前\t"+u+"\t正解\t解答数\t正答率",...rows.map(r=>`${r.i}\t${wn?r.p.name:"児童"+r.i}\t${r.p.v}\t${r.p.ok}\t${r.t}\t${r.acc}%`)].join("\n"); };   //T
-    const val=p=>s.mode==="chest"?"🪙 "+p.v:p.v+T("px.masu");
+    const val=p=>s.mode==="chest"?COIN+p.v:p.v+T("px.masu");
     const easyR=ruleOf(s.rule)==="easy", allOk=ps.reduce((n,p)=>n+p.ok,0);
     const rowHtml=r=>`<div class="hrank ${r.i<=3?"t"+r.i:""}" data-pid="${esc(r.p.pid)}" role="button" tabindex="0"><b>${r.i}</b><span>${face(r.p.emoji)} ${esc(r.p.name)}</span><span>${val(r.p)}</span><span class="note">${T("px.ok",r.p.ok,r.t)}</span></div>`;
     /* 大画面には 上位3人の名前と点だけ（正解 n/m は出さない）。全員の表は「先生だけ みる」。やさしいルールは 名前つきの順位表を出さない */
@@ -3514,7 +3592,7 @@ function renderHost(){
     if(!easyR) $("#pxto").append(teacherOnly(h("div",{innerHTML:rows.slice(0,vis).map(rowHtml).join("")+(rows.length>vis?`<p class="px-more">${T("px.more",rows.length-vis)}</p>`:"")})));
   };
   const draw=s=>{
-    last=s; HLAST=s; const m=modeOf(s), x=gameOf(s);
+    last=s; HLAST=s; bgmSync(); const m=modeOf(s), x=gameOf(s);
     if(s.mode==="quiz"&&s.status!=="lobby"){ kind="quiz"; qzHostDraw(s,()=>""); popStep(s); return; }
     if(s.mode==="rocket"&&s.status!=="lobby"){      // 協力モード：ロケットの大画面
       if(!document.getElementById("rocket-art")&&!B.artTry){ B.artTry=1; rkArt().catch(()=>{}).then(()=>{ if(last) draw(last); }); return; }      // 絵を読みこんでから作る
@@ -3571,7 +3649,7 @@ function rkKidDraw(){
   const K=RK, co=K.co, m=co.mg; rkKidStop();
   if(co.ph==="count"){
     app.innerHTML=`<div class="play rkk">${rkHead()}<div class="q"><div>${T("n.soon")}</div><div class="countdown" id="rkcd"></div></div></div>`;
-    const tick=()=>{ const c=$("#rkcd"); if(c) c.textContent=Math.max(0,Math.ceil((K.co.ae-rkNow())/1000)); };
+    const tick=()=>{ const c=$("#rkcd"); if(c){ const n=Math.max(0,Math.ceil((K.co.ae-rkNow())/1000)); if(c.textContent!==String(n)){ if(n>0) sfx("tick"); c.textContent=n; } } };
     tick(); timerId=setInterval(tick,100);
   } else if(co.ph==="play"){
     const done=K.boostSg===co.sg;
@@ -3685,7 +3763,7 @@ function rkSpawn(){
   b.style.left=(4+rnd(78))+"%";
   const still=reduceMotion();
   if(still) b.style.top=(6+rnd(60))+"%"; else b.style.animationDuration=(3.4+rnd(10)/10)+"s";
-  b.onclick=()=>{ if(b.dataset.x) return; b.dataset.x="1"; b.classList.add("caught"); const K=RK; if(!K) return; K.pend++; K.got++; K.gotMini++; const g=$("#rkgot"); if(g) g.textContent=T("rk.got",K.gotMini); setTimeout(()=>b.remove(),220); };
+  b.onclick=()=>{ if(b.dataset.x) return; b.dataset.x="1"; b.classList.add("caught"); sfx("star"); const K=RK; if(!K) return; K.pend++; K.got++; K.gotMini++; const g=$("#rkgot"); if(g) g.textContent=T("rk.got",K.gotMini); setTimeout(()=>b.remove(),220); };
   sky.appendChild(b); setTimeout(()=>b.remove(),still?3000:4000);
 }
 function rkFlush(){
@@ -3765,6 +3843,7 @@ function rkHostUpd(s){
   R.evSeen=co.ev?co.ev.id:-1;
   const key=co.ph+":"+co.sg+":"+(co.mg?co.mg.k+co.mg.a:"");
   if(key!==R.key){
+    if((R.key.startsWith("count")&&co.ph==="play")||co.ph==="clear") sfx("launch");      // 3・2・1 のあとの はっしゃ／ステージクリアで上へ
     R.key=key; const mid=$$("rkmid");
     if(co.ph==="count") mid.innerHTML=`<div class="rkm-card"><h2>${T("rk.h.soon")}</h2><div class="rkm-big" id="rkbig"></div></div>`;
     else if(co.ph==="play") mid.innerHTML=`<div class="rkm-card"><h2>${T("rk.h.q")}</h2></div>`;
@@ -3793,7 +3872,7 @@ function rkHostFrame(){
       const m=co.mg, SY=COOP.SY, i=rkSyRound(m,now), d=m.s+SY.LEAD+i*SY.GAP-now;
       if(d>2000) txt="・・・"; else if(d>1000) txt="3"; else if(d>0) txt="2"; else if(d>-800){ txt="1"; go=true; }
     } else if(co.ph==="mini"){ const t1=co.mg.s+COOP.ST.LEAD; txt=now<t1?String(Math.max(0,Math.ceil((t1-now)/1000))):""; }
-    if(big.textContent!==txt) big.textContent=txt;
+    if(big.textContent!==txt){ if(co.ph==="count"&&+txt>0) sfx("tick"); big.textContent=txt; }
     big.classList.toggle("go",go);
   }
   const note=$$("rknote");
@@ -4444,7 +4523,7 @@ function qzHostDraw(s,warnHtml){
   QH.key=key;
   const ps=sorted(s.players), top=(extra)=>h("div",{class:"qzh-top"},h("button",{type:"button",class:"back",innerHTML:ic("arrow-left")+"先生《せんせい》の画面《がめん》",onclick:()=>go("#teacher")}),h("b",{text:`${s.gt||"クイズ"}`}),extra);
   const wrapWarn=h("div"); wrapWarn.innerHTML=warnHtml();
-  const ctl=(...b)=>h("div",{class:"qzh-ctl"},...b,fsOK()?h("button",{type:"button",class:"btn sub",innerHTML:ic("maximize")+T("px.fs"),onclick:toggleFs}):null);
+  const ctl=(...b)=>h("div",{class:"qzh-ctl"},...b,fsOK()?h("button",{type:"button",class:"btn sub",innerHTML:ic("maximize")+T("px.fs"),onclick:toggleFs}):null,h("button",{type:"button",class:"btn sub pxbgm","aria-pressed":String(BGMON),innerHTML:ic("music")+"BGM <b>"+(BGMON?"オン":"オフ")+"</b>",onclick:toggleBgm}));
   const endBtn=()=>h("button",{type:"button",class:"btn sub",text:"ここで終《お》わる",onclick:()=>{ if(confirm("クイズを終《お》わりにしますか？")) api("end",HOST).catch(()=>{}); }});
   if(s.status==="playing"&&(Z.phase==="q"||Z.phase==="reveal")){
     const q=Z.q, rev=Z.phase==="reveal", dist=Z.dist||[], tot=Math.max(1,dist.reduce((a,b)=>a+b,0));
@@ -4864,6 +4943,7 @@ function route(){
   { const m=/[?&#]tk=([0-5])(?![0-9])/.exec(location.hash); TKH=m?+m[1]:null; }
   if(EX){ clearTimeout(EX.tm); EX=null; }
   if(qzFlush){ qzFlush(); qzFlush=null; }
+  if(params().path!=="host"){ BGMON=false; bgmStop(); }
   stopTimer(); P=null; M=null; QK=null; QS=null; QH=null; if(RKH) clearInterval(RKH.iv); RK=null; RKH=null; ckStop(); prStop(); wakeOff();
   if(ES){ ES.close(); ES=null; }
   const {path:path0,q}=params(), path=location.hash.startsWith("#q=")?"qlink":location.hash.startsWith("#u=")?"ulink":path0;
