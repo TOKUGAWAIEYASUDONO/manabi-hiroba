@@ -3,8 +3,9 @@
   const g = G.gens, { ch, numFb } = G;
   const pick = (r, a, wrong, min, max, loose) => ch(r, a, wrong.map(String), numFb(r, +a, { min, max }), { loose });
   g.ordinal1 = r => {
-    const n = r.range(2, 9), before = n - 1;
-    return { q: `まえに ${before}人 います。つぎの 人は まえから なんばんめ？`, a: String(n), choices: pick(r, n, [before, n + 1, before - 1], 1, 10, true) };
+    const n = r.range(2, 8), mode = r.int(3), answer = mode === 0 ? n + 1 : mode === 1 ? n - 1 : 10 - n + 1;
+    const q = mode === 0 ? `まえに ${n}人 います。つぎの 人は まえから なんばんめ？` : mode === 1 ? `まえから ${n}ばんめの 人の まえには なん人？` : `10人の れつで まえから ${n}ばんめ。うしろから なんばんめ？`;
+    return { q, a: String(answer), choices: pick(r, answer, [answer + 1, answer - 1, n], 1, 10, true) };
   };
   g.compareMeasure1 = (r, p) => {
     const x = r.range(2, 15), y = r.range(2, 15), a = Math.max(x, y), unit = p.kind === "capacity" ? "コップ" : "つみき";
@@ -16,24 +17,28 @@
     return { q: `${a} + ${b} + ${c}`, a: String(n), choices: pick(r, n, [a + b, b + c, n - 1, n + 1], 10, 27) };
   };
   g.timeCalc3 = r => {
-    const start = r.range(1, 45), duration = r.range(5, 59 - start), end = start + duration;
-    return { q: `9時${start}分から 9時${end}分まで なんぷん？`, a: String(duration), choices: pick(r, duration, [end, start, duration + 5, duration - 5], 1, 60, true) };
+    const start = r.range(15, 55), duration = r.range(10, 60), end = start + duration, hour = r.range(8, 15);
+    const clock = m => `${hour + Math.floor(m / 60)}時${m % 60}分`;
+    if (r.chance(0.5)) return { q: `${clock(start)}から ${clock(end)}まで なんぷん？`, a: String(duration), choices: pick(r, duration, [end % 60, start, duration + 10, duration - 10], 1, 90, true) };
+    return { q: `${clock(start)}の ${duration}分後は 何《なん》時《じ》何《なん》分《ぷん》？`, a: clock(end), ans: "choice4", choices: ch(r, clock(end), [clock(start + duration + 10), clock(start + duration - 10), clock(start + duration + 60), clock(start)], [], { loose: true }) };
   };
   g.mental3 = r => {
-    const a = r.range(12, 79) * 10, b = r.range(1, 9) * 10, n = a + b;
-    return { q: `${a} + ${b}`, a: String(n), choices: pick(r, n, [a + b / 10, n + 100, n - 100, a - b], 100, 999) };
+    const a = r.range(30, 89), b = r.range(11, Math.min(39, a - 10)), minus = r.chance(0.5), n = minus ? a - b : a + b;
+    return { q: `${a} ${minus ? "−" : "+"} ${b}`, a: String(n), choices: pick(r, n, [minus ? a + b : a - b, n + 10, n - 10, n + 1], 10, 129, true) };
   };
   g.largeDiv3 = r => {
     const d = r.range(2, 9), q = r.range(2, 9) * 10, n = d * q;
     return { q: `${n} ÷ ${d}`, a: String(q), choices: pick(r, q, [q / 10, q + 10, q - 10, n / 10], 10, 90) };
   };
   g.divEstimate4 = r => {
-    const d = r.range(2, 9) * 10, q = r.range(2, 9), n = d * q, actual = n + r.range(-4, 4);
-    return { q: `${actual} ÷ ${d} の 商を みつもると およそ いくつ？`, a: String(q), choices: pick(r, q, [q + 1, q - 1, q * 10, d / 10], 1, 99, true) };
+    const d = r.range(2, 9) * 10, q = r.range(2, 9), rounded = d * q, actual = rounded + r.range(0, Math.min(4, d - 1));
+    return { q: `${actual}を ${rounded}、${d}を ${d}と みて、${actual} ÷ ${d} の 商は およそ いくつ？`, a: String(q), choices: pick(r, q, [q + 1, q - 1, q * 10, d / 10], 1, 99, true) };
   };
   g.placeValue5 = r => {
-    const x = r.range(11, 99), a = x, v = (x / 10).toFixed(1);
-    return { q: `${v}を 10倍すると いくつ？`, a: String(a), choices: pick(r, a, [x * 10, x + 10, x - 10, x + 1], 1, 999) };
+    const x = r.range(11, 99), kind = r.int(4), factor = [10, 100, 10, 100][kind], source = kind < 2 ? G.dec(x, 1) : String(x);
+    const answer = kind < 2 ? G.dec(x * factor, 1) : G.dec(x, Math.log10(factor));
+    const fmt = v => kind < 2 ? G.dec(v * factor, 1) : G.dec(v, Math.log10(factor));
+    return { q: `${source}を ${kind < 2 ? factor + "倍" : "1/" + factor}にすると いくつ？`, a: answer, ans: "choice4", choices: ch(r, answer, [fmt(x + 1), fmt(x - 1), fmt(x + 2), fmt(x - 2)], [], { loose: true }) };
   };
   g.approxVolume6 = r => {
     const x = r.range(3, 10), y = r.range(3, 10), volume = r.chance(0.5), z = volume ? r.range(2, 8) : 1, n = x * y * z, u = volume ? "cm³" : "cm²";

@@ -66,14 +66,10 @@
     const x = r.range(8, 18), y = r.range(1, 5), z = r.range(1, Math.min(5, x - y - 1)), d = x - y - z;
     return { q: `${x} − ${y} − ${z}`, a: String(d), choices: ch(r, d, [x - y + z, d + 1, d - 1, d + 2].map(String), nf(r, d, { min: 1, max: 17 })) };
   };
-  g.add2plus1 = (r) => {                                   // 2けた±1けた（くり上がり・くり下がりなし）
+  g.add2plus1 = (r) => {                                   // 2けた＋1けた（くり上がりなし）
     const t = r.range(1, 8);
-    if (r.chance(0.5)) {
       const o = r.range(0, 8), b = r.range(1, 9 - o), a = t * 10 + o;
       return { q: `${a} + ${b}`, a: String(a + b), choices: ch(r, a + b, [a - b, a + b + 10, a + b - 10, a + b + 1, a + b - 1].map(String), nf(r, a + b, { min: 10, max: 99 })), tag: "yoko" };
-    }
-    const o2 = r.range(1, 9), a2 = t * 10 + o2, b2 = r.range(1, o2);
-    return { q: `${a2} − ${b2}`, a: String(a2 - b2), choices: ch(r, a2 - b2, [a2 + b2, a2 - b2 + 10, a2 - b2 - 10, a2 - b2 + 1].map(String), nf(r, a2 - b2, { min: 10, max: 99 })), tag: "yoko" };
   };
   g.tokei1 = (r) => {                                      // とけい（なんじ・なんじはん）
     const h = r.range(1, 12), half = r.chance(0.5), L = half ? 6 : 12, nx = h % 12 + 1, pv = (h + 10) % 12 + 1;

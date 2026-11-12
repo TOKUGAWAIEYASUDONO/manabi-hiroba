@@ -82,6 +82,7 @@ const sigOf = (s, loose) => G.sigOf(s, loose);
 const stats = {};
 const units = UN.UNITS, ready = units.filter(u => u.status === "ready"), later = units.filter(u => u.status === "later");
 const idSeen = new Set();
+const patternCounts = { estimate: 0, estimateMismatch: 0, estimateWrong: 0, time: 0, timeCross: 0, timeAfter: 0, mental: 0, mentalMinus: 0, place: new Set(), placeZero: 0, ordinal: new Set(), addMinus: 0 };
 for (const u of units) {
   if (idSeen.has(u.id)) err(u.id, "IDが重複している"); idSeen.add(u.id);
   if (!/^[mjse]\d-[a-z0-9-]+$/.test(u.id)) err(u.id, "IDの形式がおかしい");
@@ -122,6 +123,19 @@ for (const u of ready) {
       }
     }
     it = { ...it, q: P(it.q), a: P(it.a), stem: it.stem && P(it.stem) }; ch = ch.map(P);   // ここから先は読みを取り除いた本文で検査
+    if (u.id === "m4-wari-mitsumori") {
+      const m = it.q.match(/(\d+) ÷ (\d+) の 商/);
+      if (!m) err(u.id, `式が読めない ${tag}`);
+      else { const actual = Math.floor(+m[1] / +m[2]); patternCounts.estimate++;
+        if (actual !== +it.a) patternCounts.estimateMismatch++;
+        if (ch.some(c => c !== it.a && +c === actual)) patternCounts.estimateWrong++;
+      }
+    }
+    if (u.id === "m3-jikan-keisan") { patternCounts.time++; if (/分後/.test(it.q)) patternCounts.timeAfter++; else if (/(\d+)時\d+分から (\d+)時/.test(it.q) && +RegExp.$1 !== +RegExp.$2) patternCounts.timeCross++; }
+    if (u.id === "m3-anzan") { patternCounts.mental++; if (/−/.test(it.q)) patternCounts.mentalMinus++; if (!/^\d{2} [＋+−] \d{2}$/.test(it.q)) err(u.id, `2けた±2けたでない ${tag}`); }
+    if (u.id === "m5-seisu-shosu") { patternCounts.place.add(it.q.match(/(100倍|10倍|1\/100|1\/10)/)?.[0]); if (/\d+\.\d*0(?:\D|$)/.test(it.q + " " + it.a)) patternCounts.placeZero++; }
+    if (u.id === "m1-nanbanme") patternCounts.ordinal.add(it.q.replace(/\d+/g, "#"));
+    if (u.id === "m1-add-2keta" && /−/.test(it.q)) patternCounts.addMinus++;
     if (u.subj === "sansu") {
       const why = verify(u, it); if (why) err(u.id, "答えがまちがい：" + why);
       // 分数：誤答が正解と同じ大きさ（見かけだけちがう）にならない（約分の練習だけ例外）
@@ -150,6 +164,13 @@ for (const u of ready) {
   if (modes.size > 1 && !(modes.size === 2 && modes.has("choice4") && modes.has("num"))) warns.push(`${u.id}: 答え方が問題ごとにちがう [${[...modes]}]`);
   if (u.gen && u.ans !== "choice4" && !modes.has(u.ans)) err(u.id, `単元の答え方(${u.ans})と実際(${[...modes]})がちがう`);
 }
+if (patternCounts.estimateMismatch || patternCounts.estimateWrong) err("m4-wari-mitsumori", `本当の商と正解の不一致 ${patternCounts.estimateMismatch}件／本当の商が誤答 ${patternCounts.estimateWrong}件`);
+if (patternCounts.time && (patternCounts.timeCross + patternCounts.timeAfter) / patternCounts.time < 0.5) err("m3-jikan-keisan", "時をまたぐ問題・分後が5割未満");
+if (patternCounts.mental && patternCounts.mentalMinus / patternCounts.mental < 0.4) err("m3-anzan", "ひき算が4割未満");
+if (patternCounts.place.size < 4 || patternCounts.placeZero) err("m5-seisu-shosu", `4種類不足または末尾0 ${patternCounts.placeZero}件`);
+if (N >= 30 && patternCounts.ordinal.size < 3) err("m1-nanbanme", "問題の型が3種類未満");
+if (patternCounts.addMinus) err("m1-add-2keta", "たしざん単元にひき算がある");
+console.log(`単元別検査：見積もり ${patternCounts.estimate}問・本当の商が誤答 ${patternCounts.estimateWrong}件／時刻の時またぎ・分後 ${patternCounts.timeCross + patternCounts.timeAfter}/${patternCounts.time}／暗算のひき算 ${patternCounts.mentalMinus}/${patternCounts.mental}`);
 
 /* ---------- 単元の並び・段階・おすすめ・later ---------- */
 const seriesSteps = {};

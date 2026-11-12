@@ -926,11 +926,11 @@ body[data-v=host] .wrap{max-width:none;padding:0}
 <!-- 単元ごとの問題の型（単元から出題） -->
 <script src="data/gen/core.js?v=74457b0a"></script>
 <script src="data/gen/other.js?v=0614ebf8"></script>
-<script src="data/gen/sansu-12.js?v=05ce0efa"></script>
+<script src="data/gen/sansu-12.js?v=e835c597"></script>
 <script src="data/gen/sansu-34.js?v=dfac98cd"></script>
 <script src="data/gen/sansu-56.js?v=d0024b89"></script>
-<script src="data/gen/textbook-extra.js?v=3882ea88"></script>
-<script src="data/units.js?v=574dcde2"></script>
+<script src="data/gen/textbook-extra.js?v=dae3fbea"></script>
+<script src="data/units.js?v=2ffda08f"></script>
 <script src="data/collection.js?v=40d86f87"></script>
 <script>
 /* ================= 画面の文言（1つの表） =================
@@ -943,6 +943,7 @@ const TX={
  "h.join":["コードで参加《さんか》","はいる"],
  "h.teacher":["先生《せんせい》の画面《がめん》","せんせい"],
  "back":["もどる"],"back.end":["ここでおわる","ここで おわる"],
+ "r.close.tab":["おわったら この タブを 閉《と》じてね","おわったら この タブを とじてね"],
  "sec":["秒《びょう》","びょう"],
  "subj.math":["算数《さんすう》","さんすう"],"subj.jp":["国語《こくご》","こくご"],"subj.soc":["社会《しゃかい》","しゃかい"],"subj.eng":["英語《えいご》","えいご"],
  "n.home":["ホームへ"],
@@ -1885,7 +1886,7 @@ function finish(){
     <div class="stats"><span>${T("r.answered")} <b>${T("r.n",total)}</b></span><span>${T("r.acc")} <b>${acc}%</b></span>${p.u||!all[key].score?"":`<span>${T("r.best")} <b>${T("r.n",all[key].score)}</b></span>`}</div>
     ${p.u?`<div class="umr"><b>${T("u.marks.t")}</b><div class="umarks big">${uMarksHtml(p.marks)}</div><div class="note">${esc(T("u.marks"))}</div>${ures&&ures.length?`<div class="ubk">${ures.map(r=>`<div class="stamp"><span class="sn">${esc(UBY[r.id].title)}<small>${T("u.best",r.o)}</small></span><span class="slots" aria-hidden="true">${MEDAL_ICO.map((em,i)=>`<span class="slot${r.medal>i?" on":""}">${msvg(r.medal>i?i+1:0)}</span>`).join("")}</span></div>`).join("")}</div>`:""}</div>`:""}
     ${p.missObjs.length?missCards(p.missObjs,p.x):""}
-    ${p.task?`<div class="miss"><b>${T("r.send")}</b><br><span id="rep">${esc(repFull)}</span><br><button class="btn sub" id="cp">${T("r.copy")}</button></div>`:""}
+    ${p.task?`<div class="miss"><b>${T("r.send")}</b><br><span id="rep">${esc(repFull)}</span><br><button class="btn sub" id="cp">${T("r.copy")}</button><p>${T("r.close.tab")}</p></div>`:""}
   </div></div>`;
   mathIn(app);
   $("#again").onclick=()=>p.u?p.u.again():route();
@@ -2367,7 +2368,7 @@ function colTeacherHtml(){
 /*T-BEGIN*/
 /* 先生向けの説明（README と同じ文）。児童の名前・通信・保存について */
 const TGUIDE=[
-  "授業リンクは、このタブの間だけ授業画面に固定します。ここでおわる→結果→おわりの順で進めてください。新しいタブで普通に開くと通常モードです。児童端末の JavaScript だけでは、授業中の画面移動を完全には止められません。",
+  "授業リンクは、そのタブを閉じるまで授業画面に固定します。「ここでおわる」で結果を見たあとも固定は続きます。終わったらタブを閉じるか、新しい授業リンクを開いてください。先生が試すときは新しいタブで。児童端末の JavaScript だけでは、授業中の画面移動を完全には止められません。",
   "名前は児童が自由に入力します。本名（名字）ではなく、あだ名を入れるよう声をかけてください。名前は先生の端末のメモリにだけ置き、部屋を閉じると消えます。",
   "先生の画面を教室の大画面に映すと、児童の名前がクラス全員に見えます。上位の子と、動いた子の名前だけが出ます（最下位の子の名前は出しません）。全員の表は「先生だけ みる」を押したときだけ開きます。気になる名前は、名前を押すと「かえる／ニックネームにする／へやから だす」ができます。",
   "共用の端末では、前の子の名前が次の子の入力欄に出ないよう、名前は初期設定では覚えません（このタブを閉じると消えます）。児童が「この たんまつは じぶんだけ」を選んだときだけ、その端末に名前を残します。共用の端末では選ばないよう伝えてください。",
@@ -2431,6 +2432,7 @@ function renderTeacher(q){
       <b style="font-size:18px">③ 課題リンクを作る</b>
       <span class="prep"><b>準備：なし</b>（できたリンクを Google Classroom や Teams に貼ります）</span>
       <span class="note">児童はそのゲームをすぐに始められます。課題リンクで開いたページでは、「コードで参加」「先生の画面」「ほかのゲーム」は表示されません。</span>
+      <span class="note">授業リンクでは結果のあともそのタブは授業画面に戻ります。終わったらタブを閉じるか、新しい授業リンクを開いてください。先生が試すときは新しいタブで。</span>
       <label>ゲーム<select id="tg">${opt}</select></label>
       <label>学年<select id="tgr"></select></label>
       <div id="tkuku" class="hidden"><span class="note"><b>九九の段</b>（えらばなければ ぜんぶ。いくつでも）</span>
@@ -2447,7 +2449,7 @@ function renderTeacher(q){
     </div>
     <div class="form" style="margin-top:16px;border-color:var(--accent)">
       <b style="font-size:18px">単元のリンクを作る</b>
-      <span class="note">単元をえらんで「リンクとQR」を押すと、短いリンクとQRができます。「授業で使う（ほかの画面に行かせない）」と「ひろばを出さない」をえらべます。</span>
+      <span class="note">単元をえらんで「リンクとQR」を押すと、短いリンクとQRができます。「授業で使う（ほかの画面に行かせない）」と「ひろばを出さない」をえらべます。授業リンクは結果のあともそのタブに固定されます。終わったらタブを閉じるか、新しい授業リンクを開いてください。</span>
       <div><button class="btn" id="mku2">単元をえらんで リンクをつくる</button></div>
     </div>
     </section>
@@ -2922,7 +2924,7 @@ function modeResult(){
       <div class="subs">${p.missObjs.length?`<button class="btn sub" id="redo">${T("r.redo")}</button>`:""}${p.task?"":`<button class="btn sub" onclick="go('#home')">${T("r.other")}</button>`}</div></div>
     <div class="stats"><span>${T("r.ok")} <b>${T("r.n",p.ok)}</b></span><span>${T("r.acc")} <b>${acc}%</b></span></div>
     ${p.missObjs.length?missCards(p.missObjs,p.x):""}
-    ${p.task?`<div class="miss"><b>${T("r.send")}</b><br>${esc(repFull)}<br><button class="btn sub" id="cp">${T("r.copy")}</button></div>`:""}
+    ${p.task?`<div class="miss"><b>${T("r.send")}</b><br>${esc(repFull)}<br><button class="btn sub" id="cp">${T("r.copy")}</button><p>${T("r.close.tab")}</p></div>`:""}
   </div></div>`;
   mathIn(app);
   $("#again").onclick=()=>route();
@@ -4533,7 +4535,7 @@ function qzSoloResult(){
     h("div",{class:"actions"},h("button",{type:"button",class:"btn again",innerHTML:ic("rotate-ccw")+T("r.again"),onclick:()=>qzSoloIntro(S.set)}),
       LESSON?null:h("button",{type:"button",class:"btn sub",text:T("n.home"),onclick:()=>go("#home")})),
     h("div",{class:"stats"},h("span",null,T("r.acc")+" ",h("b",{text:pct+"%"}))),
-    S.miss.length?miss:null,send)));
+    S.miss.length?miss:null,send,LESSON?h("p",{class:"note",text:T("r.close.tab")}):null)));
 }
 
 /* ================= ライブ出題：児童の画面（クイズ形式） ================= */
