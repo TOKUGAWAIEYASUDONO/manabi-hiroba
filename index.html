@@ -88,6 +88,8 @@ h2{font-size:20px;margin:18px 0 8px}
 .hero:active{transform:translateY(5px);box-shadow:0 2px 0 var(--edge)}
 .hero .ic{width:52px;height:52px;stroke-width:2.2;fill:#fff;flex:none}
 .hero .ht{font-size:clamp(30px,6vw,44px);font-weight:800;line-height:1.1;display:block;letter-spacing:.04em}
+.hero .ht{white-space:nowrap}
+@media (max-width:430px){.hero{gap:10px;padding:12px 14px}.hero .ic{width:36px;height:36px}.hero .mb{width:46px;height:52px}.hero .ht{font-size:clamp(24px,7.4vw,32px);letter-spacing:.02em}.hero .hn{font-size:13px}}
 .hero .hn{display:block;font-size:14px;font-weight:400;margin-top:4px}
 .hero .mb{width:56px;height:63px}
 .guide{display:flex;align-items:center;gap:10px;justify-content:center;margin:-2px 0}
@@ -131,6 +133,7 @@ h2{font-size:20px;margin:18px 0 8px}
 .home.easy .hero{padding:18px 20px}
 .bottom{display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:center;margin-top:auto;padding-top:4px}
 .bottom .hbtn{font-size:15px}
+.gdlink{display:block;width:100%;text-align:center;font-size:14px;color:var(--ink);text-decoration:underline;padding:8px 0}
 .more{width:100%;text-align:center}
 .more summary{cursor:pointer;display:inline-block;color:var(--muted);font-size:14px;min-height:32px;padding:4px 8px}
 .more .links{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px;text-align:left;margin-top:6px}
@@ -937,6 +940,7 @@ const TX={
  "ru.auto":["おまかせ"],"ru.auto.d":["1〜2年《ねん》の問題《もんだい》ならやさしい","1〜2ねんの もんだいなら やさしい"],
 /* ホーム */
  "home.quick":["1分《ぷん》であそぶ","1ぷん あそぶ"],
+ "home.guide.l":["学年《がくねん》・単元《たんげん》から さがす（先生《せんせい》向《む》け）","がくねん・たんげんから さがす（せんせいむけ）"],
  "home.guide":["いっしょに あそぼう！"],
  "home.quick.n":["ワンタップで、学年《がくねん》に合《あ》ったゲームがはじまります","ボタンを 1かい おすと はじまるよ"],
  "home.all":["ぜんぶ"],
@@ -1551,7 +1555,8 @@ function renderHome(){
       ${easy?"":`<details class="more"><summary>${T("home.links")}</summary>
         <div class="links">${LINKS.map(l=>`<a class="link" href="${l.u}" target="_blank" rel="noopener"><b>${esc(l.t)} ↗</b><span>${esc(l.d)}</span></a>`).join("")}</div>
         <p class="note">${T("home.links.n")}</p>
-        <p class="note"><a href="#check">${ic("plug")} ${T("home.check")}</a></p></details>`}
+        <p class="note"><a href="#check">${ic("plug")} ${T("home.check")}</a></p></details>
+      <a class="gdlink" href="guide/index.html">${T("home.guide.l")}</a>`}
     </div></div>`;     // 先生・ICT向けのリンクは、1〜2年には出さない
   $("#quick").onclick=()=>withGrade(g=>{
     const pool=GAMES.filter(x=>x.g.includes(g)), x=pool[rnd(pool.length)];
@@ -2239,6 +2244,7 @@ function renderTeacher(q){
   app.innerHTML=`
     <h2 class="th2">${ic("graduation-cap")}先生の画面</h2>
     <p class="note">ログインは不要です。友だち対戦で児童が入れた名前は、先生の端末のメモリにだけ置き、部屋を閉じると消えます（どこにも保存しません）。　<a href="#check">${ic("plug")} 接続テスト（友だち対戦が使えるか調べる）</a></p>
+    <p class="note" style="margin-top:8px"><a class="gdlink" href="guide/index.html">学年・単元から さがす（先生向け）</a></p>
     <details class="tguide" id="tguide"><summary>${ic("lock")} つかう まえに（児童の情報の あつかい・先生向けの説明）</summary>
       <ol>${TGUIDE.map(t=>`<li>${esc(t)}</li>`).join("")}</ol></details>
     <div class="form" style="margin-top:12px;border-color:var(--accent)">
@@ -4594,7 +4600,9 @@ function renderUnits(q){
   if(!UNITS_OK){ setLG(0); app.replaceChildren(h("div",{class:"q"},"単元《たんげん》のデータ（data/units.js）を読《よ》み込《こ》めませんでした。",h("br"),h("button",{type:"button",class:"btn",text:T("n.home"),onclick:()=>go("#home")}))); return; }
   const kg=kid?ui.grade:0; setLG(kg);
   const easy=easyG(kg), subjs=["sansu","kokugo","shakai","eigo"];
-  let subj=subjs.includes(q.get("subj"))?q.get("subj"):"sansu";
+  /* ?pick=ID1,ID2（ガイドから）：UNITS にある ID だけ、最大20個を選択済みにして開く */
+  if(!kid&&q.get("pick")){ const ok=[...new Set(q.get("pick").split(",").map(x=>x.trim()))].filter(i=>UBY[i]&&UREADY.includes(UBY[i])).slice(0,20); if(ok.length){ UPK.sel=ok; uSave(); } }
+  let subj=subjs.includes(q.get("subj"))?q.get("subj"):(!kid&&q.get("pick")&&UPK.sel[0]&&UBY[UPK.sel[0]]?UBY[UPK.sel[0]].subj:"sansu");
   const pool=s=>UREADY.filter(u=>u.subj===s&&(!kid||!easy||u.g===kg));
   let fg=kid&&kg&&pool(subj).some(u=>u.g===kg)?kg:0, fi="";
   if(kid){ const keep=UPK.sel.filter(id=>UBY[id].subj===subj&&(!easy||UBY[id].g===kg)); if(keep.length!==UPK.sel.length){ UPK.sel=keep; } }

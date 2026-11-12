@@ -23,11 +23,11 @@ const MODES = [
   { t: "クイズ", d: "クラス全員で同時に（先生が出題）" },
   { t: "たからばこ", d: "クラス対戦" },
   { t: "すごろく", d: "クラス対戦" },
-  { t: "ロケット", d: "協力ゲーム（公開準備中）", soon: true }
+  { t: "ロケット", d: "協力ゲーム（ロケット はっしゃ）" }
 ];
 const minutes = u => (u.ans === "choice4" ? "10問で 約3分" : "10問で 約5分");
 const unitHref = u => `../index.html#u=${u.id}&amp;n=10&amp;s=${SEED}`;
-const TEACH_HREF = "../index.html#units";   // 本体に ID を事前選択する引数（?pick=）がまだ無いので、先生の画面の「単元からつくる」へ
+const teachHref = u => `../index.html#units?pick=${u.id}`;   // 本体が ?pick=ID を受け付け、その単元を選択済みで開く
 
 const byGS = new Map();
 for (const u of UNITS) { const k = u.g + "-" + u.subj; if (!byGS.has(k)) byGS.set(k, []); byGS.get(k).push(u); }
@@ -112,7 +112,7 @@ function unitCard(u, list) {
   }
   out.push(`<dl class="facts"><div><dt>答え方</dt><dd>${esc(ANSTXT(u.ans))}</dd></div><div><dt>所要時間の目安</dt><dd>${minutes(u)}</dd></div>${u.max ? `<div><dt>出る数の範囲</dt><dd>${u.max}まで</dd></div>` : ""}</dl>`);
   if (u.ex) out.push(`<details class="how"><summary>解き方のヒント（児童に出る例題）</summary><p>${nl2(plain(u.ex))}</p></details>`);
-  out.push(`<p class="acts"><a class="btn go" href="${unitHref(u)}">この単元で ためす</a><a class="btn sub" href="${TEACH_HREF}">課題リンクと QR を作る</a></p>`);
+  out.push(`<p class="acts"><a class="btn go" href="${unitHref(u)}">この単元で ためす</a><a class="btn sub" href="${teachHref(u)}">課題リンクと QR を作る</a></p>`);
   if (u.base) out.push(`<p class="base">学習指導要領（平成29年告示）の項目：${esc(u.base)}（AI作成・要確認）</p>`);
   out.push(`</article>`);
   return out.join("\n");
@@ -227,7 +227,7 @@ function customPage() {
 <li><b>クイズ</b><span>全員が同時に答える。先生が画面に結果を出す</span></li>
 <li><b>たからばこ</b><span>正解するとたからばこが開く、クラス対戦</span></li>
 <li><b>すごろく</b><span>正解で進むクラス対戦</span></li>
-<li class="soon"><b>ロケットはっしゃ</b><span>協力ゲーム（公開準備中）</span></li>
+<li><b>ロケットはっしゃ</b><span>みんなで力を合わせる協力ゲーム</span></li>
 <li><b>練習用リンク</b><span>リンクを開くと、児童がひとりで練習できる</span></li>
 <li><b>Excel（表）から取り込み</b><span>表をコピーして貼ると、問題がまとめて入る</span></li></ul></section>
 <section aria-labelledby="c2"><h2 id="c2" class="sect">使い方</h2><ol class="how3"><li>「先生がつくる もんだい」を開いて、問題と答えを入力します（表からの貼り付けもできます）。</li><li>ゲーム（クイズ・たからばこ・すごろく）を選んで、クラスに参加用のコードや QR を見せます。</li><li>練習用リンクを作って配ると、授業の外でも練習できます。</li></ol>
