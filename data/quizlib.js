@@ -235,7 +235,7 @@ function toJson(set){
 }
 /* 結果のCSV：ニックネームと正誤だけ（実名は持たない）。players:[{name,v,ok,rec:"1,0,-"…}] stat:[{ok,tot}] */
 function resultsCsv(o){
-  const n=o.qs.length, head=["ニックネーム","合計点","正解数",...o.qs.map((_,i)=>`${i+1}問目`)];
+  const n=o.qs.length, head=[o.nameHead||"ニックネーム","合計点","正解数",...o.qs.map((_,i)=>`${i+1}問目`)];
   const rows=[head];
   for(const p of o.players){ const rec=String(p.rec||""); rows.push([p.name,p.v,p.ok,...o.qs.map((_,i)=>rec[i]==="1"?"○":rec[i]==="0"?"×":"−")]); }
   rows.push(["正答率","","",...o.qs.map((_,i)=>{ const s=o.stat[i]; return s&&s.tot?Math.round(s.ok/s.tot*100)+"%":""; })]);
@@ -282,6 +282,8 @@ function engine(qs,o){
   const E={qs:qs.slice(),idx:-1,phase:"lobby",qStart:0,qEnd:0,ans:new Map(),P:new Map(),hist:[],easy:!!o.easy,every:o.every||3};
   const pl=pid=>{ let p=E.P.get(pid); if(!p){ p={v:0,ok:0,ng:0,st:0,lp:0,lc:0,rec:[]}; E.P.set(pid,p); } return p; };
   E.add=pid=>{ pl(pid); };
+  E.remove=pid=>{ E.P.delete(pid); E.ans.delete(pid); };     // へやから出された子
+  E.answeredBy=pid=>E.ans.has(pid);                          // いまの問題に答えたか（正誤は返さない）
   E.nextQ=now=>{
     if(E.idx+1>=E.qs.length) return false;
     E.idx++; E.phase="q"; E.qStart=now; E.qEnd=now+E.qs[E.idx].sec*1000; E.ans=new Map(); return true;

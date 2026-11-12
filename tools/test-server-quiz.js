@@ -24,7 +24,7 @@ let n = 0; const t = async (name, fn) => { try { await fn(); n++; console.log("o
     const r = await post("create", { mode: "quiz", game: "quiz", g: 3, gt: "T", qs: [{ ...qs[0], sec: 999, pt: "zzz" }, { t: "mc", q: "x", ch: ["a", "b"], ok: [9] }] });
     assert.strictEqual(r.s, 200);        // 使えない問題は飛ばし、時間・得点の値は直して使う
   });
-  const mk = async () => { const r = (await post("create", { mode: "quiz", game: "quiz", g: 3, t: 120, gt: "セット", qs })).j; const a = (await post("join", { code: r.code })).j, b = (await post("join", { code: r.code })).j; return { r, a, b }; };
+  const mk = async () => { const r = (await post("create", { mode: "quiz", game: "quiz", g: 3, t: 120, gt: "セット", qs })).j; const a = (await post("join", { code: r.code, name: "あ" })).j, b = (await post("join", { code: r.code, name: "あ" })).j; return { r, a, b }; };
   await t("クイズの進行・採点・権限", async () => {
     const { r, a, b } = await mk();
     assert.strictEqual((await post("start", { code: r.code, hostKey: "x" })).s, 403);
@@ -57,7 +57,7 @@ let n = 0; const t = async (name, fn) => { try { await fn(); n++; console.log("o
     const { r, a } = await mk();
     assert.strictEqual((await post("qnext", { code: r.code, hostKey: a.token })).s, 403);
     assert.strictEqual((await post("set", { code: r.code, pid: a.pid, token: a.token })).s, 403, "クイズの部屋は set を返さない");
-    const m = (await post("create", { mode: "chest", game: "mine", g: 3, t: 120, gt: "ちゃんと", qs })).j, p = (await post("join", { code: m.code })).j;
+    const m = (await post("create", { mode: "chest", game: "mine", g: 3, t: 120, gt: "ちゃんと", qs })).j, p = (await post("join", { code: m.code, name: "あ" })).j;
     assert.strictEqual((await post("set", { code: m.code, pid: p.pid, token: "no" })).s, 403);
     const s = await post("set", { code: m.code, pid: p.pid, token: p.token }); assert.strictEqual(s.s, 200); assert.strictEqual(s.j.qs.length, 2, "たからばこ・すごろくには4択だけ"); assert.ok(s.j.qs.every(q => q.t === "mc"));
   });
