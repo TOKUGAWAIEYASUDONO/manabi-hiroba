@@ -177,6 +177,7 @@ h2{font-size:20px;margin:18px 0 8px}
 .play.pg>.q,#mmain>.q:first-child{display:flex;flex-direction:column;justify-content:center}
 .play.pg>.q{flex:1;min-height:110px}
 .q .big{font-size:clamp(40px,11vw,76px);font-weight:800;line-height:1.2}
+.up .q .big{font-size:clamp(26px,7vw,34px);overflow-wrap:normal;word-break:keep-all}
 .q .small{color:var(--chalk);margin-top:6px;font-size:16px}
 .answer{font-size:38px;font-weight:800;min-height:50px;border-bottom:4px solid var(--go);display:inline-block;min-width:170px;margin:0 auto 10px}
 .pad{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;max-width:360px;margin:0 auto;width:100%}
@@ -2361,6 +2362,7 @@ function colTeacherHtml(){
 /*T-BEGIN*/
 /* 先生向けの説明（README と同じ文）。児童の名前・通信・保存について */
 const TGUIDE=[
+  "授業リンクは、このタブの間だけ授業画面に固定します。ここでおわる→結果→おわりの順で進めてください。新しいタブで普通に開くと通常モードです。児童端末の JavaScript だけでは、授業中の画面移動を完全には止められません。",
   "名前は児童が自由に入力します。本名（名字）ではなく、あだ名を入れるよう声をかけてください。名前は先生の端末のメモリにだけ置き、部屋を閉じると消えます。",
   "先生の画面を教室の大画面に映すと、児童の名前がクラス全員に見えます。上位の子と、動いた子の名前だけが出ます（最下位の子の名前は出しません）。全員の表は「先生だけ みる」を押したときだけ開きます。気になる名前は、名前を押すと「かえる／ニックネームにする／へやから だす」ができます。",
   "共用の端末では、前の子の名前が次の子の入力欄に出ないよう、名前は初期設定では覚えません（このタブを閉じると消えます）。児童が「この たんまつは じぶんだけ」を選んだときだけ、その端末に名前を残します。共用の端末では選ばないよう伝えてください。",
@@ -5048,6 +5050,13 @@ function uKeydown(e){
 
 /* ================= ルーター ================= */
 function route(){
+  // 授業リンクの元の URL をタブ内に記憶し、戻る・アドレス欄の変更を先に拒否する。
+  // 結果・終了画面は同じ hash のまま描画するため、この URL だけを許可する。
+  const requested=location.hash;
+  const isTask=/^(?:#(?:play|mode)\?[^#]*[?&]task=1(?![0-9])|#(?:q|u)=[^#]*[&?]task=1(?![0-9]))/.test(requested);
+  let lockedHash; try{ lockedHash=sessionStorage.getItem("mh_lesson_hash"); }catch(e){}
+  if(lockedHash&&requested!==lockedHash){ location.replace(location.href.split("#")[0]+lockedHash); return; }
+  if(!lockedHash&&isTask){ lockedHash=requested; try{ sessionStorage.setItem("mh_lesson_hash",lockedHash); }catch(e){} }
   fgFromHash(); COLH=/[?&#]col=0(?![0-9])/.test(location.hash); COLS=null; QKA=0;
   { const m=/[?&#]tk=([0-5])(?![0-9])/.exec(location.hash); TKH=m?+m[1]:null; }
   if(EX){ clearTimeout(EX.tm); EX=null; }
@@ -5059,7 +5068,7 @@ function route(){
   setLG(path==="home"||path==="modesetup"||path==="join"||path==="record"?ui.grade:0);
   document.body.dataset.v=["check","play","setup","modesetup","mode","join","lobby","host","teacher","record","make","qlink","units","ulink","hiroba","zukan","tanken"].includes(path)?path:"home";
   // 課題リンク（task=1）で開いたゲームでは、ほかの画面への入口を隠す（授業モード）
-  const lesson=((path==="play"||path==="mode")&&q.get("task")==="1")||((path==="qlink"||path==="ulink")&&/[&?]task=1(?![0-9])/.test(location.hash));
+  const lesson=!!lockedHash||((path==="play"||path==="mode")&&q.get("task")==="1")||((path==="qlink"||path==="ulink")&&/[&?]task=1(?![0-9])/.test(location.hash));
   LESSON=lesson; document.body.classList.toggle("lesson",lesson);
   const lg=$("#logo"); if(lg) lg.disabled=lesson;          // 授業モードではロゴからホームへ行けない
   window.scrollTo(0,0);
