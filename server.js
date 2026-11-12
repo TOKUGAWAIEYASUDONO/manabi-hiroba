@@ -6,10 +6,11 @@ const path = require("path");
 const crypto = require("crypto");
 const NM = require("./data/ngwords.js");   // 児童が入力する名前の検査（ブラウザ・先生の端末と同じ部品）
 const QZ = require("./data/quizlib.js");   // 先生のもんだい：形式チェックとクイズの進行（ブラウザと同じ部品）
+const COOP = require("./data/cooplib.js"); // 協力モード「ロケット はっしゃ」の進行（ブラウザ・先生の端末と同じ部品）
 
 const PORT = +process.env.PORT || 8787;
 const PAGE = ["manabi-hiroba.html", "index.html"].map(f => path.join(__dirname, f)).find(f => fs.existsSync(f));
-const MODES = ["chest", "race", "quiz"];
+const MODES = ["chest", "race", "quiz", "rocket"];
 const GAMES = ["calc", "kuku", "kanji", "kencho", "eigo"];
 const GOAL = 40;
 const EV = { 4: "⭐", 9: "🌀", 13: "⭐", 17: "🌀", 21: "⭐", 25: "🌀", 27: "⭐", 31: "🌀", 35: "⭐", 38: "🌀" };
@@ -18,7 +19,8 @@ const MAX_PLAYERS = 60;
 const RULES = ["normal", "easy"];
 const EASY_NG = ["steal", "swap", "lose"];
 // 遊び方ごとに受け付ける操作（answer はどちらでも可）
-const MODE_OPS = { chest: ["add", "x2", "lose", "steal", "swap"], race: ["move"], quiz: ["qans"] };
+const MODE_OPS = { chest: ["add", "x2", "lose", "steal", "swap"], race: ["move"], quiz: ["qans"], rocket: COOP.OPS };
+const COOP_SCALE = +process.env.COOP_TIME_SCALE > 0 && +process.env.COOP_TIME_SCALE <= 1 ? +process.env.COOP_TIME_SCALE : 1;   // 検査用：協力モードの時間をちぢめる倍率（ふつうは 1）
 const evOf = rule => rule === "easy" ? Object.fromEntries(Object.entries(EV).filter(([, e]) => e !== "🌀")) : EV;
 // ページが読み込む問題データ（data フォルダの .js だけを返す）
 const DATA_DIR = path.join(__dirname, "data");
@@ -74,11 +76,18 @@ function pub(room, host) {
     code: room.code, mode: room.mode, game: room.game, g: room.g, t: room.t, rule: room.rule, nm: room.nm,
     status: room.status, closed: !!room.closed, endAt: room.endAt, now: Date.now(),
     gt: room.gt || "",
-    players: [...room.players.values()].map(p => room.qz
+    ...(room.co ? { co: room.co.pub(Date.now(), host) } : {}),
+    players: room.co ? coPlayers(room, host) : [...room.players.values()].map(p => room.qz
       ? { pid: p.pid, name: nm(p), emoji: p.emoji, v: p.v, ok: p.ok, ng: p.ng, st: p.st | 0, lp: p.lp | 0, lc: p.lc | 0, ...(host && room.qz.phase === "end" ? { rec: p.rec || "" } : {}), ...(host && room.qz.phase === "q" && room.qz.answeredBy(p.pid) ? { a: 1 } : {}) }
       : { pid: p.pid, name: nm(p), emoji: p.emoji, v: p.v, ok: p.ok, ng: p.ng }),
     ...(room.qz ? { quiz: room.qz.pub() } : {})
   };
+}
+// 協力モード：対戦中は人の一覧を送らない（小さく保つ）。先生の画面だけは、名前の吹き出しのために一覧を受け取る
+function coPlayers(room, host) {
+  if (host) return [...room.players.values()].map(p => ({ pid: p.pid, name: p.name, emoji: p.emoji, ix: room.co.P.get(p.pid) ? room.co.P.get(p.pid).ix : 0 }));
+  if (room.status === "playing") return [];
+  return [...room.players.values()].map(p => ({ pid: p.pid, name: "", emoji: p.emoji }));
 }
 // 児童の画面：全員ぶんは名前なし。自分の名前だけを me に添える（他の子の名前は入らない）
 function kidMsg(room, res, base) {
@@ -95,20 +104,22 @@ function broadcast(room, now = false) {
   const send = () => {
     room.timer = null;
     const hostMsg = "data: " + JSON.stringify(pub(room, true)) + "\n\n", kidBase = JSON.stringify(pub(room, false)).slice(0, -1);
-    for (const res of room.clients) res.write(res.host ? hostMsg : kidMsg(room, res, kidBase));
+    for (const res of room.clients) { if (res.writableNeedDrain && !now) continue; res.write(res.host ? hostMsg : kidMsg(room, res, kidBase)); }   // 詰まっている接続には、その回だけ送らない（次に追いつく）
   };
   if (now) { clearTimeout(room.timer); return send(); }
-  if (!room.timer) room.timer = setTimeout(send, 150);
+  if (!room.timer) room.timer = setTimeout(send, room.co ? 250 : 150);      // 協力モードは250msにまとめる
 }
 function endRoom(room) {
   if (room.status === "ended") return;
   if (room.qz) { room.qz.finish(); qzSync(room); }
+  if (room.co) room.co.finish(Date.now());
   room.status = "ended"; broadcast(room, true);
 }
 setInterval(() => {
   const now = Date.now();
   for (const room of rooms.values()) {
-    if (room.qz) { if (room.status === "playing" && room.qz.tick(now)) { qzSync(room); if (room.qz.phase === "end") endRoom(room); else broadcast(room, true); } }
+    if (room.co) { if (room.status === "playing" && room.co.tick(now)) { if (room.co.ph === "end") endRoom(room); else broadcast(room, true); } }
+    else if (room.qz) { if (room.status === "playing" && room.qz.tick(now)) { qzSync(room); if (room.qz.phase === "end") endRoom(room); else broadcast(room, true); } }
     else if (room.status === "playing" && now >= room.endAt) endRoom(room);
     if (now - room.created > 3 * 3600e3) { for (const r of room.clients) r.end(); rooms.delete(room.code); }
   }
@@ -138,7 +149,7 @@ const API = {
   create(b) {
     const own = b.mode === "quiz" || b.game === "mine";       // 先生のもんだいを使う部屋
     if (!MODES.includes(b.mode) || !(own || GAMES.includes(b.game))) return [400, { error: "設定が正しくありません" }];
-    const g = Math.min(6, Math.max(1, b.g | 0)), t = Math.min(300, Math.max(60, b.t | 0));
+    const g = Math.min(6, Math.max(1, b.g | 0)), t = b.mode === "rocket" ? 300 : Math.min(300, Math.max(60, b.t | 0));
     const rule = RULES.includes(b.rule) ? b.rule : "normal";
     const room = { code: newCode(), hostKey: id(), mode: b.mode, game: b.mode === "quiz" ? "quiz" : b.game, g, t, rule, status: "lobby", endAt: 0,
       players: new Map(), clients: new Set(), created: Date.now(), timer: null, gt: "", nm: b.nm === "auto" ? "auto" : "input" };
@@ -150,6 +161,7 @@ const API = {
       room.gt = r.set.title; if (b.mode !== "quiz") room.set = { title: r.set.title, qs };   // クイズでは、答えつきの問題を児童に渡さない
       if (b.mode === "quiz") room.qz = QZ.engine(qs, { easy: rule === "easy" });
     }
+    if (b.mode === "rocket") room.co = COOP.engine({ easy: rule === "easy", g, scale: COOP_SCALE });
     rooms.set(room.code, room);
     return [200, { code: room.code, hostKey: room.hostKey, nm: room.nm }];
   },
@@ -176,7 +188,7 @@ const API = {
       who = { name: NM.dedupe(c.name, allNames(room)), emoji: pickEmoji(room) };
     } else who = nick(room);
     const p = { pid: id(), token: id(), ...who, v: 0, ok: 0, ng: 0 };
-    room.players.set(p.pid, p); if (room.qz) room.qz.add(p.pid); broadcast(room);
+    room.players.set(p.pid, p); if (room.qz) room.qz.add(p.pid); if (room.co) room.co.add(p.pid); broadcast(room);
     return [200, { code: room.code, pid: p.pid, token: p.token, name: p.name, emoji: p.emoji, nm: room.nm }];
   },
   reroll(b) {
@@ -222,6 +234,7 @@ const API = {
     if (!room || room.hostKey !== b.hostKey || !room.players.has(b.pid)) return [403, { error: "先生の画面からのみ操作できます" }];
     room.players.delete(b.pid);
     if (room.qz) { room.qz.remove(b.pid); if (room.status === "playing" && room.qz.tick(Date.now())) qzSync(room); }
+    if (room.co) room.co.remove(b.pid);
     broadcast(room, true);
     return [200, { ok: true }];
   },
@@ -231,6 +244,7 @@ const API = {
     if (!room.players.size) return [409, { error: "まだ誰も参加していません" }];
     for (const p of room.players.values()) Object.assign(p, { v: 0, ok: 0, ng: 0 });
     if (room.qz) { room.status = "playing"; room.endAt = 0; room.qz.begin(Date.now()); qzSync(room); broadcast(room, true); return [200, { ok: true }]; }
+    if (room.co) { room.status = "playing"; room.endAt = 0; room.co.begin(Date.now()); broadcast(room, true); return [200, { ok: true }]; }
     room.status = "playing"; room.endAt = Date.now() + room.t * 1000 + 3000; // 3秒のカウントダウン
     broadcast(room, true);
     return [200, { ok: true }];
@@ -269,6 +283,12 @@ const API = {
     if (!p) return [403, { error: "参加情報が正しくありません" }];
     if (room.status !== "playing") return [409, { error: "対戦中ではありません" }];
     if (b.op !== "answer" && !(MODE_OPS[room.mode] || []).includes(b.op)) return [403, { error: "この遊び方では使えない操作です" }];
+    if (room.co) {      // 協力モード：判定は共有部品（cooplib）。児童の値は型・範囲を調べてから使う
+      if (!COOP.OPS.includes(b.op)) return [403, { error: "この遊び方では使えない操作です" }];
+      const r = room.co.act(p.pid, b.op, b, Date.now());
+      if (r[0] === 200) { if (r[2]) broadcast(room, true); else broadcast(room); }
+      return [r[0], r[1]];
+    }
     if (room.qz) {      // クイズ：答えの番号だけ受け取り、点数は部屋の側で決める
       if (b.op !== "qans") return [403, { error: "この遊び方では使えない操作です" }];
       const r = room.qz.answer(p.pid, b.i, b.c, Date.now());

@@ -705,6 +705,89 @@ body[data-v=host] .wrap{max-width:none;padding:0}
 .ac{width:1.3em;height:1.3em;vertical-align:-.3em;display:inline-block}
 @media (min-width:700px){.fz{grid-template-columns:repeat(8,1fr)}.gridh{grid-template-columns:repeat(6,1fr)}.hscene{padding:12px;gap:12px}.fs .cap{font-size:12px}}
 @media (prefers-reduced-motion:reduce){.door,.hc{transition:none}}
+/* ===== ロケット はっしゃ（協力モード） ===== */
+.rks{width:1.2em;height:1.2em;vertical-align:-.2em;flex:none}
+.rks.sm{width:28px;height:28px}
+.rks.big{width:96px;height:120px;margin:0 auto;display:block}
+.rkk .q .big,.rkk .q .small{word-break:keep-all;overflow-wrap:anywhere}
+.rkk{padding-bottom:20px}
+.rk-hd{display:flex;justify-content:space-between;align-items:center;font-size:20px;font-weight:800;margin:4px 0 8px}
+.rk-kg{display:flex;align-items:center;gap:10px;background:#fff;border:3px solid var(--edge);border-radius:14px;padding:6px 12px;font-size:16px;font-weight:700;margin-bottom:10px}
+.rk-kg b{min-width:3.2em;text-align:right;font-variant-numeric:tabular-nums}
+.rk-hbar{flex:1;height:22px;background:#e4ece6;border:3px solid var(--edge);border-radius:14px;overflow:hidden}
+.rk-hbar i{display:block;height:100%;width:0;background:var(--sun);border-radius:10px;transition:width .6s ease}
+.rk-hbar.big{height:30px;margin:6px 0}
+.rk-hbar.star i{background:var(--soc)}
+.rk-qh{font-size:18px;font-weight:700;text-align:center;margin:4px 0 8px;color:var(--muted)}
+.rk-boost{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;margin:14px 0 0;min-height:60px;font-size:22px;background:var(--sun);color:var(--ink)}
+.rk-boost:disabled{background:#e0e8e2}
+.rkm .q{margin-bottom:8px}
+.rk-beat{font-size:min(34vw,170px);font-weight:900;line-height:1.05;text-align:center;min-height:1.1em;color:var(--board);font-variant-numeric:tabular-nums}
+.rk-beat.go{color:var(--math);animation:rkgo .5s ease-out}
+.rk-rd{text-align:center;font-weight:800;font-size:18px;color:var(--muted)}
+.rk-press{display:flex;align-items:center;justify-content:center;gap:12px;width:100%;min-height:26vh;margin:8px 0;border-radius:24px;background:var(--math);color:#fff;font-size:44px;font-weight:900;border:4px solid var(--edge);box-shadow:0 7px 0 var(--edge);cursor:pointer;touch-action:manipulation}
+.rk-press:active:not(:disabled){transform:translateY(5px);box-shadow:0 2px 0 var(--edge)}
+.rk-press:disabled{background:#c4cdc8;color:#46564d;box-shadow:none;transform:translateY(5px)}
+.rk-press .rks{width:64px;height:64px}
+.rk-hit{min-height:42px;text-align:center;font-size:30px;font-weight:900;color:#0f6a3a}
+.rk-hit.soft{color:var(--muted);font-size:22px}
+.rk-sky{position:relative;height:46vh;min-height:260px;overflow:hidden;border:4px solid var(--edge);border-radius:18px;background:linear-gradient(#0b0d2b,#2b2f78);touch-action:manipulation}
+.rk-fs{position:absolute;top:0;width:80px;height:80px;padding:0;border:0;background:none;box-shadow:none;cursor:pointer;animation:rkfall linear forwards}
+.rk-fs .rks{width:80px;height:80px}
+.rk-fs.caught{animation:none;transform:scale(1.7);opacity:0;transition:transform .2s,opacity .2s}
+.rk-got{text-align:center;font-size:26px;font-weight:800;margin:8px 0;display:flex;justify-content:center;align-items:center;gap:6px}
+.rk-sc{text-align:center;font-size:20px;font-weight:700;color:var(--muted);min-height:28px}
+.rk-me .big2{font-size:22px;font-weight:800;margin:6px 0}
+@keyframes rkfall{from{transform:translateY(-90px) rotate(-6deg)}to{transform:translateY(52vh) rotate(6deg)}}
+@keyframes rkgo{0%{transform:scale(.6);opacity:.2}60%{transform:scale(1.15)}100%{transform:none;opacity:1}}
+/* 先生の大画面：1280×720 でスクロールなし・文字は28px以上 */
+.px.rk-px{padding:0;position:relative;overflow:hidden}
+.rkh{position:absolute;inset:0;color:#fff;font-size:28px;line-height:1.25;word-break:keep-all;overflow-wrap:anywhere}
+.rkh-bg{position:absolute;inset:0;width:100%;height:100%}
+.rkh-top{position:absolute;left:20px;right:20px;top:14px;display:flex;align-items:center;gap:14px;z-index:3}
+.rkh-top>span{background:rgba(22,55,42,.86);border:3px solid #fff;border-radius:16px;padding:2px 16px;font-weight:800;white-space:nowrap}
+.rkh-top .rkh-t3{margin-left:auto}
+.rkh-top .rkh-t3:empty{display:none}
+.rkh-dots{position:absolute;left:20px;top:78px;display:flex;gap:10px;z-index:3}
+.rkh-dots i{width:34px;height:34px;border-radius:50%;background:rgba(22,55,42,.7);border:4px solid #fff;display:block}
+.rkh-dots i.done{background:var(--soc)}
+.rkh-dots i.cur{background:#fff;box-shadow:0 0 0 5px var(--sun)}
+.rkh-rocket{position:absolute;left:22%;width:150px;height:300px;bottom:5.5%;transform-origin:50% 100%;transition:bottom 1.6s cubic-bezier(.4,0,.2,1),transform 1s;z-index:2}
+.rkh-rocket svg{width:100%;height:100%;overflow:visible}
+.rkh-rocket.shake{animation:rkshake .25s linear infinite}
+.rkh-rocket.idle .fl1,.rkh-rocket.idle .fl2{display:none}
+.rkh-rocket .fl2{animation:rkfl .3s steps(1,end) infinite}
+.rkh-rocket .fl1{animation:rkfl .3s steps(1,end) infinite reverse}
+.rkh-pad{position:absolute;left:calc(22% - 105px);width:360px;height:60px;bottom:16%;z-index:1}
+.rkh-gauge{position:absolute;right:24px;top:84px;width:300px;z-index:3;text-align:center}
+.rkh-gauge .gl{background:rgba(22,55,42,.86);border:3px solid #fff;border-radius:16px;padding:0 10px;font-weight:800;margin-bottom:6px;white-space:nowrap}
+.rkh-gauge svg{width:104px;height:360px;display:block;margin:0 auto}
+.rkh-gauge .gp{font-weight:900;font-size:36px;background:rgba(22,55,42,.86);border:3px solid #fff;border-radius:16px;margin:6px auto 0;width:150px}
+#rkfill{transform-box:fill-box;transform-origin:50% 100%;transition:transform .7s ease}
+.rkh-mid{position:absolute;left:42%;top:150px;width:36%;z-index:3}
+.rkm-card{background:rgba(22,55,42,.9);border:4px solid #fff;border-radius:22px;padding:12px 20px;text-align:center}
+.rkm-card h2{margin:0 0 4px;font-size:40px}
+.rkm-card .hint{font-size:28px}
+.rkm-big{font-size:150px;font-weight:900;line-height:1.05;color:#ffe066;font-variant-numeric:tabular-nums;min-height:1.05em}
+.rkm-big.go{color:#ff9d8f;animation:rkgo .5s ease-out}
+.rkm-bar{height:40px;background:rgba(255,255,255,.25);border:3px solid #fff;border-radius:22px;overflow:hidden;margin:8px 0 4px}
+.rkm-bar i{display:block;height:100%;width:0;background:var(--sun);transition:width .5s ease}
+.rkm-bar.star i{background:var(--soc)}
+.rkm-clear{font-size:56px;font-weight:900;color:#ffe066;text-shadow:3px 3px 0 var(--edge)}
+.rkm-end{font-size:60px;font-weight:900;color:#ffe066;text-shadow:4px 4px 0 var(--edge);line-height:1.2}
+.rkh-note{position:absolute;left:44%;top:82px;z-index:4;display:flex;gap:10px;flex-wrap:wrap}
+.rkh-note span{background:#fff;color:var(--ink);border:3px solid var(--edge);border-radius:16px;padding:0 14px;font-weight:800}
+.rkh-n{position:absolute;left:20px;bottom:76px;background:rgba(22,55,42,.86);border:3px solid #fff;border-radius:16px;padding:0 14px;font-weight:800;z-index:3}
+.rkh-row{position:absolute;left:20px;bottom:14px;display:flex;gap:6px;z-index:3;max-width:calc(100% - 640px)}
+.rkh-row [data-pid]{display:inline-flex;background:rgba(255,255,255,.88);border:3px solid var(--edge);border-radius:50%;padding:2px;cursor:pointer}
+.rkh-row .fc{width:46px;height:46px}
+.rkh-row [data-pid].hop{animation:rkhop .5s ease-out}
+@keyframes rkfl{0%{opacity:1}50%{opacity:0}}
+@keyframes rkshake{0%{transform:translate(0,0)}25%{transform:translate(3px,-2px)}50%{transform:translate(-3px,1px)}75%{transform:translate(2px,2px)}}
+@keyframes rkhop{0%{transform:translateY(0)}40%{transform:translateY(-14px)}100%{transform:translateY(0)}}
+@media (prefers-reduced-motion:reduce){
+  .rk-fs{animation:none!important}.rk-beat.go,.rkm-big.go{animation:none}.rkh-rocket,.rkh-rocket.shake,.rkh-rocket .fl1,.rkh-rocket .fl2{transition:none;animation:none}.rkh-rocket .fl2{opacity:0}
+  .rk-hbar i,.rkm-bar i,#rkfill{transition:none}.rkh-row [data-pid].hop{animation:none}}
 </style>
 </head>
 <body>
@@ -804,6 +887,7 @@ body[data-v=host] .wrap{max-width:none;padding:0}
 <script src="data/choices.js"></script>
 <script src="data/quizlib.js"></script>
 <script src="data/ngwords.js"></script>
+<script src="data/cooplib.js"></script>
 <!-- 単元ごとの問題の型（単元から出題） -->
 <script src="data/gen/core.js"></script>
 <script src="data/gen/other.js"></script>
@@ -1114,7 +1198,40 @@ const TX={
  "col.bk.make":["ひろばの もじを だす"],
  "col.bk.hint":["この もじを メモするか、QRコードを 印刷《いんさつ》しておくと、あとで よみこめます。","この もじを メモするか、QRコードを プリントしておくと、あとで よみこめるよ。"],
  "col.bk.read":["ひろばの もじを いれて よみこむ"],
- "col.bk.ok":["ひろばの きろくを よみこみました。","ひろばの きろくを よみこんだよ！"]
+ "col.bk.ok":["ひろばの きろくを よみこみました。","ひろばの きろくを よみこんだよ！"],
+ /* ロケット はっしゃ（協力モード）：児童の画面と先生の大画面の文言。児童には ねんりょうの数字を見せない（％だけ） */
+ "m.rocket.t":["ロケット はっしゃ（みんなで きょうりょく）"],
+ "m.rocket.d":["みんなで 答《こた》えて ねんりょうを ためて、ミニゲームを クリアしながら 5つの ステージを めざそう！","みんなで こたえて ねんりょうを ためて、ミニゲームを クリアしながら 5つの ステージを めざそう！"],
+ "rk.name":["ロケット はっしゃ"],
+ "rk.stage":[n=>`ステージ ${n}／5`],
+ "rk.dest":[i=>["くも","そら","うちゅう","つき","ほし"][i]||""],
+ "rk.q":["問題《もんだい》に 答《こた》えて ねんりょうを ためよう！","もんだいに こたえて ねんりょうを ためよう！"],
+ "rk.fuel":["みんなの ねんりょう"],
+ "rk.right":["⭕ せいかい！ ねんりょう ＋5"],
+ "rk.wrong":[a=>`ちょうせん ＋1！ こたえは ${a}`],
+ "rk.cap":["みんなの ばん！ ほかの 人《ひと》を おうえんしよう","みんなの ばん！ ほかの ひとを おうえんしよう"],
+ "rk.boost":["ブースト！"],"rk.boosted":["ブースト ありがとう！"],
+ "rk.boost.h":["ブーストは 1ステージに 1かい おせるよ","ブーストは 1ステージに 1かい おせるよ"],
+ "rk.sy":["せーので はっしゃ！"],"rk.sy.h":["3・2・1 の「1」で ボタンを おそう！"],
+ "rk.press":["おす！"],"rk.ready":["じゅんび…"],
+ "rk.hit":["ぴったり！"],"rk.next":["つぎも やってみよう"],
+ "rk.st":["ほしを あつめよう！"],"rk.st.h":["ながれぼしを タップ！"],
+ "rk.got":[n=>`あつめた ほし ${n}`],
+ "rk.class":["クラスの ようす"],
+ "rk.again":["もういちど！ こんどは やさしいよ"],"rk.again.h":["みんなで いっしょに がんばろう"],
+ "rk.clear":[n=>`ステージ ${n} クリア！`],"rk.reach":[d=>`${d}に とうちゃく！`],
+ "rk.end":[n=>`クラスで ${n}ステージ とうたつ！`],"rk.end.h":["みんなの ちからで とべたね！"],
+ "rk.me":["あなたの できたこと"],
+ "rk.me.ok":[n=>`せいかい ${n}もん`],"rk.me.bo":[n=>`ブースト ${n}かい`],"rk.me.hit":[n=>`ぴったり ${n}かい`],"rk.me.st":[n=>`あつめた ほし ${n}こ`],
+ "rk.me.none":["いっしょに のって くれて ありがとう！"],
+ "rk.load":["よみこみ中《ちゅう》…","よみこみちゅう…"],
+ "rk.h.n":[n=>`いま ${n}にんが のせてるよ`],
+ "rk.h.left":["のこり"],"rk.h.sec":[n=>`${n}びょう`],
+ "rk.h.q":["みんなで こたえて ねんりょうを ためよう！"],
+ "rk.h.sy":["みんなで いっしょに「1」で おそう！"],"rk.h.sy.p":["そろいぐあい"],
+ "rk.h.st":["ながれぼしを あつめよう！"],"rk.h.st.p":["あつまった ほし"],
+ "rk.h.soon":["まもなく はっしゃ！"],
+ "rk.h.bo":["そろった！ ブースト ＋10％"],"rk.h.wind":["おいかぜが ふいた！"]
 };
 /*TX-END*/
 const rbp=s=>{ const Q=window.MH_QUIZ; return Q?Q.plain(s):String(s==null?"":s).replace(/《[^《》]*》/g,""); };   // 読みを除いた本文
@@ -2151,7 +2268,7 @@ function renderTeacher(q){
       <span class="prep"><b>準備：児童の端末とネット接続</b>（先に接続テストをすると安心です）</span>
       <span class="note">部屋を作ると4桁のコードが出ます。児童は「コードで参加」からコードを入れて、名前を入力します（名前は先生の画面に出ます。大画面に映すと、クラスの全員に見えます）。ふざけた名前は、先生の画面で名前を押すと変更・ニックネーム化・退出ができます。全員がそろったら「入室をしめきる」を押してください。ゲームが始まったあとは入れません。「なまえの きめかた」を自動ニックネームにすると、動物の名前になります。終わると全員の正解数・正答率が集まります。</span>
       <div class="tcols">
-        <label>あそびかた<select id="nm">${[...MODES,QMODE].map(m=>`<option value="${m.id}">${m.ico} ${m.t}</option>`).join("")}</select></label>
+        <label>あそびかた<select id="nm">${[...MODES,RKMODE,QMODE].map(m=>`<option value="${m.id}">${m.ico} ${m.t}</option>`).join("")}</select></label>
         <label>問題<select id="ng">${opt}${setOpt}</select></label>
         <label>学年<select id="ngr"></select></label>
         <label id="ntl">時間<select id="nt"><option value="120">2分</option><option value="180" selected>3分</option><option value="300">5分</option></select></label>
@@ -2160,6 +2277,7 @@ function renderTeacher(q){
       </div>
       <span class="note">「クイズ」は先生のもんだいだけで遊べます（④でセットをつくります）。たからばこ・すごろくでも、先生のセットの4択を使えます。学年は、児童の画面の文字（1〜2年はやさしい文字）に使います。</span>
       <span class="note">やさしいルール：たからばこで「うばう・入れかえ・落とす」が出ず、すごろくに🌀（もどる）がありません。1〜2年を選ぶと、はじめは「やさしい」になります。</span>
+      <span class="note hidden" id="rknote"><b>ロケット はっしゃ（協力モード）</b>：クラス全員で1つのロケットを飛ばします。問題（上の「問題」で選んだもの）に答えて燃料をため、目標に届くとミニゲーム（せーので はっしゃ／ほしを あつめよう）が全員同時に始まり、クリアで次のステージへ（5ステージ・全体で約5分）。失敗しても「もういちど」は1回だけで、2回目は条件がゆるくなり必ず進みます。燃料の目標は人数・学年から自動で決まり、「やさしい」ルールではもっと低くなります。1人が出せる燃料には上限があり、順位や個人の正誤は大画面にも児童の画面にも出ません（名前が出るのは、良いことをした瞬間の吹き出しだけ）。時間の設定は使いません。</span>
       <button class="btn" id="mkroom">部屋を作る</button>
       <div class="err" id="roomErr"></div>
       <span class="note">つながるか心配なときは、先に <a href="#check">${ic("plug")} 接続テスト</a> をためしてください。</span>
@@ -2193,8 +2311,9 @@ function renderTeacher(q){
   const setRule=()=>{ $("#nr").value=defaultRule(+$("#ngr").value); };
   $("#ng").onchange=()=>{ fillG("#ng","#ngr"); setRule(); }; fillG("#ng","#ngr"); setRule();
   $("#ngr").onchange=setRule;
-  const syncMode=()=>{ const quiz=$("#nm").value==="quiz";
-    $("#ntl").classList.toggle("hidden",quiz);
+  const syncMode=()=>{ const quiz=$("#nm").value==="quiz", rk=$("#nm").value==="rocket";
+    $("#ntl").classList.toggle("hidden",quiz||rk);
+    $("#rknote").classList.toggle("hidden",!rk);
     [...$("#ng").options].forEach(o=>{ o.disabled=quiz&&!o.value.startsWith("set:"); });
     if(quiz&&!$("#ng").value.startsWith("set:")){ const f=[...$("#ng").options].find(o=>o.value.startsWith("set:")); if(f){ $("#ng").value=f.value; fillG("#ng","#ngr"); setRule(); } }
     $("#roomErr").textContent=quiz&&!qsets.length?"クイズは先生のもんだいで出します。先に ④ でセットをつくってください。":""; };
@@ -2700,10 +2819,17 @@ function hrPub(r,host){
   const nm=p=>host?p.name:"";
   return {code:r.code,mode:r.mode,game:r.game,g:r.g,t:r.t,rule:r.rule,nm:r.nm,status:r.status,closed:!!r.closed,endAt:r.endAt,now:Date.now(),
     gt:r.gt||"",
-    players:[...r.players.values()].map(p=>r.qz
+    ...(r.co?{co:r.co.pub(Date.now(),host)}:{}),
+    players:r.co?hrCoPlayers(r,host):[...r.players.values()].map(p=>r.qz
       ?{pid:p.pid,name:nm(p),emoji:p.emoji,v:p.v,ok:p.ok,ng:p.ng,st:p.st|0,lp:p.lp|0,lc:p.lc|0,...(host&&r.qz.phase==="end"?{rec:p.rec||""}:{}),...(host&&r.qz.phase==="q"&&r.qz.answeredBy(p.pid)?{a:1}:{})}
       :{pid:p.pid,name:nm(p),emoji:p.emoji,v:p.v,ok:p.ok,ng:p.ng}),
     ...(r.qz?{quiz:r.qz.pub()}:{})};
+}
+/* 協力モード：対戦中は人の一覧を送らない（小さく保つ）。先生の画面だけは、名前の吹き出しのために一覧を受け取る（児童には名前を送らない） */
+function hrCoPlayers(r,host){
+  if(host) return [...r.players.values()].map(p=>{ const q=r.co.P.get(p.pid); return {pid:p.pid,name:p.name,emoji:p.emoji,ix:q?q.ix:0}; });
+  if(r.status==="playing") return [];
+  return [...r.players.values()].map(p=>({pid:p.pid,name:"",emoji:p.emoji}));
 }
 function hrKid(r,conn,kid){      // その児童だけに、自分の名前（me）を添える
   const p=conn._pid&&r.players.get(conn._pid); kid=kid||hrPub(r,false);
@@ -2711,16 +2837,18 @@ function hrKid(r,conn,kid){      // その児童だけに、自分の名前（me
 }
 function hrBroadcast(r,now){
   const send=()=>{ r.timer=null; const kid=hrPub(r,false);
-    for(const c of r.conns){ try{c.send({type:"state",s:hrKid(r,c,kid)})}catch(e){} }
+    for(const c of r.conns){
+      if(r.co&&!now&&c.dataChannel&&c.dataChannel.bufferedAmount>65536) continue;      // 詰まっている接続には、その回だけ送らない（次の状態で追いつく）
+      try{c.send({type:"state",s:hrKid(r,c,kid)})}catch(e){} }
     if(r.listeners.size){ const h=hrPub(r,true); for(const f of r.listeners) f(h); } };
   if(now){ clearTimeout(r.timer); return send(); }
-  if(!r.timer) r.timer=setTimeout(send,150);
+  if(!r.timer) r.timer=setTimeout(send,r.co?250:150);      // 協力モードは250msにまとめる
 }
 function qzSync(r){      // クイズの得点などを、部屋の参加者の表に写す
   const E=r.qz;
   for(const [pid,p] of r.players){ const q=E.P.get(pid); if(q) Object.assign(p,{v:q.v,ok:q.ok,ng:q.ng,st:q.st,lp:q.lp,lc:q.lc}); if(E.phase==="end") p.rec=E.recStr(pid); }
 }
-function hrEnd(r){ if(r.status==="ended") return; if(r.qz){ r.qz.finish(); qzSync(r); } r.status="ended"; hrBroadcast(r,true); }
+function hrEnd(r){ if(r.status==="ended") return; if(r.qz){ r.qz.finish(); qzSync(r); } if(r.co) r.co.finish(Date.now()); r.status="ended"; hrBroadcast(r,true); }
 function hrNick(r,except){
   const used=new Set([...r.players.values()].filter(p=>p!==except).map(p=>p.name));
   for(let i=0;i<80;i++){ const [n,e]=NICK_ANI[rnd(NICK_ANI.length)], name=NICK_ADJ[rnd(NICK_ADJ.length)]+n; if(!used.has(name)) return {name,emoji:e}; }
@@ -2750,7 +2878,7 @@ function hrApi(r,name,b){
       const c=NM.check(b.name); if(!c.ok) return [400,{error:NAME_ERR[c.why],why:c.why}];
       who={name:NM.dedupe(c.name,hrNames(r)),emoji:hrEmoji(r)};
     } else who=hrNick(r);
-    const p={pid:rid(),token:rid(),...who,v:0,ok:0,ng:0}; r.players.set(p.pid,p); if(r.qz) r.qz.add(p.pid); hrBroadcast(r);
+    const p={pid:rid(),token:rid(),...who,v:0,ok:0,ng:0}; r.players.set(p.pid,p); if(r.qz) r.qz.add(p.pid); if(r.co) r.co.add(p.pid); hrBroadcast(r);
     return [200,{code:r.code,pid:p.pid,token:p.token,name:p.name,emoji:p.emoji,nm:r.nm}];
   }
   if(name==="reroll"){ const p=pl(); if(!p||r.status!=="lobby") return [409,{error:"今は変えられません"}];
@@ -2763,7 +2891,7 @@ function hrApi(r,name,b){
     const p=r.players.get(b.pid); if(!p) return [403,{error:"その子は見つかりません"}];
     if(name==="hrename"){ const c=NM.check(b.name); if(!c.ok) return [400,{error:NAME_ERR[c.why],why:c.why}]; p.name=NM.dedupe(c.name,hrNames(r,p)); }
     else if(name==="hnick") Object.assign(p,hrNick(r,p));
-    else { r.players.delete(p.pid); if(r.qz){ r.qz.remove(p.pid); if(r.status==="playing"&&r.qz.tick(Date.now())) qzSync(r); }
+    else { r.players.delete(p.pid); if(r.co) r.co.remove(p.pid); if(r.qz){ r.qz.remove(p.pid); if(r.status==="playing"&&r.qz.tick(Date.now())) qzSync(r); }
       for(const c of [...r.conns]) if(c._pid===p.pid){ try{c.send({type:"state",s:hrPub(r,false)})}catch(e){} c._pid=""; r.conns.delete(c); } }
     hrBroadcast(r,true); return [200,{ok:true}];
   }
@@ -2771,6 +2899,7 @@ function hrApi(r,name,b){
   if(name==="start"){ if(!r.players.size) return [409,{error:"まだ誰も参加していません"}];
     for(const p of r.players.values()) Object.assign(p,{v:0,ok:0,ng:0});
     if(r.qz){ r.status="playing"; r.endAt=0; r.qz.begin(Date.now()); qzSync(r); hrBroadcast(r,true); return [200,{ok:true}]; }
+    if(r.co){ r.status="playing"; r.endAt=0; r.co.begin(Date.now()); hrBroadcast(r,true); return [200,{ok:true}]; }
     r.status="playing"; r.endAt=Date.now()+r.t*1000+3000; hrBroadcast(r,true); return [200,{ok:true}]; }
   if(name==="end"){ hrEnd(r); return [200,{ok:true}]; }
   if(name==="qnext"){ if(!r.qz||r.status!=="playing") return [409,{error:"今は進められません"}];      // クイズ：先生が「つぎへ」（出題中なら しめきる）
@@ -2782,9 +2911,13 @@ function hrApi(r,name,b){
   if(name!=="act") return [400,{error:"不明な操作です"}];
   const p=pl(); if(!p) return [403,{error:"参加情報が正しくありません"}];
   if(r.status!=="playing") return [409,{error:"対戦中ではありません"}];
-  const MODE_OPS={chest:["add","x2","lose","steal","swap"],race:["move"],quiz:["qans"]};   // 遊び方ごとに受け付ける操作
+  const MODE_OPS={chest:["add","x2","lose","steal","swap"],race:["move"],quiz:["qans"],rocket:["cans","boost","mini"]};   // 遊び方ごとに受け付ける操作
   if(b.op!=="answer"&&!(MODE_OPS[r.mode]||[]).includes(b.op)) return [403,{error:"この遊び方では使えない操作です"}];
   if(r.rule==="easy"&&["steal","swap","lose"].includes(b.op)) return [403,{error:"やさしいルールの部屋では使えません"}];
+  if(r.co){      // 協力モード：判定は共有部品（cooplib）。児童の値は型・範囲を調べてから使う
+    const a=r.co.act(p.pid,b.op,b,Date.now()); if(a[0]===200){ if(a[2]) hrBroadcast(r,true); else hrBroadcast(r); }
+    return [a[0],a[1]];
+  }
   if(r.qz){      // クイズ：答えの番号だけ受け取り、点数は先生の端末が決める
     if(b.op!=="qans") return [403,{error:"この遊び方では使えない操作です"}];
     const a=r.qz.answer(p.pid,b.i,b.c,Date.now()); if(!a.ok) return [409,{error:a.why==="late"?"もう時間がおわりました":"この答えは使えません"}];
@@ -2816,7 +2949,7 @@ function hrHandle(r,conn,m){
     if(!hrRate(r,conn)) res=[429,{error:"しばらくしてから、もう一度ためしてね"}];
     else{
       const old=!hrJoinBlock(r)&&conn._pid&&r.players.get(conn._pid);      // 同じ接続でもう一度入るときは、前の分を外す（1つの接続で人数をふやさない）
-      if(old){ r.players.delete(old.pid); if(r.qz) r.qz.remove(old.pid); conn._pid=""; }
+      if(old){ r.players.delete(old.pid); if(r.qz) r.qz.remove(old.pid); if(r.co) r.co.remove(old.pid); conn._pid=""; }
       res=hrApi(r,"join",{name:body.name}); if(res[0]===200){ r.conns.add(conn); conn._pid=res[1].pid; } else if(old) hrBroadcast(r);
     }
   }
@@ -2829,6 +2962,7 @@ function hrHandle(r,conn,m){
 }
 async function hrCreate(s){
   let set=null, qz=null;
+  const co=s.mode==="rocket"?COOP.engine({easy:ruleOf(s.rule)==="easy",g:s.g}):null;      // 協力モード「ロケット はっしゃ」
   if(s.mode==="quiz"||s.game==="mine"){        // 先生のもんだい：型・文字数・個数・時間の値を調べてから使う
     const c=QZ.cleanSet({title:s.gt,qs:s.qs}); if(!c.ok) throw new Error("もんだいが正しくありません："+c.why);
     const qs=s.mode==="quiz"?c.set.qs:c.set.qs.filter(x=>x.t==="mc"); if(!qs.length) throw new Error("4択の問題がありません");
@@ -2841,13 +2975,14 @@ async function hrCreate(s){
     try{ await withTimeout(new Promise((ok,ng)=>{peer.on("open",ok);peer.on("error",ng);}),10000,"つなぎ役のサーバーに接続できませんでした"); }
     catch(e){ try{peer.destroy()}catch(_){} if(e&&e.type==="unavailable-id") continue;
       throw new Error("つなぎ役のサーバーに接続できませんでした"+(e&&e.type?"（"+e.type+"）":"")); }
-    const r={code,mode:s.mode,game:s.mode==="quiz"?"quiz":s.game,g:s.g,t:s.t,rule:ruleOf(s.rule),status:"lobby",endAt:0,players:new Map(),conns:new Set(),allc:new Set(),closed:false,listeners:new Set(),timer:null,peer,gt:set?set.title:"",set:qz?null:set,qz,nm:s.nm==="auto"?"auto":"input"};
+    const r={code,mode:s.mode,game:s.mode==="quiz"?"quiz":s.game,g:s.g,t:co?300:s.t,rule:ruleOf(s.rule),status:"lobby",endAt:0,players:new Map(),conns:new Set(),allc:new Set(),closed:false,listeners:new Set(),timer:null,peer,gt:set?set.title:"",set:qz?null:set,qz,co,nm:s.nm==="auto"?"auto":"input"};
     peer.on("connection",conn=>{ if(r.allc.size>=200){ try{conn.close()}catch(e){} return; }      // つながる数の上限（いたずら対策）
       r.allc.add(conn); conn.on("data",m=>hrHandle(r,conn,m)); conn.on("close",()=>{ r.conns.delete(conn); r.allc.delete(conn); }); });
     peer.on("disconnected",()=>{ try{peer.reconnect()}catch(e){} });   // 途中参加できるよう仲介サーバーにつなぎ直す
     r.iv=setInterval(()=>{ if(r.status!=="playing") return;
-      if(r.qz){ if(r.qz.tick(Date.now())){ qzSync(r); if(r.qz.phase==="end") hrEnd(r); else hrBroadcast(r,true); } }
-      else if(Date.now()>=r.endAt) hrEnd(r); },r.qz?250:1000);
+      if(r.co){ if(r.co.tick(Date.now())){ if(r.co.ph==="end") hrEnd(r); else hrBroadcast(r,true); } }
+      else if(r.qz){ if(r.qz.tick(Date.now())){ qzSync(r); if(r.qz.phase==="end") hrEnd(r); else hrBroadcast(r,true); } }
+      else if(Date.now()>=r.endAt) hrEnd(r); },(r.qz||r.co)?250:1000);
     HR=r; return {code,hostKey:"local",nm:r.nm};
   }
   throw new Error("部屋を作れませんでした。もう一度ためしてください");
@@ -2919,7 +3054,7 @@ function listen(code,onState,onLost){
   })();
 }
 /*T-END*/
-const modeOf=s=>s.mode==="quiz"?QMODE:MODES.find(m=>m.id===s.mode), gameOf=s=>(s.game==="mine"||s.game==="quiz")?MINEGAME(s.gt):GAMES.find(x=>x.id===s.game);
+const modeOf=s=>s.mode==="quiz"?QMODE:s.mode==="rocket"?RKMODE:MODES.find(m=>m.id===s.mode), gameOf=s=>(s.game==="mine"||s.game==="quiz")?MINEGAME(s.gt):GAMES.find(x=>x.id===s.game);
 /* 集めている情報の表示（待合室・結果・先生の部屋画面） */
 let LASTNM="input";      // いまの部屋の「なまえの きめかた」（input＝児童が入力／auto＝自動ニックネーム）
 const privacy=()=>`<p class="note privacy" style="text-align:center">${ic("lock")} ${T("pv",NETMODE==="server",LASTNM)}</p>`;
@@ -2996,16 +3131,17 @@ function renderJoin(q){
 function renderLobby(){
   NET=NET||sget("mh_net"); if(!NET) return go("#join");
   listen(NET.code,s=>{
+    if(s.mode==="rocket"&&s.status!=="lobby"){ if(typeof s.me!=="string") return kickedView(); return rkKidState(s); }      // 協力モード：対戦中は人の一覧が来ない。自分の名前（me）が無ければ、へやから出された
     if(!s.players.some(p=>p.pid===NET.pid)) return kickedView();       // 先生が へやから だした
     if(s.mode==="quiz") return qzKidState(s);
     if(s.status==="lobby") lobbyView(s);
     else if(s.status==="playing"){ if(!M||!M.net){ if(s.game==="mine"&&!MINE){ NETLAST=s; if(!NETSET_P) ensureMine(s); } else startNetGame(s); } else { M.state=s; drawSide(); } }
     else { if(M&&M.net){ M.state=s; netFinish(); } else netFinishView(s); }
-  },()=>{ if(M&&M.net&&M.over) return; if(QK&&QK.ended) return;
+  },()=>{ if(M&&M.net&&M.over) return; if(QK&&QK.ended) return; if(RK&&RK.ended) return;
     app.innerHTML=`<div class="play"><div class="q">${T("n.lost")}<br><button class="btn" onclick="go('#join')">${T("n.rejoin")}</button></div></div>`; });
 }
 function kickedView(){
-  if(ES){ ES.close(); ES=null; } stopTimer(); M=null; QK=null; NET=null; try{ sessionStorage.removeItem("mh_net"); }catch(e){}
+  if(ES){ ES.close(); ES=null; } stopTimer(); M=null; QK=null; RK=null; NET=null; try{ sessionStorage.removeItem("mh_net"); }catch(e){}
   app.innerHTML=`<div class="play"><div class="q">${T("k.out")}<br><button class="btn" onclick="go('#join')">${T("n.rejoin")}</button></div></div>`;
 }
 let LEDIT=false, LSTATE=null;
@@ -3209,7 +3345,7 @@ function popShow(ev){
   if(params().path!=="host") return;
   if(PST.live.length>=POP.max){ if(!ev.fresh) return; const o=PST.live.shift(); o.el.remove(); }      // いっぱいのときは、まだ出ていない子のために古いものを消す
   const l=popLayer(), el=document.createElement("div"); el.className="pop";
-  const mark={join:"👋",get:"🪙",star:"⭐",move:"👣",goal:"🏁"}[ev.k]||"";
+  const mark={join:"👋",get:"🪙",star:"⭐",move:"👣",goal:"🏁",rk1:"🔥",rk2:"⚡",rk3:"⭐"}[ev.k]||"";
   el.innerHTML=ev.anon?`${face(ev.emoji)}<span class="pn">こたえた！</span>`:`${face(ev.emoji)}<span class="pn"></span><span class="pi">${mark}</span>`;
   if(!ev.anon) el.querySelector(".pn").textContent=ev.name;
   l.appendChild(el);
@@ -3288,6 +3424,7 @@ function renderHost(){
     const note=`<details class="px-note"><summary>${T("px.memo")}</summary><div class="pn">${warn()}${privacy()}<div class="note">${T("px.url")}${esc(joinUrl)}</div><div class="note">全員《ぜんいん》がそろったら「入室をしめきる」を押してください（ゲームが始まると、あとからは入れません）。コードを教室の外の人に知られたときは、「先生の画面」にもどって部屋を作りなおすと、新しいコードになります。名前が気になる子は、名前を押すと変えたり出したりできます。</div><div class="err" id="herr"></div></div></details>`;   //T
     const bk=`<button type="button" class="btn sub" onclick="go('#teacher')">${ic("arrow-left")}${T("px.back")}</button>`;
     const main=k==="lobby"?`<button type="button" class="btn sub" id="hcl" aria-pressed="false">${ic("lock")}<span id="hclt">${T("px.close")}</span></button><button type="button" class="btn" id="hs">${T("px.start")}</button>`
+      :k==="rkend"?`<button type="button" class="btn" id="hn">${T("px.new")}</button>`
       :k==="end"?`${csvOptHtml()}<button type="button" class="btn sub" id="hc">${T("px.copy")}</button><button type="button" class="btn" id="hn">${T("px.new")}</button>`
       :`<button type="button" class="btn sub" id="he">${T("px.end")}</button>`;
     d.innerHTML=note+bk+main+fsBtn();
@@ -3373,6 +3510,12 @@ function renderHost(){
   const draw=s=>{
     last=s; HLAST=s; const m=modeOf(s), x=gameOf(s);
     if(s.mode==="quiz"&&s.status!=="lobby"){ kind="quiz"; qzHostDraw(s,()=>""); popStep(s); return; }
+    if(s.mode==="rocket"&&s.status!=="lobby"){      // 協力モード：ロケットの大画面
+      if(!document.getElementById("rocket-art")&&!B.artTry){ B.artTry=1; rkArt().catch(()=>{}).then(()=>{ if(last) draw(last); }); return; }      // 絵を読みこんでから作る
+      const k2=s.status==="playing"?"rocket":"rkend";
+      if(k2!==kind){ kind=k2; evs=[]; prev=null; dockSet(k2==="rocket"?"play":"rkend"); rkHostBuild(px,s); }
+      rkHostUpd(s); rkPop(s); prev=s; return;
+    }
     const k=s.status==="lobby"?"lobby":s.status==="playing"?s.mode:"end";
     if(k!==kind){ kind=k; evs=[]; prev=null; dockSet(k==="chest"||k==="race"?"play":k);
       if(k==="lobby") lobbyBuild(s); else if(k==="chest") chestBuild(s,m,x); else if(k==="race") raceBuild(s,m,x); else endBuild(s); }
@@ -3390,6 +3533,268 @@ function renderHost(){
   timerId=setInterval(()=>{ const t=document.getElementById("pxt");
     if(t&&last&&last.status==="playing"){ const n=Math.max(0,Math.ceil((last.endAt-off-Date.now())/1000)); t.textContent=clock(n); t.classList.toggle("warn",n<=10); }
     if(last&&last.mode==="quiz") qzHostTick(last,off); },250);
+}
+
+/* ================= ロケット はっしゃ（協力モード） =================
+   流れ：問題タイムで燃料をためる → 目標でミニゲーム（全員同時）→ クリアで次のステージ（5つ）。進行と判定は data/cooplib.js（先生の端末と server.js で同じ部品）。
+   児童の画面：問題・ブースト・ミニゲーム・自分の「できたこと」だけ（他の子の名前・正誤は出さない）。先生の大画面：ロケット・ゲージ・ステージ・良いことの名前の吹き出し */
+const COOP=window.MH_COOP;
+const RKMODE={id:"rocket",ico:"🚀"}; tget(RKMODE,"t","m.rocket.t"); tget(RKMODE,"d","m.rocket.d");
+let RK=null, RKH=null;
+const rkArt=()=>loadScript("data/rocket-art.js",()=>!!document.getElementById("rocket-art"));
+const rkSvg=(id,vb,c)=>`<svg class="${c||"rks"}" viewBox="${vb}" aria-hidden="true" focusable="false"><use href="#${id}"/></svg>`;
+const rkNow=()=>Date.now()+RK.off;
+function rkKidStop(){ stopTimer(); if(RK){ clearInterval(RK.fl); RK.fl=0; } }
+function rkKidState(s){
+  const co=COOP&&COOP.clean(s.co); if(!co) return;
+  setLG(s.g);
+  if(!RK||RK.code!==s.code) RK={code:s.code,offs:[],off:0,key:"",k:0,ans:0,ok:0,boo:0,hit:0,got:0,gotMini:0,pend:0,ended:false,art:0,cur:null,lock:false,boostSg:-1,pressed:{},fl:0,nextStar:0,flushing:false};
+  const K=RK; K.s=s; K.co=co;
+  const o=s.now-Date.now(); K.offs.push(o); if(K.offs.length>10) K.offs.shift(); K.off=Math.max(...K.offs);      // 先生の時計との差：遅れが一番小さかった状態から出す
+  if(!K.art){ K.art=1; rkArt().catch(()=>{}).then(()=>{ if(RK===K) rkKidState(K.s); }); return; }
+  if(s.status==="ended"||co.ph==="end") return rkKidEnd();
+  const key=co.ph+":"+co.sg+":"+(co.mg?co.mg.k+co.mg.a:"");
+  if(K.key!==key){ K.key=key; rkKidDraw(); } else rkKidLive();
+}
+function rkHead(){
+  const K=RK, co=K.co;
+  return `<div class="rk-hd"><span>🚀 ${T("rk.stage",co.sg+1)}</span><span class="note">${T("l.room")} ${esc(K.s.code)}</span></div>`;
+}
+const rkGaugeK=co=>`<div class="rk-kg"><span>${T("rk.fuel")}</span><div class="rk-hbar"><i id="rkg" style="width:${co.p}%"></i></div><b id="rkgp">${co.p}％</b></div>`;
+function rkKidDraw(){
+  const K=RK, co=K.co, m=co.mg; rkKidStop();
+  if(co.ph==="count"){
+    app.innerHTML=`<div class="play rkk">${rkHead()}<div class="q"><div>${T("n.soon")}</div><div class="countdown" id="rkcd"></div></div></div>`;
+    const tick=()=>{ const c=$("#rkcd"); if(c) c.textContent=Math.max(0,Math.ceil((K.co.ae-rkNow())/1000)); };
+    tick(); timerId=setInterval(tick,100);
+  } else if(co.ph==="play"){
+    const done=K.boostSg===co.sg;
+    app.innerHTML=`<div class="play rkk">${rkHead()}${rkGaugeK(co)}<div class="rk-qh">${T("rk.q")}</div><div id="rkq"></div>
+      <button type="button" class="btn rk-boost" id="rkb"${done?" disabled":""}>${rkSvg("rk-bolt","0 0 64 64","rks sm")}<span>${T(done?"rk.boosted":"rk.boost")}</span></button><div class="rk-sc">${T("rk.boost.h")}</div></div>`;
+    $("#rkb").onclick=rkBoost; rkShowQ();
+  } else if(co.ph==="mini"&&m.k==="sy"){
+    app.innerHTML=`<div class="play rkk rkm">${rkHead()}<div class="q"><div class="big">${T("rk.sy")}</div><div class="small">${T("rk.sy.h")}</div></div>
+      <div class="rk-rd" id="rkrd"></div><div class="rk-beat" id="rkbeat" aria-hidden="true"></div><div class="rk-hit" id="rkhit" aria-live="polite"></div>
+      <button type="button" class="rk-press" id="rkpress">${rkSvg("rk-ring","0 0 64 64")}<span>${T("rk.press")}</span></button>
+      <div class="rk-sc">${T("rk.class")}</div><div class="rk-hbar big"><i id="rkmp" style="width:${m.p}%"></i></div></div>`;
+    $("#rkpress").onclick=rkPress; rkSyTick(); timerId=setInterval(rkSyTick,60);
+  } else if(co.ph==="mini"){
+    K.nextStar=0; K.gotMini=0;
+    app.innerHTML=`<div class="play rkk rkm">${rkHead()}<div class="q"><div class="big">${T("rk.st")}</div><div class="small">${T("rk.st.h")}</div></div>
+      <div class="rk-sc" id="rkcd2"></div><div class="rk-sky" id="rksky"></div><div class="rk-got">${rkSvg("rk-gem","0 0 48 48")}<span id="rkgot">${T("rk.got",0)}</span></div>
+      <div class="rk-sc">${T("rk.class")}</div><div class="rk-hbar big star"><i id="rkmp" style="width:${m.p}%"></i></div></div>`;
+    timerId=setInterval(rkStTick,100); K.fl=setInterval(rkFlush,400);
+  } else if(co.ph==="again"){
+    app.innerHTML=`<div class="play rkk">${rkHead()}<div class="q">${rkSvg("rk-rocket","0 0 120 150","rks big")}<div class="big">${T("rk.again")}</div><div class="small">${T("rk.again.h")}</div></div></div>`;
+  } else if(co.ph==="clear"){
+    sfx("medal"); party();
+    app.innerHTML=`<div class="play rkk">${rkHead()}<div class="q">${rkSvg("rk-rocket","0 0 120 150","rks big")}<div class="big">${T("rk.clear",co.st)}</div><div class="small">${T("rk.reach",T("rk.dest",co.st-1))}</div></div></div>`;
+  }
+}
+function rkKidLive(){
+  const K=RK, co=K.co, g=$("#rkg"), p=$("#rkmp");
+  if(g){ g.style.width=co.p+"%"; const t=$("#rkgp"); if(t) t.textContent=co.p+"％"; }
+  if(p&&co.mg) p.style.width=co.mg.p+"%";
+}
+/* --- 問題タイム --- */
+function rkLoadMine(){
+  const K=RK; if(!NETSET_P) NETSET_P=api("set",NET).then(r=>{
+    const c=QZ.cleanSet(r); const qs=c.ok?c.set.qs.filter(x=>x.t==="mc"):[];
+    if(!qs.length) throw new Error("no set");
+    MINE={qs,order:[],i:0};
+  }).catch(()=>{ NETSET_P=null; });
+  const box=$("#rkq"); if(box) box.innerHTML=`<div class="q">${T("rk.load")}</div>`;
+  NETSET_P.then(()=>{ if(RK===K&&K.co.ph==="play"&&MINE) rkShowQ(); });
+}
+function rkShowQ(){
+  const K=RK; if(!K||K.co.ph!=="play") return;
+  const s=K.s, box=$("#rkq"); if(!box) return;
+  if(s.game==="mine"&&!MINE) return rkLoadMine();
+  const q=K.cur=(s.game==="mine"?genMine():genChoice(s.game,s.g)); K.lock=false;
+  const cls=["ca","cb","cc","cd"];
+  box.innerHTML=`<div class="q"><div class="big">${q.rich?"":esc(q.q)}${spkBtn(s.game,q.q)}</div><div class="small">${esc(q.small||"")}</div></div>
+    <div class="fb" id="fb" aria-live="polite"></div>
+    <div class="choices">${q.ch.map((c,i)=>`<button class="choice ${cls[i]}" data-c="${esc(c)}"><span class="kh" aria-hidden="true">${i+1}</span>${q.rich?"":chLabel(c,q)}</button>`).join("")}</div>`;
+  if(q.rich){ box.querySelector(".big").prepend(rubyNode(q.q)); box.querySelectorAll(".choice").forEach((b,i)=>b.append(rubyNode(q.ch[i]))); }
+  box.querySelectorAll("[data-c]").forEach(b=>b.onclick=()=>rkPick(b));
+}
+function rkPick(b){
+  const K=RK; if(!K||K.lock||K.co.ph!=="play") return; K.lock=true;
+  const q=K.cur, isOk=c=>q.rich?q.oks.includes(c):c===q.a, right=isOk(b.dataset.c);
+  document.querySelectorAll("#rkq .choice").forEach(e=>e.classList.add(isOk(e.dataset.c)?"right":"wrong"));
+  K.ans++; if(right) K.ok++;
+  sfx(right?"ok":"ng");
+  const fb=$("#fb"), ans=q.rich?QZ.plain(q.a):q.a;
+  if(fb){ fb.className="fb "+(right?"ok":"ng"); fb.textContent=right?T("rk.right"):T("rk.wrong",ans); }
+  api("act",{...NET,op:"cans",ok:right,k:++K.k}).then(r=>{
+    if(RK===K&&r&&r.cap){ const f=$("#fb"); if(f){ f.className="fb ok"; f.textContent=T("rk.cap"); } }      // 1人の上限：数字は見せず「みんなの ばん！」
+  }).catch(()=>{});
+  setTimeout(()=>{ if(RK===K&&K.co.ph==="play") rkShowQ(); },right?1300:2600);      // 答えのあとは 1.3秒（まちがいは 2.6秒）あける
+}
+function rkBoost(){
+  const K=RK; if(!K||K.co.ph!=="play"||K.boostSg===K.co.sg) return;
+  K.boostSg=K.co.sg; K.boo++; sfx("ok");
+  const b=$("#rkb"); if(b){ b.disabled=true; b.querySelector("span").textContent=T("rk.boosted"); }
+  api("act",{...NET,op:"boost"}).catch(()=>{});
+}
+/* --- せーので はっしゃ：3・2・1 の「1」を先生の時計で合わせる --- */
+function rkSyRound(m,now){
+  const SY=COOP.SY; let i=0;
+  for(;i<SY.ROUNDS-1;i++) if(now<m.s+SY.LEAD+i*SY.GAP+1500) break;
+  return i;
+}
+function rkSyTick(){
+  const K=RK; if(!K||K.co.ph!=="mini"||K.co.mg.k!=="sy") return;
+  const m=K.co.mg, SY=COOP.SY, now=rkNow(), i=rkSyRound(m,now), d=m.s+SY.LEAD+i*SY.GAP-now;
+  const el=$("#rkbeat"); if(!el) return;
+  let txt="", go=false;
+  if(d>2000) txt="・・・"; else if(d>1000) txt="3"; else if(d>0) txt="2"; else if(d>-800){ txt="1"; go=true; }
+  if(el.textContent!==txt) el.textContent=txt;
+  el.classList.toggle("go",go);
+  const rd=$("#rkrd"); if(rd) rd.textContent=(i+1)+" / "+SY.ROUNDS;
+  const pb=$("#rkpress"); if(pb) pb.disabled=!!K.pressed[m.s+":"+i];
+}
+function rkHitMsg(txt,soft){ const e=$("#rkhit"); if(!e) return; e.textContent=txt; e.classList.toggle("soft",!!soft); const K=RK; clearTimeout(K.hm); K.hm=setTimeout(()=>{ const x=$("#rkhit"); if(x) x.textContent=""; },1500); }
+function rkPress(){
+  const K=RK; if(!K||K.co.ph!=="mini"||K.co.mg.k!=="sy") return;
+  const m=K.co.mg, at=rkNow(), i=rkSyRound(m,at), key=m.s+":"+i;
+  if(K.pressed[key]) return; K.pressed[key]=1; $("#rkpress").disabled=true;
+  api("act",{...NET,op:"mini",at}).then(r=>{
+    if(RK!==K) return;
+    if(r&&r.hit){ K.hit++; sfx("ok"); rkHitMsg(T("rk.hit")); } else rkHitMsg(T("rk.next"),true);      // 外れても失敗とは出さない
+  }).catch(()=>{});
+}
+/* --- ほしを あつめよう：自分の端末の流れ星をタップ。合計はクラスで判定 --- */
+function rkStTick(){
+  const K=RK; if(!K||K.co.ph!=="mini"||K.co.mg.k!=="st") return;
+  const m=K.co.mg, now=rkNow(), t1=m.s+COOP.ST.LEAD, cd=$("#rkcd2");
+  if(now<t1){ if(cd) cd.textContent=Math.max(0,Math.ceil((t1-now)/1000)); return; }
+  if(cd&&K.capShown!==m.s) cd.textContent="";
+  if(now>=m.e) return;
+  if(now>=K.nextStar){ rkSpawn(); K.nextStar=now+600+rnd(500); }
+}
+function rkSpawn(){
+  const sky=$("#rksky"); if(!sky) return;
+  const b=document.createElement("button"); b.type="button"; b.className="rk-fs"; b.innerHTML=rkSvg("rk-star","0 0 64 64");
+  b.style.left=(4+rnd(78))+"%";
+  const still=reduceMotion();
+  if(still) b.style.top=(6+rnd(60))+"%"; else b.style.animationDuration=(3.4+rnd(10)/10)+"s";
+  b.onclick=()=>{ if(b.dataset.x) return; b.dataset.x="1"; b.classList.add("caught"); const K=RK; if(!K) return; K.pend++; K.got++; K.gotMini++; const g=$("#rkgot"); if(g) g.textContent=T("rk.got",K.gotMini); setTimeout(()=>b.remove(),220); };
+  sky.appendChild(b); setTimeout(()=>b.remove(),still?3000:4000);
+}
+function rkFlush(){
+  const K=RK; if(!K||K.pend<=0||K.flushing) return;
+  const n=Math.min(5,K.pend); K.pend-=n; K.flushing=true;
+  api("act",{...NET,op:"mini",n}).then(r=>{ K.flushing=false; if(RK===K&&r&&r.cap&&K.co.mg){ K.capShown=K.co.mg.s; const c=$("#rkcd2"); if(c) c.textContent=T("rk.cap"); } }).catch(()=>{ K.flushing=false; K.pend+=n; });
+}
+function rkKidEnd(){
+  const K=RK; if(K.ended) return; K.ended=true; rkKidStop();
+  const st=K.co.res?K.co.res.st:K.co.st;
+  sfx("medal"); party();
+  const colHtml=COLOK?colRun({units:[],answered:K.ans,correct:K.ok,quiz:true}):"";      // どんぐり：3問以上こたえた子に +2（1日1回）。成功しても ふえない
+  const mine=[K.ok?T("rk.me.ok",K.ok):"",K.boo?T("rk.me.bo",K.boo):"",K.hit?T("rk.me.hit",K.hit):"",K.got?T("rk.me.st",K.got):""].filter(Boolean);
+  app.innerHTML=`<div class="play"><div class="res">${rkSvg("rk-rocket","0 0 120 150","rks big")}<div class="num">${T("rk.end",st)}</div><div class="note">${T("rk.end.h")}</div>
+    <div class="q rk-me"><div class="small">${T("rk.me")}</div>${(mine.length?mine:[T("rk.me.none")]).map(x=>`<div class="big2">${esc(x)}</div>`).join("")}</div>
+    ${colHtml}<div class="actions"><button class="btn again" onclick="go('#home')">${T("n.home")}</button></div></div>${privacy()}</div>`;
+}
+
+/* --- 先生の大画面 --- */
+const rkGaugeSvg=()=>`<svg viewBox="0 0 104 360" aria-hidden="true" focusable="false"><defs><clipPath id="rkclip"><rect x="10" y="8" width="84" height="344" rx="34"/></clipPath></defs>
+  <rect x="6" y="4" width="92" height="352" rx="40" fill="#fff" stroke="var(--edge)" stroke-width="4"/>
+  <g clip-path="url(#rkclip)"><rect id="rkfill" x="10" y="8" width="84" height="344" fill="var(--sun)"/>
+  ${[1,2,3,4].map(i=>`<path d="M10 ${8+344*i/5}h84" stroke="var(--edge)" stroke-width="3" stroke-dasharray="6 6" opacity=".55"/>`).join("")}</g>
+  <rect x="6" y="4" width="92" height="352" rx="40" fill="none" stroke="var(--edge)" stroke-width="4"/></svg>`;
+function rkHostBuild(px,s){
+  popInit(); M=null;
+  const R=RKH={s,co:null,off:0,row:[],bbi:0,key:"",iv:0,bn:0,bt:0,scene:-1,evSeen:-1};
+  px.className="px rk-px";
+  px.innerHTML=`<div class="rkh" id="rkh">
+    <svg class="rkh-bg" viewBox="0 0 1280 720" preserveAspectRatio="xMidYMid slice" aria-hidden="true" focusable="false"><use id="rkbg" href="#rk-bg0"/></svg>
+    <div class="rkh-top"><span>🚀 ${T("rk.name")}</span><span id="rkst"></span><span class="rkh-t3" id="rkt"></span></div>
+    <div class="rkh-dots" id="rkdots">${[0,1,2,3,4].map(i=>`<i></i>`).join("")}</div>
+    <div class="rkh-note" id="rknote"></div>
+    <svg class="rkh-pad" id="rkpad" viewBox="0 0 360 60" aria-hidden="true" focusable="false"><use href="#rk-pad"/></svg>
+    <div class="rkh-rocket" id="rkr"><svg viewBox="0 0 120 240" aria-hidden="true" focusable="false"><use id="rkside" href="#rk-side" x="0" y="0" width="120" height="150" style="display:none"/><use href="#rk-rocket" x="0" y="0" width="120" height="150"/>
+      <use class="fl1" href="#rk-fl1" x="33" y="134" width="54" height="81"/><use class="fl2" href="#rk-fl2" x="33" y="134" width="54" height="81"/></svg></div>
+    <div class="rkh-gauge"><div class="gl">${T("rk.fuel")}</div>${rkGaugeSvg()}<div class="gp" id="rkgp"></div></div>
+    <div class="rkh-mid" id="rkmid"></div>
+    <div class="rkh-n" id="rkn"></div><div class="rkh-row" id="rkrow"></div></div>`;
+  R.iv=setInterval(rkHostFrame,100);
+}
+function rkRowPut(p){
+  const R=RKH; if(!R) return;
+  if(!R.row.includes(p.pid)){ R.row.push(p.pid); if(R.row.length>14) R.row.shift(); rkRowDraw(); }
+}
+function rkRowDraw(){
+  const R=RKH, box=document.getElementById("rkrow"); if(!box||!R.s) return;
+  const by=new Map(R.s.players.map(p=>[p.pid,p]));
+  R.row=R.row.filter(x=>by.has(x));
+  for(const p of R.s.players){ if(R.row.length>=14) break; if(!R.row.includes(p.pid)) R.row.push(p.pid); }
+  const sig=R.row.join(",")+"|"+R.row.map(x=>by.get(x).emoji).join("");
+  if(box.dataset.sig===sig) return; box.dataset.sig=sig;
+  box.innerHTML=R.row.map(x=>`<span data-pid="${esc(x)}" role="button" tabindex="0">${face(by.get(x).emoji)}</span>`).join("");
+}
+function rkPop(s){
+  const R=RKH, b=R&&R.co&&R.co.bb; if(!b||b.i===R.bbi) return; R.bbi=b.i;
+  const by=new Map(s.players.map(p=>[p.ix,p])), evs=[];
+  for(const [ix,kind] of b.l){ const p=by.get(ix); if(!p) continue; rkRowPut(p); evs.push({pid:p.pid,name:p.name,emoji:p.emoji,k:"rk"+kind}); }
+  if(evs.length) popFeed(evs);
+}
+function rkHostUpd(s){
+  const R=RKH, co=COOP.clean(s.co); if(!R||!co) return;
+  R.s=s; R.co=co; R.off=s.now-Date.now();
+  const $$=id=>document.getElementById(id), fin=co.ph==="clear"||co.ph==="end";
+  const scene=fin?co.st:co.sg;
+  if(scene!==R.scene){ R.scene=scene; $$("rkbg").setAttribute("href","#rk-bg"+scene); $$("rkpad").style.display=scene===0?"":"none"; }
+  const alt=fin?co.st:co.sg+(co.ph==="play"?co.p/100*.6:.8);
+  const r=$$("rkr"); r.style.bottom=(5.5+alt/5*34.5)+"%"; r.style.transform=`scale(${(.8+.05*co.st).toFixed(2)})`;
+  r.classList.toggle("shake",co.ph==="count"||co.ph==="clear");
+  r.classList.toggle("idle",co.st===0&&(co.ph==="count"||(co.ph==="play"&&co.p<10)));      // 発射台にいるあいだは炎を出さない
+  $$("rkside").style.display=co.st>=2?"":"none";
+  $$("rkst").textContent=co.ph==="end"?T("rk.end.h"):T("rk.stage",co.sg+1)+"　→ "+T("rk.dest",co.sg);
+  [...$$("rkdots").children].forEach((d,i)=>{ d.className=i<co.st?"done":(i===co.sg&&co.ph!=="end"?"cur":""); });
+  const p=co.ph==="mini"||fin?100:co.p; $$("rkfill").style.transform=`scaleY(${p/100})`; $$("rkgp").textContent=p+"％";
+  $$("rkn").textContent=T("rk.h.n",co.n);
+  if(co.ev&&co.ev.t==="bo"&&co.ev.id!==R.evSeen){ R.bn=1; R.bt=Date.now()+3500; }
+  R.evSeen=co.ev?co.ev.id:-1;
+  const key=co.ph+":"+co.sg+":"+(co.mg?co.mg.k+co.mg.a:"");
+  if(key!==R.key){
+    R.key=key; const mid=$$("rkmid");
+    if(co.ph==="count") mid.innerHTML=`<div class="rkm-card"><h2>${T("rk.h.soon")}</h2><div class="rkm-big" id="rkbig"></div></div>`;
+    else if(co.ph==="play") mid.innerHTML=`<div class="rkm-card"><h2>${T("rk.h.q")}</h2></div>`;
+    else if(co.ph==="mini"&&co.mg.k==="sy") mid.innerHTML=`<div class="rkm-card"><h2>${T("rk.sy")}</h2><div class="hint">${T("rk.h.sy")}</div><div class="rkm-big" id="rkbig"></div><div class="hint">${T("rk.h.sy.p")}</div><div class="rkm-bar"><i id="rkmb"></i></div></div>`;
+    else if(co.ph==="mini") mid.innerHTML=`<div class="rkm-card"><h2>${T("rk.st")}</h2><div class="hint">${T("rk.h.st")}</div><div class="rkm-big" id="rkbig"></div><div class="hint">${T("rk.h.st.p")}</div><div class="rkm-bar star"><i id="rkmb"></i></div></div>`;
+    else if(co.ph==="again") mid.innerHTML=`<div class="rkm-card"><h2>${T("rk.again")}</h2><div class="hint">${T("rk.again.h")}</div></div>`;
+    else if(co.ph==="clear"){ mid.innerHTML=`<div class="rkm-card"><div class="rkm-clear">${T("rk.clear",co.st)}</div><h2>${T("rk.reach",T("rk.dest",co.st-1))}</h2></div>`; party(); }
+    else if(co.ph==="end"){ mid.innerHTML=`<div class="rkm-card"><div class="rkm-end">${T("rk.end",co.res?co.res.st:co.st)}</div></div>`; party(); }
+  }
+  const mb=$$("rkmb"); if(mb&&co.mg) mb.style.width=co.mg.p+"%";
+  rkRowDraw(); rkHostFrame();
+}
+function rkHostFrame(){
+  const R=RKH; if(!R||params().path!=="host"){ if(R) clearInterval(R.iv); return; }
+  const co=R.co; if(!co) return;
+  const now=Date.now()+R.off, $$=id=>document.getElementById(id);
+  const t=$$("rkt"); let tt="";
+  if(co.ph==="play"&&co.ae) tt=T("rk.h.left")+" "+T("rk.h.sec",Math.max(0,Math.ceil((co.ae-now)/1000)));
+  else if(co.ph==="mini"&&co.mg) tt=T("rk.h.left")+" "+T("rk.h.sec",Math.max(0,Math.ceil((co.mg.e-now)/1000)));
+  if(t&&t.textContent!==tt) t.textContent=tt;
+  const big=$$("rkbig");
+  if(big){
+    let txt="", go=false;
+    if(co.ph==="count") txt=String(Math.max(0,Math.ceil((co.ae-now)/1000)));
+    else if(co.ph==="mini"&&co.mg.k==="sy"){
+      const m=co.mg, SY=COOP.SY, i=rkSyRound(m,now), d=m.s+SY.LEAD+i*SY.GAP-now;
+      if(d>2000) txt="・・・"; else if(d>1000) txt="3"; else if(d>0) txt="2"; else if(d>-800){ txt="1"; go=true; }
+    } else if(co.ph==="mini"){ const t1=co.mg.s+COOP.ST.LEAD; txt=now<t1?String(Math.max(0,Math.ceil((t1-now)/1000))):""; }
+    if(big.textContent!==txt) big.textContent=txt;
+    big.classList.toggle("go",go);
+  }
+  const note=$$("rknote");
+  if(note){
+    const on=[]; if(R.bn&&Date.now()<R.bt) on.push(T("rk.h.bo")); if(co.ph==="play"&&co.wd) on.push(T("rk.h.wind"));
+    const html=on.map(x=>`<span>${x}</span>`).join(""); if(note.dataset.h!==html){ note.dataset.h=html; note.innerHTML=html; }
+  }
 }
 
 /*T-BEGIN*/
@@ -4451,7 +4856,7 @@ function route(){
   { const m=/[?&#]tk=([0-5])(?![0-9])/.exec(location.hash); TKH=m?+m[1]:null; }
   if(EX){ clearTimeout(EX.tm); EX=null; }
   if(qzFlush){ qzFlush(); qzFlush=null; }
-  stopTimer(); P=null; M=null; QK=null; QS=null; QH=null; ckStop(); prStop(); wakeOff();
+  stopTimer(); P=null; M=null; QK=null; QS=null; QH=null; if(RKH) clearInterval(RKH.iv); RK=null; RKH=null; ckStop(); prStop(); wakeOff();
   if(ES){ ES.close(); ES=null; }
   const {path:path0,q}=params(), path=location.hash.startsWith("#q=")?"qlink":location.hash.startsWith("#u=")?"ulink":path0;
   setLG(path==="home"||path==="modesetup"||path==="join"||path==="record"?ui.grade:0);
