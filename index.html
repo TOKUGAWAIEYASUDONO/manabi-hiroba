@@ -816,6 +816,8 @@ body[data-v=host] .wrap{max-width:none;padding:0}
   .rk-fs{animation:none!important}.rk-beat.go,.rkm-big.go{animation:none}.rkh-rocket,.rkh-rocket.shake,.rkh-rocket .fl1,.rkh-rocket .fl2{transition:none;animation:none}.rkh-rocket .fl2{opacity:0}
   .rk-hbar i,.rkm-bar i,#rkfill{transition:none}.rkh-row [data-pid].hop{animation:none}}
 </style>
+<style id="mathview-style"></style>
+<style>.qclock{margin:0 auto 4px}.kidunits{grid-template-columns:1fr}.kidunits .ucard{min-height:76px;justify-content:center;text-align:center;font-size:1.25rem}</style>
 </head>
 <body>
 <svg xmlns="http://www.w3.org/2000/svg" style="position:absolute;width:0;height:0;overflow:hidden" aria-hidden="true" focusable="false"><defs>
@@ -914,6 +916,7 @@ body[data-v=host] .wrap{max-width:none;padding:0}
 <script src="data/calc.js"></script>
 <script src="data/choices.js"></script>
 <script src="data/quizlib.js"></script>
+<script src="data/mathview.js"></script>
 <script src="data/ngwords.js"></script>
 <script src="data/cooplib.js"></script>
 <!-- 単元ごとの問題の型（単元から出題） -->
@@ -1487,6 +1490,26 @@ function fgText(n){
   p.replaceChild(rubyNode(s),n);
 }
 const rbParts=s=>{ const Q=window.MH_QUIZ; return Q&&Q.rubyParts(s).some(x=>x.b!=null); };
+document.getElementById("mathview-style").textContent=MH_MATHVIEW.css;
+function mathText(root){
+  if(!root) return;
+  const w=document.createTreeWalker(root,NodeFilter.SHOW_TEXT), nodes=[]; let n;
+  while((n=w.nextNode())) if(/\d+(?:と\d+)?\/\d+/.test(n.nodeValue)&&!n.parentElement.closest("rt,.frac,script,style")) nodes.push(n);
+  nodes.forEach(n=>n.replaceWith(MH_MATHVIEW.fracNodes(n.nodeValue,document)));
+}
+function mathIn(root){ mathText(root); return root; }
+new MutationObserver(ms=>{ for(const m of ms){
+  const targets=m.type==="characterData"?[m.target]:[...m.addedNodes];
+  for(const n of targets){
+    const e=n.nodeType===3?n.parentElement:n;
+    if(e&&e.nodeType===1&&(e.matches?.(".mq,.ma,.qzl,.choice,.big,.fb,.uextext")||e.closest?.(".mcard,.qzq,.qzgrid,.choices"))) mathIn(e);
+  }
+} }).observe(document.body,{childList:true,subtree:true,characterData:true});
+function clockIn(root,id,q){
+  if(!["m1-tokei","m1-tokei-fun"].includes(id)) return;
+  const time=MH_MATHVIEW.parseClockQ(q);
+  if(time){ const svg=MH_MATHVIEW.clockSVG(time.h,time.m,{size:112}); svg.classList.add("qclock"); root.prepend(svg); }
+}
 function fgAttr(el){ for(const a of FG_ATTR){ const v=el.getAttribute&&el.getAttribute(a); if(v&&v.indexOf("《")>=0&&rbParts(v)) el.setAttribute(a,rbp(v)); } }
 function fgWalk(root){
   if(root.nodeType===3) return fgText(root);
@@ -1631,7 +1654,7 @@ function homeNext(x,best){
 function gameTile(x,b){
   const best=b[x.id], m=best?best.medal:0;
   return `<button class="tile" data-id="${x.id}"><span class="tico">${svgU(x.art)}</span><span class="tbody"><span class="tt">${x.t}</span>
-    <span class="tstat">${stampsHtml(m)}<span class="bv">${best?T("h.best",best.score):T("h.best0")}</span></span>
+    <span class="tstat">${stampsHtml(m)}<span class="bv">${best&&best.score?T("h.best",best.score):""}</span></span>
     <span class="tnext">${medalize(homeNext(x,best))}</span></span></button>`;
 }
 function modeTile(m,b){
@@ -1641,7 +1664,7 @@ function modeTile(m,b){
 /* 「単元をえらぶ」：その教科に単元があるとき。1〜2年は自分の学年の単元があるときだけ */
 function unitTile(k){
   if(!UNITS_OK||!SJR[k]) return "";
-  const g=ui.grade, has=UREADY.some(u=>u.subj===SJR[k]&&(g===0||(easyG(g)?u.g===g:true)));
+  const g=ui.grade, has=UREADY.some(u=>(easyG(g)?u.g===g:u.subj===SJR[k])&&(g===0||(easyG(g)?u.g===g:true)));
   return has?`<button class="tile unitgo" data-un="${SJR[k]}"><span class="tico">${ic("clipboard")}</span><span class="tbody"><span class="tt">${T("u.pick")}</span><span class="td">${T("u.pick.d")}</span></span></button>`:"";
 }
 function renderHome(){
@@ -1653,7 +1676,7 @@ function renderHome(){
     ${easy?`<div class="guide">${mbs("n")}<span class="say">${T("home.guide")}</span></div>`:""}
     <button class="hero" id="quick">${easy?"":mbs("n")}${ic("zap")}<span><span class="ht">${T("home.quick")}</span><span class="hn">${T("home.quick.n")}</span></span></button>
     ${COLOK?colDoor():""}
-    <div class="zones" data-n="${zones.length+1}">${zones.map(([k,l])=>`<section class="zone s-${k}"><h2>${subjN(k)}</h2><div class="tiles">${l.map(x=>gameTile(x,b)).join("")}${unitTile(k)}</div></section>`).join("")}
+    <div class="zones" data-n="${zones.length+1}">${zones.map(([k,l])=>`<section class="zone s-${k}"><h2>${subjN(k)}</h2><div class="tiles">${l.map(x=>gameTile(x,b)).join("")}${easy?"":unitTile(k)}</div></section>`).join("")}${easy?`<section class="zone s-math"><div class="tiles">${unitTile("math")}</div></section>`:""}
       <section class="zone s-btl"><h2>${ic("swords")}${T("home.battle")}</h2><div class="tiles">${MODES.map(m=>modeTile(m,b)).join("")}</div></section></div>
     ${zones.length?"":`<div class="empty">${T("home.empty")}</div>`}
     <div class="bottom">
@@ -1677,7 +1700,7 @@ function renderHome(){
     withGrade(g0=>openGame(x,g0));
   });
   app.querySelectorAll("[data-m]").forEach(e=>e.onclick=()=>go(`#modesetup?m=${e.dataset.m}`));
-  app.querySelectorAll("[data-un]").forEach(e=>e.onclick=()=>go(`#units?kid=1&subj=${e.dataset.un}`));
+  app.querySelectorAll("[data-un]").forEach(e=>e.onclick=()=>go(easy?"#units?kid=1":`#units?kid=1&subj=${e.dataset.un}`));
 }
 /* 右上の学年：押すと選び直し */
 function openGradeSheet(){
@@ -1748,7 +1771,7 @@ function renderPlay(q){
     ${task?`<div class="banner">${ic("pencil")} ${T("p.task",`${x.t}（${g}年《ねん》・${t}${T("sec")}）`)}</div>`:""}
     <div class="topbar">
       ${task?`<button class="back" id="bk">${ic("x")}${T("back.end")}</button>`:`<button class="back" onclick="stopTimer();go('#home')">${BK()}</button>`}
-      <span><b>${tico(x)} ${x.t}</b> <span class="note">${g}年《ねん》${info?"・"+esc(info):""}</span></span>
+       <span><b>${tico(x)} ${x.t}</b> <span class="note">${g<=2?"":g+"年《ねん》"}${info?(g<=2?"":"・")+esc(info):""}</span></span>
       <span class="timer" id="tm" aria-hidden="true">${t}</span>
     </div>
     <div class="tbar" id="tbar"><i id="tb"></i></div>
@@ -1781,7 +1804,7 @@ function next(){
   else P.cur=gen(P.x.id,P.g,P.opt);
   P.inp=""; P.lock=false;
   if(P.cur.ch) P.chN++; else P.inN++;
-  $("#qq").innerHTML=esc(P.cur.q)+spkBtn(P.x.id,P.cur.q); $("#qs").textContent=P.cur.small||"= ?";
+  $("#qq").textContent=P.cur.q; mathIn($("#qq")); if(P.x.id==="eigo") $("#qq").insertAdjacentHTML("beforeend",spkBtn(P.x.id,P.cur.q)); $("#qs").textContent=P.cur.small||"= ?";
   const area=$("#area");
   if(!P.cur.ch){
     const dot=P.g>=4;   // 1〜3年の計算には小数が出ないので「.」キーは出さない
@@ -1793,7 +1816,7 @@ function next(){
   } else {
     const cls=["ca","cb","cc","cd"];
     area.innerHTML=`<div class="choices">${P.cur.ch.map((c,i)=>`<button class="choice ${cls[i]}" data-c="${esc(c)}"><span class="kh" aria-hidden="true">${i+1}</span>${chLabel(c,P.cur)}</button>`).join("")}</div>`;
-    area.querySelectorAll("[data-c]").forEach(b=>b.onclick=()=>pick(b));
+    mathIn(area); area.querySelectorAll("[data-c]").forEach(b=>b.onclick=()=>pick(b));
   }
 }
 function key(k){
@@ -1817,7 +1840,7 @@ function judge(right,ans){
   else {
     p.ng++; p.misses.push(`${p.cur.q} → ${ans}`); p.missObjs.push(p.cur);
     if(p.review&&!p.cur.retry) p.queue.push({...p.cur,retry:true});    // ふくしゅう中にまちがえた問題は、最後にもう一度
-    fb.className="fb ng"; fb.textContent=T("fb.ng",ans);
+    fb.className="fb ng"; fb.textContent=T("fb.ng",ans); mathIn(fb);
   }
   if(p.review) $("#scw").innerHTML=T("p.left",p.queue.length); else $("#sc").textContent=p.ok;
   // 4択をでたらめに連打させないよう、まちがえたあとは1.8秒待つ
@@ -4201,7 +4224,7 @@ function rubyNode(text){
   const f=document.createDocumentFragment();
   for(const p of QZ.rubyParts(text)){
     if(p.b!=null){ const r=document.createElement("ruby"); r.append(p.b); const rt=document.createElement("rt"); rt.textContent=p.r; r.append(rt); f.append(r); }
-    else f.append(p.t);
+    else f.append(MH_MATHVIEW.fracNodes(p.t,document));
   }
   return f;
 }
@@ -4751,6 +4774,15 @@ function renderUnits(q){
   const kid=q.get("kid")==="1";
   if(!UNITS_OK){ setLG(0); app.replaceChildren(h("div",{class:"q"},"単元《たんげん》のデータ（data/units.js）を読《よ》み込《こ》めませんでした。",h("br"),h("button",{type:"button",class:"btn",text:T("n.home"),onclick:()=>go("#home")}))); return; }
   const kg=kid?ui.grade:0; setLG(kg);
+  if(kid&&easyG(kg)){
+    const units=UREADY.filter(u=>u.g===kg);
+    app.replaceChildren(h("div",{class:"up kid"},
+      h("div",{class:"topbar"},h("button",{type:"button",class:"back",innerHTML:BK(),onclick:()=>go("#home")})),
+      h("h2",{class:"th2",text:T("u.pick")}),
+      h("div",{class:"ugrid kidunits"},...units.map(u=>h("button",{type:"button",class:"ucard",onclick:()=>startUnitRun({ids:[u.id],n:20,t:20,seed:uSeed(),mix:true,choice:null})},
+        h("span",{class:"ubody"},h("b",{text:u.title})))))));
+    return;
+  }
   const easy=easyG(kg), subjs=["sansu","kokugo","shakai","eigo"];
   /* ?pick=ID1,ID2（ガイドから）：UNITS にある ID だけ、最大20個を選択済みにして開く */
   if(!kid&&q.get("pick")){ const ok=[...new Set(q.get("pick").split(",").map(x=>x.trim()))].filter(i=>UBY[i]&&UREADY.includes(UBY[i])).slice(0,20); if(ok.length){ UPK.sel=ok; uSave(); } }
@@ -4915,14 +4947,14 @@ function unitNext(){
   if(U.pi>=U.pool.length){ U.round++; U.pool=UN.unitPick(U.ids,U.n,U.seed+"-"+U.round,U.mix); U.pi=0; if(!U.pool.length) return finish(); }
   const c=uCur(U.pool[U.pi++],U.choice); P.cur=c; P.inp={f:(c.len||[]).map(()=>""),at:0}; P.lock=false;
   if(c.mode==="choice4") P.chN++; else P.inN++;
-  const qq=$("#qq"); qq.className="big"+(rbp(c.q).length>16?" long":""); qq.textContent=c.q;
+  const qq=$("#qq"); qq.className="big"+(rbp(c.q).length>16?" long":""); qq.textContent=c.q; mathIn(qq); clockIn(qq,c.uid,c.q);
   if(c.subj==="eigo") qq.insertAdjacentHTML("beforeend",spkBtn("eigo",c.q));
   $("#qs").textContent=c.small; $("#um").textContent=""; $("#um").insertAdjacentHTML("beforeend",uMarksHtml(P.marks,12));
   const area=$("#area");
   if(c.mode==="choice4"){
     const cls=["ca","cb","cc","cd"];
     area.innerHTML=`<div class="choices">${c.ch.map((x,i)=>`<button class="choice ${cls[i]}" data-c="${esc(x)}"><span class="kh" aria-hidden="true">${i+1}</span>${chLabel(x,c)}</button>`).join("")}</div>`;
-    area.querySelectorAll("[data-c]").forEach(b=>b.onclick=()=>uPick(b));
+    mathIn(area); area.querySelectorAll("[data-c]").forEach(b=>b.onclick=()=>uPick(b));
     return;
   }
   const m=c.mode, dot=m==="dec"||(m==="unit"&&c.dot);
