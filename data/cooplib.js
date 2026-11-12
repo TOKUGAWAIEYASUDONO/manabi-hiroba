@@ -1,18 +1,18 @@
 /* まなびひろば「みんなで あそぶ」（協力モード）の部品（画面には触らない）
    ブラウザでは window.MH_COOP、Node.js（server.js・tools/）では require で使う。外部には通信しない。
    いまの中身：「ロケット はっしゃ」の進行（engine）。
-   流れ：問題タイム（正解で燃料）→ 目標に届いたらミニゲーム（全員同時・15〜25秒）→ クリアで次のステージ。5ステージ。
+   流れ：問題タイム（正解で燃料）→ 目標に届いたらミニゲーム（全員同時・1回12秒いない）→ クリアで次のステージ。ふつう5ステージ／みじかい3ステージ（先生がえらぶ）。
    ミニゲームは「せーので はっしゃ」（3・2・1 に合わせて押す）と「ほしを あつめよう」（流れ星をタップ）。
    失敗しても もういちど は1回だけ。2回目は条件をゆるめて、必ず次へ進む（責めない・止めない）。
    時刻はすべて引数の now（先生の端末の Date.now()）で渡す。部品の中で時計は読まない（検査しやすくするため）。 */
 (function(root){
 "use strict";
-const STAGES=5;
+const STAGES=5, SHORT=3;                            // ふつう 5ステージ／みじかい 3ステージ
 const KINDS=["sy","st","sy","st","sy"];            // ステージごとのミニゲーム：sy＝せーので はっしゃ／st＝ほしを あつめよう
 const OPS=["cans","boost","mini"];                  // 児童が送ってよい操作
-const SY={LEAD:4000,GAP:5000,ROUNDS:3,TAIL:2500};   // せーので：最初の「3」まで／ラウンドの間／ラウンド数／さいごの余韻（ミリ秒）
-const ST={LEAD:3000,DUR:17000,MIN:8000};            // ほし：はじまるまで／あつめる時間／早く終われる最短
-const C={COUNT:3000,PLAY:[40000,45000],CAP:[60000,65000],CLEAR:3500,AGAIN:2800,MAXALL:14*60000};   // [ふつう,やさしい]
+const SY={LEAD:2500,GAP:3000,ROUNDS:3,TAIL:1500};   // せーので：最初の「3」まで／ラウンドの間／ラウンド数／さいごの余韻（ミリ秒）。全部で 10秒
+const ST={LEAD:2000,DUR:9000,MIN:5000};             // ほし：はじまるまで／あつめる時間／早く終われる最短。全部で 11秒
+const C={COUNT:3000,PLAY:[50000,55000],CAP:[60000,65000],CLEAR:2500,AGAIN:2000,MAXALL:14*60000};   // [ふつう,やさしい]
 const intIn=(v,a,b)=>Number.isInteger(v)&&v>=a&&v<=b;
 const bad=(c,msg)=>[c,{error:msg}];
 
@@ -28,9 +28,9 @@ const capOf=(G,n)=>Math.max(8,Math.round(G/Math.max(1,n)*2.2));           // 1�
 
 function engine(o){
   o=o||{};
-  const easy=!!o.easy, g=intIn(o.g,1,6)?o.g:3, sc=o.scale>0&&o.scale<=1?o.scale:1;     // scale：検査で時間をちぢめるときだけ使う
+  const easy=!!o.easy, g=intIn(o.g,1,6)?o.g:3, NS=o.stages===SHORT?SHORT:STAGES, sc=o.scale>0&&o.scale<=1?o.scale:1;     // scale：検査で時間をちぢめるときだけ使う
   const rand=typeof o.rand==="function"?o.rand:Math.random;
-  const T=ms=>Math.round(ms*sc), E={easy,g,sc,ph:"lobby",sg:0,st:0,fp:0,G:0,capF:8,wind:0,bonus:0,boN:0,ps:0,pe:0,m:null,evid:0,ev:null,
+  const T=ms=>Math.round(ms*sc), E={easy,g,sc,ns:NS,an:0,ph:"lobby",sg:0,st:0,fp:0,G:0,capF:8,wind:0,bonus:0,boN:0,ps:0,pe:0,m:null,evid:0,ev:null,
     P:new Map(),seq:0,Q:[],bb:null,bbAt:0,lastPick:0,t0:0,res:null,bbN:0};
 
   E.add=pid=>{ if(!E.P.has(pid)) E.P.set(pid,{ix:E.seq++,lastK:0,lastAt:0,lastOk:true,ts:[],f:0,bo:0,ok:0,ng:0,mh:false,rd:0,ms:0,lastStar:0,shown:0,shownAt:-1e12,tot:{ok:0,ans:0,bo:0,hit:0,st:0}}); };
@@ -51,7 +51,7 @@ function engine(o){
       m.need=Math.max(1,Math.ceil((easy?[.45,.2]:[.6,.25])[att-1]*n));               // クラスのこの人数が ぴったりなら クリア
       m.e=m.t0[SY.ROUNDS-1]+T(SY.TAIL);
     } else {
-      m.target=Math.max(4,Math.ceil(n*(easy?6:8)*(att===2?.5:1)));                  // みんなの ほしの合計
+      m.target=Math.max(4,Math.ceil(n*(easy?3:4)*(att===2?.5:1)));                  // みんなの ほしの合計（9秒で 1人 約10こ流れる）
       m.cap=Math.max(4,Math.ceil(m.target/n*2.5));                                  // 1人の上限（連打で稼げない）
       m.e=now+T(ST.LEAD+ST.DUR);
     }
@@ -59,10 +59,10 @@ function engine(o){
     for(const p of E.P.values()){ p.mh=false; p.rd=0; p.ms=0; }
   }
   function toClear(now){ E.st++; E.ph="clear"; E.pe=now+T(C.CLEAR); ev("c"+E.st); }
-  function finish(now){ if(E.ph==="end") return; E.ph="end"; E.res={st:E.st,n:N()}; ev("end"); E.pe=now; }
+  function finish(now){ if(E.ph==="end") return; E.ph="end"; E.res={st:E.st,n:N(),an:E.an}; ev("end"); E.pe=now; }
   E.finish=finish;
   E.begin=now=>{
-    E.t0=now; E.st=0; E.sg=0; E.G=stageTarget(N(),g,easy); E.capF=capOf(E.G,N()); E.ph="count"; E.pe=now+T(C.COUNT); E.res=null; E.ev=null; E.evid=0;
+    E.t0=now; E.st=0; E.sg=0; E.an=0; E.G=stageTarget(N(),g,easy); E.capF=capOf(E.G,N()); E.ph="count"; E.pe=now+T(C.COUNT); E.res=null; E.ev=null; E.evid=0;
     for(const p of E.P.values()) Object.assign(p,{f:0,bo:0,ok:0,ng:0,lastK:0,lastAt:0,ts:[],shown:0,shownAt:-1e12,tot:{ok:0,ans:0,bo:0,hit:0,st:0}});
   };
   const progress=()=>{ const m=E.m; if(!m) return 0;
@@ -94,7 +94,7 @@ function engine(o){
       if(E.ph!=="play") return [200,{ok:true,fp:0,late:true}];
       p.ts=p.ts.filter(t=>now-t<T(60000));
       if(p.ts.length>=12||now-p.lastAt<T(p.lastOk?1100:2400)) return bad(429,"少しゆっくり送ってね");   // 1分に12回まで／正解のあと1.1秒・まちがいのあと2.4秒はあける
-      p.lastK=b.k; p.lastAt=now; p.lastOk=b.ok; p.ts.push(now); p.tot.ans++;
+      p.lastK=b.k; p.lastAt=now; p.lastOk=b.ok; p.ts.push(now); p.tot.ans++; E.an++;
       const want=b.ok?5:1, give=Math.max(0,Math.min(want,E.capF-p.f));
       if(b.ok){ p.ok++; p.tot.ok++; } else p.ng++;
       if(give>0){ p.f+=give; E.fp+=give*(E.wind?1.25:1); if(b.ok) queue(pid,1); }
@@ -154,14 +154,14 @@ function engine(o){
       }
     }
     else if(E.ph==="again"){ if(now>=E.pe){ toMini(now,2); ch=true; } }
-    else if(E.ph==="clear"){ if(now>=E.pe){ if(E.st>=STAGES) finish(now); else { E.sg++; startPlay(now); } ch=true; } }
+    else if(E.ph==="clear"){ if(now>=E.pe){ if(E.st>=NS) finish(now); else { E.sg++; startPlay(now); } ch=true; } }
     if(pick(now)) ch=true;
     return ch;
   };
 
   /* ----- 画面に送る状態（小さく。人ごとの数字は入れない。吹き出し bb は先生の画面だけ） ----- */
   E.pub=(now,host)=>{
-    const o={k:"rk",ph:E.ph,sg:E.sg,st:E.st,n:N()};
+    const o={k:"rk",ph:E.ph,sg:E.sg,st:E.st,n:N(),ns:NS};
     if(E.ph==="play"){ o.p=Math.min(100,Math.floor(100*E.fp/E.G)); o.as=E.ps; o.ae=E.pe; if(E.wind) o.wd=1; o.bo=Math.min(100,Math.floor(100*E.boN/Math.max(1,Math.ceil(.6*N())))); }
     else if(E.ph==="count"||E.ph==="again"||E.ph==="clear") o.ae=E.pe;
     else if(E.ph==="mini"){ o.p=100; o.mg={k:E.m.k,a:E.m.a,s:E.m.s,e:E.m.e,p:progress()}; }
@@ -179,17 +179,17 @@ function clean(co){
   if(!co||typeof co!=="object"||co.k!=="rk") return null;
   const PH=["lobby","count","play","mini","again","clear","end"];
   if(!PH.includes(co.ph)||!intIn(co.sg,0,STAGES-1)||!intIn(co.st,0,STAGES)) return null;
-  const o={k:"rk",ph:co.ph,sg:co.sg,st:co.st,n:intIn(co.n,0,1000)?co.n:0,p:intIn(co.p,0,100)?co.p:0,wd:co.wd?1:0,bo:intIn(co.bo,0,100)?co.bo:0,
+  const o={k:"rk",ns:co.ns===SHORT?SHORT:STAGES,ph:co.ph,sg:co.sg,st:co.st,n:intIn(co.n,0,1000)?co.n:0,p:intIn(co.p,0,100)?co.p:0,wd:co.wd?1:0,bo:intIn(co.bo,0,100)?co.bo:0,
     as:Number.isFinite(co.as)?co.as:0,ae:Number.isFinite(co.ae)?co.ae:0,ev:null,mg:null,res:null,bb:null};
   if(co.ev&&intIn(co.ev.id,0,1e6)&&typeof co.ev.t==="string") o.ev={id:co.ev.id,t:co.ev.t.slice(0,8)};
   const m=co.mg;
   if(co.ph==="mini"&&m&&(m.k==="sy"||m.k==="st")&&intIn(m.a,1,2)&&Number.isFinite(m.s)&&Number.isFinite(m.e)) o.mg={k:m.k,a:m.a,s:m.s,e:m.e,p:intIn(m.p,0,100)?m.p:0};
   if(co.ph==="mini"&&!o.mg) return null;
-  if(co.ph==="end") o.res={st:intIn(co.res&&co.res.st,0,STAGES)?co.res.st:co.st};
+  if(co.ph==="end") o.res={st:intIn(co.res&&co.res.st,0,STAGES)?co.res.st:co.st,an:intIn(co.res&&co.res.an,0,1e6)?co.res.an:0};
   if(co.bb&&intIn(co.bb.i,0,1e9)&&Array.isArray(co.bb.l)) o.bb={i:co.bb.i,l:co.bb.l.filter(x=>Array.isArray(x)&&intIn(x[0],0,1e6)&&intIn(x[1],1,4)).slice(0,3).map(x=>[x[0],x[1]])};
   return o;
 }
 
-const API={STAGES,KINDS,OPS,SY,ST,C,stageTarget,capOf,engine,clean};
+const API={STAGES,SHORT,KINDS,OPS,SY,ST,C,stageTarget,capOf,engine,clean};
 if(typeof module!=="undefined"&&module.exports) module.exports=API; else root.MH_COOP=API;
 })(typeof window!=="undefined"?window:globalThis);

@@ -82,7 +82,10 @@ const why = s => NM.check(s).why;
   for (let i = 0; i < 30; i++) { try { await fetch(base + "/"); break; } catch (e) { await sleep(100); } }
   const mkRoom = async (o = {}) => (await post("create", { mode: "chest", game: "calc", g: 3, t: 120, ...o })).j;
   try {
-    await t("部屋の「なまえの きめかた」：既定は入力、auto で自動ニックネーム。info で参加画面が知る", async () => {
+    await t("部屋の「なまえの きめかた」：先生の画面の初期値は自動ニックネーム（index.html）。サーバーに何も送らないときは入力、auto で自動ニックネーム。info で参加画面が知る", async () => {
+      const html = require("fs").readFileSync(path.join(__dirname, "..", "index.html"), "utf8");
+      assert.ok(/<select id="nmm"><option value="auto" selected>/.test(html), "先生の画面の「なまえの きめかた」は、はじめから自動ニックネーム");
+      assert.ok(/nm:\$\("#nmm"\)\.value==="input"\?"input":"auto"/.test(html), "部屋づくりは、入力を選んだときだけ input");
       const a = await mkRoom(), b = await mkRoom({ nm: "auto" }), c = await mkRoom({ nm: "zzz" });
       assert.strictEqual(a.nm, "input"); assert.strictEqual(b.nm, "auto"); assert.strictEqual(c.nm, "input");
       assert.strictEqual((await post("info", { code: a.code })).j.nm, "input"); assert.strictEqual((await post("info", { code: b.code })).j.nm, "auto");

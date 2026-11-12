@@ -94,7 +94,7 @@ function newCode() {
 function pub(room, host) {
   const nm = p => host ? p.name : "";
   return {
-    code: room.code, mode: room.mode, game: room.game, g: room.g, t: room.t, rule: room.rule, nm: room.nm,
+    code: room.code, mode: room.mode, game: room.game, g: room.g, t: room.t, rule: room.rule, nm: room.nm, nh: room.nh,
     status: room.status, closed: !!room.closed, endAt: room.endAt, now: Date.now(),
     gt: room.gt || "",
     ...(room.co ? { co: room.co.pub(Date.now(), host) } : {}),
@@ -187,7 +187,7 @@ const API = {
     const g = Math.min(6, Math.max(1, b.g | 0)), t = b.mode === "rocket" ? 300 : Math.min(300, Math.max(60, b.t | 0));
     const rule = RULES.includes(b.rule) ? b.rule : "normal";
     const room = { code: newCode(), hostKey: id(), mode: b.mode, game: b.mode === "quiz" ? "quiz" : b.game, g, t, rule, status: "lobby", endAt: 0,
-      players: new Map(), clients: new Set(), created: Date.now(), last: Date.now(), ip, timer: null, gt: "", nm: b.nm === "auto" ? "auto" : "input" };
+      players: new Map(), clients: new Set(), created: Date.now(), last: Date.now(), ip, timer: null, gt: "", nm: b.nm === "auto" ? "auto" : "input", nh: b.nh === 0 ? 0 : 1 };      // nh：1＝児童の結果画面にひろば（どんぐり）を出さない（初期値）／0＝出す
     if (own) {
       const r = QZ.cleanSet({ title: b.gt, qs: b.qs });         // 型・文字数・個数・時間の値を調べてから使う
       if (!r.ok) return [400, { error: "もんだいが正しくありません：" + r.why }];
@@ -196,7 +196,7 @@ const API = {
       room.gt = r.set.title; if (b.mode !== "quiz") room.set = { title: r.set.title, qs };   // クイズでは、答えつきの問題を児童に渡さない
       if (b.mode === "quiz") room.qz = QZ.engine(qs, { easy: rule === "easy" });
     }
-    if (b.mode === "rocket") room.co = COOP.engine({ easy: rule === "easy", g, scale: COOP_SCALE });
+    if (b.mode === "rocket") room.co = COOP.engine({ easy: rule === "easy", g, scale: COOP_SCALE, stages: b.ns === 3 ? 3 : 5 });
     tlist.push(nowC); rooms.set(room.code, room);
     return [200, { code: room.code, hostKey: room.hostKey, nm: room.nm }];
   },

@@ -22,18 +22,18 @@ function run(E, from, to, step, f) { let now = from; for (; now <= to; now += st
   await t("目標の式：人数・学年・むずかしさで自動調整（最小 10・やさしいは低い）", () => {
     const tb = [[1, 3], [5, 3], [20, 3], [30, 3], [28, 1], [60, 5]].map(([N, g]) => [N, g, CO.stageTarget(N, g, false), CO.stageTarget(N, g, true)]);
     console.log("    人数・学年・ふつう・やさしい（1ステージの目標）:", tb.map(r => r.join("/")).join("  "));
-    assert.strictEqual(CO.stageTarget(30, 3, false), 250, "ふつうの学級（3〜4年・30人）");
+    assert.strictEqual(CO.stageTarget(30, 3, false), 310, "ふつうの学級（3〜4年・30人）");
     assert.strictEqual(CO.stageTarget(1, 3, false), 10); assert.strictEqual(CO.stageTarget(1, 1, true), 10, "1人でも終わる（最小 10）");
     for (const [N, g, a, b] of tb) assert.ok(b <= a && a >= 10, "やさしい版は低い " + N);
     assert.ok(CO.stageTarget(60, 5, false) > CO.stageTarget(30, 5, false) * 1.9, "人数に比例");
     assert.ok(CO.stageTarget(30, 5, false) > CO.stageTarget(30, 1, false), "学年が上がるほど速く答える前提");
-    assert.strictEqual(CO.capOf(250, 30), 18); assert.strictEqual(CO.capOf(10, 1), 22); assert.ok(CO.capOf(10, 60) >= 8);
+    assert.strictEqual(CO.capOf(310, 30), 23); assert.strictEqual(CO.capOf(10, 1), 22); assert.ok(CO.capOf(10, 60) >= 8);
   });
   await t("目標に届く見込み：模擬の児童（正答率 0.5／0.7／0.9）でふつうは約8割・やさしいは高い・どの人数でも終わる", () => {
     const rate = (N, g, easy, acc, seed) => {      // 1ステージの問題タイムに、目標に届くまでの時間。cap（60秒）を超えたら「届かなかった」
       const r = rng(seed), E = room(N, { easy, g }), p = g <= 2 ? 4 : g <= 4 ? 5.5 : 6.5; let reached = false;
       const next = Array.from({ length: N }, () => 3000 + r() * 60000 / p);
-      const t0 = 3000; let now = t0, to = 3000 + (easy ? 45000 : 40000);
+      const t0 = 3000; let now = t0, to = 3000 + (easy ? 55000 : 50000);
       for (; now <= to; now += 250) {
         E.tick(now);
         if (E.ph !== "play") { reached = now - t0 <= to - t0; break; }
@@ -108,7 +108,7 @@ function run(E, from, to, step, f) { let now = from; for (; now <= to; now += st
     assert.strictEqual(E.ph, "mini"); assert.strictEqual(E.m.k, "sy"); assert.strictEqual(E.pub(t1).mg.a, 1);
     const F = room(30, {}); const tt = run(F, 3000, 3000 + 61000, 250);
     assert.strictEqual(F.ph, "mini", "誰も答えなくても 時間切れで次へ（cap 60秒）");
-    const W = room(30, { easy: true }); run(W, 3000, 3000 + 27000 + 100, 250); assert.strictEqual(W.wind, 1, "おいかぜ：時間の6割で45%未満"); assert.strictEqual(W.pub(30200).wd, 1);
+    const W = room(30, { easy: true }); run(W, 3000, 3000 + 33000 + 100, 250); assert.strictEqual(W.wind, 1, "おいかぜ：時間の6割で45%未満"); assert.strictEqual(W.pub(30200).wd, 1);
   });
   await t("せーので はっしゃ：1の前後0.6秒に押した子の割合で判定・1ラウンド1回・2回目の救済", () => {
     const E = room(10, {}); toMini(E, 4000); const m = E.m, S = m.s;
@@ -123,7 +123,7 @@ function run(E, from, to, step, f) { let now = from; for (; now <= to; now += st
     assert.strictEqual(E.act("p5", "mini", { at: "x" }, S + 4000)[0], 400); assert.strictEqual(E.act("p5", "mini", { at: NaN }, S + 4000)[0], 400);
     assert.strictEqual(E.act("p5", "mini", { at: S + 100 }, S + 100)[1].hit, false, "ラウンドから遠い押しは数えない");
     // 失敗 → もういちど → 2回目は ゆるめて必ず進む
-    run(E, S + 4000, S + 17000, 250);
+    run(E, S + 4000, S + 10500, 250);
     assert.strictEqual(E.ph, "again", "3人（6人に足りない）→ もういちど"); assert.strictEqual(E.st, 0); assert.strictEqual(E.pub(0).ev.t, "again");
     run(E, E.pe, E.pe + 100, 250); assert.strictEqual(E.ph, "mini"); assert.strictEqual(E.m.a, 2); assert.strictEqual(E.m.win, 1200); assert.strictEqual(E.m.need, 3, "10人の25%（ゆるめ）");
     const end2 = run(E, E.m.s, E.m.e + 100, 250); assert.strictEqual(E.ph, "clear", "2回目は、だれも押さなくても進む"); assert.strictEqual(E.st, 1);
@@ -135,18 +135,18 @@ function run(E, from, to, step, f) { let now = from; for (; now <= to; now += st
   });
   await t("ほしを あつめよう：全員の合計・1人の上限・早く終われる・2回目は半分でも進む", () => {
     const E = room(10, {}); E.sg = 1; toMini(E, 4000); const m = E.m;
-    assert.strictEqual(m.k, "st"); assert.strictEqual(m.target, 80); assert.strictEqual(m.cap, 20, "平均の2.5倍");
+    assert.strictEqual(m.k, "st"); assert.strictEqual(m.target, 40); assert.strictEqual(m.cap, 10, "平均の2.5倍");
     let now = m.s + 3500, got = 0;
     for (let i = 0; i < 30; i++, now += 200) { const r = E.act("p0", "mini", { n: 5 }, now); got += r[1].n; }
-    assert.strictEqual(got, 20, "連打しても1人20こまで"); assert.ok(E.m.total === 20);
+    assert.strictEqual(got, 10, "連打しても1人10こまで"); assert.ok(E.m.total === 10);
     assert.strictEqual(E.act("p1", "mini", { n: 9 }, now)[0], 400); assert.strictEqual(E.act("p1", "mini", { n: 0 }, now)[0], 400); assert.strictEqual(E.act("p1", "mini", { n: 1.5 }, now)[0], 400);
     assert.strictEqual(E.act("p1", "mini", { n: 1 }, now + 5)[0], 200); assert.strictEqual(E.act("p1", "mini", { n: 1 }, now + 6)[0], 429, "150ms以内は受けない");
     for (let i = 1; i < 10; i++) { for (let k = 0; k < 5; k++) E.act("p" + i, "mini", { n: 3 }, now + 200 * (k + 1)); }
-    now += 1500; run(E, now, now + 3000, 250);
-    assert.strictEqual(E.ph, "clear", "合計が届いたら早く終わる（最短8秒のあと）");
+    now += 1500; run(E, now, now + 2000, 250);
+    assert.strictEqual(E.ph, "clear", "合計が届いたら早く終わる（最短5秒のあと）");
     // 失敗 → 2回目は半分
     const F = room(10, {}); F.sg = 1; toMini(F, 4000); run(F, F.m.s, F.m.e + 100, 250); assert.strictEqual(F.ph, "again");
-    run(F, F.pe, F.pe + 100, 250); assert.strictEqual(F.m.target, 40, "2回目は半分");
+    run(F, F.pe, F.pe + 100, 250); assert.strictEqual(F.m.target, 20, "2回目は半分");
     run(F, F.m.s, F.m.e + 100, 250); assert.strictEqual(F.ph, "clear", "足りなくても進む");
   });
   await t("5ステージを最後まで：クリア → 次のステージ → 5つで終了。止まらない（全員が何もしなくても終わる）", () => {
@@ -230,6 +230,60 @@ function run(E, from, to, step, f) { let now = from; for (; now <= to; now += st
     console.log(`    ゲーム ${dur.toFixed(0)}秒・5ステージ→${E.st}・児童への1回の状態 最大 ${maxSize}B・全員への送信 平均 ${kbs.toFixed(0)} KB/秒（約${(kbs * 8 / 1024).toFixed(1)} Mbps）・act 最大 問題タイム ${maxPlay}回/秒・ミニゲーム ${maxMini}回/秒・処理 ${cpu.toFixed(0)}ms`);
     assert.ok(maxSize <= 900 && kbs < 250, "通信量"); assert.ok(maxPlay <= 40 && maxMini <= 200, "actは問題タイム1秒に40回以下・ミニゲーム200回以下"); assert.ok(cpu < 3000, "先生の端末の処理は軽い");
     assert.ok(Math.abs(bcast / dur - 4) < .3, "1秒に4回: " + bcast / dur);
+  });
+
+  /* ---------- 学習の密度（4周目）：ミニゲームは1回12秒以内・みじかい3ステージ・クラスの解答数 ---------- */
+  await t("ミニゲームは1回12秒以内（せーので・ほし、2回目も）", () => {
+    assert.ok(CO.SY.LEAD + (CO.SY.ROUNDS - 1) * CO.SY.GAP + CO.SY.TAIL <= 12000, "せーので");
+    assert.ok(CO.ST.LEAD + CO.ST.DUR <= 12000, "ほし");
+    for (const [sg, att] of [[0, 1], [1, 1], [0, 2], [1, 2]]) for (const N of [1, 10, 30]) {
+      const E = room(N, { g: 3 }); E.sg = sg; toMini(E, 4000); if (att === 2) { run(E, E.m.s, E.m.e + 100, 250); run(E, E.pe, E.pe + 100, 250); }
+      assert.strictEqual(E.m.a, att); const len = E.m.e - E.m.s; assert.ok(len <= 12000, `ステージ${sg + 1} ${att}回目 ${N}人: ${len}ms`);
+    }
+  });
+  await t("みじかい（3ステージ）：3つで終わる・状態に ns・ミニゲームは せーの→ほし→せーの・終了画面用に クラスの解答数 an", () => {
+    const E = room(6, { stages: 3 }); assert.strictEqual(E.pub(3000).ns, 3); assert.strictEqual(CO.clean(E.pub(3000)).ns, 3);
+    assert.strictEqual(room(6, {}).pub(3000).ns, 5, "ふつうは5"); assert.strictEqual(room(6, { stages: 4 }).pub(3000).ns, 5, "3以外は5"); assert.strictEqual(CO.clean({ ...E.pub(3000), ns: 9 }).ns, 5);
+    let now = 3000, kinds = [], acc = 0;
+    for (let guard = 0; guard < 4000 && E.ph !== "end"; guard++) {
+      now += 250;
+      if (E.ph === "play") for (const [pid] of E.P) if (E.P.get(pid).lastAt + 1500 < now) { const r = ans(E, pid, true, now); if (r[0] === 200 && !r[1].late) acc++; }
+      if (E.ph === "mini" && (!kinds.length || kinds[kinds.length - 1] !== E.m.k + E.sg)) kinds.push(E.m.k + E.sg);
+      if (E.ph === "mini" && E.m.k === "sy") for (const [pid] of E.P) E.act(pid, "mini", { at: E.m.t0[0] }, now);
+      if (E.ph === "mini" && E.m.k === "st") for (const [pid] of E.P) E.act(pid, "mini", { n: 5 }, now);
+      E.tick(now);
+    }
+    assert.strictEqual(E.ph, "end"); assert.strictEqual(E.st, 3); assert.strictEqual(E.pub(now).res.st, 3); assert.deepStrictEqual(kinds, ["sy0", "st1", "sy2"]);
+    assert.ok(now < 3000 + 3 * 80000, "3ステージは約3分 " + now);
+    const res = E.pub(now).res; assert.strictEqual(res.an, acc, "クラスの解答数"); assert.ok(res.an > 0); assert.strictEqual(CO.clean(E.pub(now)).res.an, acc);
+    const Z = room(4, { stages: 3 }); run(Z, 3000, 20 * 60000, 250); assert.strictEqual(Z.ph, "end", "だれも答えなくても終わる"); assert.strictEqual(Z.pub(1).res.an, 0);
+  });
+  await t("クラスの解答数：30人のシミュレーションで、1人あたりの解答数が同じ時間のたからばこの7割以上（ふつう・みじかい／2・4・6年）", () => {
+    const rows = [];
+    for (const stages of [5, 3]) for (const g of [2, 4, 6]) {
+      let rk = 0, ch = 0; const R = 4, N = 30;
+      for (let seed = 0; seed < R; seed++) {
+        const r = rng(900 + seed * 7 + g), E = room(N, { g, stages }), p = g <= 2 ? 4 : g <= 4 ? 5.5 : 6.5, acc = .7;
+        const think = () => 60000 / p * (.7 + .6 * r());                         // 1問を考える時間（たからばこの1分あたり p 問と同じ速さ）
+        const next = Array.from({ length: N }, () => 3000 + think()); let now = 3000, was = "count";
+        for (let guard = 0; guard < 8000 && E.ph !== "end"; guard++) {
+          now += 250; E.tick(now);
+          if (E.ph === "mini") {      // ミニゲームにも ふつうに参加する（せーのは 1の前後0.3秒、ほしは 1秒に約5こ）
+            if (E.m.k === "sy") for (let i = 0; i < N; i++) for (let k = 0; k < 3; k++) { const at = E.m.t0[k] + (r() - .5) * 600; if (now >= at && now < at + 250) E.act("p" + i, "mini", { at }, now); }
+            else if (now >= E.m.s + CO.ST.LEAD) for (let i = 0; i < N; i++) if (r() < .2) E.act("p" + i, "mini", { n: 1 }, now);
+          }
+          if (E.ph !== "play") { was = E.ph; continue; }
+          if (was !== "play") { was = "play"; for (let i = 0; i < N; i++) next[i] = now + think(); }      // 新しいステージの問題が出た
+          for (let i = 0; i < N; i++) if (now >= next[i]) { const ok = r() < acc; ans(E, "p" + i, ok, now); next[i] = now + think() + (ok ? 1200 : 2500); }
+        }
+        assert.strictEqual(E.ph, "end"); const D = now - 3000;
+        rk += E.pub(now).res.an / N;
+        const r2 = rng(900 + seed * 7 + g); let c = 0; for (let i = 0; i < N; i++) { let tt = 0; for (;;) { const ok = r2() < acc; tt += 60000 / p * (.7 + .6 * r2()) + (ok ? 1200 : 2500); if (tt > D) break; c++; } } ch += c / N;      // たからばこ：同じ時間 D、同じ速さ
+      }
+      rk /= R; ch /= R; rows.push(`${stages}ステージ/${g}年 ${rk.toFixed(1)}/${ch.toFixed(1)}=${Math.round(rk / ch * 100)}%`);
+      assert.ok(rk / ch >= .7, `${stages}ステージ ${g}年: ロケット ${rk.toFixed(1)}問／たからばこ ${ch.toFixed(1)}問 = ${(rk / ch * 100).toFixed(0)}%`);
+    }
+    console.log("    1人あたりの解答数 ロケット／たからばこ（同じ時間）:", rows.join("  "));
   });
 
   /* ---------- 3) server.js ---------- */

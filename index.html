@@ -4,6 +4,12 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>まなびひろば</title>
+<meta name="description" content="まなびひろばは無料・登録不要の小学生向け学習ゲーム。学年・単元から選べ、ひとりでもクラスでも遊べます。">
+<link rel="canonical" href="https://tokugawaieyasudono.github.io/manabi-hiroba/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="まなびひろば｜小学生向け無料学習ゲーム">
+<meta property="og:description" content="算数・国語などを学年や単元から選んで遊べる、登録不要の学習ゲーム。ひとり練習もクラス対戦もできます。">
+<meta property="og:url" content="https://tokugawaieyasudono.github.io/manabi-hiroba/">
 <link rel="stylesheet" href="vendor/fonts/biz-udpgothic.css">
 <style>
 :root{
@@ -231,7 +237,16 @@ h2{font-size:20px;margin:18px 0 8px}
 .out{background:#eef7ef;border:2px solid var(--go);border-radius:6px;padding:10px;word-break:break-all;font-size:14px}
 .tcols{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:16px}
 .prep{font-size:14px;background:var(--main2);border-radius:4px;padding:6px 10px;color:var(--ink)}
-.th2{display:flex;align-items:center;gap:8px}
+.th2{display:flex;align-items:center;gap:8px;margin:6px 0}
+.t3{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:8px 0 12px}
+.t3b{background:#fff;color:var(--ink);border:3px solid var(--edge);border-radius:14px;min-height:60px;padding:6px 8px;font:inherit;cursor:pointer;display:grid;gap:2px;justify-items:center;align-content:center;box-shadow:0 3px 0 var(--edge)}
+.t3b b{font-size:20px}.t3b small{font-size:12px;color:var(--muted)}
+.t3b[aria-pressed=true]{background:var(--go);color:#fff}.t3b[aria-pressed=true] small{color:#fff}
+.tpane.hidden{display:none}.tpane>.form+.form{margin-top:16px}
+.form label.chk{display:flex;gap:10px;align-items:center;font-size:15px}.form label.chk input{width:22px;height:22px;flex:none}
+.tcols.rooms{grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:10px 14px}
+.gdlink.inl{display:inline;width:auto;padding:0;font-size:inherit}
+@media (max-width:430px){.t3{gap:6px}.t3b b{font-size:15px}.t3b small{display:none}}
 /* ===== 教室で映す ===== */
 .proj{position:fixed;inset:0;background:#10261c;color:#fff;display:flex;flex-direction:column;padding:24px;z-index:10}
 .proj .ptop{display:flex;justify-content:space-between;font-size:22px}
@@ -522,6 +537,7 @@ body[data-v=host] .wrap{max-width:none;padding:0}
 .px .note,.px .chip,.px .hrank .note{font-size:28px}
 .px-dock{position:fixed;right:14px;bottom:12px;display:flex;gap:10px;align-items:center;justify-content:flex-end;flex-wrap:wrap;max-width:calc(100vw - 28px);z-index:25}
 .px-dock .btn{font-size:20px;padding:8px 18px;min-height:52px}
+.px-dock #hs{font-size:34px;padding:10px 46px;min-height:76px;background:var(--go);color:#fff;border:4px solid #fff;box-shadow:0 0 0 4px var(--go),0 6px 14px rgba(0,0,0,.35)}
 .px-note{background:#fff;color:var(--ink);border:3px solid var(--edge);border-radius:12px;position:relative}
 .px-note summary{cursor:pointer;padding:12px 16px;font-size:18px;font-weight:700;min-height:52px;display:flex;align-items:center}
 .px-note .pn{position:absolute;right:0;bottom:60px;width:min(560px,92vw);background:#fff;border:3px solid var(--edge);border-radius:12px;padding:10px 14px;font-size:15px;max-height:60vh;overflow:auto}
@@ -949,6 +965,7 @@ const TX={
  "ru.auto":["おまかせ"],"ru.auto.d":["1〜2年《ねん》の問題《もんだい》ならやさしい","1〜2ねんの もんだいなら やさしい"],
 /* ホーム */
  "home.quick":["1分《ぷん》であそぶ","1ぷん あそぶ"],
+ "home.about.l":["保護者《ほごしゃ》・学校《がっこう》向《む》け"],
  "home.guide.l":["学年《がくねん》・単元《たんげん》から さがす（先生《せんせい》向《む》け）","がくねん・たんげんから さがす（せんせいむけ）"],
  "home.guide":["いっしょに あそぼう！"],
  "home.quick.n":["ワンタップで、学年《がくねん》に合《あ》ったゲームがはじまります","ボタンを 1かい おすと はじまるよ"],
@@ -1217,7 +1234,8 @@ const TX={
  "m.rocket.t":["ロケット はっしゃ（みんなで きょうりょく）"],
  "m.rocket.d":["みんなで 答《こた》えて ねんりょうを ためて、ミニゲームを クリアしながら 5つの ステージを めざそう！","みんなで こたえて ねんりょうを ためて、ミニゲームを クリアしながら 5つの ステージを めざそう！"],
  "rk.name":["ロケット はっしゃ"],
- "rk.stage":[n=>`ステージ ${n}／5`],
+ "rk.stage":[(n,m)=>`ステージ ${n}／${m||5}`],
+ "rk.an":[n=>`クラスで ${n}もん こたえた！`],
  "rk.dest":[i=>["くも","そら","うちゅう","つき","ほし"][i]||""],
  "rk.q":["問題《もんだい》に 答《こた》えて ねんりょうを ためよう！","もんだいに こたえて ねんりょうを ためよう！"],
  "rk.fuel":["みんなの ねんりょう"],
@@ -1527,6 +1545,11 @@ function missCards(objs,x){
     <button type="button" class="bad" aria-expanded="false">${T("r.bad")}</button>
     <div class="badid hidden">${T("r.badid")}：<b>${esc(qidOf(o,x))}</b><br>${T("r.bad2")}</div></div>`).join("")}</div>`;
 }
+/*T-BEGIN*/
+/* 授業モードの「先生に送る結果」の文（先生が読む文なので、ふりがなは付けない） */
+const unitReport=p=>{ const mc=m=>p.marks.filter(x=>x===m).length; return `【単元：${p.u.ids.map(i=>rbp(UBY[i].title)).join("・")}】${p.g}年｜○${mc("○")} △${mc("△")} ×${mc("×")}（${p.marks.length}問）`; };
+const quizReport=S=>`【${S.set.title||"れんしゅう"}】せいかい${S.ok}問／${S.done||0}問（全${S.qs.length}問）｜まちがえた問題：${S.miss.length?S.miss.map(m=>S.qs.indexOf(m.q)+1).join(", ")+"番":"なし"}`;
+/*T-END*/
 const missIds=(objs,x)=>objs.length?`｜${T0("r.ids")}：${uniqMiss(objs,x).slice(0,30).map(o=>qidOf(o,x)).join(", ")}`:"";
 document.addEventListener("click",e=>{ const b=e.target.closest&&e.target.closest(".mcard .bad"); if(!b) return;
   const d=b.nextElementSibling, show=d.classList.contains("hidden"); d.classList.toggle("hidden",!show); b.setAttribute("aria-expanded",show); });
@@ -1640,7 +1663,8 @@ function renderHome(){
         <div class="links">${LINKS.map(l=>`<a class="link" href="${l.u}" target="_blank" rel="noopener"><b>${esc(l.t)} ↗</b><span>${esc(l.d)}</span></a>`).join("")}</div>
         <p class="note">${T("home.links.n")}</p>
         <p class="note"><a href="#check">${ic("plug")} ${T("home.check")}</a></p></details>
-      <a class="gdlink" href="guide/index.html">${T("home.guide.l")}</a>`}
+      <a class="gdlink" href="guide/index.html">${T("home.guide.l")}</a>
+      <a class="gdlink" href="guide/about.html">${T("home.about.l")}</a>`}
     </div></div>`;     // 先生・ICT向けのリンクは、1〜2年には出さない
   $("#quick").onclick=()=>withGrade(g=>{
     const pool=GAMES.filter(x=>x.g.includes(g)), x=pool[rnd(pool.length)];
@@ -1821,7 +1845,7 @@ function finish(){
   if(!p.u){ store.set("mh_best",all); refreshMedals(); } else ures=uRecord(p);       // 単元練習は、単元ごとのきろく（u:単元ID）に残す
   const colHtml=COLOK?colRunPlay(p):"";
   const report=`【${T0("g."+p.x.id+".t")}】${p.g}年 ${p.t}秒｜せいかい${p.ok}問／${total}問（正答率${acc}%）`;   //T
-  const repFull=report+missIds(p.missObjs,p.x);          // 課題リンクの結果の末尾に、まちがえた問題のID
+  const repFull=(p.u?unitReport(p):report)+missIds(p.missObjs,p.x);          // 課題リンクの結果の末尾に、まちがえた問題のID（単元のリンクは、単元名と ○△× の数）
   app.innerHTML=`<div class="play"><div class="res">
     ${medRow(medal,acc,showNew)}
     <div class="num">${T("r.num",p.ok)}</div>
@@ -2306,6 +2330,7 @@ function colTeacherHtml(){
       <span class="note">オフにすると、ホーム・結果画面・きろく画面から ひろばが消えます（学習のきろくは今まで通り）。課題リンクの末尾に <b>&amp;col=0</b> を付けると、そのリンクだけ ひろばを出しません。<b>オフが優先</b>なので、オフの端末では、リンクに col=1 を付けてもオンになりません。</span>
       <label style="display:flex;gap:10px;align-items:center;font-size:16px;flex-wrap:wrap">ひろばたんけんの チケット：1日に つかえる数 <select id="colTk" style="font-size:16px;padding:6px">${[0,1,2,3,4,5].map(n=>`<option value="${n}"${n===(((store.get(COLCFG,null)||{}).tk)??2)?" selected":""}>${n}回${n===2?"（ふつう）":n===0?"（たんけんを出さない）":""}</option>`).join("")}</select></label>
       <span class="note">チケットは「できた」「マスター」を 5つ達成すると 1まい（持てるのは 3まい・1日に増えるのは 2まいまで）。たんけんは 1回 2〜3分で、どんぐりは出ません。課題リンクの末尾に <b>&amp;tk=0</b>〜<b>&amp;tk=5</b> を付けると そのリンクだけ回数を決められます（端末の設定と リンクの <b>小さいほう</b> が使われます。授業モードでは たんけんは出ません）。</span>
+      <span class="note"><b>この設定は、いま開いているこの端末だけ</b>に効きます（ほかの端末や、児童の端末は変わりません）。</span>
       <span class="note">端末が変わると、ひろばは新しく始まります（引きつぎは「きろく」画面のバックアップ文字・QR。ひろばは原則その端末のものです）。</span>
     </div>`;
 }
@@ -2329,21 +2354,36 @@ function renderTeacher(q){
   const setOpt=qsets.length?`<optgroup label="先生の もんだい">${qsets.map(s=>`<option value="set:${esc(s.id)}">📝 ${esc(s.title||"（なまえなし）")}（${s.qs.length}問）</option>`).join("")}</optgroup>`:"";
   app.innerHTML=`
     <h2 class="th2">${ic("graduation-cap")}先生の画面</h2>
-    <p class="note">ログインは不要です。友だち対戦で児童が入れた名前は、先生の端末のメモリにだけ置き、部屋を閉じると消えます（どこにも保存しません）。　<a href="#check">${ic("plug")} 接続テスト（友だち対戦が使えるか調べる）</a></p>
-    <p class="note" style="margin-top:8px"><a class="gdlink" href="guide/index.html">学年・単元から さがす（先生向け）</a></p>
+    <p class="note">ログインは不要です。友だち対戦で児童が入れた名前は、先生の端末のメモリにだけ置き、部屋を閉じると消えます。　<a href="#check">${ic("plug")} 接続テスト</a>　<a class="gdlink inl" href="guide/index.html">学年・単元から さがす（先生向け）</a></p>
     <details class="tguide" id="tguide"><summary>${ic("lock")} つかう まえに（児童の情報の あつかい・先生向けの説明）</summary>
       <ol>${TGUIDE.map(t=>`<li>${esc(t)}</li>`).join("")}</ol></details>
-    <div class="form" style="margin-top:12px;border-color:var(--accent)">
-      <b style="font-size:18px">⑤ 単元から つくる（単元を組み合わせて出題）</b>
-      <span class="prep"><b>準備：なし</b>（問題は単元ごとの「型」から自動で作ります。正解はコードで計算し、自動の検査で確かめています。気になる問題は「この もんだい、おかしい？」から問題IDを確かめてください）</span>
-      <span class="note">教科・学年・学習項目でしぼって、単元を何個でも組み合わせられます（学年をまたいでもOK）。そのままクイズ・たからばこ・すごろくで出題したり、先生のもんだいセットにして編集したり、短いリンク・QRにして児童に配ったりできます。</span>
-      <div><button class="btn" id="mku">単元をえらぶ</button></div>
+    <div class="t3" role="group" aria-label="やりたいこと">
+      <button type="button" class="t3b" id="tab-play" data-tab="play" aria-pressed="true"><b>クラスで遊ぶ</b><small>友だち対戦・教室で映すクイズ</small></button>
+      <button type="button" class="t3b" id="tab-link" data-tab="link" aria-pressed="false"><b>リンクを配る</b><small>課題リンク・単元リンク・QR</small></button>
+      <button type="button" class="t3b" id="tab-make" data-tab="make" aria-pressed="false"><b>問題をつくる</b><small>単元から・先生のもんだい</small></button>
     </div>
-    <div class="form" style="margin-top:16px;border-color:var(--go)">
-      <b style="font-size:18px">④ もんだいを つくる（先生のオリジナル）</b>
-      <span class="prep"><b>準備：なし</b>（つくった問題は、この端末の中だけに保存されます）</span>
-      <span class="note">4択・○×の問題を自分でつくって、教室のクイズ大会（Kahoot のような遊び方）や、たからばこ・すごろくで使えます。Excel やスプレッドシートの表を貼りつけて取り込んだり、ファイル・れんしゅう用リンクで書き出したりもできます。いま ${qsets.length} セットあります。</span>
-      <div><button class="btn" id="mkq">もんだいを つくる・えらぶ</button></div>
+    <section class="tpane" id="tp-play">
+    <div class="form" id="roomForm" style="border-color:var(--accent)">
+      <b style="font-size:18px">① クラスで友だち対戦（児童の端末を使う）</b>
+      <span class="note"><b>準備：児童の端末とネット接続。</b>部屋を作ると4桁のコードが出ます。先に <a href="#check">${ic("plug")} 接続テスト</a> をすると安心です。</span>
+      <div class="tcols rooms">
+        <label>あそびかた<select id="nm">${[...MODES,RKMODE,QMODE].map(m=>`<option value="${m.id}">${m.ico} ${m.t}</option>`).join("")}</select></label>
+        <label>問題<select id="ng">${opt}${setOpt}</select></label>
+        <label>学年<select id="ngr"></select></label>
+        <label id="nsl" class="hidden">ステージの数<select id="nstg"><option value="5" selected>ふつう（5ステージ・約5分）</option><option value="3">みじかい（3ステージ・約3分）</option></select></label>
+        <label id="ntl">時間<select id="nt"><option value="120">2分</option><option value="180" selected>3分</option><option value="300">5分</option></select></label>
+        <label>ルール<select id="nr">${RULES.map(r=>`<option value="${r.id}">${r.t}（${r.d}）</option>`).join("")}</select></label>
+        <label>なまえの きめかた<select id="nmm"><option value="auto" selected>自動ニックネーム（動物）</option><option value="input">児童が入力する</option></select></label>
+      </div>
+      <label class="chk"><input type="checkbox" id="nnh" checked> ひろばを出さない（児童の結果画面に、どんぐり・「ひろばを みる」を出しません）</label>
+      <button class="btn" id="mkroom">部屋を作る</button>
+      <div class="err" id="roomErr"></div>
+      <details class="tguide" id="roomHelp"><summary>くわしい説明（名前・ルール・ロケット）</summary>
+      <span class="note">部屋を作ると4桁のコードが出ます。児童は「コードで参加」からコードを入れて、名前を入力します（名前は先生の画面に出ます。大画面に映すと、クラスの全員に見えます）。ふざけた名前は、先生の画面で名前を押すと変更・ニックネーム化・退出ができます。全員がそろったら「入室をしめきる」を押してください。ゲームが始まったあとは入れません。「なまえの きめかた」を自動ニックネームにすると、動物の名前になります。終わると全員の正解数・正答率が集まります。</span>
+      <span class="note">「クイズ」は先生のもんだいだけで遊べます（④でセットをつくります）。たからばこ・すごろくでも、先生のセットの4択を使えます。学年は、児童の画面の文字（1〜2年はやさしい文字）に使います。</span>
+      <span class="note">やさしいルール：たからばこで「うばう・入れかえ・落とす」が出ず、すごろくに🌀（もどる）がありません。1〜2年を選ぶと、はじめは「やさしい」になります。</span>
+      <span class="note hidden" id="rknote"><b>ロケット はっしゃ（協力モード）</b>：クラス全員で1つのロケットを飛ばします。問題（上の「問題」で選んだもの）に答えて燃料をため、目標に届くとミニゲーム（せーので はっしゃ／ほしを あつめよう）が全員同時に始まり、クリアで次のステージへ（ふつう5ステージ・約5分／みじかい3ステージ・約3分。「ステージの数」でえらびます）。失敗しても「もういちど」は1回だけで、2回目は条件がゆるくなり必ず進みます。燃料の目標は人数・学年から自動で決まり、「やさしい」ルールではもっと低くなります。1人が出せる燃料には上限があり、順位や個人の正誤は大画面にも児童の画面にも出ません（名前が出るのは、良いことをした瞬間の吹き出しだけ）。時間の設定は使いません。</span>
+      </details>
     </div>
     <div class="form" style="margin-top:16px">
       <b style="font-size:18px">② すきま時間クイズ大会（教室で映す）</b>
@@ -2355,27 +2395,10 @@ function renderTeacher(q){
       <label>1問の時間<select id="ps"><option value="10">10秒</option><option value="15" selected>15秒</option><option value="20">20秒</option></select></label>
       <button class="btn" id="pj">映して始める</button>
     </div>
-    <div class="form" style="margin-top:16px;border-color:var(--accent)">
-      <b style="font-size:18px">③ クラスで友だち対戦（児童の端末を使う）</b>
-      <span class="prep"><b>準備：児童の端末とネット接続</b>（先に接続テストをすると安心です）</span>
-      <span class="note">部屋を作ると4桁のコードが出ます。児童は「コードで参加」からコードを入れて、名前を入力します（名前は先生の画面に出ます。大画面に映すと、クラスの全員に見えます）。ふざけた名前は、先生の画面で名前を押すと変更・ニックネーム化・退出ができます。全員がそろったら「入室をしめきる」を押してください。ゲームが始まったあとは入れません。「なまえの きめかた」を自動ニックネームにすると、動物の名前になります。終わると全員の正解数・正答率が集まります。</span>
-      <div class="tcols">
-        <label>あそびかた<select id="nm">${[...MODES,RKMODE,QMODE].map(m=>`<option value="${m.id}">${m.ico} ${m.t}</option>`).join("")}</select></label>
-        <label>問題<select id="ng">${opt}${setOpt}</select></label>
-        <label>学年<select id="ngr"></select></label>
-        <label id="ntl">時間<select id="nt"><option value="120">2分</option><option value="180" selected>3分</option><option value="300">5分</option></select></label>
-        <label>ルール<select id="nr">${RULES.map(r=>`<option value="${r.id}">${r.t}（${r.d}）</option>`).join("")}</select></label>
-        <label>なまえの きめかた<select id="nmm"><option value="input">児童が入力する</option><option value="auto">自動ニックネーム（動物）</option></select></label>
-      </div>
-      <span class="note">「クイズ」は先生のもんだいだけで遊べます（④でセットをつくります）。たからばこ・すごろくでも、先生のセットの4択を使えます。学年は、児童の画面の文字（1〜2年はやさしい文字）に使います。</span>
-      <span class="note">やさしいルール：たからばこで「うばう・入れかえ・落とす」が出ず、すごろくに🌀（もどる）がありません。1〜2年を選ぶと、はじめは「やさしい」になります。</span>
-      <span class="note hidden" id="rknote"><b>ロケット はっしゃ（協力モード）</b>：クラス全員で1つのロケットを飛ばします。問題（上の「問題」で選んだもの）に答えて燃料をため、目標に届くとミニゲーム（せーので はっしゃ／ほしを あつめよう）が全員同時に始まり、クリアで次のステージへ（5ステージ・全体で約5分）。失敗しても「もういちど」は1回だけで、2回目は条件がゆるくなり必ず進みます。燃料の目標は人数・学年から自動で決まり、「やさしい」ルールではもっと低くなります。1人が出せる燃料には上限があり、順位や個人の正誤は大画面にも児童の画面にも出ません（名前が出るのは、良いことをした瞬間の吹き出しだけ）。時間の設定は使いません。</span>
-      <button class="btn" id="mkroom">部屋を作る</button>
-      <div class="err" id="roomErr"></div>
-      <span class="note">つながるか心配なときは、先に <a href="#check">${ic("plug")} 接続テスト</a> をためしてください。</span>
-    </div>
-    <div class="form" style="margin-top:16px">
-      <b style="font-size:18px">① 課題リンクを作る</b>
+    </section>
+    <section class="tpane hidden" id="tp-link">
+    <div class="form">
+      <b style="font-size:18px">③ 課題リンクを作る</b>
       <span class="prep"><b>準備：なし</b>（できたリンクを Google Classroom や Teams に貼ります）</span>
       <span class="note">児童はそのゲームをすぐに始められます。課題リンクで開いたページでは、「コードで参加」「先生の画面」「ほかのゲーム」は表示されません。</span>
       <label>ゲーム<select id="tg">${opt}</select></label>
@@ -2388,30 +2411,62 @@ function renderTeacher(q){
       <label id="trl" class="hidden">ルール（バトルモードのとき）<select id="tr">${RULES.map(r=>`<option value="${r.id}">${r.t}（${r.d}）</option>`).join("")}</select></label>
       <label>制限時間<select id="tt"><option value="30">30秒</option><option value="60" selected>60秒</option><option value="90">90秒</option><option value="120">120秒</option></select></label>
       <label>ふりがな<select id="tfg"><option value="">児童の設定のまま</option><option value="1">いつも あり</option><option value="0">いつも なし</option></select></label>
+      <label class="chk"><input type="checkbox" id="tnh"> ひろばを出さない（リンクの末尾に <b>&amp;col=0</b> を付けます）</label>
       <button class="btn" id="mk">リンクを作る</button>
       <div class="out hidden" id="lo"></div>
     </div>
+    <div class="form" style="margin-top:16px;border-color:var(--accent)">
+      <b style="font-size:18px">単元のリンクを作る</b>
+      <span class="note">単元をえらんで「リンクとQR」を押すと、短いリンクとQRができます。「授業で使う（ほかの画面に行かせない）」と「ひろばを出さない」をえらべます。</span>
+      <div><button class="btn" id="mku2">単元をえらんで リンクをつくる</button></div>
+    </div>
+    </section>
+    <section class="tpane hidden" id="tp-make">
+    <div class="form" style="border-color:var(--accent)">
+      <b style="font-size:18px">④ 単元から つくる（単元を組み合わせて出題）</b>
+      <span class="prep"><b>準備：なし</b>（問題は単元ごとの「型」から自動で作ります。正解はコードで計算し、自動の検査で確かめています。気になる問題は「この もんだい、おかしい？」から問題IDを確かめてください）</span>
+      <span class="note">教科・学年・学習項目でしぼって、単元を何個でも組み合わせられます（学年をまたいでもOK）。そのままクイズ・たからばこ・すごろくで出題したり、先生のもんだいセットにして編集したり、短いリンク・QRにして児童に配ったりできます。</span>
+      <div><button class="btn" id="mku">単元をえらぶ</button></div>
+    </div>
+    <div class="form" style="margin-top:16px;border-color:var(--go)">
+      <b style="font-size:18px">⑤ もんだいを つくる（先生のオリジナル）</b>
+      <span class="prep"><b>準備：なし</b>（つくった問題は、この端末の中だけに保存されます）</span>
+      <span class="note">4択・○×の問題を自分でつくって、教室のクイズ大会（Kahoot のような遊び方）や、たからばこ・すごろくで使えます。Excel やスプレッドシートの表を貼りつけて取り込んだり、ファイル・れんしゅう用リンクで書き出したりもできます。いま ${qsets.length} セットあります。</span>
+      <div><button class="btn" id="mkq">もんだいを つくる・えらぶ</button></div>
+    </div>
+    </section>
     ${colTeacherHtml()}
     <div class="banner" style="margin-top:16px"><b>次の段階で追加する予定：</b>単元ごとのつまずき分析、学校のアカウントでのログイン。</div>`;
   const fillG=(sel,gsel)=>{ const v=$(sel).value;
     if(v.startsWith("set:")){ $(gsel).innerHTML=[1,2,3,4,5,6].map(n=>`<option value="${n}">${n}年</option>`).join(""); const st=qsFind(v.slice(4)); $(gsel).value=String(st&&st.g?st.g:3); return; }
     const x=GAMES.find(y=>y.id===v); $(gsel).innerHTML=x.g.map(n=>`<option value="${n}">${n}年</option>`).join(""); };
   $("#mkq").onclick=()=>go("#make");
+  /* 3つのタブ（クラスで遊ぶ／リンクを配る／問題をつくる）。#teacher?tab=link|make で開く */
+  const showTab=k=>{ app.querySelectorAll(".tpane").forEach(e=>e.classList.toggle("hidden",e.id!=="tp-"+k)); app.querySelectorAll(".t3b").forEach(b=>b.setAttribute("aria-pressed",b.dataset.tab===k?"true":"false")); };
+  app.querySelectorAll(".t3b").forEach(b=>b.onclick=()=>showTab(b.dataset.tab));
+  { const tb=q&&q.get("tab"); showTab(tb==="link"||tb==="make"?tb:"play"); }
+  $("#mku2").onclick=()=>go("#units");
   const co=$("#colOn"); if(co) co.onchange=()=>colSetOn(co.checked);
   const ct=$("#colTk"); if(ct) ct.onchange=()=>colSetCfg({tk:+ct.value});
   $("#mku").onclick=()=>go("#units");
   const setRule=()=>{ $("#nr").value=defaultRule(+$("#ngr").value); };
-  $("#ng").onchange=()=>{ fillG("#ng","#ngr"); setRule(); }; fillG("#ng","#ngr"); setRule();
-  $("#ngr").onchange=setRule;
+  const TR="mh_troom", remember=()=>store.set(TR,{nm:$("#nm").value,ng:$("#ng").value,ngr:$("#ngr").value});      // 前回の設定（あそびかた・問題・学年）を、この端末に覚える
+  $("#ng").onchange=()=>{ fillG("#ng","#ngr"); setRule(); remember(); };
+  { const sv=store.get(TR,null)||{}, has=(sel,v)=>typeof v==="string"&&[...$(sel).options].some(o=>o.value===v&&!o.disabled);
+    if(has("#nm",sv.nm)&&(sv.nm!=="quiz"||qsets.length)) $("#nm").value=sv.nm;
+    if(has("#ng",sv.ng)) $("#ng").value=sv.ng;
+    fillG("#ng","#ngr"); if(has("#ngr",sv.ngr)) $("#ngr").value=sv.ngr; setRule(); }
+  $("#ngr").onchange=()=>{ setRule(); remember(); };
   const syncMode=()=>{ const quiz=$("#nm").value==="quiz", rk=$("#nm").value==="rocket";
-    $("#ntl").classList.toggle("hidden",quiz||rk);
+    $("#ntl").classList.toggle("hidden",quiz||rk); $("#nsl").classList.toggle("hidden",!rk);
     $("#rknote").classList.toggle("hidden",!rk);
     [...$("#ng").options].forEach(o=>{ o.disabled=quiz&&!o.value.startsWith("set:"); });
     if(quiz&&!$("#ng").value.startsWith("set:")){ const f=[...$("#ng").options].find(o=>o.value.startsWith("set:")); if(f){ $("#ng").value=f.value; fillG("#ng","#ngr"); setRule(); } }
     if(quiz&&!qsets.length) $("#roomErr").innerHTML='クイズは先生のもんだいで出します。先に ④ でセットをつくってください。<br><a class="btn s" href="#make" style="display:inline-flex;align-items:center;margin-top:6px;text-decoration:none">④ もんだいを つくる</a>';
     else $("#roomErr").textContent=""; };
-  $("#nm").onchange=syncMode;
-  const roomFromForm=()=>{ const mode=$("#nm").value, gv=$("#ng").value, base={mode,g:+$("#ngr").value,t:+$("#nt").value,rule:ruleOf($("#nr").value),nm:$("#nmm").value==="auto"?"auto":"input"};
+  $("#nm").onchange=()=>{ syncMode(); remember(); };
+  syncMode();
+  const roomFromForm=()=>{ const mode=$("#nm").value, gv=$("#ng").value, base={mode,g:+$("#ngr").value,t:+$("#nt").value,rule:ruleOf($("#nr").value),nm:$("#nmm").value==="input"?"input":"auto",nh:$("#nnh").checked?1:0,ns:$("#nm").value==="rocket"&&$("#nstg").value==="3"?3:5};
     if(gv.startsWith("set:")){ const st=qsFind(gv.slice(4)); if(!st) throw new Error("セットが見つかりません");
       const c=qzCheckMsg(st); if(!c.set) throw new Error(`「${st.title||"なまえなし"}」は、${c.why}`);
       if(mode!=="quiz"&&!c.set.qs.some(x=>x.t==="mc")) throw new Error("たからばこ・すごろくで使うには、4択の問題が1つ以上いります");
@@ -2437,7 +2492,7 @@ function renderTeacher(q){
   app.querySelectorAll("[data-td]").forEach(b=>b.onclick=()=>b.classList.toggle("on"));
   $("#pg").onchange=()=>fillG("#pg","#pgr"); fillG("#pg","#pgr");
   $("#mk").onclick=()=>{
-    const md=$("#tm2").value, base=location.href.split("#")[0], gid=$("#tg").value, fgp=$("#tfg").value?"&fg="+$("#tfg").value:"";
+    const md=$("#tm2").value, base=location.href.split("#")[0], gid=$("#tg").value, fgp=($("#tfg").value?"&fg="+$("#tfg").value:"")+($("#tnh").checked?"&col=0":"");
     let extra="";      // 九九の段・順番、県庁所在地のえらびかた
     if(gid==="kuku"){ const d=[...app.querySelectorAll("[data-td].on")].map(e=>e.dataset.td); extra=(d.length?"&d="+d.join(","):"")+"&o="+$("#tko").value; }
     else if(gid==="kencho"&&$("#tkk").value) extra="&k="+$("#tkk").value;
@@ -2449,7 +2504,7 @@ function renderTeacher(q){
     $("#lc").onclick=()=>navigator.clipboard?.writeText(url).then(()=>$("#lc").textContent="コピーしました",()=>{});
   };
   $("#pj").onclick=()=>startProjector($("#pg").value,+$("#pgr").value,+$("#pn").value,+$("#ps").value);
-  if(q&&q.get("nm")==="auto") $("#nmm").value="auto";      // #teacher?nm=auto のリンクで「自動ニックネーム」をえらんだ状態にする
+  if(q&&q.get("nm")==="input") $("#nmm").value="input";      // 「なまえの きめかた」は、はじめから自動ニックネーム。#teacher?nm=input で「児童が入力」をえらんだ状態にできる（nm=auto もそのまま使える）
   const want=q&&q.get("set");      // 「出題する」から来たとき：クイズの設定をえらんだ状態にして、部屋の欄までスクロール
   if(want&&qsFind(want)){ $("#nm").value="quiz"; $("#ng").value="set:"+want; fillG("#ng","#ngr"); setRule(); syncMode(); $("#mkroom").closest(".form").scrollIntoView(); }
 }
@@ -2911,7 +2966,7 @@ const NAME_ERR={empty:"名前を入れてね",long:"名前は8文字までです
 /* host=true（先生の画面）だけ、全員の名前と「いま答えたか」を持つ。児童の画面には、ほかの子の名前を入れない（name は空） */
 function hrPub(r,host){
   const nm=p=>host?p.name:"";
-  return {code:r.code,mode:r.mode,game:r.game,g:r.g,t:r.t,rule:r.rule,nm:r.nm,status:r.status,closed:!!r.closed,endAt:r.endAt,now:Date.now(),
+  return {code:r.code,mode:r.mode,game:r.game,g:r.g,t:r.t,rule:r.rule,nm:r.nm,nh:r.nh,status:r.status,closed:!!r.closed,endAt:r.endAt,now:Date.now(),
     gt:r.gt||"",
     ...(r.co?{co:r.co.pub(Date.now(),host)}:{}),
     players:r.co?hrCoPlayers(r,host):[...r.players.values()].map(p=>r.qz
@@ -3056,7 +3111,7 @@ function hrHandle(r,conn,m){
 }
 async function hrCreate(s){
   let set=null, qz=null;
-  const co=s.mode==="rocket"?COOP.engine({easy:ruleOf(s.rule)==="easy",g:s.g}):null;      // 協力モード「ロケット はっしゃ」
+  const co=s.mode==="rocket"?COOP.engine({easy:ruleOf(s.rule)==="easy",g:s.g,stages:s.ns===3?3:5}):null;      // 協力モード「ロケット はっしゃ」
   if(s.mode==="quiz"||s.game==="mine"){        // 先生のもんだい：型・文字数・個数・時間の値を調べてから使う
     const c=QZ.cleanSet({title:s.gt,qs:s.qs}); if(!c.ok) throw new Error("もんだいが正しくありません："+c.why);
     const qs=s.mode==="quiz"?c.set.qs:c.set.qs.filter(x=>x.t==="mc"); if(!qs.length) throw new Error("4択の問題がありません");
@@ -3069,7 +3124,7 @@ async function hrCreate(s){
     try{ await withTimeout(new Promise((ok,ng)=>{peer.on("open",ok);peer.on("error",ng);}),10000,"つなぎ役のサーバーに接続できませんでした"); }
     catch(e){ try{peer.destroy()}catch(_){} if(e&&e.type==="unavailable-id") continue;
       throw new Error("つなぎ役のサーバーに接続できませんでした"+(e&&e.type?"（"+e.type+"）":"")); }
-    const r={code,mode:s.mode,game:s.mode==="quiz"?"quiz":s.game,g:s.g,t:co?300:s.t,rule:ruleOf(s.rule),status:"lobby",endAt:0,players:new Map(),conns:new Set(),allc:new Set(),closed:false,listeners:new Set(),timer:null,peer,gt:set?set.title:"",set:qz?null:set,qz,co,nm:s.nm==="auto"?"auto":"input"};
+    const r={code,mode:s.mode,game:s.mode==="quiz"?"quiz":s.game,g:s.g,t:co?300:s.t,rule:ruleOf(s.rule),status:"lobby",endAt:0,players:new Map(),conns:new Set(),allc:new Set(),closed:false,listeners:new Set(),timer:null,peer,gt:set?set.title:"",set:qz?null:set,qz,co,nm:s.nm==="auto"?"auto":"input",nh:s.nh===0?0:1};
     peer.on("connection",conn=>{ if(r.allc.size>=200){ try{conn.close()}catch(e){} return; }      // つながる数の上限（いたずら対策）
       r.allc.add(conn); conn.on("data",m=>hrHandle(r,conn,m)); conn.on("close",()=>{ r.conns.delete(conn); r.allc.delete(conn); }); });
     peer.on("disconnected",()=>{ try{peer.reconnect()}catch(e){} });   // 途中参加できるよう仲介サーバーにつなぎ直す
@@ -3640,6 +3695,7 @@ let RK=null, RKH=null;
 const rkArt=()=>loadScript("data/rocket-art.js",()=>!!document.getElementById("rocket-art"));
 const rkSvg=(id,vb,c)=>`<svg class="${c||"rks"}" viewBox="${vb}" aria-hidden="true" focusable="false"><use href="#${id}"/></svg>`;
 const rkNow=()=>Date.now()+RK.off;
+const rkDest=(co,i)=>co.ns===3?[1,3,4][i]:i, rkScn=(co,i)=>co.ns===3?[0,2,4,5][i]:i;      // みじかい（3ステージ）は、行き先と背景を 5つのうちの 3つに割りあてる
 function rkKidStop(){ stopTimer(); if(RK){ clearInterval(RK.fl); RK.fl=0; } }
 function rkKidState(s){
   const co=COOP&&COOP.clean(s.co); if(!co) return;
@@ -3654,7 +3710,7 @@ function rkKidState(s){
 }
 function rkHead(){
   const K=RK, co=K.co;
-  return `<div class="rk-hd"><span>🚀 ${T("rk.stage",co.sg+1)}</span><span class="note">${T("l.room")} ${esc(K.s.code)}</span></div>`;
+  return `<div class="rk-hd"><span>🚀 ${T("rk.stage",co.sg+1,co.ns)}</span><span class="note">${T("l.room")} ${esc(K.s.code)}</span></div>`;
 }
 const rkGaugeK=co=>`<div class="rk-kg"><span>${T("rk.fuel")}</span><div class="rk-hbar"><i id="rkg" style="width:${co.p}%"></i></div><b id="rkgp">${co.p}％</b></div>`;
 function rkKidDraw(){
@@ -3684,7 +3740,7 @@ function rkKidDraw(){
     app.innerHTML=`<div class="play rkk">${rkHead()}<div class="q">${rkSvg("rk-rocket","0 0 120 150","rks big")}<div class="big">${T("rk.again")}</div><div class="small">${T("rk.again.h")}</div></div></div>`;
   } else if(co.ph==="clear"){
     sfx("medal"); party();
-    app.innerHTML=`<div class="play rkk">${rkHead()}<div class="q">${rkSvg("rk-rocket","0 0 120 150","rks big")}<div class="big">${T("rk.clear",co.st)}</div><div class="small">${T("rk.reach",T("rk.dest",co.st-1))}</div></div></div>`;
+    app.innerHTML=`<div class="play rkk">${rkHead()}<div class="q">${rkSvg("rk-rocket","0 0 120 150","rks big")}<div class="big">${T("rk.clear",co.st)}</div><div class="small">${T("rk.reach",T("rk.dest",rkDest(co,co.st-1)))}</div></div></div>`;
   }
 }
 function rkKidLive(){
@@ -3785,11 +3841,11 @@ function rkFlush(){
 }
 function rkKidEnd(){
   const K=RK; if(K.ended) return; K.ended=true; rkKidStop();
-  const st=K.co.res?K.co.res.st:K.co.st;
+  const st=K.co.res?K.co.res.st:K.co.st, an=K.co.res?K.co.res.an:0;
   sfx("medal"); party();
-  const colHtml=COLOK?colRun({units:[],answered:K.ans,correct:K.ok,quiz:true}):"";      // どんぐり：3問以上こたえた子に +2（1日1回）。成功しても ふえない
+  const colHtml=COLOK?colRun({units:[],answered:K.ans,correct:K.ok,quiz:true,quiet:K.s.nh!==0}):"";      // 部屋の「ひろばを出さない」（初期値）のときは、どんぐりの行も「ひろばを みる」も出さない      // どんぐり：3問以上こたえた子に +2（1日1回）。成功しても ふえない
   const mine=[K.ok?T("rk.me.ok",K.ok):"",K.boo?T("rk.me.bo",K.boo):"",K.hit?T("rk.me.hit",K.hit):"",K.got?T("rk.me.st",K.got):""].filter(Boolean);
-  app.innerHTML=`<div class="play"><div class="res">${rkSvg("rk-rocket","0 0 120 150","rks big")}<div class="num">${st>0?T("rk.end",st):T("rk.end0")}</div><div class="note">${T(st>0?"rk.end.h":"rk.end.h0")}</div>
+  app.innerHTML=`<div class="play"><div class="res">${rkSvg("rk-rocket","0 0 120 150","rks big")}<div class="num">${st>0?T("rk.end",st):T("rk.end0")}</div><div class="note">${T(st>0?"rk.end.h":"rk.end.h0")}</div>${an>0?`<div class="num rk-an">${T("rk.an",an)}</div>`:""}
     <div class="q rk-me"><div class="small">${T("rk.me")}</div>${(mine.length?mine:[T("rk.me.none")]).map(x=>`<div class="big2">${esc(x)}</div>`).join("")}</div>
     ${colHtml}<div class="actions"><button class="btn again" onclick="go('#home')">${T("n.home")}</button></div></div>${privacy()}</div>`;
 }
@@ -3841,14 +3897,14 @@ function rkHostUpd(s){
   R.s=s; R.co=co; R.off=s.now-Date.now();
   const $$=id=>document.getElementById(id), fin=co.ph==="clear"||co.ph==="end";
   const scene=fin?co.st:co.sg;
-  if(scene!==R.scene){ R.scene=scene; $$("rkbg").setAttribute("href","#rk-bg"+scene); $$("rkpad").style.display=scene===0?"":"none"; }
-  const alt=fin?co.st:co.sg+(co.ph==="play"?co.p/100*.6:.8);
-  const r=$$("rkr"); r.style.bottom=(5.5+alt/5*34.5)+"%"; r.style.transform=`scale(${(.8+.05*co.st).toFixed(2)})`;
+  if(scene!==R.scene){ R.scene=scene; $$("rkbg").setAttribute("href","#rk-bg"+rkScn(co,scene)); $$("rkpad").style.display=scene===0?"":"none"; }
+  const k5=5/co.ns, alt=(fin?co.st:co.sg+(co.ph==="play"?co.p/100*.6:.8))*k5;
+  const r=$$("rkr"); r.style.bottom=(5.5+alt/5*34.5)+"%"; r.style.transform=`scale(${(.8+.05*co.st*k5).toFixed(2)})`;
   r.classList.toggle("shake",co.ph==="count"||co.ph==="clear");
   r.classList.toggle("idle",co.st===0&&(co.ph==="count"||(co.ph==="play"&&co.p<10)));      // 発射台にいるあいだは炎を出さない
-  $$("rkside").style.display=co.st>=2?"":"none";
-  $$("rkst").textContent=co.ph==="end"?T((co.res?co.res.st:co.st)>0?"rk.end.h":"rk.end.h0"):T("rk.stage",co.sg+1)+"　→ "+T("rk.dest",co.sg);
-  [...$$("rkdots").children].forEach((d,i)=>{ d.className=i<co.st?"done":(i===co.sg&&co.ph!=="end"?"cur":""); });
+  $$("rkside").style.display=co.st*k5>=2?"":"none";
+  $$("rkst").textContent=co.ph==="end"?T((co.res?co.res.st:co.st)>0?"rk.end.h":"rk.end.h0"):T("rk.stage",co.sg+1,co.ns)+"　→ "+T("rk.dest",rkDest(co,co.sg));
+  [...$$("rkdots").children].forEach((d,i)=>{ d.style.display=i<co.ns?"":"none"; d.className=i<co.st?"done":(i===co.sg&&co.ph!=="end"?"cur":""); });
   const p=co.ph==="mini"||fin?100:co.p; $$("rkfill").style.transform=`scaleY(${p/100})`; $$("rkgp").textContent=p+"％";
   $$("rkn").textContent=T("rk.h.n",co.n);
   if(co.ev&&co.ev.t==="bo"&&co.ev.id!==R.evSeen){ R.bn=1; R.bt=Date.now()+3500; }
@@ -3862,8 +3918,8 @@ function rkHostUpd(s){
     else if(co.ph==="mini"&&co.mg.k==="sy") mid.innerHTML=`<div class="rkm-card"><h2>${T("rk.sy")}</h2><div class="hint">${T("rk.h.sy")}</div><div class="rkm-big" id="rkbig"></div><div class="hint">${T("rk.h.sy.p")}</div><div class="rkm-bar"><i id="rkmb"></i></div></div>`;
     else if(co.ph==="mini") mid.innerHTML=`<div class="rkm-card"><h2>${T("rk.st")}</h2><div class="hint">${T("rk.h.st")}</div><div class="rkm-big" id="rkbig"></div><div class="hint">${T("rk.h.st.p")}</div><div class="rkm-bar star"><i id="rkmb"></i></div></div>`;
     else if(co.ph==="again") mid.innerHTML=`<div class="rkm-card"><h2>${T("rk.again")}</h2><div class="hint">${T("rk.again.h")}</div></div>`;
-    else if(co.ph==="clear"){ mid.innerHTML=`<div class="rkm-card"><div class="rkm-clear">${T("rk.clear",co.st)}</div><h2>${T("rk.reach",T("rk.dest",co.st-1))}</h2></div>`; party(); }
-    else if(co.ph==="end"){ mid.innerHTML=`<div class="rkm-card"><div class="rkm-end">${(co.res?co.res.st:co.st)>0?T("rk.end",co.res?co.res.st:co.st):T("rk.end0")}</div></div>`; party(); }
+    else if(co.ph==="clear"){ mid.innerHTML=`<div class="rkm-card"><div class="rkm-clear">${T("rk.clear",co.st)}</div><h2>${T("rk.reach",T("rk.dest",rkDest(co,co.st-1)))}</h2></div>`; party(); }
+    else if(co.ph==="end"){ mid.innerHTML=`<div class="rkm-card"><div class="rkm-end">${(co.res?co.res.st:co.st)>0?T("rk.end",co.res?co.res.st:co.st):T("rk.end0")}</div>${co.res&&co.res.an>0?`<h2>${T("rk.an",co.res.an)}</h2>`:""}</div>`; party(); }
   }
   const mb=$$("rkmb"); if(mb&&co.mg) mb.style.width=co.mg.p+"%";
   rkRowDraw(); rkHostFrame();
@@ -4360,12 +4416,12 @@ function qrPut(box,url){
   }).catch(()=>{});
 }
 function exportPanel(set){
-  const msg=h("div",{class:"err",role:"alert"}), out=h("div",{class:"lkout"});
+  const msg=h("div",{class:"err",role:"alert"}), out=h("div",{class:"lkout"}), LQ={task:false,col0:false};
   const need=()=>{ const r=qzCheckMsg(set); if(!r.set){ msg.textContent=r.why; return null; } msg.textContent=""; return r.set; };
   const mk=(label,ic2,fn)=>h("button",{type:"button",class:"btn sub",innerHTML:ic(ic2)+label,onclick:fn});
   async function makeLink(){
     const f=need(); out.replaceChildren(); if(!f) return;
-    const code=await QZ.encodeLink(f), url=location.href.split("#")[0]+"#q="+code;
+    const code=await QZ.encodeLink(f), url=location.href.split("#")[0]+"#q="+code+(LQ.task?"&task=1":"")+(LQ.col0?"&col=0":"");
     if(url.length>LINK_MAX){ out.append(h("div",{class:"banner"},`このセットは長すぎて、リンクにできません（${url.length}文字。目安は${LINK_MAX}文字まで、およそ30問）。上の「ファイルで書き出す」を使って、ファイルを渡してください。`)); return; }
     const box=h("div",{class:"qrwrap"}), ta=h("textarea",{class:"fld",readOnly:true,rows:3,value:url,"aria-label":"れんしゅう用リンク"});
     out.append(h("div",{class:"out"},h("b",{text:"れんしゅう用リンク"}),ta,copyBtn(()=>url),
@@ -4379,6 +4435,8 @@ function exportPanel(set){
       mk("ファイルで書き出す（.json）","download",()=>{ const f=need(); if(f) dl(fname(set.title,".json"),"application/json;charset=utf-8",QZ.toJson(f)); }),
       mk("CSVで書き出す（Excelで開けます）","download",()=>{ const f=need(); if(f) dl(fname(set.title,".csv"),"text/csv;charset=utf-8",QZ.toCsv(f)); }),
       mk("れんしゅう用リンクを作る","copy",makeLink)),
+    h("label",{class:"chk inl"},h("input",{type:"checkbox",onchange:e=>{ LQ.task=e.target.checked; }})," れんしゅう用リンクを「授業で使う（ほかの画面に行かせない）」にする"),   //T
+    h("label",{class:"chk inl"},h("input",{type:"checkbox",onchange:e=>{ LQ.col0=e.target.checked; }})," れんしゅう用リンクで ひろばを出さない"),   //T
     h("div",{class:"note",text:".json はほかの先生に渡して、取り込みで読み込めます。CSV は Excel やスプレッドシートで開けて、取り込みにも使えます。"}),msg,out);
 }
 
@@ -4406,7 +4464,7 @@ function qzSoloQ(){
   const grid=h("div",{class:"qzgrid"+(q.t==="tf"?" tf2":"")},...q.ch.map((_,i)=>qzChoiceBtn(q,i,c=>qzSoloAnswer(c))));
   const fb=h("div",{class:"fb",id:"fb","aria-live":"polite",text:T("z.pick")});
   app.replaceChildren(h("div",{class:"play pg qzk"},
-    h("div",{class:"topbar"},h("b",{text:T("z.qn",S.i+1,S.qs.length)}),h("span",{class:"note",text:S.set.title||""}),tm),
+    h("div",{class:"topbar"},LESSON?h("button",{type:"button",class:"back",innerHTML:ic("x")+T("back.end"),onclick:()=>{ stopTimer(); S.locked=true; qzSoloResult(); }}):null,h("b",{text:T("z.qn",S.i+1,S.qs.length)}),h("span",{class:"note",text:S.set.title||""}),tm),
     h("div",{class:"tbar",id:"tbar"},bar),
     h("div",{class:"q qzq"},rich(h("div"),q.q)),grid,fb,
     h("div",{id:"qznext",style:"text-align:center;margin-top:10px"})));
@@ -4426,21 +4484,24 @@ function qzSoloAnswer(c){
   const fb=document.getElementById("fb"); fb.className="fb "+(right?"ok":"ng");
   fb.textContent=(right?T("z.right"):c<0?T("z.none"):T("z.wrong"))+(right&&q.pt!=="none"?"　"+T("z.pts",pts):"")+(S.st>=2?"　"+T("z.streak",S.st):"");
   sfx(right?"ok":"ng");
+  S.done=(S.done||0)+1;
   const last=S.i>=S.qs.length-1;
   const nb=h("button",{type:"button",class:"btn again",text:last?T("z.finish"):T("z.next"),onclick:()=>{ if(last) qzSoloResult(); else { S.i++; qzSoloQ(); } }});
   document.getElementById("qznext").replaceChildren(nb); nb.focus();
 }
 function qzSoloResult(){
   const S=QS, n=S.qs.length, pct=Math.round(S.ok/n*100), medal=pct>=80?3:pct>=60?2:pct>=40?1:0;
+  const rep=quizReport(S);
+  const send=LESSON?h("div",{class:"miss"},h("b",{text:T("r.send")}),h("br"),h("span",{text:rep}),h("br"),h("button",{type:"button",class:"btn sub",text:T("r.copy"),onclick:e=>{ navigator.clipboard?.writeText(rep).then(()=>{ e.target.textContent=T("r.copied"); },()=>{}); }})):null;
   if(medal>=2) sfx("medal"); if(medal===3) party();
   const miss=h("div",{class:"miss"},h("b",{text:T("r.miss")}),...S.miss.slice(0,20).map(m=>h("div",{class:"mcard"},h("div",{class:"mq"},rich(h("span"),m.q.q)),h("div",{class:"ma"},T("r.ans")+"：",h("b",null,...m.q.ok.map((k,j)=>h("span",null,j?" / ":"",rich(h("span"),m.q.ch[k]))))))));
   app.replaceChildren(h("div",{class:"play"},h("div",{class:"res"},
     h("div",{innerHTML:medRow(medal,pct)}),
     h("div",{class:"num",text:T("z.okn",S.ok,n)}),h("div",{class:"nextm",text:T("z.total",S.score)}),
     h("div",{class:"actions"},h("button",{type:"button",class:"btn again",innerHTML:ic("rotate-ccw")+T("r.again"),onclick:()=>qzSoloIntro(S.set)}),
-      h("button",{type:"button",class:"btn sub",text:T("n.home"),onclick:()=>go("#home")})),
+      LESSON?null:h("button",{type:"button",class:"btn sub",text:T("n.home"),onclick:()=>go("#home")})),
     h("div",{class:"stats"},h("span",null,T("r.acc")+" ",h("b",{text:pct+"%"}))),
-    S.miss.length?miss:null)));
+    S.miss.length?miss:null,send)));
 }
 
 /* ================= ライブ出題：児童の画面（クイズ形式） ================= */
@@ -4504,7 +4565,7 @@ function qzKidEnd(s,Z,me){
   stopTimer();
   if(QK&&QK.key==="end") return;
   QK={key:"end",ended:true};
-  const colHtml=COLOK?colRun({units:[],answered:QKA,correct:me.ok,quiz:true}):"";
+  const colHtml=COLOK?colRun({units:[],answered:QKA,correct:me.ok,quiz:true,quiet:s.nh!==0}):"";
   const ps=sorted(s.players), place=ps.findIndex(p=>p.pid===NET.pid)+1, easy=Z.easy||ruleOf(s.rule)==="easy";
   const medal=place===1?3:place===2?2:place===3?1:0;
   if(easy||place<=3) sfx("medal"); if(easy||place===1) party();
@@ -4596,7 +4657,7 @@ function qzHostTick(s,off){
   const warn=left<=Math.min(10,q.sec/3); if(t) t.classList.toggle("warn",warn); if(bar) bar.classList.toggle("warn",warn);
 }
 /* 部屋の設定：先生のセットは保存しているものから読み直す（sessionStorage には問題の中身を入れない） */
-const hostPlain=H=>({mode:H.mode,game:H.game,g:H.g,t:H.t,rule:H.rule,nm:H.nm==="auto"?"auto":"input",setId:H.setId||"",gt:H.gt||""});
+const hostPlain=H=>({mode:H.mode,game:H.game,g:H.g,t:H.t,rule:H.rule,nm:H.nm==="auto"?"auto":"input",nh:H.nh===0?0:1,ns:H.ns===3?3:5,setId:H.setId||"",gt:H.gt||""});
 function roomArgs(H){
   const s=hostPlain(H);
   if(s.setId){ const st=qsFind(s.setId), f=st&&qsFinal(st); if(!f||!f.ok) throw new Error("もんだいのセットが見《み》つかりません（④で確認《かくにん》してください）"); s.qs=f.set.qs; s.gt=f.set.title; }
@@ -4650,13 +4711,13 @@ let UPK=(()=>{ const v=store.get("mh_upick",null)||{};
 const uSave=()=>store.set("mh_upick",UPK);
 const uChoice=(ids,c)=>c===true||c===false?c:uEasyDefault(ids);
 /* リンク */
-function uHash(c){ return "#u="+c.ids.join(",")+"&n="+c.n+"&t="+c.t+"&s="+c.seed+(c.mix===false?"&m=0":"")+(c.choice===true?"&c=1":c.choice===false?"&c=0":""); }
+function uHash(c){ return "#u="+c.ids.join(",")+"&n="+c.n+"&t="+c.t+"&s="+c.seed+(c.mix===false?"&m=0":"")+(c.choice===true?"&c=1":c.choice===false?"&c=0":"")+(c.task?"&task=1":"")+(c.col0?"&col=0":""); }
 function uParse(hash){
   const sp=new URLSearchParams(String(hash).replace(/^#/,""));
   const ids=[...new Set((sp.get("u")||"").split(",").map(s=>s.trim()))].filter(i=>UBY[i]).slice(0,UMAX);
   if(!ids.length) return null;
   const num=(k,lo,hi,d)=>{ const v=sp.get(k); return v!==null&&/^\d{1,9}$/.test(v)&&+v>=lo&&+v<=hi?+v:d; };
-  return {ids,n:num("n",1,60,20),t:num("t",5,120,20),seed:num("s",0,999999999,1),mix:sp.get("m")!=="0",choice:sp.get("c")==="1"?true:sp.get("c")==="0"?false:null};
+  return {ids,n:num("n",1,60,20),t:num("t",5,120,20),seed:num("s",0,999999999,1),mix:sp.get("m")!=="0",choice:sp.get("c")==="1"?true:sp.get("c")==="0"?false:null,task:sp.get("task")==="1",col0:sp.get("col")==="0"};
 }
 const upill=(label,on,fn)=>h("button",{type:"button",class:"pill small"+(on?" on":""),"aria-pressed":on?"true":"false",text:label,onclick:fn});
 /* 例題（ひとことの解き方）を見せる */
@@ -4699,6 +4760,7 @@ function renderUnits(q){
   if(kid){ const keep=UPK.sel.filter(id=>UBY[id].subj===subj&&(!easy||UBY[id].g===kg)); if(keep.length!==UPK.sel.length){ UPK.sel=keep; } }
   const root=h("div",{class:"up"+(kid?" kid":"")}), filt=h("div",{class:"upf"}), sets=h("div"), panel=h("div",{class:"form upanel"}), cards=h("div",{class:"ucards"}), msg=h("div",{class:"err",role:"alert"}), out=h("div",{class:"lkout"});
   const chosen=()=>UPK.sel.filter(i=>UBY[i]);
+  const LK={task:!kid&&!!q.get("pick"), col0:false};      // リンクとQR：ガイドから来たとき（?pick=）は「授業で使う」を はじめからオン
   /* かたまり1：しぼりこみ */
   function drawFilter(){
     const items=[...new Set(pool(subj).map(u=>u.item).filter(Boolean))], rows=[];
@@ -4751,7 +4813,7 @@ function renderUnits(q){
     const s=qsNew(qs,QZ.cut(title,QZ.LIM.title),uMaxG(c.ids)); s.memo=QZ.cut(reuse||memo,QZ.LIM.memo); qsWrite(); return s;
   }
   function showLink(){
-    if(!need()) return; const c=cfg(), url=location.href.split("#")[0]+uHash(c);
+    if(!need()) return; const c=cfg(), url=location.href.split("#")[0]+uHash({...c,task:LK.task,col0:LK.col0});
     const box=h("div",{class:"qrwrap"}), ta=h("textarea",{class:"fld",readOnly:true,rows:3,value:url,"aria-label":"単元《たんげん》リンク"});
     out.replaceChildren(h("div",{class:"out"},h("b",{text:"単元《たんげん》リンク（短《みじか》いリンク）"}),ta,copyBtn(()=>url),
       h("a",{class:"btn sub s",href:url,target:"_blank",rel:"noopener",text:"ためしに開《ひら》く ↗"}),
@@ -4778,6 +4840,8 @@ function renderUnits(q){
       rows.push(h("div",{class:"uacts"},
         h("button",{type:"button",class:"btn",innerHTML:ic("users")+"この内容で出題（クイズ・たからばこ・すごろく）",onclick:run(()=>{ const s=makeSet("単元出題："+chosen().join(",")); go("#teacher?set="+s.id); })}),   //T
         h("button",{type:"button",class:"btn sub",innerHTML:ic("pencil")+"先生《せんせい》のもんだいセットにする（編集《へんしゅう》・書《か》き出《だ》し）",onclick:run(()=>{ const s=makeSet(); go("#make?set="+s.id); })}),
+        h("label",{class:"chk inl"},h("input",{type:"checkbox",checked:LK.task,onchange:e=>{ LK.task=e.target.checked; }})," 授業で使う（ほかの画面に行かせない）"),   //T
+        h("label",{class:"chk inl"},h("input",{type:"checkbox",checked:LK.col0,onchange:e=>{ LK.col0=e.target.checked; }})," ひろばを出さない"),   //T
         h("button",{type:"button",class:"btn sub",innerHTML:ic("copy")+"リンクとQR",onclick:showLink}),
         h("button",{type:"button",class:"btn sub",innerHTML:ic("play")+"ひとりで ためす",onclick:run(()=>{ go(uHash(cfg())); })})),
         h("div",{class:"note",text:"「出題《しゅつだい》」と「セットにする」は、問題《もんだい》を4択《たく》にして先生《せんせい》のもんだいセットに保存《ほぞん》します（出題《しゅつだい》は同《おな》じ単元《たんげん》なら上書《うわが》き）。リンクとQRは単元《たんげん》IDと設定《せってい》だけなので短《みじか》く、開《ひら》くたびに児童《じどう》の端末《たんまつ》で同《おな》じ問題《もんだい》を作《つく》ります。"}));
@@ -4804,7 +4868,7 @@ function renderUnitLink(hash){
   const how=h("div",{class:"pills",style:"justify-content:center"}), draw=()=>how.replaceChildren(upill(T("u.type"),!choice,()=>{ choice=false; draw(); }),upill(T("u.c4"),choice,()=>{ choice=true; draw(); }));
   draw();
   app.replaceChildren(h("div",{class:"play up"},
-    h("div",{class:"topbar"},h("button",{type:"button",class:"back",innerHTML:BK(),onclick:()=>go("#home")}),h("b"),h("span")),
+    h("div",{class:"topbar"},c.task?h("span"):h("button",{type:"button",class:"back",innerHTML:BK(),onclick:()=>go("#home")}),h("b"),h("span")),
     h("div",{class:"q"},h("div",{class:"big",text:T("u.intro")}),h("div",{class:"small",text:T("u.1min")})),
     h("div",{class:"uchips cen"},...c.ids.map(id=>h("span",{class:"uchipw"},h("span",{class:"uchip static"},h("span",{class:"ucg",text:UBY[id].g+"年《ねん》"}),h("span",{text:UBY[id].title})),
       h("button",{type:"button",class:"btn sub s uexb",text:T("u.ex"),"aria-label":T("u.ex")+"："+UBY[id].title,onclick:()=>uEx(UBY[id])})))),
@@ -4815,12 +4879,12 @@ function startUnitRun(c){
   stopTimer();
   const ids=c.ids, g=uMaxG(ids), choice=uChoice(ids,c.choice); setLG(g);
   const t=60;
-  P={x:UNITX,g,t,left:t,ok:0,ng:0,cur:null,inp:null,misses:[],missObjs:[],task:false,lock:false,over:false,chN:0,inN:0,marks:[],
+  P={x:UNITX,g,t,left:t,ok:0,ng:0,cur:null,inp:null,misses:[],missObjs:[],task:!!c.task,lock:false,over:false,chN:0,inN:0,marks:[],
      u:{ids,n:c.n,seed:c.seed,mix:c.mix,choice,round:0,pool:UN.unitPick(ids,c.n,c.seed,c.mix),pi:0,
         again:()=>startUnitRun({...c,seed:uSeed()})}};
   const names=ids.map(i=>UBY[i].title).join("・");
   app.innerHTML=`<div class="play pg">
-    <div class="topbar"><button class="back" onclick="stopTimer();go('#home')">${BK()}</button>
+    <div class="topbar">${c.task?`<button class="back" id="bk">${ic("x")}${T("back.end")}</button>`:`<button class="back" onclick="stopTimer();go('#home')">${BK()}</button>`}
       <span><b>${tico(UNITX)} ${T("g.unit.t")}</b> <span class="note" id="unm"></span></span><span class="timer" id="tm" aria-hidden="true">${t}</span></div>
     <div class="tbar" id="tbar"><i id="tb"></i></div>
     <div class="q"><div class="big" id="qq"></div><div class="small" id="qs"></div></div>
@@ -4829,6 +4893,7 @@ function startUnitRun(c){
     <div id="area"></div>
     <div class="uexrow"><button type="button" class="btn sub s" id="uexb">💡 ${T("u.ex")}</button></div>
     <div class="score" id="scw">${T("p.score",0)}</div></div>`;
+  if(c.task) $("#bk").onclick=()=>{ stopTimer(); finish(); };      // 授業モード：ホームへは行かず、結果の画面へ
   $("#unm").textContent=rbp(names).length>28?rbp(names).slice(0,27)+"…":names;
   $("#uexb").onclick=()=>{ if(P&&P.cur&&P.u) uEx(UBY[P.cur.uid]); };
   unitNext();
@@ -4962,7 +5027,7 @@ function route(){
   setLG(path==="home"||path==="modesetup"||path==="join"||path==="record"?ui.grade:0);
   document.body.dataset.v=["check","play","setup","modesetup","mode","join","lobby","host","teacher","record","make","qlink","units","ulink","hiroba","zukan","tanken"].includes(path)?path:"home";
   // 課題リンク（task=1）で開いたゲームでは、ほかの画面への入口を隠す（授業モード）
-  const lesson=(path==="play"||path==="mode")&&q.get("task")==="1";
+  const lesson=((path==="play"||path==="mode")&&q.get("task")==="1")||((path==="qlink"||path==="ulink")&&/[&?]task=1(?![0-9])/.test(location.hash));
   LESSON=lesson; document.body.classList.toggle("lesson",lesson);
   const lg=$("#logo"); if(lg) lg.disabled=lesson;          // 授業モードではロゴからホームへ行けない
   window.scrollTo(0,0);
@@ -4979,7 +5044,7 @@ function route(){
   else if(path==="host") renderHost();
   else if(path==="teacher") renderTeacher(q);
   else if(path==="make") renderMake(q);
-  else if(path==="qlink") renderQuizLink(location.hash.slice(3));
+  else if(path==="qlink") renderQuizLink(location.hash.slice(3).split(/[&?]/)[0]);
   else if(path==="units") renderUnits(q);
   else if(path==="ulink") renderUnitLink(location.hash);
   else if(path==="record") renderRecord();
