@@ -50,6 +50,11 @@ const why = s => NM.check(s).why;
     for (const w of ["馬鹿", "阿呆", "死ね", "氏ね", "殺す", "消えろ", "黙れ", "変態", "気持ち悪い", "糞", "不細工", "たろう馬鹿", "しねしね", "シネシネ", "死ねしね", "しねしねしね", "くずくず", "ばかばか"])
       assert.strictEqual(why(w), "ng", w);
   });
+  await t("電話番号・メール・URL らしい名前は断る（pii）。短い数字つきの名前は通す", () => {
+    for (const w of ["09012345", "12345", "ゆうと12345", "０９０１２３４５", "123a4567", "http", "www1", "gmail", "Yahoo", "docomo"]) assert.strictEqual(why(w), "pii", w);
+    for (const w of ["a@b.jp", "090-1234", "http://x", "lin@gmail.com"]) assert.ok(!NM.check(w).ok, w);   // 記号は文字の種類で先に断る
+    for (const w of ["ゆうと2", "ゆうと2024", "Ren8", "3ばん", "ゆうと1234", "a12b34", "ＡＢＣ１２"]) assert.ok(NM.check(w).ok, w + " " + JSON.stringify(NM.check(w)));
+  });
   await t("NG語：ふつうの漢字の名前は通す（誤検出の例外）", () => {
     for (const w of ["外山", "池田", "死神", "便利", "精一", "首藤", "大阪", "花子", "糸井", "たけし", "しんたろう", "しのぶ", "ねしね"])
       assert.ok(NM.check(w).ok, w + " " + JSON.stringify(NM.check(w)));
@@ -87,7 +92,7 @@ const why = s => NM.check(s).why;
     });
     await t("参加時の名前の検査（長さ・文字種・NG語）をサーバーでも行う", async () => {
       const r = await mkRoom();
-      for (const [name, w] of [["", "empty"], ["あいうえおかきくけ", "long"], ["ゆう と", "chars"], ["😀", "chars"], ["ばか", "ng"], ["BAKA", "ng"], ["ＵＮＫＯ", "ng"], [null, "empty"], [123, "empty"], [{ a: 1 }, "empty"]]) {
+      for (const [name, w] of [["", "empty"], ["あいうえおかきくけ", "long"], ["ゆう と", "chars"], ["😀", "chars"], ["ばか", "ng"], ["BAKA", "ng"], ["ＵＮＫＯ", "ng"], ["09012345", "pii"], ["gmail", "pii"], [null, "empty"], [123, "empty"], [{ a: 1 }, "empty"]]) {
         const x = await post("join", { code: r.code, name });
         assert.strictEqual(x.s, 400, JSON.stringify(name)); assert.strictEqual(x.j.why, w, JSON.stringify(name)); assert.ok(x.j.error);
       }

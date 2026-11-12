@@ -87,9 +87,20 @@ function isNg(name){
   return false;
 }
 
+/* 電話番号・メール・URL らしい名前（個人の連絡先を先生の大画面に出さないため）。NFKC のあとで調べる
+   - 数字が5けた以上つづく／数字が合わせて7けた以上
+   - http・www・メールの会社名などの文字（@ . / : - は、文字の種類の検査で先に断られる） */
+const CONTACT_WORDS=["http","www","mailto","gmail","yahoo","icloud","hotmail","outlook","docomo","softbank","ezweb"];
+function isContact(name){
+  const t=String(name).normalize("NFKC").toLowerCase();
+  if(/[0-9]{5,}/.test(t)) return true;
+  if((t.match(/[0-9]/g)||[]).length>=7) return true;
+  return CONTACT_WORDS.some(w=>t.includes(w));
+}
+
 /* 使える文字：ひらがな・カタカナ（ー を含む）・漢字（々 を含む）・英数字。NFKC のあと（全角英数は半角、半角カナは全角になる） */
 const OK_CHARS=/^[ぁ-ゖァ-ヺー㐀-䶿一-鿿々A-Za-z0-9]+$/;
-/* 名前を整えて検査する。 {ok:true,name} か {ok:false,why:"empty"|"long"|"chars"|"ng"} */
+/* 名前を整えて検査する。 {ok:true,name} か {ok:false,why:"empty"|"long"|"chars"|"ng"|"pii"} */
 function check(raw){
   if(typeof raw!=="string") return {ok:false,why:"empty"};
   const name=raw.normalize("NFKC").trim();
@@ -97,6 +108,7 @@ function check(raw){
   if([...name].length>MAX) return {ok:false,why:"long"};
   if(!OK_CHARS.test(name)) return {ok:false,why:"chars"};
   if(isNg(name)) return {ok:false,why:"ng"};
+  if(isContact(name)) return {ok:false,why:"pii"};
   return {ok:true,name};
 }
 /* 同じ名前があれば「ゆうと2」「ゆうと3」…。比べるときは大文字小文字・かな種を区別しない */
@@ -108,6 +120,6 @@ function dedupe(name,used){
   return name+Math.floor(Math.random()*1e6);
 }
 
-const API={MIN,MAX,check,dedupe,isNg,norm,romajiToKana,key};
+const API={MIN,MAX,check,dedupe,isNg,isContact,norm,romajiToKana,key};
 if(typeof module!=="undefined"&&module.exports) module.exports=API; else root.MH_NAMES=API;
 })(typeof window!=="undefined"?window:globalThis);

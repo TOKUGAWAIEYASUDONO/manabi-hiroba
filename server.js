@@ -43,6 +43,27 @@ function hitOk(key, limit, ms, now) {
 }
 function hitPeek(key, limit, ms, now) { return (hits.get(key) || []).filter(t => now - t < ms).length < limit * RATE_SCALE; }
 const TOO_MANY = [429, { error: "しばらくしてから、もう一度ためしてね" }];
+// 部屋づくり・つなぎっぱなしの接続の上限（メモリを使い切られないため）。環境変数は検査用で、ふつうは変えない
+const envN = (k, d) => { const v = +process.env[k]; return v > 0 ? v : d; };
+const LIM = {
+  createPerMin: envN("LIMIT_CREATE_PER_MIN", 6),          // 同じ接続元（IP）が1分につくれる部屋
+  createPerHour: envN("LIMIT_CREATE_PER_HOUR", 40),       // 同じ接続元が1時間につくれる部屋
+  roomsPerIp: envN("LIMIT_ROOMS_PER_IP", 15),             // 同じ接続元が同時に持てる部屋
+  roomsTotal: envN("LIMIT_ROOMS_TOTAL", 400),             // サーバー全体の同時の部屋数
+  unusedMs: envN("LIMIT_UNUSED_MS", 15 * 60e3),           // 誰も入らず・誰も見ていない部屋は、この時間で消す
+  idleMs: envN("LIMIT_IDLE_MS", 45 * 60e3),               // 何の操作もない部屋は、この時間で消す
+  endedMs: envN("LIMIT_ENDED_MS", 30 * 60e3),             // 終わった部屋は、この時間で消す
+  sseRoom: envN("LIMIT_SSE_ROOM", 150),                   // 1つの部屋の接続（児童60人＋先生＋つなぎなおし）
+  sseCred: envN("LIMIT_SSE_CRED", 3),                     // 同じ児童／先生の資格情報での接続（タブ・つなぎなおし）
+  sseIp: envN("LIMIT_SSE_IP", 200),                       // 同じ接続元の接続（教室の端末は同じ接続元に見える）
+  sseTotal: envN("LIMIT_SSE_TOTAL", 4000),
+  sseAnon: envN("LIMIT_SSE_ANON", 10),                     // 鍵なし（部屋コードだけ）の接続は、接続元ごとに少なく
+  sseIdleMs: envN("LIMIT_SSE_IDLE_MS", 20 * 60e3),        // 部屋の操作が何もない時間がこれを超えたら、つなぎっぱなしの接続を切る
+  sseBuf: envN("LIMIT_SSE_BUF", 1 << 20)                  // 送り切れずにたまった量（低速な接続を切る）
+};
+const sseIpCount = new Map();
+let sseTotal = 0;
+const createLog = new Map();       // ip -> 部屋をつくった時刻の一覧
 const rnd = n => crypto.randomInt(n);
 const id = () => crypto.randomBytes(9).toString("base64url");
 
@@ -64,7 +85,7 @@ function pickEmoji(room) {
 const joinBlock = room => room.status === "ended" ? [409, { error: "この対戦はもう終わっています" }]
   : room.status !== "lobby" ? [409, { error: "もう始まっているので入れません" }]
   : room.closed ? [409, { error: "入室はしめきられました" }] : null;
-const NAME_ERR = { empty: "名前を入れてね", long: "名前は8文字までです", chars: "使えない文字が入っています", ng: "その名前は使えません" };
+const NAME_ERR = { empty: "名前を入れてね", long: "名前は8文字までです", chars: "使えない文字が入っています", ng: "その名前は使えません", pii: "数字が長くならぶ名前や、メール・URLの名前は使えません" };
 const allNames = (room, except) => [...room.players.values()].filter(q => q !== except).map(q => q.name);
 function newCode() {
   for (;;) { const c = String(1000 + rnd(9000)); if (!rooms.has(c)) return c; }
@@ -121,8 +142,16 @@ setInterval(() => {
     if (room.co) { if (room.status === "playing" && room.co.tick(now)) { if (room.co.ph === "end") endRoom(room); else broadcast(room, true); } }
     else if (room.qz) { if (room.status === "playing" && room.qz.tick(now)) { qzSync(room); if (room.qz.phase === "end") endRoom(room); else broadcast(room, true); } }
     else if (room.status === "playing" && now >= room.endAt) endRoom(room);
-    if (now - room.created > 3 * 3600e3) { for (const r of room.clients) r.end(); rooms.delete(room.code); }
+    const dead = now - room.created > 3 * 3600e3                                              // 3時間でかならず消す
+      || (room.status === "lobby" && !room.players.size && !room.clients.size && now - room.last > LIM.unusedMs)   // 使われていない部屋
+      || (room.status === "ended" && now - room.last > LIM.endedMs)                         // 終わってしばらくたった部屋
+      || now - room.last > LIM.idleMs;                                                      // 長いあいだ何も操作がない部屋
+    if (dead) { for (const r of room.clients) r.end(); rooms.delete(room.code); continue; }
+    for (const r of room.clients) {                                                         // 部屋が静かなまま長いときと、送り切れない低速な接続は切る
+      if (r.writableLength > LIM.sseBuf || now - room.last > LIM.sseIdleMs) r.end();
+    }
   }
+  for (const [k, a] of createLog) { const f = a.filter(t => now - t < 3600e3); if (f.length) createLog.set(k, f); else createLog.delete(k); }
   for (const [k, a] of hits) { const f = a.filter(t => now - t < 10000); if (f.length) hits.set(k, f); else hits.delete(k); }
 }, 250);
 
@@ -146,13 +175,19 @@ function leader(room, me) {
 }
 
 const API = {
-  create(b) {
+  create(b, ip) {
+    const nowC = Date.now(), tlist = (createLog.get(ip) || []).filter(t => nowC - t < 3600e3);
+    createLog.set(ip, tlist);
+    if (tlist.filter(t => nowC - t < 60e3).length >= LIM.createPerMin * RATE_SCALE || tlist.length >= LIM.createPerHour * RATE_SCALE)
+      return [429, { error: "部屋をつくりすぎです。しばらくしてから、もう一度ためしてね" }];
+    if (rooms.size >= LIM.roomsTotal) return [503, { error: "いま部屋がいっぱいです。しばらくしてから、もう一度ためしてね" }];
+    if ([...rooms.values()].filter(r => r.ip === ip).length >= LIM.roomsPerIp * RATE_SCALE) return [429, { error: "同時につくれる部屋の数をこえました。使い終わった部屋を「ここで終わる」で閉じてね" }];
     const own = b.mode === "quiz" || b.game === "mine";       // 先生のもんだいを使う部屋
     if (!MODES.includes(b.mode) || !(own || GAMES.includes(b.game))) return [400, { error: "設定が正しくありません" }];
     const g = Math.min(6, Math.max(1, b.g | 0)), t = b.mode === "rocket" ? 300 : Math.min(300, Math.max(60, b.t | 0));
     const rule = RULES.includes(b.rule) ? b.rule : "normal";
     const room = { code: newCode(), hostKey: id(), mode: b.mode, game: b.mode === "quiz" ? "quiz" : b.game, g, t, rule, status: "lobby", endAt: 0,
-      players: new Map(), clients: new Set(), created: Date.now(), timer: null, gt: "", nm: b.nm === "auto" ? "auto" : "input" };
+      players: new Map(), clients: new Set(), created: Date.now(), last: Date.now(), ip, timer: null, gt: "", nm: b.nm === "auto" ? "auto" : "input" };
     if (own) {
       const r = QZ.cleanSet({ title: b.gt, qs: b.qs });         // 型・文字数・個数・時間の値を調べてから使う
       if (!r.ok) return [400, { error: "もんだいが正しくありません：" + r.why }];
@@ -162,7 +197,7 @@ const API = {
       if (b.mode === "quiz") room.qz = QZ.engine(qs, { easy: rule === "easy" });
     }
     if (b.mode === "rocket") room.co = COOP.engine({ easy: rule === "easy", g, scale: COOP_SCALE });
-    rooms.set(room.code, room);
+    tlist.push(nowC); rooms.set(room.code, room);
     return [200, { code: room.code, hostKey: room.hostKey, nm: room.nm }];
   },
   // 参加画面が、名前を入力させる部屋かどうかを知るための問い合わせ（部屋の中身は返さない）
@@ -364,20 +399,32 @@ http.createServer(async (req, res) => {
       const q = req.method === "POST" ? await body(req) : {};
       const room = rooms.get(String(req.method === "POST" ? q.code : url.searchParams.get("code") || ""));
       if (!room) return json(res, 404, { error: "部屋が見つかりません" });
+      const ip = req.socket.remoteAddress || "";
+      const hk = typeof q.hostKey === "string" ? q.hostKey : "", pl = room.players.get(typeof q.pid === "string" ? q.pid : "");
+      const isHost = !!hk && hk === room.hostKey;                                // 先生の画面だけが全員の名前を受け取る
+      const pid = !isHost && pl && pl.token === q.token ? pl.pid : "";
+      const cred = isHost ? "H" : pid;                                           // 資格情報ごとの接続数（鍵なしは接続元ごとに数える）
+      const rcl = [...room.clients];
+      if (room.clients.size >= LIM.sseRoom || sseTotal >= LIM.sseTotal || (sseIpCount.get(ip) || 0) >= LIM.sseIp
+        || (cred ? rcl.filter(r => r.cred === cred).length >= LIM.sseCred : rcl.filter(r => !r.cred && r.ip === ip).length >= LIM.sseAnon))
+        return json(res, 429, { error: "つなぎすぎです。しばらくしてから、もう一度ためしてね" });
       res.writeHead(200, { "Content-Type": "text/event-stream", "Cache-Control": "no-store", Connection: "keep-alive" });
       res.write("retry: 2000\n\n");
-      const hk = typeof q.hostKey === "string" ? q.hostKey : "", pl = room.players.get(typeof q.pid === "string" ? q.pid : "");
-      res.host = !!hk && hk === room.hostKey;                                   // 先生の画面だけが全員の名前を受け取る
-      res.pid = !res.host && pl && pl.token === q.token ? pl.pid : "";
+      res.host = isHost; res.pid = pid; res.cred = cred; res.ip = ip;
+      sseTotal++; sseIpCount.set(ip, (sseIpCount.get(ip) || 0) + 1);
       res.write(res.host ? "data: " + JSON.stringify(pub(room, true)) + "\n\n" : kidMsg(room, res, JSON.stringify(pub(room, false)).slice(0, -1)));
       room.clients.add(res);
       const hb = setInterval(() => res.write(": ping\n\n"), 15000);
-      req.on("close", () => { clearInterval(hb); room.clients.delete(res); });
+      let closed = false;
+      const gone = () => { if (closed) return; closed = true; clearInterval(hb); room.clients.delete(res); sseTotal--; const c = (sseIpCount.get(ip) || 1) - 1; if (c > 0) sseIpCount.set(ip, c); else sseIpCount.delete(ip); };
+      req.on("close", gone); res.on("close", gone);
       return;
     }
     const m = url.pathname.match(/^\/api\/(\w+)$/);
     if (req.method === "POST" && m && API[m[1]]) {
-      const [code, obj] = API[m[1]](await body(req), req.socket.remoteAddress || "");
+      const bd = await body(req), rm = bd && typeof bd === "object" && rooms.get(String(bd.code));
+      if (rm && m[1] !== "info") rm.last = Date.now();         // 部屋の操作があった時刻（使われていない部屋を消す目安）
+      const [code, obj] = API[m[1]](bd, req.socket.remoteAddress || "");
       return json(res, code, obj);
     }
     json(res, 404, { error: "not found" });

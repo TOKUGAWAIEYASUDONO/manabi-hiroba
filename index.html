@@ -38,6 +38,10 @@ body{margin:0;min-height:100vh;min-height:100dvh;display:flex;flex-direction:col
   background-image:linear-gradient(rgba(31,77,58,.07) 2px,transparent 2px),linear-gradient(90deg,rgba(31,77,58,.07) 2px,transparent 2px);
   background-size:36px 36px;
   font-family:'BIZ UDPGothic',"Hiragino Kaku Gothic ProN","Yu Gothic UI","Yu Gothic","Meiryo",system-ui,sans-serif;font-weight:400}
+/* 語の途中で改行しない：分かち書きの空白・句読点・文節で折り返す。Chrome などは文節（auto-phrase）、ほかは空白だけで折り返し、長すぎる語は最後の手段で折る */
+body{word-break:keep-all;overflow-wrap:anywhere;line-break:strict}
+@supports (word-break:auto-phrase){body{word-break:auto-phrase}}
+.nw{white-space:nowrap}
 b,strong,h1,h2,h3{font-weight:700}
 a{color:#0b5a8f}
 button,input,select,textarea{font-family:inherit}
@@ -151,7 +155,7 @@ h2{font-size:20px;margin:18px 0 8px}
 .play.pg,.mplay{flex:1;display:flex;flex-direction:column}
 .mplay{width:100%;max-width:980px;margin:0 auto}
 .topbar{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;gap:8px}
-.topbar>:nth-child(2){flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;text-align:center}
+.topbar>:nth-child(2){flex:1;min-width:0;text-align:center;line-height:1.25}      /* ゲーム名は省略せず、2行まで折り返す */
 .back{background:#fff;border-radius:12px;padding:6px 14px;font-size:15px;white-space:nowrap;flex:none;min-height:44px;color:var(--ink);box-shadow:0 3px 0 var(--edge)}
 .timer{font-size:24px;font-weight:800;white-space:nowrap;flex:none;min-width:2.4ch;text-align:right}
 .timer.warn{font-size:40px;color:var(--bad);line-height:1}
@@ -222,8 +226,8 @@ h2{font-size:20px;margin:18px 0 8px}
 .mcard .badid{font-size:16px;margin-top:6px;background:#fff3d6;border-radius:4px;padding:6px 10px}
 /* ===== 先生の画面（フォームのカードを縦に重ねる形。あとで「問題を作る」カードを足せる） ===== */
 .form{background:#fff;border:2px solid var(--line);border-left:8px solid var(--board);border-radius:4px 14px 14px 4px;padding:14px;display:grid;gap:12px}
-.form label{display:grid;gap:6px;font-weight:700;font-size:15px}
-.form select{font-size:16px;padding:8px;border-radius:8px;border:2px solid var(--edge);font-family:inherit;background:#fff;color:var(--ink)}
+.form label{display:grid;gap:6px;font-weight:700;font-size:15px;min-width:0}
+.form select{min-width:0;max-width:100%;font-size:16px;padding:8px;border-radius:8px;border:2px solid var(--edge);font-family:inherit;background:#fff;color:var(--ink)}
 .out{background:#eef7ef;border:2px solid var(--go);border-radius:6px;padding:10px;word-break:break-all;font-size:14px}
 .tcols{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:16px}
 .prep{font-size:14px;background:var(--main2);border-radius:4px;padding:6px 10px;color:var(--ink)}
@@ -354,6 +358,7 @@ textarea.fld{resize:vertical}
 .imp-row{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin:6px 0}
 .fileL{display:flex;gap:6px;align-items:center;font-size:14px}
 .imp{display:grid;gap:8px}
+.form>*,.imp>*{min-width:0}.fileL{flex-wrap:wrap;max-width:100%}.fileL input[type=file]{max-width:100%;min-width:0}
 .imp-help summary{cursor:pointer;color:var(--muted);font-size:14px;min-height:32px;padding:4px 0}
 .pvsum{font-weight:700;margin:4px 0}
 .pvwrap{overflow:auto;max-height:52vh;border:2px solid var(--line);border-radius:6px;background:#fff}
@@ -372,7 +377,7 @@ textarea.fld{resize:vertical}
 .qst{font-size:13px}.qst.ng{color:var(--bad);font-weight:700}
 .qmini{min-width:44px;min-height:44px;border:2px solid var(--edge);border-radius:8px;background:#fff;font-size:14px;cursor:pointer;padding:0 8px}
 .qb{padding:8px 12px 14px;display:grid;gap:12px;border-top:2px dotted var(--line)}
-.crows{display:grid;gap:8px}
+.crows{display:grid;gap:8px;min-width:0}.qb>*{min-width:0}.qb{grid-template-columns:minmax(0,1fr)}.qb .tcols{grid-template-columns:minmax(0,1fr)}.qb .tcols>*,.qb .tcols select{min-width:0;width:100%}.qb .fld,.qb select{max-width:100%;box-sizing:border-box}.crow .fld{width:auto}.crow .fld{flex:1 1 0;min-width:0}
 .crow{display:flex;align-items:center;gap:8px}
 .crow .qs{width:30px;height:30px;flex:none;fill:currentColor}
 .crow .qs.c0{color:var(--a)}.crow .qs.c1{color:var(--b)}.crow .qs.c2{color:#c79a00}.crow .qs.c3{color:var(--d)}
@@ -493,7 +498,7 @@ textarea.fld{resize:vertical}
 .ulab{font-size:16px;font-weight:700;color:var(--muted)}
 .ufrac{display:inline-flex;flex-direction:column;align-items:center}
 .ubar2{display:block;width:100%;height:4px;background:var(--ink);margin:2px 0}
-.pad .sk{font-size:16px}.pad .sk.ar{font-size:24px}
+.pad .pk{font-size:16px}.pad .pk.ar{font-size:24px}      /* 入力パッドの「あまり」「▶」のキー（単元のカード .sk とは別） */
 .unitrow{display:grid;grid-template-columns:repeat(auto-fit,minmax(72px,1fr));gap:8px;max-width:360px;margin:8px auto 0}
 .unitrow button{font-size:22px;min-height:48px;border:3px solid var(--edge);box-shadow:0 4px 0 var(--edge);border-radius:12px;background:var(--go);color:#fff;cursor:pointer}
 .unitrow button:active{transform:translateY(3px);box-shadow:0 1px 0 var(--edge)}
@@ -509,7 +514,7 @@ body:not(.nofg) .q .big:has(ruby),body:not(.nofg) .hero .ht:has(ruby){line-heigh
 .ubk h4{margin:8px 0 2px}
 .hbtn.fgb{font-size:14px;gap:4px;flex-direction:column;line-height:1.05;padding:0 8px}
 .hbtn.fgb b{font-size:15px}
-@media (max-width:430px){.hbtn.fgb{font-size:10px;padding:0 3px;min-width:38px}.hbtn.fgb b{font-size:12px} header .logo{font-size:16px} #hRec{font-size:12px;padding:0 6px;gap:3px} #hRec b{font-size:15px} .hbtn#hGrade{padding:0 6px}}
+@media (max-width:430px){header{gap:3px;padding:6px 6px} header .logo{font-size:13px;letter-spacing:0;padding:0 1px;min-width:0;flex:0 1 auto;overflow:hidden} header .hbtn{flex:none} .hbtn#hGrade{font-size:13px;padding:0 4px;gap:2px} .hbtn#hGrade .ic{display:none} #hRec{font-size:11px;padding:0 3px;gap:2px} #hRec .ic,#hRec svg{width:20px;height:20px} #hRec .art{width:20px;height:20px} .hbtn.fgb{font-size:10px;padding:0 3px;min-width:44px}.hbtn.fgb b{font-size:12px} #hRec b{font-size:14px}}
 /* ===== 前に映す大画面（先生の端末）：2〜3m 離れても読める。最小 28px ===== */
 body[data-v=host] header,body[data-v=host] .foot{display:none}
 body[data-v=host] .wrap{max-width:none;padding:0}
@@ -580,10 +585,12 @@ body[data-v=host] .wrap{max-width:none;padding:0}
 .tguide ol{margin:6px 0 8px 18px;padding:0;font-size:14px;line-height:1.6}.tguide li{margin:5px 0}
 .lockmsg{display:inline-flex;align-items:center;gap:6px;background:#fff3c4;color:#5b4300;border:2px solid #e0b030;border-radius:999px;padding:4px 14px;font-weight:700;margin:6px 0}
 @keyframes pxin{from{transform:translateX(30px);opacity:0}to{transform:none;opacity:1}}
-.px-race-w{padding-bottom:14px}
+.px-race-w{padding-bottom:92px}      /* 下のボタン群（.px-dock）のぶんをあけて、盤にかぶらないようにする */
 .px-race{flex:1;display:grid;grid-template-columns:auto 1fr;gap:28px;align-items:stretch}
-.px-bd .sgbd{height:calc(100dvh - 28px);width:auto;max-width:none}
-.px-race .px-r{padding-bottom:84px}
+.px-bd .sgbd{height:calc(100dvh - 14px - 92px);width:auto;max-width:none}
+.px-race .px-r{padding-bottom:0;min-height:0;display:flex;flex-direction:column;overflow:hidden}
+@media (max-height:800px){.px-race .px-timer{font-size:min(11vh,96px)}.px-race .px-ttl{margin-bottom:4px}.px-race .px-h{margin:8px 0 4px}.px-race .px-more{margin:4px 0}}
+.px-race .px-r>*{flex:none}.px-race .px-r>.px-ev{flex:1 1 0;min-height:0;overflow:hidden}
 .px-top .r{display:flex;align-items:center;gap:12px;font-size:32px;font-weight:700;margin-bottom:4px}
 .px-top .rk{color:#ffe066;width:36px;text-align:center;font-size:36px}
 .px-top .nm{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
@@ -1072,6 +1079,7 @@ const TX={
  "e.notplaying":["対戦中《たいせんちゅう》ではありません","たいせんちゅうじゃ ないよ"],
  "e.nomode":["この遊《あそ》び方《かた》では使《つか》えない操作《そうさ》です","この あそびかたでは できないよ"],
  "e.nm.empty":["名前《なまえ》を入《い》れてね","なまえを いれてね"],"e.nm.long":["名前《なまえ》は8文字《もじ》までです","なまえは 8もじまでだよ"],
+ "e.nm.pii":["数字《すうじ》が長《なが》くならぶ名前《なまえ》や、メール・URLの名前《なまえ》は使《つか》えません","すうじが ながい なまえや、メール・URLは つかえないよ"],
  "e.nm.chars":["使《つか》えない文字《もじ》が入《はい》っています","つかえない もじが はいっているよ"],"e.nm.ng":["その名前《なまえ》は使《つか》えません","その なまえは つかえないよ"],
  "e.noeasy":["やさしいルールの部屋《へや》では使《つか》えません","やさしいルールの へやでは できないよ"],
  "e.unknown":["不明《ふめい》な操作《そうさ》です","ふめいな そうさだよ"],
@@ -1226,7 +1234,7 @@ const TX={
  "rk.class":["クラスの ようす"],
  "rk.again":["もういちど！ こんどは やさしいよ"],"rk.again.h":["みんなで いっしょに がんばろう"],
  "rk.clear":[n=>`ステージ ${n} クリア！`],"rk.reach":[d=>`${d}に とうちゃく！`],
- "rk.end":[n=>`クラスで ${n}ステージ とうたつ！`],"rk.end.h":["みんなの ちからで とべたね！"],
+ "rk.end":[n=>`クラスで ${n}ステージ とうたつ！`],"rk.end.h":["みんなの ちからで とべたね！"],"rk.end0":["こんどは とうたつを めざそう！"],"rk.end.h0":["つぎは もっと とおくまで とべるよ！"],
  "rk.me":["あなたの できたこと"],
  "rk.me.ok":[n=>`せいかい ${n}もん`],"rk.me.bo":[n=>`ブースト ${n}かい`],"rk.me.hit":[n=>`ぴったり ${n}かい`],"rk.me.st":[n=>`あつめた ほし ${n}こ`],
  "rk.me.none":["いっしょに のって くれて ありがとう！"],
@@ -1263,7 +1271,8 @@ const faceId=e=>"f-"+(FACE[e]||"smile");
 const face=e=>`<svg class="fc" aria-hidden="true" focusable="false"><use href="#${faceId(e)}"/></svg>`;
 const PIPS={1:[[32,32]],2:[[20,20],[44,44]],3:[[20,20],[32,32],[44,44]],4:[[20,20],[44,20],[20,44],[44,44]],5:[[20,20],[44,20],[32,32],[20,44],[44,44]],6:[[20,18],[44,18],[20,32],[44,32],[20,46],[44,46]]};
 /* 結果の上：メダル＋めばえ（メダルなしのときは「おしい」のめばえだけ）。動きは「ぴょん」と1回だけ */
-const medRow=m=>`<div class="medrow">${m?`<div class="medalwrap m${m}"><div class="medal">${msvg(m)}</div></div>`:""}${mbs(m?"h":"o","hop"+(m?"":" big"))}</div>`;
+/* 結果のマスコットの顔：メダル・自己ベスト・正答率80%以上は よろこぶ顔。正答率50%以上は ふつうの顔。それより低いときだけ おしい顔（ほめられているのに悲しい顔にならないように） */
+const medRow=(m,acc,best)=>{ const k=m||best||(acc>=80)?"h":(acc>=50)?"n":"o"; return `<div class="medrow">${m?`<div class="medalwrap m${m}"><div class="medal">${msvg(m)}</div></div>`:""}${mbs(k,"hop"+(m?"":" big"))}</div>`; };
 const diceSvg=n=>`<svg class="art" viewBox="0 0 64 64" aria-hidden="true" focusable="false"><g stroke="var(--edge)" stroke-width="3.5" stroke-linejoin="round"><rect x="6" y="6" width="52" height="52" rx="12" fill="var(--paper)"/>${PIPS[n].map(([x,y])=>`<circle cx="${x}" cy="${y}" r="4.5" fill="${n===1?"var(--math)":"var(--edge)"}" stroke="none"/>`).join("")}</g></svg>`;
 function drawHeader(){
   const c=document.getElementById("hSound"), l=document.getElementById("licLink"), gb=document.getElementById("hGrade"), rb=document.getElementById("hRec");
@@ -1814,7 +1823,7 @@ function finish(){
   const report=`【${T0("g."+p.x.id+".t")}】${p.g}年 ${p.t}秒｜せいかい${p.ok}問／${total}問（正答率${acc}%）`;   //T
   const repFull=report+missIds(p.missObjs,p.x);          // 課題リンクの結果の末尾に、まちがえた問題のID
   app.innerHTML=`<div class="play"><div class="res">
-    ${medRow(medal)}
+    ${medRow(medal,acc,showNew)}
     <div class="num">${T("r.num",p.ok)}</div>
     <div class="nextm">${medalize(esc(nextMsg))}</div>
     ${colHtml}
@@ -2310,7 +2319,8 @@ const TGUIDE=[
   "結果のCSV・コピーに名前を入れるかは先生が選べます（初期設定は入れません）。名前入りのファイルは、学校の個人情報の扱いに従って保管・削除してください。",
   "4けたの部屋コードは、インターネット上の公開仲介サーバー（0.peerjs.com）を通じて端末どうしをつなぎます。コードを教室の外に出さず、全員がそろったら「入室をしめきる」を押してください。ゲームが始まったあとは入れません。同じ端末からの続けての参加は一定時間ごとに数を制限しています。コードを知られたときは、「先生の画面」にもどって部屋を作りなおすと新しいコードになります。",
   "通信先は 0.peerjs.com（仲介）、stun.l.google.com（STUN）、*.turn.peerjs.com（直接つながらないときの中継）だけです。これらにはIPアドレスが届きますが、名前や得点は届きません（端末どうしの通信は暗号化されます）。",
-  "ひろば・どんぐり・ずかんは、この端末の記録だけで動き、名前・順位・外部送信はありません。授業で使わないときは「⑥」でオフにできます。リンクの col=0 でもオフにできます。"
+  "ひろば・どんぐり・ずかんは、この端末の記録だけで動き、名前・順位・外部送信はありません。授業で使わないときは「⑥」でオフにできます。リンクの col=0 でもオフにできます。",
+  "記録は、その端末の遊びの記録で、成績の証明には使えません。どんぐり・ずかん・自己ベスト・バックアップの文字は、端末の中の記録で、本人が書きかえることもできます（端末の時計を変えても数字が変わります）。通知表・評価・順位づけには使わないでください。"
 ];
 function renderTeacher(q){
   setLG(0); QSETS=null; const qsets=qsGet();
@@ -2398,7 +2408,8 @@ function renderTeacher(q){
     $("#rknote").classList.toggle("hidden",!rk);
     [...$("#ng").options].forEach(o=>{ o.disabled=quiz&&!o.value.startsWith("set:"); });
     if(quiz&&!$("#ng").value.startsWith("set:")){ const f=[...$("#ng").options].find(o=>o.value.startsWith("set:")); if(f){ $("#ng").value=f.value; fillG("#ng","#ngr"); setRule(); } }
-    $("#roomErr").textContent=quiz&&!qsets.length?"クイズは先生のもんだいで出します。先に ④ でセットをつくってください。":""; };
+    if(quiz&&!qsets.length) $("#roomErr").innerHTML='クイズは先生のもんだいで出します。先に ④ でセットをつくってください。<br><a class="btn s" href="#make" style="display:inline-flex;align-items:center;margin-top:6px;text-decoration:none">④ もんだいを つくる</a>';
+    else $("#roomErr").textContent=""; };
   $("#nm").onchange=syncMode;
   const roomFromForm=()=>{ const mode=$("#nm").value, gv=$("#ng").value, base={mode,g:+$("#ngr").value,t:+$("#nt").value,rule:ruleOf($("#nr").value),nm:$("#nmm").value==="auto"?"auto":"input"};
     if(gv.startsWith("set:")){ const st=qsFind(gv.slice(4)); if(!st) throw new Error("セットが見つかりません");
@@ -2410,6 +2421,7 @@ function renderTeacher(q){
   $("#mkroom").onclick=async()=>{
     if(!netOK) return $("#roomErr").textContent="予備モードは、サーバー（node server.js）から開いたときだけ使えます。";
     $("#mkroom").disabled=true; $("#roomErr").textContent="部屋を作っています…";
+    if($("#nm").value==="quiz"&&!qsets.length){ $("#mkroom").disabled=false; return syncMode(); }
     try{
       const s=roomFromForm();
       const r=await api("create",s);
@@ -2817,7 +2829,7 @@ function modeResult(){
   const report=`【${T0("m."+p.m.id+".t")}／${T0("g."+p.x.id+".t")}】${p.g}年｜${place}位｜せいかい${p.ok}問／${total}問（正答率${acc}%）`;   //T
   const repFull=report+missIds(p.missObjs,p.x);
   app.innerHTML=`<div class="play"><div class="res">
-    ${medRow(easy?3:medal)}
+    ${medRow(easy?3:medal,acc)}
     <div class="num">${easy?T("b.done"):T("b.place",place)}</div>
     <div style="margin:10px auto;max-width:320px">${rankRows(easy?easyList(ps):ps.map((q,i)=>[q,i+1]),q=>q.v+" "+unit)}</div>
     <div class="actions"><button class="btn again" id="again">${ic("rotate-ccw")}${T("r.again")}</button>
@@ -2895,7 +2907,7 @@ const NICK_ANI=[["パンダ","🐼"],["ウサギ","🐰"],["カエル","🐸"],[
 /* 先生の端末で動く「部屋」 */
 let HR=null;
 const NM=window.MH_NAMES;
-const NAME_ERR={empty:"名前を入れてね",long:"名前は8文字までです",chars:"使えない文字が入っています",ng:"その名前は使えません"};
+const NAME_ERR={empty:"名前を入れてね",long:"名前は8文字までです",chars:"使えない文字が入っています",ng:"その名前は使えません",pii:"数字が長くならぶ名前や、メール・URLの名前は使えません"};
 /* host=true（先生の画面）だけ、全員の名前と「いま答えたか」を持つ。児童の画面には、ほかの子の名前を入れない（name は空） */
 function hrPub(r,host){
   const nm=p=>host?p.name:"";
@@ -3302,7 +3314,7 @@ function netResult(){
   if(easy||place<=3) sfx("medal");
   if(easy||place===1) party();
   app.innerHTML=`<div class="play"><div class="res">
-    ${medRow(easy?3:medal)}
+    ${medRow(easy?3:medal,acc)}
     <div class="num">${easy?T("b.done"):T("b.placeof",ps.length,place)}</div>
     ${netResultHtml(s,NET.pid,easy)}
     <div class="actions"><button class="btn again" onclick="go('#home')">${T("n.home")}</button>
@@ -3777,7 +3789,7 @@ function rkKidEnd(){
   sfx("medal"); party();
   const colHtml=COLOK?colRun({units:[],answered:K.ans,correct:K.ok,quiz:true}):"";      // どんぐり：3問以上こたえた子に +2（1日1回）。成功しても ふえない
   const mine=[K.ok?T("rk.me.ok",K.ok):"",K.boo?T("rk.me.bo",K.boo):"",K.hit?T("rk.me.hit",K.hit):"",K.got?T("rk.me.st",K.got):""].filter(Boolean);
-  app.innerHTML=`<div class="play"><div class="res">${rkSvg("rk-rocket","0 0 120 150","rks big")}<div class="num">${T("rk.end",st)}</div><div class="note">${T("rk.end.h")}</div>
+  app.innerHTML=`<div class="play"><div class="res">${rkSvg("rk-rocket","0 0 120 150","rks big")}<div class="num">${st>0?T("rk.end",st):T("rk.end0")}</div><div class="note">${T(st>0?"rk.end.h":"rk.end.h0")}</div>
     <div class="q rk-me"><div class="small">${T("rk.me")}</div>${(mine.length?mine:[T("rk.me.none")]).map(x=>`<div class="big2">${esc(x)}</div>`).join("")}</div>
     ${colHtml}<div class="actions"><button class="btn again" onclick="go('#home')">${T("n.home")}</button></div></div>${privacy()}</div>`;
 }
@@ -3835,7 +3847,7 @@ function rkHostUpd(s){
   r.classList.toggle("shake",co.ph==="count"||co.ph==="clear");
   r.classList.toggle("idle",co.st===0&&(co.ph==="count"||(co.ph==="play"&&co.p<10)));      // 発射台にいるあいだは炎を出さない
   $$("rkside").style.display=co.st>=2?"":"none";
-  $$("rkst").textContent=co.ph==="end"?T("rk.end.h"):T("rk.stage",co.sg+1)+"　→ "+T("rk.dest",co.sg);
+  $$("rkst").textContent=co.ph==="end"?T((co.res?co.res.st:co.st)>0?"rk.end.h":"rk.end.h0"):T("rk.stage",co.sg+1)+"　→ "+T("rk.dest",co.sg);
   [...$$("rkdots").children].forEach((d,i)=>{ d.className=i<co.st?"done":(i===co.sg&&co.ph!=="end"?"cur":""); });
   const p=co.ph==="mini"||fin?100:co.p; $$("rkfill").style.transform=`scaleY(${p/100})`; $$("rkgp").textContent=p+"％";
   $$("rkn").textContent=T("rk.h.n",co.n);
@@ -3851,7 +3863,7 @@ function rkHostUpd(s){
     else if(co.ph==="mini") mid.innerHTML=`<div class="rkm-card"><h2>${T("rk.st")}</h2><div class="hint">${T("rk.h.st")}</div><div class="rkm-big" id="rkbig"></div><div class="hint">${T("rk.h.st.p")}</div><div class="rkm-bar star"><i id="rkmb"></i></div></div>`;
     else if(co.ph==="again") mid.innerHTML=`<div class="rkm-card"><h2>${T("rk.again")}</h2><div class="hint">${T("rk.again.h")}</div></div>`;
     else if(co.ph==="clear"){ mid.innerHTML=`<div class="rkm-card"><div class="rkm-clear">${T("rk.clear",co.st)}</div><h2>${T("rk.reach",T("rk.dest",co.st-1))}</h2></div>`; party(); }
-    else if(co.ph==="end"){ mid.innerHTML=`<div class="rkm-card"><div class="rkm-end">${T("rk.end",co.res?co.res.st:co.st)}</div></div>`; party(); }
+    else if(co.ph==="end"){ mid.innerHTML=`<div class="rkm-card"><div class="rkm-end">${(co.res?co.res.st:co.st)>0?T("rk.end",co.res?co.res.st:co.st):T("rk.end0")}</div></div>`; party(); }
   }
   const mb=$$("rkmb"); if(mb&&co.mg) mb.style.width=co.mg.p+"%";
   rkRowDraw(); rkHostFrame();
@@ -4423,7 +4435,7 @@ function qzSoloResult(){
   if(medal>=2) sfx("medal"); if(medal===3) party();
   const miss=h("div",{class:"miss"},h("b",{text:T("r.miss")}),...S.miss.slice(0,20).map(m=>h("div",{class:"mcard"},h("div",{class:"mq"},rich(h("span"),m.q.q)),h("div",{class:"ma"},T("r.ans")+"：",h("b",null,...m.q.ok.map((k,j)=>h("span",null,j?" / ":"",rich(h("span"),m.q.ch[k]))))))));
   app.replaceChildren(h("div",{class:"play"},h("div",{class:"res"},
-    h("div",{innerHTML:medRow(medal)}),
+    h("div",{innerHTML:medRow(medal,pct)}),
     h("div",{class:"num",text:T("z.okn",S.ok,n)}),h("div",{class:"nextm",text:T("z.total",S.score)}),
     h("div",{class:"actions"},h("button",{type:"button",class:"btn again",innerHTML:ic("rotate-ccw")+T("r.again"),onclick:()=>qzSoloIntro(S.set)}),
       h("button",{type:"button",class:"btn sub",text:T("n.home"),onclick:()=>go("#home")})),
@@ -4498,7 +4510,7 @@ function qzKidEnd(s,Z,me){
   if(easy||place<=3) sfx("medal"); if(easy||place===1) party();
   const box=h("div"); box.innerHTML=netResultHtml(s,NET.pid,easy);
   app.replaceChildren(h("div",{class:"play"},h("div",{class:"res"},
-    h("div",{innerHTML:medRow(easy?3:medal)}),
+    h("div",{innerHTML:medRow(easy?3:medal,QKA?Math.round(me.ok/QKA*100):50)}),
     h("div",{class:"num",text:easy?T("z.all",Z.all):T("b.placeof",ps.length,place)}),
     easy?null:h("div",{class:"nextm",text:T("z.total",me.v)}),box,h("div",{innerHTML:colHtml}),
     h("div",{class:"actions"},h("button",{type:"button",class:"btn again",text:T("n.home"),onclick:()=>go("#home")})),
@@ -4849,7 +4861,7 @@ function unitNext(){
     return;
   }
   const m=c.mode, dot=m==="dec"||(m==="unit"&&c.dot);
-  const sp=m==="amari"?`<button data-k="あまり" class="sk">${T("u.amari")}</button>`:m==="frac"?`<button data-k="▶" class="sk ar" aria-label="${esc(T("u.nextf"))}">▶</button>`:dot?`<button data-k=".">.</button>`:"";
+  const sp=m==="amari"?`<button data-k="あまり" class="pk">${T("u.amari")}</button>`:m==="frac"?`<button data-k="▶" class="pk ar" aria-label="${esc(T("u.nextf"))}">▶</button>`:dot?`<button data-k=".">.</button>`:"";
   const keys=["7","8","9","4","5","6","1","2","3"].map(k=>`<button data-k="${k}">${k}</button>`).join("")
     +(sp?sp+`<button data-k="0">0</button>`:`<button data-k="0" class="zero">0</button>`)+`<button data-k="⌫" aria-label="${esc(T("u.del"))}">⌫</button>`;
   const tail=m==="unit"?`<div class="unitrow">${c.units.map(u=>`<button data-u="${esc(u)}">${esc(UN.ruby?UN.ruby(u):u)}</button>`).join("")}</div>`

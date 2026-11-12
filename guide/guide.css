@@ -60,12 +60,13 @@ table.grid{border-collapse:collapse;width:100%;background:var(--paper);border:2p
 .how3{padding-left:1.4em}.how3 li{margin:6px 0}
 .sub3{font-size:17px;margin:14px 0 4px}.calc{padding-left:1.2em;margin:4px 0}
 .backtop{margin:24px 0}
+.totop{position:fixed;right:12px;bottom:12px;z-index:20;background:#fff;color:var(--ink,#1f3a2c);border:2px solid var(--edge,#1d4b36);border-radius:12px;padding:10px 14px;min-height:44px;display:inline-flex;align-items:center;font-weight:700;font-size:15px;text-decoration:none;box-shadow:0 3px 0 var(--edge,#1d4b36)}
 .foot{background:var(--board);color:var(--chalk);margin-top:32px;padding:14px 0;font-size:14px}.foot a{color:#fff}.foot p{margin:4px 0}
 @media (max-width:520px){.unit{padding:12px;border-left-width:8px}.qs .a{white-space:normal}.grid th,.grid td{padding:4px 6px}}
 @media print{
   :root{--field:#fff}
   body{font-size:11pt;line-height:1.5;background:#fff}
-  .top,.crumb,.gnav,.subj,.tbnav,.acts,.backtop,.foot,.how summary,.sets a.btn{display:none}
+  .top,.crumb,.gnav,.subj,.tbnav,.acts,.backtop,.totop,.foot,.how summary,.sets a.btn{display:none}
   .wrap{max-width:none;padding:0}
   .unit{break-inside:avoid;border:1px solid #888;border-left:6px solid #333;margin:0 0 8px;padding:6px 10px}
   .unit h2{font-size:15pt}
