@@ -78,7 +78,8 @@
   g.tokei1 = (r) => {                                      // とけい（なんじ・なんじはん）
     const h = r.range(1, 12), half = r.chance(0.5), L = half ? 6 : 12, nx = h % 12 + 1, pv = (h + 10) % 12 + 1;
     const a = half ? `${h}じはん` : `${h}じ`;
-    return { q: `みじかい はりが ${h}、ながい はりが ${L} の とき、なんじ？`, a, ans: "choice4",
+    const sh = half ? `${h}と${nx}の あいだ` : `${h}`;   // 「はん」のとき みじかい はりは つぎの 数との あいだ
+    return { q: `みじかい はりが ${sh}、ながい はりが ${L} の とき、なんじ？`, a, ans: "choice4",
       choices: ch(r, a, [half ? `${h}じ` : `${h}じはん`, `${L}じ`, `${nx}じ`, `${pv}じ`, `${nx}じはん`, `${pv}じはん`, `${L}じはん`], [`${r.range(1, 12)}じ`, `${r.range(1, 12)}じはん`], { loose: true }) };
   };
   g.tokeiFun1 = (r) => {                                   // 5分きざみの なんじなんぷん

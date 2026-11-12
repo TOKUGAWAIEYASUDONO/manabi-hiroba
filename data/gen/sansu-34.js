@@ -175,17 +175,17 @@
       return { q: `${dec(n, dp)} ÷ ${b}`, a: dec(c, dp), hissan: { a: dec(n, dp), b, op: "÷" }, choices: ch(r, dec(c, dp), w, nf(r, c, { min: 11, ok: x => nz(x), fmt: x => dec(x, dp) })) };
     }
   };
-  const mixed = (W, N, d) => N ? `${W}と${N}/${d}` : String(W);
+  const mixed = (W, N, d) => W < 0 ? null : !N ? String(W) : W === 0 ? `${N}/${d}` : `${W}と${N}/${d}`;   // 0は「0と」にしない
   g.bunsuMixed4 = (r, p) => {                              // 帯分数の たし算・ひき算（同じ分母）
     for (;;) {
       const d = r.pick([3, 5, 7]), w1 = r.range(1, 5), w2 = r.range(1, 4), n1 = r.range(1, d - 1), n2 = r.range(1, d - 1), sub = p.op === "−" || (p.op === "±" && r.chance(0.5));
       let t1 = w1 * d + n1, t2 = w2 * d + n2;
       if (sub) { if (t1 <= t2) continue; }
       const t = sub ? t1 - t2 : t1 + t2, W = Math.floor(t / d), N = t % d;
-      if (!N || (sub ? t1 % d === 0 : false)) continue;
+      if (!N || W < 1 || (sub ? t1 % d === 0 : false)) continue;   // 答えが1より小さくなる問題は出さない
       const A = mixed(W, N, d), carry = sub ? n1 < n2 : n1 + n2 > d;
-      const w = [mixed(W + 1, N, d), mixed(W - 1, N, d), mixed(W, d - N, d), mixed(W, N === d - 1 ? 1 : N + 1, d), ...(sub ? [`${Math.abs(w1 - w2)}と${Math.abs(n1 - n2)}/${d}`] : [])];
-      if (carry) w.push(mixed(sub ? W + 1 : W - 1, N, d));
+      const w = [mixed(W + 1, N, d), mixed(W - 1, N, d), mixed(W, d - N, d), mixed(W, N === d - 1 ? 1 : N + 1, d), ...(sub ? [mixed(Math.abs(w1 - w2), Math.abs(n1 - n2), d)] : [])].filter(x => x);
+      if (carry) { const c = mixed(sub ? W + 1 : W - 1, N, d); if (c) w.push(c); }
       return { q: `${w1}と${n1}/${d} ${sub ? "−" : "+"} ${w2}と${n2}/${d}`, a: A, choices: ch(r, A, w.filter(x => x !== A && !/^\d+と\d+\/\d+$/.test(x) ? true : x !== A), [mixed(W + 2, N, d), mixed(W, N === 1 ? 2 : N - 1, d), mixed(Math.max(1, W - 2), N, d)]) };
     }
   };

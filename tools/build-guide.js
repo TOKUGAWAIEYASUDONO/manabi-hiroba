@@ -64,7 +64,7 @@ const header = crumbs => `<header class="top"><div class="wrap"><a class="brand"
 <nav class="crumb wrap" aria-label="パンくず">${crumbs.map(([t, h]) => h ? `<a href="${h}">${esc(t)}</a>` : `<span aria-current="page">${esc(t)}</span>`).join(" › ")}</nav>
 `;
 const footer = () => `<footer class="foot"><div class="wrap">
-<p>まなびひろば：学校の端末で使える、小学生向けの無料の学習ゲーム（登録不要・広告なし・外部への通信なし）。</p>
+<p>まなびひろば：学校の端末で使える、小学生向けの無料の学習ゲーム（登録不要・広告なし。ひとりで遊ぶときは外部への通信なし。友だち対戦のときだけ、端末どうしをつなぐ仲介サーバーに接続）。</p>
 <p>学習指導要領の項目番号（base）はAIが作成したもので、人の確認待ちです。教科書の単元名・順は出版社により異なります。</p>
 <p><a href="../index.html">まなびひろば ホーム</a> ／ <a href="index.html">学年・単元から さがす</a> ／ <a href="custom.html">先生の問題で遊ぶ</a></p>
 </div></footer>
