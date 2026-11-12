@@ -10,6 +10,7 @@
 <meta property="og:title" content="まなびひろば｜小学生向け無料学習ゲーム">
 <meta property="og:description" content="算数・国語などを学年や単元から選んで遊べる、登録不要の学習ゲーム。ひとり練習もクラス対戦もできます。">
 <meta property="og:url" content="https://tokugawaieyasudono.github.io/manabi-hiroba/">
+<meta name="twitter:card" content="summary">
 <link rel="stylesheet" href="vendor/fonts/biz-udpgothic.css">
 <style>
 :root{
@@ -334,6 +335,7 @@ h2{font-size:20px;margin:18px 0 8px}
 /* ===== 授業モード・フッター・QR ===== */
 .foot{text-align:center;padding:6px 16px 12px;font-size:12px}
 .foot a{color:var(--muted)}
+body.lesson .foot{display:none}
 .qrbox svg{width:min(80vw,52vh,360px);height:auto;display:block;margin:12px auto;background:#fff;border:2px solid var(--line);border-radius:4px}
 .lobby2{text-align:center}
 .lobby2 .chips{max-height:40vh;overflow:auto}
@@ -425,6 +427,7 @@ textarea.fld{resize:vertical}
 .qzv.okc{color:#9be7b0}.qzv.ngc{color:#ffc9c2}
 .qzp,.qzs{font-size:clamp(22px,6vw,32px);font-weight:800;color:#ffe066}
 .qzk .fb{margin-top:12px;text-align:center}
+.qzk .qzl .frac{font-size:1.3em}
 .qzk .topbar b{white-space:nowrap}
 /* 先生の大画面 */
 .qzh{display:flex;flex-direction:column;gap:10px;flex:1}
@@ -436,7 +439,7 @@ textarea.fld{resize:vertical}
 .qzh .qzc.tf{font-size:clamp(40px,8vw,90px)}
 .qzh .qzc .qs{width:clamp(36px,5vw,64px);height:clamp(36px,5vw,64px)}
 .qzh .qzc .cnt{margin-left:auto;font-size:1.3em;white-space:nowrap}
-.qzh .qzc .bar{position:absolute;left:0;bottom:0;height:8px;background:rgba(255,255,255,.8)}
+.qzh .qzc > .bar{position:absolute;left:0;bottom:0;height:8px;background:rgba(255,255,255,.8)}
 .qzh-ctl{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin:8px 0}
 .qzh h3{margin:14px 0 6px;font-size:18px}
 .podium{display:flex;align-items:flex-end;justify-content:center;gap:12px;margin:12px 0}
@@ -1176,7 +1179,7 @@ const TX={
  "col.r.can":[t=>`「${t}」が できた！`],"col.r.master":[t=>`「${t}」が マスター！`],
  "col.r.found":["ずかんに シールが はれたよ"],
  "col.r.pend":["あした もういちど やると、シールに いろが つくよ"],
- "col.r.first":["きょうの 1かいめ！"],"col.r.quiz":["クイズに さんか！"],
+  "col.r.first":["きょうの 1かいめ！"],"col.r.quiz":["クイズに さんか！"],"col.r.rocket":["ロケットに さんか！"],
  "col.r.part":["ひろばに あたらしい ものが きたよ！"],
  "col.r.day1":["単元《たんげん》れんしゅうを すると、ずかんに シールが はれるよ","たんげんれんしゅうを すると、ずかんに シールが はれるよ"],
  "col.r.go":["ひろばを みる"],
@@ -1298,7 +1301,7 @@ const medRow=(m,acc,best)=>{ const k=m||best||(acc>=80)?"h":(acc>=50)?"n":"o"; r
 const diceSvg=n=>`<svg class="art" viewBox="0 0 64 64" aria-hidden="true" focusable="false"><g stroke="var(--edge)" stroke-width="3.5" stroke-linejoin="round"><rect x="6" y="6" width="52" height="52" rx="12" fill="var(--paper)"/>${PIPS[n].map(([x,y])=>`<circle cx="${x}" cy="${y}" r="4.5" fill="${n===1?"var(--math)":"var(--edge)"}" stroke="none"/>`).join("")}</g></svg>`;
 function drawHeader(){
   const c=document.getElementById("hSound"), l=document.getElementById("licLink"), gb=document.getElementById("hGrade"), rb=document.getElementById("hRec");
-  if(l) l.textContent=T("ft.lic");
+  if(l){ l.textContent=T("ft.lic"); l.hidden=!!window.LESSON; }
   if(gb){ gb.innerHTML=(ui.grade?`<b>${ui.grade}年《ねん》</b>`:T("h.gradepick"))+ic("chevron-down"); gb.setAttribute("aria-label",T("h.gradeq")); }
   if(rb){ rb.innerHTML=`${msvg(3)}<b id="hRecN">${medalTotal()}</b>${T("h.rec")}`; rb.setAttribute("aria-label",T("rec.t")); }
   const fb=document.getElementById("hFg");
@@ -1769,7 +1772,7 @@ function renderPlay(q){
   P={x,g,t,left:t,ok:0,ng:0,cur:null,inp:"",misses:[],missObjs:[],task,lock:false,over:false,opt,kuku,chN:0,inN:0};
   const info=kuku?kukuLabel(kuku):(opt.k==="diff"?T("kc.diff"):"");
   app.innerHTML=`<div class="play pg">
-    ${task?`<div class="banner">${ic("pencil")} ${T("p.task",`${x.t}（${g}年《ねん》・${t}${T("sec")}）`)}</div>`:""}
+     ${task?`<div class="banner">${ic("pencil")} ${T("p.task",`${x.t}（${g<=2?"":g+"年《ねん》・"}${t}${T("sec")}）`)}</div>`:""}
     <div class="topbar">
       ${task?`<button class="back" id="bk">${ic("x")}${T("back.end")}</button>`:`<button class="back" onclick="stopTimer();go('#home')">${BK()}</button>`}
        <span><b>${tico(x)} ${x.t}</b> <span class="note">${g<=2?"":g+"年《ねん》"}${info?(g<=2?"":"・")+esc(info):""}</span></span>
@@ -1873,16 +1876,17 @@ function finish(){
   app.innerHTML=`<div class="play"><div class="res">
     ${medRow(medal,acc,showNew)}
     <div class="num">${T("r.num",p.ok)}</div>
-    <div class="nextm">${medalize(esc(nextMsg))}</div>
+    ${p.task?"":`<div class="nextm">${medalize(esc(nextMsg))}</div>`}
     ${colHtml}
     ${showNew?`<div class="newbest">${T("r.new")}</div>`:""}
     <div class="actions"><button class="btn again" id="again">${ic("rotate-ccw")}${T("r.again")}</button>
       <div class="subs">${p.missObjs.length?`<button class="btn sub" id="redo">${T("r.redo")}</button>`:""}${p.task?"":`<button class="btn sub" onclick="go('#home')">${T("r.other")}</button>`}</div></div>
-    <div class="stats"><span>${T("r.answered")} <b>${T("r.n",total)}</b></span><span>${T("r.acc")} <b>${acc}%</b></span>${p.u?"":`<span>${T("r.best")} <b>${T("r.n",all[key].score)}</b></span>`}</div>
+    <div class="stats"><span>${T("r.answered")} <b>${T("r.n",total)}</b></span><span>${T("r.acc")} <b>${acc}%</b></span>${p.u||!all[key].score?"":`<span>${T("r.best")} <b>${T("r.n",all[key].score)}</b></span>`}</div>
     ${p.u?`<div class="umr"><b>${T("u.marks.t")}</b><div class="umarks big">${uMarksHtml(p.marks)}</div><div class="note">${esc(T("u.marks"))}</div>${ures&&ures.length?`<div class="ubk">${ures.map(r=>`<div class="stamp"><span class="sn">${esc(UBY[r.id].title)}<small>${T("u.best",r.o)}</small></span><span class="slots" aria-hidden="true">${MEDAL_ICO.map((em,i)=>`<span class="slot${r.medal>i?" on":""}">${msvg(r.medal>i?i+1:0)}</span>`).join("")}</span></div>`).join("")}</div>`:""}</div>`:""}
     ${p.missObjs.length?missCards(p.missObjs,p.x):""}
     ${p.task?`<div class="miss"><b>${T("r.send")}</b><br><span id="rep">${esc(repFull)}</span><br><button class="btn sub" id="cp">${T("r.copy")}</button></div>`:""}
   </div></div>`;
+  mathIn(app);
   $("#again").onclick=()=>p.u?p.u.again():route();
   const rd=$("#redo"); if(rd) rd.onclick=()=>startReview(p.missObjs,p.x,p.g,p.task);
   const cp=$("#cp"); if(cp) cp.onclick=()=>{ navigator.clipboard?.writeText(repFull).then(()=>cp.textContent=T("r.copied"),()=>{}); };
@@ -2064,7 +2068,7 @@ function colRun(info){
   if(ev("found").length) L.push(T("col.r.found"));
   if(ev("pend").length) L.push(T("col.r.pend"));
   if(ev("first").length) L.push(T("col.r.first"));
-  if(ev("quiz").length) L.push(T("col.r.quiz"));
+  if(ev("quiz").length) L.push(T(info.rocket?"col.r.rocket":"col.r.quiz"));
   if(r.newParts.length) L.push(T("col.r.part"));
   if(r.tickets>0&&colTkOn()) L.push(T("col.tk.got"));
   if(r.capFirst){ L.push(T("col.cap")); S.day.shown=1; colSave(); }
@@ -2379,7 +2383,7 @@ function renderTeacher(q){
   const setOpt=qsets.length?`<optgroup label="先生の もんだい">${qsets.map(s=>`<option value="set:${esc(s.id)}">📝 ${esc(s.title||"（なまえなし）")}（${s.qs.length}問）</option>`).join("")}</optgroup>`:"";
   app.innerHTML=`
     <h2 class="th2">${ic("graduation-cap")}先生の画面</h2>
-    <p class="note">ログインは不要です。友だち対戦で児童が入れた名前は、先生の端末のメモリにだけ置き、部屋を閉じると消えます。　<a href="#check">${ic("plug")} 接続テスト</a>　<a class="gdlink inl" href="guide/index.html">学年・単元から さがす（先生向け）</a></p>
+    <p class="note">ログインは不要です。友だち対戦で児童が入れた名前は、先生の端末のメモリにだけ置き、部屋を閉じると消えます。　<a href="#check">${ic("plug")} 接続テスト</a><br><a class="gdlink" href="guide/index.html">学年・単元から さがす（先生向け）</a></p>
     <details class="tguide" id="tguide"><summary>${ic("lock")} つかう まえに（児童の情報の あつかい・先生向けの説明）</summary>
       <ol>${TGUIDE.map(t=>`<li>${esc(t)}</li>`).join("")}</ol></details>
     <div class="t3" role="group" aria-label="やりたいこと">
@@ -2397,7 +2401,7 @@ function renderTeacher(q){
         <label>学年<select id="ngr"></select></label>
         <label id="nsl" class="hidden">ステージの数<select id="nstg"><option value="5" selected>ふつう（5ステージ・約5分）</option><option value="3">みじかい（3ステージ・約3分）</option></select></label>
         <label id="ntl">時間<select id="nt"><option value="120">2分</option><option value="180" selected>3分</option><option value="300">5分</option></select></label>
-        <label>ルール<select id="nr">${RULES.map(r=>`<option value="${r.id}">${r.t}（${r.d}）</option>`).join("")}</select></label>
+        <label>ルール<select id="nr">${RULES.map(r=>`<option value="${r.id}">${r.t}</option>`).join("")}</select></label>
         <label>なまえの きめかた<select id="nmm"><option value="auto" selected>自動ニックネーム（動物）</option><option value="input">児童が入力する</option></select></label>
       </div>
       <label class="chk"><input type="checkbox" id="nnh" checked> ひろばを出さない（児童の結果画面に、どんぐり・「ひろばを みる」を出しません）</label>
@@ -2475,13 +2479,14 @@ function renderTeacher(q){
   const ct=$("#colTk"); if(ct) ct.onchange=()=>colSetCfg({tk:+ct.value});
   $("#mku").onclick=()=>go("#units");
   const setRule=()=>{ $("#nr").value=defaultRule(+$("#ngr").value); };
-  const TR="mh_troom", remember=()=>store.set(TR,{nm:$("#nm").value,ng:$("#ng").value,ngr:$("#ngr").value});      // 前回の設定（あそびかた・問題・学年）を、この端末に覚える
+  const TR="mh_troom", remember=()=>store.set(TR,{nm:$("#nm").value,ng:$("#ng").value,ngr:$("#ngr").value,nstg:$("#nstg").value});      // 前回の設定（あそびかた・問題・学年）を、この端末に覚える
   $("#ng").onchange=()=>{ fillG("#ng","#ngr"); setRule(); remember(); };
   { const sv=store.get(TR,null)||{}, has=(sel,v)=>typeof v==="string"&&[...$(sel).options].some(o=>o.value===v&&!o.disabled);
     if(has("#nm",sv.nm)&&(sv.nm!=="quiz"||qsets.length)) $("#nm").value=sv.nm;
     if(has("#ng",sv.ng)) $("#ng").value=sv.ng;
-    fillG("#ng","#ngr"); if(has("#ngr",sv.ngr)) $("#ngr").value=sv.ngr; setRule(); }
+    fillG("#ng","#ngr"); if(has("#ngr",sv.ngr)) $("#ngr").value=sv.ngr; if(has("#nstg",sv.nstg)) $("#nstg").value=sv.nstg; setRule(); }
   $("#ngr").onchange=()=>{ setRule(); remember(); };
+  $("#nstg").onchange=remember;
   const syncMode=()=>{ const quiz=$("#nm").value==="quiz", rk=$("#nm").value==="rocket";
     $("#ntl").classList.toggle("hidden",quiz||rk); $("#nsl").classList.toggle("hidden",!rk);
     $("#rknote").classList.toggle("hidden",!rk);
@@ -2918,6 +2923,7 @@ function modeResult(){
     ${p.missObjs.length?missCards(p.missObjs,p.x):""}
     ${p.task?`<div class="miss"><b>${T("r.send")}</b><br>${esc(repFull)}<br><button class="btn sub" id="cp">${T("r.copy")}</button></div>`:""}
   </div></div>`;
+  mathIn(app);
   $("#again").onclick=()=>route();
   const rd=$("#redo"); if(rd) rd.onclick=()=>startReview(p.missObjs,p.x,p.g,p.task);
   const cp=$("#cp"); if(cp) cp.onclick=()=>navigator.clipboard?.writeText(repFull).then(()=>cp.textContent=T("r.copied"),()=>{});
@@ -3868,7 +3874,7 @@ function rkKidEnd(){
   const K=RK; if(K.ended) return; K.ended=true; rkKidStop();
   const st=K.co.res?K.co.res.st:K.co.st, an=K.co.res?K.co.res.an:0;
   sfx("medal"); party();
-  const colHtml=COLOK?colRun({units:[],answered:K.ans,correct:K.ok,quiz:true,quiet:K.s.nh!==0}):"";      // 部屋の「ひろばを出さない」（初期値）のときは、どんぐりの行も「ひろばを みる」も出さない      // どんぐり：3問以上こたえた子に +2（1日1回）。成功しても ふえない
+  const colHtml=COLOK?colRun({units:[],answered:K.ans,correct:K.ok,quiz:true,rocket:true,quiet:K.s.nh!==0}):"";      // 部屋の「ひろばを出さない」（初期値）のときは、どんぐりの行も「ひろばを みる」も出さない      // どんぐり：3問以上こたえた子に +2（1日1回）。成功しても ふえない
   const mine=[K.ok?T("rk.me.ok",K.ok):"",K.boo?T("rk.me.bo",K.boo):"",K.hit?T("rk.me.hit",K.hit):"",K.got?T("rk.me.st",K.got):""].filter(Boolean);
   app.innerHTML=`<div class="play"><div class="res">${rkSvg("rk-rocket","0 0 120 150","rks big")}<div class="num">${st>0?T("rk.end",st):T("rk.end0")}</div><div class="note">${T(st>0?"rk.end.h":"rk.end.h0")}</div>${an>0?`<div class="num rk-an">${T("rk.an",an)}</div>`:""}
     <div class="q rk-me"><div class="small">${T("rk.me")}</div>${(mine.length?mine:[T("rk.me.none")]).map(x=>`<div class="big2">${esc(x)}</div>`).join("")}</div>
@@ -4904,7 +4910,7 @@ function renderUnitLink(hash){
   app.replaceChildren(h("div",{class:"play up"},
     h("div",{class:"topbar"},c.task?h("span"):h("button",{type:"button",class:"back",innerHTML:BK(),onclick:()=>go("#home")}),h("b"),h("span")),
     h("div",{class:"q"},h("div",{class:"big",text:T("u.intro")}),h("div",{class:"small",text:T("u.1min")})),
-    h("div",{class:"uchips cen"},...c.ids.map(id=>h("span",{class:"uchipw"},h("span",{class:"uchip static"},h("span",{class:"ucg",text:UBY[id].g+"年《ねん》"}),h("span",{text:UBY[id].title})),
+    h("div",{class:"uchips cen"},...c.ids.map(id=>h("span",{class:"uchipw"},h("span",{class:"uchip static"},c.task&&UBY[id].g<=2?null:h("span",{class:"ucg",text:UBY[id].g+"年《ねん》"}),h("span",{text:UBY[id].title})),
       h("button",{type:"button",class:"btn sub s uexb",text:T("u.ex"),"aria-label":T("u.ex")+"："+UBY[id].title,onclick:()=>uEx(UBY[id])})))),
     how,h("div",{style:"margin-top:12px"},h("button",{type:"button",class:"btn again",id:"ugo",text:T("u.go"),onclick:()=>startUnitRun({...c,choice})}))));
   const b=document.getElementById("ugo"); if(b) b.focus();
@@ -5069,7 +5075,7 @@ function route(){
   document.body.dataset.v=["check","play","setup","modesetup","mode","join","lobby","host","teacher","record","make","qlink","units","ulink","hiroba","zukan","tanken"].includes(path)?path:"home";
   // 課題リンク（task=1）で開いたゲームでは、ほかの画面への入口を隠す（授業モード）
   const lesson=!!lockedHash||((path==="play"||path==="mode")&&q.get("task")==="1")||((path==="qlink"||path==="ulink")&&/[&?]task=1(?![0-9])/.test(location.hash));
-  LESSON=lesson; document.body.classList.toggle("lesson",lesson);
+  LESSON=lesson; document.body.classList.toggle("lesson",lesson); const lic=document.getElementById("licLink"); if(lic) lic.hidden=lesson;
   const lg=$("#logo"); if(lg) lg.disabled=lesson;          // 授業モードではロゴからホームへ行けない
   window.scrollTo(0,0);
   if(!DATA_OK&&path!=="check"&&path!=="teacher"&&path!=="make"&&path!=="qlink"){
