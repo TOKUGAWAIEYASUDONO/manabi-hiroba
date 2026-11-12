@@ -4,7 +4,7 @@
    data/units.js・data/gen/*.js・data/calc.js（・あれば data/textbook-order.js）を元に、
    guide/（学年×教科ごとのページ・入口・custom.html）、guide/guide.css、sitemap.xml、robots.txt を書き出す。
    同じデータなら同じ出力（日付や乱数を入れない）。データを変えたら再生成して、生成物も commit する。 */
-const fs = require("fs"), path = require("path");
+const fs = require("fs"), path = require("path"), crypto = require("crypto");
 const { root, load, BASE, SUBJ, SUBJ_ORDER, pageName } = require("./guide-lib");
 const W = load(), UN = W.MH_UNITS, plain = UN.plain, TB = W.TEXTBOOK_ORDER;
 const UNITS = UN.UNITS, SEED = 1;
@@ -336,6 +336,7 @@ table.grid{border-collapse:collapse;width:100%;background:var(--paper);border:2p
 `;
 const out = new Map();
 out.set("guide/guide.css", CSS);
+const cssVersion = crypto.createHash("sha256").update(Buffer.from(CSS, "utf8")).digest("hex").slice(0, 8);
 const names = [];
 for (const p of pages) { out.set("guide/" + p.file, gradePage(p).html); names.push(p.file); }
 out.set("guide/index.html", indexPage().html);
@@ -345,6 +346,6 @@ const urls = [BASE, BASE + "guide/", ...pages.map(p => BASE + "guide/" + p.file)
 out.set("sitemap.xml", `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${urls.map((u, i) => `  <url><loc>${u}</loc><priority>${i === 0 ? "1.0" : i === 1 ? "0.9" : "0.7"}</priority></url>`).join("\n")}\n</urlset>\n`);
 out.set("robots.txt", `User-agent: *\nAllow: /\n\nSitemap: ${BASE}sitemap.xml\n`);
 fs.mkdirSync(path.join(root, "guide"), { recursive: true });
-for (const [f, s] of out) fs.writeFileSync(path.join(root, f), s, "utf8");
+for (const [f, s] of out) fs.writeFileSync(path.join(root, f), f.startsWith("guide/") && f.endsWith(".html") ? s.replace(/href="guide\.css(?:\?v=[0-9a-f]{8})?"/g, `href="guide.css?v=${cssVersion}"`) : s, "utf8");
 for (const f of fs.readdirSync(path.join(root, "guide"))) if (/^g\d-[a-z]+\.html$/.test(f) && !names.includes(f)) fs.unlinkSync(path.join(root, "guide", f));
 console.log(`guide: 教科ページ${pages.length} + 入口 + custom、単元 ${UNITS.length}（ready ${ready(UNITS).length}）、教科書の並び：${TB ? "あり" : "なし"}`);

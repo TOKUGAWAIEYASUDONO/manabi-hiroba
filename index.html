@@ -11,7 +11,7 @@
 <meta property="og:description" content="算数・国語などを学年や単元から選んで遊べる、登録不要の学習ゲーム。ひとり練習もクラス対戦もできます。">
 <meta property="og:url" content="https://tokugawaieyasudono.github.io/manabi-hiroba/">
 <meta name="twitter:card" content="summary">
-<link rel="stylesheet" href="vendor/fonts/biz-udpgothic.css">
+<link rel="stylesheet" href="vendor/fonts/biz-udpgothic.css?v=ecfc8846">
 <style>
 :root{
   /* ===== 色（トークン）。文字と背景の組み合わせは 4.5:1 以上（数値は README に記載） ===== */
@@ -916,22 +916,22 @@ body[data-v=host] .wrap{max-width:none;padding:0}
 <footer class="foot"><a id="licLink" href="vendor/THIRD-PARTY-LICENSES.txt" target="_blank" rel="noopener"></a></footer>
 
 <!-- 問題データ（file:// でも読めるよう script タグで読む） -->
-<script src="data/questions.js"></script>
-<script src="data/calc.js"></script>
-<script src="data/choices.js"></script>
-<script src="data/quizlib.js"></script>
-<script src="data/mathview.js"></script>
-<script src="data/ngwords.js"></script>
-<script src="data/cooplib.js"></script>
+<script src="data/questions.js?v=e7a7757e"></script>
+<script src="data/calc.js?v=60621312"></script>
+<script src="data/choices.js?v=1cc6792c"></script>
+<script src="data/quizlib.js?v=43bdb5a8"></script>
+<script src="data/mathview.js?v=2dd83af6"></script>
+<script src="data/ngwords.js?v=c8b8a674"></script>
+<script src="data/cooplib.js?v=5d49147c"></script>
 <!-- 単元ごとの問題の型（単元から出題） -->
-<script src="data/gen/core.js"></script>
-<script src="data/gen/other.js"></script>
-<script src="data/gen/sansu-12.js"></script>
-<script src="data/gen/sansu-34.js"></script>
-<script src="data/gen/sansu-56.js"></script>
-<script src="data/gen/textbook-extra.js"></script>
-<script src="data/units.js"></script>
-<script src="data/collection.js"></script>
+<script src="data/gen/core.js?v=74457b0a"></script>
+<script src="data/gen/other.js?v=0614ebf8"></script>
+<script src="data/gen/sansu-12.js?v=05ce0efa"></script>
+<script src="data/gen/sansu-34.js?v=dfac98cd"></script>
+<script src="data/gen/sansu-56.js?v=d0024b89"></script>
+<script src="data/gen/textbook-extra.js?v=3882ea88"></script>
+<script src="data/units.js?v=574dcde2"></script>
+<script src="data/collection.js?v=40d86f87"></script>
 <script>
 /* ================= 画面の文言（1つの表） =================
    TX["キー"] = [ふつうの文言, 1〜2年の「やさしい文字」]（やさしい側がないものは同じ文言）。
@@ -1355,7 +1355,7 @@ function aplay(buf,vol,dur,loop){
 }
 function zz(k){
   if(!SFX[k]) return;
-  if(typeof zzfx!=="function"){ loadScript("vendor/zzfx-1.4.0.micro.min.js",()=>typeof zzfx==="function").then(()=>{ try{ zzfxV=.15; }catch(e){} zz(k); }).catch(()=>{ SND_DEAD=true; drawHeader(); }); return; }
+  if(typeof zzfx!=="function"){ loadScript("vendor/zzfx-1.4.0.micro.min.js?v=7f4b89af",()=>typeof zzfx==="function").then(()=>{ try{ zzfxV=.15; }catch(e){} zz(k); }).catch(()=>{ SND_DEAD=true; drawHeader(); }); return; }
   try{ if(zzfxX.state==="suspended") zzfxX.resume(); zzfx(...SFX[k]); }catch(e){ SND_DEAD=true; drawHeader(); }
 }
 function sfx(k){
@@ -1417,7 +1417,7 @@ document.addEventListener("visibilitychange",()=>{ if(BGMON) bgmSync(); });
 const reduceMotion=()=>{ try{ return matchMedia("(prefers-reduced-motion: reduce)").matches; }catch(e){ return false; } };
 function party(){
   if(reduceMotion()) return;
-  loadScript("vendor/canvas-confetti-1.9.4.js",()=>typeof confetti==="function").then(()=>{
+  loadScript("vendor/canvas-confetti-1.9.4.js?v=49f4bcbc",()=>typeof confetti==="function").then(()=>{
     confetti({particleCount:100,spread:75,origin:{y:.62},ticks:80,gravity:1.2,useWorker:false,disableForReducedMotion:true});
   }).catch(()=>{});
 }
@@ -1427,7 +1427,7 @@ function showQr(box,url){
   if(!box||location.protocol==="file:") return;
   const put=()=>{ box.innerHTML=qrCache[url]+`<div class="note" style="text-align:center">${T("qr.t")}</div>`; };
   if(qrCache[url]) return put();
-  loadScript("vendor/qrcode-generator-2.0.4.js",()=>typeof qrcode==="function").then(()=>{
+  loadScript("vendor/qrcode-generator-2.0.4.js?v=79ec86f8",()=>typeof qrcode==="function").then(()=>{
     const q=qrcode(0,"M"); q.addData(url); q.make();
     qrCache[url]=q.createSvgTag({cellSize:6,margin:4,scalable:true});
     if(document.body.contains(box)) put();
@@ -2087,7 +2087,7 @@ function renderHiroba(){
   if(colMode()!=="on") return go("#home");
   setLG(ui.grade); HS={sel:null,shop:false,gift:0,cap:0,done:0};
   app.innerHTML=`<div class="hb"></div>`;
-  loadScript("data/hiroba-art.js",()=>!!document.getElementById("hiroba-art")).then(()=>{ if(params().path==="hiroba") hbDraw(true); },()=>{ app.innerHTML=`<div class="q">${T("col.err")}</div>`; });
+  loadScript("data/hiroba-art.js?v=e89b7885",()=>!!document.getElementById("hiroba-art")).then(()=>{ if(params().path==="hiroba") hbDraw(true); },()=>{ app.innerHTML=`<div class="q">${T("col.err")}</div>`; });
 }
 function hbDraw(first){
   const S=colTouch(), today=colToday(), P=COL.parts(S), pm={}; P.forEach(p=>{ pm[p.id]=p; });
@@ -2171,7 +2171,7 @@ function exItems(S){ return ["h-school"].concat(COL.parts(S).filter(p=>p.have).m
 function renderTanken(){
   if(!colTkOn()) return go("#hiroba");
   setLG(ui.grade); app.innerHTML=`<div class="ex"></div>`;
-  loadScript("data/hiroba-art.js",()=>!!document.getElementById("hiroba-art")).then(()=>{ if(params().path==="tanken") exIntro(); },()=>{ app.innerHTML=`<div class="q">${T("col.err")}</div>`; });
+  loadScript("data/hiroba-art.js?v=e89b7885",()=>!!document.getElementById("hiroba-art")).then(()=>{ if(params().path==="tanken") exIntro(); },()=>{ app.innerHTML=`<div class="q">${T("col.err")}</div>`; });
 }
 function exIntro(){
   const S=colTouch(), st=COL.tkState(S,colToday(),colTkLimit()); if(!st.ok) return go("#hiroba");
@@ -2328,7 +2328,7 @@ function colBackupHtml(){
     <div id="hrMsg" role="status"></div></div>`;
 }
 function hrQr(box,text){
-  loadScript("vendor/qrcode-generator-2.0.4.js",()=>typeof qrcode==="function").then(()=>{
+  loadScript("vendor/qrcode-generator-2.0.4.js?v=79ec86f8",()=>typeof qrcode==="function").then(()=>{
     const q=qrcode(0,"L"); q.addData(text.replace(/[^0-9A-Z]/g,"")); q.make(); box.innerHTML=q.createSvgTag({cellSize:4,margin:4,scalable:true});
   }).catch(()=>{});
 }
@@ -2984,7 +2984,7 @@ const PEER_PREFIX="manabihiroba-v1-";
 let peerP=null;
 function loadPeer(){
   if(window.Peer) return Promise.resolve();
-  if(!peerP) peerP=loadScript("vendor/peerjs-1.5.5.min.js",()=>!!window.Peer).catch(()=>{ peerP=null; throw new Error(T("e.load")); });
+  if(!peerP) peerP=loadScript("vendor/peerjs-1.5.5.min.js?v=7604d8c3",()=>!!window.Peer).catch(()=>{ peerP=null; throw new Error(T("e.load")); });
   return peerP;
 }
 const rid=()=>{const a=new Uint8Array(9);crypto.getRandomValues(a);return Array.from(a,b=>b.toString(16).padStart(2,"0")).join("")};
@@ -3724,7 +3724,7 @@ function renderHost(){
 const COOP=window.MH_COOP;
 const RKMODE={id:"rocket",ico:"🚀"}; tget(RKMODE,"t","m.rocket.t"); tget(RKMODE,"d","m.rocket.d");
 let RK=null, RKH=null;
-const rkArt=()=>loadScript("data/rocket-art.js",()=>!!document.getElementById("rocket-art"));
+const rkArt=()=>loadScript("data/rocket-art.js?v=c0d0be8b",()=>!!document.getElementById("rocket-art"));
 const rkSvg=(id,vb,c)=>`<svg class="${c||"rks"}" viewBox="${vb}" aria-hidden="true" focusable="false"><use href="#${id}"/></svg>`;
 const rkNow=()=>Date.now()+RK.off;
 const rkDest=(co,i)=>co.ns===3?[1,3,4][i]:i, rkScn=(co,i)=>co.ns===3?[0,2,4,5][i]:i;      // みじかい（3ステージ）は、行き先と背景を 5つのうちの 3つに割りあてる
@@ -4440,7 +4440,7 @@ function qzCheckMsg(set){
 }
 function qrPut(box,url){
   box.replaceChildren(); if(location.protocol==="file:") return;
-  loadScript("vendor/qrcode-generator-2.0.4.js",()=>typeof qrcode==="function").then(()=>{
+  loadScript("vendor/qrcode-generator-2.0.4.js?v=79ec86f8",()=>typeof qrcode==="function").then(()=>{
     try{ const q=qrcode(0,url.length>1100?"L":"M"); q.addData(url); q.make();
       const svg=new DOMParser().parseFromString(q.createSvgTag({cellSize:4,margin:4,scalable:true}),"image/svg+xml").documentElement;
       box.append(h("div",{class:"qrbox"},document.importNode(svg,true)),h("div",{class:"note",style:"text-align:center",text:"スマホやタブレットのカメラで読みとると、ひとりで練習できます"}));
@@ -5062,7 +5062,8 @@ function route(){
   const requested=location.hash;
   const isTask=/^(?:#(?:play|mode)\?[^#]*[?&]task=1(?![0-9])|#(?:q|u)=[^#]*[&?]task=1(?![0-9]))/.test(requested);
   let lockedHash; try{ lockedHash=sessionStorage.getItem("mh_lesson_hash"); }catch(e){}
-  if(lockedHash&&requested!==lockedHash){ location.replace(location.href.split("#")[0]+lockedHash); return; }
+  if(lockedHash&&requested!==lockedHash&&!isTask){ location.replace(location.href.split("#")[0]+lockedHash); return; }
+  if(lockedHash&&isTask&&requested!==lockedHash){ lockedHash=requested; try{ sessionStorage.setItem("mh_lesson_hash",lockedHash); }catch(e){} }
   if(!lockedHash&&isTask){ lockedHash=requested; try{ sessionStorage.setItem("mh_lesson_hash",lockedHash); }catch(e){} }
   fgFromHash(); COLH=/[?&#]col=0(?![0-9])/.test(location.hash); COLS=null; QKA=0;
   { const m=/[?&#]tk=([0-5])(?![0-9])/.exec(location.hash); TKH=m?+m[1]:null; }
