@@ -24,6 +24,11 @@
     S("h-rainbow", '<path d="M12 52a20 20 0 0 1 40 0" fill="none" stroke-width="23" stroke-linecap="butt"/><g fill="none" stroke-linecap="butt" stroke-width="5.5"><path d="M6 52a26 26 0 0 1 52 0" stroke="var(--math)"/><path d="M12 52a20 20 0 0 1 40 0" stroke="var(--soc)"/><path d="M18 52a14 14 0 0 1 28 0" stroke="var(--jp)"/></g><g fill="var(--paper)"><circle cx="9" cy="53" r="7"/><circle cx="55" cy="53" r="7"/><circle cx="16" cy="55" r="5"/><circle cx="48" cy="55" r="5"/></g>'),
     /* 背景：校舎 */
     S("h-school", '<rect x="5" y="22" width="54" height="36" fill="var(--paper)"/><rect x="2" y="17" width="60" height="9" fill="var(--board)"/><rect x="25" y="5" width="14" height="13" fill="var(--paper)"/><circle cx="32" cy="11" r="3" fill="var(--soc)" stroke-width="2"/><g stroke-width="2.5"><rect x="10" y="31" width="10" height="9" fill="var(--jp)"/><rect x="44" y="31" width="10" height="9" fill="var(--jp)"/><rect x="26" y="44" width="12" height="14" fill="var(--wood)"/></g>')
+    ,
+    /* v2：ひろばたんけん（とびら・たからばこ・チケット） */
+    S("h-door", '<rect x="12" y="6" width="40" height="52" rx="14" fill="var(--wood)"/><rect x="20" y="16" width="24" height="42" rx="9" fill="var(--btl)" stroke-width="2.5"/><circle cx="38" cy="38" r="3.2" fill="var(--soc)" stroke-width="2.5"/>'),
+    S("h-chest", '<rect x="7" y="28" width="50" height="28" rx="3" fill="var(--wood)"/><path d="M7 30Q7 10 32 10Q57 10 57 30z" fill="var(--bronze)"/><path d="M7 30h50" fill="none"/><rect x="26" y="26" width="12" height="13" rx="2" fill="var(--soc)" stroke-width="2.5"/>'),
+    S("h-ticket", '<path d="M6 18h52v10a5 5 0 0 0 0 10v10H6V38a5 5 0 0 0 0-10z" fill="var(--soc)"/><path d="M24 18v30" fill="none" stroke-dasharray="3 5" stroke-width="2.5"/><path d="M41 27l2.6 5.2 5.7.8-4.1 4 1 5.7-5.2-2.7-5.1 2.7 1-5.7-4.1-4 5.7-.8z" fill="var(--paper)" stroke-width="2"/>')
   ].join("");
   const d = document.createElement("div"); d.id = "hiroba-art";
   d.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" style="position:absolute;width:0;height:0;overflow:hidden" aria-hidden="true" focusable="false"><defs>' + svg + "</defs></svg>";

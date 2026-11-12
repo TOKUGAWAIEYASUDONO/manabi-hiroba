@@ -227,4 +227,106 @@ t("dayNum：日付を日数に直す（同じ日は同じ値、翌日は +1）",
   assert.strictEqual(C.dayNum(new Date(2026, 10, 12, 0, 1)), C.dayNum(new Date(2026, 10, 12, 23, 59)));
   assert.strictEqual(C.dayNum(new Date(2026, 10, 13, 0, 1)), C.dayNum(new Date(2026, 10, 12, 23, 59)) + 1);
 });
+/* ---------- v2：たんけんチケット・たんけんメモ・ひろばたんけんの地図 ---------- */
+const m3 = C.UNIT_IDS.filter(i => i[0] === "m" && i[1] === "3");
+const canN = (S, day, k, from = 0) => { const ids = m3.slice(from, from + k); run(S, day, ids.map(U)); return run(S, day + 1, ids.map(U)); };   // k この単元を「できた」に（2日つかう）
+t("チケット：「できた」5つで1まい。4つではもらえない", () => {
+  const S = C.fresh(D); const r = canN(S, D, 4); assert.strictEqual(S.tk.n, 0); assert.strictEqual(r.tickets, 0);
+  const r2 = canN(S, D + 2, 1, 4); assert.strictEqual(S.tk.n, 1); assert.strictEqual(r2.tickets, 1); assert.strictEqual(S.tk.star, 0);
+});
+t("チケット：マスターも ★ になる。「みつけた」だけでは ★ にならない", () => {
+  const S = C.fresh(D); run(S, D, [U(m3[0])]); assert.strictEqual(S.tk.star, 0);
+  run(S, D + 1, [U(m3[0])]); assert.strictEqual(S.tk.star, 1);
+  run(S, D + 2, [U(m3[0])]); assert.strictEqual(S.tk.star, 2);
+});
+t("チケット：持てるのは3まい。あふれた ★ は 5つで止めて、なくさない", () => {
+  const S = C.fresh(D); S.tk.n = 3; S.tk.star = 4; S.tk.d = D; S.tk.got = 0;
+  canN(S, D, 3);                                         // ★ が 4+3 → 5 で止まる（3まいなので まい数は増えない）
+  assert.strictEqual(S.tk.n, 3); assert.strictEqual(S.tk.star, 5);
+  C.tkRoll(S, D + 1); S.tk.got = 0; assert(C.tkUse(S, D + 1, 5));          // 1まい つかうと、とっておいた ★ が まいになる
+  assert.strictEqual(S.tk.n, 3); assert.strictEqual(S.tk.star, 0);
+});
+t("チケット：1日に増えるのは2まいまで（のこりは ★ のまま あしたに）", () => {
+  const S = C.fresh(D + 5); S.tk.star = 0; S.tk.n = 0; S.tk.got = 0; S.tk.d = D + 5; S.last = D + 5;
+  S.tk.star = 5; C.tkRoll(S, D + 5); assert.strictEqual(S.tk.got, 1); assert.strictEqual(S.tk.n, 1);
+  S.tk.star = 5; C.tkRoll(S, D + 5); assert.strictEqual(S.tk.got, 2); assert.strictEqual(S.tk.n, 2);
+  S.tk.star = 5; C.tkRoll(S, D + 5); assert.strictEqual(S.tk.got, 2); assert.strictEqual(S.tk.n, 2); assert.strictEqual(S.tk.star, 5);   // 今日はここまで
+  C.tkRoll(S, D + 6); assert.strictEqual(S.tk.got, 1); assert.strictEqual(S.tk.n, 3);                                                      // あした 1まい（3まいで止まる）
+});
+t("チケット：1日に つかえるのは 2回（先生が 0〜5）", () => {
+  const S = C.fresh(D); S.tk.n = 3; S.tk.d = D;
+  assert(C.tkUse(S, D, 2)); assert(C.tkUse(S, D, 2)); assert(!C.tkUse(S, D, 2)); assert.strictEqual(C.tkState(S, D, 2).why, "day");
+  assert(C.tkUse(S, D + 1, 2)); assert.strictEqual(S.tk.n, 0); assert.strictEqual(C.tkState(S, D + 1, 2).why, "none");
+  const T5 = C.fresh(D); T5.tk.n = 3; T5.tk.d = D; assert(C.tkUse(T5, D, 5)); assert(C.tkUse(T5, D, 5)); assert(C.tkUse(T5, D, 5));
+  const T0 = C.fresh(D); T0.tk.n = 3; assert(!C.tkUse(T0, D, 0)); assert.strictEqual(T0.tk.n, 3); assert.strictEqual(C.tkState(T0, D, 0).why, "off");
+});
+t("チケット：端末のオフが勝つ・リンクと端末は小さいほう", () => {
+  assert.strictEqual(C.tkLimit(undefined, undefined), 2); assert.strictEqual(C.tkLimit(3, undefined), 3); assert.strictEqual(C.tkLimit(undefined, 4), 2);
+  assert.strictEqual(C.tkLimit(5, 1), 1); assert.strictEqual(C.tkLimit(0, 5), 0); assert.strictEqual(C.tkLimit(5, 0), 0); assert.strictEqual(C.tkLimit(99, 99), 5);
+});
+t("チケット：時計をもどしても つかえない／もどしても 1日の回数は戻らない", () => {
+  const S = C.fresh(D + 3); S.last = D + 3; S.tk.n = 3; S.tk.d = D + 3;
+  assert(C.tkUse(S, D + 3, 2)); assert(C.tkUse(S, D + 3, 2));
+  assert(!C.tkUse(S, D + 1, 5)); assert.strictEqual(C.tkState(S, D + 1, 5).why, "back");
+  assert.strictEqual(S.tk.used, 2);
+});
+t("チケット：たんけんの中（recordRun を通らない）では ★ は増えない／どんぐりも出ない", () => {
+  const S = C.fresh(D); S.tk.n = 1; const e0 = S.ac.e, st = S.tk.star;
+  assert(C.tkUse(S, D, 2)); const r = C.memoPick(S, { grade: 3, seed: 5 }); C.memoAdd(S, r.k, r.id);
+  assert.strictEqual(S.tk.star, st); assert.strictEqual(S.ac.e, e0); assert.strictEqual(S.day.got, 0);
+});
+t("チケット：日付がもどっている recordRun では ★ を足さない", () => {
+  const S = C.fresh(D + 9); S.last = D + 9; const r = run(S, D + 2, [U("m3-amari")]); assert(r.blocked); assert.strictEqual(S.tk.star, 0);
+});
+t("記録：古い mh_col（tk・mo・mu なし）も読める。こわれた値は捨てる", () => {
+  const old = C.fresh(D); delete old.tk; delete old.mo; delete old.mu; old.u["m3-amari"] = [2, 0, D];
+  const S = C.clean(JSON.parse(JSON.stringify(old)), D + 1); assert.strictEqual(S.tk.n, 0); assert.deepStrictEqual(S.mo, []); assert.strictEqual(C.stage(S, "m3-amari"), 2);
+  const bad = C.clean({ ...old, tk: { n: 99, star: -3, d: "x", got: 9, used: 77 }, mo: ["tree", "zzz", "tree", 5], mu: ["m3-amari", "nope"] }, D);
+  assert.strictEqual(bad.tk.n, 3); assert.strictEqual(bad.tk.star, 0); assert.strictEqual(bad.tk.got, 2); assert.strictEqual(bad.tk.used, 5);
+  assert.deepStrictEqual(bad.mo, ["tree"]); assert.deepStrictEqual(bad.mu, ["m3-amari"]);
+  assert.deepStrictEqual(JSON.parse(JSON.stringify(C.clean(JSON.parse(JSON.stringify(bad)), D))), JSON.parse(JSON.stringify(bad)));      // 保存→読みこみで同じ
+});
+t("たんけんメモ：ひろばの物と単元をかわりばんこ／持っていない物から／ぜんぶ持てばくり返し", () => {
+  const S = C.fresh(D); const got = [];
+  for (let i = 0; i < 6; i++) { const r = C.memoPick(S, { grade: 3, seed: 100 + i }); assert(r.isNew); got.push(r.k); assert(C.memoAdd(S, r.k, r.id)); assert(!C.memoAdd(S, r.k, r.id)); }
+  assert.deepStrictEqual(got, ["o", "u", "u", "u", "u", "u"]);            // 物は「がっこう」だけなので、2つ目からは 単元
+  assert.strictEqual(C.memoCount(S), 6); assert(S.mu.every(id => C.uGrade(id) === 3));
+  const A = C.fresh(D); A.mo = C.MEMO_O.slice(); A.mu = C.UNIT_IDS.slice();
+  const r = C.memoPick(A, { grade: 3, seed: 9 }); assert(!r.isNew); assert.strictEqual(C.memoCount(A), C.memoTotal());
+});
+t("バックアップ：たんけんメモも往復する。メモが無ければ 古い形と同じ長さ。チケットは入らない", () => {
+  const S = C.fresh(D); S.u["m3-amari"] = [2, 0, D]; S.tk.n = 3;
+  const plain = C.hrMake(S); S.mo = ["school", "clock"]; S.mu = ["m3-amari", C.UNIT_IDS[115]];
+  const withMemo = C.hrMake(S), r = C.hrParse(withMemo);
+  assert.strictEqual(withMemo.replace(/-/g, "").length - plain.replace(/-/g, "").length, 28);
+  assert.deepStrictEqual(r.mo.slice().sort(), ["clock", "school"]); assert.deepStrictEqual(r.mu.slice().sort(), ["m3-amari", C.UNIT_IDS[115]].sort());
+  const L = C.fresh(D + 3); C.hrMerge(L, r, D + 3); assert.strictEqual(L.mo.length, 2); assert.strictEqual(L.mu.length, 2); assert.strictEqual(L.tk.n, 0);
+  C.hrMerge(L, r, D + 3); assert.strictEqual(L.mo.length, 2);                                // くり返しても増えない
+  assert.deepStrictEqual(C.hrParse(plain).mo, []);                                           // メモなし（古い形）も読める
+  assert.strictEqual(C.hrParse(withMemo.slice(0, -4) + "ZZZZ"), null);                       // こわれた文字は弾く
+});
+t("バックアップ：メモの部分が中途半端な長さなら弾く", () => {
+  const S = C.fresh(D); S.mo = ["tree"]; const s = C.hrMake(S).replace(/-/g, "");
+  assert(C.hrParse(s)); assert.strictEqual(C.hrParse(s.slice(0, -4) + s.slice(-3)), null);
+});
+t("ひろばたんけんの地図：近道をぜんぶ閉じても遠まわりでゴールできる／ゴールの手前のとびらは かならず通る", () => {
+  let loops = 0;
+  for (const n of [0, 4, 8, 16]) for (let seed = 1; seed <= 300; seed++) {
+    const m = C.explorerMap(seed, n); assert(m, "seed " + seed); const g = m.grid;
+    assert.strictEqual(g.length, 5); assert(g.every(r => r.length === 7));
+    assert(m.long >= m.short + 2, `遠まわりが近道より長い seed ${seed}/${n}: ${m.short} ${m.long}`); assert(m.short >= 6 && m.long <= 30, `${m.short} ${m.long}`);
+    assert.strictEqual(m.doors.filter(d => d.final).length, 1); assert(m.doors.length >= 4 && m.doors.length <= 5);
+    const gx = m.goal[0], gy = m.goal[1], open = [[gx - 1, gy], [gx, gy + 1]].filter(([x, y]) => g[y] && g[y][x] !== undefined && g[y][x] !== 1);
+    assert.strictEqual(open.length, 1); const F = m.doors.find(d => d.final); assert.deepStrictEqual(open[0], [F.x, F.y]); assert.strictEqual(g[F.y][F.x], 3);
+    loops += m.loops;
+  }
+  assert(loops > 0);
+});
+t("ひろばたんけんの地図：ひろばの物が多いほど、かべがぬける（最大3）／同じ入力なら同じ地図", () => {
+  const a = C.explorerMap(77, 0), b = C.explorerMap(77, 16);
+  assert.deepStrictEqual(C.explorerMap(77, 5), C.explorerMap(77, 5));
+  assert(b.loops - a.loops <= 3);
+  let more = 0; for (let s = 1; s <= 100; s++) if (C.explorerMap(s, 16).loops > C.explorerMap(s, 0).loops) more++;
+  assert(more > 30, "道が変わる：" + more);
+});
 console.log(`\n${n} 件のテストを実行${process.exitCode ? "（失敗あり）" : "：すべて成功"}`);

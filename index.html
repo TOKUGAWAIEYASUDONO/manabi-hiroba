@@ -628,6 +628,37 @@ body[data-v=host] .wrap{max-width:none;padding:0}
 .hbar{display:flex;align-items:center;gap:8px;flex-wrap:wrap;background:#fff;border:2px solid var(--line);border-left:8px solid var(--sun);border-radius:4px 14px 14px 4px;padding:8px 12px;margin-top:10px;font-weight:700}
 .hbar span{flex:1;min-width:180px}
 .btn.s{padding:8px 16px;font-size:16px}
+.tkbox{background:#fff;border:3px solid var(--edge);border-radius:14px;box-shadow:0 4px 0 var(--edge);padding:10px 14px;margin:12px 0}
+.tkh{display:flex;align-items:center;justify-content:space-between;gap:10px;font-size:18px}
+.tkcs{display:inline-flex;gap:6px}
+.tkc .art{width:34px;height:34px;filter:grayscale(1) opacity(.3)}
+.tkc.on .art{filter:drop-shadow(0 3px 0 rgba(22,55,42,.28))}
+.tkbox .note{margin:6px 0}
+.tkbox .btn{width:100%;margin:6px 0 0;display:flex;align-items:center;justify-content:center;gap:8px;min-height:54px;font-size:20px}
+.tkbox .btn .art{width:28px;height:28px}
+.ex{width:100%;max-width:720px;margin:0 auto}
+.exmap{display:grid;grid-template-columns:repeat(7,1fr);gap:3px;width:min(100%,504px);margin:10px auto;background:#bfe3b0;border:4px solid var(--edge);border-radius:14px;padding:6px}
+.xt{aspect-ratio:1;position:relative;border-radius:8px;padding:0;min-height:0;min-width:0;display:block}
+.xt.w{background:#5f9a5a;border:2px solid rgba(22,55,42,.55)}
+.xt.w .art{position:absolute;inset:3px;width:calc(100% - 6px);height:calc(100% - 6px);filter:drop-shadow(0 2px 0 rgba(22,55,42,.3))}
+.xt.f,.xt.o,.xt.g,.xt.d,.xt.x{background:#f4ecd0;border:3px solid var(--edge);box-shadow:0 3px 0 var(--edge);cursor:pointer}
+.xt.o{background:#fbf6e2}.xt.d{background:#fff3c4}.xt.x{background:#ddd;box-shadow:none;cursor:default}
+.xt.x .art{opacity:.35}.xt.x::after{content:"×";position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:30px;font-weight:800;color:var(--math)}
+.xt .art{position:absolute;inset:2px;width:calc(100% - 4px);height:calc(100% - 4px)}
+.xt .me{z-index:2;inset:0;width:100%;height:100%;filter:drop-shadow(0 3px 0 rgba(22,55,42,.35))}
+.xt.near{outline:3px solid var(--sun);outline-offset:1px}
+.exq{background:#fff;border:3px solid var(--edge);border-radius:14px;padding:8px 12px 12px;margin-top:8px}
+.exq h3{margin:4px 0;font-size:17px}
+.exq .q{margin:6px 0}
+.exq .exhint{white-space:pre-line;background:#fff3c4;border-radius:8px;padding:6px 10px;margin-top:8px;font-size:15px}
+.exgoal{text-align:center;padding:12px 0}
+.exgoal .art.big{width:96px;height:96px}
+.memo{background:#fff;border:3px solid var(--edge);border-radius:14px;box-shadow:0 4px 0 var(--edge);padding:10px 14px;margin:12px auto;max-width:480px;text-align:left}
+.memo b{font-size:18px}.memo p{margin:6px 0 0;white-space:pre-line;line-height:1.6}
+.zk-memo h2{background:var(--go)}
+.mmc{padding:8px 0;border-bottom:2px dotted var(--line)}.mmc:last-child{border-bottom:0}
+.mmc p{margin:4px 0 0;white-space:pre-line;font-size:15px;line-height:1.6}
+.zk-memo .mmb{padding:0 12px 8px}
 .hops{display:flex;gap:10px;margin:12px 0 4px}
 .hops .btn{flex:1;margin:0;display:flex;align-items:center;justify-content:center;gap:6px;min-height:54px;font-size:20px}
 .hops .btn .art{width:28px;height:28px}
@@ -1028,6 +1059,44 @@ const TX={
  "col.zk.other":["ほかの 学年《がくねん》の ページ","ほかの ねんの ページ"],
  "col.zk.n":[(a,b)=>`${a} / ${b}`],"col.zk.all":[(a,b)=>`できた ${a} / ${b}`],
  "col.zk.note":["すきな ところから うめて いいよ。たんげんを おすと、くわしく みられるよ。"],
+ /* v2：たんけんチケット・ひろばたんけん・たんけんメモ */
+ "col.tk.name":["たんけんチケット"],"col.tk.go":["たんけんに いく"],
+ "col.tk.n":[n=>`チケット ${n}まい`],
+ "col.tk.none":["単元《たんげん》を「できた」に すると もらえるよ（5つで 1まい）。","たんげんを「できた」に すると もらえるよ。"],
+ "col.tk.day":["きょうの たんけんは おしまい。また あした！"],
+ "col.tk.got":["たんけんチケットを 1まい もらったよ！"],
+ "col.ex.t":["ひろばたんけん"],
+ "col.ex.intro":["とびらの 問題《もんだい》に 答《こた》えると、近道《ちかみち》が ひらくよ。まちがえても、遠《とお》まわりすれば だいじょうぶ！","とびらの もんだいを とくと、ちかみちが ひらくよ。まちがえても、ほかの みちを いけば だいじょうぶ！"],
+ "col.ex.note":["どんぐりは もらえないよ。ゴールで「たんけん メモ」が 1つ もらえるよ。"],
+ "col.ex.start":["たんけんを はじめる"],
+ "col.ex.tap":["いきたい ばしょを タップしてね。とびらを タップすると もんだいが 出《で》るよ。","いきたい ばしょを タップしてね。とびらを タップすると もんだいが でるよ。"],
+ "col.ex.stuck":["そこへは まだ いけないよ。"],
+ "col.ex.door":["とびらの もんだい！"],"col.ex.hint":["ヒント"],
+ "col.ex.ok":["せいかい！ とびらが ひらいたよ。"],
+ "col.ex.ng":[a=>`ざんねん。こたえは ${a}。とびらは とじたよ。べつの みちを いこう！`],
+ "col.ex.ngf":[a=>`おしい！ こたえは ${a}。もういちど ちょうせん！`],
+ "col.ex.a.f":["みち"],"col.ex.a.d":["とびら"],"col.ex.a.o":["ひらいた とびら"],"col.ex.a.x":["とじた とびら"],"col.ex.a.g":["たからばこ"],"col.ex.a.me":["どんぐりくん"],
+ "col.ex.goal":["ゴール！ たからばこを みつけたよ"],
+ "col.ex.memo":["たんけん メモ"],"col.ex.new":["ずかんに のったよ！"],"col.ex.old":["この メモは もっているよ。"],
+ "col.ex.of":[t=>`「${t}」の れいだい`],
+ "col.ex.back":["ひろばに もどる"],"col.ex.zk":["ずかんで みる"],
+ "col.ex.mm.n":[(a,b)=>`${a} / ${b}`],"col.ex.mm.none":["たんけんで たからばこを みつけると、ここに メモが ふえるよ。"],
+ "col.mm.school":["校庭《こうてい》の 地面《じめん》は、雨《あめ》の あと 水《みず》が たまりにくいように、まんなかが すこし 高《たか》く なっていることが あるよ。","こうていの じめんは、あめの あと みずが たまりにくいように、まんなかが すこし たかく なっている ことが あるよ。"],
+ "col.mm.slide":["すべりだいは、ななめの かたむきが ゆるやかだと ゆっくり、きゅうだと はやく すべるよ。","すべりだいは、ななめの かたむきが ゆるやかだと ゆっくり、きゅうだと はやく すべるよ。"],
+ "col.mm.swing":["ブランコは、くさりが 長《なが》いほど ゆっくり ゆれるよ。ゆれる はやさは、乗《の》る 人《ひと》の おもさでは かわらないんだって。","ブランコは、くさりが ながいほど ゆっくり ゆれるよ。ゆれる はやさは、のる ひとの おもさでは かわらないんだって。"],
+ "col.mm.bar":["てつぼうの「さかあがり」は、足《あし》を ふりあげる いきおいと、うでで からだを ひきよせる ちからが コツだよ。","てつぼうの「さかあがり」は、あしを ふりあげる いきおいと、うでで からだを ひきよせる ちからが コツだよ。"],
+ "col.mm.jungle":["ジャングルジムは、四角《しかく》を くみあわせて できているよ。たて・よこ・高《たか》さの 3つの むきが あるね。","ジャングルジムは、しかくを くみあわせて できているよ。たて・よこ・たかさの 3つの むきが あるね。"],
+ "col.mm.book1":["ほんばこの 本《ほん》を 背《せ》の 色《いろ》で ならべると きれい。でも、さがすときは 題名《だいめい》の じゅんが べんりだよ。","ほんばこの ほんを せの いろで ならべると きれい。でも、さがすときは だいめいの じゅんが べんりだよ。"],
+ "col.mm.lib":["図書館《としょかん》の 本《ほん》には 番号《ばんごう》が ついていて、おなじ なかまの 本《ほん》が となりどうしに ならぶよ。","としょかんの ほんには ばんごうが ついていて、おなじ なかまの ほんが となりどうしに ならぶよ。"],
+ "col.mm.flagjp":["日本《にほん》の 国旗《こっき》は「日《ひ》の 丸《まる》」。白《しろ》い 地《じ》に 赤《あか》い 円《えん》が 1つ だよ。","にほんの こっきは「ひのまる」。しろい じに あかい まるが 1つ だよ。"],
+ "col.mm.flagus":["アメリカの 国旗《こっき》の 星《ほし》は 50こ。州《しゅう》の 数《かず》と おなじだよ。","アメリカの こっきの ほしは 50こ。しゅうの かずと おなじだよ。"],
+ "col.mm.tree":["木《き》を 切《き》った 切《き》り口《くち》の 年輪《ねんりん》を 数《かぞ》えると、その 木《き》の 年《とし》が わかるよ。","きを きった きりくちの ねんりんを かぞえると、その きの としが わかるよ。"],
+ "col.mm.flower":["花《はな》の 色《いろ》や におい は、ちょうや ハチを よぶ 目印《めじるし》に なっているよ。","はなの いろや においは、ちょうや ハチを よぶ めじるしに なっているよ。"],
+ "col.mm.bench":["ベンチの 木《き》は、雨《あめ》や 日《ひ》ざしに 強《つよ》い ように、ぬりものを してあることが 多《おお》いよ。","ベンチの きは、あめや ひざしに つよい ように、ぬりものを してあることが おおいよ。"],
+ "col.mm.hutch":["うさぎは 耳《みみ》を 左右《さゆう》べつべつに うごかして、まわりの 音《おと》を 聞《き》きわけるよ。","うさぎは みみを さゆうべつべつに うごかして、まわりの おとを ききわけるよ。"],
+ "col.mm.pond":["池《いけ》の 水《みず》の 上《うえ》を すいすい すすむ アメンボは、足《あし》の 先《さき》に 水《みず》を はじく 毛《け》が あるんだよ。","いけの みずの うえを すいすい すすむ アメンボは、あしの さきに みずを はじく けが あるんだよ。"],
+ "col.mm.clock":["時計塔《とけいとう》の 長《なが》い はりは 1時間《じかん》で ぐるっと 1しゅう。みじかい はりは 12時間《じかん》で 1しゅう するよ。","とけいとうの ながい はりは 1じかんで ぐるっと 1しゅう。みじかい はりは 12じかんで 1しゅう するよ。"],
+ "col.mm.rainbow":["にじは、太陽《たいよう》の 光《ひかり》が 雨《あめ》つぶで 色《いろ》に わかれて 見《み》える もの。太陽《たいよう》を せなかに して さがそう。","にじは、たいようの ひかりが あめつぶで いろに わかれて みえる もの。たいようを せなかに して さがそう。"],
  "col.bk":["ひろばの もじ（ひきつぎ）"],
  "col.bk.make":["ひろばの もじを だす"],
  "col.bk.hint":["この もじを メモするか、QRコードを 印刷《いんさつ》しておくと、あとで よみこめます。","この もじを メモするか、QRコードを プリントしておくと、あとで よみこめるよ。"],
@@ -1692,7 +1761,12 @@ const colToday=()=>COL.dayNum(new Date());
 function colGet(){ if(!COLS) COLS=COL.clean(store.get(COLK,null),colToday()); return COLS; }
 function colSave(){ if(COLS) store.set(COLK,COLS); }
 const colCfgOn=()=>{ const c=store.get(COLCFG,null); return !(c&&c.on===0); };
-function colSetOn(v){ store.set(COLCFG,{on:v?1:0}); }
+function colSetCfg(p){ store.set(COLCFG,{...(store.get(COLCFG,null)||{}),...p}); }
+function colSetOn(v){ colSetCfg({on:v?1:0}); }
+/* チケットの 1日の つかえる数：端末の せってい(tk)と リンクの tk の 小さいほう。0 なら ひろばたんけんは 出さない */
+let TKH=null, EX=null, EXLAST=null;
+const colTkLimit=()=>{ const c=store.get(COLCFG,null); return COL.tkLimit(c&&typeof c.tk==="number"?c.tk:undefined,TKH); };
+const colTkOn=()=>colMode()==="on"&&UNITS_OK&&colTkLimit()>0;
 /* オフが勝つ：端末のオフ、またはリンクの col=0 のどちらかでオフ。リンクの col=1 では オンにならない */
 const colMode=()=>(!COLOK||!colCfgOn()||COLH)?"off":"on";
 function colTouch(){ const S=colGet(); COL.sync(S,colToday()); colSave(); return S; }
@@ -1720,6 +1794,7 @@ function colRun(info){
   if(ev("first").length) L.push(T("col.r.first"));
   if(ev("quiz").length) L.push(T("col.r.quiz"));
   if(r.newParts.length) L.push(T("col.r.part"));
+  if(r.tickets>0&&colTkOn()) L.push(T("col.tk.got"));
   if(r.capFirst){ L.push(T("col.cap")); S.day.shown=1; colSave(); }
   if(!L.length&&!r.paid&&S.d0===today) L.push(T("col.r.day1"));
   if(!L.length&&!r.paid) return "";
@@ -1763,6 +1838,10 @@ function hbDraw(first){
   const dd=S.done?COL.dayDate(S.done):null;
   const done=S.done?`<div class="hmsg done">${HS.done?`<b>${T("col.done")}</b><br>`:""}${T("col.done.on",dd.getUTCMonth()+1,dd.getUTCDate())}<br>${T("col.done.n")}
     <div class="pills" style="margin-top:8px"><b class="pl">${T("col.theme")}</b>${[0,1,2].map(i=>`<button type="button" class="pill small${S.theme===i?" on":""}" data-th="${i}" aria-pressed="${S.theme===i}">${T("col.theme."+i)}</button>`).join("")}</div></div>`:"";
+  const tkBox=()=>{ if(!colTkOn()) return ""; const st=COL.tkState(S,today,colTkLimit());
+    const icons=Array.from({length:COL.TK_MAX},(_,i)=>`<span class="tkc${i<st.n?" on":""}">${svgU("h-ticket")}</span>`).join("");
+    const msg=st.ok?"":T(st.why==="none"?"col.tk.none":"col.tk.day");
+    return `<section class="tkbox" aria-label="${esc(T("col.tk.name"))}"><div class="tkh"><b>${T("col.tk.name")}</b><span class="tkcs" role="img" aria-label="${esc(T("col.tk.n",st.n))}">${icons}</span></div>${msg?`<p class="note">${msg}</p>`:""}<button type="button" class="btn" id="hbTk"${st.ok?"":" disabled"}>${svgU("h-door")}${T("col.tk.go")}</button></section>`; };
   const root=app.querySelector(".hb"); if(!root) return;
   root.innerHTML=`<div class="topbar"><button class="back" onclick="go('#home')">${BK()}</button><b>${T("col.name")}</b><span class="acn" aria-label="${esc(T("col.door.d",bal))}">${acornSvg()}<b>${bal}</b></span></div>
     ${HS.gift?`<div class="hmsg">${acornSvg("ac")} ${T("col.gift")}</div>`:""}
@@ -1775,6 +1854,7 @@ function hbDraw(first){
     </div>
     ${bar}
     <div class="hops"><button type="button" class="btn" id="hbShop" aria-expanded="${HS.shop}">${acornSvg("ac")}${T("col.shop")}</button><button type="button" class="btn" id="hbZk">${ic("book-open")}${T("col.zukan")}</button></div>
+    ${tkBox()}
     <section class="shop${HS.shop?"":" hidden"}" id="shopBox"><h3>${T("col.shop")}</h3>${shop}</section>
     <p class="note">${T("col.local")}</p>`;
   root.querySelectorAll("[data-c]").forEach(b=>b.onclick=()=>hbCell(+b.dataset.c));
@@ -1784,6 +1864,7 @@ function hbDraw(first){
   const q=id=>root.querySelector(id);
   q("#hbShop").onclick=()=>{ HS.shop=!HS.shop; hbDraw(false); };
   q("#hbZk").onclick=()=>go("#zukan");
+  if(q("#hbTk")) q("#hbTk").onclick=()=>go("#tanken");
   if(q("#hbStore")) q("#hbStore").onclick=()=>{ COL.unplace(S,HS.sel); HS.sel=null; colSave(); hbDraw(false); };
   if(q("#hbCancel")) q("#hbCancel").onclick=()=>{ HS.sel=null; hbDraw(false); };
 }
@@ -1797,6 +1878,127 @@ function hbCell(c){
   hbDraw(false);
   const f=app.querySelector(`[data-c="${c}"]`); if(f) f.focus();
 }
+
+/* ----- ひろばたんけん（チケット1まいで1回。2〜3分。どんぐりは出ない・recordRun を通さない＝チケットの★にならない） ----- */
+function exMemo(k,id){
+  if(k==="u"){ const u=UBY[id]; return {title:u?T("col.ex.of",u.title):id,text:u?u.ex||u.note||"":""}; }
+  return {title:T(id==="school"||COL.PARTS.some(p=>p.id===id)?"col.p."+id:"col.d."+id),text:T("col.mm."+id)};
+}
+function exPool(S,g){
+  const gr=g||3; let us=UREADY.filter(u=>u.subj==="sansu"&&u.g===gr); if(!us.length) us=UREADY.filter(u=>u.subj==="sansu");
+  if(gr<=2){ const e=us.filter(u=>u.max<=(gr===1?30:100)); if(e.length>=3) us=e; }      // 1〜2年はやさしい単元だけ
+  const seen=shuffle(us.filter(u=>COL.stage(S,u.id)>=1)).slice(0,3), rest=shuffle(us.filter(u=>!seen.includes(u)));
+  return [...seen,...rest].slice(0,5).map(u=>u.id);                                    // 学習ずみを まぜる（ふくしゅう）
+}
+function exItems(S){ return ["h-school"].concat(COL.parts(S).filter(p=>p.have).map(p=>p.art),COL.DECOR.filter(d=>S.own.includes(d.id)).map(d=>d.art)); }
+function renderTanken(){
+  if(!colTkOn()) return go("#hiroba");
+  setLG(ui.grade); app.innerHTML=`<div class="ex"></div>`;
+  loadScript("data/hiroba-art.js",()=>!!document.getElementById("hiroba-art")).then(()=>{ if(params().path==="tanken") exIntro(); },()=>{ app.innerHTML=`<div class="q">${T("col.err")}</div>`; });
+}
+function exIntro(){
+  const S=colTouch(), st=COL.tkState(S,colToday(),colTkLimit()); if(!st.ok) return go("#hiroba");
+  const root=app.querySelector(".ex"); if(!root) return;
+  root.innerHTML=`<div class="topbar"><button class="back" onclick="go('#hiroba')">${BK()}</button><b>${T("col.ex.t")}</b><span></span></div>
+    <div class="q" style="margin-top:12px"><div class="big">${svgU("h-chest","big")}<br>${T("col.ex.t")}</div><div class="small">${T("col.ex.intro")}</div></div>
+    <div class="tkbox"><div class="tkh"><b>${T("col.tk.name")}</b><span class="tkcs" role="img" aria-label="${esc(T("col.tk.n",st.n))}">${Array.from({length:COL.TK_MAX},(_,i)=>`<span class="tkc${i<st.n?" on":""}">${svgU("h-ticket")}</span>`).join("")}</span></div><p class="note">${T("col.ex.note")}</p>
+      <button type="button" class="btn again" id="exGo">${svgU("h-door")}${T("col.ex.start")}</button></div>`;
+  root.querySelector("#exGo").onclick=exStart;
+  root.querySelector("#exGo").focus();
+}
+function exStart(){
+  const S=colTouch(); if(!COL.tkUse(S,colToday(),colTkLimit())){ go("#hiroba"); return; } colSave();   // チケットは はじめるときに 1まい つかう
+  const g=ui.grade|0, seed=1+Math.floor(Math.random()*899999), items=shuffle(exItems(S)), map=COL.explorerMap(seed,items.length);
+  const st=map.grid.map(r=>r.map(c=>["f","w","d","F","f","g"][c]));
+  const ids=exPool(S,g);
+  EX={S,g,seed,map,st,pos:map.start.slice(),items,ids,qs:UN.unitPick(ids,10,seed,true),qi:0,q:null,busy:false,steps:0,asked:0,right:0,wrong:0,t0:Date.now(),tm:0};
+  exDraw();
+}
+const exNear=(x,y)=>Math.abs(x-EX.pos[0])+Math.abs(y-EX.pos[1])===1;
+function exDraw(msgKey){
+  const E=EX; if(!E) return; const root=app.querySelector(".ex"); if(!root) return;
+  const pill=[[1,1],[3,1],[5,1],[1,3],[3,3],[5,3]], lm={}; pill.forEach(([x,y],i)=>{ if(E.items[i]) lm[x+","+y]=E.items[i]; });
+  const lab=(c)=>T("col.ex.a."+({d:"d",F:"d",o:"o",x:"x",g:"g"}[c]||"f"));
+  let cells="";
+  for(let y=0;y<E.map.H;y++) for(let x=0;x<E.map.W;x++){
+    const c=E.st[y][x], me=E.pos[0]===x&&E.pos[1]===y, ico=c==="d"||c==="F"||c==="o"||c==="x"?svgU("h-door"):c==="g"?svgU("h-chest"):"";
+    if(c==="w"){ cells+=`<div class="xt w" aria-hidden="true">${lm[x+","+y]?svgU(lm[x+","+y]):""}</div>`; continue; }
+    cells+=`<button type="button" class="xt ${c==="F"?"d":c}${!me&&exNear(x,y)&&c!=="x"?" near":""}" data-x="${x}" data-y="${y}" aria-label="${esc(me?T("col.ex.a.me"):lab(c))}"${c==="x"?" disabled":""}>${ico}${me?svgU("h-acorn","me"):""}</button>`;
+  }
+  const q=E.q;
+  const panel=q?`<section class="exq" aria-live="polite"><h3>${T("col.ex.door")}</h3><div class="q"><div class="big${q.c.q.length>16?" long":""}" id="exqq"></div><div class="small" id="exqs"></div></div>
+      <div class="choices">${q.c.ch.map((x,i)=>`<button type="button" class="choice ${["ca","cb","cc","cd"][i]}" data-c="${esc(x)}"><span class="kh" aria-hidden="true">${i+1}</span>${chLabel(x,q.c)}</button>`).join("")}</div>
+      <div class="fb" id="exfb" aria-live="polite"></div><div id="exhint"></div></section>`
+    :`<p class="note" style="text-align:center" role="status">${T(msgKey||"col.ex.tap")}</p>`;
+  root.innerHTML=`<div class="topbar"><button class="back" onclick="go('#hiroba')">${BK()}</button><b>${T("col.ex.t")}</b><span></span></div><div class="exmap" role="group" aria-label="${esc(T("col.ex.t"))}">${cells}</div>${panel}`;
+  root.querySelectorAll(".xt[data-x]").forEach(b=>b.onclick=()=>exTap(+b.dataset.x,+b.dataset.y));
+  if(q){ $("#exqq").textContent=q.c.q; $("#exqs").textContent=q.c.small; root.querySelectorAll("[data-c]").forEach(b=>b.onclick=()=>exPick(b)); }
+}
+function exPath(tx,ty,thru){      // 近道（とびら）は ふつう 目的地のときだけ（thru なら 通りぬけも考える）。とじた・かべは 通れない
+  const E=EX, key=(x,y)=>x+","+y, from=key(...E.pos), prev={[from]:null}, qu=[E.pos];
+  for(let i=0;i<qu.length;i++){ const [x,y]=qu[i]; if(x===tx&&y===ty) break;
+    for(const [dx,dy] of [[1,0],[-1,0],[0,1],[0,-1]]){ const nx=x+dx,ny=y+dy; if(nx<0||ny<0||nx>=E.map.W||ny>=E.map.H||key(nx,ny) in prev) continue;
+      const c=E.st[ny][nx]; if(c==="w"||c==="x") continue; if((c==="d"||c==="F")&&!thru&&!(nx===tx&&ny===ty)) continue;
+      prev[key(nx,ny)]=key(x,y); qu.push([nx,ny]); } }
+  if(!(key(tx,ty) in prev)) return null;
+  const p=[]; for(let k=key(tx,ty);k!==null;k=prev[k]) p.push(k.split(",").map(Number)); return p.reverse().slice(1);
+}
+function exTap(tx,ty){
+  const E=EX; if(!E||E.busy||E.q||E.done) return;
+  const c=E.st[ty]&&E.st[ty][tx]; if(!c||c==="w"||c==="x") return;
+  const path=exPath(tx,ty)||exPath(tx,ty,true); if(!path||!path.length){ if(!path) exDraw("col.ex.stuck"); return; }
+  E.busy=true; sfx("ok");
+  const step=()=>{
+    if(EX!==E) return;
+    const [x,y]=path.shift(), cc=E.st[y][x];
+    if(cc==="d"||cc==="F"){ E.busy=false; return exAsk(x,y,cc==="F"); }
+    E.pos=[x,y]; E.steps++;
+    if(cc==="g"){ E.busy=false; exDraw(); return exGoal(); }
+    exDraw(); if(path.length) E.tm=setTimeout(step,130); else E.busy=false;
+  };
+  step();
+}
+function exAsk(x,y,fin){
+  const E=EX; if(E.qi>=E.qs.length){ E.qs=UN.unitPick(E.ids,10,E.seed+"-"+E.qi,true); E.qi=0; }
+  const c=uCur(E.qs[E.qi++],true); E.asked++;
+  E.q={c,x,y,fin,tries:0,lock:false}; exDraw();
+  const b=app.querySelector(".exq .choice"); if(b) b.focus({preventScroll:true});
+  const pn=app.querySelector(".exq"); if(pn) pn.scrollIntoView({block:"nearest"});
+}
+function exPick(b){
+  const E=EX, q=E&&E.q; if(!q||q.lock||b.disabled) return;
+  const c=q.c, right=b.dataset.c===c.a, fb=$("#exfb"); q.lock=true; sfx(right?"ok":"ng");
+  const all=[...app.querySelectorAll(".exq .choice")];
+  if(right){ all.forEach(e=>e.classList.add(e.dataset.c===c.a?"right":"wrong")); fb.className="fb ok"; fb.textContent=T("col.ex.ok"); E.right++;
+    setTimeout(()=>{ if(EX!==E) return; E.st[q.y][q.x]="o"; E.pos=[q.x,q.y]; E.steps++; E.q=null; exDraw(); },650); return; }
+  E.wrong++;
+  all.forEach(e=>{ if(e.dataset.c===c.a) e.classList.add("right"); else e.classList.add("wrong"); e.disabled=true; });
+  fb.className="fb ng"; fb.textContent=T(q.fin?"col.ex.ngf":"col.ex.ng",c.a);
+  const hint=app.querySelector("#exhint"); if(hint){ const u=UBY[c.uid]; if(u&&u.ex){ hint.innerHTML=`<div class="exhint"><b>${T("col.ex.hint")}</b>　</div>`; hint.firstChild.append(document.createTextNode(u.ex)); } }
+  setTimeout(()=>{ if(EX!==E) return;
+    if(q.fin){ E.q=null; exAsk(q.x,q.y,true); }                       // さいごの とびらは 何度でも（べつの もんだい）
+    else { E.st[q.y][q.x]="x"; E.q=null; exDraw(); } },2200);          // 近道が とじるだけ。遠まわりの みちが ある
+}
+function exGoal(){
+  const E=EX, S=E.S; E.done=true; sfx("medal"); party();
+  const r=COL.memoPick(S,{grade:E.g,seed:1+Math.floor(Math.random()*899999)}); if(r.isNew) COL.memoAdd(S,r.k,r.id); colSave();
+  const m=exMemo(r.k,r.id); EXLAST={ms:Date.now()-E.t0,steps:E.steps,asked:E.asked,right:E.right,wrong:E.wrong,memo:r.k+":"+r.id,isNew:r.isNew};
+  const root=app.querySelector(".ex"); if(!root) return;
+  root.innerHTML=`<div class="exgoal"><div class="big" style="font-size:24px;font-weight:800">${svgU("h-chest","big")}<br>${T("col.ex.goal")}</div>
+    <div class="memo" role="status"><small>${T("col.ex.memo")}</small><br><b></b><p></p></div>
+    <p class="note">${T(r.isNew?"col.ex.new":"col.ex.old")}</p>
+    <div class="actions"><button type="button" class="btn again" id="exBack">${T("col.ex.back")}</button> <button type="button" class="btn sub" id="exZk">${ic("book-open")}${T("col.ex.zk")}</button></div></div>`;
+  root.querySelector(".memo b").textContent=m.title; root.querySelector(".memo p").textContent=m.text;
+  root.querySelector("#exBack").onclick=()=>go("#hiroba"); root.querySelector("#exZk").onclick=()=>go("#zukan");
+  root.querySelector("#exBack").focus();
+}
+document.addEventListener("keydown",e=>{
+  if(!EX||params().path!=="tanken"||e.ctrlKey||e.metaKey||e.altKey) return;
+  const t=e.target&&e.target.tagName; if(t==="INPUT"||t==="TEXTAREA"||t==="SELECT") return;
+  if(EX.q){ if(/^[1-4]$/.test(e.key)){ const b=app.querySelectorAll(".exq .choice")[+e.key-1]; if(b) exPick(b); } return; }
+  const d={ArrowRight:[1,0],ArrowLeft:[-1,0],ArrowDown:[0,1],ArrowUp:[0,-1]}[e.key]; if(!d) return;
+  e.preventDefault(); exTap(EX.pos[0]+d[0],EX.pos[1]+d[1]);
+});
 
 /* ----- たんげん ずかん ----- */
 function renderZukan(){
@@ -1817,7 +2019,7 @@ function renderZukan(){
     return `<section class="zks zk-${k}"><h2>${subjN(k)}</h2>${body}</section>`;
   }).join("");
   app.innerHTML=`<div class="zk"><div class="topbar"><button class="back" onclick="go('#hiroba')">${BK()}</button><b>${T("col.zukan.t")}</b><span class="note">${T("col.zk.all",sum.can,sum.total)}</span></div>
-    <p class="note">${T("col.zk.note")}</p>${sec}
+    <p class="note">${T("col.zk.note")}</p>${sec}${colMemoHtml(S)}
     <div class="zkmsg" id="zkmsg" role="status" aria-live="polite"></div>
     <p class="note">${T("col.local")}</p></div>`;
   app.querySelectorAll(".sk").forEach(b=>b.onclick=()=>{
@@ -1829,6 +2031,11 @@ function renderZukan(){
   });
 }
 
+function colMemoHtml(S){
+  const n=COL.memoCount(S), items=[...S.mo.map(id=>["o",id]),...S.mu.map(id=>["u",id])];
+  const body=items.length?items.map(([k,id])=>{ const m=exMemo(k,id); return `<div class="mmc"><b>${esc(m.title)}</b><p>${esc(m.text)}</p></div>`; }).join(""):`<p class="note">${T("col.ex.mm.none")}</p>`;
+  return `<section class="zks zk-memo"><h2>${T("col.ex.memo")}</h2><details class="zkp"${n?" open":""}><summary>${T("col.ex.memo")}<span class="zkn">${T("col.ex.mm.n",n,COL.memoTotal())}</span></summary><div class="mmb">${body}</div></details></section>`;
+}
 /* ----- ひろばの バックアップ（きろく画面）。QR は 同梱の qrcode-generator ----- */
 function colBackupHtml(){
   if(colMode()!=="on") return "";
@@ -1871,6 +2078,8 @@ function colTeacherHtml(){
       <span class="note">勉強したあとが形になる「じぶんの ひろば」です。ランキング・くじ・課金・広告はありません。どんぐりは 1日 20こまでで、授業モード（課題リンク）では画面に出ません。</span>
       <label style="display:flex;gap:10px;align-items:center;font-size:16px"><input type="checkbox" id="colOn"${on?" checked":""} style="width:24px;height:24px"> この端末で ひろば・ずかん・どんぐりを つかう</label>
       <span class="note">オフにすると、ホーム・結果画面・きろく画面から ひろばが消えます（学習のきろくは今まで通り）。課題リンクの末尾に <b>&amp;col=0</b> を付けると、そのリンクだけ ひろばを出しません。<b>オフが優先</b>なので、オフの端末では、リンクに col=1 を付けてもオンになりません。</span>
+      <label style="display:flex;gap:10px;align-items:center;font-size:16px;flex-wrap:wrap">ひろばたんけんの チケット：1日に つかえる数 <select id="colTk" style="font-size:16px;padding:6px">${[0,1,2,3,4,5].map(n=>`<option value="${n}"${n===(((store.get(COLCFG,null)||{}).tk)??2)?" selected":""}>${n}回${n===2?"（ふつう）":n===0?"（たんけんを出さない）":""}</option>`).join("")}</select></label>
+      <span class="note">チケットは「できた」「マスター」を 5つ達成すると 1まい（持てるのは 3まい・1日に増えるのは 2まいまで）。たんけんは 1回 2〜3分で、どんぐりは出ません。課題リンクの末尾に <b>&amp;tk=0</b>〜<b>&amp;tk=5</b> を付けると そのリンクだけ回数を決められます（端末の設定と リンクの <b>小さいほう</b> が使われます。授業モードでは たんけんは出ません）。</span>
       <span class="note">端末が変わると、ひろばは新しく始まります（引きつぎは「きろく」画面のバックアップ文字・QR。ひろばは原則その端末のものです）。</span>
     </div>`;
 }
@@ -1948,6 +2157,7 @@ function renderTeacher(q){
     const x=GAMES.find(y=>y.id===v); $(gsel).innerHTML=x.g.map(n=>`<option value="${n}">${n}年</option>`).join(""); };
   $("#mkq").onclick=()=>go("#make");
   const co=$("#colOn"); if(co) co.onchange=()=>colSetOn(co.checked);
+  const ct=$("#colTk"); if(ct) ct.onchange=()=>colSetCfg({tk:+ct.value});
   $("#mku").onclick=()=>go("#units");
   const setRule=()=>{ $("#nr").value=defaultRule(+$("#ngr").value); };
   $("#ng").onchange=()=>{ fillG("#ng","#ngr"); setRule(); }; fillG("#ng","#ngr"); setRule();
@@ -2858,6 +3068,13 @@ const clock=n=>n>=60?Math.floor(n/60)+":"+String(n%60).padStart(2,"0"):String(n)
 /* ===== 先生の画面：名前の管理（かえる／ニックネームに／へやから出す）と、動いた子の名前の吹き出し ===== */
 let HLAST=null;                       // 先生の画面が最後に受け取った状態（名前を押したときに使う）
 const pxVis=(n,max)=>n>=4?Math.min(max,n-1):Math.min(max,n);        // 順位の表に名前を出す人数。4人以上のときは、最下位の子の名前は出さない
+/* 全員の名前つきの表は、大画面には出さない。「先生だけ みる」を押したときだけ開く（投影していないことを確かめてから） */
+function teacherOnly(content){
+  const box=h("div",{class:"hidden",id:"tonly"},h("p",{class:"note",text:"※ 全員《ぜんいん》の名前《なまえ》が出《で》ます。大画面《だいがめん》に映《うつ》していないことを確《たし》かめてから、開《ひら》いてください。"}),content);
+  const btn=h("button",{type:"button",class:"btn sub",id:"tobtn","aria-expanded":"false","aria-controls":"tonly",innerHTML:ic("lock")+"先生《せんせい》だけ みる（全員《ぜんいん》の表《ひょう》）"});
+  btn.onclick=()=>{ const open=box.classList.toggle("hidden")===false; btn.setAttribute("aria-expanded",open?"true":"false"); };
+  return h("div",{style:"margin:12px 0;text-align:center"},btn,h("div",{style:"text-align:left"},box));
+}
 const csvWithNames=()=>{ const c=document.getElementById("csvn"); return !c||c.checked; };
 const csvOptHtml=()=>`<label class="csvopt"><input type="checkbox" id="csvn" checked> 結果に名前を入れる<small>（ファイルの扱いに注意）</small></label>`;
 function nameMenuClose(){ const m=document.getElementById("nmenu"); if(m) m.remove(); }
@@ -3074,9 +3291,14 @@ function renderHost(){
     const ans=rows.filter(r=>r.t>0), avg=ans.length?Math.round(ans.reduce((n,r)=>n+r.acc,0)/ans.length):0, u=rbp(unitOf(s)), vis=pxVis(rows.length,8);
     B.tsv=()=>{ const wn=csvWithNames(); return ["順位\t名前\t"+u+"\t正解\t解答数\t正答率",...rows.map(r=>`${r.i}\t${wn?r.p.name:"児童"+r.i}\t${r.p.v}\t${r.p.ok}\t${r.t}\t${r.acc}%`)].join("\n"); };   //T
     const val=p=>s.mode==="chest"?"🪙 "+p.v:p.v+T("px.masu");
+    const easyR=ruleOf(s.rule)==="easy", allOk=ps.reduce((n,p)=>n+p.ok,0);
+    const rowHtml=r=>`<div class="hrank ${r.i<=3?"t"+r.i:""}" data-pid="${esc(r.p.pid)}" role="button" tabindex="0"><b>${r.i}</b><span>${face(r.p.emoji)} ${esc(r.p.name)}</span><span>${val(r.p)}</span><span class="note">${T("px.ok",r.p.ok,r.t)}</span></div>`;
+    /* 大画面には 上位3人の名前と点だけ（正解 n/m は出さない）。全員の表は「先生だけ みる」。やさしいルールは 名前つきの順位表を出さない */
+    const topHtml=rows.slice(0,3).map(r=>`<div class="hrank ${"t"+r.i}" data-pid="${esc(r.p.pid)}" role="button" tabindex="0"><b>${r.i}</b><span>${face(r.p.emoji)} ${esc(r.p.name)}</span><span>${val(r.p)}</span></div>`).join("");
     px.innerHTML=`<div class="px-end"><h2 class="px-h2">${ic("flag")}${T("px.res")}<small>${T("px.avg",ps.length,avg)}</small></h2>
-      ${rows.slice(0,vis).map(r=>`<div class="hrank ${r.i<=3?"t"+r.i:""}" data-pid="${esc(r.p.pid)}" role="button" tabindex="0"><b>${r.i}</b><span>${face(r.p.emoji)} ${esc(r.p.name)}</span><span>${val(r.p)}</span><span class="note">${T("px.ok",r.p.ok,r.t)}</span></div>`).join("")}
-      ${rows.length>vis?`<p class="px-more">${T("px.more",rows.length-vis)}</p>`:""}</div>`;
+      <p class="px-more" style="font-size:34px;font-weight:800">${T("z.all",allOk)}</p>
+      ${easyR?"":topHtml}<div id="pxto"></div></div>`;
+    if(!easyR) $("#pxto").append(teacherOnly(h("div",{innerHTML:rows.slice(0,vis).map(rowHtml).join("")+(rows.length>vis?`<p class="px-more">${T("px.more",rows.length-vis)}</p>`:"")})));
   };
   const draw=s=>{
     last=s; HLAST=s; const m=modeOf(s), x=gameOf(s);
@@ -3770,6 +3992,7 @@ function qzHostDraw(s,warnHtml){
   /* 終わり：表彰台・結果表・問題ごとの正答率 */
   const stat=Z.stat||[], list=Z.list||[], easy=Z.easy||ruleOf(s.rule)==="easy";
   const low=stat.map((x,i)=>x.tot&&x.ok/x.tot<.6?i:-1).filter(i=>i>=0);
+  const allOk=Z.all!=null&&Z.all>0?Z.all:ps.reduce((n,p)=>n+p.ok,0);
   const pod=h("div",{class:"podium"});
   if(!easy) for(const k of [1,0,2]){ const p=ps[k]; if(!p) continue; const d=h("div",{class:"pod p"+(k+1)},h("div",{class:"pn",text:["🥇","🥈","🥉"][k]})); d.append(h("div",{class:"pnm",text:p.name}),h("div",{class:"pv",text:p.v+" 点《てん》"})); pod.append(d); }
   const tb=h("table",{class:"rtable"},h("thead",null,h("tr",null,["順位《じゅんい》","名前《なまえ》","点数《てんすう》","正解《せいかい》","正答率《せいとうりつ》"].map(x=>h("th",{text:x})))));
@@ -3783,8 +4006,9 @@ function qzHostDraw(s,warnHtml){
   app.replaceChildren(h("div",{class:"qzh"},wrapWarn,top(h("span")),
     h("h2",{class:"th2",innerHTML:ic("flag")+"クイズ けっか"}),
     easy?h("div",{class:"q"},h("div",{class:"big",text:T("z.all",Z.all||0)}),h("div",{class:"small",text:"やさしいルールなので、児童《じどう》の画面《がめん》には順位《じゅんい》を出《だ》していません。"})):pod,
-    h("h3",{text:s.nm==="auto"?"結果《けっか》（ニックネームと点数《てんすう》）":"結果《けっか》（名前《なまえ》と点数《てんすう》）"}),h("div",{style:"overflow:auto"},tb),
-    h("p",{class:"note",text:s.nm==="auto"?"※ 名前《なまえ》は自動《じどう》でつけたニックネームです。":"※ 名前《なまえ》は児童《じどう》が入力《にゅうりょく》したものです。名前《なまえ》のあるファイルは、大切《たいせつ》に扱《あつか》ってください。"}),
+    easy?null:h("div",{class:"q"},h("div",{class:"big",text:T("z.all",allOk)})),
+    easy?null:teacherOnly(h("div",null,h("h3",{text:s.nm==="auto"?"結果《けっか》（ニックネームと点数《てんすう》）":"結果《けっか》（名前《なまえ》と点数《てんすう》）"}),h("div",{style:"overflow:auto"},tb),
+      h("p",{class:"note",text:s.nm==="auto"?"※ 名前《なまえ》は自動《じどう》でつけたニックネームです。":"※ 名前《なまえ》は児童《じどう》が入力《にゅうりょく》したものです。名前《なまえ》のあるファイルは、大切《たいせつ》に扱《あつか》ってください。"}))),
     h("h3",{text:"問題《もんだい》ごとの正答率《せいとうりつ》（赤《あか》は60%未満《みまん》）"}),acc,
     ctl(csvOpt,h("button",{type:"button",class:"btn sub",innerHTML:ic("download")+"結果《けっか》をCSVで保存《ほぞん》",onclick:()=>dl("kekka.csv","text/csv;charset=utf-8",csv())}),
       low.length?h("button",{type:"button",class:"btn",innerHTML:ic("rotate-ccw")+`正答率《せいとうりつ》の低《ひく》い ${low.length}問《もん》を、もう一度《いちど》出《だ》す`,onclick:()=>api("qreplay",HOST).catch(e=>{ herr.textContent=e.message; })}):null,
@@ -4154,12 +4378,14 @@ function uKeydown(e){
 /* ================= ルーター ================= */
 function route(){
   fgFromHash(); COLH=/[?&#]col=0(?![0-9])/.test(location.hash); COLS=null; QKA=0;
+  { const m=/[?&#]tk=([0-5])(?![0-9])/.exec(location.hash); TKH=m?+m[1]:null; }
+  if(EX){ clearTimeout(EX.tm); EX=null; }
   if(qzFlush){ qzFlush(); qzFlush=null; }
   stopTimer(); P=null; M=null; QK=null; QS=null; QH=null; ckStop(); prStop(); wakeOff();
   if(ES){ ES.close(); ES=null; }
   const {path:path0,q}=params(), path=location.hash.startsWith("#q=")?"qlink":location.hash.startsWith("#u=")?"ulink":path0;
   setLG(path==="home"||path==="modesetup"||path==="join"||path==="record"?ui.grade:0);
-  document.body.dataset.v=["check","play","setup","modesetup","mode","join","lobby","host","teacher","record","make","qlink","units","ulink","hiroba","zukan"].includes(path)?path:"home";
+  document.body.dataset.v=["check","play","setup","modesetup","mode","join","lobby","host","teacher","record","make","qlink","units","ulink","hiroba","zukan","tanken"].includes(path)?path:"home";
   // 課題リンク（task=1）で開いたゲームでは、ほかの画面への入口を隠す（授業モード）
   const lesson=(path==="play"||path==="mode")&&q.get("task")==="1";
   LESSON=lesson; document.body.classList.toggle("lesson",lesson);
@@ -4184,6 +4410,7 @@ function route(){
   else if(path==="record") renderRecord();
   else if(path==="hiroba"&&COLOK) renderHiroba();
   else if(path==="zukan"&&COLOK) renderZukan();
+  else if(path==="tanken"&&COLOK) renderTanken();
   else renderHome();
 }
 window.addEventListener("hashchange",route);
