@@ -81,6 +81,17 @@
     return { q: `みじかい はりが ${h}、ながい はりが ${L} の とき、なんじ？`, a, ans: "choice4",
       choices: ch(r, a, [half ? `${h}じ` : `${h}じはん`, `${L}じ`, `${nx}じ`, `${pv}じ`, `${nx}じはん`, `${pv}じはん`, `${L}じはん`], [`${r.range(1, 12)}じ`, `${r.range(1, 12)}じはん`], { loose: true }) };
   };
+  g.tokeiFun1 = (r) => {                                   // 5分きざみの なんじなんぷん
+    const h = r.range(1, 12), mark = r.range(1, 11), minute = mark * 5;
+    const next = h % 12 + 1;
+    const short = `${h}と${next}の あいだ`;
+    const fn = (hh, m) => `${hh}じ${m}${m % 10 === 0 ? "ぷん" : "ふん"}`;   // 10・20…は「ぷん」、5・15…は「ふん」
+    const a = fn(h, minute);
+    const up = minute === 55 ? 50 : minute + 5, down = minute === 5 ? 10 : minute - 5;
+    const wrong = [fn(next, minute), fn(h, up), fn(h, down), fn(mark, minute)];
+    return { q: `みじかい はりが ${short}、ながい はりが ${mark} の とき、なんじなんぷん？`, a, ans: "choice4",
+      choices: ch(r, a, wrong, [fn(h, r.range(1, 11) * 5), fn(next, r.range(1, 11) * 5)], { loose: true }) };
+  };
 
   // ===== 2年 =====
   g.add2hissan = (r, p) => {                               // 2けた+2けた（くり上がりあり）
@@ -112,6 +123,23 @@
     } while (xs.size < 4 || [...xs].some(x => x < 100));
     const L = [...xs], a = big ? Math.max(...L) : Math.min(...L);
     return { q: `いちばん ${big ? "大きい" : "小さい"} 数は どれ？`, a: String(a), choices: r.shuffle(L.map(String)), ans: "choice4" };
+  };
+  g.keta4 = (r) => {                                       // 4けたの数・まとまり・大小
+    const kind = r.int(4);
+    if (kind === 0) {
+      const th = r.range(1, 9), h = r.range(0, 9), t = r.range(0, 9), o = r.range(0, 9);
+      const n = th * 1000 + h * 100 + t * 10 + o;
+      return { q: `1000が ${th}こ、100が ${h}こ、10が ${t}こ、1が ${o}こで いくつ？`, a: String(n),
+        choices: ch(r, n, [n + 100, n - 100, n + 10, n - 10, n + 1000].filter(x => x >= 1000 && x <= 9999).map(String), nf(r, n, { min: 1000, max: 9999 })) };
+    }
+    if (kind === 1) {
+      const size = r.pick([10, 100]), n = size === 10 ? r.range(100, 1000) : r.range(10, 100), a = n * size;
+      return { q: `${size}が ${n}こで いくつ？`, a: String(a),
+        choices: ch(r, a, [a + size, a - size, a + 10 * size, a - 10 * size].filter(x => x >= 1000 && x <= 10000).map(String), nf(r, a, { min: 1000, max: 10000 })) };
+    }
+    const nums = new Set(); while (nums.size < 4) nums.add(r.range(1000, 9999));
+    const xs = [...nums], big = kind === 2, a = big ? Math.max(...xs) : Math.min(...xs);
+    return { q: `いちばん ${big ? "大きい" : "小さい"} 数は どれ？`, a: String(a), choices: r.shuffle(xs.map(String)), ans: "choice4" };
   };
   g.kuku = (r, p) => {                                     // 九九（dans：[はじめ,おわり]の段）
     const [lo, hi] = p.dans || [2, 9], a = r.range(lo, hi), b = r.range(p.minB || 1, 9), s = a * b;

@@ -24,7 +24,7 @@ var TEXTBOOK_ORDER = {
         { t: "ひきざん", u: ["m1-sub-kurisage"], term: "2学期" },
         { t: "おおきいかず", u: ["m1-juu-to-ichi", "m1-add-2keta"], term: "3学期" },
         { t: "どちらがひろい", u: [], term: "3学期" },
-        { t: "なんじなんぷん", u: ["m1-tokei"], term: "3学期" },
+        { t: "なんじなんぷん", u: ["m1-tokei-fun"], term: "3学期" },
         { t: "たしざんとひきざん", u: [], term: "3学期" },
         { t: "かたちづくり", u: ["m1-katachi"], term: "3学期" }
       ],
@@ -41,7 +41,7 @@ var TEXTBOOK_ORDER = {
         { t: "長方形と正方形", u: ["m2-zukei"], term: "2学期" },
         { t: "かけ算(1)", u: ["m2-kuku-low", "m2-kake-bunsho"], term: "2学期" },
         { t: "かけ算(2)", u: ["m2-kuku-high", "m2-kuku-hole"], term: "2学期" },
-        { t: "4けたの数", u: [], term: "3学期" },
+        { t: "4けたの数", u: ["m2-keta4"], term: "3学期" },
         { t: "長いものの長さのたんい", u: ["m2-nagasa"], term: "3学期" },
         { t: "たし算とひき算", u: [], term: "3学期" },
         { t: "分数", u: ["m2-bunsu"], term: "3学期" },
@@ -235,7 +235,7 @@ var TEXTBOOK_ORDER = {
         { t: "くらべてみよう", u: [], term: "2学期" },
         { t: "かたちをつくろう", u: ["m1-katachi"], term: "3学期" },
         { t: "大きいかずをかぞえよう", u: ["m1-juu-to-ichi", "m1-add-2keta"], term: "3学期" },
-        { t: "なんじなんぷん", u: ["m1-tokei"], term: "3学期" },
+        { t: "なんじなんぷん", u: ["m1-tokei-fun"], term: "3学期" },
         { t: "たすのかなひくのかな", u: [], term: "3学期" },
         { t: "かずしらべ", u: [], term: "3学期" },
         { t: "1年のまとめをしよう", u: [], term: "3学期" }
@@ -367,7 +367,7 @@ var TEXTBOOK_ORDER = {
         { t: "ひきざん", u: ["m1-sub-kurisage"], term: "2学期" },
         { t: "くらべかた", u: [], term: "2学期" },
         { t: "大きなかず", u: ["m1-juu-to-ichi", "m1-add-2keta"], term: "3学期" },
-        { t: "なんじなんぷん", u: ["m1-tokei"], term: "3学期" },
+        { t: "なんじなんぷん", u: ["m1-tokei-fun"], term: "3学期" },
         { t: "どんなしきになるかな", u: [], term: "3学期" },
         { t: "かたちづくり", u: ["m1-katachi"], term: "3学期" }
       ],
@@ -386,7 +386,7 @@ var TEXTBOOK_ORDER = {
         { t: "長いものの長さ", u: ["m2-nagasa"], term: "2学期" },
         { t: "九九の表", u: [], term: "3学期" },
         { t: "はこの形", u: ["m2-hako"], term: "3学期" },
-        { t: "1000より大きい数", u: [], term: "3学期" },
+        { t: "1000より大きい数", u: ["m2-keta4"], term: "3学期" },
         { t: "図をつかって考えよう", u: [], term: "3学期" },
         { t: "1を分けて", u: ["m2-bunsu"], term: "3学期" }
       ],
@@ -600,7 +600,7 @@ var TEXTBOOK_ORDER = {
         { t: "かさくらべ", u: [], term: "2学期" },
         { t: "いろいろな かたち", u: ["m1-katachi"], term: "2学期" },
         { t: "大きな かず", u: ["m1-juu-to-ichi", "m1-add-2keta"], term: "3学期" },
-        { t: "なんじなんぷん", u: ["m1-tokei"], term: "3学期" },
+        { t: "なんじなんぷん", u: ["m1-tokei-fun"], term: "3学期" },
         { t: "ずを つかって かんがえよう", u: [], term: "3学期" },
         { t: "かたちづくり", u: ["m1-katachi"], term: "3学期" }
       ],
@@ -617,7 +617,7 @@ var TEXTBOOK_ORDER = {
         { t: "かけ算", u: ["m2-kuku-low", "m2-kake-bunsho"], term: "2学期" },
         { t: "かけ算九九づくり", u: ["m2-kuku-high", "m2-kuku-hole"], term: "2学期" },
         { t: "長い ものの 長さの たんい", u: ["m2-nagasa"], term: "2学期" },
-        { t: "1000より 大きい 数", u: [], term: "3学期" },
+        { t: "1000より 大きい 数", u: ["m2-keta4"], term: "3学期" },
         { t: "たし算と ひき算の かんけい", u: [], term: "3学期" },
         { t: "かけ算の きまり", u: [], term: "3学期" },
         { t: "分数", u: ["m2-bunsu"], term: "3学期" },
