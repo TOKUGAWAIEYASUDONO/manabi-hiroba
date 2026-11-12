@@ -10,8 +10,9 @@
 <meta property="og:title" content="まなびひろば｜小学生向け無料学習ゲーム">
 <meta property="og:description" content="算数・国語などを学年や単元から選んで遊べる、登録不要の学習ゲーム。ひとり練習もクラス対戦もできます。">
 <meta property="og:url" content="https://tokugawaieyasudono.github.io/manabi-hiroba/">
-<meta name="twitter:card" content="summary">
+<meta name="twitter:card" content="summary_large_image">
 <meta property="og:image" content="https://tokugawaieyasudono.github.io/manabi-hiroba/vendor/img/og-home.png">
+<meta property="og:image:width" content="1200"><meta property="og:image:height" content="630">
 <meta name="twitter:image" content="https://tokugawaieyasudono.github.io/manabi-hiroba/vendor/img/og-home.png">
 <link rel="stylesheet" href="vendor/fonts/biz-udpgothic.css?v=ecfc8846">
 <style>
@@ -823,7 +824,7 @@ body[data-v=host] .wrap{max-width:none;padding:0}
   .rk-hbar i,.rkm-bar i,#rkfill{transition:none}.rkh-row [data-pid].hop{animation:none}}
 </style>
 <style id="mathview-style"></style>
-<style>.qclock{margin:0 auto 4px}.kidunits{grid-template-columns:1fr}.kidunits .ucard{min-height:76px;justify-content:center;text-align:center;font-size:1.25rem}.lesson-end{display:block;margin:24px auto 8px;padding:6px;border:0;background:transparent;color:var(--muted);font-size:12px;touch-action:none}.colorpick{grid-template-columns:repeat(2,minmax(0,1fr))}.colorpick .choice.ca{background:#3979e5;color:#fff}.colorpick .choice.cb{background:#e35a56;color:#fff}@media(max-width:375px){.up .q:has(#qpic){padding:8px 6px;margin-bottom:6px}.up .q:has(#qpic) .big{font-size:25px}.up .q:has(#qpic) svg{max-height:94px}}
+<style>.qclock{margin:0 auto 4px}.kidunits{grid-template-columns:1fr}.kidunits .ucard{min-height:76px;justify-content:center;text-align:center;font-size:1.25rem}.lesson-end{display:block;margin:24px auto 8px;padding:6px;border:0;background:transparent;color:var(--muted);font-size:12px;touch-action:none}.colorpick{grid-template-columns:repeat(2,minmax(0,1fr))}.colorpick .choice[data-c="あお"]{background:#3979e5;color:#fff}.colorpick .choice[data-c="あか"]{background:#e35a56;color:#fff}.colorpick .choice[data-c="きいろ"]{background:#f5cd49;color:#243447}@media(max-width:375px){.up .q:has(#qpic){padding:5px 6px;margin-bottom:3px}.up .q:has(#qpic) .big{font-size:22px}.up .q:has(#qpic) svg{max-height:72px}.up .q:has(#qpic)~.umarks{margin:2px auto}.up:has(#qpic) .choices .choice{min-height:44px;padding:5px}.up:has(#qpic) .fb{min-height:20px}}
 </style>
 </head>
 <body>
@@ -923,7 +924,7 @@ body[data-v=host] .wrap{max-width:none;padding:0}
 <script src="data/calc.js?v=60621312"></script>
 <script src="data/choices.js?v=1cc6792c"></script>
 <script src="data/quizlib.js?v=43bdb5a8"></script>
-<script src="data/mathview.js?v=822ad1c3"></script>
+<script src="data/mathview.js?v=170cc5aa"></script>
 <script src="data/ngwords.js?v=c8b8a674"></script>
 <script src="data/cooplib.js?v=a05f730a"></script>
 <!-- 単元ごとの問題の型（単元から出題） -->
@@ -933,7 +934,7 @@ body[data-v=host] .wrap{max-width:none;padding:0}
 <script src="data/gen/sansu-34.js?v=dfac98cd"></script>
 <script src="data/gen/sansu-56.js?v=d0024b89"></script>
 <script src="data/gen/textbook-extra.js?v=31b08203"></script>
-<script src="data/units.js?v=2ffda08f"></script>
+<script src="data/units.js?v=9cb6963f"></script>
 <script src="data/collection.js?v=40d86f87"></script>
 <script>
 /* ================= 画面の文言（1つの表） =================
@@ -946,7 +947,7 @@ const TX={
  "h.join":["コードで参加《さんか》","はいる"],
  "h.teacher":["先生《せんせい》の画面《がめん》","せんせい"],
  "back":["もどる"],"back.end":["ここでおわる","ここで おわる"],
- "r.close.tab":["おわったら この タブを 閉《と》じてね","おわったら この タブを とじてね"],
+ "r.close.tab":["先生《せんせい》：じゅぎょうを おわる（2秒《びょう》長押《ながお》し）","せんせい：じゅぎょうを おわる（2びょう ながおし）"],
  "sec":["秒《びょう》","びょう"],
  "subj.math":["算数《さんすう》","さんすう"],"subj.jp":["国語《こくご》","こくご"],"subj.soc":["社会《しゃかい》","しゃかい"],"subj.eng":["英語《えいご》","えいご"],
  "n.home":["ホームへ"],
@@ -2380,7 +2381,7 @@ const TGUIDE=[
   "結果のCSV・コピーに名前を入れるかは先生が選べます（初期設定は入れません）。名前入りのファイルは、学校の個人情報の扱いに従って保管・削除してください。",
   "4けたの部屋コードは、インターネット上の公開仲介サーバー（0.peerjs.com）を通じて端末どうしをつなぎます。コードを教室の外に出さず、全員がそろったら「入室をしめきる」を押してください。ゲームが始まったあとは入れません。同じ端末からの続けての参加は一定時間ごとに数を制限しています。コードを知られたときは、「先生の画面」にもどって部屋を作りなおすと新しいコードになります。",
   "通信先は 0.peerjs.com（仲介）、stun.l.google.com（STUN）、*.turn.peerjs.com（直接つながらないときの中継）だけです。これらにはIPアドレスが届きますが、名前や得点は届きません（端末どうしの通信は暗号化されます）。",
-  "ひろば・どんぐり・ずかんは、この端末の記録だけで動き、名前・順位・外部送信はありません。授業で使わないときは「⑥」でオフにできます。リンクの col=0 でもオフにできます。",
+  "ひろば・どんぐり・ずかんは、この端末の記録だけで動き、名前・順位・外部送信はありません。授業で使わないときは「その他の設定」でオフにできます。リンクの col=0 でもオフにできます。",
   "記録は、その端末の遊びの記録で、成績の証明には使えません。どんぐり・ずかん・自己ベスト・バックアップの文字は、端末の中の記録で、本人が書きかえることもできます（端末の時計を変えても数字が変わります）。通知表・評価・順位づけには使わないでください。"
 ];
 function renderTeacher(q){
@@ -2453,7 +2454,7 @@ function renderTeacher(q){
       <div class="out hidden" id="lo"></div>
     </div>
     <div class="form" style="margin-top:16px;border-color:var(--accent)">
-      <b style="font-size:18px">単元のリンクを作る</b>
+      <b style="font-size:18px">② 単元のリンクを作る</b>
       <span class="note">単元をえらんで「リンクとQR」を押すと、短いリンクとQRができます。「授業で使う（ほかの画面に行かせない）」と「ひろばを出さない」をえらべます。授業リンクは開いてから90分、または日付が変わるまで固定されます。終わったら結果画面の「先生：じゅぎょうを おわる」を2秒長押ししてください。</span>
       <div><button class="btn" id="mku2">単元をえらんで リンクをつくる</button></div>
     </div>
@@ -5077,6 +5078,7 @@ function lessonEndButton(){
   ["pointerup","pointercancel","pointerleave","lostpointercapture"].forEach(x=>b.addEventListener(x,cancel));b.addEventListener("contextmenu",e=>e.preventDefault());res.appendChild(b);
 }
 /* ================= ルーター ================= */
+function shouldBlockLessonNavigation(lockedHash,requested,isTask){ return !!lockedHash&&requested!==lockedHash&&!isTask; }
 function route(){
   // 授業リンクの元の URL をタブ内に記憶し、戻る・アドレス欄の変更を先に拒否する。
   // 結果・終了画面は同じ hash のまま描画するため、この URL だけを許可する。
@@ -5085,8 +5087,7 @@ function route(){
   let lockedHash; try{ lockedHash=sessionStorage.getItem("mh_lesson_hash"); }catch(e){}
   let lockInfo; try{ lockInfo=JSON.parse(sessionStorage.getItem("mh_lesson_lock")||"null"); }catch(e){}
   if(lockedHash&&(!lockInfo||Date.now()-lockInfo.at>=5400000||new Date(lockInfo.at).toDateString()!==new Date().toDateString())){ lessonUnlock(); lockedHash=null; }
-  if(!lockedHash&&activePracticeHash&&requested!==activePracticeHash&&((P&&!P.done)||(M&&!M.over)||(QS&&!QS.locked))){ history.replaceState(null,"",location.href.split("#")[0]+activePracticeHash); return; }
-  if(lockedHash&&requested!==lockedHash&&!isTask){ location.replace(location.href.split("#")[0]+lockedHash); return; }
+  if(shouldBlockLessonNavigation(lockedHash,requested,isTask)){ history.replaceState(null,"",location.href.split("#")[0]+lockedHash); return; }
   if(lockedHash&&isTask&&requested!==lockedHash){ lockedHash=requested; try{ sessionStorage.setItem("mh_lesson_hash",lockedHash); }catch(e){} }
   if(!lockedHash&&isTask){ lockedHash=requested; try{ sessionStorage.setItem("mh_lesson_hash",lockedHash); sessionStorage.setItem("mh_lesson_lock",JSON.stringify({at:Date.now()})); }catch(e){} }
   activePracticeHash=lockedHash||requested;

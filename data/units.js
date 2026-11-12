@@ -230,7 +230,7 @@ window.MH_UNITS = (function () {
     if (!it) throw err;
     const ans = it.ans || (u.params && u.params.ans) || inferAns(it.a), rw = it.raw || [];       // raw = ふりがなを付けない欄（漢字よみの「問われている漢字」）
     const out = { unit: u.id, subj: u.subj, g: u.g, q: rw.includes("q") ? it.q : rb(it.q), a: rb(String(it.a)), choices: it.choices.map(c => rb(String(c))), ans, val: canon(ans, plain(it.a)) };
-    for (const k of ["tag", "hissan", "src"]) if (it[k]) out[k] = it[k];
+    for (const k of ["tag", "hissan", "src", "picture"]) if (it[k]) out[k] = it[k];
     if (it.stem) out.stem = rb(it.stem);
     return out;
   }

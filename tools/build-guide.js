@@ -62,7 +62,9 @@ function head({ title, desc, canonical, ld }) {
 <meta property="og:description" content="${esc(desc)}">
 <meta property="og:url" content="${canonical}">
 <meta property="og:locale" content="ja_JP">
-<meta name="twitter:card" content="summary">
+<meta name="twitter:card" content="summary_large_image">
+<meta property="og:image" content="${BASE}vendor/img/og-home.png">
+<meta property="og:image:width" content="1200"><meta property="og:image:height" content="630">
 <link rel="stylesheet" href="../vendor/fonts/biz-udpgothic.css">
 <link rel="stylesheet" href="guide.css">
 ${ld.map(jsonld).join("\n")}
