@@ -11,11 +11,14 @@ window.MH_CHOICE = (function () {
   const lenOf = s => [...plain(s)].length;
   /* all = 読みの候補を取る問題（全学年）、item = 出す問題。まちがいの読みを3つ返す */
   function kanji(all, item, shuffle) {
-    const ok = okuri(item.q), n = lenOf(item.a), seen = new Set([item.a]), tiers = [[], [], [], []];
+    const ok = okuri(item.q), n = lenOf(item.a), seen = new Set([item.a]), tiers = Array.from({length: 7 * 4}, () => []);
     for (const x of shuffle(all)) {
       if (seen.has(x.a)) continue; seen.add(x.a);
       const same = okuri(x.q) === ok, near = Math.abs(lenOf(x.a) - n) <= 1;
-      tiers[same && near ? 0 : same ? 1 : near ? 2 : 3].push(x.a);
+      const distance = Math.min(6, Math.abs((x.g || item.g) - item.g));
+      const kind = same && near ? 0 : same ? 1 : near ? 2 : 3;
+      const tier = distance === 0 ? (same ? kind : 14 + kind) : (same ? 2 + (distance - 1) * 2 + (near ? 0 : 1) : 18 + distance);
+      tiers[tier].push(x.a);
     }
     return [].concat(...tiers).slice(0, 3);
   }

@@ -12,7 +12,7 @@ const errors = [], err = m => errors.push(m);
 const gdir = path.join(root, "guide");
 const read = f => (fs.existsSync(f) ? fs.readFileSync(f, "utf8") : null);
 
-const expected = new Set(["index.html", "custom.html"]);
+const expected = new Set(["index.html", "custom.html", "about.html"]);
 for (const u of UN.UNITS) expected.add(pageName(u.g, u.subj));
 const pageHtml = {};
 for (const f of expected) { const s = read(path.join(gdir, f)); if (s === null) err(`ページがありません: guide/${f}`); else pageHtml[f] = s; }

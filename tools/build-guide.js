@@ -66,7 +66,7 @@ const header = crumbs => `<header class="top"><div class="wrap"><a class="brand"
 const footer = () => `<footer class="foot"><div class="wrap">
 <p>まなびひろば：学校の端末で使える、小学生向けの無料の学習ゲーム（登録不要・広告なし。ひとりで遊ぶときは外部への通信なし。友だち対戦のときだけ、端末どうしをつなぐ仲介サーバーに接続）。</p>
 <p>学習指導要領の項目番号（base）はAIが作成したもので、人の確認待ちです。教科書の単元名・順は出版社により異なります。</p>
-<p><a href="../index.html">まなびひろば ホーム</a> ／ <a href="index.html">学年・単元から さがす</a> ／ <a href="custom.html">先生の問題で遊ぶ</a></p>
+<p><a href="../index.html">まなびひろば ホーム</a> ／ <a href="index.html">学年・単元から さがす</a> ／ <a href="custom.html">先生の問題で遊ぶ</a> ／ <a href="about.html">保護者・学校向け</a></p>
 </div></footer>
 <a class="totop" href="#" aria-label="ページの先頭へ">▲ 先頭へ</a>
 </body>
@@ -206,7 +206,7 @@ function indexPage() {
   h += `<section aria-labelledby="games"><h2 id="games" class="sect">ゲーム名から さがす（ひろば本体のゲーム）</h2><p class="note">単元に関係なく遊べる、はじめからあるゲームです。</p>\n<div class="tablewrap"><table class="grid games"><thead><tr><th scope="col">ゲーム</th><th scope="col">対象学年</th><th scope="col">内容・単元</th></tr></thead><tbody>${sh.map(r => `<tr><th scope="row">${r[0]}</th><td>${r[1]}</td><td>${r[2]}</td></tr>`).join("")}</tbody></table></div>\n`;
   h += `<h3 class="sub3">計算スプリントの学年ごとの単元</h3><ul class="calc">${Object.keys(W.MH_CALC.UNITS).map(g => `<li><b>${GJ(g)}</b>：${Object.values(W.MH_CALC.UNITS[g]).map(x => esc(plain(x))).join("、")}</li>`).join("")}</ul></section>\n`;
   h += `<section class="aside"><h2 class="sect">この一覧について</h2><p class="note">単元の名前・学年は まなびひろばのデータ（data/units.js）から自動で作っています。学習指導要領の項目番号はAIが作成したもので、人の確認待ちです。教科書の会社によって単元の名前や順番が ちがうことがあります。</p></section>\n`;
-  h += `</main>\n` + footer();
+  h += `<p><a href="about.html">保護者・学校向け：運営とデータの扱い</a></p>\n</main>\n` + footer();
   return { title, desc, html: h };
 }
 
@@ -239,6 +239,21 @@ function customPage() {
 }
 
 /* ---------- 書き出し ---------- */
+function aboutPage() {
+  const title = "保護者・学校向け｜まなびひろばの運営とデータの扱い";
+  const desc = "まなびひろばは個人開発の無料学習ゲームです。登録不要。端末に残る記録、対戦時の通信先、名前の扱い、連絡先を説明します。";
+  const canonical = BASE + "guide/about.html";
+  const ld = [{ "@context": "https://schema.org", "@type": "WebPage", name: title, description: desc, url: canonical, inLanguage: "ja" }];
+  let h = head({ title, desc, canonical, ld });
+  h += header([["まなびひろば", "../index.html"], ["学年・単元から さがす", "index.html"], ["保護者・学校向け"]]);
+  h += `<main class="wrap about"><h1>保護者・学校向け<span class="h1sub">運営とデータの扱い</span></h1>
+<p>まなびひろばは、個人が開発・運営する無料の学習ゲームです。登録も広告もありません。お問い合わせ・不具合の報告は <a href="https://github.com/TOKUGAWAIEYASUDONO/manabi-hiroba/issues">GitHub リポジトリの Issues</a> へお願いします。公開投稿なので、児童の個人情報は書かないでください。</p>
+<h2>集めない物・端末に残る物</h2><p>運営者は名前、メールアドレス、アカウント、位置情報、成績を収集しません。端末には学年・遊びの記録・どんぐり・ふりがな等の設定が保存されます。主な保存キー：<code>mh_setup</code>、<code>mh_best</code>、<code>mh_col</code>、<code>mh_colcfg</code>、<code>mh_fg</code>、<code>mh_ui</code>、<code>mh_sound</code>、<code>mh_quiz_sets</code>、<code>mh_upick</code>。対戦中の一時情報：<code>mh_net</code>、<code>mh_host</code>、<code>mh_name_s</code>。自分専用の端末と指定した場合だけ <code>mh_name</code> に名前が残ります。共有端末では指定しないでください。記録は端末で遊んだ履歴であり、成績評価には使えません。</p>
+<h2>対戦時の名前・通信</h2><p>名前は既定では自動ニックネームです。先生が名前入力を選んだ場合だけ児童が入力でき、部屋の終了時に対戦用の名前は消えます。通常のサイト表示は GitHub Pages から配信されます。友だち対戦では <code>0.peerjs.com</code>（接続仲介）と STUN/TURN（<code>stun.l.google.com</code>・<code>*.turn.peerjs.com</code>、接続補助・中継）にも通信します。これらには接続に必要な IP アドレスが届きます。</p>
+<p><a href="index.html">← 学年・単元ガイドへ</a></p></main>` + footer();
+  return { title, desc, html: h };
+}
+
 const CSS = `/* まなびひろば 先生向けガイド（本体の色・文字と同じ。外部読み込みなし） */
 :root{--board:#1f4d3a;--field:#e9f4e4;--ink:#1b2a22;--muted:#46564d;--edge:#16372a;--paper:#fff;--line:#c9d8c8;--chalk:#d6ebdd;--math:#cf3d2c;--jp:#2f6fd8;--soc:#f2c230;--eng:#7a4cc8;--go:#1b7a4b;--sun:#ff9422;--bad:#b3261e}
 *{box-sizing:border-box}
@@ -323,7 +338,8 @@ const names = [];
 for (const p of pages) { out.set("guide/" + p.file, gradePage(p).html); names.push(p.file); }
 out.set("guide/index.html", indexPage().html);
 out.set("guide/custom.html", customPage().html);
-const urls = [BASE, BASE + "guide/", ...pages.map(p => BASE + "guide/" + p.file), BASE + "guide/custom.html"];
+out.set("guide/about.html", aboutPage().html);
+const urls = [BASE, BASE + "guide/", ...pages.map(p => BASE + "guide/" + p.file), BASE + "guide/custom.html", BASE + "guide/about.html"];
 out.set("sitemap.xml", `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${urls.map((u, i) => `  <url><loc>${u}</loc><priority>${i === 0 ? "1.0" : i === 1 ? "0.9" : "0.7"}</priority></url>`).join("\n")}\n</urlset>\n`);
 out.set("robots.txt", `User-agent: *\nAllow: /\n\nSitemap: ${BASE}sitemap.xml\n`);
 fs.mkdirSync(path.join(root, "guide"), { recursive: true });

@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>保護者・学校向け｜まなびひろばの運営とデータの扱い</title>
+<meta name="description" content="まなびひろばは個人開発の無料学習ゲームです。登録不要。端末に残る記録、対戦時の通信先、名前の扱い、連絡先を説明します。">
+<link rel="canonical" href="https://tokugawaieyasudono.github.io/manabi-hiroba/guide/about.html">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="まなびひろば">
+<meta property="og:title" content="保護者・学校向け｜まなびひろばの運営とデータの扱い">
+<meta property="og:description" content="まなびひろばは個人開発の無料学習ゲームです。登録不要。端末に残る記録、対戦時の通信先、名前の扱い、連絡先を説明します。">
+<meta property="og:url" content="https://tokugawaieyasudono.github.io/manabi-hiroba/guide/about.html">
+<meta property="og:locale" content="ja_JP">
+<meta name="twitter:card" content="summary">
+<link rel="stylesheet" href="../vendor/fonts/biz-udpgothic.css">
+<link rel="stylesheet" href="guide.css">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebPage","name":"保護者・学校向け｜まなびひろばの運営とデータの扱い","description":"まなびひろばは個人開発の無料学習ゲームです。登録不要。端末に残る記録、対戦時の通信先、名前の扱い、連絡先を説明します。","url":"https://tokugawaieyasudono.github.io/manabi-hiroba/guide/about.html","inLanguage":"ja"}</script>
+</head>
+<body>
+<header class="top"><div class="wrap"><a class="brand" href="../index.html">まなびひろば</a><span class="tag">先生向けガイド</span></div></header>
+<nav class="crumb wrap" aria-label="パンくず"><a href="../index.html">まなびひろば</a> › <a href="index.html">学年・単元から さがす</a> › <span aria-current="page">保護者・学校向け</span></nav>
+<main class="wrap about"><h1>保護者・学校向け<span class="h1sub">運営とデータの扱い</span></h1>
+<p>まなびひろばは、個人が開発・運営する無料の学習ゲームです。登録も広告もありません。お問い合わせ・不具合の報告は <a href="https://github.com/TOKUGAWAIEYASUDONO/manabi-hiroba/issues">GitHub リポジトリの Issues</a> へお願いします。公開投稿なので、児童の個人情報は書かないでください。</p>
+<h2>集めない物・端末に残る物</h2><p>運営者は名前、メールアドレス、アカウント、位置情報、成績を収集しません。端末には学年・遊びの記録・どんぐり・ふりがな等の設定が保存されます。主な保存キー：<code>mh_setup</code>、<code>mh_best</code>、<code>mh_col</code>、<code>mh_colcfg</code>、<code>mh_fg</code>、<code>mh_ui</code>、<code>mh_sound</code>、<code>mh_quiz_sets</code>、<code>mh_upick</code>。対戦中の一時情報：<code>mh_net</code>、<code>mh_host</code>、<code>mh_name_s</code>。自分専用の端末と指定した場合だけ <code>mh_name</code> に名前が残ります。共有端末では指定しないでください。記録は端末で遊んだ履歴であり、成績評価には使えません。</p>
+<h2>対戦時の名前・通信</h2><p>名前は既定では自動ニックネームです。先生が名前入力を選んだ場合だけ児童が入力でき、部屋の終了時に対戦用の名前は消えます。通常のサイト表示は GitHub Pages から配信されます。友だち対戦では <code>0.peerjs.com</code>（接続仲介）と STUN/TURN（<code>stun.l.google.com</code>・<code>*.turn.peerjs.com</code>、接続補助・中継）にも通信します。これらには接続に必要な IP アドレスが届きます。</p>
+<p><a href="index.html">← 学年・単元ガイドへ</a></p></main><footer class="foot"><div class="wrap">
+<p>まなびひろば：学校の端末で使える、小学生向けの無料の学習ゲーム（登録不要・広告なし。ひとりで遊ぶときは外部への通信なし。友だち対戦のときだけ、端末どうしをつなぐ仲介サーバーに接続）。</p>
+<p>学習指導要領の項目番号（base）はAIが作成したもので、人の確認待ちです。教科書の単元名・順は出版社により異なります。</p>
+<p><a href="../index.html">まなびひろば ホーム</a> ／ <a href="index.html">学年・単元から さがす</a> ／ <a href="custom.html">先生の問題で遊ぶ</a> ／ <a href="about.html">保護者・学校向け</a></p>
+</div></footer>
+<a class="totop" href="#" aria-label="ページの先頭へ">▲ 先頭へ</a>
+</body>
+</html>

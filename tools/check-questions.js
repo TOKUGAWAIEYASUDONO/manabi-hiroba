@@ -247,17 +247,19 @@ for (let g = 1; g <= 6; g++) {
     }
     // 漢字よみ：正解との文字数の差の平均、送りがな付き問題の選択肢の送りがな率
     for (let g = 1; g <= 6; g++) {
-      const list = Q.kanji.filter(x => x.g === g); let diff = 0, nd = 0, ok = 0, nok = 0;
+      const list = Q.kanji.filter(x => x.g === g); let diff = 0, nd = 0, ok = 0, nok = 0, other = 0;
       for (let i = 0; i < N; i++) {
         const it = list[rnd(list.length)], ds = CH.kanji(Q.kanji, it, shuffle);
         if (ds.length !== 3 || new Set([it.a, ...ds]).size !== 4) { err(it.id, "4択がそろわない"); continue; }
-        for (const d of ds) { diff += Math.abs([...d].length - [...it.a].length); nd++; }
+        for (const d of ds) { diff += Math.abs([...d].length - [...it.a].length); nd++; if (!list.some(y => y.a === d)) other++; }
         if (CH.okuri(it.q)) for (const d of ds) { nok++; const o = Q.kanji.find(y => y.a === d); if (o && CH.okuri(o.q)) ok++; }
       }
       const avg = diff / nd, rate = nok ? ok / nok : 1;
       console.log(`漢字 ${g}年の4択：${N}回／文字数の差の平均 ${avg.toFixed(2)}／送りがな付きの問題で送りがな付きの選択肢 ${nok ? Math.round(rate * 100) + "%" : "（該当なし）"}`);
       if (avg > 1) err("漢字 " + g + "年", "選択肢の文字数の差の平均が " + avg.toFixed(2) + "（1以下にする）");
       if (rate < 0.8) err("漢字 " + g + "年", "送りがな付きの問題の選択肢で、送りがな付きが " + Math.round(rate * 100) + "%（80%以上にする）");
+      console.log(`漢字 ${g}年の4択：他学年の読み ${Math.round(other / nd * 100)}%`);
+      if (other / nd > 0.2) err("漢字 " + g + "年", "他学年の読みが " + Math.round(other / nd * 100) + "%（20%以下にする）");
     }
     // 英単語：選択肢が正解と同じ種類の割合
     for (const G of [...new Set(Q.eigo.map(x => x.g))].sort()) {
