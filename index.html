@@ -895,7 +895,7 @@ body[data-v=host] .wrap{max-width:none;padding:0}
   .up:not(.play):not(.kid) .uwrap{display:grid;grid-template-columns:minmax(0,1fr) 340px;gap:12px}
   .up:not(.play):not(.kid) .uwrap>.upanel{grid-column:2;grid-row:1;position:sticky;top:8px;align-self:start;max-height:calc(100dvh - 16px);overflow:auto;margin:0}
   .up:not(.play):not(.kid) .uwrap>.ucards{grid-column:1;grid-row:1;min-width:0}
-  .up:not(.play):not(.kid) .ugrid{grid-template-columns:minmax(0,1fr)}
+  .up:not(.play):not(.kid) .ugrid{grid-template-columns:repeat(2,minmax(0,1fr))}
   .up.kid:not(.play)>.ufoot{grid-column:2;grid-row:4;align-self:end}
   .up.kid:not(.play) .uwrap{padding-bottom:84px}
 }
@@ -906,10 +906,10 @@ body[data-v=host] .wrap{max-width:none;padding:0}
 .upsets .pill{min-height:52px}
 .upsets .nw{white-space:nowrap}
 .form select,.upanel select,#app select{min-height:44px}
-</style>
-<style id="mathview-style"></style>
+ .ugrade-jump{display:flex;align-items:center;flex-wrap:wrap;gap:6px;margin:8px 0}.ugrade-jump a{font-size:13px;padding:3px 7px;border-radius:6px;background:#e1f0e3;color:var(--ink)}.ugrp{scroll-margin-top:12px}@media (min-width:1400px){.up:not(.play):not(.kid) .ugrid{grid-template-columns:repeat(3,minmax(0,1fr))}}@media (min-width:900px) and (max-height:740px){.home:not(.easy){gap:4px}.home:not(.easy) .zones{gap:5px}.home:not(.easy) .zone{padding-bottom:5px}.home:not(.easy) .tiles{gap:5px}.home:not(.easy) .tile{min-height:50px}.home:not(.easy) .bottom{gap:2px}.home:not(.easy) .bottom .gdlink{padding:0}}</style>
+<style id="mathview-style"> .ugrade-jump{display:flex;align-items:center;flex-wrap:wrap;gap:6px;margin:8px 0}.ugrade-jump a{font-size:13px;padding:3px 7px;border-radius:6px;background:#e1f0e3;color:var(--ink)}.ugrp{scroll-margin-top:12px}@media (min-width:1400px){.up:not(.play):not(.kid) .ugrid{grid-template-columns:repeat(3,minmax(0,1fr))}}@media (min-width:900px) and (max-height:740px){.home:not(.easy){gap:4px}.home:not(.easy) .zones{gap:5px}.home:not(.easy) .zone{padding-bottom:5px}.home:not(.easy) .tiles{gap:5px}.home:not(.easy) .tile{min-height:50px}.home:not(.easy) .bottom{gap:2px}.home:not(.easy) .bottom .gdlink{padding:0}}</style>
 <style>.qclock{margin:0 auto 4px}.kidunits{grid-template-columns:1fr}.kidunits .ucard{min-height:76px;justify-content:center;text-align:center;font-size:1.25rem}.lesson-end{display:block;margin:16px auto 8px;padding:10px 16px;min-height:48px;border:1px solid var(--line);border-radius:10px;background:linear-gradient(to right,var(--go) var(--hold-progress,0%),var(--paper) var(--hold-progress,0%));color:var(--ink);font-size:14px;font-weight:700;touch-action:none;-webkit-touch-callout:none;-webkit-user-select:none;user-select:none}.colorpick{grid-template-columns:repeat(2,minmax(0,1fr))}.colorpick .choice[data-c="あお"]{background:#3979e5;color:#fff}.colorpick .choice[data-c="あか"]{background:#e35a56;color:#fff}.colorpick .choice[data-c="きいろ"]{background:#f5cd49;color:#243447}@media(max-width:375px){.play.pg .q:has(#qpic){padding:5px 6px;margin-bottom:3px}.play.pg .q:has(#qpic) .big{font-size:20px;line-height:1.25}.play.pg .q:has(#qpic) .big:not(.long){white-space:nowrap}.play.pg .q:has(#qpic) svg{max-height:90px}.play.pg .q:has(#qpic)~.umarks{margin:2px auto}.play.pg:has(#qpic) .choices .choice{min-height:44px;padding:5px}.play.pg:has(#qpic) .fb{min-height:20px;font-size:18px;margin-bottom:3px}.play.pg:has(#qpic) .choices{gap:6px}.play.pg:has(#qpic) .topbar{margin-bottom:3px}.play.pg:has(#qpic) .tbar{margin-bottom:4px}}
-</style>
+ .ugrade-jump{display:flex;align-items:center;flex-wrap:wrap;gap:6px;margin:8px 0}.ugrade-jump a{font-size:13px;padding:3px 7px;border-radius:6px;background:#e1f0e3;color:var(--ink)}.ugrp{scroll-margin-top:12px}@media (min-width:1400px){.up:not(.play):not(.kid) .ugrid{grid-template-columns:repeat(3,minmax(0,1fr))}}@media (min-width:900px) and (max-height:740px){.home:not(.easy){gap:4px}.home:not(.easy) .zones{gap:5px}.home:not(.easy) .zone{padding-bottom:5px}.home:not(.easy) .tiles{gap:5px}.home:not(.easy) .tile{min-height:50px}.home:not(.easy) .bottom{gap:2px}.home:not(.easy) .bottom .gdlink{padding:0}}</style>
 </head>
 <body>
 <svg xmlns="http://www.w3.org/2000/svg" style="position:absolute;width:0;height:0;overflow:hidden" aria-hidden="true" focusable="false"><defs>
@@ -4506,7 +4506,7 @@ function makeEdit(set){
   function drawQ(){ list.replaceChildren(...(set.qs.length?set.qs.map((_,i)=>qCard(i)):[h("div",{class:"empty",text:"問題がありません。下のボタンで足してください。"})])); counts(); }
   const title=h("input",{type:"text",class:"fld",maxLength:QZ.LIM.title,value:set.title,placeholder:"セットの名前（40字まで）","aria-label":"セットの名前"});
   title.addEventListener("input",()=>{ set.title=title.value; later(); });
-  const grade=h("select",{class:"fld","aria-label":"対象学年"},h("option",{value:"0",selected:!set.g,text:"（指定しない）"}),...[1,2,3,4,5,6].map(g=>h("option",{value:String(g),selected:set.g===g,text:g+"年"})));
+  const grade=h("select",{class:"fld","aria-label":"対象学年"},h("option",{value:"0",selected:!set.g,text:"（指定しない）"}),...[1,2,3,4,5,6].map(g=>h("option",{value:String(g),selected:set.g===g,text:g+"年《ねん》"})));
   grade.addEventListener("change",()=>{ set.g=+grade.value; later(); });
   const memo=h("textarea",{class:"fld",rows:2,maxLength:QZ.LIM.memo,value:set.memo,placeholder:"メモ（自分用。200字まで）","aria-label":"メモ"});
   memo.addEventListener("input",()=>{ set.memo=memo.value; later(); });
@@ -4920,14 +4920,15 @@ function renderUnits(q){
   function drawCards(){
     const us=pool(subj).filter(u=>(!fg||u.g===fg)&&(!fi||u.item===fi)), byG={};
     us.forEach(u=>(byG[u.g]=byG[u.g]||[]).push(u));
-    const groups=Object.keys(byG).sort((a,b)=>a-b).map(g=>h("section",{class:"ugrp"},h("h3",{text:g+"年《ねん》"}),
+    const grades=Object.keys(byG).sort((a,b)=>a-b);
+    const groups=grades.map(g=>h("section",{class:"ugrp",id:"ugrade-"+g},h("h3",{text:g+"年《ねん》"}),
       h("div",{class:"ugrid"},...byG[g].map(u=>h("div",{class:"ucardw"},
         h("button",{type:"button",class:"ucard",role:"checkbox","aria-checked":"false","data-id":u.id,onclick:()=>toggle(u.id)},
           h("span",{class:"ubox","aria-hidden":"true"}),
           h("span",{class:"ubody"},h("b",{text:u.title}),h("span",{class:"unote",text:u.note}),
             h("span",{class:"umeta"},h("span",{class:"utag",text:u.g+"年《ねん》"}),!kid&&u.item&&u.item!=="その他《ほか》"?h("span",{class:"utag",text:u.item}):null))),
         h("button",{type:"button",class:"btn sub s uexb",text:T("u.ex"),"aria-label":T("u.ex")+"："+u.title,onclick:()=>uEx(u)}))))));
-    cards.replaceChildren(...(groups.length?groups:[h("div",{class:"empty",text:"この条件《じょうけん》の単元《たんげん》はありません"})]));
+    cards.replaceChildren(...(groups.length?[...(!kid&&grades.length>1?[h("nav",{class:"ugrade-jump","aria-label":"学年《がくねん》へとぶ"},h("span",{text:"学年《がくねん》へとぶ："}),...grades.map(g=>h("a",{href:"#ugrade-"+g,text:g+"年《ねん》",onclick:e=>{e.preventDefault();document.getElementById("ugrade-"+g)?.scrollIntoView({behavior:"smooth"});}})))]:[]),...groups]:[h("div",{class:"empty",text:"この条件《じょうけん》の単元《たんげん》はありません"})]));
     paint();
   }
   function paint(){ cards.querySelectorAll(".ucard").forEach(b=>{ const on=UPK.sel.includes(b.dataset.id); b.setAttribute("aria-checked",on?"true":"false"); b.firstChild.textContent=on?"✅":""; }); }
