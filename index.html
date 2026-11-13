@@ -833,6 +833,69 @@ body[data-v=host] .wrap{max-width:none;padding:0}
 @media (prefers-reduced-motion:reduce){
   .rk-fs{animation:none!important}.rk-beat.go,.rkm-big.go{animation:none}.rkh-rocket,.rkh-rocket.shake,.rkh-rocket .fl1,.rkh-rocket .fl2{transition:none;animation:none}.rkh-rocket .fl2{opacity:0}
   .rk-hbar i,.rkm-bar i,#rkfill{transition:none}.rkh-row [data-pid].hop{animation:none}}
+
+/* Phone / tablet / desktop layout: the same controls are retained at every width. */
+@media (max-width:599px){
+  .wrap{padding:8px 10px}
+  .home{gap:10px}.zones{grid-template-columns:minmax(0,1fr)}.zone{grid-column:auto!important}
+  .zones .s-btl .tiles{grid-template-columns:1fr!important}
+  .up,.up.play{max-width:100%}.upf .grade-pills{grid-template-columns:repeat(4,minmax(0,1fr))}
+  .upsets .set-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .up .uwrap,.up .ugrid{grid-template-columns:minmax(0,1fr)}
+  .up.kid .ugrid{grid-template-columns:minmax(0,1fr)}
+  .ufoot{position:sticky;bottom:0}.ustart{min-height:52px}
+  .play.pg{min-height:calc(100dvh - 66px);display:flex;flex-direction:column}
+  .play.pg #area{margin-top:auto}.play.pg .choices{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .play.pg .choice{min-height:64px}.play.pg .pad button{min-height:44px}
+  .play.pg .pad{gap:5px}.play.pg .uans{min-height:50px;margin-bottom:4px}
+  .play.pg .fb{margin-bottom:3px}.play.pg .q{min-height:0}
+  .play.pg:has(.pad) .score{margin-top:3px}
+  .t3{grid-template-columns:repeat(3,minmax(0,1fr))}.tpane{min-width:0}
+}
+@media (min-width:600px) and (max-width:1023px){
+  .zones{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .zones .zone{grid-column:auto!important}.zones .s-btl{grid-column:1/-1!important}
+  .upf .grade-pills{grid-template-columns:repeat(4,minmax(0,1fr))}
+  .up .uwrap{grid-template-columns:minmax(0,1fr)}
+}
+@media (min-width:1024px){
+  .wrap{max-width:1366px}.home .zones{grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+  .home .zone{grid-column:auto!important}.home .zones .s-btl{grid-column:auto!important}
+  .home .zones .s-btl .tiles{grid-template-columns:1fr!important}
+  .home .zone{padding:8px 10px}.home .zone h2{margin-bottom:5px}
+  .home .tiles{gap:5px}.home .hero{padding:8px 16px}
+  .up:not(.play){max-width:1366px;display:grid;grid-template-columns:minmax(260px,320px) minmax(0,1fr);gap:8px 16px;align-items:start}
+  .up:not(.play)>.topbar,.up:not(.play)>.th2,.up:not(.play)>.note{grid-column:1/-1}
+  .up:not(.play)>.ufilters{grid-column:1;grid-row:4;position:sticky;top:8px;max-height:calc(100dvh - 90px);overflow:auto}
+  .up:not(.play)>.uwrap{grid-column:2;grid-row:4;display:flex;flex-direction:column;min-width:0}
+  .up:not(.play) .uwrap>.upanel{position:static;max-height:none;overflow:visible;order:0;margin-bottom:8px}
+  .up:not(.play) .uwrap>.ucards{order:1}.up:not(.play) .ugrid{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .up:not(.play) .upf .pills{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .up:not(.play) .upf .grade-pills{grid-template-columns:repeat(4,minmax(0,1fr))}
+  .up:not(.play) .upsets .set-grid{grid-template-columns:minmax(0,1fr)}
+  .up:not(.play)>.ufoot{grid-column:2}
+  .play.pg{max-width:1000px;margin:0 auto;width:100%;min-height:calc(100dvh - 76px);display:flex;flex-direction:column}
+  .play.pg>.q{flex:1;min-height:0}.play.pg .q :is(.big){font-size:clamp(42px,5vw,76px)}
+  .play.pg .choices{grid-template-columns:repeat(4,minmax(0,1fr))}.play.pg .choice{min-height:76px}
+  .play.pg:has(#qpic:not(:empty))>.q{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);align-content:center;align-items:center;column-gap:20px}
+  .play.pg:has(#qpic:not(:empty)) #qpic{grid-column:1;grid-row:1/3}
+  .play.pg:has(#qpic:not(:empty)) #qpic svg{max-height:min(40dvh,280px)}
+  .play.pg:has(#qpic:not(:empty)) #qq,.play.pg:has(#qpic:not(:empty)) #qs{grid-column:2}
+  .play.pg:has(#qpic:not(:empty)) .choices{grid-template-columns:repeat(2,minmax(0,1fr));max-width:700px;margin:auto}
+  .res{display:grid;grid-template-columns:minmax(260px,1fr) minmax(0,1.5fr);gap:0 24px;align-items:start}
+  .res>.medrow,.res>.num,.res>.nextm,.res>.actions,.res>.stats,.res>.umr,.res>.newbest{grid-column:1}
+  .res>.miss{grid-column:2;grid-row:1/span 10;max-height:calc(100dvh - 120px);overflow:auto}
+  body[data-v=teacher] #app{display:grid;grid-template-columns:240px minmax(0,1fr);gap:8px 16px;align-items:start}
+  body[data-v=teacher] #app>.th2,body[data-v=teacher] #app>.note,body[data-v=teacher] #app>.tguide{grid-column:1/-1}
+  body[data-v=teacher] #app>.t3{grid-column:1;grid-row:4;grid-template-columns:1fr;position:sticky;top:8px}
+  body[data-v=teacher] #app>.tpane:not(.hidden){grid-column:2;grid-row:4}
+  body[data-v=teacher] .form{gap:8px;padding:10px}body[data-v=teacher] .form select{min-height:44px}
+}
+.upsets .pill span{display:block;overflow:visible;white-space:normal}
+.upsets .pill span{word-break:keep-all;overflow-wrap:normal}
+.upsets .pill{min-height:52px}
+.upsets .nw{white-space:nowrap}
+.form select,.upanel select,#app select{min-height:44px}
 </style>
 <style id="mathview-style"></style>
 <style>.qclock{margin:0 auto 4px}.kidunits{grid-template-columns:1fr}.kidunits .ucard{min-height:76px;justify-content:center;text-align:center;font-size:1.25rem}.lesson-end{display:block;margin:16px auto 8px;padding:10px 16px;min-height:48px;border:1px solid var(--line);border-radius:10px;background:linear-gradient(to right,var(--go) var(--hold-progress,0%),var(--paper) var(--hold-progress,0%));color:var(--ink);font-size:14px;font-weight:700;touch-action:none;-webkit-touch-callout:none;-webkit-user-select:none;user-select:none}.colorpick{grid-template-columns:repeat(2,minmax(0,1fr))}.colorpick .choice[data-c="あお"]{background:#3979e5;color:#fff}.colorpick .choice[data-c="あか"]{background:#e35a56;color:#fff}.colorpick .choice[data-c="きいろ"]{background:#f5cd49;color:#243447}@media(max-width:375px){.play.pg .q:has(#qpic){padding:5px 6px;margin-bottom:3px}.play.pg .q:has(#qpic) .big{font-size:20px;line-height:1.25}.play.pg .q:has(#qpic) .big:not(.long){white-space:nowrap}.play.pg .q:has(#qpic) svg{max-height:90px}.play.pg .q:has(#qpic)~.umarks{margin:2px auto}.play.pg:has(#qpic) .choices .choice{min-height:44px;padding:5px}.play.pg:has(#qpic) .fb{min-height:20px;font-size:18px;margin-bottom:3px}.play.pg:has(#qpic) .choices{gap:6px}.play.pg:has(#qpic) .topbar{margin-bottom:3px}.play.pg:has(#qpic) .tbar{margin-bottom:4px}}
@@ -945,8 +1008,8 @@ body[data-v=host] .wrap{max-width:none;padding:0}
 <script src="data/gen/sansu-34.js?v=dfac98cd"></script>
 <script src="data/gen/sansu-56.js?v=d0024b89"></script>
 <script src="data/gen/textbook-extra.js?v=b2d3f58f"></script>
-<script src="data/units.js?v=9cb6963f"></script>
-<script src="data/collection.js?v=40d86f87"></script>
+<script src="data/units.js?v=42971975"></script>
+<script src="data/collection.js?v=d7b5fbb7"></script>
 <script>
 /* ================= 画面の文言（1つの表） =================
    TX["キー"] = [ふつうの文言, 1〜2年の「やさしい文字」]（やさしい側がないものは同じ文言）。
@@ -4839,7 +4902,7 @@ function renderUnits(q){
   function drawSets(){
     const ok=(UN.UNIT_SETS||[]).map(s=>({s,us:s.units.filter(i=>UBY[i])})).filter(x=>x.us.length>1&&x.us.every(i=>UBY[i].subj===subj)&&(!kid||(!easy&&x.us.every(i=>UBY[i].g<=(kg||6)))));
     sets.replaceChildren(...(ok.length?[h("div",{class:"upsets"},h("b",{class:"pl",text:kid?T("u.sets"):"おすすめの組《く》み合《あ》わせ（タップで選《えら》ぶ）"}),
-      h("div",{class:"set-grid"},...ok.map(x=>h("button",{type:"button",class:"pill small set",onclick:()=>{ UPK.sel=x.us.slice(0,UMAX); uSave(); paint(); drawPanel(); }},h("span",{text:x.s.title})))))]:[]));
+      h("div",{class:"set-grid"},...ok.map(x=>h("button",{type:"button",class:"pill small set",onclick:()=>{ UPK.sel=x.us.slice(0,UMAX); uSave(); paint(); drawPanel(); }},h("span",null,...x.s.title.split(/(（[^）]*）|\([^)]*\))/).map((p,k)=>k%2?h("span",{class:"nw",text:p}):p))))))]:[]));
   }
   /* かたまり3：カード */
   function drawCards(){
@@ -4919,7 +4982,7 @@ function renderUnits(q){
     h("div",{class:"topbar"},h("button",{type:"button",class:"back",innerHTML:kid?BK():ic("arrow-left")+"先生《せんせい》の画面《がめん》",onclick:()=>go(kid?"#home":"#teacher")}),h("b"),h("span")),
     h("h2",{class:"th2",innerHTML:kid?"":ic("check")+"単元《たんげん》から つくる",text:kid?`${SUBJ_JA[subj]&&easyG(kg)?T("subj."+SJ[subj]):SUBJ_JA[subj]}　${T("u.pick")}`:null}),
     kid?null:h("p",{class:"note",text:"教科《きょうか》・学年《がくねん》でしぼって、単元《たんげん》をいくつでも選《えら》べます（学年《がくねん》をまたいでもOK）。選《えら》んだ単元《たんげん》を等分《とうぶん》にまぜて出題《しゅつだい》します。"}),
-    filt,sets,h("div",{class:"uwrap"},panel,cards),kid?h("div",{class:"ufoot"},startBtn):null].filter(Boolean));
+    h("div",{class:"ufilters"},filt,sets),h("div",{class:"uwrap"},panel,cards),kid?h("div",{class:"ufoot"},startBtn):null].filter(Boolean));
   app.replaceChildren(root);
   drawFilter(); drawSets(); drawCards(); drawPanel();
 }

@@ -1,54 +1,78 @@
 {
-  "indexSha256": "9addf16a031548436e5b7f7aaff22e4a233242f37e0c57b899857aacb3e3bd7b",
+  "indexSha256": "4ca4b623a58ba71ab61048ee9b295c70f6b83fd77813787321d1f3686c7e55ef",
   "browser": "chrome.exe",
   "measurements": {
     "375x667/計算スプリント": {
       "fontSize": 41.25,
-      "choicesBottom": 670.5
+      "choicesBottom": 636.8
     },
     "375x667/漢字よみ": {
       "fontSize": 41.25,
-      "choicesBottom": 602
+      "choicesBottom": 646
     },
     "375x667/単元の練習 m3-amari": {
       "fontSize": 20,
-      "choicesBottom": 550
+      "choicesBottom": 594
     },
     "375x667/1年の絵つき m1-nanbanme": {
       "fontSize": 20,
-      "choicesBottom": 550
+      "choicesBottom": 594
     },
     "375x667/1年の絵つき m1-nagasa-kurabe": {
       "fontSize": 20,
-      "choicesBottom": 550
+      "choicesBottom": 594
     },
     "375x667/1年の絵つき m1-kasa-kurabe": {
       "fontSize": 20,
-      "choicesBottom": 550
+      "choicesBottom": 594
+    },
+    "768x1024/計算スプリント": {
+      "fontSize": 76,
+      "choicesBottom": 944.8
+    },
+    "768x1024/漢字よみ": {
+      "fontSize": 76,
+      "choicesBottom": 959
+    },
+    "768x1024/単元の練習 m3-amari": {
+      "fontSize": 34,
+      "choicesBottom": 907
+    },
+    "768x1024/1年の絵つき m1-nanbanme": {
+      "fontSize": 34,
+      "choicesBottom": 907
+    },
+    "768x1024/1年の絵つき m1-nagasa-kurabe": {
+      "fontSize": 34,
+      "choicesBottom": 907
+    },
+    "768x1024/1年の絵つき m1-kasa-kurabe": {
+      "fontSize": 34,
+      "choicesBottom": 907
     },
     "1366x768/計算スプリント": {
-      "fontSize": 76,
-      "choicesBottom": 712.2
+      "fontSize": 68.3,
+      "choicesBottom": 726.8
     },
     "1366x768/漢字よみ": {
-      "fontSize": 76,
-      "choicesBottom": 703
+      "fontSize": 68.3,
+      "choicesBottom": 741
     },
     "1366x768/単元の練習 m3-amari": {
       "fontSize": 34,
-      "choicesBottom": 651
+      "choicesBottom": 689
     },
     "1366x768/1年の絵つき m1-nanbanme": {
       "fontSize": 34,
-      "choicesBottom": 706
+      "choicesBottom": 689
     },
     "1366x768/1年の絵つき m1-nagasa-kurabe": {
       "fontSize": 34,
-      "choicesBottom": 757
+      "choicesBottom": 689
     },
     "1366x768/1年の絵つき m1-kasa-kurabe": {
       "fontSize": 34,
-      "choicesBottom": 808
+      "choicesBottom": 735
     }
   }
 }
