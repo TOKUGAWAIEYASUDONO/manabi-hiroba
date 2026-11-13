@@ -23,7 +23,7 @@ for(const id of ['m1-nagasa-kurabe','m1-kasa-kurabe','m1-nanbanme']){
     }
     if(pic.kind==='line') assert.ok(svg.children.some(e=>e.tagName==='text'&&e.textContent.includes('まえ')),`${id}: front marker missing`);
     found=true;
-    if(pic.kind==='tapes'&&item.choices.includes('あお')&&item.choices.includes('あか')){
+    if(item.choices.includes('あお')&&item.choices.includes('あか')){
       assert.ok(['あお','あか'].includes(item.a));
       const expected=pic.blue>pic.red?'あお':pic.red>pic.blue?'あか':null;
       if(expected && /ながい/.test(ctx.window.MH_UNITS.plain(item.q))) assert.equal(item.a,expected);
@@ -39,4 +39,6 @@ assert.equal(guard(null,'#home',false),false,'ordinary practice must be able to 
 assert.equal(guard('#u=lesson&task=1','#home',false),true,'lesson navigation must remain blocked');
 assert.match(html,/\.colorpick \.choice\[data-c="あお"\]\{background:#3979e5/);
 assert.match(html,/\.colorpick \.choice\[data-c="あか"\]\{background:#e35a56/);
+assert.match(html,/c\.picture&&c\.ch\.includes\("あお"\)&&c\.ch\.includes\("あか"\)\?" colorpick"/);
+assert.doesNotMatch(html,/c\.picture\.kind==="tapes"&&c\.ch\.includes\("あお"\)/);
 console.log('unit render: first-grade pictures, color labels, route guard OK');

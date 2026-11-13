@@ -181,7 +181,7 @@ h2{font-size:20px;margin:18px 0 8px}
 .play.pg>.q,#mmain>.q:first-child{display:flex;flex-direction:column;justify-content:center}
 .play.pg>.q{flex:1;min-height:110px}
 .q .big{font-size:clamp(40px,11vw,76px);font-weight:800;line-height:1.2}
-.play.pg .q .big{font-size:clamp(26px,7vw,34px);overflow-wrap:normal;word-break:keep-all}
+.play.pg .q:has(#qpic) .big{font-size:clamp(26px,7vw,34px);overflow-wrap:normal;word-break:keep-all}
 .q .small{color:var(--chalk);margin-top:6px;font-size:16px}
 .answer{font-size:38px;font-weight:800;min-height:50px;border-bottom:4px solid var(--go);display:inline-block;min-width:170px;margin:0 auto 10px}
 .pad{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;max-width:360px;margin:0 auto;width:100%}
@@ -4974,7 +4974,7 @@ function unitNext(){
   const area=$("#area");
   if(c.mode==="choice4"){
     const cls=["ca","cb","cc","cd"];
-    area.innerHTML=`<div class="choices${c.picture&&c.picture.kind==="tapes"&&c.ch.includes("あお")&&c.ch.includes("あか")?" colorpick":""}">${c.ch.map((x,i)=>`<button class="choice ${cls[i]}" data-c="${esc(x)}"><span class="kh" aria-hidden="true">${i+1}</span>${chLabel(x,c)}</button>`).join("")}</div>`;
+    area.innerHTML=`<div class="choices${c.picture&&c.ch.includes("あお")&&c.ch.includes("あか")?" colorpick":""}">${c.ch.map((x,i)=>`<button class="choice ${cls[i]}" data-c="${esc(x)}"><span class="kh" aria-hidden="true">${i+1}</span>${chLabel(x,c)}</button>`).join("")}</div>`;
     mathIn(area); area.querySelectorAll("[data-c]").forEach(b=>b.onclick=()=>uPick(b));
     return;
   }
