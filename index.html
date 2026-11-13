@@ -935,7 +935,7 @@ body[data-v=host] .wrap{max-width:none;padding:0}
 <script src="data/calc.js?v=60621312"></script>
 <script src="data/choices.js?v=1cc6792c"></script>
 <script src="data/quizlib.js?v=43bdb5a8"></script>
-<script src="data/mathview.js?v=40d0fcde"></script>
+<script src="data/mathview.js?v=cdf1f036"></script>
 <script src="data/ngwords.js?v=c8b8a674"></script>
 <script src="data/cooplib.js?v=a05f730a"></script>
 <!-- 単元ごとの問題の型（単元から出題） -->
@@ -974,6 +974,7 @@ const TX={
  "px.ev.none":["もんだいに こたえて すすもう！"],"px.ev.who":["だれか"],
  /* ゲーム */
  "g.calc.t":["計算《けいさん》スプリント","けいさん スプリント"],"g.calc.d":["時間内《じかんない》に何《なん》問《もん》とけるかな？学年《がくねん》に合《あ》わせた計算《けいさん》","じかんの なかで いくつ とけるかな？"],
+ "g.calc.home.d":["単元《たんげん》をえらんで 1分《ぷん》でとこう","たんげんを えらんで 1ぷんで とこう"],
  "g.kuku.t":["九九《くく》チャレンジ","くく チャレンジ"],"g.kuku.d":["九九《くく》をすばやく答《こた》えよう","くくを はやく こたえよう"],
  "g.kanji.t":["漢字《かんじ》よみクイズ","かんじ よみクイズ"],"g.kanji.d":["漢字《かんじ》の読《よ》みを4つから選《えら》ぼう","かんじの よみを 4つから えらぼう"],
  "g.kencho.t":["県庁所在地《けんちょうしょざいち》クイズ"],"g.kencho.d":["都道府県《とどうふけん》の県庁《けんちょう》がある市《し》は？"],
@@ -1675,6 +1676,7 @@ function homeNext(x,best){
 function gameTile(x,b){
   const best=b[x.id], m=best?best.medal:0;
   return `<button class="tile" data-id="${x.id}"><span class="tico">${svgU(x.art)}</span><span class="tbody"><span class="tt">${x.t}</span>
+    ${x.id==="calc"?`<span class="td">${T("g.calc.home.d")}</span>`:""}
     <span class="tstat">${stampsHtml(m)}<span class="bv">${best&&best.score?T("h.best",best.score):""}</span></span>
     <span class="tnext">${medalize(homeNext(x,best))}</span></span></button>`;
 }
@@ -1697,7 +1699,7 @@ function renderHome(){
     ${easy?`<div class="guide">${mbs("n")}<span class="say">${T("home.guide")}</span></div>`:""}
     <button class="hero" id="quick">${easy?"":mbs("n")}${ic("zap")}<span><span class="ht">${T("home.quick")}</span><span class="hn">${T("home.quick.n")}</span></span></button>
     ${COLOK?colDoor():""}
-    <div class="zones" data-n="${zones.length+1}">${zones.map(([k,l])=>`<section class="zone s-${k}"><h2>${subjN(k)}</h2><div class="tiles">${l.map(x=>gameTile(x,b)).join("")}${easy?"":unitTile(k)}</div></section>`).join("")}${easy?`<section class="zone s-math"><div class="tiles">${unitTile("math")}</div></section>`:""}
+    <div class="zones" data-n="${zones.length+1}">${zones.map(([k,l])=>`<section class="zone s-${k}"><h2>${subjN(k)}</h2><div class="tiles">${l.map(x=>gameTile(x,b)).join("")}${easy||k==="math"?"":unitTile(k)}</div></section>`).join("")}${easy?`<section class="zone s-math"><div class="tiles">${unitTile("math")}</div></section>`:""}
       <section class="zone s-btl"><h2>${ic("swords")}${T("home.battle")}</h2><div class="tiles">${MODES.map(m=>modeTile(m,b)).join("")}</div></section></div>
     ${zones.length?"":`<div class="empty">${T("home.empty")}</div>`}
     <div class="bottom">
@@ -1718,7 +1720,7 @@ function renderHome(){
   $("#hJoin2").onclick=()=>go("#join"); $("#hTeach2").onclick=()=>go("#teacher");
   app.querySelectorAll("[data-id]").forEach(e=>e.onclick=()=>{
     const x=GAMES.find(y=>y.id===e.dataset.id);
-    withGrade(g0=>openGame(x,g0));
+    withGrade(g0=>x.id==="calc"?go("#units?kid=1&subj=sansu"):openGame(x,g0));
   });
   app.querySelectorAll("[data-m]").forEach(e=>e.onclick=()=>go(`#modesetup?m=${e.dataset.m}`));
   app.querySelectorAll("[data-un]").forEach(e=>e.onclick=()=>go(easy?"#units?kid=1":`#units?kid=1&subj=${e.dataset.un}`));

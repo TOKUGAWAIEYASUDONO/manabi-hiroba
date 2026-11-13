@@ -20,14 +20,19 @@ async function main(){
  let id=0;const pending=new Map();ws.onmessage=e=>{const m=JSON.parse(e.data);if(m.id&&pending.has(m.id)){const [ok,ng]=pending.get(m.id);pending.delete(m.id);m.error?ng(Error(m.error.message)):ok(m.result)}};
  const send=(method,params={})=>new Promise((ok,ng)=>{const n=++id;const timer=setTimeout(()=>{pending.delete(n);ng(Error(`CDP 応答待ち: ${method}`))},10000);pending.set(n,[(v)=>{clearTimeout(timer);ok(v)},(e)=>{clearTimeout(timer);ng(e)}]);ws.send(JSON.stringify({id:n,method,params}))});
  await send('Page.enable');await send('Runtime.enable');
- const cases=[['計算スプリント','#play?game=add&g=1&t=60'],['漢字よみ','#play?game=kanji&g=2&t=60'],['単元の練習','#u=m2-hyo&n=10&s=1'],['1年の絵つき問題','#u=m1-nanbanme&n=10&s=1']];
+ const pic=['m1-nanbanme','m1-nagasa-kurabe','m1-kasa-kurabe'];
+ const cases=[['計算スプリント','#play?game=calc&g=3&t=60'],['漢字よみ','#play?game=kanji&g=2&t=60'],['単元の練習 m3-amari','#u=m3-amari&n=10&s=1&c=1'],...pic.map(u=>[`1年の絵つき ${u}`,`#u=${u}&n=10&s=1&c=1`])];
+ // 問題の出方を毎回同じにする（乱数を固定）
+ await send('Page.addScriptToEvaluateOnNewDocument',{source:'(()=>{let a=12345;Math.random=()=>{a=(a*1664525+1013904223)>>>0;return a/4294967296}})()'});
  const out={indexSha256:crypto.createHash('sha256').update(fs.readFileSync(path.join(root,'index.html'))).digest('hex'),browser:path.basename(browser),measurements:{}};
  for(const [width,height] of [[375,667],[1366,768]]){
   await send('Emulation.setDeviceMetricsOverride',{width,height,deviceScaleFactor:1,mobile:width<500});
   for(const [name,hash] of cases){
-   await send('Page.navigate',{url:`http://127.0.0.1:${httpPort}/index.html${hash}`});
-   let value;for(let i=0;i<40;i++){await sleep(150);const r=await send('Runtime.evaluate',{expression:`(()=>{let q=document.querySelector('#qq'),buttons=[...document.querySelectorAll('.choice')];if(!q||!buttons.length)return null;let b=buttons[buttons.length-1].getBoundingClientRect();return {fontSize:parseFloat(getComputedStyle(q).fontSize),choicesBottom:Math.round(b.bottom*10)/10,choiceCount:buttons.length,question:q.innerText.slice(0,80)}})()`,returnByValue:true});value=r.result?.value;if(value)break}
-   if(!value)throw Error(`${name} ${width}×${height}: 問題と選択肢を表示できません`);
+   let value;
+   for(let attempt=0;attempt<3&&!value;attempt++){ // 初回の読み込みが遅いとき、最大3回やり直す
+   await send('Page.navigate',{url:'about:blank'});await send('Page.navigate',{url:`http://127.0.0.1:${httpPort}/index.html?r=${Date.now()}${hash}`});await sleep(300);
+   for(let i=0;i<50;i++){await sleep(150);const r=await send('Runtime.evaluate',{expression:`(()=>{if(!document.querySelector('#qq')){let go=[...document.querySelectorAll('button')].find(x=>/はじめる|スタート/.test(x.textContent));if(go)go.click()}let q=document.querySelector('#qq'),buttons=[...document.querySelectorAll('#area .choice,#area .pad button')];if(!q||!buttons.length||!q.innerText.trim())return null;let b=document.querySelector('#area').getBoundingClientRect();return {fontSize:parseFloat(getComputedStyle(q).fontSize),choicesBottom:Math.round(Math.max(b.bottom,buttons[buttons.length-1].getBoundingClientRect().bottom)*10)/10,choiceCount:buttons.length,question:q.innerText.slice(0,80)}})()`,returnByValue:true});value=r.result?.value;if(value)break}}
+   if(!value){const d=await send("Runtime.evaluate",{expression:"location.href+\" | \"+document.readyState+document.body.innerHTML.slice(0,600)",returnByValue:true});throw Error(`${name} ${width}×${height}: 問題と選択肢を表示できません `+JSON.stringify(d.result?.value))}
    out.measurements[`${width}x${height}/${name}`]={fontSize:value.fontSize,choicesBottom:value.choicesBottom};
   }
  }

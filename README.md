@@ -148,7 +148,7 @@ index.html は data フォルダと一緒に置くこと（ダブルクリック
 ## 公開前の手順
 `node tools/prepublish.js` を実行します。版の付け直し→ガイド再生成→全 `check-*`・`test-*` を順に確認し、失敗したらそこで止まります。`check-release.js` は `?v=` と実ファイルの版、およびガイドの単元数を照合します。index.html を別担当が編集中は `stamp-version.js --check` だけ使い、書き換えません。
 
-見た目の後もどりは、Chrome または Edge がある Windows で `node tools/measure-layout.js` を別に実行して確認します。375×667 と 1366×768 の問題文字と選択肢の下端を `tools/layout-baseline.json` と比べます。意図して画面を変えたときだけ `node tools/measure-layout.js --write` で基準を作り直してください。この検査は一時サーバーとヘッドレスブラウザを起動し、終了時に停止します。
+見た目の後もどりは、Chrome または Edge がある Windows で `node tools/measure-layout.js` を公開前に別に実行して確認します（prepublish には入れていません）。計算スプリント・漢字よみ・単元の練習（m3-amari）・1年の絵つき3単元（なんばんめ・ながさくらべ・かさくらべ）について、問題の文字の大きさと回答欄（選択肢・テンキー）の下端を 375×667 と 1366×768 で測り、`tools/layout-baseline.json` と比べます。許容差は文字 0.1px、下端 1px で、超えるとエラーになります。乱数を固定して同じ問題で測ります。意図して画面を変えたときだけ `node tools/measure-layout.js --write` で基準を作り直してください。一時サーバーとヘッドレスブラウザを起動し、成功・失敗のどちらでも終了時に止めます。
 
 ## 読み込みの計測
 `node tools/measure-load.js` の現在の概算：初回 21 ファイル、904,618 バイト（未圧縮）、354,812 バイト（各ファイル gzip 圧縮後）。実通信のヘッダーや動的読み込みは含みません。
