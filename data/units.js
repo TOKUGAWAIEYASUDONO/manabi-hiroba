@@ -28,7 +28,7 @@
 window.MH_UNITS = (function () {
   const G = window.MH_GEN, gens = G.gens, rb = G.ruby, plain = G.plain;   // rb = ふりがなを付ける、plain = 読みを取り除く
   const list = [];
-  const U = (id, subj, g, area, item, title, gen, params, o) => { o = o || {}; list.push({ id, subj, g, area, base: o.base || "", item, title: rb(title), note: rb(o.note || ""), ex: rb(o.ex || ""), gen, params: params || {}, max: o.max, series: o.series, step: o.step, stepLabel: o.label == null ? o.label : rb(o.label), status: gen ? "ready" : "later", sample: 3 }); };
+  const U = (id, subj, g, area, item, title, gen, params, o) => { o = o || {}; const read = subj === 'rika' && g === 3 ? G.rikaRuby : rb; list.push({ id, subj, g, area, base: o.base || "", item, title: read(title), note: read(o.note || ""), ex: read(o.ex || ""), gen, params: params || {}, max: o.max, series: o.series, step: o.step, stepLabel: o.label == null ? o.label : read(o.label), status: gen ? "ready" : "later", sample: 3 }); };
   const M = "sansu";
 
   /* ================= 算数 1年 ================= */
@@ -280,10 +280,11 @@ window.MH_UNITS = (function () {
     }
     if (!it) throw err;
     const ans = it.ans || (u.params && u.params.ans) || inferAns(it.a), rw = it.raw || [];       // raw = ふりがなを付けない欄（漢字よみの「問われている漢字」）
-    const out = { unit: u.id, subj: u.subj, g: u.g, q: rw.includes("q") ? it.q : rb(it.q), a: rb(String(it.a)), choices: it.choices.map(c => rb(String(c))), ans, val: canon(ans, plain(it.a)) };
+    const read = u.subj === 'rika' && u.g === 3 ? G.rikaRuby : rb;
+    const out = { unit: u.id, subj: u.subj, g: u.g, q: rw.includes("q") ? it.q : read(it.q), a: read(String(it.a)), choices: it.choices.map(c => read(String(c))), ans, val: canon(ans, plain(it.a)) };
       for (const k of ["tag", "hissan", "src", "picture"]) if (it[k]) out[k] = it[k];
       if (it.reviewed === false) out.reviewed = false;
-    if (it.stem) out.stem = rb(it.stem);
+    if (it.stem) out.stem = read(it.stem);
     return out;
   }
   /* 単元をまぜて n問。unitIds は学年をまたいでよい。mix=false なら単元の順に並べる */
