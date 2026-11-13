@@ -171,7 +171,7 @@ function gradePage(p) {
   h += header([["まなびひろば", "../index.html"], ["学年・単元から さがす", "index.html"], [`${GJ(g)} ${SUBJ[subj]}`]]);
   h += `<main class="wrap" id="top-units">\n<h1>${esc(leadTxt)}<span class="h1sub">${GJ(g)} ${SUBJ[subj]}の単元から さがす学習ゲーム</span></h1>\n`;
   h += `<p class="lead">${GJ(g)} ${SUBJ[subj]}の単元は全${units.length}単元（ゲームで使えるもの${rd.length}${units.length > rd.length ? `、準備中${units.length - rd.length}` : ""}）。単元名は教科書の並びに合わせています。</p>\n`;
-  if (subj === "rika") h += `<p class="note"><strong>理科は AI が作った問題です。先生の確認はまだです。おかしな問題は、先生に知らせてね。</strong></p>\n`;
+if (subj === "rika") h += `<p class="note"><strong>理科は AI が作り、運営者が全問を確認しました。先生（教員）の確認はまだです。気になる問題は「この もんだい、おかしい？」から知らせてください。</strong></p>\n`;
   h += gradeNav(g) + "\n";
   h += `<nav class="subj" aria-label="${GJ(g)}の教科">${SUBJ_ORDER.filter(s => byGS.has(g + "-" + s)).map(s => `<a href="${pageName(g, s)}"${s === subj ? ' aria-current="page"' : ""}>${SUBJ[s]}</a>`).join("")}</nav>\n`;
   if (tbCompanies(subj, g).length) h += `<p class="note">教科書の順で見たいときは、<a href="#tb">教科書会社ごとの並び</a>へ。</p>\n`;
@@ -267,7 +267,7 @@ function aboutPage() {
   h += `<main class="wrap about"><h1>保護者・学校向け<span class="h1sub">運営とデータの扱い</span></h1>
 <p>まなびひろばは、個人が開発・運営する無料の学習ゲームです。登録も広告もありません。お問い合わせ・不具合の報告は <a href="https://github.com/TOKUGAWAIEYASUDONO/manabi-hiroba/issues">GitHub リポジトリの Issues</a> へお願いします。公開投稿なので、児童の個人情報は書かないでください。</p>
 <p>ホームでは学年に合った教科・単元を選んで遊べます。授業リンク・課題リンクからも、先生が指定した内容に直接進めます。</p>
-${SUBJ.rika ? '<p><strong>理科の問題は AI が作成し、先生による確認はまだです。</strong>確認日は未定です。内容の誤りは上記の Issues にお知らせください。児童の個人情報は書かないでください。</p>' : ''}
+${SUBJ.rika ? '<p><strong>理科は AI が作り、運営者が全問を確認しました。先生（教員）の確認はまだです。</strong>気になる問題は「この もんだい、おかしい？」から知らせてください。児童の個人情報は書かないでください。</p>' : ''}
 <h2>集めない物・端末に残る物</h2><p>このサイトの運営者は名前、メールアドレス、アカウント、位置情報、成績を収集しません。端末には学年・遊びの記録・どんぐり・ふりがな等の設定が保存されます。主な保存キー：<code>mh_setup</code>、<code>mh_best</code>、<code>mh_col</code>、<code>mh_colcfg</code>、<code>mh_fg</code>、<code>mh_ui</code>、<code>mh_sound</code>、<code>mh_quiz_sets</code>、<code>mh_upick</code>、<code>mh_troom</code>。対戦中の一時情報：<code>mh_net</code>、<code>mh_host</code>、<code>mh_name_s</code>。授業リンクの固定には、このタブだけに <code>mh_lesson_hash</code> を使います。自分専用の端末と指定した場合だけ <code>mh_name</code> に名前が残ります。共有端末では指定しないでください。記録は端末で遊んだ履歴であり、成績評価には使えません。</p>
 <p>共有画像 <code>vendor/img/og-home.png</code> は 2026-11-13 にサイトの黒板と芽のキャラクターをもとに図形と文字で作った自作画像です。以前の AI 生成画像（実在の人物ではありません）は <code>vendor/img/og-home-v1.png</code> として保管しています。</p>
 <p>授業リンクの固定には、このタブだけに <code>mh_lesson_lock</code>（固定を始めた時刻）を使います。開いてから90分、または日付が変わるまで固定します。先生が結果画面で終えるときは、終了ボタンを2秒長押しします。タブを閉じると消えます。</p>

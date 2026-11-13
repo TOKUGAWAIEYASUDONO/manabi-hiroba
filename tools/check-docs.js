@@ -4,6 +4,7 @@ const fs = require('fs'), path = require('path');
 const root = path.join(__dirname, '..');
 const read = p => fs.readFileSync(path.join(root, p), 'utf8');
 const html = read('index.html'), about = read('guide/about.html'), readme = read('README.md');
+const rikaPublic = /window\.RIKA_PUBLIC\s*=\s*true\s*;/.test(html);
 const sources = ['index.html', ...fs.readdirSync(path.join(root, 'data')).filter(f => f.endsWith('.js')).map(f => `data/${f}`), ...fs.readdirSync(path.join(root, 'guide')).filter(f => f.endsWith('.html')).map(f => `guide/${f}`)];
 const keys = new Set();
 for (const file of sources) {
@@ -15,6 +16,12 @@ for (const file of sources) {
 }
 const documented = new Set([...about.matchAll(/<code>(mh_[\w]+)<\/code>/g)].map(m => m[1]));
 let errors = 0;
+if (rikaPublic) {
+  for (const [file, src] of [['README.md', readme], ['guide/about.html', about], ...[3,4,5,6].map(g => [`guide/g${g}-rika.html`, read(`guide/g${g}-rika.html`)])]) {
+    if (!src.includes('運営者が全問を確認しました') || !src.includes('先生（教員）の確認はまだです') || !src.includes('この もんだい、おかしい？')) { console.error(`${file}: 理科の確認状況の記載が一致しません`); errors++; }
+  }
+  if (!html.includes('運営者《うんえいしゃ》が 全問《ぜんもん》を 確認《かくにん》')) { console.error('index.html: 理科の児童向け注意がありません'); errors++; }
+}
 for (const key of keys) if (key.startsWith('mh_') && !documented.has(key)) { console.error(`保存キーの記載なし: ${key}`); errors++; }
 for (const key of documented) if (!keys.has(key)) { console.error(`未使用の保存キー記載: ${key}`); errors++; }
 const images = fs.readdirSync(path.join(root, 'vendor/img')).filter(f => fs.statSync(path.join(root, 'vendor/img', f)).isFile()).sort();

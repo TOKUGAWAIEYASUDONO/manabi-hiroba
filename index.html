@@ -1014,14 +1014,14 @@ body[data-v=host] .wrap{max-width:none;padding:0}
 <script src="data/cooplib.js?v=a05f730a"></script>
 <!-- 単元ごとの問題の型（単元から出題） -->
 <script src="data/gen/core.js?v=bceaee0a"></script>
-<script>window.RIKA_PUBLIC=false;</script>
-<script>if(window.RIKA_PUBLIC) document.write('<script src="data/gen/rika.js?v=bb510f34"><\/script>');</script>
+<script>window.RIKA_PUBLIC=true;</script>
+<script>if(window.RIKA_PUBLIC) document.write('<script src="data/gen/rika.js?v=822f5269"><\/script>');</script>
 <script src="data/gen/other.js?v=0614ebf8"></script>
 <script src="data/gen/sansu-12.js?v=e835c597"></script>
 <script src="data/gen/sansu-34.js?v=dfac98cd"></script>
 <script src="data/gen/sansu-56.js?v=d0024b89"></script>
 <script src="data/gen/textbook-extra.js?v=b2d3f58f"></script>
-<script src="data/units.js?v=6478c0c0"></script>
+<script src="data/units.js?v=bf456375"></script>
 <script src="data/collection.js?v=d7b5fbb7"></script>
 <script>
 /* ================= 画面の文言（1つの表） =================
@@ -1739,7 +1739,7 @@ function openGame(x,g0){
   go(x.id==="kuku"||x.id==="kencho"?`#setup?game=${x.id}&g=${g}`:`#play?game=${x.id}&g=${g}&t=60`);
 }
 const SUBJ_ORDER=["math","jp","soc",...(window.RIKA_PUBLIC?["rika"]:[]),"eng"], MEDAL_ICO=["🥉","🥈","🥇"];
-const RIKA_WARNING="理科《りか》は AI が作《つく》った問題《もんだい》です。先生《せんせい》の確認《かくにん》はまだです。おかしな問題《もんだい》は、先生《せんせい》に知《し》らせてね。";
+const RIKA_WARNING="理科《りか》は AI が作《つく》り、運営者《うんえいしゃ》が 全問《ぜんもん》を 確認《かくにん》しました。先生《せんせい》の 確認《かくにん》は まだです。おかしいと 思《おも》ったら「この もんだい、おかしい？」から 知《し》らせてね。";
 const rikaWarning=()=>`<p class="rika-warning">${RIKA_WARNING}</p>`;
 const hasRika=ids=>window.RIKA_PUBLIC&&ids.some(id=>UBY[id]&&UBY[id].subj==="rika");
 const stampsHtml=m=>MEDAL_ICO.map((e,i)=>m>i?msvg(i+1,"st on"):msvg(0,"st")).join("");

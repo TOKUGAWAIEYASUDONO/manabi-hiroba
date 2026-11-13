@@ -469,6 +469,6 @@
       '月の光って見える側':'月のどの側が光って見える？'
     };
     if(exactQuestions[key]) q=G.ruby(exactQuestions[key]);
-    return { q, stem: lead, a: row[1], ans: 'choice4', choices: r.shuffle(row.slice(1)), reviewed: false, src: p.id + '-' + i };
+    return { q, stem: lead, a: row[1], ans: 'choice4', choices: r.shuffle(row.slice(1)), reviewed: true, src: p.id + '-' + i };
   };
 })(window.MH_GEN);

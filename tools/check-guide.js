@@ -17,6 +17,13 @@ const expected = new Set(["index.html", "custom.html", "about.html"]);
 for (const u of UN.UNITS) expected.add(pageName(u.g, u.subj));
 const pageHtml = {};
 for (const f of expected) { const s = read(path.join(gdir, f)); if (s === null) err(`ページがありません: guide/${f}`); else pageHtml[f] = s; }
+if (rikaPublic) {
+  for (let g = 3; g <= 6; g++) {
+    const f = `g${g}-rika.html`;
+    if (!pageHtml[f] || !pageHtml[f].includes('運営者が全問を確認しました')) err(`公開中の理科ページが不正: ${f}`);
+    if (!pageHtml['index.html']?.includes(f)) err(`入口に理科がありません: ${f}`);
+  }
+}
 for (const f of fs.existsSync(gdir) ? fs.readdirSync(gdir) : []) if (f.endsWith(".html") && !expected.has(f) && !/^g[3-6]-rika\.html$/.test(f)) err(`想定外のページ: guide/${f}`);
 
 const idsOf = html => new Set([...html.matchAll(/\sid="([^"]+)"/g)].map(m => m[1]));

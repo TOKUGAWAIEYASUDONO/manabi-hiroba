@@ -29,7 +29,7 @@ for (const u of units) {
   for (const [answer, n] of answerCounts) if (n > 2) errors.push(`${u.id}: 同じ答え「${answer}」が${n}件`);
   for (let i = 0; i < rows.length * 2; i++) {
     const q = ctx.window.MH_UNITS.make(u, `rika-check-${i}`);
-    if (q.reviewed !== false || q.ans !== 'choice4' || q.choices.length !== 4 || !q.choices.includes(q.a)) errors.push(`${u.id}: 生成結果が不正`);
+    if (q.reviewed !== true || q.ans !== 'choice4' || q.choices.length !== 4 || !q.choices.includes(q.a)) errors.push(`${u.id}: 生成結果が不正`);
     if (/はは？|がが|をを|では？$|何というかは？|[はをでにと]は？$/.test(q.q)) errors.push(`${u.id}: 不自然な問題文「${q.q}」`);
     const answer = q.a.replace(/《[^》]*》/g, '');
     if (/こと\s*どう\s*なる？$|することは\s*どう\s*なる？$/.test(q.q)) errors.push(`${u.id}: 崩れた問い「${q.q}」`);

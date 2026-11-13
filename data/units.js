@@ -283,7 +283,7 @@ window.MH_UNITS = (function () {
     const read = u.subj === 'rika' && u.g >= 3 && u.g <= 6 ? G.rikaRuby : rb;
     const out = { unit: u.id, subj: u.subj, g: u.g, q: rw.includes("q") ? it.q : read(it.q), a: read(String(it.a)), choices: it.choices.map(c => read(String(c))), ans, val: canon(ans, plain(it.a)) };
       for (const k of ["tag", "hissan", "src", "picture"]) if (it[k]) out[k] = it[k];
-      if (it.reviewed === false) out.reviewed = false;
+      if (typeof it.reviewed === 'boolean') out.reviewed = it.reviewed;
     if (it.stem) out.stem = read(it.stem);
     return out;
   }
