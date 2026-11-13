@@ -13,15 +13,16 @@ let errors = [];
 if (units.length !== 40) errors.push(`理科単元 ${units.length} 件（40件の予定）`);
 for (const u of units) {
   const rows = bank[u.id];
-  const minimum = u.g <= 4 ? 8 : 4;
+  const minimum = 8;
   if (!rows || rows.length < minimum) { errors.push(`${u.id}: 知識行が${minimum}件未満`); continue; }
   for (const row of rows) if (row.length !== 5 || new Set(row.slice(1)).size !== 4) errors.push(`${u.id}: 4択の重複または不足`);
   for (let i = 0; i < rows.length * 2; i++) {
     const q = ctx.window.MH_UNITS.make(u, `rika-check-${i}`);
     if (q.reviewed !== false || q.ans !== 'choice4' || q.choices.length !== 4 || !q.choices.includes(q.a)) errors.push(`${u.id}: 生成結果が不正`);
+    if (/はは？|がが|をを|では？$|何というかは？|[はをでにと]は？$/.test(q.q)) errors.push(`${u.id}: 不自然な問題文「${q.q}」`);
   }
 }
-console.log(`理科 ${units.length}単元・3・4年は各8知識以上／エラー ${errors.length}件`);
+console.log(`理科 ${units.length}単元・全学年各8知識以上／エラー ${errors.length}件`);
 for (const e of errors) console.error(e);
 if (errors.length) process.exit(1);
 
