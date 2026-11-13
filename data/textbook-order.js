@@ -697,5 +697,6 @@ var TEXTBOOK_ORDER = {
         { t: "6年間のまとめ", u: [], term: "3学期" }
       ]
     } }
-  }
+  },
+  rika: { kyoiku: { name: "Kyoiku Shuppan", book: "Mirai o Hiraku Shogaku Rika", src: "https://www.kyoiku-shuppan.co.jp/r6shou/rika/files/DL11_rika.pdf", note: "Only the April first unit of grade 4 was confirmed; later units are not yet mapped.", g: { 4: [ { t: "\u5b63\u7bc0\u3068\u751f\u304d\u7269", u: ["r4-season"], term: "4\u6708" } ] } } }
 };

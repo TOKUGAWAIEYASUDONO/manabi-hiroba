@@ -85,7 +85,7 @@ const idSeen = new Set();
 const patternCounts = { estimate: 0, estimateMismatch: 0, estimateWrong: 0, time: 0, timeCross: 0, timeAfter: 0, mental: 0, mentalMinus: 0, place: new Set(), placeZero: 0, ordinal: new Set(), addMinus: 0 };
 for (const u of units) {
   if (idSeen.has(u.id)) err(u.id, "IDが重複している"); idSeen.add(u.id);
-  if (!/^[mjse]\d-[a-z0-9-]+$/.test(u.id)) err(u.id, "IDの形式がおかしい");
+  if (!/^[mjser]\d-[a-z0-9-]+$/.test(u.id)) err(u.id, "IDの形式がおかしい");
   if (!(u.g >= 1 && u.g <= 6)) err(u.id, "学年がおかしい");
   if (u.subj === "sansu" && !/^[ABCD]$/.test(u.area)) err(u.id, "領域(area)が A〜D でない");
   if (!u.base) err(u.id, "学習指導要領の根拠メモ(base)が空");

@@ -12,8 +12,8 @@ const gain = r => r.paid + r.deferred;
 t("単元の ID 表：units.js の ready な単元と同じ（新しい単元が増えたら表に足すこと）", () => {
   const root = path.join(__dirname, "..");
   const ctx = { console }; ctx.window = ctx; vm.createContext(ctx);
-  for (const f of ["data/questions.js", "data/calc.js", "data/choices.js", "data/quizlib.js", "data/gen/core.js", "data/gen/other.js", "data/gen/sansu-12.js", "data/gen/sansu-34.js", "data/gen/sansu-56.js", "data/units.js"]) vm.runInContext(fs.readFileSync(path.join(root, f), "utf8"), ctx, { filename: f });
-  const ready = ctx.MH_UNITS.UNITS.filter(u => u.status === "ready" && u.gen), SJ = { sansu: "m", kokugo: "j", shakai: "s", eigo: "e" };
+  for (const f of ["data/questions.js", "data/calc.js", "data/choices.js", "data/quizlib.js", "data/gen/core.js", "data/gen/other.js", "data/gen/sansu-12.js", "data/gen/sansu-34.js", "data/gen/sansu-56.js", "data/gen/rika.js", "data/units.js"]) vm.runInContext(fs.readFileSync(path.join(root, f), "utf8"), ctx, { filename: f });
+  const ready = ctx.MH_UNITS.UNITS.filter(u => u.status === "ready" && u.gen), SJ = { sansu: "m", kokugo: "j", shakai: "s", eigo: "e", rika: "r" };
   assert.strictEqual(new Set(C.UNIT_IDS).size, C.UNIT_IDS.length);
   assert.deepStrictEqual([...ready.map(u => u.id)].sort(), [...C.UNIT_IDS].sort());
   const GFIX = { "m6-hayasa": 5, "m5-bunsu-int": 6 };
@@ -299,7 +299,7 @@ t("バックアップ：たんけんメモも往復する。メモが無けれ�
   const S = C.fresh(D); S.u["m3-amari"] = [2, 0, D]; S.tk.n = 3;
   const plain = C.hrMake(S); S.mo = ["school", "clock"]; S.mu = ["m3-amari", C.UNIT_IDS[115]];
   const withMemo = C.hrMake(S), r = C.hrParse(withMemo);
-  assert.strictEqual(withMemo.replace(/-/g, "").length - plain.replace(/-/g, "").length, 32);
+  assert.strictEqual(withMemo.replace(/-/g, "").length - plain.replace(/-/g, "").length, 40);
   assert.deepStrictEqual(r.mo.slice().sort(), ["clock", "school"]); assert.deepStrictEqual(r.mu.slice().sort(), ["m3-amari", C.UNIT_IDS[115]].sort());
   const L = C.fresh(D + 3); C.hrMerge(L, r, D + 3); assert.strictEqual(L.mo.length, 2); assert.strictEqual(L.mu.length, 2); assert.strictEqual(L.tk.n, 0);
   C.hrMerge(L, r, D + 3); assert.strictEqual(L.mo.length, 2);                                // くり返しても増えない

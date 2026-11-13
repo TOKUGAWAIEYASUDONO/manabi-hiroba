@@ -175,6 +175,55 @@ window.MH_UNITS = (function () {
   for (const [k, cs, nm] of EG) U(`e5-${k}`, "eigo", 5, "-", "その他", `英単語 5年・${nm}`, "eigo", { g: 5, cs }, { base: "外国語〔知識及び技能〕語彙（小学校5年）", note: `${nm}の 英単語`, ex: "英語を 見て、 日本語の 意味を えらぼう。\n声に 出して 読むと おぼえやすいよ。" });
   U("e6-all", "eigo", 6, "-", "その他", "英単語 6年", "eigo", { g: 6 }, { base: "外国語〔知識及び技能〕語彙（小学校6年）", note: "6年の 英単語", ex: "英語を 見て、 日本語の 意味を えらぼう。" });
 
+  /* Rika grades 3-6 */
+  const RT = [
+    "こん虫の体", "植物の育ち方", "太陽とかげ", "光と日光", "音のせいしつ", "風とゴムの力", "じしゃくのせいしつ", "電気の通り道", "物の重さ", "地面と太陽",
+    "季節と生き物", "人の体と運動", "電流のはたらき", "とじこめた空気と水", "水のすがた", "物の体積と温度", "物のあたたまり方", "水のゆくえ", "月と星", "雨水と地面",
+    "種子の発芽", "植物の成長", "花から実へ", "魚と人のたんじょう", "天気の変化", "台風と天気", "流れる水のはたらき", "物のとけ方", "ふりこの運動", "電磁石のせいしつ",
+    "物の燃え方", "人や動物の体", "植物の体", "生物のつながり", "水よう液のせいしつ", "水よう液と金ぞく", "てこのはたらき", "電気の利用", "大地のつくり", "月と太陽"
+  ];
+  U("r3-living", "rika", 3, "B", RT[0], RT[0], "rika", { id: "r3-living" }, { base: "Rika grade 3 B", note: "ことばで たしかめよう。", ex: "ただしいものを えらぼう。" });
+  U("r3-plants", "rika", 3, "B", RT[1], RT[1], "rika", { id: "r3-plants" }, { base: "Rika grade 3 B", note: "ことばで たしかめよう。", ex: "ただしいものを えらぼう。" });
+  U("r3-sun", "rika", 3, "B", RT[2], RT[2], "rika", { id: "r3-sun" }, { base: "Rika grade 3 B", note: "ことばで たしかめよう。", ex: "ただしいものを えらぼう。" });
+  U("r3-light", "rika", 3, "A", RT[3], RT[3], "rika", { id: "r3-light" }, { base: "Rika grade 3 A", note: "ことばで たしかめよう。", ex: "ただしいものを えらぼう。" });
+  U("r3-sound", "rika", 3, "A", RT[4], RT[4], "rika", { id: "r3-sound" }, { base: "Rika grade 3 A", note: "ことばで たしかめよう。", ex: "ただしいものを えらぼう。" });
+  U("r3-wind", "rika", 3, "A", RT[5], RT[5], "rika", { id: "r3-wind" }, { base: "Rika grade 3 A", note: "ことばで たしかめよう。", ex: "ただしいものを えらぼう。" });
+  U("r3-magnet", "rika", 3, "A", RT[6], RT[6], "rika", { id: "r3-magnet" }, { base: "Rika grade 3 A", note: "ことばで たしかめよう。", ex: "ただしいものを えらぼう。" });
+  U("r3-electric", "rika", 3, "A", RT[7], RT[7], "rika", { id: "r3-electric" }, { base: "Rika grade 3 A", note: "ことばで たしかめよう。", ex: "ただしいものを えらぼう。" });
+  U("r3-weight", "rika", 3, "A", RT[8], RT[8], "rika", { id: "r3-weight" }, { base: "Rika grade 3 A", note: "ことばで たしかめよう。", ex: "ただしいものを えらぼう。" });
+  U("r3-earth", "rika", 3, "B", RT[9], RT[9], "rika", { id: "r3-earth" }, { base: "Rika grade 3 B", note: "ことばで たしかめよう。", ex: "ただしいものを えらぼう。" });
+  U("r4-season", "rika", 4, "B", RT[10], RT[10], "rika", { id: "r4-season" }, { base: "Rika grade 4 B", note: "ことばで たしかめよう。", ex: "ただしいものを えらぼう。" });
+  U("r4-body", "rika", 4, "B", RT[11], RT[11], "rika", { id: "r4-body" }, { base: "Rika grade 4 B", note: "ことばで たしかめよう。", ex: "ただしいものを えらぼう。" });
+  U("r4-electric", "rika", 4, "A", RT[12], RT[12], "rika", { id: "r4-electric" }, { base: "Rika grade 4 A", note: "ことばで たしかめよう。", ex: "ただしいものを えらぼう。" });
+  U("r4-air", "rika", 4, "A", RT[13], RT[13], "rika", { id: "r4-air" }, { base: "Rika grade 4 A", note: "ことばで たしかめよう。", ex: "ただしいものを えらぼう。" });
+  U("r4-water", "rika", 4, "A", RT[14], RT[14], "rika", { id: "r4-water" }, { base: "Rika grade 4 A", note: "ことばで たしかめよう。", ex: "ただしいものを えらぼう。" });
+  U("r4-metal", "rika", 4, "A", RT[15], RT[15], "rika", { id: "r4-metal" }, { base: "Rika grade 4 A", note: "ことばで たしかめよう。", ex: "ただしいものを えらぼう。" });
+  U("r4-heat", "rika", 4, "A", RT[16], RT[16], "rika", { id: "r4-heat" }, { base: "Rika grade 4 A", note: "ことばで たしかめよう。", ex: "ただしいものを えらぼう。" });
+  U("r4-weather", "rika", 4, "B", RT[17], RT[17], "rika", { id: "r4-weather" }, { base: "Rika grade 4 B", note: "ことばで たしかめよう。", ex: "ただしいものを えらぼう。" });
+  U("r4-moon", "rika", 4, "B", RT[18], RT[18], "rika", { id: "r4-moon" }, { base: "Rika grade 4 B", note: "ことばで たしかめよう。", ex: "ただしいものを えらぼう。" });
+  U("r4-land", "rika", 4, "B", RT[19], RT[19], "rika", { id: "r4-land" }, { base: "Rika grade 4 B", note: "ことばで たしかめよう。", ex: "ただしいものを えらぼう。" });
+  U("r5-seed", "rika", 5, "B", RT[20], RT[20], "rika", { id: "r5-seed" }, { base: "Rika grade 5 B", note: "ことばで たしかめよう。", ex: "ただしいものを えらぼう。" });
+  U("r5-growth", "rika", 5, "B", RT[21], RT[21], "rika", { id: "r5-growth" }, { base: "Rika grade 5 B", note: "ことばで たしかめよう。", ex: "ただしいものを えらぼう。" });
+  U("r5-flower", "rika", 5, "B", RT[22], RT[22], "rika", { id: "r5-flower" }, { base: "Rika grade 5 B", note: "ことばで たしかめよう。", ex: "ただしいものを えらぼう。" });
+  U("r5-animal", "rika", 5, "B", RT[23], RT[23], "rika", { id: "r5-animal" }, { base: "Rika grade 5 B", note: "ことばで たしかめよう。", ex: "ただしいものを えらぼう。" });
+  U("r5-cloud", "rika", 5, "B", RT[24], RT[24], "rika", { id: "r5-cloud" }, { base: "Rika grade 5 B", note: "ことばで たしかめよう。", ex: "ただしいものを えらぼう。" });
+  U("r5-typhoon", "rika", 5, "B", RT[25], RT[25], "rika", { id: "r5-typhoon" }, { base: "Rika grade 5 B", note: "ことばで たしかめよう。", ex: "ただしいものを えらぼう。" });
+  U("r5-river", "rika", 5, "B", RT[26], RT[26], "rika", { id: "r5-river" }, { base: "Rika grade 5 B", note: "ことばで たしかめよう。", ex: "ただしいものを えらぼう。" });
+  U("r5-solubility", "rika", 5, "A", RT[27], RT[27], "rika", { id: "r5-solubility" }, { base: "Rika grade 5 A", note: "ことばで たしかめよう。", ex: "ただしいものを えらぼう。" });
+  U("r5-pendulum", "rika", 5, "A", RT[28], RT[28], "rika", { id: "r5-pendulum" }, { base: "Rika grade 5 A", note: "ことばで たしかめよう。", ex: "ただしいものを えらぼう。" });
+  U("r5-electromagnet", "rika", 5, "A", RT[29], RT[29], "rika", { id: "r5-electromagnet" }, { base: "Rika grade 5 A", note: "ことばで たしかめよう。", ex: "ただしいものを えらぼう。" });
+  U("r6-burn", "rika", 6, "A", RT[30], RT[30], "rika", { id: "r6-burn" }, { base: "Rika grade 6 A", note: "ことばで たしかめよう。", ex: "ただしいものを えらぼう。" });
+  U("r6-body", "rika", 6, "B", RT[31], RT[31], "rika", { id: "r6-body" }, { base: "Rika grade 6 B", note: "ことばで たしかめよう。", ex: "ただしいものを えらぼう。" });
+  U("r6-plant", "rika", 6, "B", RT[32], RT[32], "rika", { id: "r6-plant" }, { base: "Rika grade 6 B", note: "ことばで たしかめよう。", ex: "ただしいものを えらぼう。" });
+  U("r6-chain", "rika", 6, "B", RT[33], RT[33], "rika", { id: "r6-chain" }, { base: "Rika grade 6 B", note: "ことばで たしかめよう。", ex: "ただしいものを えらぼう。" });
+  U("r6-water", "rika", 6, "A", RT[34], RT[34], "rika", { id: "r6-water" }, { base: "Rika grade 6 A", note: "ことばで たしかめよう。", ex: "ただしいものを えらぼう。" });
+  U("r6-gas", "rika", 6, "A", RT[35], RT[35], "rika", { id: "r6-gas" }, { base: "Rika grade 6 A", note: "ことばで たしかめよう。", ex: "ただしいものを えらぼう。" });
+  U("r6-lever", "rika", 6, "A", RT[36], RT[36], "rika", { id: "r6-lever" }, { base: "Rika grade 6 A", note: "ことばで たしかめよう。", ex: "ただしいものを えらぼう。" });
+  U("r6-electric", "rika", 6, "A", RT[37], RT[37], "rika", { id: "r6-electric" }, { base: "Rika grade 6 A", note: "ことばで たしかめよう。", ex: "ただしいものを えらぼう。" });
+  U("r6-land", "rika", 6, "B", RT[38], RT[38], "rika", { id: "r6-land" }, { base: "Rika grade 6 B", note: "ことばで たしかめよう。", ex: "ただしいものを えらぼう。" });
+  U("r6-moon", "rika", 6, "B", RT[39], RT[39], "rika", { id: "r6-moon" }, { base: "Rika grade 6 B", note: "ことばで たしかめよう。", ex: "ただしいものを えらぼう。" });
+
+
   const byId = {}; list.forEach(u => { byId[u.id] = u; });
 
   /* ---------- 答え方 ---------- */
@@ -230,7 +279,8 @@ window.MH_UNITS = (function () {
     if (!it) throw err;
     const ans = it.ans || (u.params && u.params.ans) || inferAns(it.a), rw = it.raw || [];       // raw = ふりがなを付けない欄（漢字よみの「問われている漢字」）
     const out = { unit: u.id, subj: u.subj, g: u.g, q: rw.includes("q") ? it.q : rb(it.q), a: rb(String(it.a)), choices: it.choices.map(c => rb(String(c))), ans, val: canon(ans, plain(it.a)) };
-    for (const k of ["tag", "hissan", "src", "picture"]) if (it[k]) out[k] = it[k];
+      for (const k of ["tag", "hissan", "src", "picture"]) if (it[k]) out[k] = it[k];
+      if (it.reviewed === false) out.reviewed = false;
     if (it.stem) out.stem = rb(it.stem);
     return out;
   }

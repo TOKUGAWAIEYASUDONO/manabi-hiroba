@@ -35,7 +35,8 @@
     "s4-kencho-sk","s4-kencho-ky","s4-kencho-all","e5-food","e5-animal","e5-action","e5-place","e5-daymonth",
     "e5-color","e5-school","e6-all","m1-tokei-fun","m2-keta4",
     "m1-nanbanme","m1-nagasa-kurabe","m1-kasa-kurabe","m2-keisan-kufu","m3-jikan-keisan",
-    "m3-anzan","m3-ookii-wari","m4-wari-mitsumori","m5-seisu-shosu","m6-oyoso-menseki"
+    "m3-anzan","m3-ookii-wari","m4-wari-mitsumori","m5-seisu-shosu","m6-oyoso-menseki",
+    "r3-living","r3-plants","r3-sun","r3-light","r3-sound","r3-wind","r3-magnet","r3-electric","r3-weight","r3-earth","r4-season","r4-body","r4-electric","r4-air","r4-water","r4-metal","r4-heat","r4-weather","r4-moon","r4-land","r5-seed","r5-growth","r5-flower","r5-animal","r5-cloud","r5-typhoon","r5-river","r5-solubility","r5-pendulum","r5-electromagnet","r6-burn","r6-body","r6-plant","r6-chain","r6-water","r6-gas","r6-lever","r6-electric","r6-land","r6-moon"
   ];
   const IDX = {}; UNIT_IDS.forEach((id, i) => { IDX[id] = i; });
   const GRADE_FIX = { "m6-hayasa": 5, "m5-bunsu-int": 6 }; /* 現行教科書に合わせて学年を直した単元（IDは互換のため据え置き） */
