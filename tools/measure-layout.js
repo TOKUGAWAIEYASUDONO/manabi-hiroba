@@ -37,11 +37,26 @@ async function main(){
    if(value.choicesBottom>height){console.error(`${width}x${height}/${name}: 回答欄の下端 ${value.choicesBottom} が画面の高さ ${height} を超えています`);process.exitCode=1;overflow++}
   }
  }
+ // ホームと単元えらび：ページの高さと横はみ出しを測る（PC 1366×768 のホームは、スクロールなしで1画面に収める）
+ const pageCases=[...[1,3,6].flatMap(g=>[[`ホーム ${g}年`,'#home',g],[`単元えらび（児童） ${g}年`,'#units?kid=1',g]]),['単元えらび（先生）','#units',0]];
+ for(const [width,height] of [[375,667],[768,1024],[1366,768]]){
+  await send('Emulation.setDeviceMetricsOverride',{width,height,deviceScaleFactor:1,mobile:width<500});
+  for(const [name,hash,g] of pageCases){
+   await send('Page.navigate',{url:'about:blank'});await send('Page.navigate',{url:`http://127.0.0.1:${httpPort}/index.html?r=${Date.now()}`});await sleep(500);
+   await send('Runtime.evaluate',{expression:`localStorage.clear();sessionStorage.clear();${g?`localStorage.setItem('mh_ui',JSON.stringify({grade:${g},subj:'all'}))`:''};1`});
+   await send('Page.navigate',{url:'about:blank'});await send('Page.navigate',{url:`http://127.0.0.1:${httpPort}/index.html?r=${Date.now()}${hash}`});await sleep(1500);
+   const r=await send('Runtime.evaluate',{expression:`(()=>{const e=document.documentElement;return {pageHeight:e.scrollHeight,overflowX:e.scrollWidth>innerWidth+16?e.scrollWidth-innerWidth:0,oneMin:/1分(で|あ)そ|1ぷん(で|あ)そ/.test(document.body.innerText)}})()`,returnByValue:true});
+   const v=r.result.value;out.measurements[`${width}x${height}/${name}`]={pageHeight:v.pageHeight};
+   if(v.oneMin){console.error(`${width}x${height}/${name}: 「1分であそぶ」が残っています`);process.exitCode=1;overflow++}
+   if(v.overflowX){console.error(`${width}x${height}/${name}: 横にはみ出しています（${v.overflowX}px）`);process.exitCode=1;overflow++}
+   if(width===1366&&name.startsWith('ホーム')&&v.pageHeight>height){console.error(`${width}x${height}/${name}: PC のホームが1画面に収まりません（高さ ${v.pageHeight} > ${height}）`);process.exitCode=1;overflow++}
+  }
+ }
  ws.close();
  if(overflow)throw Error(`回答欄が画面の下にはみ出す: ${overflow} 件`);
  if(process.argv.includes('--write')){fs.writeFileSync(baseline,JSON.stringify(out,null,2)+'\n');console.log('基準を作成:',out.indexSha256);return}
  const old=JSON.parse(fs.readFileSync(baseline,'utf8'));let bad=0;
- for(const [key,v] of Object.entries(out.measurements)){const b=old.measurements[key];if(!b||Math.abs(v.fontSize-b.fontSize)>0.1||Math.abs(v.choicesBottom-b.choicesBottom)>1){console.error(key,'基準',b,'現在',v);bad++}}
+ for(const [key,v] of Object.entries(out.measurements)){const b=old.measurements[key];if(!b||(v.pageHeight!==undefined?Math.abs(v.pageHeight-b.pageHeight)>2:(Math.abs(v.fontSize-b.fontSize)>0.1||Math.abs(v.choicesBottom-b.choicesBottom)>1))){console.error(key,'基準',b,'現在',v);bad++}}
  if(bad)throw Error(`レイアウト ${bad} 件が基準からずれました`);
  console.log(`レイアウト ${Object.keys(out.measurements).length} 件一致（基準 index.html: ${old.indexSha256}）`);
 }
