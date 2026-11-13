@@ -39,6 +39,8 @@ if(!window.RIKA_PUBLIC){
 }
 for(let g=1;g<=6;g++) {
   vm.runInContext(`ui.grade=${g}; renderHome()`,ctx,{filename:`home-${g}`});
+  if(vm.runInContext('app.innerHTML',ctx).includes('id="quick"')) throw Error(`quick play remains on home: ${g}`);
+  if(!vm.runInContext('app.innerHTML',ctx).includes('class="zones"')) throw Error(`subject zones missing: ${g}`);
   if(window.RIKA_PUBLIC&&g>=3&&!vm.runInContext('app.innerHTML',ctx).includes('先生《せんせい》の確認《かくにん》はまだ')) throw Error(`rika home warning missing: ${g}`);
 }
 for(const [name,expr] of [['units','renderUnits(new URLSearchParams())'],['teacher','renderTeacher(new URLSearchParams())'],['practice',`renderUnitLink("#u=${window.RIKA_PUBLIC?'r3-living':'m3-amari'}&n=1")`]]) {

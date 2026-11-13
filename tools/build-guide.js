@@ -266,6 +266,7 @@ function aboutPage() {
   h += header([["まなびひろば", "../index.html"], ["学年・単元から さがす", "index.html"], ["保護者・学校向け"]]);
   h += `<main class="wrap about"><h1>保護者・学校向け<span class="h1sub">運営とデータの扱い</span></h1>
 <p>まなびひろばは、個人が開発・運営する無料の学習ゲームです。登録も広告もありません。お問い合わせ・不具合の報告は <a href="https://github.com/TOKUGAWAIEYASUDONO/manabi-hiroba/issues">GitHub リポジトリの Issues</a> へお願いします。公開投稿なので、児童の個人情報は書かないでください。</p>
+<p>ホームでは学年に合った教科・単元を選んで遊べます。授業リンク・課題リンクからも、先生が指定した内容に直接進めます。</p>
 ${SUBJ.rika ? '<p><strong>理科の問題は AI が作成し、先生による確認はまだです。</strong>確認日は未定です。内容の誤りは上記の Issues にお知らせください。児童の個人情報は書かないでください。</p>' : ''}
 <h2>集めない物・端末に残る物</h2><p>このサイトの運営者は名前、メールアドレス、アカウント、位置情報、成績を収集しません。端末には学年・遊びの記録・どんぐり・ふりがな等の設定が保存されます。主な保存キー：<code>mh_setup</code>、<code>mh_best</code>、<code>mh_col</code>、<code>mh_colcfg</code>、<code>mh_fg</code>、<code>mh_ui</code>、<code>mh_sound</code>、<code>mh_quiz_sets</code>、<code>mh_upick</code>、<code>mh_troom</code>。対戦中の一時情報：<code>mh_net</code>、<code>mh_host</code>、<code>mh_name_s</code>。授業リンクの固定には、このタブだけに <code>mh_lesson_hash</code> を使います。自分専用の端末と指定した場合だけ <code>mh_name</code> に名前が残ります。共有端末では指定しないでください。記録は端末で遊んだ履歴であり、成績評価には使えません。</p>
 <p>共有画像 <code>vendor/img/og-home.png</code> は 2026-11-13 にサイトの黒板と芽のキャラクターをもとに図形と文字で作った自作画像です。以前の AI 生成画像（実在の人物ではありません）は <code>vendor/img/og-home-v1.png</code> として保管しています。</p>
@@ -367,6 +368,6 @@ const urls = [BASE, BASE + "guide/", ...pages.map(p => BASE + "guide/" + p.file)
 out.set("sitemap.xml", `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${urls.map((u, i) => `  <url><loc>${u}</loc><priority>${i === 0 ? "1.0" : i === 1 ? "0.9" : "0.7"}</priority></url>`).join("\n")}\n</urlset>\n`);
 out.set("robots.txt", `User-agent: *\nAllow: /\n\nSitemap: ${BASE}sitemap.xml\n`);
 fs.mkdirSync(path.join(root, "guide"), { recursive: true });
-for (const [f, s] of out) fs.writeFileSync(path.join(root, f), f.startsWith("guide/") && f.endsWith(".html") ? s.replace(/href="guide\.css(?:\?v=[0-9a-f]{8})?"/g, `href="guide.css?v=${cssVersion}"`) : s, "utf8");
+for (const [f, s] of out) if (process.argv.includes("--guide-only") ? f.startsWith("guide/") : true) fs.writeFileSync(path.join(root, f), f.startsWith("guide/") && f.endsWith(".html") ? s.replace(/href="guide\.css(?:\?v=[0-9a-f]{8})?"/g, `href="guide.css?v=${cssVersion}"`) : s, "utf8");
 // 公開対象外の旧ページはデータとして残す。入口と sitemap には含めない。
 console.log(`guide: 教科ページ${pages.length} + 入口 + custom、単元 ${UNITS.length}（ready ${ready(UNITS).length}）、教科書の並び：${TB ? "あり" : "なし"}`);

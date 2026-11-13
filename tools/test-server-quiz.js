@@ -45,13 +45,13 @@ let n = 0; const t = async (name, fn) => { try { await fn(); n++; console.log("o
     assert.strictEqual((await post("qnext", { code: r.code, hostKey: r.hostKey })).s, 200);     // 次の問題
     assert.strictEqual((await post("qnext", { code: r.code, hostKey: r.hostKey })).s, 200);     // しめきって見せる
     assert.strictEqual((await post("qnext", { code: r.code, hostKey: r.hostKey })).s, 200); assert.strictEqual((await post("qnext", { code: r.code, hostKey: r.hostKey })).s, 200); assert.strictEqual((await post("qnext", { code: r.code, hostKey: r.hostKey })).s, 200);
-    const es = await fetch(`http://127.0.0.1:${PORT}/api/events`, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ code: r.code, hostKey: r.hostKey }) }); const d = JSON.parse(new TextDecoder().decode((await es.body.getReader().read()).value).split("data: ")[1].split("\n")[0]);
+    const es = await fetch(`http://127.0.0.1:${PORT}/api/events`, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ code: r.code, hostKey: r.hostKey }) }); const esReader = es.body.getReader(); const d = JSON.parse(new TextDecoder().decode((await esReader.read()).value).split("data: ")[1].split("\n")[0]);
     assert.strictEqual(d.status, "ended"); assert.strictEqual(d.quiz.phase, "end"); assert.strictEqual(d.quiz.stat.length, 3);
     const pa = d.players.find(p => p.pid === a.pid), pb = d.players.find(p => p.pid === b.pid);
     assert.ok(pa.v > 900 && pa.v <= 1000, "1問目の正解は500〜1000点 " + pa.v); assert.strictEqual(pb.v, 0); assert.strictEqual(pa.rec, "1--"); assert.ok(!("token" in pa));
     assert.strictEqual((await post("qreplay", { code: r.code, hostKey: "bad" })).s, 403);
     assert.strictEqual((await post("qreplay", { code: r.code, hostKey: r.hostKey })).s, 200, "正答率の低い問題だけ、もう一度");
-    es.body.cancel().catch(() => {});
+    await esReader.cancel();
   });
   await t("児童は進行できない・読めるのは自分の部屋のセットだけ", async () => {
     const { r, a } = await mk();
@@ -62,5 +62,7 @@ let n = 0; const t = async (name, fn) => { try { await fn(); n++; console.log("o
     const s = await post("set", { code: m.code, pid: p.pid, token: p.token }); assert.strictEqual(s.s, 200); assert.strictEqual(s.j.qs.length, 2, "たからばこ・すごろくには4択だけ"); assert.ok(s.j.qs.every(q => q.t === "mc"));
   });
   console.log(`\n${n} 件のテストを実行${process.exitCode ? "（失敗あり）" : "：すべて成功"}`);
-  srv.kill(); process.exit(process.exitCode || 0);
-})();
+})().catch(e => { console.error(e); process.exitCode = 1; }).finally(async () => {
+  if (srv.exitCode === null && !srv.killed) srv.kill();
+  if (srv.exitCode === null && !srv.signalCode) await new Promise(resolve => srv.once("exit", resolve));
+});

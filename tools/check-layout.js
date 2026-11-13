@@ -6,6 +6,7 @@ const path = require('node:path');
 const cp = require('node:child_process');
 const root = path.resolve(__dirname, '..');
 const html = fs.readFileSync(path.join(root, 'index.html'), 'utf8');
+assert.doesNotMatch(html, /id="quick"|home\.quick/, 'ホームの「1分であそぶ」は出さない');
 const main = cp.execFileSync('git', ['show', 'main:index.html'], {cwd: root, encoding: 'utf8'});
 const rules = source => [...source.matchAll(/([^{}]+)\{([^{}]*)\}/g)]
   .filter(([, , body]) => /(?:^|;)\s*font-size\s*:/.test(body))

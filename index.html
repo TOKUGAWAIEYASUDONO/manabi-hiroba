@@ -33,7 +33,7 @@
   --eng:#7a4cc8;        /* 英語・紫（白い文字 5.7:1） */
   --btl:#8a5a2b;        /* バトル・木（白い文字 5.9:1） */
   --go:#1b7a4b;         /* 進む・決めるボタンの緑（白い文字 5.3:1） */
-  --sun:#ff9422;        /* 「1分であそぶ」（濃い文字 6.8:1） */
+  --sun:#ff9422;
   --wood:#c9a066;       /* ボードのふち */
   --main:var(--go); --main2:#e1f0e3; --accent:#ff9422;
   --a:var(--math); --b:var(--jp); --c:var(--soc); --d:#1b7a4b;
@@ -59,7 +59,7 @@ button,input,select,textarea{font-family:inherit}
 button{color:var(--ink);font-weight:700}
 .ic{width:1.15em;height:1.15em;fill:none;stroke:currentColor;stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round;vertical-align:-.18em;flex:none}
 /* ===== 押せる物：太いふち＋下影。押すと沈む。押せない物には影を付けない ===== */
-.btn,.pill,.back,.hbtn,.tile,.choice,.pad button,.gbtn,.mode,.box,.spk,.qm,.hero,.mcard .bad{
+.btn,.pill,.back,.hbtn,.tile,.choice,.pad button,.gbtn,.mode,.box,.spk,.qm,.mcard .bad{
   border:3px solid var(--edge);box-shadow:0 4px 0 var(--edge);cursor:pointer;
   transition:transform .06s ease-out,box-shadow .06s ease-out;-webkit-tap-highlight-color:transparent}
 .btn:active:not(:disabled),.pill:active:not(:disabled),.back:active:not(:disabled),.hbtn:active:not(:disabled),.tile:active:not(:disabled),.choice:active:not(:disabled),
@@ -98,15 +98,6 @@ h2{font-size:20px;margin:18px 0 8px}
 .err{color:var(--bad);font-weight:700;min-height:24px}
 /* ===== ホーム ===== */
 .home{display:flex;flex-direction:column;gap:12px;flex:1}
-.hero{width:100%;background:var(--sun);color:var(--ink);border-radius:24px;padding:12px 20px;display:flex;align-items:center;justify-content:center;gap:16px;
-  border-width:4px;box-shadow:0 7px 0 var(--edge);text-align:left;transition:transform .06s ease-out,box-shadow .06s ease-out}
-.hero:active{transform:translateY(5px);box-shadow:0 2px 0 var(--edge)}
-.hero .ic{width:52px;height:52px;stroke-width:2.2;fill:#fff;flex:none}
-.hero .ht{font-size:clamp(30px,6vw,44px);font-weight:800;line-height:1.1;display:block;letter-spacing:.04em}
-.hero .ht{white-space:nowrap}
-@media (max-width:430px){.hero{gap:10px;padding:12px 14px}.hero .ic{width:36px;height:36px}.hero .mb{width:46px;height:52px}.hero .ht{font-size:clamp(24px,7.4vw,32px);letter-spacing:.02em}.hero .hn{font-size:13px}}
-.hero .hn{display:block;font-size:14px;font-weight:400;margin-top:4px}
-.hero .mb{width:56px;height:63px}
 .guide{display:flex;align-items:center;gap:10px;justify-content:center;margin:-2px 0}
 .guide .mb{width:60px;height:68px}
 .guide span.say{background:#fff;border:3px solid var(--edge);border-radius:16px;padding:6px 14px;font-weight:700;font-size:18px;position:relative}
@@ -147,7 +138,6 @@ h2{font-size:20px;margin:18px 0 8px}
 .home.easy .tile .tt{font-size:22px;line-height:1.25}
 .home.easy .tile .tstat,.home.easy .tile .tnext{font-size:16px}
 .home.easy .zone h2{font-size:24px}
-.home.easy .hero{padding:18px 20px}
 .bottom{display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:center;margin-top:auto;padding-top:4px}
 .bottom .hbtn{font-size:15px}
 .gdlink{display:block;width:100%;text-align:center;font-size:14px;color:var(--ink);text-decoration:underline;padding:8px 0}
@@ -546,7 +536,7 @@ ruby{ruby-position:over}
 rt{font-size:.5em;line-height:1;font-weight:400;letter-spacing:0}
 body.nofg rt{display:none}
 body:not(.nofg) :is(p,div,span,b,button,h1,h2,h3,td,th,label,summary,li):has(>ruby){line-height:1.75}
-body:not(.nofg) .q .big:has(ruby),body:not(.nofg) .hero .ht:has(ruby){line-height:1.5}
+ body:not(.nofg) .q .big:has(ruby){line-height:1.5}
 .q .small:has(ruby){margin-top:16px}
 .ubk h4{margin:8px 0 2px}
 .hbtn.fgb{font-size:14px;gap:4px;flex-direction:column;line-height:1.05;padding:0 8px}
@@ -867,7 +857,7 @@ body[data-v=host] .wrap{max-width:none;padding:0}
   .home .zone{grid-column:auto!important}.home .zones .s-btl{grid-column:auto!important}
   .home .zones .s-btl .tiles{grid-template-columns:1fr!important}
   .home .zone{padding:8px 10px}.home .zone h2{margin-bottom:5px}
-  .home .tiles{gap:5px}.home .hero{padding:8px 16px}
+  .home .tiles{gap:5px}
   .up:not(.play){max-width:1366px;display:grid;grid-template-columns:minmax(260px,320px) minmax(0,1fr);gap:8px 16px;align-items:start}
   .up:not(.play)>.topbar,.up:not(.play)>.th2,.up:not(.play)>.note{grid-column:1/-1}
   .up:not(.play)>.ufilters{grid-column:1;grid-row:4;position:sticky;top:8px;max-height:calc(100dvh - 90px);overflow:auto}
@@ -1009,7 +999,7 @@ body[data-v=host] .wrap{max-width:none;padding:0}
 <!-- 単元ごとの問題の型（単元から出題） -->
 <script src="data/gen/core.js?v=bceaee0a"></script>
 <script>window.RIKA_PUBLIC=false;</script>
-<script>if(window.RIKA_PUBLIC) document.write('<script src="data/gen/rika.js?v=3400f7a7"><\/script>');</script>
+<script>if(window.RIKA_PUBLIC) document.write('<script src="data/gen/rika.js?v=a2aa0560"><\/script>');</script>
 <script src="data/gen/other.js?v=0614ebf8"></script>
 <script src="data/gen/sansu-12.js?v=e835c597"></script>
 <script src="data/gen/sansu-34.js?v=dfac98cd"></script>
@@ -1059,11 +1049,9 @@ const TX={
  "ru.easy.d":["コインがへらない・もどらない","コインが へらない・もどらない"],
  "ru.auto":["おまかせ"],"ru.auto.d":["1〜2年《ねん》の問題《もんだい》ならやさしい","1〜2ねんの もんだいなら やさしい"],
 /* ホーム */
- "home.quick":["1分《ぷん》であそぶ","1ぷん あそぶ"],
  "home.about.l":["保護者《ほごしゃ》・学校《がっこう》向《む》け"],
  "home.guide.l":["学年《がくねん》・単元《たんげん》から さがす（先生《せんせい》向《む》け）","がくねん・たんげんから さがす（せんせいむけ）"],
  "home.guide":["いっしょに あそぼう！"],
- "home.quick.n":["ワンタップで、学年《がくねん》に合《あ》ったゲームがはじまります","ボタンを 1かい おすと はじまるよ"],
  "home.all":["ぜんぶ"],
  "home.empty":["この学年《がくねん》のゲームはじゅんび中《ちゅう》です","この ゲームは じゅんびちゅう です"],
  "home.battle":["バトル（2〜3分《ぷん》）","たいせん（2〜3ふん）"],
@@ -1770,7 +1758,6 @@ function renderHome(){
   const zones=SUBJ_ORDER.map(k=>[k,games.filter(x=>x.s===k)]).filter(z=>z[1].length || (z[0]==="rika" && (ui.grade===0 || ui.grade>=3) && UREADY.some(u=>u.subj==="rika")));
   app.innerHTML=`<div class="home${easy?" easy":""}">
     ${easy?`<div class="guide">${mbs("n")}<span class="say">${T("home.guide")}</span></div>`:""}
-    <button class="hero" id="quick">${easy?"":mbs("n")}${ic("zap")}<span><span class="ht">${T("home.quick")}</span><span class="hn">${T("home.quick.n")}</span></span></button>
     ${COLOK?colDoor():""}
     <div class="zones" data-n="${zones.length+1}">${zones.map(([k,l])=>`<section class="zone s-${k}"><h2>${subjN(k)}</h2>${k==="rika"?rikaWarning():""}<div class="tiles">${l.map(x=>gameTile(x,b)).join("")}${k==="rika"?`<button class="tile unitgo" data-un="rika"><span class="tico">${svgU("a-rika")}</span><span class="tbody"><span class="tt">${T("u.pick")}</span></span></button>`:easy||k==="math"?"":unitTile(k)}</div></section>`).join("")}${easy?`<section class="zone s-math"><div class="tiles">${unitTile("math")}</div></section>`:""}
       <section class="zone s-btl"><h2>${ic("swords")}${T("home.battle")}</h2><div class="tiles">${MODES.map(m=>modeTile(m,b)).join("")}</div></section></div>
@@ -1785,10 +1772,6 @@ function renderHome(){
       <a class="gdlink" href="guide/index.html">${T("home.guide.l")}</a>
       <a class="gdlink" href="guide/about.html">${T("home.about.l")}</a>`}
     </div></div>`;     // 先生・ICT向けのリンクは、1〜2年には出さない
-  $("#quick").onclick=()=>withGrade(g=>{
-    const pool=GAMES.filter(x=>x.g.includes(g)), x=pool[rnd(pool.length)];
-    go(`#play?game=${x.id}&g=${g}&t=60`);
-  });
   const dr=$("#colDoor"); if(dr) dr.onclick=()=>go("#hiroba");
   $("#hJoin2").onclick=()=>go("#join"); $("#hTeach2").onclick=()=>go("#teacher");
   app.querySelectorAll("[data-id]").forEach(e=>e.onclick=()=>{
