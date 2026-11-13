@@ -1004,8 +1004,8 @@ body[data-v=host] .wrap{max-width:none;padding:0}
 <script src="data/ngwords.js?v=c8b8a674"></script>
 <script src="data/cooplib.js?v=a05f730a"></script>
 <!-- 単元ごとの問題の型（単元から出題） -->
-<script src="data/gen/core.js?v=544435a3"></script>
-<script src="data/gen/rika.js?v=6a61d60f"></script>
+<script src="data/gen/core.js?v=bceaee0a"></script>
+<script src="data/gen/rika.js?v=b52e3537"></script>
 <script src="data/gen/other.js?v=0614ebf8"></script>
 <script src="data/gen/sansu-12.js?v=e835c597"></script>
 <script src="data/gen/sansu-34.js?v=dfac98cd"></script>
@@ -4965,7 +4965,8 @@ function renderUnits(q){
         h("label",{class:"inl"},"クイズの制限《せいげん》時間《じかん》（1問《もん》）",h("select",{onchange:e=>{ UPK.t=+e.target.value; uSave(); }},...USECS.map(s=>h("option",{value:s,selected:s===UPK.t,text:s+"秒《びょう》"})))),
         h("div",{class:"pills"},h("b",{class:"pl",text:"混《ま》ぜ方《かた》"}),upill("まぜる",UPK.mix,()=>{ UPK.mix=true; uSave(); drawPanel(); }),upill("単元《たんげん》の順番《じゅんばん》どおり",!UPK.mix,()=>{ UPK.mix=false; uSave(); drawPanel(); })));
     }
-    rows.push(h("div",{class:"pills"},h("b",{class:"pl",text:T("u.how")}),upill(T("u.type"),!cho,()=>{ UPK.choice=false; uSave(); drawPanel(); }),upill(T("u.c4"),cho,()=>{ UPK.choice=true; uSave(); drawPanel(); })));
+    if(!ids.length || !ids.every(id=>UBY[id].subj==="rika")) rows.push(h("div",{class:"pills"},h("b",{class:"pl",text:T("u.how")}),upill(T("u.type"),!cho,()=>{ UPK.choice=false; uSave(); drawPanel(); }),upill(T("u.c4"),cho,()=>{ UPK.choice=true; uSave(); drawPanel(); })));
+    if(ids.some(id=>UBY[id].subj==="rika")) rows.push(h("p",{class:"note",text:"理科《りか》の問題《もんだい》は AI が作成《さくせい》し、先生《せんせい》による確認《かくにん》はまだです。"}));
     if(!kid){
       const run=(fn)=>()=>{ if(!need()) return; try{ fn(); }catch(e){ msg.textContent=e.message; } };
       rows.push(h("div",{class:"uacts"},

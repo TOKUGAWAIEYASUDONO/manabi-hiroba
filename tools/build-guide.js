@@ -117,7 +117,11 @@ function unitCard(u, list) {
   if (u.note) out.push(`<p class="note">${esc(plain(u.note))}</p>`);
   if (!rd) { out.push(`<p class="soon">この単元は、図や絵が必要なため、いま準備中です。公開したら この一覧にゲームが出ます。</p></article>`); return out.join("\n"); }
   out.push(`<div class="ex"><b>この単元で使えるゲーム</b><ul class="modes">${MODES.map(m => `<li${m.soon ? ' class="soon"' : ""}><b>${m.t}</b><span>${esc(m.d)}</span></li>`).join("")}</ul></div>`);
-  const ex2 = [1, 2].map(i => UN.make(u, `guide|${u.id}|${i}`));
+  const ex2 = [], used = new Set();
+  for (let i = 1; i <= 100 && ex2.length < 2; i++) {
+    const it = UN.make(u, `guide|${u.id}|${i}`), key = plain(it.q);
+    if (!used.has(key)) { used.add(key); ex2.push(it); }
+  }
   out.push(`<div class="ex"><b>問題の例</b><ol class="qs">${ex2.map(it => `<li><span class="q">${esc(plain(it.q))}${it.stem ? ` <small>${esc(plain(it.stem))}</small>` : ""}</span><span class="a">答え：${esc(plain(it.a))}</span></li>`).join("")}</ol></div>`);
   if (u.series) {
     const sib = list.filter(x => x.series === u.series && x.status === "ready").sort((a, b) => a.step - b.step);
@@ -127,7 +131,7 @@ function unitCard(u, list) {
   out.push(`<dl class="facts"><div><dt>答え方</dt><dd>${esc(ANSTXT(u.ans))}</dd></div><div><dt>所要時間の目安</dt><dd>${minutes(u)}</dd></div>${u.max ? `<div><dt>出る数の範囲</dt><dd>${u.max}まで</dd></div>` : ""}</dl>`);
   if (u.ex) out.push(`<details class="how"><summary>解き方のヒント（児童に出る例題）</summary><p>${nl2(plain(u.ex))}</p></details>`);
   out.push(`<p class="acts"><a class="btn go" href="${unitHref(u)}">この単元で ためす</a><a class="btn sub" href="${teachHref(u)}">課題リンクと QR を作る</a></p>`);
-  if (u.base) out.push(`<p class="base">学習指導要領（平成29年告示）の項目：${esc(u.base)}（AI作成・要確認）</p>`);
+  if (u.base) out.push(`<p class="base">学習指導要領（平成29年告示）の項目：${esc(u.subj === 'rika' ? u.base.replace(/^Rika grade (\d+) ([AB])$/, (_, g, a) => `第${g}学年 ${a} ${a === 'B' ? '生命・地球' : '物質・エネルギー'}`) : u.base)}（AI作成・要確認）</p>`);
   out.push(`</article>`);
   return out.join("\n");
 }

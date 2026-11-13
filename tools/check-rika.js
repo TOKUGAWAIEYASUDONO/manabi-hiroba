@@ -16,6 +16,14 @@ for (const u of units) {
   const minimum = 8;
   if (!rows || rows.length < minimum) { errors.push(`${u.id}: 知識行が${minimum}件未満`); continue; }
   for (const row of rows) if (row.length !== 5 || new Set(row.slice(1)).size !== 4) errors.push(`${u.id}: 4択の重複または不足`);
+  for (const row of rows) {
+    const plain = s => String(s).replace(/《[^》]*》/g, '').replace(/[｜|]/g, '');
+    const [stem, answer, ...wrong] = row.map(plain);
+    if (/すこなくなる|とむ関係|子魚|水溶液|しんしょく/.test(row.join('')) && (u.id === 'r5-solubility' || u.id === 'r5-animal' || u.id === 'r6-water' || u.id === 'r4-land')) errors.push(`${u.id}: 壊れた語・学年外の語`);
+    if (/氷がとけ/.test(stem) && wrong.includes('水てき')) errors.push(`${u.id}: 水と水てきがともに正答に見える`);
+    if (/はたらきは$/.test(stem) && /どう なる？$/.test(stem)) errors.push(`${u.id}: はたらきの問いが崩れている`);
+    if (/理由$/.test(stem) && /なぜ/.test(stem)) errors.push(`${u.id}: 理由となぜの重複`);
+  }
   const answerCounts = new Map();
   for (const row of rows) answerCounts.set(row[1], (answerCounts.get(row[1]) || 0) + 1);
   for (const [answer, n] of answerCounts) if (n > 2) errors.push(`${u.id}: 同じ答え「${answer}」が${n}件`);
