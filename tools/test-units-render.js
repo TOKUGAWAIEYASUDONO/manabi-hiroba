@@ -21,7 +21,11 @@ for(const id of ['m1-nagasa-kurabe','m1-kasa-kurabe','m1-nanbanme']){
       assert.equal(lines.length,Math.min(9,pic.blue)-1+Math.min(9,pic.red)-1,`${id}: tape divisions differ from text`);
       assert.equal(numbers[0],pic.blue);assert.equal(numbers[1],pic.red);
     }
-    if(pic.kind==='line') assert.ok(svg.children.some(e=>e.tagName==='text'&&e.textContent.includes('まえ')),`${id}: front marker missing`);
+    if(pic.kind==='line') {
+      assert.ok(svg.children.some(e=>e.tagName==='text'&&e.textContent==='まえ'),`${id}: front marker missing`);
+      assert.ok(svg.children.some(e=>e.tagName==='text'&&e.textContent==='うしろ'),`${id}: back marker missing`);
+      assert.ok(!svg.children.some(e=>e.tagName==='text'&&/[→←]/.test(e.textContent)),`${id}: direction arrow remains`);
+    }
     found=true;
     if(item.choices.includes('あお')&&item.choices.includes('あか')){
       assert.ok(['あお','あか'].includes(item.a));
@@ -30,6 +34,17 @@ for(const id of ['m1-nagasa-kurabe','m1-kasa-kurabe','m1-nanbanme']){
     }
   }
   assert.ok(found);
+}
+for(const id of ['m1-nagasa-kurabe','m1-kasa-kurabe']){
+  const answers=new Set(), shown=new Set();
+  for(let seed=0;seed<1000;seed++){
+    const item=ctx.window.MH_UNITS.make(id,seed);
+    if(!/どっちが/.test(ctx.window.MH_UNITS.plain(item.q))) continue;
+    for(const choice of item.choices.filter(x=>x==='あお'||x==='あか')) shown.add(choice);
+    answers.add(item.a);
+    assert.ok(!item.choices.includes('どちらも'),`${id}: impossible choice`);
+  }
+  for(const choice of shown) assert.ok(answers.has(choice),`${id}: ${choice} is never correct in 1000 questions`);
 }
 const html=fs.readFileSync(path.join(root,'index.html'),'utf8');
 const helper=html.match(/function shouldBlockLessonNavigation\([^\n]+/);

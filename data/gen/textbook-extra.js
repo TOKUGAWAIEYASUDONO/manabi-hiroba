@@ -10,8 +10,8 @@
   g.compareMeasure1 = (r, p) => {
     const x = r.range(2, 9), y = r.range(2, 9), a = Math.max(x, y), unit = p.kind === "capacity" ? "コップ" : "テープ";
     if (x === y) return g.compareMeasure1(r, p);
-    if (r.chance(0.5)) return {q:p.kind === "capacity" ? "どっちが おおい？" : "どっちが ながい？", a:x>y?"あお":"あか", ans:"choice4", choices:["あお","あか","おなじ","どちらも"], picture:p.kind==="capacity"?{kind:"cups",blue:x,red:y}:{kind:"tapes",blue:x,red:y}};
-    const q = p.kind === "capacity" ? `おなじ コップで くらべます。あおは ${x}こぶん、あかは ${y}こぶん。おおい ほうは なんこぶん？` : `テープを ますで くらべます。あおは ${x}こぶん、あかは ${y}こぶん。ながい ほうは ます なんこぶん？`;
+    if (r.chance(0.5)) return {q:p.kind === "capacity" ? "どっちが おおい？" : "どっちが ながい？", a:x>y?"あお":"あか", ans:"choice4", choices:[x>y?"あお":"あか",x>y?"あか":"あお",String(a),String(Math.min(x,y))], picture:p.kind==="capacity"?{kind:"cups",blue:x,red:y}:{kind:"tapes",blue:x,red:y}};
+    const q = p.kind === "capacity" ? `おなじ コップで くらべます。あおは コップ ${x}はいぶん、あかは コップ ${y}はいぶん。おおい ほうは コップ なんはいぶん？` : `テープを ますで くらべます。あおは ${x}こぶん、あかは ${y}こぶん。ながい ほうは ます なんこぶん？`;
     return { q, a: String(a), choices: pick(r, a, [Math.min(x, y), a + 1, a - 1], 1, 20, true), picture:p.kind==="capacity"?{kind:"cups",blue:x,red:y}:{kind:"tapes",blue:x,red:y,segmented:true} };
   };
   g.groupAdd2 = r => {
@@ -21,7 +21,7 @@
   g.timeCalc3 = r => {
     const start = r.range(15, 55), duration = r.range(10, 60), end = start + duration, hour = r.range(8, 15);
     const clock = m => { const h=hour+Math.floor(m/60); return `${h<12?"午前":"午後"} ${h>12?h-12:h}時${m%60}分`; };
-    if (r.chance(0.5)) return { q: `${clock(start)}から ${clock(end)}まで なんぷん？`, a: String(duration), choices: pick(r, duration, [end % 60, start, duration + 10, duration - 10], 1, 90, true) };
+    if (r.chance(0.5)) return { q: `${clock(start)}から ${clock(end)}まで 何分《なんぷん》？`, a: String(duration), choices: pick(r, duration, [end % 60, start, duration + 10, duration - 10], 1, 90, true) };
     return { q: `${clock(start)}の ${duration}分後は 何《なん》時《じ》何《なん》分《ぷん》？`, a: clock(end), ans: "choice4", choices: ch(r, clock(end), [clock(start + duration + 10), clock(start + duration - 10), clock(start + duration + 60), clock(start)], [], { loose: true }) };
   };
   g.mental3 = r => {
@@ -33,8 +33,8 @@
     return { q: `${n} ÷ ${d}`, a: String(q), choices: pick(r, q, [q / 10, q + 10, q - 10, n / 10], 10, 90) };
   };
   g.divEstimate4 = r => {
-    const d = r.range(2, 9) * 10, q = r.range(2, 9), rounded = d * q, actual = rounded + r.range(0, Math.min(4, d - 1));
-    return { q: `${actual===rounded?"":`${actual}を ${rounded}と みて、`}${actual} ÷ ${d} の 商は およそ いくつ？`, a: String(q), choices: pick(r, q, [q + 1, q - 1, q * 10, d / 10], 1, 99, true) };
+    const d = r.range(2, 9) * 10, q = r.range(2, 9), rounded = d * q, actual = rounded + r.range(1, Math.min(4, d - 1));
+    return { q: `${actual}を ${rounded}と みて、${actual} ÷ ${d} の 商《しょう》は およそ いくつ？`, a: String(q), choices: pick(r, q, [q + 1, q - 1, q * 10, d / 10], 1, 99, true) };
   };
   g.placeValue5 = r => {
     const x = r.range(11, 99), kind = r.int(4), factor = [10, 100, 10, 100][kind], source = kind < 2 ? G.dec(x, 1) : String(x);

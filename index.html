@@ -824,7 +824,7 @@ body[data-v=host] .wrap{max-width:none;padding:0}
   .rk-hbar i,.rkm-bar i,#rkfill{transition:none}.rkh-row [data-pid].hop{animation:none}}
 </style>
 <style id="mathview-style"></style>
-<style>.qclock{margin:0 auto 4px}.kidunits{grid-template-columns:1fr}.kidunits .ucard{min-height:76px;justify-content:center;text-align:center;font-size:1.25rem}.lesson-end{display:block;margin:16px auto 8px;padding:10px 16px;min-height:48px;border:1px solid var(--line);border-radius:10px;background:linear-gradient(to right,var(--go) var(--hold-progress,0%),var(--paper) var(--hold-progress,0%));color:var(--ink);font-size:14px;font-weight:700;touch-action:none;-webkit-touch-callout:none;-webkit-user-select:none;user-select:none}.colorpick{grid-template-columns:repeat(2,minmax(0,1fr))}.colorpick .choice[data-c="あお"]{background:#3979e5;color:#fff}.colorpick .choice[data-c="あか"]{background:#e35a56;color:#fff}.colorpick .choice[data-c="きいろ"]{background:#f5cd49;color:#243447}@media(max-width:375px){.play.pg .q:has(#qpic){padding:5px 6px;margin-bottom:3px}.play.pg .q:has(#qpic) .big{font-size:20px;line-height:1.25}.play.pg .q:has(#qpic) .big:not(.long){white-space:nowrap}.play.pg .q:has(#qpic) svg{max-height:64px}.play.pg .q:has(#qpic)~.umarks{margin:2px auto}.play.pg:has(#qpic) .choices .choice{min-height:44px;padding:5px}.play.pg:has(#qpic) .fb{min-height:20px;font-size:18px;margin-bottom:3px}.play.pg:has(#qpic) .choices{gap:6px}.play.pg:has(#qpic) .topbar{margin-bottom:3px}.play.pg:has(#qpic) .tbar{margin-bottom:4px}}
+<style>.qclock{margin:0 auto 4px}.kidunits{grid-template-columns:1fr}.kidunits .ucard{min-height:76px;justify-content:center;text-align:center;font-size:1.25rem}.lesson-end{display:block;margin:16px auto 8px;padding:10px 16px;min-height:48px;border:1px solid var(--line);border-radius:10px;background:linear-gradient(to right,var(--go) var(--hold-progress,0%),var(--paper) var(--hold-progress,0%));color:var(--ink);font-size:14px;font-weight:700;touch-action:none;-webkit-touch-callout:none;-webkit-user-select:none;user-select:none}.colorpick{grid-template-columns:repeat(2,minmax(0,1fr))}.colorpick .choice[data-c="あお"]{background:#3979e5;color:#fff}.colorpick .choice[data-c="あか"]{background:#e35a56;color:#fff}.colorpick .choice[data-c="きいろ"]{background:#f5cd49;color:#243447}@media(max-width:375px){.play.pg .q:has(#qpic){padding:5px 6px;margin-bottom:3px}.play.pg .q:has(#qpic) .big{font-size:20px;line-height:1.25}.play.pg .q:has(#qpic) .big:not(.long){white-space:nowrap}.play.pg .q:has(#qpic) svg{max-height:90px}.play.pg .q:has(#qpic)~.umarks{margin:2px auto}.play.pg:has(#qpic) .choices .choice{min-height:44px;padding:5px}.play.pg:has(#qpic) .fb{min-height:20px;font-size:18px;margin-bottom:3px}.play.pg:has(#qpic) .choices{gap:6px}.play.pg:has(#qpic) .topbar{margin-bottom:3px}.play.pg:has(#qpic) .tbar{margin-bottom:4px}}
 </style>
 </head>
 <body>
@@ -924,7 +924,7 @@ body[data-v=host] .wrap{max-width:none;padding:0}
 <script src="data/calc.js?v=60621312"></script>
 <script src="data/choices.js?v=1cc6792c"></script>
 <script src="data/quizlib.js?v=43bdb5a8"></script>
-<script src="data/mathview.js?v=e4a8ec3c"></script>
+<script src="data/mathview.js?v=40d0fcde"></script>
 <script src="data/ngwords.js?v=c8b8a674"></script>
 <script src="data/cooplib.js?v=a05f730a"></script>
 <!-- 単元ごとの問題の型（単元から出題） -->
@@ -933,7 +933,7 @@ body[data-v=host] .wrap{max-width:none;padding:0}
 <script src="data/gen/sansu-12.js?v=e835c597"></script>
 <script src="data/gen/sansu-34.js?v=dfac98cd"></script>
 <script src="data/gen/sansu-56.js?v=d0024b89"></script>
-<script src="data/gen/textbook-extra.js?v=21db5c64"></script>
+<script src="data/gen/textbook-extra.js?v=b2d3f58f"></script>
 <script src="data/units.js?v=9cb6963f"></script>
 <script src="data/collection.js?v=40d86f87"></script>
 <script>
@@ -1154,7 +1154,7 @@ const TX={
  "u.ratio.k":[(n,k)=>`${n}問《もん》を ${k}つの単元《たんげん》に同《おな》じ数《かず》ずつ分《わ》けて出《だ》すよ`,(n,k)=>`${n}もんを ${k}この たんげんから おなじ かずずつ だすよ`],
  "u.how":["答《こた》え方《かた》","こたえかた"],"u.type":["数字《すうじ》を入《い》れる","すうじを いれる"],"u.c4":["4つからえらぶ","4つから えらぶ"],
  "u.go":["練習《れんしゅう》をはじめる","れんしゅう スタート"],"u.bad":["このリンクは使《つか》えません。先生《せんせい》にもう一度《いちど》もらってください。","このリンクは つかえないよ。せんせいに もういちど もらってね。"],
- "u.intro":["この単元《たんげん》で練習《れんしゅう》するよ","この たんげんで れんしゅうするよ"],"u.1min":["1分《ぷん》でいくつとけるかな？","1ぷんで いくつ とけるかな？"],
+ "u.intro":["この単元《たんげん》を練習《れんしゅう》しよう","この たんげんを れんしゅうしよう"],"u.1min":["1分《ぷん》でいくつとけるかな？","1ぷんで いくつ とけるかな？"],
  "u.amari":["あまり"],"u.nextf":["つぎのらんへ","つぎの らんへ"],"u.del":["けす"],"u.pickunit":["単位《たんい》をえらぶ","たんいを えらぶ"],
  "u.retry":["❌ おしい！もう一度《いちど》やってみよう","❌ おしい！ もういちど やってみよう"],
  "u.ok2":["△ 2回《かい》目《め》でせいかい！","△ 2かいめで せいかい！"],
@@ -4974,7 +4974,8 @@ function unitNext(){
   const area=$("#area");
   if(c.mode==="choice4"){
     const cls=["ca","cb","cc","cd"];
-    area.innerHTML=`<div class="choices${c.picture&&c.ch.includes("あお")&&c.ch.includes("あか")?" colorpick":""}">${c.ch.map((x,i)=>`<button class="choice ${cls[i]}" data-c="${esc(x)}"><span class="kh" aria-hidden="true">${i+1}</span>${chLabel(x,c)}</button>`).join("")}</div>`;
+    const visibleChoices=c.picture&&c.ch.includes("あお")&&c.ch.includes("あか")?c.ch.filter(x=>x==="あお"||x==="あか"):c.ch;
+    area.innerHTML=`<div class="choices${c.picture&&c.ch.includes("あお")&&c.ch.includes("あか")?" colorpick":""}">${visibleChoices.map((x,i)=>`<button class="choice ${cls[i]}" data-c="${esc(x)}"><span class="kh" aria-hidden="true">${i+1}</span>${chLabel(x,c)}</button>`).join("")}</div>`;
     mathIn(area); area.querySelectorAll("[data-c]").forEach(b=>b.onclick=()=>uPick(b));
     return;
   }
@@ -5075,6 +5076,9 @@ function lessonEndButton(){
   const b=document.createElement("button");b.type="button";b.className="lesson-end";b.append(rubyNode(T("r.close.tab")));b.setAttribute("aria-label","先生《せんせい》：2秒《びょう》長押《ながお》しで じゅぎょうを おわる");
   let timer=0,frame=0,start=0;const cancel=()=>{clearTimeout(timer);cancelAnimationFrame(frame);timer=0;frame=0;b.style.setProperty("--hold-progress","0%");};const tick=()=>{b.style.setProperty("--hold-progress",Math.min(100,(performance.now()-start)/20)+"%");frame=requestAnimationFrame(tick);};
   b.addEventListener("pointerdown",e=>{if(e.button!==0)return;b.setPointerCapture(e.pointerId);cancel();start=performance.now();tick();timer=setTimeout(()=>{lessonUnlock();activePracticeHash="";go("#home");},2000);});
+  b.addEventListener("keydown",e=>{if(e.code!=="Space"||e.repeat||timer)return;e.preventDefault();cancel();start=performance.now();tick();timer=setTimeout(()=>{lessonUnlock();activePracticeHash="";go("#home");},2000);});
+  b.addEventListener("keyup",e=>{if(e.code==="Space"){e.preventDefault();cancel();}});
+  b.addEventListener("blur",cancel);
   ["pointerup","pointercancel","pointerleave","lostpointercapture"].forEach(x=>b.addEventListener(x,cancel));b.addEventListener("contextmenu",e=>e.preventDefault());res.appendChild(b);
 }
 /* ================= ルーター ================= */

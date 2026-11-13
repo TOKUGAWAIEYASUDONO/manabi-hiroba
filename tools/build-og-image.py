@@ -27,7 +27,7 @@ txt((132,392), '無料・登録不要', 48, '#d6ebdd', True)
 
 # index.html の mb-b / mb-n と同じ輪郭・色の「めばえ」を拡大して描く。
 # 双葉、丸い顔、ほお、体、足、手、目、口。
-edge='#16372a'; green='#7ccf6b'; cream='#fff3d6'; pink='#f6a9b4'; go='#1b7a4b'
+edge='#16372a'; green='#7ccf6b'; cream='#fff3d6'; pink='#f6a9b4'; go='#f6b84c'
 line([(910,463),(910,513)], edge, 9); line([(972,463),(972,513)], edge, 9)
 ellipse((863,329,1019,492), go, edge, 7)
 ellipse((851,215,1031,395), cream, edge, 8)

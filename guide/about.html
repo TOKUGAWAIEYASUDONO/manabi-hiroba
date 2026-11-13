@@ -26,7 +26,7 @@
 <p>まなびひろばは、個人が開発・運営する無料の学習ゲームです。登録も広告もありません。お問い合わせ・不具合の報告は <a href="https://github.com/TOKUGAWAIEYASUDONO/manabi-hiroba/issues">GitHub リポジトリの Issues</a> へお願いします。公開投稿なので、児童の個人情報は書かないでください。</p>
 <h2>集めない物・端末に残る物</h2><p>このサイトの運営者は名前、メールアドレス、アカウント、位置情報、成績を収集しません。端末には学年・遊びの記録・どんぐり・ふりがな等の設定が保存されます。主な保存キー：<code>mh_setup</code>、<code>mh_best</code>、<code>mh_col</code>、<code>mh_colcfg</code>、<code>mh_fg</code>、<code>mh_ui</code>、<code>mh_sound</code>、<code>mh_quiz_sets</code>、<code>mh_upick</code>、<code>mh_troom</code>。対戦中の一時情報：<code>mh_net</code>、<code>mh_host</code>、<code>mh_name_s</code>。授業リンクの固定には、このタブだけに <code>mh_lesson_hash</code> を使います。自分専用の端末と指定した場合だけ <code>mh_name</code> に名前が残ります。共有端末では指定しないでください。記録は端末で遊んだ履歴であり、成績評価には使えません。</p>
 <p>共有画像 <code>vendor/img/og-home.png</code> は 2026-11-13 にサイトの黒板と芽のキャラクターをもとに図形と文字で作った自作画像です。以前の AI 生成画像（実在の人物ではありません）は <code>vendor/img/og-home-v1.png</code> として保管しています。</p>
-<p>授業リンクの固定には、このタブだけに <code>mh_lesson_lock</code>（固定を始めた時刻）を使います。タブを閉じると消えます。</p>
+<p>授業リンクの固定には、このタブだけに <code>mh_lesson_lock</code>（固定を始めた時刻）を使います。開いてから90分、または日付が変わるまで固定します。先生が結果画面で終えるときは、終了ボタンを2秒長押しします。タブを閉じると消えます。</p>
 <h2>対戦時の名前・通信</h2><p>名前は既定では自動ニックネームです。先生が名前入力を選んだ場合だけ児童が入力できます。</p>
 <h3>通常方式：GitHub Pages ＋ PeerJS</h3><p>通常のサイト表示は GitHub Pages から配信されます。友だち対戦では <code>0.peerjs.com</code>（接続仲介）と STUN/TURN（<code>stun.l.google.com</code>・<code>*.turn.peerjs.com</code>、接続補助・中継）にも通信します。これらには接続に必要な IP アドレスが届きます。対戦用の名前や得点は先生の端末のメモリに置かれ、部屋を閉じると消えます。</p>
 <h3>予備方式：学校が動かす node サーバー（<code>?net=server</code>）</h3><p>学校が自分で <code>server.js</code> を動かす場合、対戦中だけ、その学校のサーバーのメモリに名前（または自動ニックネーム）・得点・正誤が置かれます。部屋が消えると、これらも消えます。このサーバーとデータを管理するのは、サーバーを動かした学校です。通常方式の PeerJS ではなく、学校のサーバーに接続します。</p>
