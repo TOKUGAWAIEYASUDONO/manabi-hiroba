@@ -5,7 +5,7 @@ const root = path.join(__dirname, '..'), ctx = { window: {} };
 vm.createContext(ctx);
 for (const f of ['data/gen/core.js','data/gen/rika.js','data/units.js'])
   vm.runInContext(fs.readFileSync(path.join(root, f), 'utf8'), ctx, { filename: f });
-const grades = process.argv.slice(2).length ? process.argv.slice(2).map(Number) : [3, 4];
+const grades = process.argv.slice(2).length ? process.argv.slice(2).map(Number) : [3, 4, 5];
 if (grades.some(g => !Number.isInteger(g) || g < 3 || g > 6)) throw new Error('学年は3〜6を指定');
 const G = ctx.window.MH_GEN, units = ctx.window.MH_UNITS;
 const errors = [], seen = new Set(), han = /[㐀-䶿一-鿿々〆〇ヶ]/u;
