@@ -121,6 +121,8 @@ h2{font-size:20px;margin:18px 0 8px}
   .zones[data-n="3"] .s-btl{grid-column:span 2} .zones[data-n="3"] .s-btl .tiles{grid-template-columns:1fr} .zones[data-n="4"] .s-btl{grid-column:1/-1} .zones[data-n="5"] .s-btl{grid-column:span 4}
   .zones[data-n="4"] .s-btl .tiles,.zones[data-n="5"] .s-btl .tiles{grid-template-columns:repeat(2,1fr)}}
 .zone{background:var(--zc);color:var(--zt,#fff);padding:10px 12px 14px;border-radius:6px 6px 18px 18px;border-top:8px solid var(--edge)}
+.rika-warning{background:#fff4d6;color:#402b00;border:2px solid #a66b00;border-radius:10px;padding:8px 12px;font-size:16px;font-weight:700;line-height:1.6;margin:8px 0}
+@media (min-width:900px) and (max-height:800px){.home:not(.easy) .zones{align-items:start;gap:8px}.home:not(.easy) .zone{padding:5px 8px 8px;border-top-width:5px}.home:not(.easy) .zone h2{font-size:17px;margin-bottom:4px}.home:not(.easy) .tile{min-height:56px;padding:2px 8px;gap:6px}.home:not(.easy) .tile .tico,.home:not(.easy) .tile .tico .art{width:40px;height:40px}.home:not(.easy) .tile .tt{font-size:16px}.home:not(.easy) .tile .tstat,.home:not(.easy) .tile .tnext{font-size:12px}.home:not(.easy) .tile .tstat .st{width:17px;height:17px}.home:not(.easy) .s-btl .tiles{grid-template-columns:repeat(2,minmax(0,1fr))!important}}
 .zone h2{margin:0 0 8px;font-size:20px;letter-spacing:.08em;display:flex;align-items:center;gap:8px}
 .zone.s-math{--zc:var(--math)} .zone.s-jp{--zc:var(--jp)} .zone.s-soc{--zc:var(--soc);--zt:var(--ink)} .zone.s-rika{--zc:var(--rika)} .zone.s-eng{--zc:var(--eng)} .zone.s-btl{--zc:var(--btl)}
 .tiles{display:grid;gap:8px}
@@ -477,6 +479,7 @@ textarea.fld{resize:vertical}
 .upsets .set-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
 @media (min-width:700px){.upf .grade-pills{grid-template-columns:repeat(7,minmax(0,1fr))}.upf .item-pills{grid-template-columns:repeat(3,minmax(0,1fr))}.upsets .set-grid{grid-template-columns:repeat(3,minmax(0,1fr))}}
 @media (min-width:1000px){.upf .item-pills,.upsets .set-grid{grid-template-columns:repeat(4,minmax(0,1fr))}}
+@media (min-width:1000px){.up:not(.kid) .ufilters{display:grid;grid-template-columns:1fr 300px;gap:8px}.up:not(.kid) .upf .pills .pill{min-height:36px;line-height:1.2;padding:2px 6px}.up:not(.kid) .upf .item-pills{max-height:96px;overflow:auto}.up:not(.kid) .upsets{max-height:180px;overflow:auto}.up:not(.kid) .upsets .set-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.up:not(.kid) .uwrap{grid-template-columns:minmax(0,1fr) 300px}.up:not(.kid) .uwrap>.upanel{grid-column:2}.up:not(.kid) .uwrap>.ucards{grid-column:1}}
 .pl{align-self:center;font-size:14px;margin-right:2px}
 .upanel .err:empty,.upanel .lkout:empty{display:none}
 .upsets{margin:4px 0 8px}
@@ -1000,13 +1003,13 @@ body[data-v=host] .wrap{max-width:none;padding:0}
 <script src="data/calc.js?v=60621312"></script>
 <script src="data/choices.js?v=1cc6792c"></script>
 <script src="data/quizlib.js?v=43bdb5a8"></script>
-<script src="data/mathview.js?v=cdf1f036"></script>
+<script src="data/mathview.js?v=90c14913"></script>
 <script src="data/ngwords.js?v=c8b8a674"></script>
 <script src="data/cooplib.js?v=a05f730a"></script>
 <!-- 単元ごとの問題の型（単元から出題） -->
 <script src="data/gen/core.js?v=bceaee0a"></script>
 <script>window.RIKA_PUBLIC=false;</script>
-<script>if(window.RIKA_PUBLIC) document.write('<script src="data/gen/rika.js?v=b52e3537"><\/script>');</script>
+<script>if(window.RIKA_PUBLIC) document.write('<script src="data/gen/rika.js?v=3400f7a7"><\/script>');</script>
 <script src="data/gen/other.js?v=0614ebf8"></script>
 <script src="data/gen/sansu-12.js?v=e835c597"></script>
 <script src="data/gen/sansu-34.js?v=dfac98cd"></script>
@@ -1732,6 +1735,9 @@ function openGame(x,g0){
   go(x.id==="kuku"||x.id==="kencho"?`#setup?game=${x.id}&g=${g}`:`#play?game=${x.id}&g=${g}&t=60`);
 }
 const SUBJ_ORDER=["math","jp","soc",...(window.RIKA_PUBLIC?["rika"]:[]),"eng"], MEDAL_ICO=["🥉","🥈","🥇"];
+const RIKA_WARNING="理科《りか》は AI が作《つく》った問題《もんだい》です。先生《せんせい》の確認《かくにん》はまだです。おかしな問題《もんだい》は、先生《せんせい》に知《し》らせてね。";
+const rikaWarning=()=>`<p class="rika-warning">${RIKA_WARNING}</p>`;
+const hasRika=ids=>window.RIKA_PUBLIC&&ids.some(id=>UBY[id]&&UBY[id].subj==="rika");
 const stampsHtml=m=>MEDAL_ICO.map((e,i)=>m>i?msvg(i+1,"st on"):msvg(0,"st")).join("");
 const tico=x=>svgU(x.art,"ti");
 /* 「つぎのメダルまで あと○もん」（1分あそんだときの正解数で数える） */
@@ -1766,7 +1772,7 @@ function renderHome(){
     ${easy?`<div class="guide">${mbs("n")}<span class="say">${T("home.guide")}</span></div>`:""}
     <button class="hero" id="quick">${easy?"":mbs("n")}${ic("zap")}<span><span class="ht">${T("home.quick")}</span><span class="hn">${T("home.quick.n")}</span></span></button>
     ${COLOK?colDoor():""}
-    <div class="zones" data-n="${zones.length+1}">${zones.map(([k,l])=>`<section class="zone s-${k}"><h2>${subjN(k)}</h2><div class="tiles">${l.map(x=>gameTile(x,b)).join("")}${k==="rika"?`<button class="tile unitgo" data-un="rika"><span class="tico">${svgU("a-rika")}</span><span class="tbody"><span class="tt">${T("u.pick")}</span></span></button>`:easy||k==="math"?"":unitTile(k)}</div></section>`).join("")}${easy?`<section class="zone s-math"><div class="tiles">${unitTile("math")}</div></section>`:""}
+    <div class="zones" data-n="${zones.length+1}">${zones.map(([k,l])=>`<section class="zone s-${k}"><h2>${subjN(k)}</h2>${k==="rika"?rikaWarning():""}<div class="tiles">${l.map(x=>gameTile(x,b)).join("")}${k==="rika"?`<button class="tile unitgo" data-un="rika"><span class="tico">${svgU("a-rika")}</span><span class="tbody"><span class="tt">${T("u.pick")}</span></span></button>`:easy||k==="math"?"":unitTile(k)}</div></section>`).join("")}${easy?`<section class="zone s-math"><div class="tiles">${unitTile("math")}</div></section>`:""}
       <section class="zone s-btl"><h2>${ic("swords")}${T("home.battle")}</h2><div class="tiles">${MODES.map(m=>modeTile(m,b)).join("")}</div></section></div>
     ${zones.length?"":`<div class="empty">${T("home.empty")}</div>`}
     <div class="bottom">
@@ -1961,6 +1967,7 @@ function finish(){
   if(p.u&&p.cur&&p.cur.tries>0&&!p.missObjs.includes(p.cur)) p.missObjs.push(p.cur);
    const repFull=(p.u?unitReport(p):report)+missIds(p.missObjs,p.x);          // 課題リンクの結果の末尾に、まちがえた問題のID（単元のリンクは、単元名と ○△× の数）
   app.innerHTML=`<div class="play"><div class="res">
+    ${p.u&&hasRika(p.u.ids)?rikaWarning():""}
     ${medRow(medal,acc,showNew)}
     <div class="num">${T("r.num",p.ok)}</div>
     ${p.task?"":`<div class="nextm">${medalize(esc(nextMsg))}</div>`}
@@ -4892,16 +4899,17 @@ function renderUnits(q){
   let fg=kid&&kg&&pool(subj).some(u=>u.g===kg)?kg:0, fi="";
   if(kid){ const keep=UPK.sel.filter(id=>UBY[id].subj===subj&&(!easy||UBY[id].g===kg)); if(keep.length!==UPK.sel.length){ UPK.sel=keep; } }
   const root=h("div",{class:"up"+(kid?" kid":"")}), filt=h("div",{class:"upf"}), sets=h("div"), panel=h("div",{class:"form upanel"}), cards=h("div",{class:"ucards"}), msg=h("div",{class:"err",role:"alert"}), out=h("div",{class:"lkout"});
+  root.dataset.subject=subj;
   const chosen=()=>UPK.sel.filter(i=>UBY[i]);
   const LK={task:!kid&&!!q.get("pick"), col0:false};      // リンクとQR：ガイドから来たとき（?pick=）は「授業で使う」を はじめからオン
   /* かたまり1：しぼりこみ */
   function drawFilter(){
     const items=[...new Set(pool(subj).map(u=>u.item).filter(Boolean))], rows=[];
-    if(!kid) rows.push(h("div",{class:"pills subject-pills"},h("b",{class:"pl",text:"教科《きょうか》"}),...subjs.map(s=>upill(SUBJ_JA[s],s===subj,()=>{ subj=s; fg=0; fi=""; drawFilter(); drawSets(); drawCards(); }))));
+    if(!kid) rows.push(h("div",{class:"pills subject-pills"},h("b",{class:"pl",text:"教科《きょうか》"}),...subjs.map(s=>upill(SUBJ_JA[s],s===subj,()=>{ subj=s; root.dataset.subject=s; fg=0; fi=""; drawFilter(); drawSets(); drawCards(); drawPanel(); }))));
     const gs=[...new Set(pool(subj).map(u=>u.g))].sort((a,b)=>a-b);
     if(!(kid&&easy)&&gs.length>1) rows.push(h("div",{class:"pills grade-pills"},h("b",{class:"pl",text:T("u.grade")}),upill(T("u.all"),fg===0,()=>{ fg=0; drawFilter(); drawCards(); }),...gs.map(g=>upill(g+"年《ねん》",fg===g,()=>{ fg=g; drawFilter(); drawCards(); }))));
     if(!kid&&items.length>1) rows.push(h("div",{class:"pills item-pills"},h("b",{class:"pl",text:"学習《がくしゅう》項目《こうもく》"}),upill("ぜんぶ",fi==="",()=>{ fi=""; drawFilter(); drawCards(); }),...items.map(it=>upill(it,fi===it,()=>{ fi=it; drawFilter(); drawCards(); }))));
-    filt.replaceChildren(...rows);
+    filt.replaceChildren(...(subj==="rika"?[h("p",{class:"rika-warning",text:RIKA_WARNING})]:[]),...rows);
   }
   /* かたまり2：おすすめの組み合わせ */
   function drawSets(){
@@ -4934,8 +4942,9 @@ function renderUnits(q){
   const need=()=>{ if(!chosen().length){ msg.textContent=T("u.none"); return false; } msg.textContent=""; return true; };
   function uToQs(items,t){
     const sec=USECS.find(s=>s>=t)||120;
-    return items.map(it=>{ const k=it.choices.indexOf(it.a); if(k<0||it.choices.length<2) return null;
-      return {t:"mc",q:(it.stem?it.stem+"　":"")+it.q,ch:it.choices,ok:[k],sec,pt:"normal"}; }).filter(Boolean);
+    return items.map(it=>{ const compare=it.picture&&it.choices.includes("あお")&&it.choices.includes("あか");
+      const choices=compare?["あお","あか"]:it.choices, k=choices.indexOf(it.a); if(k<0||choices.length<2) return null;
+      return {t:"mc",q:(it.stem?it.stem+"　":"")+it.q,ch:choices,ok:[k],sec,pt:"normal"}; }).filter(Boolean);
   }
   function makeSet(reuse){
     const c=cfg(), items=UN.unitPick(c.ids,c.n,c.seed,c.mix), qs=uToQs(items,c.t);
@@ -4968,7 +4977,7 @@ function renderUnits(q){
         h("div",{class:"pills"},h("b",{class:"pl",text:"混《ま》ぜ方《かた》"}),upill("まぜる",UPK.mix,()=>{ UPK.mix=true; uSave(); drawPanel(); }),upill("単元《たんげん》の順番《じゅんばん》どおり",!UPK.mix,()=>{ UPK.mix=false; uSave(); drawPanel(); })));
     }
     if(!ids.length || !ids.every(id=>UBY[id].subj==="rika")) rows.push(h("div",{class:"pills"},h("b",{class:"pl",text:T("u.how")}),upill(T("u.type"),!cho,()=>{ UPK.choice=false; uSave(); drawPanel(); }),upill(T("u.c4"),cho,()=>{ UPK.choice=true; uSave(); drawPanel(); })));
-    if(ids.some(id=>UBY[id].subj==="rika")) rows.push(h("p",{class:"note",text:"理科《りか》の問題《もんだい》は AI が作成《さくせい》し、先生《せんせい》による確認《かくにん》はまだです。"}));
+    if(hasRika(ids)) rows.push(h("p",{class:"rika-warning",text:RIKA_WARNING}));
     if(!kid){
       const run=(fn)=>()=>{ if(!need()) return; try{ fn(); }catch(e){ msg.textContent=e.message; } };
       rows.push(h("div",{class:"uacts"},
@@ -5000,10 +5009,11 @@ function renderUnitLink(hash){
   const g=uMaxG(c.ids); setLG(g);
   let choice=uChoice(c.ids,c.choice);
   const how=h("div",{class:"pills",style:"justify-content:center"}), draw=()=>how.replaceChildren(upill(T("u.type"),!choice,()=>{ choice=false; draw(); }),upill(T("u.c4"),choice,()=>{ choice=true; draw(); }));
-  draw();
+  if(!c.ids.every(id=>UBY[id].subj==="rika")) draw();
   app.replaceChildren(h("div",{class:"play up"},
     h("div",{class:"topbar"},c.task?h("span"):h("button",{type:"button",class:"back",innerHTML:BK(),onclick:()=>go("#home")}),h("b"),h("span")),
     h("div",{class:"q"},h("div",{class:"big",text:T("u.intro")}),h("div",{class:"small",text:T("u.1min")})),
+    hasRika(c.ids)?h("p",{class:"rika-warning",text:RIKA_WARNING}):null,
     h("div",{class:"uchips cen"},...c.ids.map(id=>h("span",{class:"uchipw"},h("span",{class:"uchip static"},c.task&&UBY[id].g<=2?null:h("span",{class:"ucg",text:UBY[id].g+"年《ねん》"}),h("span",{text:UBY[id].title})),
       h("button",{type:"button",class:"btn sub s uexb",text:T("u.ex"),"aria-label":T("u.ex")+"："+UBY[id].title,onclick:()=>uEx(UBY[id])})))),
     how,h("div",{style:"margin-top:12px"},h("button",{type:"button",class:"btn again",id:"ugo",text:T("u.go"),onclick:()=>startUnitRun({...c,choice})}))));
@@ -5020,6 +5030,7 @@ function startUnitRun(c){
   app.innerHTML=`<div class="play pg">
     <div class="topbar">${c.task?`<button class="back" id="bk">${ic("x")}${T("back.end")}</button>`:`<button class="back" onclick="stopTimer();go('#home')">${BK()}</button>`}
       <span><b>${tico(UNITX)} ${T("g.unit.t")}</b> <span class="note" id="unm"></span></span><span class="timer" id="tm" aria-hidden="true">${t}</span></div>
+    ${hasRika(ids)?rikaWarning():""}
     <div class="tbar" id="tbar"><i id="tb"></i></div>
     <div class="q"><div id="qpic"></div><div class="big" id="qq"></div><div class="small" id="qs"></div></div>
     <div class="umarks" id="um" aria-label="${esc(T("u.marks"))}"></div>

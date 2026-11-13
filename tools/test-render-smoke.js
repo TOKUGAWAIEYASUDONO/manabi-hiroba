@@ -25,7 +25,7 @@ const ctx={window,document,location:window.location,localStorage:storage,session
   setTimeout(){return 1},clearTimeout(){},URL,URLSearchParams,TextEncoder,Date,Math,Promise,
   fetch(){return Promise.resolve({ok:false})},MutationObserver:class{observe(){} disconnect(){}}};
 vm.createContext(ctx);
-window.RIKA_PUBLIC=/window\.RIKA_PUBLIC\s*=\s*true\s*;/.test(html);
+window.RIKA_PUBLIC=process.env.RIKA_SMOKE_PUBLIC==='1'||/window\.RIKA_PUBLIC\s*=\s*true\s*;/.test(html);
 for(const file of ['data/kanji-grade.js','data/questions.js','data/calc.js','data/choices.js','data/quizlib.js','data/mathview.js','data/ngwords.js','data/cooplib.js','data/gen/core.js',...(window.RIKA_PUBLIC?['data/gen/rika.js']:[]),'data/gen/other.js','data/gen/sansu-12.js','data/gen/sansu-34.js','data/gen/sansu-56.js','data/gen/textbook-extra.js','data/units.js','data/collection.js']) {
   vm.runInContext(fs.readFileSync(path.join(root,file),'utf8'),ctx,{filename:file});
 }
@@ -39,8 +39,15 @@ if(!window.RIKA_PUBLIC){
 }
 for(let g=1;g<=6;g++) {
   vm.runInContext(`ui.grade=${g}; renderHome()`,ctx,{filename:`home-${g}`});
+  if(window.RIKA_PUBLIC&&g>=3&&!vm.runInContext('app.innerHTML',ctx).includes('先生《せんせい》の確認《かくにん》はまだ')) throw Error(`rika home warning missing: ${g}`);
 }
 for(const [name,expr] of [['units','renderUnits(new URLSearchParams())'],['teacher','renderTeacher(new URLSearchParams())'],['practice',`renderUnitLink("#u=${window.RIKA_PUBLIC?'r3-living':'m3-amari'}&n=1")`]]) {
   vm.runInContext(expr,ctx,{filename:name});
 }
 console.log('render smoke: home 1〜6年、単元選び、先生画面、練習 OK');
+if(!process.env.RIKA_SMOKE_PUBLIC){
+  const {spawnSync}=require('child_process');
+  const result=spawnSync(process.execPath,[__filename],{env:{...process.env,RIKA_SMOKE_PUBLIC:'1'},encoding:'utf8'});
+  if(result.status!==0) throw Error('rika public smoke failed: '+result.stderr+' '+result.stdout);
+  console.log(result.stdout.trim());
+}
