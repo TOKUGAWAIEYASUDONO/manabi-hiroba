@@ -1760,7 +1760,7 @@ function renderHome(){
   setLG(ui.grade);
   const b=bests(), easy=easyG(LG);
   const games=GAMES.filter(x=>ui.grade===0||x.g.includes(ui.grade));
-  const zones=SUBJ_ORDER.map(k=>[k,games.filter(x=>x.s===k)]).filter(z=>z[1].length || (k==="rika" && (ui.grade===0 || ui.grade>=3) && UREADY.some(u=>u.subj==="rika")));
+  const zones=SUBJ_ORDER.map(k=>[k,games.filter(x=>x.s===k)]).filter(z=>z[1].length || (z[0]==="rika" && (ui.grade===0 || ui.grade>=3) && UREADY.some(u=>u.subj==="rika")));
   app.innerHTML=`<div class="home${easy?" easy":""}">
     ${easy?`<div class="guide">${mbs("n")}<span class="say">${T("home.guide")}</span></div>`:""}
     <button class="hero" id="quick">${easy?"":mbs("n")}${ic("zap")}<span><span class="ht">${T("home.quick")}</span><span class="hn">${T("home.quick.n")}</span></span></button>
@@ -4818,7 +4818,7 @@ function ensureMine(s){       // 先生のセットを1回だけ受け取る（�
    リンク（#u=単元ID,…&n=&t=&s=）は、単元IDを UNITS にあるものだけ、n・t・s を範囲内だけ受け付ける */
 const UN=window.MH_UNITS, UNITS_OK=!!(UN&&Array.isArray(UN.UNITS)&&UN.UNITS.length&&UN.unitPick);
 const SJ={sansu:"math",kokugo:"jp",shakai:"soc",rika:"rika",eigo:"eng"}, SJR={math:"sansu",jp:"kokugo",soc:"shakai",rika:"rika",eng:"eigo"};
-const SUBJ_JA={sansu:"算数《さんすう》",kokugo:"国語《こくご》",shakai:"社会《しゃかい》",eigo:"英語《えいご》"};
+const SUBJ_JA={sansu:"算数《さんすう》",kokugo:"国語《こくご》",shakai:"社会《しゃかい》",rika:"理科《りか》",eigo:"英語《えいご》"};
 const UREADY=UNITS_OK?UN.UNITS.filter(u=>u.status==="ready"&&u.gen):[];
 const UBY={}; UREADY.forEach(u=>{ UBY[u.id]=u; });
 const UNITX={id:"unit",ico:"🧩",art:"a-soroban",s:"math",g:[1,2,3,4,5,6],type:"input"}; tget(UNITX,"t","g.unit.t");
