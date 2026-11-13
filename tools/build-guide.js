@@ -6,7 +6,7 @@
    同じデータなら同じ出力（日付や乱数を入れない）。データを変えたら再生成して、生成物も commit する。 */
 const fs = require("fs"), path = require("path"), crypto = require("crypto");
 const { root, load, BASE, SUBJ, SUBJ_ORDER, pageName } = require("./guide-lib");
-SUBJ.rika = "理科"; SUBJ_ORDER.splice(3, 0, "rika");
+if (/window\.RIKA_PUBLIC\s*=\s*true\s*;/.test(fs.readFileSync(path.join(root, "index.html"), "utf8"))) { SUBJ.rika = "理科"; SUBJ_ORDER.splice(3, 0, "rika"); }
 const W = load(), UN = W.MH_UNITS, plain = UN.plain, TB = W.TEXTBOOK_ORDER;
 const UNITS = UN.UNITS, SEED = 1;
 
@@ -367,5 +367,5 @@ out.set("sitemap.xml", `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="h
 out.set("robots.txt", `User-agent: *\nAllow: /\n\nSitemap: ${BASE}sitemap.xml\n`);
 fs.mkdirSync(path.join(root, "guide"), { recursive: true });
 for (const [f, s] of out) fs.writeFileSync(path.join(root, f), f.startsWith("guide/") && f.endsWith(".html") ? s.replace(/href="guide\.css(?:\?v=[0-9a-f]{8})?"/g, `href="guide.css?v=${cssVersion}"`) : s, "utf8");
-for (const f of fs.readdirSync(path.join(root, "guide"))) if (/^g\d-[a-z]+\.html$/.test(f) && !names.includes(f)) fs.unlinkSync(path.join(root, "guide", f));
+// 公開対象外の旧ページはデータとして残す。入口と sitemap には含めない。
 console.log(`guide: 教科ページ${pages.length} + 入口 + custom、単元 ${UNITS.length}（ready ${ready(UNITS).length}）、教科書の並び：${TB ? "あり" : "なし"}`);

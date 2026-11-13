@@ -2,10 +2,11 @@
 const fs = require("fs"), path = require("path"), vm = require("vm");
 const root = path.join(__dirname, "..");
 function load() {
-  const ctx = { window: {} };
+  const html = fs.readFileSync(path.join(root, "index.html"), "utf8");
+  const ctx = { window: { RIKA_PUBLIC: /window\.RIKA_PUBLIC\s*=\s*true\s*;/.test(html) } };
   vm.createContext(ctx);
   const files = ["data/kanji-grade.js", "data/questions.js", "data/choices.js", "data/gen/core.js"];
-  for (const f of fs.readdirSync(path.join(root, "data/gen")).sort()) if (f !== "core.js" && f.endsWith(".js")) files.push("data/gen/" + f);
+  for (const f of fs.readdirSync(path.join(root, "data/gen")).sort()) if (f !== "core.js" && f.endsWith(".js") && (f !== "rika.js" || ctx.window.RIKA_PUBLIC)) files.push("data/gen/" + f);
   files.push("data/units.js", "data/calc.js");
   for (const f of files) vm.runInContext(fs.readFileSync(path.join(root, f), "utf8"), ctx, { filename: f });
   // 教科書会社ごとの並び（別担当が作る。無ければ標準の並びだけ）。const/var/window どれで書かれていても拾う

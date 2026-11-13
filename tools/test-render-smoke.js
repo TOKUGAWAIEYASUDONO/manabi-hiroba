@@ -25,15 +25,22 @@ const ctx={window,document,location:window.location,localStorage:storage,session
   setTimeout(){return 1},clearTimeout(){},URL,URLSearchParams,TextEncoder,Date,Math,Promise,
   fetch(){return Promise.resolve({ok:false})},MutationObserver:class{observe(){} disconnect(){}}};
 vm.createContext(ctx);
-for(const file of ['data/kanji-grade.js','data/questions.js','data/calc.js','data/choices.js','data/quizlib.js','data/mathview.js','data/ngwords.js','data/cooplib.js','data/gen/core.js','data/gen/rika.js','data/gen/other.js','data/gen/sansu-12.js','data/gen/sansu-34.js','data/gen/sansu-56.js','data/gen/textbook-extra.js','data/units.js','data/collection.js']) {
+window.RIKA_PUBLIC=/window\.RIKA_PUBLIC\s*=\s*true\s*;/.test(html);
+for(const file of ['data/kanji-grade.js','data/questions.js','data/calc.js','data/choices.js','data/quizlib.js','data/mathview.js','data/ngwords.js','data/cooplib.js','data/gen/core.js',...(window.RIKA_PUBLIC?['data/gen/rika.js']:[]),'data/gen/other.js','data/gen/sansu-12.js','data/gen/sansu-34.js','data/gen/sansu-56.js','data/gen/textbook-extra.js','data/units.js','data/collection.js']) {
   vm.runInContext(fs.readFileSync(path.join(root,file),'utf8'),ctx,{filename:file});
 }
 Object.assign(ctx,window);
 vm.runInContext(src,ctx,{filename:'index.html'});
+if(!window.RIKA_PUBLIC){
+  if(/^<script\s+src="data\/gen\/rika\.js/m.test(html)) throw Error('rika.js is loaded publicly');
+  if(window.MH_UNITS.UNITS.some(u=>u.subj==='rika')) throw Error('rika units are public');
+  if(!/window\.RIKA_PUBLIC\?\["rika"\]:\[\]/.test(html)) throw Error('rika subject gate missing');
+  if(!/このリンクは つかえません/.test(html)) throw Error('rika deep-link guard missing');
+}
 for(let g=1;g<=6;g++) {
   vm.runInContext(`ui.grade=${g}; renderHome()`,ctx,{filename:`home-${g}`});
 }
-for(const [name,expr] of [['units','renderUnits(new URLSearchParams())'],['teacher','renderTeacher(new URLSearchParams())'],['practice','renderUnitLink("#u=r3-living&n=1")']]) {
+for(const [name,expr] of [['units','renderUnits(new URLSearchParams())'],['teacher','renderTeacher(new URLSearchParams())'],['practice',`renderUnitLink("#u=${window.RIKA_PUBLIC?'r3-living':'m3-amari'}&n=1")`]]) {
   vm.runInContext(expr,ctx,{filename:name});
 }
 console.log('render smoke: home 1〜6年、単元選び、先生画面、練習 OK');

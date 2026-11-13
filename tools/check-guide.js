@@ -8,6 +8,7 @@
 const fs = require("fs"), path = require("path");
 const { root, load, BASE, SUBJ_ORDER, pageName } = require("./guide-lib");
 const W = load(), UN = W.MH_UNITS, TB = W.TEXTBOOK_ORDER;
+const rikaPublic = /window\.RIKA_PUBLIC\s*=\s*true\s*;/.test(fs.readFileSync(path.join(root, "index.html"), "utf8"));
 const errors = [], err = m => errors.push(m);
 const gdir = path.join(root, "guide");
 const read = f => (fs.existsSync(f) ? fs.readFileSync(f, "utf8") : null);
@@ -16,7 +17,7 @@ const expected = new Set(["index.html", "custom.html", "about.html"]);
 for (const u of UN.UNITS) expected.add(pageName(u.g, u.subj));
 const pageHtml = {};
 for (const f of expected) { const s = read(path.join(gdir, f)); if (s === null) err(`ページがありません: guide/${f}`); else pageHtml[f] = s; }
-for (const f of fs.existsSync(gdir) ? fs.readdirSync(gdir) : []) if (f.endsWith(".html") && !expected.has(f)) err(`想定外のページ: guide/${f}`);
+for (const f of fs.existsSync(gdir) ? fs.readdirSync(gdir) : []) if (f.endsWith(".html") && !expected.has(f) && !/^g[3-6]-rika\.html$/.test(f)) err(`想定外のページ: guide/${f}`);
 
 const idsOf = html => new Set([...html.matchAll(/\sid="([^"]+)"/g)].map(m => m[1]));
 const allIds = {}; for (const f in pageHtml) allIds[f] = idsOf(pageHtml[f]);
@@ -65,12 +66,14 @@ const sm = read(path.join(root, "sitemap.xml")), rb = read(path.join(root, "robo
 if (!sm) err("sitemap.xml がありません");
 else {
   const must = [BASE, BASE + "guide/", ...[...expected].filter(f => f !== "index.html").map(f => BASE + "guide/" + f)];
-  for (const u of must) if (!u.endsWith("-rika.html") && !sm.includes(`<loc>${u}</loc>`)) err(`sitemap.xml にありません: ${u}`);
+  for (const u of must) if (!sm.includes(`<loc>${u}</loc>`)) err(`sitemap.xml にありません: ${u}`);
+  if (!rikaPublic && /g[3-6]-rika\.html|#u=r[3-6]-|pick=r[3-6]-/.test(sm + Object.values(pageHtml).join(""))) err("非公開の理科への入口が残っています");
 }
 if (!rb || !rb.includes(`Sitemap: ${BASE}sitemap.xml`)) err("robots.txt から sitemap を指していません");
 // 教科書の並び
 let tbRows = 0;
 if (TB) for (const s of Object.keys(TB)) for (const c of Object.keys(TB[s] || {})) for (const g of Object.keys((TB[s][c] || {}).g || {})) for (const r of TB[s][c].g[g]) {
+  if (!rikaPublic && s === "rika") continue;
   tbRows++;
   if (!r.t) err(`TEXTBOOK_ORDER ${s}/${c}/${g}: 単元名 t がありません`);
   for (const id of r.u || []) if (!UN.byId[id]) err(`TEXTBOOK_ORDER ${s}/${c}/${g} 「${r.t}」: 単元IDが存在しません: ${id}`);
