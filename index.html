@@ -824,7 +824,7 @@ body[data-v=host] .wrap{max-width:none;padding:0}
   .rk-hbar i,.rkm-bar i,#rkfill{transition:none}.rkh-row [data-pid].hop{animation:none}}
 </style>
 <style id="mathview-style"></style>
-<style>.qclock{margin:0 auto 4px}.kidunits{grid-template-columns:1fr}.kidunits .ucard{min-height:76px;justify-content:center;text-align:center;font-size:1.25rem}.lesson-end{display:block;margin:16px auto 8px;padding:10px 16px;min-height:48px;border:1px solid var(--line);border-radius:10px;background:linear-gradient(to right,var(--go) var(--hold-progress,0%),var(--paper) var(--hold-progress,0%));color:var(--ink);font-size:14px;font-weight:700;touch-action:none;user-select:none}.colorpick{grid-template-columns:repeat(2,minmax(0,1fr))}.colorpick .choice[data-c="あお"]{background:#3979e5;color:#fff}.colorpick .choice[data-c="あか"]{background:#e35a56;color:#fff}.colorpick .choice[data-c="きいろ"]{background:#f5cd49;color:#243447}@media(max-width:375px){.play.pg .q:has(#qpic){padding:5px 6px;margin-bottom:3px}.play.pg .q:has(#qpic) .big{font-size:22px}.play.pg .q:has(#qpic) svg{max-height:72px}.play.pg .q:has(#qpic)~.umarks{margin:2px auto}.play.pg:has(#qpic) .choices .choice{min-height:44px;padding:5px}.play.pg:has(#qpic) .fb{min-height:20px}}
+<style>.qclock{margin:0 auto 4px}.kidunits{grid-template-columns:1fr}.kidunits .ucard{min-height:76px;justify-content:center;text-align:center;font-size:1.25rem}.lesson-end{display:block;margin:16px auto 8px;padding:10px 16px;min-height:48px;border:1px solid var(--line);border-radius:10px;background:linear-gradient(to right,var(--go) var(--hold-progress,0%),var(--paper) var(--hold-progress,0%));color:var(--ink);font-size:14px;font-weight:700;touch-action:none;-webkit-touch-callout:none;-webkit-user-select:none;user-select:none}.colorpick{grid-template-columns:repeat(2,minmax(0,1fr))}.colorpick .choice[data-c="あお"]{background:#3979e5;color:#fff}.colorpick .choice[data-c="あか"]{background:#e35a56;color:#fff}.colorpick .choice[data-c="きいろ"]{background:#f5cd49;color:#243447}@media(max-width:375px){.play.pg .q:has(#qpic){padding:5px 6px;margin-bottom:3px}.play.pg .q:has(#qpic) .big{font-size:20px;line-height:1.25}.play.pg .q:has(#qpic) .big:not(.long){white-space:nowrap}.play.pg .q:has(#qpic) svg{max-height:64px}.play.pg .q:has(#qpic)~.umarks{margin:2px auto}.play.pg:has(#qpic) .choices .choice{min-height:44px;padding:5px}.play.pg:has(#qpic) .fb{min-height:20px;font-size:18px;margin-bottom:3px}.play.pg:has(#qpic) .choices{gap:6px}.play.pg:has(#qpic) .topbar{margin-bottom:3px}.play.pg:has(#qpic) .tbar{margin-bottom:4px}}
 </style>
 </head>
 <body>
@@ -924,7 +924,7 @@ body[data-v=host] .wrap{max-width:none;padding:0}
 <script src="data/calc.js?v=60621312"></script>
 <script src="data/choices.js?v=1cc6792c"></script>
 <script src="data/quizlib.js?v=43bdb5a8"></script>
-<script src="data/mathview.js?v=170cc5aa"></script>
+<script src="data/mathview.js?v=e4a8ec3c"></script>
 <script src="data/ngwords.js?v=c8b8a674"></script>
 <script src="data/cooplib.js?v=a05f730a"></script>
 <!-- 単元ごとの問題の型（単元から出題） -->
@@ -933,7 +933,7 @@ body[data-v=host] .wrap{max-width:none;padding:0}
 <script src="data/gen/sansu-12.js?v=e835c597"></script>
 <script src="data/gen/sansu-34.js?v=dfac98cd"></script>
 <script src="data/gen/sansu-56.js?v=d0024b89"></script>
-<script src="data/gen/textbook-extra.js?v=31b08203"></script>
+<script src="data/gen/textbook-extra.js?v=21db5c64"></script>
 <script src="data/units.js?v=9cb6963f"></script>
 <script src="data/collection.js?v=40d86f87"></script>
 <script>
@@ -947,7 +947,7 @@ const TX={
  "h.join":["コードで参加《さんか》","はいる"],
  "h.teacher":["先生《せんせい》の画面《がめん》","せんせい"],
  "back":["もどる"],"back.end":["ここでおわる","ここで おわる"],
- "r.close.tab":["先生《せんせい》：じゅぎょうを おわる（2秒《びょう》長押《ながお》し）","せんせい：じゅぎょうを おわる（2びょう ながおし）"],
+ "r.close.tab":["先生《せんせい》：じゅぎょうを おわる（2秒《びょう》 長押《ながお》し）","せんせい：じゅぎょうを おわる（2びょう ながおし）"],
  "sec":["秒《びょう》","びょう"],
  "subj.math":["算数《さんすう》","さんすう"],"subj.jp":["国語《こくご》","こくご"],"subj.soc":["社会《しゃかい》","しゃかい"],"subj.eng":["英語《えいご》","えいご"],
  "n.home":["ホームへ"],
@@ -2501,7 +2501,7 @@ function renderTeacher(q){
     $("#rknote").classList.toggle("hidden",!rk);
     [...$("#ng").options].forEach(o=>{ o.disabled=quiz&&!o.value.startsWith("set:"); });
     if(quiz&&!$("#ng").value.startsWith("set:")){ const f=[...$("#ng").options].find(o=>o.value.startsWith("set:")); if(f){ $("#ng").value=f.value; fillG("#ng","#ngr"); setRule(); } }
-    if(quiz&&!qsets.length) $("#roomErr").innerHTML='クイズは先生のもんだいで出します。先に ② でセットをつくってください。<br><a class="btn s" href="#make" style="display:inline-flex;align-items:center;margin-top:6px;text-decoration:none">② もんだいを つくる</a>';
+    if(quiz&&!qsets.length) $("#roomErr").innerHTML='クイズは先生のもんだいで出します。先に ③のタブの ②「もんだいを つくる」でセットをつくってください。<br><a class="btn s" href="#make" style="display:inline-flex;align-items:center;margin-top:6px;text-decoration:none">③のタブの ② もんだいを つくる</a>';
     else $("#roomErr").textContent=""; };
   $("#nm").onchange=()=>{ syncMode(); remember(); };
   syncMode();
@@ -4702,7 +4702,7 @@ function qzHostTick(s,off){
 const hostPlain=H=>({mode:H.mode,game:H.game,g:H.g,t:H.t,rule:H.rule,nm:H.nm==="auto"?"auto":"input",nh:H.nh===0?0:1,ns:H.ns===3?3:5,setId:H.setId||"",gt:H.gt||""});
 function roomArgs(H){
   const s=hostPlain(H);
-  if(s.setId){ const st=qsFind(s.setId), f=st&&qsFinal(st); if(!f||!f.ok) throw new Error("もんだいのセットが見《み》つかりません（④で確認《かくにん》してください）"); s.qs=f.set.qs; s.gt=f.set.title; }
+  if(s.setId){ const st=qsFind(s.setId), f=st&&qsFinal(st); if(!f||!f.ok) throw new Error("もんだいのセットが見《み》つかりません（③のタブの ②「もんだいを つくる」で確認《かくにん》してください）"); s.qs=f.set.qs; s.gt=f.set.title; }
   return s;
 }
 
@@ -5072,7 +5072,7 @@ let activePracticeHash=location.hash;
 function lessonUnlock(){ try{sessionStorage.removeItem("mh_lesson_hash");sessionStorage.removeItem("mh_lesson_lock");}catch(e){} LESSON=false;document.body.classList.remove("lesson"); }
 function lessonEndButton(){
   const res=app.querySelector(".res");if(!res||res.querySelector(".lesson-end"))return;
-  const b=document.createElement("button");b.type="button";b.className="lesson-end";b.textContent="先生《せんせい》：じゅぎょうを おわる";b.setAttribute("aria-label","先生《せんせい》：2秒《びょう》長押《ながお》しで じゅぎょうを おわる");
+  const b=document.createElement("button");b.type="button";b.className="lesson-end";b.append(rubyNode(T("r.close.tab")));b.setAttribute("aria-label","先生《せんせい》：2秒《びょう》長押《ながお》しで じゅぎょうを おわる");
   let timer=0,frame=0,start=0;const cancel=()=>{clearTimeout(timer);cancelAnimationFrame(frame);timer=0;frame=0;b.style.setProperty("--hold-progress","0%");};const tick=()=>{b.style.setProperty("--hold-progress",Math.min(100,(performance.now()-start)/20)+"%");frame=requestAnimationFrame(tick);};
   b.addEventListener("pointerdown",e=>{if(e.button!==0)return;b.setPointerCapture(e.pointerId);cancel();start=performance.now();tick();timer=setTimeout(()=>{lessonUnlock();activePracticeHash="";go("#home");},2000);});
   ["pointerup","pointercancel","pointerleave","lostpointercapture"].forEach(x=>b.addEventListener(x,cancel));b.addEventListener("contextmenu",e=>e.preventDefault());res.appendChild(b);

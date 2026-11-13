@@ -13,6 +13,15 @@ for(const id of ['m1-nagasa-kurabe','m1-kasa-kurabe','m1-nanbanme']){
     assert.ok(pic,`${id}: picture missing`);
     const svg=ctx.window.MH_MATHVIEW.pictureSVG(pic,doc);
     assert.equal(svg?.tagName,'svg',`${id}: SVG missing`);
+    assert.ok(!item.choices.includes('わからない'),`${id}: ambiguous choice`);
+    if(pic.kind==='tapes'&&pic.segmented){
+      const q=ctx.window.MH_UNITS.plain(item.q), numbers=[...q.matchAll(/(?:あおは|あかは) (\d+)こぶん/g)].map(m=>Number(m[1]));
+      assert.equal(numbers.length,2,`${id}: counting text missing`);
+      const lines=svg.children.filter(e=>e.tagName==='line');
+      assert.equal(lines.length,Math.min(9,pic.blue)-1+Math.min(9,pic.red)-1,`${id}: tape divisions differ from text`);
+      assert.equal(numbers[0],pic.blue);assert.equal(numbers[1],pic.red);
+    }
+    if(pic.kind==='line') assert.ok(svg.children.some(e=>e.tagName==='text'&&e.textContent.includes('まえ')),`${id}: front marker missing`);
     found=true;
     if(pic.kind==='tapes'&&item.choices.includes('あお')&&item.choices.includes('あか')){
       assert.ok(['あお','あか'].includes(item.a));

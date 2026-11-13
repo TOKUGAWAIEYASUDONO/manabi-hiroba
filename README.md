@@ -51,7 +51,7 @@ index.html は data フォルダと一緒に置くこと（ダブルクリック
 外部（CDN）からは読み込まない。ライセンス全文は `vendor/THIRD-PARTY-LICENSES.txt`。 各ファイルの SHA-256 は `vendor/SHA256SUMS.txt`（`node tools/check-vendor-hashes.js` で現物と照合、部品を入れかえたら `--write` で作りなおす）。
 - PeerJS 1.5.5（MIT）・qrcode-generator 2.0.4（MIT）・canvas-confetti 1.9.4（ISC）・ZzFX 1.4.0（MIT）
 - 効果音・BGM・絵（CC0）：`vendor/audio/*.mp3`・`vendor/img/coin.png`・`vendor/img/planet.png`。作者は Kenney（kenney.nl）と Juhani Junkala（OpenGameArt）。patch.gg（公開素材の検索）で CC0・非AI と確認して取得。クレジットは任意だが感謝として載せる。一覧と元URLは `vendor/THIRD-PARTY-LICENSES.txt`。音は「音オン」のときだけ読み込み、読めなければ ZzFX の音にもどる。BGM は先生の大画面の「BGM」ボタンを押したときだけ（初期オフ）
-- 共有画像 `vendor/img/og-home.png`：AI生成画像（このプロジェクトで Codex の画像生成を使い、2026-11-12 に作成）。実在の人物の写真ではありません。上記 CC0 素材には含みません。
+- 共有画像 `vendor/img/og-home.png`：2026-11-13 に `python tools/build-og-image.py`（Pillow）で作成。`index.html` の黒板・色トークン・めばえの SVG（`mb-b`／`mb-n`）に合わせて図形を描き、BIZ UDPGothic で文字を入れた 1200×630 の自作画像です。上記 CC0 素材には含みません。元の AI 生成画像は `vendor/img/og-home-v1.png` として保管しています（2026-11-12、Codex の画像生成、実在の人物ではありません）。
 - アイコン：Lucide 1.71.0（ISC）。使う分だけを `index.html` の先頭に `<symbol>` として入れている（`#i-名前`）
 - フォント：BIZ UDPGothic（OFL-1.1、@fontsource 5.3.0）。`vendor/fonts/biz-udpgothic.css` と `vendor/fonts/files/*.woff2`（使う文字を含む分割ファイルだけ）。font-display:swap。読み込めなくても端末のフォントで表示される。文言を増やして新しい漢字を使ったときは、フォントの分割ファイルを作り直す
 
@@ -171,6 +171,6 @@ index.html は data フォルダと一緒に置くこと（ダブルクリック
 - **ロケットの密度**：ミニゲーム1回は12秒以内（せーので10秒・ほし11秒）。問題タイムの基本時間を 50秒に、クリア・もういちどの間を短くした。終了画面に「クラスで ○もん こたえた」。`test-coop.js` に、30人×（ふつう・みじかい）×（2・4・6年）で「1人あたりの解答数がたからばこ（同じ時間・同じ速さ）の7割以上」の検査（いまは約72〜78%）。
 授業リンクはタブ単位の sessionStorage に保持し、開いてから90分または日付が変わるまで固定されます。URL 書き換えや戻る操作では解除できません。「ここでおわる」で結果を見たあとも固定は続きます。先生が終えるときは、結果画面の「先生：じゅぎょうを おわる（2秒 長押し）」を2秒長押しします。別の授業に切りかえるときは、新しい授業リンクを開いてください。先生が試すときは新しいタブで開いてください。新しいタブで普通に開けば通常モードであり、児童端末の JavaScript だけで授業中の画面移動を完全には止められません。
 
-30台同時利用の目安：先生の端末と児童の端末を同じ授業ネットワークにつなぎ、事前に接続テストで安定性を確認してください。
+30台同時利用の目安：`tools/measure-load.js` の gzip 概算約356KB/台、計約10.7MB。教室の実効下り回線が10Mbpsで30台が同時に初回読み込みする場合、転送だけで約9秒（通信ヘッダー・遅延・動的読み込みを除く）。先生の端末と児童の端末を同じ授業ネットワークにつなぎ、事前に接続テストで安定性を確認してください。
 データを更新したら `node tools/stamp-version.js`。
 
