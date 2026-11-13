@@ -464,10 +464,21 @@ textarea.fld{resize:vertical}
 .up{width:100%;max-width:1000px;margin:0 auto}
 .up.play{max-width:640px}
 .up .th2{margin:6px 0}
-.upf{display:grid;gap:4px}
+.upf{display:grid;gap:8px}
+.upf .pills{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin-bottom:0}
+.upf .pills .pl{grid-column:1/-1;margin:0}
+.upf .pills .pill,.upsets .pill{width:100%;min-width:0;min-height:52px;display:flex;align-items:center;justify-content:center;text-align:center;white-space:normal;word-break:keep-all;overflow-wrap:normal;line-height:1.55}
+.upf .pills .pill:has(ruby),.upsets .pill:has(ruby){line-height:1.8}
+.upsets .pill span{display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;overflow:hidden;word-break:keep-all;overflow-wrap:normal}
+.upf .grade-pills{grid-template-columns:repeat(4,minmax(0,1fr))}
+.upf .subject-pills{grid-template-columns:repeat(4,minmax(0,1fr))}
+.upsets .pl{display:block;margin:0 0 8px}
+.upsets .set-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+@media (min-width:700px){.upf .grade-pills{grid-template-columns:repeat(7,minmax(0,1fr))}.upf .item-pills{grid-template-columns:repeat(3,minmax(0,1fr))}.upsets .set-grid{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media (min-width:1000px){.upf .item-pills,.upsets .set-grid{grid-template-columns:repeat(4,minmax(0,1fr))}}
 .pl{align-self:center;font-size:14px;margin-right:2px}
 .upanel .err:empty,.upanel .lkout:empty{display:none}
-.upsets{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:4px 0 8px}
+.upsets{margin:4px 0 8px}
 .pill.set{background:#fff3d6}
 .upanel{margin:0 0 12px;border-left-color:var(--accent)}
 .uwrap{display:grid;gap:8px;margin-top:6px}
@@ -488,7 +499,7 @@ textarea.fld{resize:vertical}
 .uacts{display:flex;flex-wrap:wrap;gap:8px}
 .uacts .btn{margin:0}
 .ugrp h3{margin:14px 0 6px;font-size:18px;border-bottom:3px solid var(--board);display:inline-block;padding-right:16px}
-.ugrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(290px,1fr));gap:10px}
+.ugrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,290px),1fr));gap:10px}
 .ucardw{display:flex;gap:6px;align-items:stretch}
 .ucard{flex:1;min-width:0;display:flex;gap:10px;align-items:center;text-align:left;background:#fff;border:3px solid var(--edge);border-radius:12px;box-shadow:0 4px 0 var(--edge);padding:8px 10px;min-height:68px;cursor:pointer}
 .ucard:active{transform:translateY(3px);box-shadow:0 1px 0 var(--edge)}
@@ -500,7 +511,7 @@ textarea.fld{resize:vertical}
 .umeta{display:flex;gap:4px;flex-wrap:wrap}
 .utag{font-size:12px;background:#eef2ec;border-radius:6px;padding:0 6px;color:var(--muted)}
 .uexb{margin:0!important;flex:none;min-width:56px;padding:6px 8px!important}
-.up.kid .ugrid{grid-template-columns:repeat(auto-fill,minmax(260px,1fr))}
+.up.kid .ugrid{grid-template-columns:repeat(auto-fit,minmax(min(100%,260px),1fr))}
 .up.kid .ucard{min-height:92px}
 .up.kid .ubody b{font-size:21px}.up.kid .unote{font-size:15px}.up.kid .ubox{width:40px;height:40px;font-size:26px}
 .ufoot{position:sticky;bottom:0;background:linear-gradient(transparent,var(--field) 30%);padding:12px 0 6px;text-align:center;z-index:5}
@@ -4816,17 +4827,17 @@ function renderUnits(q){
   /* かたまり1：しぼりこみ */
   function drawFilter(){
     const items=[...new Set(pool(subj).map(u=>u.item).filter(Boolean))], rows=[];
-    if(!kid) rows.push(h("div",{class:"pills"},h("b",{class:"pl",text:"教科《きょうか》"}),...subjs.map(s=>upill(SUBJ_JA[s],s===subj,()=>{ subj=s; fg=0; fi=""; drawFilter(); drawSets(); drawCards(); }))));
+    if(!kid) rows.push(h("div",{class:"pills subject-pills"},h("b",{class:"pl",text:"教科《きょうか》"}),...subjs.map(s=>upill(SUBJ_JA[s],s===subj,()=>{ subj=s; fg=0; fi=""; drawFilter(); drawSets(); drawCards(); }))));
     const gs=[...new Set(pool(subj).map(u=>u.g))].sort((a,b)=>a-b);
-    if(!(kid&&easy)&&gs.length>1) rows.push(h("div",{class:"pills"},h("b",{class:"pl",text:T("u.grade")}),upill(T("u.all"),fg===0,()=>{ fg=0; drawFilter(); drawCards(); }),...gs.map(g=>upill(g+"年《ねん》",fg===g,()=>{ fg=g; drawFilter(); drawCards(); }))));
-    if(!kid&&items.length>1) rows.push(h("div",{class:"pills"},h("b",{class:"pl",text:"学習《がくしゅう》項目《こうもく》"}),upill("ぜんぶ",fi==="",()=>{ fi=""; drawFilter(); drawCards(); }),...items.map(it=>upill(it,fi===it,()=>{ fi=it; drawFilter(); drawCards(); }))));
+    if(!(kid&&easy)&&gs.length>1) rows.push(h("div",{class:"pills grade-pills"},h("b",{class:"pl",text:T("u.grade")}),upill(T("u.all"),fg===0,()=>{ fg=0; drawFilter(); drawCards(); }),...gs.map(g=>upill(g+"年《ねん》",fg===g,()=>{ fg=g; drawFilter(); drawCards(); }))));
+    if(!kid&&items.length>1) rows.push(h("div",{class:"pills item-pills"},h("b",{class:"pl",text:"学習《がくしゅう》項目《こうもく》"}),upill("ぜんぶ",fi==="",()=>{ fi=""; drawFilter(); drawCards(); }),...items.map(it=>upill(it,fi===it,()=>{ fi=it; drawFilter(); drawCards(); }))));
     filt.replaceChildren(...rows);
   }
   /* かたまり2：おすすめの組み合わせ */
   function drawSets(){
     const ok=(UN.UNIT_SETS||[]).map(s=>({s,us:s.units.filter(i=>UBY[i])})).filter(x=>x.us.length>1&&x.us.every(i=>UBY[i].subj===subj)&&(!kid||(!easy&&x.us.every(i=>UBY[i].g<=(kg||6)))));
     sets.replaceChildren(...(ok.length?[h("div",{class:"upsets"},h("b",{class:"pl",text:kid?T("u.sets"):"おすすめの組《く》み合《あ》わせ（タップで選《えら》ぶ）"}),
-      ...ok.map(x=>h("button",{type:"button",class:"pill small set",text:x.s.title,onclick:()=>{ UPK.sel=x.us.slice(0,UMAX); uSave(); paint(); drawPanel(); }})))]:[]));
+      h("div",{class:"set-grid"},...ok.map(x=>h("button",{type:"button",class:"pill small set",onclick:()=>{ UPK.sel=x.us.slice(0,UMAX); uSave(); paint(); drawPanel(); }},h("span",{text:x.s.title})))))]:[]));
   }
   /* かたまり3：カード */
   function drawCards(){
