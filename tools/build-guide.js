@@ -6,6 +6,7 @@
    同じデータなら同じ出力（日付や乱数を入れない）。データを変えたら再生成して、生成物も commit する。 */
 const fs = require("fs"), path = require("path"), crypto = require("crypto");
 const { root, load, BASE, SUBJ, SUBJ_ORDER, pageName } = require("./guide-lib");
+SUBJ.rika = "理科"; SUBJ_ORDER.splice(3, 0, "rika");
 const W = load(), UN = W.MH_UNITS, plain = UN.plain, TB = W.TEXTBOOK_ORDER;
 const UNITS = UN.UNITS, SEED = 1;
 
@@ -166,6 +167,7 @@ function gradePage(p) {
   h += header([["まなびひろば", "../index.html"], ["学年・単元から さがす", "index.html"], [`${GJ(g)} ${SUBJ[subj]}`]]);
   h += `<main class="wrap" id="top-units">\n<h1>${esc(leadTxt)}<span class="h1sub">${GJ(g)} ${SUBJ[subj]}の単元から さがす学習ゲーム</span></h1>\n`;
   h += `<p class="lead">${GJ(g)} ${SUBJ[subj]}の単元は全${units.length}単元（ゲームで使えるもの${rd.length}${units.length > rd.length ? `、準備中${units.length - rd.length}` : ""}）。単元名は教科書の並びに合わせています。</p>\n`;
+  if (subj === "rika") h += `<p class="note">理科の問題は AI が作成し、先生による確認はまだ</p>\n`;
   h += gradeNav(g) + "\n";
   h += `<nav class="subj" aria-label="${GJ(g)}の教科">${SUBJ_ORDER.filter(s => byGS.has(g + "-" + s)).map(s => `<a href="${pageName(g, s)}"${s === subj ? ' aria-current="page"' : ""}>${SUBJ[s]}</a>`).join("")}</nav>\n`;
   if (tbCompanies(subj, g).length) h += `<p class="note">教科書の順で見たいときは、<a href="#tb">教科書会社ごとの並び</a>へ。</p>\n`;
@@ -322,12 +324,12 @@ table.grid{border-collapse:collapse;width:100%;background:var(--paper);border:2p
 .grid thead th{background:var(--board);color:#fff}.grid tbody th{background:#e1f0e3;white-space:nowrap}
 .grid.games td,.grid.games th,.grid.tbt td{text-align:left}
 .cell{display:flex;align-items:center;justify-content:center;gap:4px;min-height:48px;text-decoration:none;font-weight:bold;color:var(--ink);border-radius:8px}
-.cell b{font-size:22px}.cell.s-sansu b{color:var(--math)}.cell.s-kokugo b{color:var(--jp)}.cell.s-shakai b{color:#7a5d00}.cell.s-eigo b{color:var(--eng)}
+.cell b{font-size:22px}.cell.s-sansu b{color:var(--math)}.cell.s-kokugo b{color:var(--jp)}.cell.s-shakai b{color:#7a5d00}.cell.s-rika b{color:#176b63}.cell.s-eigo b{color:var(--eng)}
 .none{color:#6f7d75}
 .gblock{background:var(--paper);border:2px solid var(--line);border-radius:12px;padding:6px 14px 10px;margin:10px 0}.gblock h3{margin:6px 0;font-size:20px}
 .srow{margin:6px 0;display:flex;flex-wrap:wrap;gap:4px 8px;align-items:center}
 .slink{font-weight:bold;color:#fff;background:var(--board);padding:2px 10px;border-radius:8px;text-decoration:none}
-.slink.s-sansu{background:var(--math)}.slink.s-kokugo{background:var(--jp)}.slink.s-shakai{background:#f2c230;color:var(--ink)}.slink.s-eigo{background:var(--eng)}
+.slink.s-sansu{background:var(--math)}.slink.s-kokugo{background:var(--jp)}.slink.s-shakai{background:#f2c230;color:var(--ink)}.slink.s-rika{background:#176b63}.slink.s-eigo{background:var(--eng)}
 .ulink{font-size:15px;padding:2px 8px;border:1px solid var(--line);border-radius:999px;text-decoration:none;color:var(--ink);background:#fafdf9}.ulink.later{color:var(--muted);border-style:dashed}
 .how3{padding-left:1.4em}.how3 li{margin:6px 0}
 .sub3{font-size:17px;margin:14px 0 4px}.calc{padding-left:1.2em;margin:4px 0}

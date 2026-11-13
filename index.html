@@ -29,6 +29,7 @@
   --math:#cf3d2c;       /* 算数・赤（白い文字 4.8:1） */
   --jp:#2f6fd8;         /* 国語・青（白い文字 4.8:1） */
   --soc:#f2c230;        /* 社会・黄（濃い文字 9:1） */
+  --rika:#176b63;       /* 理科・深緑（白い文字 5.9:1） */
   --eng:#7a4cc8;        /* 英語・紫（白い文字 5.7:1） */
   --btl:#8a5a2b;        /* バトル・木（白い文字 5.9:1） */
   --go:#1b7a4b;         /* 進む・決めるボタンの緑（白い文字 5.3:1） */
@@ -121,7 +122,7 @@ h2{font-size:20px;margin:18px 0 8px}
   .zones[data-n="4"] .s-btl .tiles,.zones[data-n="5"] .s-btl .tiles{grid-template-columns:repeat(2,1fr)}}
 .zone{background:var(--zc);color:var(--zt,#fff);padding:10px 12px 14px;border-radius:6px 6px 18px 18px;border-top:8px solid var(--edge)}
 .zone h2{margin:0 0 8px;font-size:20px;letter-spacing:.08em;display:flex;align-items:center;gap:8px}
-.zone.s-math{--zc:var(--math)} .zone.s-jp{--zc:var(--jp)} .zone.s-soc{--zc:var(--soc);--zt:var(--ink)} .zone.s-eng{--zc:var(--eng)} .zone.s-btl{--zc:var(--btl)}
+.zone.s-math{--zc:var(--math)} .zone.s-jp{--zc:var(--jp)} .zone.s-soc{--zc:var(--soc);--zt:var(--ink)} .zone.s-rika{--zc:var(--rika)} .zone.s-eng{--zc:var(--eng)} .zone.s-btl{--zc:var(--btl)}
 .tiles{display:grid;gap:8px}
 .play .tiles{grid-template-columns:repeat(auto-fit,minmax(240px,1fr))}
 .tile{width:100%;background:#fff;color:var(--ink);border-radius:12px;padding:6px 12px;display:flex;align-items:center;gap:12px;text-align:left;min-height:76px}
@@ -940,6 +941,7 @@ body[data-v=host] .wrap{max-width:none;padding:0}
 <symbol id="a-soroban" viewBox="0 0 64 64"><g stroke="var(--edge)" stroke-width="3.5" stroke-linejoin="round" stroke-linecap="round"><rect x="5" y="8" width="54" height="48" rx="6" fill="var(--wood)"/><path d="M18 12v40M32 12v40M46 12v40" stroke-width="2"/><path d="M7 24h50" stroke-width="3"/><g stroke-width="2.4"><ellipse cx="18" cy="17" rx="6" ry="3.4" fill="var(--math)"/><ellipse cx="32" cy="17" rx="6" ry="3.4" fill="var(--jp)"/><ellipse cx="46" cy="17" rx="6" ry="3.4" fill="var(--soc)"/><ellipse cx="18" cy="30" rx="6" ry="3" fill="var(--math)"/><ellipse cx="18" cy="36" rx="6" ry="3" fill="var(--math)"/><ellipse cx="18" cy="45" rx="6" ry="3" fill="var(--math)"/><ellipse cx="18" cy="51" rx="6" ry="3" fill="var(--math)"/><ellipse cx="32" cy="30" rx="6" ry="3" fill="var(--jp)"/><ellipse cx="32" cy="36" rx="6" ry="3" fill="var(--jp)"/><ellipse cx="32" cy="45" rx="6" ry="3" fill="var(--jp)"/><ellipse cx="32" cy="51" rx="6" ry="3" fill="var(--jp)"/><ellipse cx="46" cy="30" rx="6" ry="3" fill="var(--soc)"/><ellipse cx="46" cy="36" rx="6" ry="3" fill="var(--soc)"/><ellipse cx="46" cy="45" rx="6" ry="3" fill="var(--soc)"/><ellipse cx="46" cy="51" rx="6" ry="3" fill="var(--soc)"/></g></g></symbol>
 <symbol id="a-kuku" viewBox="0 0 64 64"><g stroke="var(--edge)" stroke-width="3.5" stroke-linejoin="round" stroke-linecap="round"><rect x="6" y="6" width="16" height="16" rx="3" fill="var(--math)"/><rect x="24" y="6" width="16" height="16" rx="3" fill="var(--soc)"/><rect x="42" y="6" width="16" height="16" rx="3" fill="var(--jp)"/><rect x="6" y="24" width="16" height="16" rx="3" fill="var(--eng)"/><rect x="24" y="24" width="16" height="16" rx="3" fill="var(--paper)"/><path d="M29 29l6 6M35 29l-6 6" stroke-width="3"/><rect x="42" y="24" width="16" height="16" rx="3" fill="var(--math)"/><rect x="6" y="42" width="16" height="16" rx="3" fill="var(--soc)"/><rect x="24" y="42" width="16" height="16" rx="3" fill="var(--jp)"/><rect x="42" y="42" width="16" height="16" rx="3" fill="var(--eng)"/></g></symbol>
 <symbol id="a-kanji" viewBox="0 0 64 64"><g stroke="var(--edge)" stroke-width="3.5" stroke-linejoin="round" stroke-linecap="round"><rect x="6" y="8" width="36" height="48" rx="3" fill="var(--paper)" transform="rotate(-6 24 32)"/><path d="M12 22q10-5 22 0M12 32q11-5 22 0M14 42q10-4 18 0" stroke-width="5" fill="none" transform="rotate(-6 24 32)"/><path d="M43 52L56 12" stroke="var(--btl)" stroke-width="6"/><path d="M38 62q-1-8 4-9 5 0 3 9z" fill="var(--edge)" stroke-width="2.5"/></g></symbol>
+<symbol id="a-rika" viewBox="0 0 64 64"><g stroke="var(--edge)" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="27" cy="26" r="17" fill="var(--paper)"/><path d="M39 39l17 17"/><path d="M19 29q4-11 15-12" fill="none"/></g></symbol>
 <symbol id="a-japan" viewBox="0 0 64 64"><g stroke="var(--edge)" stroke-width="3" stroke-linejoin="round" stroke-linecap="round" fill="var(--go)"><path d="M38 8l8-3 10 5 5 9-9 4-6-5-8-1z"/><path d="M52 24Q54 32 46 36Q38 38 34 42Q26 46 16 47L9 52Q6 47 12 43Q22 40 28 35Q36 31 42 25z"/><path d="M18 50l9-1 3 5-9 3-6-2z"/><path d="M5 53l8-3 3 8-5 3-5-5z"/><circle cx="42" cy="30" r="3.6" fill="var(--math)" stroke-width="2.4"/></g></symbol>
 <symbol id="a-abc" viewBox="0 0 64 64"><g stroke="var(--edge)" stroke-width="3.5" stroke-linejoin="round" stroke-linecap="round"><path d="M14 8h36a8 8 0 0 1 8 8v22a8 8 0 0 1-8 8H30L16 58V46h-2a8 8 0 0 1-8-8V16a8 8 0 0 1 8-8z" fill="var(--eng)"/><g fill="none" stroke="var(--paper)" stroke-width="4"><path d="M12 36l5-17 5 17M14 30h6"/><path d="M27 36V20h4.5q4.5 0 4.5 4.5t-4.5 4.5H27m4.5 0q5 0 5 4t-5 4H27"/><path d="M52 24q-2-4-6-4-5 1-5 8t5 8q4 0 6-4"/></g></g></symbol>
 <symbol id="a-chest" viewBox="0 0 64 64"><g stroke="var(--edge)" stroke-width="3.5" stroke-linejoin="round" stroke-linecap="round"><rect x="7" y="28" width="50" height="28" rx="3" fill="var(--wood)"/><path d="M7 29V22q0-14 25-14t25 14v7z" fill="var(--btl)"/><path d="M17 17v39M47 17v39" stroke="var(--soc)" stroke-width="7" stroke-linecap="butt"/><rect x="26" y="26" width="12" height="13" rx="2.5" fill="var(--soc)"/><circle cx="32" cy="31.5" r="2" fill="var(--edge)" stroke="none"/></g></symbol>
@@ -1002,13 +1004,14 @@ body[data-v=host] .wrap{max-width:none;padding:0}
 <script src="data/ngwords.js?v=c8b8a674"></script>
 <script src="data/cooplib.js?v=a05f730a"></script>
 <!-- 単元ごとの問題の型（単元から出題） -->
-<script src="data/gen/core.js?v=74457b0a"></script>
+<script src="data/gen/core.js?v=544435a3"></script>
+<script src="data/gen/rika.js?v=6a61d60f"></script>
 <script src="data/gen/other.js?v=0614ebf8"></script>
 <script src="data/gen/sansu-12.js?v=e835c597"></script>
 <script src="data/gen/sansu-34.js?v=dfac98cd"></script>
 <script src="data/gen/sansu-56.js?v=d0024b89"></script>
 <script src="data/gen/textbook-extra.js?v=b2d3f58f"></script>
-<script src="data/units.js?v=42971975"></script>
+<script src="data/units.js?v=0ac1d319"></script>
 <script src="data/collection.js?v=d7b5fbb7"></script>
 <script>
 /* ================= 画面の文言（1つの表） =================
@@ -1023,7 +1026,7 @@ const TX={
  "back":["もどる"],"back.end":["ここでおわる","ここで おわる"],
  "r.close.tab":["先生《せんせい》：じゅぎょうを おわる（2秒《びょう》 長押《ながお》し）","せんせい：じゅぎょうを おわる（2びょう ながおし）"],
  "sec":["秒《びょう》","びょう"],
- "subj.math":["算数《さんすう》","さんすう"],"subj.jp":["国語《こくご》","こくご"],"subj.soc":["社会《しゃかい》","しゃかい"],"subj.eng":["英語《えいご》","えいご"],
+ "subj.math":["算数《さんすう》","さんすう"],"subj.jp":["国語《こくご》","こくご"],"subj.soc":["社会《しゃかい》","しゃかい"],"subj.rika":["理科《りか》","りか"],"subj.eng":["英語《えいご》","えいご"],
  "n.home":["ホームへ"],
  "fg.t":["ふりがな"],"fg.on":["あり"],"fg.off":["なし"],
  /* 前に映す大画面（先生の端末） */
@@ -1516,7 +1519,7 @@ function showQr(box,url){
 const tget=(o,p,k)=>Object.defineProperty(o,p,{get:()=>T(k),enumerable:true});   // GAMES・MODES・RULES の t・d は表から取る
 
 /* ================= データ ================= */
-const SUBJ={math:{bg:"#fde6df",fg:"#8a2a10"},jp:{bg:"#e1ecfb",fg:"#1c4a96"},soc:{bg:"#dff3e8",fg:"#14603f"},eng:{bg:"#efe3fa",fg:"#5a2a8a"}};   // 薄い背景＋濃い文字
+const SUBJ={math:{bg:"#fde6df",fg:"#8a2a10"},jp:{bg:"#e1ecfb",fg:"#1c4a96"},soc:{bg:"#dff3e8",fg:"#14603f"},rika:{bg:"#d8f2ed",fg:"#145a52"},eng:{bg:"#efe3fa",fg:"#5a2a8a"}};   // 薄い背景＋濃い文字
 const subjN=k=>T("subj."+k);
 const tagHtml=k=>`<span class="tag" style="background:${SUBJ[k].bg};color:${SUBJ[k].fg}">${subjN(k)}</span>`;
 const DATA_OK=!!(window.MH_QUESTIONS&&window.MH_CALC&&window.MH_CHOICE);
@@ -1727,7 +1730,7 @@ function openGame(x,g0){
   const g=x.g.includes(g0)?g0:x.g[0];
   go(x.id==="kuku"||x.id==="kencho"?`#setup?game=${x.id}&g=${g}`:`#play?game=${x.id}&g=${g}&t=60`);
 }
-const SUBJ_ORDER=["math","jp","soc","eng"], MEDAL_ICO=["🥉","🥈","🥇"];
+const SUBJ_ORDER=["math","jp","soc","rika","eng"], MEDAL_ICO=["🥉","🥈","🥇"];
 const stampsHtml=m=>MEDAL_ICO.map((e,i)=>m>i?msvg(i+1,"st on"):msvg(0,"st")).join("");
 const tico=x=>svgU(x.art,"ti");
 /* 「つぎのメダルまで あと○もん」（1分あそんだときの正解数で数える） */
@@ -1757,12 +1760,12 @@ function renderHome(){
   setLG(ui.grade);
   const b=bests(), easy=easyG(LG);
   const games=GAMES.filter(x=>ui.grade===0||x.g.includes(ui.grade));
-  const zones=SUBJ_ORDER.map(k=>[k,games.filter(x=>x.s===k)]).filter(z=>z[1].length);
+  const zones=SUBJ_ORDER.map(k=>[k,games.filter(x=>x.s===k)]).filter(z=>z[1].length || (k==="rika" && (ui.grade===0 || ui.grade>=3) && UREADY.some(u=>u.subj==="rika")));
   app.innerHTML=`<div class="home${easy?" easy":""}">
     ${easy?`<div class="guide">${mbs("n")}<span class="say">${T("home.guide")}</span></div>`:""}
     <button class="hero" id="quick">${easy?"":mbs("n")}${ic("zap")}<span><span class="ht">${T("home.quick")}</span><span class="hn">${T("home.quick.n")}</span></span></button>
     ${COLOK?colDoor():""}
-    <div class="zones" data-n="${zones.length+1}">${zones.map(([k,l])=>`<section class="zone s-${k}"><h2>${subjN(k)}</h2><div class="tiles">${l.map(x=>gameTile(x,b)).join("")}${easy||k==="math"?"":unitTile(k)}</div></section>`).join("")}${easy?`<section class="zone s-math"><div class="tiles">${unitTile("math")}</div></section>`:""}
+    <div class="zones" data-n="${zones.length+1}">${zones.map(([k,l])=>`<section class="zone s-${k}"><h2>${subjN(k)}</h2><div class="tiles">${l.map(x=>gameTile(x,b)).join("")}${k==="rika"?`<button class="tile unitgo" data-un="rika"><span class="tico">${svgU("a-rika")}</span><span class="tbody"><span class="tt">${T("u.pick")}</span></span></button>`:easy||k==="math"?"":unitTile(k)}</div></section>`).join("")}${easy?`<section class="zone s-math"><div class="tiles">${unitTile("math")}</div></section>`:""}
       <section class="zone s-btl"><h2>${ic("swords")}${T("home.battle")}</h2><div class="tiles">${MODES.map(m=>modeTile(m,b)).join("")}</div></section></div>
     ${zones.length?"":`<div class="empty">${T("home.empty")}</div>`}
     <div class="bottom">
@@ -2056,7 +2059,7 @@ function bkApply(r){
 /* 単元練習の記録：教科ごとに、挑戦した単元とメダル */
 function unitBook(b){
   if(!UNITS_OK) return "";
-  const subs=[["sansu","math"],["kokugo","jp"],["shakai","soc"],["eigo","eng"]];
+  const subs=[["sansu","math"],["kokugo","jp"],["shakai","soc"],["rika","rika"],["eigo","eng"]];
   const secs=subs.map(([sj,k])=>{
     const us=UREADY.filter(u=>u.subj===sj&&b["u:"+u.id]&&(b["u:"+u.id].score||b["u:"+u.id].medal));
     if(!us.length) return "";
@@ -2371,7 +2374,7 @@ function renderZukan(){
   const stk=u=>{ const st=COL.stage(S,u.id), pend=COL.pending(S,u.id), k=SJ[u.subj];
     const mark=st===3?svgU("d-star","skstar"):st===2?ic("check"):pend?ic("moon"):"";
     return `<button type="button" class="sk s${st}${pend?" pend":""}" data-id="${u.id}" style="--sc:var(--${k});--sb:${SUBJ[k].bg}" aria-label="${esc(rbp(u.title))}：${T("col.s."+st)}"><span class="skm">${mark}</span><span class="skt">${esc(u.title)}</span></button>`; };
-  const sec=[["sansu","math"],["kokugo","jp"],["shakai","soc"],["eigo","eng"]].map(([sj,k])=>{
+  const sec=[["sansu","math"],["kokugo","jp"],["shakai","soc"],["rika","rika"],["eigo","eng"]].map(([sj,k])=>{
     const us=UREADY.filter(u=>u.subj===sj); if(!us.length) return "";
     const gs=[...new Set(us.map(u=>u.g))].sort((a,b)=>a-b), has=g&&gs.includes(g);
     const page=(gr,open)=>{ const l=us.filter(u=>u.g===gr), n=l.filter(u=>COL.stage(S,u.id)>=2).length;
@@ -4814,7 +4817,7 @@ function ensureMine(s){       // 先生のセットを1回だけ受け取る（�
    データは data/units.js・data/gen/*.js（window.MH_UNITS）。画面は DOM 組み立て（textContent）だけで作る。
    リンク（#u=単元ID,…&n=&t=&s=）は、単元IDを UNITS にあるものだけ、n・t・s を範囲内だけ受け付ける */
 const UN=window.MH_UNITS, UNITS_OK=!!(UN&&Array.isArray(UN.UNITS)&&UN.UNITS.length&&UN.unitPick);
-const SJ={sansu:"math",kokugo:"jp",shakai:"soc",eigo:"eng"}, SJR={math:"sansu",jp:"kokugo",soc:"shakai",eng:"eigo"};
+const SJ={sansu:"math",kokugo:"jp",shakai:"soc",rika:"rika",eigo:"eng"}, SJR={math:"sansu",jp:"kokugo",soc:"shakai",rika:"rika",eng:"eigo"};
 const SUBJ_JA={sansu:"算数《さんすう》",kokugo:"国語《こくご》",shakai:"社会《しゃかい》",eigo:"英語《えいご》"};
 const UREADY=UNITS_OK?UN.UNITS.filter(u=>u.status==="ready"&&u.gen):[];
 const UBY={}; UREADY.forEach(u=>{ UBY[u.id]=u; });
@@ -4879,7 +4882,7 @@ function renderUnits(q){
         h("span",{class:"ubody"},h("b",{text:u.title})))))));
     return;
   }
-  const easy=easyG(kg), subjs=["sansu","kokugo","shakai","eigo"];
+  const easy=easyG(kg), subjs=["sansu","kokugo","shakai","rika","eigo"];
   /* ?pick=ID1,ID2（ガイドから）：UNITS にある ID だけ、最大20個を選択済みにして開く */
   if(!kid&&q.get("pick")){ const ok=[...new Set(q.get("pick").split(",").map(x=>x.trim()))].filter(i=>UBY[i]&&UREADY.includes(UBY[i])).slice(0,20); if(ok.length){ UPK.sel=ok; uSave(); } }
   let subj=subjs.includes(q.get("subj"))?q.get("subj"):(!kid&&q.get("pick")&&UPK.sel[0]&&UBY[UPK.sel[0]]?UBY[UPK.sel[0]].subj:"sansu");

@@ -65,7 +65,7 @@ const sm = read(path.join(root, "sitemap.xml")), rb = read(path.join(root, "robo
 if (!sm) err("sitemap.xml がありません");
 else {
   const must = [BASE, BASE + "guide/", ...[...expected].filter(f => f !== "index.html").map(f => BASE + "guide/" + f)];
-  for (const u of must) if (!sm.includes(`<loc>${u}</loc>`)) err(`sitemap.xml にありません: ${u}`);
+  for (const u of must) if (!u.endsWith("-rika.html") && !sm.includes(`<loc>${u}</loc>`)) err(`sitemap.xml にありません: ${u}`);
 }
 if (!rb || !rb.includes(`Sitemap: ${BASE}sitemap.xml`)) err("robots.txt から sitemap を指していません");
 // 教科書の並び

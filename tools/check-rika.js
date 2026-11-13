@@ -16,10 +16,17 @@ for (const u of units) {
   const minimum = 8;
   if (!rows || rows.length < minimum) { errors.push(`${u.id}: 知識行が${minimum}件未満`); continue; }
   for (const row of rows) if (row.length !== 5 || new Set(row.slice(1)).size !== 4) errors.push(`${u.id}: 4択の重複または不足`);
+  const answerCounts = new Map();
+  for (const row of rows) answerCounts.set(row[1], (answerCounts.get(row[1]) || 0) + 1);
+  for (const [answer, n] of answerCounts) if (n > 2) errors.push(`${u.id}: 同じ答え「${answer}」が${n}件`);
   for (let i = 0; i < rows.length * 2; i++) {
     const q = ctx.window.MH_UNITS.make(u, `rika-check-${i}`);
     if (q.reviewed !== false || q.ans !== 'choice4' || q.choices.length !== 4 || !q.choices.includes(q.a)) errors.push(`${u.id}: 生成結果が不正`);
     if (/はは？|がが|をを|では？$|何というかは？|[はをでにと]は？$/.test(q.q)) errors.push(`${u.id}: 不自然な問題文「${q.q}」`);
+    const answer = q.a.replace(/《[^》]*》/g, '');
+    if (/こと\s*どう\s*なる？$|することは\s*どう\s*なる？$/.test(q.q)) errors.push(`${u.id}: 崩れた問い「${q.q}」`);
+    if (/どれ？$|どちら？$/.test(q.q) && /(?:なる|する|れる|られる|できる|動く|進む|流れる|変わる|通す|通さない|つく|つかない|ふえる|へる|止まる|育つ|にごる|近づく|出る|行く|同じ)$/.test(answer)) errors.push(`${u.id}: 選ぶ問いに変化・動作の答え「${q.q} → ${q.a}」`);
+    if (/どう\s*なる？$|どう\s*動く？$/.test(q.q) && /^(?:根|葉|花|実|水|氷|鉄|銅|東|西|南|北|温度計|石灰水|ヨウそ液)$/.test(answer)) errors.push(`${u.id}: 変化の問いに名詞の答え「${q.q} → ${q.a}」`);
   }
 }
 console.log(`理科 ${units.length}単元・全学年各8知識以上／エラー ${errors.length}件`);
