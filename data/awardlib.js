@@ -1,6 +1,6 @@
 // 部門賞はサーバーで確定する。順位の公開値には集計の数字を含めない。
 const BASE=[['correct','ものしり はかせ'],['streak','れんぞく ロケット'],['speed','いなずま アンサー'],['comeback','あきらめない ヒーロー']];
-const EXTRA={chest:['chest','たからさがし名人'],race:['star','ラッキースター'],rocket:['boost','エンジン全開']};
+const EXTRA={chest:['chest','たからさがし名人《めいじん》'],race:['star','ラッキースター'],rocket:['boost','エンジン全開《ぜんかい》']};
 function awards(mode,rule,players){
   const cats=[...BASE,...(EXTRA[mode]?[EXTRA[mode]]:[])], first=new Map(), shown=new Map();
   return cats.map(([key,title])=>{

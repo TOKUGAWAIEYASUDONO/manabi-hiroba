@@ -102,7 +102,7 @@ function pub(room, host) {
     players: room.co ? coPlayers(room, host) : [...room.players.values()].map(p => room.qz
       ? { pid: p.pid, name: nm(p), emoji: p.emoji, v: p.v, ok: p.ok, ng: p.ng, st: p.st | 0, lp: p.lp | 0, lc: p.lc | 0, ...(host && room.qz.phase === "end" ? { rec: p.rec || "" } : {}), ...(host && room.qz.phase === "q" && room.qz.answeredBy(p.pid) ? { a: 1 } : {}) }
       : { pid: p.pid, name: nm(p), emoji: p.emoji, v: p.v, ok: p.ok, ng: p.ng }),
-    ...(room.status === "ended" ? { awards: AW.awards(room.mode, room.rule, [...room.players.values()]), ...(host ? { awardStats: [...room.players.values()].map(p=>({pid:p.pid,name:p.name,correct:p.ok,streak:p.maxStreak||0,averageMs:p.speedCount?Math.round(p.speedSum/p.speedCount):null,comeback:p.comeback||0,chest:p.chest||0,star:p.star||0,boost:p.boost||0})) } : {}) } : {}),
+    ...(room.status === "ended" ? { awards: AW.awards(room.mode, room.rule, [...room.players.values()]).map(c => host ? c : { ...c, winners: c.winners.map(w => ({ ...w, name: "" })) }), ...(host ? { awardStats: [...room.players.values()].map(p=>({pid:p.pid,name:p.name,correct:p.ok,streak:p.maxStreak||0,averageMs:p.speedCount?Math.round(p.speedSum/p.speedCount):null,comeback:p.comeback||0,chest:p.chest||0,star:p.star||0,boost:p.boost||0})) } : {}) } : {}),
     ...(room.qz ? { quiz: room.qz.pub() } : {})
   };
 }
@@ -400,6 +400,14 @@ http.createServer(async (req, res) => {
       res.writeHead(200, { "Content-Type": vm[2] === "js" ? "text/javascript; charset=utf-8" : "text/plain; charset=utf-8" });
       return fs.createReadStream(f).pipe(res);
     }
+    const fm = url.pathname.match(/^\/vendor\/(fonts\/[\w-]+\.css|fonts\/files\/[\w-]+\.woff2)$/);   // 同梱の文字（BIZ UDPゴシック）
+    if (req.method === "GET" && fm) {
+      const f = path.join(__dirname, "vendor", fm[1]);
+      if (!fs.existsSync(f)) return json(res, 404, { error: "not found" });
+      res.writeHead(200, { "Content-Type": fm[1].endsWith(".css") ? "text/css; charset=utf-8" : "font/woff2", "Cache-Control": "public, max-age=86400" });
+      return fs.createReadStream(f).pipe(res);
+    }
+    if (req.method === "GET" && url.pathname === "/favicon.ico") { res.writeHead(204, { "Cache-Control": "public, max-age=86400" }); return res.end(); }
     const am = url.pathname.match(/^\/vendor\/(audio\/[\w-]+\.mp3|img\/[\w-]+\.png|img\/space\/[\w-]+\.webp)$/);   // 効果音・BGM・絵（CC0 の素材。vendor/THIRD-PARTY-LICENSES.txt）
     if (req.method === "GET" && am) {
       const f = path.join(__dirname, "vendor", am[1]);
