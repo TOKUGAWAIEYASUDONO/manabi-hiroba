@@ -16,7 +16,7 @@ t("単元の ID 表：units.js の ready な単元と同じ（新しい単元が
   const ready = ctx.MH_UNITS.UNITS.filter(u => u.status === "ready" && u.gen), SJ = { sansu: "m", kokugo: "j", shakai: "s", eigo: "e", rika: "r" };
   assert.strictEqual(new Set(C.UNIT_IDS).size, C.UNIT_IDS.length);
   assert.deepStrictEqual([...ready.map(u => u.id)].sort(), [...C.UNIT_IDS].sort());
-  const GFIX = { "m6-hayasa": 5, "m5-bunsu-int": 6 };
+  const GFIX = { "m6-hayasa": 5, "m5-bunsu-int": 6, "m5-frac-mul-int": 6, "m5-frac-div-int": 6, "m6-speed-distance": 5, "m6-speed-time": 5 };
   for (const u of ready) { assert.strictEqual(u.id[0], SJ[u.subj]); assert.strictEqual(GFIX[u.id] || +u.id[1], u.g); }
   assert(C.UNIT_IDS.length * 4 + 3 < 46656);
 });
@@ -299,7 +299,7 @@ t("バックアップ：たんけんメモも往復する。メモが無けれ�
   const S = C.fresh(D); S.u["m3-amari"] = [2, 0, D]; S.tk.n = 3;
   const plain = C.hrMake(S); S.mo = ["school", "clock"]; S.mu = ["m3-amari", C.UNIT_IDS[115]];
   const withMemo = C.hrMake(S), r = C.hrParse(withMemo);
-  assert.strictEqual(withMemo.replace(/-/g, "").length - plain.replace(/-/g, "").length, 48);
+  assert.strictEqual(withMemo.replace(/-/g, "").length - plain.replace(/-/g, "").length, 4 + 4 * Math.ceil(C.UNIT_IDS.length / 20));
   assert.deepStrictEqual(r.mo.slice().sort(), ["clock", "school"]); assert.deepStrictEqual(r.mu.slice().sort(), ["m3-amari", C.UNIT_IDS[115]].sort());
   const L = C.fresh(D + 3); C.hrMerge(L, r, D + 3); assert.strictEqual(L.mo.length, 2); assert.strictEqual(L.mu.length, 2); assert.strictEqual(L.tk.n, 0);
   C.hrMerge(L, r, D + 3); assert.strictEqual(L.mo.length, 2);                                // くり返しても増えない
