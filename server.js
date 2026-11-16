@@ -320,6 +320,9 @@ const API = {
     if (b.op !== "answer" && !(MODE_OPS[room.mode] || []).includes(b.op)) return [403, { error: "この遊び方では使えない操作です" }];
     if (room.co) {      // 協力モード：判定は共有部品（cooplib）。児童の値は型・範囲を調べてから使う
       if (!COOP.OPS.includes(b.op)) return [403, { error: "この遊び方では使えない操作です" }];
+      // Boost eligibility is calculated only from answers accepted by the room engine.
+      // Never accept client-supplied counters as boost credit.
+      if (b.op === "boost" && ("count" in b || "correct" in b || "ok" in b)) return [400, { error: "boost counters are not accepted" }];
       const r = room.co.act(p.pid, b.op, b, Date.now());
       if (r[0] === 200) { if (r[2]) broadcast(room, true); else broadcast(room); }
       return [r[0], r[1]];

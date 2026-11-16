@@ -546,6 +546,16 @@ body:not(.nofg) :is(p,div,span,b,button,h1,h2,h3,td,th,label,summary,li):has(>ru
 @media (max-width:430px){header{gap:3px;padding:6px 6px} header .logo{font-size:13px;letter-spacing:0;padding:0 1px;min-width:0;flex:0 1 auto;overflow:hidden} header .hbtn{flex:none} .hbtn#hGrade{font-size:13px;padding:0 4px;gap:2px} .hbtn#hGrade .ic{display:none} #hRec{font-size:11px;padding:0 3px;gap:2px} #hRec .ic,#hRec svg{width:20px;height:20px} #hRec .art{width:20px;height:20px} .hbtn.fgb{font-size:10px;padding:0 3px;min-width:44px}.hbtn.fgb b{font-size:12px} #hRec b{font-size:14px}}
 /* ===== 前に映す大画面（先生の端末）：2〜3m 離れても読める。最小 28px ===== */
 body[data-v=host] header,body[data-v=host] .foot{display:none}
+.px-menu{position:fixed;right:14px;top:12px;z-index:60;color:var(--ink)}
+.px-menu summary{list-style:none;cursor:pointer;background:#fff;border:2px solid var(--edge);border-radius:12px;padding:8px 14px;font-size:20px;font-weight:800}
+.px-menu-panel{position:absolute;right:0;top:52px;width:min(430px,90vw);max-height:78vh;overflow:auto;background:#fff;border:3px solid var(--edge);border-radius:14px;padding:14px;display:flex;flex-direction:column;gap:8px}
+.px-menu-panel .px-note .pn{position:static;width:auto}
+.px-menu-panel .btn{font-size:20px}
+.px-menu:not([open]) .px-menu-panel{display:none}
+body[data-v=host] .px-lobby .chips,body[data-v=host] .rkh-note{display:none}
+body[data-v=host] .px-end .px-more{display:none}
+body[data-v=host] .px-r .px-ev{display:none}
+body[data-v=host] .px-r .px-h:last-of-type{display:none}
 body[data-v=host] .wrap{max-width:none;padding:0}
 .px{flex:1;display:flex;flex-direction:column;min-height:100dvh;background:var(--board);color:#fff;padding:14px 26px 92px;font-size:28px;line-height:1.3;overflow:hidden}
 .px .note,.px .chip,.px .hrank .note{font-size:28px}
@@ -1027,7 +1037,7 @@ body[data-v=host] .wrap{max-width:none;padding:0}
 <script src="data/quizlib.js?v=43bdb5a8"></script>
 <script src="data/mathview.js?v=90c14913"></script>
 <script src="data/ngwords.js?v=c8b8a674"></script>
-<script src="data/cooplib.js?v=a05f730a"></script>
+<script src="data/cooplib.js?v=cff69a3a"></script>
 <!-- 単元ごとの問題の型（単元から出題） -->
 <script src="data/gen/core.js?v=bceaee0a"></script>
 <script>window.RIKA_PUBLIC=true;</script>
@@ -1358,7 +1368,7 @@ const TX={
  "rk.wrong":[a=>`ちょうせん ＋1！ こたえは ${a}`],
  "rk.cap":["みんなの ばん！ ほかの 人《ひと》を おうえんしよう","みんなの ばん！ ほかの ひとを おうえんしよう"],
  "rk.boost":["ブースト！"],"rk.boosted":["ブースト ありがとう！"],
- "rk.boost.h":["ブーストは 1ステージに 1かい おせるよ","ブーストは 1ステージに 1かい おせるよ"],
+ "rk.boost.h":["3もん せいかいで ブースト！","3もん せいかいで ブースト！"],
  "rk.sy":["せーので はっしゃ！"],"rk.sy.h":["3・2・1 の「1」で ボタンを おそう！"],
  "rk.press":["おす！"],"rk.ready":["じゅんび…"],
  "rk.hit":["ぴったり！"],"rk.next":["つぎも やってみよう"],
@@ -3721,7 +3731,7 @@ function renderHost(){
       :k==="rkend"?`<button type="button" class="btn" id="hn">${T("px.new")}</button>`
       :k==="end"?`${csvOptHtml()}<button type="button" class="btn sub" id="hc">${T("px.copy")}</button><button type="button" class="btn" id="hn">${T("px.new")}</button>`
       :`<button type="button" class="btn sub" id="he">${T("px.end")}</button>`;
-    d.innerHTML=note+bk+main+fsBtn()+bgmBtn();
+    d.innerHTML=`<details class="px-menu"><summary>&#9776; メニュー</summary><div class="px-menu-panel">${note}${bk}${main.replace(/<button[^>]*id="hs"[^>]*>.*?<\/button>/, "")}${fsBtn()}${bgmBtn()}</div></details>`+(k==="lobby"?`<button type="button" class="btn" id="hs">${T("px.start")}</button>`:"");
     const b=id=>document.getElementById(id);
     if(b("hs")) b("hs").onclick=()=>api("start",HOST).catch(err);
     if(b("hcl")) b("hcl").onclick=()=>api("close",{...HOST,on:!(last&&last.closed)}).catch(err);      // 入室のしめきり（待合室でも参加を止める）
@@ -3846,13 +3856,13 @@ function rkKidStop(){ stopTimer(); if(RK){ clearInterval(RK.fl); RK.fl=0; } }
 function rkKidState(s){
   const co=COOP&&COOP.clean(s.co); if(!co) return;
   setLG(s.g);
-  if(!RK||RK.code!==s.code) RK={code:s.code,offs:[],off:0,key:"",k:0,ans:0,ok:0,boo:0,hit:0,got:0,gotMini:0,pend:0,ended:false,art:0,cur:null,lock:false,boostSg:-1,pressed:{},fl:0,nextStar:0,flushing:false};
+  if(!RK||RK.code!==s.code) RK={code:s.code,offs:[],off:0,key:"",k:0,ans:0,ok:0,boo:0,hit:0,got:0,gotMini:0,pend:0,ended:false,art:0,cur:null,lock:false,boostSg:-1,boostUsed:0,stageOk:0,pressed:{},fl:0,nextStar:0,flushing:false};
   const K=RK; K.s=s; K.co=co;
   const o=s.now-Date.now(); K.offs.push(o); if(K.offs.length>10) K.offs.shift(); K.off=Math.max(...K.offs);      // 先生の時計との差：遅れが一番小さかった状態から出す
   if(!K.art){ K.art=1; rkArt().catch(()=>{}).then(()=>{ if(RK===K) rkKidState(K.s); }); return; }
   if(s.status==="ended"||co.ph==="end") return rkKidEnd();
   const key=co.ph+":"+co.sg+":"+(co.mg?co.mg.k+co.mg.a:"");
-  if(K.key!==key){ K.key=key; rkKidDraw(); } else rkKidLive();
+  if(K.key!==key){ if(K.co.ph==="play"&&K.boostSg!==K.co.sg){ K.boostSg=K.co.sg; K.stageOk=0; K.boostUsed=0; } K.key=key; rkKidDraw(); } else rkKidLive();
 }
 function rkHead(){
   const K=RK, co=K.co;
@@ -3867,9 +3877,9 @@ function rkKidDraw(){
     const tick=()=>{ const c=$("#rkcd"); if(c){ const n=Math.max(0,Math.ceil((K.co.ae-rkNow())/1000)); if(c.textContent!==String(n)){ if(n>0) sfx("tick"); c.textContent=n; } } };
     tick(); timerId=setInterval(tick,100);
   } else if(co.ph==="play"){
-    const done=K.boostSg===co.sg;
+    const ready=K.stageOk-K.boostUsed*3>=3;
     app.innerHTML=`<div class="play rkk">${rkHead()}${rkGaugeK(co)}<div class="rk-qh">${T("rk.q")}</div><div id="rkq"></div>
-      <button type="button" class="btn rk-boost" id="rkb"${done?" disabled":""}>${rkSvg("rk-bolt","0 0 64 64","rks sm")}<span>${T(done?"rk.boosted":"rk.boost")}</span></button><div class="rk-sc">${T("rk.boost.h")}</div></div>`;
+      <button type="button" class="btn rk-boost" id="rkb"${ready?"":" disabled"}>${rkSvg("rk-bolt","0 0 64 64","rks sm")}<span>${T(ready?"rk.boost":"rk.boosted")}</span></button><div class="rk-sc">${T("rk.boost.h")}</div></div>`;
     $("#rkb").onclick=rkBoost; rkShowQ();
   } else if(co.ph==="mini"&&m.k==="sy"){
     app.innerHTML=`<div class="play rkk rkm">${rkHead()}<div class="q"><div class="big">${T("rk.sy")}</div><div class="small">${T("rk.sy.h")}</div></div>
@@ -3921,18 +3931,19 @@ function rkPick(b){
   const K=RK; if(!K||K.lock||K.co.ph!=="play") return; K.lock=true;
   const q=K.cur, isOk=c=>q.rich?q.oks.includes(c):c===q.a, right=isOk(b.dataset.c);
   document.querySelectorAll("#rkq .choice").forEach(e=>e.classList.add(isOk(e.dataset.c)?"right":"wrong"));
-  K.ans++; if(right) K.ok++;
+  K.ans++; if(right){ K.ok++; K.stageOk++; }
   sfx(right?"ok":"ng");
   const fb=$("#fb"), ans=q.rich?QZ.plain(q.a):q.a;
   if(fb){ fb.className="fb "+(right?"ok":"ng"); fb.textContent=right?T("rk.right"):T("rk.wrong",ans); }
   api("act",{...NET,op:"cans",ok:right,k:++K.k}).then(r=>{
     if(RK===K&&r&&r.cap){ const f=$("#fb"); if(f){ f.className="fb ok"; f.textContent=T("rk.cap"); } }      // 1人の上限：数字は見せず「みんなの ばん！」
   }).catch(()=>{});
+  const boostBtn=$("#rkb"); if(boostBtn&&K.stageOk-K.boostUsed*3>=3){ boostBtn.disabled=false; boostBtn.querySelector("span").textContent=T("rk.boost"); }
   setTimeout(()=>{ if(RK===K&&K.co.ph==="play") rkShowQ(); },right?1300:2600);      // 答えのあとは 1.3秒（まちがいは 2.6秒）あける
 }
 function rkBoost(){
-  const K=RK; if(!K||K.co.ph!=="play"||K.boostSg===K.co.sg) return;
-  K.boostSg=K.co.sg; K.boo++; sfx("ok");
+  const K=RK; if(!K||K.co.ph!=="play"||K.stageOk-K.boostUsed*3<3) return;
+  K.boostUsed++; K.boo++; sfx("ok");
   const b=$("#rkb"); if(b){ b.disabled=true; b.querySelector("span").textContent=T("rk.boosted"); }
   api("act",{...NET,op:"boost"}).catch(()=>{});
 }

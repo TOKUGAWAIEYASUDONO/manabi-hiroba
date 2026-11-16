@@ -41,7 +41,7 @@ function engine(o){
   /* ----- 段階の切りかえ ----- */
   function startPlay(now){
     E.ph="play"; E.ps=now; E.pe=now+T(C.CAP[easy?1:0]); E.fp=0; E.wind=0; E.bonus=0; E.boN=0;
-    for(const p of E.P.values()){ p.f=0; p.bo=0; }
+    for(const p of E.P.values()){ p.f=0; p.bo=0; p.ok=0; }
   }
   function toMini(now,att){
     const k=KINDS[E.sg], n=Math.max(1,N()), m={k,a:att,s:now,hits:0,total:0};
@@ -104,8 +104,8 @@ function engine(o){
     }
     if(op==="boost"){
       if(E.ph!=="play") return [200,{ok:true,fp:0,late:true}];
-      if(p.bo) return bad(409,"もう押しました");
-      p.bo=1; E.boN++; p.tot.bo++; E.fp+=2; queue(pid,2);
+      if(p.bo>=Math.floor(p.ok/3)) return bad(409,"もう押しました");
+      p.bo++; E.boN++; p.tot.bo++; E.fp+=2; queue(pid,2);
       if(!E.bonus&&E.boN>=Math.ceil(.6*N())){ E.bonus=1; E.fp+=E.G*.1; ev("bo"); }          // 6割が押すと「そろった！」で全体に +10%
       if(E.fp>=E.G){ toMini(now,1); changed=true; }
       pick(now);

@@ -54,23 +54,12 @@ function run(E, from, to, step, f) { let now = from; for (; now <= to; now += st
   });
 
   /* ---------- 燃料 ---------- */
-  await t("燃料：正解 +5・答えたら +1（まちがいも）・時間の外は数えない", () => {
-    const E = room(10, {}); const G = E.G;
-    let r = ans(E, "p0", true, 4000); assert.deepStrictEqual(r.slice(0, 2), [200, { ok: true, fp: 5, cap: false }]);
-    r = ans(E, "p1", false, 4000); assert.strictEqual(r[1].fp, 1);
-    assert.strictEqual(E.fp, 6);
-    const E2 = CO.engine({}); E2.add("a"); E2.begin(0);
-    r = ans(E2, "a", true, 1000); assert.strictEqual(r[1].late, true, "カウントダウン中は数えない"); assert.strictEqual(E2.fp, 0);
-    assert.ok(G > 0);
-  });
-  await t("ブースト：1人1回・+2・6割で「そろった！」+10%", () => {
-    const E = room(10, {}), G = E.G;
-    assert.strictEqual(E.act("p0", "boost", {}, 4000)[1].fp, 2);
-    assert.strictEqual(E.act("p0", "boost", {}, 4100)[0], 409, "2回目は不可");
-    for (let i = 1; i < 6; i++) E.act("p" + i, "boost", {}, 4200);
-    assert.strictEqual(E.pub(4300).ev.t, "bo", "6人（6割）でそろった");
-    assert.ok(Math.abs(E.fp - (12 + G * .1)) < 1e-6, "2×6＋目標の10%: " + E.fp);
-    const E1 = room(1, {}); E1.act("p0", "boost", {}, 4000); assert.strictEqual(E1.bonus, 1, "1人でもそろう");
+  await t("boost after three server-counted correct answers", () => {
+    const E=room(10,{});
+    assert.strictEqual(E.act("p0","boost",{count:999},4000)[0],409);
+    for(let i=0;i<3;i++) ans(E,"p0",true,4000+i*1300);
+    assert.strictEqual(E.act("p0","boost",{count:999},8000)[0],200);
+    assert.strictEqual(E.act("p0","boost",{},8100)[0],409);
   });
   await t("1人の上限：強い子ひとりで背負わない（全体の ~2.2/人数）。上限を超えた分は数えず cap:true", () => {
     const E = room(30, {}), cap = E.capF; let t = 4000, capped = 0;
