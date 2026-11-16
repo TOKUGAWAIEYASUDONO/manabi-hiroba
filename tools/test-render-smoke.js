@@ -48,6 +48,13 @@ for(let g=1;g<=6;g++) {
 for(const [name,expr] of [['units','renderUnits(new URLSearchParams())'],['teacher','renderTeacher(new URLSearchParams())'],['practice',`renderUnitLink("#u=${window.RIKA_PUBLIC?'r3-living':'m3-amari'}&n=1")`]]) {
   vm.runInContext(expr,ctx,{filename:name});
 }
+for(const grade of [1,2,3]){
+  vm.runInContext(`ui.grade=${grade}; renderModeSetup(new URLSearchParams("m=chest"))`,ctx,{filename:'mode-unit-setup'});
+  vm.runInContext(`ui.grade=${grade}; renderModeSetup(new URLSearchParams("m=race"))`,ctx,{filename:'race-unit-setup'});
+}
+vm.runInContext('renderTeacher(new URLSearchParams())',ctx,{filename:'teacher-unit-setup'});
+const unitCheck=vm.runInContext('unitModeQuestions(["m3-amari"])',ctx);
+if(!unitCheck.length||unitCheck.some(q=>!q.ch.includes(q.a))) throw Error('unit battle choices invalid');
 console.log('render smoke: home 1〜6年、単元選び、先生画面、練習 OK');
 if(!process.env.RIKA_SMOKE_PUBLIC){
   const {spawnSync}=require('child_process');

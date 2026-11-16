@@ -2544,6 +2544,7 @@ function renderTeacher(q){
         <label>ルール<select id="nr">${RULES.map(r=>`<option value="${r.id}">${r.t}</option>`).join("")}</select></label>
         <label>なまえの きめかた<select id="nmm"><option value="auto" selected>自動ニックネーム（動物）</option><option value="input">児童が入力する</option></select></label>
       </div>
+      <div id="roomUnits"></div>
       <label class="chk"><input type="checkbox" id="nnh" checked> ひろばを出さない（児童の結果画面に、どんぐり・「ひろばを みる」を出しません）</label>
       <button class="btn" id="mkroom">部屋を作る</button>
       <div class="err" id="roomErr"></div>
@@ -2626,7 +2627,8 @@ function renderTeacher(q){
     if(has("#nm",sv.nm)&&(sv.nm!=="quiz"||qsets.length)) $("#nm").value=sv.nm;
     if(has("#ng",sv.ng)) $("#ng").value=sv.ng;
     fillG("#ng","#ngr"); if(has("#ngr",sv.ngr)) $("#ngr").value=sv.ngr; if(has("#nstg",sv.nstg)) $("#nstg").value=sv.nstg; setRule(); }
-  $("#ngr").onchange=()=>{ setRule(); remember(); };
+  let roomSelected=unitPicker($("#roomUnits"),+$("#ngr").value);
+  $("#ngr").onchange=()=>{ setRule(); remember(); roomSelected=unitPicker($("#roomUnits"),+$("#ngr").value); };
   $("#nstg").onchange=remember;
   const syncMode=()=>{ const quiz=$("#nm").value==="quiz", rk=$("#nm").value==="rocket";
     $("#ntl").classList.toggle("hidden",quiz||rk); $("#nsl").classList.toggle("hidden",!rk);
@@ -2638,6 +2640,10 @@ function renderTeacher(q){
   $("#nm").onchange=()=>{ syncMode(); remember(); };
   syncMode();
   const roomFromForm=()=>{ const mode=$("#nm").value, gv=$("#ng").value, base={mode,g:+$("#ngr").value,t:+$("#nt").value,rule:ruleOf($("#nr").value),nm:$("#nmm").value==="input"?"input":"auto",nh:$("#nnh").checked?1:0,ns:$("#nm").value==="rocket"&&$("#nstg").value==="3"?3:5};
+    if((mode==="chest"||mode==="race")&&roomSelected().length){
+      const ids=roomSelected(), qs=unitModeQuestions(ids).map(q=>({t:"mc",q:q.q,ch:q.ch,ok:[q.ch.indexOf(q.a)],sec:20,pt:"normal"}));
+      return {...base,game:"mine",gt:"単元："+ids.map(id=>UBY[id].title).join("・"),qs,unitIds:ids};
+    }
     if(gv.startsWith("set:")){ const st=qsFind(gv.slice(4)); if(!st) throw new Error("セットが見つかりません");
       const c=qzCheckMsg(st); if(!c.set) throw new Error(`「${st.title||"なまえなし"}」は、${c.why}`);
       if(mode!=="quiz"&&!c.set.qs.some(x=>x.t==="mc")) throw new Error("たからばこ・すごろくで使うには、4択の問題が1つ以上いります");
@@ -2747,18 +2753,20 @@ function renderModeSetup(q){
     <h2>${T("ms.which")}</h2>
     <div class="tiles">${list.map(x=>`<button class="tile" data-id="${x.id}"><span class="tico">${svgU(x.art)}</span><span class="tbody"><span class="tt">${x.t}</span>
       <span class="tstat">${tagHtml(x.s)}</span></span></button>`).join("")}</div>
+    <div id="modeUnits"></div>
     <h2>${T("ms.time")}</h2>
     <div class="pills" style="justify-content:center"><button class="pill on" data-t="120">${T("ms.2")}</button><button class="pill" data-t="180">${T("ms.3")}</button></div>
     <h2>${T("ms.rule")}</h2>
     <div class="pills" style="justify-content:center">${ruleBtns.map(r=>`<button class="pill ${r.id===rule0?"on":""}" data-r="${r.id}">${r.t}<span class="note" style="color:inherit">（${r.d}）</span></button>`).join("")}</div>
   </div>`;
   let t=120, rule=rule0;
+  const selected=unitPicker($("#modeUnits"),ui.grade);
   app.querySelectorAll("[data-t]").forEach(b=>b.onclick=()=>{t=+b.dataset.t;app.querySelectorAll("[data-t]").forEach(e=>e.classList.toggle("on",e===b));});
   app.querySelectorAll("[data-r]").forEach(b=>b.onclick=()=>{rule=b.dataset.r;app.querySelectorAll("[data-r]").forEach(e=>e.classList.toggle("on",e===b));});
   app.querySelectorAll("[data-id]").forEach(b=>b.onclick=()=>{
     const x=GAMES.find(y=>y.id===b.dataset.id);
     withGrade(g0=>{ const g=x.g.includes(g0)?g0:x.g[0];
-      go(`#mode?m=${m.id}&game=${x.id}&g=${g}&t=${t}&r=${rule==="auto"?defaultRule(g):rule}`); });
+      go(`#mode?m=${m.id}&game=${x.id}&g=${g}&t=${t}&r=${rule==="auto"?defaultRule(g):rule}${selected().length?"&units="+selected().join(","):""}`); });
   });
 }
 
@@ -2767,10 +2775,12 @@ function renderMode(q){
   const m=MODES.find(x=>x.id===q.get("m")), x=GAMES.find(y=>y.id===q.get("game"));
   if(!m||!x) return go("#home");
   let g=+q.get("g")||x.g[0]; if(!x.g.includes(g)) g=x.g[0];
+  const unitIds=(q.get("units")||"").split(",").filter(id=>UBY[id]).slice(0,UMAX);
+  const unitQs=unitIds.length?unitModeQuestions(unitIds):null;
   const t=Math.min(300,Math.max(60,+q.get("t")||120)), task=q.get("task")==="1";
   const rule=q.has("r")?ruleOf(q.get("r")):defaultRule(g);
   setLG(g);
-  M={m,x,g,t,task,rule,ev:evOf(rule),ok:0,ng:0,misses:[],missObjs:[],phase:"q",end:Date.now()+t*1000,
+  M={m,x,g,t,task,rule,unitQs,unitIndex:0,ev:evOf(rule),ok:0,ng:0,misses:[],missObjs:[],phase:"q",end:Date.now()+t*1000,
      me:{n:T("b.me"),e:(l=>l[rnd(l.length)][1])(NICK_ANI.filter(a=>!BOTS.some(b=>b.e===a[1]))),v:0,me:true},
      bots:BOTS.map((b,i)=>({...b,v:0,wait:rr(2,5)*botK(g),spd:[1,1.15,0.85][i]})),
      over:false};
@@ -2799,7 +2809,7 @@ function renderMode(q){
 }
 function showQ(){
   if(!M||M.over) return;
-  M.phase="q"; M.cur=genChoice(M.x.id,M.g);
+  M.phase="q"; M.cur=M.unitQs?M.unitQs[(M.unitIndex++)%M.unitQs.length]:genChoice(M.x.id,M.g);
   const cls=["ca","cb","cc","cd"];
   $("#mmain").innerHTML=`<div class="q"><div class="big">${M.cur.rich?"":esc(M.cur.q)}${spkBtn(M.x.id,M.cur.q)}</div><div class="small">${esc(M.cur.small||"")}</div></div>
     <div class="fb" id="fb" aria-live="polite"></div>
@@ -4844,10 +4854,11 @@ function qzHostTick(s,off){
   const warn=left<=Math.min(10,q.sec/3); if(t) t.classList.toggle("warn",warn); if(bar) bar.classList.toggle("warn",warn);
 }
 /* 部屋の設定：先生のセットは保存しているものから読み直す（sessionStorage には問題の中身を入れない） */
-const hostPlain=H=>({mode:H.mode,game:H.game,g:H.g,t:H.t,rule:H.rule,nm:H.nm==="auto"?"auto":"input",nh:H.nh===0?0:1,ns:H.ns===3?3:5,setId:H.setId||"",gt:H.gt||""});
+const hostPlain=H=>({mode:H.mode,game:H.game,g:H.g,t:H.t,rule:H.rule,nm:H.nm==="auto"?"auto":"input",nh:H.nh===0?0:1,ns:H.ns===3?3:5,setId:H.setId||"",unitIds:H.unitIds||[],gt:H.gt||""});
 function roomArgs(H){
   const s=hostPlain(H);
   if(s.setId){ const st=qsFind(s.setId), f=st&&qsFinal(st); if(!f||!f.ok) throw new Error("もんだいのセットが見《み》つかりません（③のタブの ②「もんだいを つくる」で確認《かくにん》してください）"); s.qs=f.set.qs; s.gt=f.set.title; }
+  if(s.unitIds.length){ const ids=s.unitIds.filter(id=>UBY[id]).slice(0,UMAX); s.qs=unitModeQuestions(ids).map(q=>({t:"mc",q:q.q,ch:q.ch,ok:[q.ch.indexOf(q.a)],sec:20,pt:"normal"})); }
   return s;
 }
 
@@ -4907,6 +4918,30 @@ function uParse(hash){
   return {ids,n:num("n",1,60,20),t:num("t",5,120,20),seed:num("s",0,999999999,1),mix:sp.get("m")!=="0",choice:sp.get("c")==="1"?true:sp.get("c")==="0"?false:null,task:sp.get("task")==="1",col0:sp.get("col")==="0"};
 }
 const upill=(label,on,fn)=>h("button",{type:"button",class:"pill small"+(on?" on":""),"aria-pressed":on?"true":"false",text:label,onclick:fn});
+/* 対戦設定でも単元えらびと同じカード・おすすめを使う。選択は設定画面内だけ。 */
+function unitPicker(root,grade){
+  const selected=[], easy=grade===1||grade===2;
+  let subject="sansu", filter=easy?grade:0;
+  const subjects=["sansu","kokugo","shakai",...(window.RIKA_PUBLIC?["rika"]:[]),"eigo"];
+  const draw=()=>{
+    const pool=UREADY.filter(u=>u.subj===subject&&(!easy||u.g===grade));
+    const controls=h("div",{class:"upf"});
+    if(!easy) controls.append(h("div",{class:"pills subject-pills"},...subjects.map(s=>upill(SUBJ_JA[s],s===subject,()=>{subject=s;filter=0;draw();}))));
+    if(!easy) controls.append(h("div",{class:"pills grade-pills"},...([0,1,2,3,4,5,6].map(g=>upill(g?g+"年《ねん》":"ぜんぶ",filter===g,()=>{filter=g;draw();})))));
+    const cards=h("div",{class:"ugrid"+(easy?" kidunits":"")},...pool.filter(u=>!filter||u.g===filter).map(u=>h("button",{type:"button",class:"ucard",role:"checkbox","aria-checked":selected.includes(u.id)?"true":"false",onclick:()=>{const i=selected.indexOf(u.id);if(i>=0)selected.splice(i,1);else if(selected.length<UMAX)selected.push(u.id);draw();}},
+      h("span",{class:"ubox",text:selected.includes(u.id)?"✅":""}),h("span",{class:"ubody"},h("b",{text:u.title}),!easy?h("span",{class:"unote",text:u.note}):null))));
+    const sets=easy?null:h("div",{class:"upsets"},h("b",{class:"pl",text:"おすすめの組《く》み合《あ》わせ"}),h("div",{class:"set-grid"},...(UN.UNIT_SETS||[]).filter(s=>s.units.length>1&&s.units.every(id=>UBY[id]&&UBY[id].subj===subject)).map(s=>upill(s.title,false,()=>{selected.splice(0,selected.length,...s.units.slice(0,UMAX));draw();}))));
+    root.replaceChildren(h("h2",{text:"単元《たんげん》をえらぶ（えらばなければ学年《がくねん》の問題《もんだい》）"}),controls,sets,
+      h("div",{class:"note",text:selected.length?selected.map(id=>UBY[id].title).join("・"):"単元《たんげん》は まだえらんでいません"}),cards);
+  };
+  if(UNITS_OK) draw();
+  return ()=>selected.slice();
+}
+function unitModeQuestions(ids){
+  const items=UN.unitPick(ids,40,uSeed(),true);
+  return items.map(it=>({q:(it.stem?it.stem+"　":"")+it.q,a:String(it.a),ch:it.choices.map(String),small:""}))
+    .filter(q=>q.ch.includes(q.a)&&q.ch.length>=2);
+}
 /* 例題（ひとことの解き方）を見せる */
 function uEx(u){
   if(document.getElementById("exsheet")) return;
