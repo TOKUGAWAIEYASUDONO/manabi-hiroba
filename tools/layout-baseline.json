@@ -1,5 +1,5 @@
 {
-  "indexSha256": "5cb406be22cca3fb19713001ac1697f185e990def4b38c0676d0f4df7fd01fa3",
+  "indexSha256": "cc21fb326306a4ad05008353b816758445268ab0a32be1bb09b8f108766700ea",
   "browser": "chrome.exe",
   "measurements": {
     "375x667/計算スプリント": {
@@ -81,19 +81,19 @@
       "pageHeight": 1948
     },
     "375x667/ホーム 3年": {
-      "pageHeight": 1256
+      "pageHeight": 1564
     },
     "375x667/単元えらび（児童） 3年": {
       "pageHeight": 3452
     },
     "375x667/ホーム 6年": {
-      "pageHeight": 1757
+      "pageHeight": 2065
     },
     "375x667/単元えらび（児童） 6年": {
       "pageHeight": 2969
     },
     "375x667/単元えらび（先生）": {
-      "pageHeight": 14538
+      "pageHeight": 14646
     },
     "768x1024/ホーム 1年": {
       "pageHeight": 1024
@@ -102,19 +102,19 @@
       "pageHeight": 1140
     },
     "768x1024/ホーム 3年": {
-      "pageHeight": 1024
+      "pageHeight": 1269
     },
     "768x1024/単元えらび（児童） 3年": {
       "pageHeight": 2219
     },
     "768x1024/ホーム 6年": {
-      "pageHeight": 1155
+      "pageHeight": 1547
     },
     "768x1024/単元えらび（児童） 6年": {
       "pageHeight": 2026
     },
     "768x1024/単元えらび（先生）": {
-      "pageHeight": 8430
+      "pageHeight": 8538
     },
     "1366x768/ホーム 1年": {
       "pageHeight": 768
@@ -135,7 +135,7 @@
       "pageHeight": 1466
     },
     "1366x768/単元えらび（先生）": {
-      "pageHeight": 12281
+      "pageHeight": 7431
     }
   }
 }
