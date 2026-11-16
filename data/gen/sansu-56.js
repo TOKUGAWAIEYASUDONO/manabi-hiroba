@@ -43,7 +43,7 @@
   };
   g.shosuKake5 = (r, p) => {                               // 小数×小数
     for (;;) {
-      const a = r.range(11, p.maxA || 99), b = r.range(11, p.maxB || 99);
+      const a = r.range(p.minA || 11, p.maxA || 99), b = r.range(p.minB || 11, p.maxB || 99);
       if (!nz(a) || !nz(b) || !nz(a * b)) continue;
       const s = a * b, ok = x => x > 0 && nz(x);
       return { q: `${dec(a, 1)} × ${dec(b, 1)}`, a: dec(s, 2), hissan: { a: dec(a, 1), b: dec(b, 1), op: "×" }, choices: ch(r, dec(s, 2), [dec(s, 1), dec(s, 3), dec(a + b, 1), ...[s + 1, s - 1, s + 10, s - 10, s + 100].filter(ok).map(x => dec(x, 2))], nf(r, s, { min: 1, ok, fmt: x => dec(x, 2) })) };
@@ -56,9 +56,9 @@
       return { q: `${dec(n, 1)} ÷ ${dec(d, 1)}`, a: String(c), hissan: { a: dec(n, 1), b: dec(d, 1), op: "÷" }, choices: ch(r, c, S([c + 1, c - 1, c + 2, c - 2, c + 10, c - 10]), nf(r, c, { min: 2, max: 99 })) };
     }
   };
-  g.yakubun5 = (r) => {                                    // 約分
+  g.yakubun5 = (r, p = {}) => {                                    // 約分
     for (;;) {
-      const b0 = r.range(2, 9), a0 = coprime(r, b0), k = r.range(2, 9), a = a0 * k, b = b0 * k; if (b > 72) continue;
+      const b0 = r.range(2, 9), a0 = coprime(r, b0), k = r.range(...(p.k || [2, 9])), a = a0 * k, b = b0 * k; if (b > (p.maxD || 72)) continue;
       const A = `${a0}/${b0}`, part = [];
       for (let i = 2; i < k; i++) if (k % i === 0) part.push(`${a / i}/${b / i}`);
       return { q: `${a}/${b}を これいじょう 約分できない 分数に しよう`, a: A, ans: "frac", choices: ch(r, A, [...part, `${a0}/${b}`, `${a}/${b0}`, `${a0 + 1}/${b0}`, `${a0}/${b0 + 1}`, `${b0}/${a0}`.replace(/^1\//, "2/")], [`${a0 + 2}/${b0}`, `${a0}/${b0 + 2}`, `${a0 + 1}/${b0 + 1}`].filter(x => !/\/1$/.test(x) && x !== A)) };
@@ -156,6 +156,110 @@
     }
   };
 
+  /* ---------- 細分単元（5〜6年） ---------- */
+  const sameVal = (x, y) => { const [a, b] = x.split("/").map(Number), [c, d] = y.split("/").map(Number); return a * (d || 1) === c * (b || 1); };
+  const fracWrong = (A, xs) => xs.filter(x => isFrac(x) && !/^0\//.test(x) && !sameVal(x, A));
+  g.detailDecMul5 = (r) => {                              // 小数第2位 × 小数第1位
+    for (;;) {
+      const a = r.range(11, 999), b = r.range(2, 99), s = a * b;
+      if (!nz(a) || !nz(b) || !nz(s)) continue;
+      const ok = x => x > 0 && nz(x);
+      return { q: `${dec(a, 2)} × ${dec(b, 1)}`, a: dec(s, 3), hissan: { a: dec(a, 2), b: dec(b, 1), op: "×" }, choices: ch(r, dec(s, 3), [dec(s, 2), dec(s, 4), ...[s + 1, s - 1, s + 10, s - 10, s + 100].filter(ok).map(x => dec(x, 3))], nf(r, s, { min: 1, ok, fmt: x => dec(x, 3) }), { loose: true }) };
+    }
+  };
+  /* 小数で わる（わりきれる）。kind='int' は 整数 ÷ 小数第1位、'hund' は 小数 ÷ 小数第2位。答えは 小数（整数のときも ある） */
+  g.detailDecDiv5 = (r, p) => {
+    for (let i = 0; i < 100000; i++) {
+      let n, b, q, N, B;                                  // q は 商の 100倍
+      if (p.kind === 'int') { b = r.range(2, 99); n = r.range(1, 99); if (!nz(b) || n * 1000 % b) continue; q = n * 1000 / b; N = String(n); B = dec(b, 1); }
+      else { b = r.range(11, 999); const c = r.range(2, 99); if (!nz(b) || b * c % 10 || b * c / 10 > 9999) continue; n = b * c / 10; q = c * 10; N = dec(n, 2); B = dec(b, 2); }
+      if (q < 10 || q > 9900) continue;
+      const u = q % 100 === 0 ? 100 : q % 10 === 0 ? 10 : 1, A = dec(q, 2);
+      const w = [q * 10, q % 10 === 0 ? q / 10 : null, q + u, q - u, q + 2 * u, q + 10 * u].filter(x => x && x > 0).map(x => dec(x, 2));
+      return { q: `${N} ÷ ${B}`, a: A, ans: "dec", hissan: { a: N, b: B, op: "÷" }, choices: ch(r, A, w, nf(r, q, { step: u, min: 1, fmt: x => dec(x, 2) }), { loose: true }) };
+    }
+    throw Error('detailDecDiv5 candidate');
+  };
+  /* 通分：kind='multiple' は 一方の 分母が もう一方の 倍数、'coprime' は 分母が たがいに素。分母の 小さい 方を 大きい 分母に なおす */
+  g.detailTsubun5 = (r, p) => {
+    for (;;) {
+      const b = r.range(2, 12), d = r.range(2, 12); if (b === d) continue;
+      if (p.kind === 'multiple' ? !(d % b === 0 || b % d === 0) : gcd(b, d) !== 1) continue;
+      const a = coprime(r, b), c = coprime(r, d), L = lcm(b, d);
+      let [x, y] = p.kind === 'multiple' ? (b < d ? [a, b] : [c, d]) : (r.chance(0.5) ? [a, b] : [c, d]);
+      const k = L / y, A = `${x * k}/${L}`;
+      const w = fracWrong(A, [`${x}/${L}`, `${x + k}/${L}`, `${x * k + 1}/${L}`, `${x * k - 1}/${L}`, `${x * k}/${L * 2}`, `${x * y}/${L}`]);
+      return { q: `${a}/${b}と ${c}/${d}を 通分すると、 ${x}/${y}は いくつに なる？`, a: A, ans: "frac", choices: ch(r, A, w, fracWrong(A, [`${x * k + 2}/${L}`, `${x * k + 3}/${L}`, `${x * k}/${L + 1}`, `${x * k + 1}/${L + 1}`])) };
+    }
+  };
+  /* 分母が ちがう 分数の たし算・ひき算。reduce=答えで 約分が いる、max1=答えが 1より 小さい */
+  g.detailFracAS5 = (r, p) => {
+    for (let i = 0; i < 100000; i++) {
+      let b = r.range(2, 12), d = r.range(2, 12); if (b === d) continue;
+      let a = coprime(r, b), c = coprime(r, d); const sub = p.op === "−";
+      if (sub && a * d <= c * b) { if (a * d === c * b) continue; [a, b, c, d] = [c, d, a, b]; }
+      const L = lcm(b, d), n = sub ? a * L / b - c * L / d : a * L / b + c * L / d;
+      if (n % L === 0 || (gcd(n, L) > 1) !== !!p.reduce || (p.max1 && n >= L)) continue;
+      const A = fr(n, L);
+      const w = fracWrong(A, [fr(sub ? a - c : a + c, sub ? Math.abs(b - d) || 1 : b + d), fr(sub ? Math.max(a - c, 1) : a + c, Math.max(b, d)), fr(n + 1, L), fr(n - 1, L), fr(n, b * d + 1), fr(a * c, b * d)]);
+      return { q: `${a}/${b} ${sub ? "−" : "+"} ${c}/${d}`, a: A, choices: ch(r, A, w, fracWrong(A, fracFb(A))) };
+    }
+    throw Error('detailFracAS5 candidate');
+  };
+  /* 分数 × 整数・分数 ÷ 整数（分母2〜12、整数2〜9。答えは 約分した 分数） */
+  g.detailFracInt = (r, p) => {
+    for (;;) {
+      const b = r.range(2, 12), a = coprime(r, b), z = r.range(2, 9), mul = p.op === "×";
+      const A = mul ? fr(a * z, b) : fr(a, b * z); if (!isFrac(A)) continue;
+      const w = mul ? [fr(a, b * z), fr(a * z, b * z), fr(a + z, b), fr(a * z + 1, b)] : [fr(a * z, b), fr(a, b + z), fr(a + z, b), fr(a + 1, b * z)];
+      return { q: `${a}/${b} ${mul ? "×" : "÷"} ${z}`, a: A, choices: ch(r, A, fracWrong(A, w), fracWrong(A, fracFb(A))) };
+    }
+  };
+
+  /* 分数の かけ算・わり算（6年）。op='×' cross=約分できる組だけ（false は 約分しない組だけ）／op='÷' mixed=わられる数が 帯分数 */
+  g.detailFracMul6 = (r, p) => {
+    for (let i = 0; i < 100000; i++) {
+      const b = r.range(2, 12), d = r.range(2, 12), a = coprime(r, b), c = coprime(r, d);
+      let A, q, w;
+      if (p.op === "×") {
+        if ((gcd(a, d) > 1 || gcd(c, b) > 1) !== !!p.cross) continue;
+        A = fr(a * c, b * d); q = `${a}/${b} × ${c}/${d}`; w = [fr(a * d, b * c), fr(a + c, b + d), fr(a * c, b + d), fr(a * c + 1, b * d)];
+      } else if (p.mixed) {
+        const W = r.range(1, 3), t = W * b + a; A = fr(t * d, b * c); q = `${W}と${a}/${b} ÷ ${c}/${d}`; w = [fr(t * c, b * d), fr(W * b * d + a * d, b), fr((W + a) * d, b * c), fr(t * d + 1, b * c)];
+      } else { A = fr(a * d, b * c); q = `${a}/${b} ÷ ${c}/${d}`; w = [fr(a * c, b * d), fr(b * c, a * d), fr(a + d, b + c), fr(a * d + 1, b * c)]; }
+      if (!isFrac(A)) continue;
+      return { q, a: A, ans: "frac", choices: ch(r, A, fracWrong(A, w), fracWrong(A, fracFb(A))) };
+    }
+    throw Error('detailFracMul6 candidate');
+  };
+  /* 小数（0.1〜2.9）と 分数（分母 2・4・5・10）の まじった 計算 */
+  g.detailDecFrac6 = (r) => {
+    for (;;) {
+      const x = r.range(1, 29), d = r.pick([2, 4, 5, 10]), n = r.range(1, d - 1), op = r.pick(["+", "−", "×", "÷"]);
+      if (!nz(x) || gcd(n, d) !== 1) continue;
+      const X = dec(x, 1), Fq = `${n}/${d}`, decFirst = r.chance(0.5);
+      let num, den;                                        // x/10 と n/d の 計算
+      if (op === "+") { num = x * d + n * 10; den = 10 * d; }
+      else if (op === "×") { num = x * n; den = 10 * d; }
+      else if (op === "−") { num = decFirst ? x * d - n * 10 : n * 10 - x * d; den = 10 * d; if (num <= 0) continue; }
+      else { num = decFirst ? x * d : n * 10; den = decFirst ? 10 * n : x * d; }
+      const A = fr(num, den); if (!isFrac(A)) continue;
+      const q = decFirst ? `${X} ${op} ${Fq}` : `${Fq} ${op} ${X}`;
+      const w = [fr(num + 1, den), fr(num, den + 1), fr(x + n, 10 + d), fr(Math.max(1, num - 1), den), fr(den, num)];
+      return { q, a: A, ans: "frac", choices: ch(r, A, fracWrong(A, w), fracWrong(A, fracFb(A))) };
+    }
+  };
+  /* 速さの 文章題（5年）。kind='distance' は 道のり、'time' は かかる時間 */
+  const SPEED = [["電車《でんしゃ》", "時速", "km", "時間", 40, 90, "何時間《なんじかん》"], ["バス", "時速", "km", "時間", 20, 60, "何時間《なんじかん》"], ["自転車《じてんしゃ》", "時速", "km", "時間", 10, 20, "何時間《なんじかん》"], ["姉《あね》", "分速", "m", "分", 50, 90, "何分《なんぷん》"], ["ドローン", "秒速《びょうそく》", "m", "秒《びょう》", 2, 30, "何秒《なんびょう》"]];
+  g.detailSpeed = (r, p) => {
+    const [who, S0, U0, T0, lo, hi, HT] = r.pick(SPEED), v = r.range(lo, hi), t = r.range(1, 9), s = v * t;
+    if (p.kind === "distance") {
+      const A = s + U0;
+      return { q: `${who}が ${S0} ${v}${U0}で ${t}${T0} 進《すす》みました。 進《すす》んだ 道《みち》のりは 何${U0}？`, a: A, choices: ch(r, A, S([v + t, s + v, s - v, s + 10, s - 10, s * 10]).filter(x => +x > 0).map(x => x + U0), nf(r, s, { step: 1, min: 1, fmt: x => x + U0 }), { loose: true }) };
+    }
+    return { q: `${who}が ${S0} ${v}${U0}で ${s}${U0} 進《すす》むと、 ${HT} かかる？`, a: String(t), choices: ch(r, t, S([t + 1, t - 1, t + 2, t - 2, v, s - v]).filter(x => +x > 0), nf(r, t, { min: 1, max: 12 }), { loose: true }) };
+  };
+
   // ===== 6年 =====
   g.bunsuMul6 = (r, p) => {                                // 分数×分数・分数÷分数・分数と整数
     for (;;) {
@@ -184,11 +288,11 @@
     const x1 = r.pick(ds); let x2; do { x2 = r.pick(ds); } while (x2 === x1);
     const y1 = k / x1, y2 = k / x2; return { q: `y は x に 反比例します。 x = ${x1}の とき y = ${y1}です。 x = ${x2}の とき、 y は？`, a: String(y2), choices: ch(r, y2, S([y1 + (x2 - x1), y1 * x2 / 2 | 0, k, y2 + 1, y2 - 1, y1 * (x2 - x1) || 1]).filter(v => +v !== y2 && +v > 0), nf(r, y2, { min: 1, max: 40 })) };
   };
-  g.hiKantan6 = (r) => {                                   // 比をかんたんに／比の値
+  g.hiKantan6 = (r, p = {}) => {                                   // 比をかんたんに／比の値
     for (;;) {
-      const k = r.range(2, 9), a0 = r.range(1, 9), b0 = r.range(1, 9); if (a0 === b0 || gcd(a0, b0) !== 1) continue;
+      const k = r.range(...(p.k || [2, 9])), a0 = r.range(1, 9), b0 = r.range(1, 9); if (a0 === b0 || gcd(a0, b0) !== 1) continue;
       const a = a0 * k, b = b0 * k;
-      if (r.chance(0.6)) { const A = `${a0}:${b0}`; return { q: `${a}:${b}を いちばん かんたんな 整数の 比に すると？`, a: A, ans: "choice4", choices: ch(r, A, [`${b0}:${a0}`, `${a0}:${b}`, `${a}:${b0}`, `${a0 + 1}:${b0}`, `${a0}:${b0 + 1}`], [`${a0 + 2}:${b0}`, `${a0}:${b0 + 2}`, `${a0 + 1}:${b0 + 1}`], { loose: true }) }; }
+      if (p.simplify || r.chance(0.6)) { const A = `${a0}:${b0}`; return { q: `${a}:${b}を いちばん かんたんな 整数の 比に すると？`, a: A, ans: "choice4", choices: ch(r, A, [`${b0}:${a0}`, `${a0}:${b}`, `${a}:${b0}`, `${a0 + 1}:${b0}`, `${a0}:${b0 + 1}`], [`${a0 + 2}:${b0}`, `${a0}:${b0 + 2}`, `${a0 + 1}:${b0 + 1}`], { loose: true }) }; }
       const A = fr(a0, b0); if (!isFrac(A)) continue;
       return { q: `${a}:${b}の 比の値は？`, a: A, ans: "frac", choices: ch(r, A, [fr(b0, a0), fr(a0, b), fr(a, b0), fr(a0 + 1, b0)].filter(x => isFrac(x) && x !== A), fracFb(A)) };
     }

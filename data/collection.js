@@ -36,10 +36,14 @@
     "e5-color","e5-school","e6-all","m1-tokei-fun","m2-keta4",
     "m1-nanbanme","m1-nagasa-kurabe","m1-kasa-kurabe","m2-keisan-kufu","m3-jikan-keisan",
     "m3-anzan","m3-ookii-wari","m4-wari-mitsumori","m5-seisu-shosu","m6-oyoso-menseki",
-    "r3-living","r3-plants","r3-sun","r3-light","r3-sound","r3-wind","r3-magnet","r3-electric","r3-weight","r3-earth","r4-season","r4-body","r4-electric","r4-air","r4-water","r4-metal","r4-heat","r4-weather","r4-moon","r4-land","r5-seed","r5-growth","r5-flower","r5-animal","r5-cloud","r5-typhoon","r5-river","r5-solubility","r5-pendulum","r5-electromagnet","r6-burn","r6-body","r6-plant","r6-chain","r6-water","r6-gas","r6-lever","r6-electric","r6-land","r6-moon"
+    "r3-living","r3-plants","r3-sun","r3-light","r3-sound","r3-wind","r3-magnet","r3-electric","r3-weight","r3-earth","r4-season","r4-body","r4-electric","r4-air","r4-water","r4-metal","r4-heat","r4-weather","r4-moon","r4-land","r5-seed","r5-growth","r5-flower","r5-animal","r5-cloud","r5-typhoon","r5-river","r5-solubility","r5-pendulum","r5-electromagnet","r6-burn","r6-body","r6-plant","r6-chain","r6-water","r6-gas","r6-lever","r6-electric","r6-land","r6-moon",
+    "m1-add10-small","m1-add10-ten","m1-make10","m1-add-over10","m1-sub10-small","m1-sub10-ten","m1-sub-over10","m1-add-2d1-no","m1-add3-under10","m1-add3-over10","m2-add-2d-no","m2-add-2d-ones","m2-add-2d-100","m2-add-2d1d","m2-sub-2d-no","m2-sub-2d-ones","m2-sub-100","m2-kuku-2","m2-kuku-3","m2-kuku-4","m2-kuku-5","m2-kuku-6","m2-kuku-7","m2-kuku-8","m2-kuku-9","m3-add-3d-no","m3-add-3d-ones","m3-add-3d-tens","m3-add-3d-1000","m3-sub-3d-no","m3-sub-3d-ones","m3-sub-3d-chain","m3-sub-3d-zero","m3-mul-2d1d-no","m3-mul-2d1d-carry","m3-mul-3d1d","m3-mul-2d2d-no","m3-mul-2d2d-carry","m3-div-kuku","m3-div-rem-small","m3-div-rem-large","m3-dec-add-no","m3-dec-add-carry","m3-dec-sub",
+    "m4-div-2d1d-exact","m4-div-2d1d-rem","m4-div-3d1d-short","m4-div-3d1d-zero","m4-div-3d1d-rem","m4-div-2d2d-exact","m4-div-2d2d-rem","m4-div-3d2d-1q","m4-div-3d2d-2q","m4-mul-3d2d-no","m4-mul-3d2d-carry","m4-dec-add-hundredth","m4-dec-sub-hundredth","m4-dec-mul-int","m4-dec-div-int","m4-frac-mixed-add","m4-frac-mixed-sub",
+    "m5-dec-mul-tenths","m5-dec-mul-hundredths","m5-dec-div-tenths","m5-dec-div-hundredths","m5-frac-reduce-one","m5-frac-reduce-multi","m5-frac-common-multiple","m5-frac-common-coprime","m5-frac-add-simple","m5-frac-add-reduce","m5-frac-sub-simple","m5-frac-sub-reduce","m5-frac-mul-int","m5-frac-div-int",
+    "m6-frac-mul-proper","m6-frac-mul-cross","m6-frac-div-proper","m6-frac-div-mixed","m6-mix-dec-frac","m6-ratio-reduce","m6-speed-distance","m6-speed-time"
   ];
   const IDX = {}; UNIT_IDS.forEach((id, i) => { IDX[id] = i; });
-  const GRADE_FIX = { "m6-hayasa": 5, "m5-bunsu-int": 6 }; /* 現行教科書に合わせて学年を直した単元（IDは互換のため据え置き） */
+  const GRADE_FIX = { "m6-hayasa": 5, "m5-bunsu-int": 6, "m5-frac-mul-int": 6, "m5-frac-div-int": 6, "m6-speed-distance": 5, "m6-speed-time": 5 }; /* 現行教科書に合わせて学年を直した単元（IDは互換のため据え置き） */
   const uGrade = id => GRADE_FIX[id] || +id[1];
   /* 教科の成果（固定ゾーン）。track：play 算数＝遊具／lib 国語＝図書館／flag 英語＝国旗。need：その教科で「できた」以上の単元の数 */
   const PARTS = [

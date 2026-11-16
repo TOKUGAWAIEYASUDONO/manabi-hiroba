@@ -3,6 +3,21 @@
   const g = G.gens, { ch, numFb, noCarry, noBorrow, dec, frac, gcd } = G;
   const nf = (r, n, o) => numFb(r, n, o);
   const S = x => x.map(String);
+  g.detail3 = (r, p) => {
+    const carries = (a, b, sub) => { const out = []; let c = 0; for (let i = 0; i < 3; i++) { const x = a % 10, y = b % 10; c = sub ? +(x - c < y) : +(x + y + c >= 10); out.push(c); a = Math.floor(a / 10); b = Math.floor(b / 10); } return out.join(''); };
+    const mc = (a, b) => { let c = 0, yes = false; while (a) { c = Math.floor((a % 10 * b + c) / 10); yes ||= c > 0; a = Math.floor(a / 10); } return yes; };
+    let a, b, v, found = false;
+    for (let i = 0; i < 100000; i++) {
+      a = r.range(...p.a); b = r.range(...p.b); v = p.op === '−' ? a - b : p.op === '×' ? a * b : a + b;
+      if (v < (p.min || 1) || v > (p.max || 9999)) continue;
+      if (p.pattern && carries(a, b, p.op === '−') !== p.pattern) continue;
+      if (p.zero && !(Math.floor(a / 10) % 10 === 0 && a % 10 < b % 10)) continue;
+      if (p.mul) { const yes = mc(a, b % 10) || (b >= 10 && (mc(a, Math.floor(b / 10)) || carries(a * (b % 10), a * Math.floor(b / 10) * 10, false) !== '000')); if ((p.mul === 'carry') !== yes) continue; }
+      found = true; break;
+    }
+    if (!found) throw Error('detail3 candidate');
+    return { q: `${a} ${p.op} ${b}`, a: String(v), hissan: { a, b, op: p.op }, choices: ch(r, v, S([v + 1, v - 1, v + 10, v - 10, v + 100, v - 100]), nf(r, v, { min: 1, max: p.max || 9999 }), { loose: true }) };
+  };
   const nz = x => x % 10 !== 0;                            // 小数にしたとき末尾が0にならない
 
   // ===== 3年 =====
@@ -48,14 +63,50 @@
     let d, qq, rem, n;
     do {
       d = r.range(p.d[0], p.d[1]); qq = r.range(p.q[0], p.q[1]);
-      rem = r.chance(p.amariP) ? r.range(1, d - 1) : 0; n = d * qq + rem;
+      rem = r.chance(p.amariP) ? r.range(p.rem ? p.rem[0] : 1, Math.min(d - 1, p.rem ? p.rem[1] : d - 1)) : 0; n = d * qq + rem;
     } while (n > (p.nMax || 9999) || (p.zero && !/0/.test(String(qq))) && r.chance(0.8));
+    return divOut(r, n, d, qq, rem);
+  };
+  /* わり算の問題と選択肢（warizan・detailDiv で共通） */
+  function divOut(r, n, d, qq, rem) {
     const f = (a, b) => b ? `${a}あまり${b}` : String(a), A = f(qq, rem);
     const w = [];
     if (rem) w.push(f(qq - 1, rem + d), f(qq + 1, rem), f(qq, rem + 1), f(rem, qq), f(qq, rem === 1 ? 2 : rem - 1), f(qq + 1, Math.max(0, rem - 1)));
     else { w.push(qq + 1, qq - 1, qq + 10, qq - 10, Number(String(qq).replace(/0/g, "")) || qq + 2, d); }
     const fb = rem ? [f(qq + 2, rem), f(qq, rem + 2), f(qq - 2, rem), f(qq + 1, rem + 1)] : nf(r, qq, { min: 1 });
     return { q: `${n} ÷ ${d}`, a: A, hissan: { a: n, b: d, op: "÷", q: qq, r: rem }, choices: ch(r, A, w.map(String), fb, { loose: rem > 0 }) };
+  }
+  /* 細分単元（4年）：わり算の ひっ算。d=わる数 q=商 n=わられる数の範囲、rem=あまりあり、qz=商の十の位が0 */
+  g.detailDiv = (r, p) => {
+    for (let i = 0; i < 100000; i++) {
+      const d = r.range(p.d[0], p.d[1]), qq = r.range(p.q[0], p.q[1]), rem = p.rem ? r.range(1, d - 1) : 0, n = d * qq + rem;
+      if (n < p.n[0] || n > p.n[1]) continue;
+      if (p.qz && !(qq >= 100 && Math.floor(qq / 10) % 10 === 0)) continue;
+      return divOut(r, n, d, qq, rem);
+    }
+    throw Error('detailDiv candidate');
+  };
+  /* 細分単元（4年）：かけ算の ひっ算。carry='no' は どの位の かけ算も たし算も くり上がらない、'yes' は どこかで くり上がる */
+  const mulCarry = (a, b) => {
+    const parts = [];
+    for (let y = b, k = 0; y; y = Math.floor(y / 10), k++) {
+      const dg = y % 10;
+      for (let x = a; x; x = Math.floor(x / 10)) if (x % 10 * dg >= 10) return true;
+      parts.push(a * dg * 10 ** k);
+    }
+    let s = 0;
+    for (const v of parts) { for (let x = s, y = v; x || y; x = Math.floor(x / 10), y = Math.floor(y / 10)) if (x % 10 + y % 10 >= 10) return true; s += v; }
+    return false;
+  };
+  G.mulCarry = mulCarry;
+  g.detailMul = (r, p) => {
+    for (let i = 0; i < 100000; i++) {
+      const a = r.range(p.a[0], p.a[1]), b = r.range(p.b[0], p.b[1]);
+      if (b % 10 === 0 || (p.carry === 'yes') !== mulCarry(a, b)) continue;   // 何十を かける 問題は 出さない
+      const s = a * b, bt = Math.floor(b / 10), bo = b % 10;
+      return { q: `${a} × ${b}`, a: String(s), hissan: { a, b, op: "×" }, choices: ch(r, s, S([a * bo + a * bt, s + 10, s - 10, s + 100, s - 100, s + 1000]), nf(r, s, { step: 10, min: 1000, max: 99999 }), { loose: true }) };
+    }
+    throw Error('detailMul candidate');
   };
   const WITEM = [["あめ", "こ"], ["えんぴつ", "ほん"], ["シール", "まい"], ["ビー玉", "こ"]];
   g.wariBunsho = (r) => {                                  // わり算の文章題（等分・包含）
@@ -71,6 +122,8 @@
       if (!nz(a) || !nz(b)) continue;
       const A = a * 10 ** (P - pa), B = b * 10 ** (P - pb);
       if (sub && A <= B) continue;
+      if (p.detailCarry === 'no' && a % 10 + b % 10 >= 10) continue;
+      if (p.detailCarry === 'yes' && a % 10 + b % 10 < 10) continue;
       const ans = sub ? A - B : A + B;
       if (!nz(ans)) continue;
       const wr = [sub ? Math.abs(a - b) : a + b, ans + 1, ans - 1, ans + 10, ans - 10, ans + 100, ans - 100].filter((x, i) => i < 1 ? pa !== pb : true);
@@ -178,12 +231,13 @@
   const mixed = (W, N, d) => W < 0 ? null : !N ? String(W) : W === 0 ? `${N}/${d}` : `${W}と${N}/${d}`;   // 0は「0と」にしない
   g.bunsuMixed4 = (r, p) => {                              // 帯分数の たし算・ひき算（同じ分母）
     for (;;) {
-      const d = r.pick([3, 5, 7]), w1 = r.range(1, 5), w2 = r.range(1, 4), n1 = r.range(1, d - 1), n2 = r.range(1, d - 1), sub = p.op === "−" || (p.op === "±" && r.chance(0.5));
+      const d = r.pick(p.ds || [3, 5, 7]), w1 = r.range(1, 5), w2 = r.range(1, 4), n1 = r.range(1, d - 1), n2 = r.range(1, d - 1), sub = p.op === "−" || (p.op === "±" && r.chance(0.5));
       let t1 = w1 * d + n1, t2 = w2 * d + n2;
       if (sub) { if (t1 <= t2) continue; }
       const t = sub ? t1 - t2 : t1 + t2, W = Math.floor(t / d), N = t % d;
       if (!N || W < 1 || (sub ? t1 % d === 0 : false)) continue;   // 答えが1より小さくなる問題は出さない
       const A = mixed(W, N, d), carry = sub ? n1 < n2 : n1 + n2 > d;
+      if (p.carry && !carry) continue;                             // 細分単元：くり上がり・くり下がりの ある 問題だけ
       const w = [mixed(W + 1, N, d), mixed(W - 1, N, d), mixed(W, d - N, d), mixed(W, N === d - 1 ? 1 : N + 1, d), ...(sub ? [mixed(Math.abs(w1 - w2), Math.abs(n1 - n2), d)] : [])].filter(x => x);
       if (carry) { const c = mixed(sub ? W + 1 : W - 1, N, d); if (c) w.push(c); }
       return { q: `${w1}と${n1}/${d} ${sub ? "−" : "+"} ${w2}と${n2}/${d}`, a: A, choices: ch(r, A, w.filter(x => x !== A && !/^\d+と\d+\/\d+$/.test(x) ? true : x !== A), [mixed(W + 2, N, d), mixed(W, N === 1 ? 2 : N - 1, d), mixed(Math.max(1, W - 2), N, d)]) };
