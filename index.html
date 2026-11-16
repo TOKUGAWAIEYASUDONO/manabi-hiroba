@@ -1007,6 +1007,46 @@ body[data-v=host] .wrap{max-width:none;padding:0}
 .hissan .hs-num{grid-column:2;justify-self:end}.hissan .hs-op{grid-column:1;grid-row:2;text-align:center}.hissan .hs-rule{grid-column:1/-1;border-top:2px solid currentColor;min-height:1.15em}.hissan .hs-divisor{grid-column:1;align-self:end}.hissan .hs-dividend{grid-column:2;border-top:2px solid currentColor;border-left:2px solid currentColor;border-top-left-radius:.45em;padding:0 .12em}.hissan .hs-quotient{grid-column:2;min-height:1.15em}.hissan .hs-rem{font-size:.48em;grid-column:1/-1;text-align:right}.q .big:has(.hissan){white-space:normal!important;overflow:visible}.q .hissan{font-size:clamp(24px,7vw,44px)}@media print{.hissan{color:#000;break-inside:avoid}.hissan .hs-rule,.hissan .hs-dividend{border-color:#000}}
 .play.pg .q .hissan{font-size:clamp(40px,12vw,64px);line-height:1.08}.play.pg .q:has(.hissan){padding:6px;margin-bottom:4px}.play.pg .q:has(.hissan) .small{display:none}
 .proj .pq .hissan,.qzhq .hissan{font-size:clamp(52px,9vw,110px);color:inherit}
+/* ひっ算のマス入力（1マス1数字。小さいマスは くり上がり・くり下がり） */
+.hsc{--cs:44px;--rl:6px;display:inline-flex;flex-direction:row;align-items:flex-start;gap:calc(var(--cs)*.3);max-width:100%;font-family:ui-monospace,SFMono-Regular,Consolas,monospace;font-variant-numeric:tabular-nums;color:#fff}
+.hsg{display:grid;align-items:center;justify-items:center}
+.hsd,.hsl{font-size:calc(var(--cs)*.76);font-weight:800;line-height:1;position:relative}
+.hsd{width:100%;text-align:center}
+.hsl{justify-self:end;padding-right:.18em}
+.hsl.dv{align-self:stretch;display:flex;align-items:center;padding-right:.12em}
+.hsd.dvd{align-self:stretch;display:flex;align-items:center;justify-content:center;border-top:3px solid currentColor}
+.hsd.dvd0{border-left:3px solid currentColor;border-top-left-radius:calc(var(--cs)*.45) calc(var(--cs)*.35)}
+.hsr{justify-self:stretch;align-self:center;height:0;border-top:3px solid currentColor}
+.hsb{width:calc(var(--cs) - 4px);height:calc(var(--cs) - 4px);min-height:0;margin:0;padding:0;border-radius:8px;border:2px solid rgba(255,255,255,.6);background:rgba(255,255,255,.1);color:#fff;font:inherit;font-size:calc(var(--cs)*.68);font-weight:800;line-height:1;position:relative;cursor:pointer;box-shadow:none;touch-action:manipulation}
+.hsb.sm{width:calc(var(--cs)*.56);height:calc(var(--cs)*.56);font-size:calc(var(--cs)*.42);border:2px dashed rgba(255,255,255,.4);border-radius:6px;color:#ffe9a8;background:transparent}
+.hsb.at{border:3px solid #ffe066;background:rgba(255,224,102,.25);outline:none}
+.hsb.sm.at{border-style:solid}
+.hsb.bad{border:3px solid #ff8a80;background:rgba(255,82,62,.38)}
+.hsb.soft{border-color:#ffb74d;color:#ffcc80}
+.hsb.bad.at{box-shadow:0 0 0 3px #ffe066}.hsb.fix{background:#fff;color:#c62828;border-color:#fff}
+.hsb.good{border-color:#9be7a6;background:rgba(80,200,120,.32)}
+.hsb:focus-visible{outline:3px solid #fff;outline-offset:1px}
+.hsc .pt::after{content:".";position:absolute;right:-.24em;bottom:-.06em;line-height:1;color:#fff;pointer-events:none}
+.hsb.pt::after{font-size:1.1em}
+.hsm{color:#ff8a80;font-size:calc(var(--cs)*.42);justify-self:start}
+.hsrem{display:flex;align-items:center;gap:4px;height:var(--cs);font-size:calc(var(--cs)*.42);font-weight:800}
+.hsrem .hsrl{font-family:inherit;margin-right:2px}
+.hsrem.rbad .hsrl{color:#ff8a80}
+.q .big.hscw{line-height:1;white-space:normal;overflow:visible}
+.play.pg .q:has(.hsc){padding:6px;margin-bottom:4px}.play.pg .q:has(.hsc) .small{display:none}
+.pad.hspad{grid-template-columns:repeat(4,1fr);max-width:400px}.hspad .okc{font-size:16px;padding:0 2px}
+.uexrow{display:flex;justify-content:center;align-items:center;gap:8px;flex-wrap:wrap}
+.hstog{display:inline-flex;gap:4px;margin:0}.hstog:empty{display:none}.hstog .pill{margin:0;min-height:40px}
+.play.pg.hsfit{min-height:0!important}.play.pg.hsfit>.q{flex:none!important}.play.pg.cellmode>.uexrow{order:1}.play.pg.cellmode>#area{order:2}.play.pg.cellmode>.score{order:3}.play.pg.cellmode .uexrow{margin:4px 0 6px}
+@media (max-width:599px){.play.pg.cellmode{min-height:calc(100dvh - 72px)}.play.pg.cellmode .score,.play.pg.cellmode #unm{display:none}.play.pg.cellmode .uexrow{flex-wrap:nowrap;gap:4px}.play.pg.cellmode #area{margin-top:0}.play.pg.cellmode .pad button{min-height:42px}.play.pg.cellmode .umarks{min-height:22px;font-size:18px}.play.pg.cellmode .uexrow{margin-top:4px}.play.pg.cellmode .uexrow .btn,.play.pg.cellmode .hstog .pill{min-height:36px;padding:4px 10px;font-size:14px}}
+@media (min-width:1024px){
+  .play.pg.cellmode{display:grid;grid-template-columns:minmax(0,1fr) 340px;grid-template-rows:auto auto auto auto 1fr auto auto;column-gap:18px}
+  .play.pg.cellmode>*{grid-column:1/-1}
+  .play.pg.cellmode>.q{grid-column:1;grid-row:3/8;margin:0}
+  .play.pg.cellmode>#um{grid-column:2;grid-row:3}.play.pg.cellmode>#fb{grid-column:2;grid-row:4}.play.pg.cellmode>#area{grid-column:2;grid-row:5;margin-top:auto}
+  .play.pg.cellmode>.uexrow{grid-column:2;grid-row:6}.play.pg.cellmode>.score{grid-column:2;grid-row:7}
+  .play.pg.cellmode .pad button{min-height:56px}
+}
 .worksheet{position:fixed;inset:0;z-index:9999;overflow:auto;background:#fff;color:#000;padding:20px}.worksheet-tools{display:flex;gap:12px;margin-bottom:18px}.worksheet-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:22px}.worksheet-item{border:1px solid #aaa;min-height:145px;padding:10px;break-inside:avoid}.worksheet-question{font-size:24px}.worksheet-question .hissan{font-size:28px;color:#000}.worksheet-answer{height:32px;border-bottom:1px solid #333;margin:4px 8px 0 32px}.worksheet .hissan .hs-rule{min-height:0;height:0}@media print{body:has(.worksheet) #app{display:none}.worksheet{position:static;padding:0}.worksheet-tools{display:none}.worksheet-item{border-color:#ccc}}
 </style>
 </head>
@@ -1105,7 +1145,7 @@ body[data-v=host] .wrap{max-width:none;padding:0}
 
 <!-- 問題データ（file:// でも読めるよう script タグで読む） -->
 <script src="data/questions.js?v=e7a7757e"></script>
-<script src="data/config.js?v=493aa644"></script>
+<script src="data/config.js?v=8904bcfc"></script>
 <script src="data/calc.js?v=60621312"></script>
 <script src="data/choices.js?v=1cc6792c"></script>
 <script src="data/quizlib.js?v=43bdb5a8"></script>
@@ -1343,6 +1383,8 @@ const TX={
  "u.intro":["この単元《たんげん》を練習《れんしゅう》しよう","この たんげんを れんしゅうしよう"],"u.1min":["1分《ぷん》でいくつとけるかな？","1ぷんで いくつ とけるかな？"],
  "u.amari":["あまり"],"u.nextf":["つぎのらんへ","つぎの らんへ"],"u.del":["けす"],"u.pickunit":["単位《たんい》をえらぶ","たんいを えらぶ"],
  "u.retry":["❌ おしい！もう一度《いちど》やってみよう","❌ おしい！ もういちど やってみよう"],
+ "hs.on":["マスで とく"],"hs.off":["こたえだけ"],"hs.aria":["ひっ算《ざん》の マス","ひっさんの マス"],"hs.look":[s=>`（${s}を 見《み》なおそう）`,s=>`（${s}を みなおそう）`],
+ "hs.ans":["こたえ"],"hs.quot":["上《うえ》の こたえ（商《しょう》）"],"hs.prod":["かけた 数《かず》"],"hs.diff":["ひいた 数《かず》"],"hs.rem":["あまり"],"hs.part":["とちゅうの 式《しき》","とちゅうの しき"],"hs.carry":["くり上《あ》がり","くりあがり"],"hs.borrow":["くり下《さ》がり","くりさがり"],
  "u.ok2":["△ 2回《かい》目《め》でせいかい！","△ 2かいめで せいかい！"],
  "u.marks":["○ 1回《かい》で正解《せいかい》　△ 2回《かい》目《め》で正解《せいかい》　× まちがい","○ 1かいで せいかい　△ 2かいめで せいかい　× まちがい"],
  "u.marks.t":["○△×のきろく","○△×の きろく"],
@@ -5053,6 +5095,105 @@ function uEx(u){
       h("h3",{text:T("u.ex")+"："+u.title}),h("p",{class:"uextext",text:u.ex||u.note||""}),ok));
   document.addEventListener("keydown",onKey); document.body.appendChild(el); ok.focus();
 }
+/* HSC-BEGIN ひっ算のマス：どの位置に どの数字を書くか（画面には依存しない。tools/test-hissan-cells.js で検査） */
+const hsPt=(s,P)=>P?s.slice(0,s.length-P)+"."+s.slice(s.length-P):s;
+function hsCells(d,o){
+  o=o||{};
+  const op=String(d.op||"+"), A=String(d.a), B=String(d.b), fr=s=>(s.split(".")[1]||"").length, dg=s=>s.replace(".","");
+  if(!/^\d+(\.\d+)?$/.test(A)||!/^\d+(\.\d+)?$/.test(B)) return null;
+  const rows=[], cells={}, order=[];
+  const row=(t,kind,small)=>{ const r={t,kind,small:!!small,cells:[],pt:-1,i:rows.length}; rows.push(r); return r; };
+  const cell=(r,col,v,req,alt)=>{ const id="r"+r.i+"c"+col, x={id,col,v:String(v),req:!!req,alt:alt||[],row:r.i}; r.cells.push(x); cells[id]=x; return x; };
+  const put=(r,str,end,req)=>{ str=String(str); for(let k=0;k<str.length;k++){ const col=end-(str.length-1-k); if(r.t==="given") r.cells.push({col,v:str[k]}); else cell(r,col,str[k],req); } };
+  const rule=(c0,c1)=>{ const r=row("rule","rule"); r.c0=c0; r.c1=c1; return r; };
+  let W, answer, lead=null;
+  if(op==="+"||op==="−"||op==="-"){
+    const pa=fr(A), pb=fr(B), P=Math.max(pa,pb), ad=dg(A), bd=dg(B);
+    const ai=+ad*10**(P-pa), bi=+bd*10**(P-pb), add=op==="+", res=add?ai+bi:ai-bi;
+    if(res<0) return null;
+    answer=String(res).padStart(P+1,"0");
+    const la=ad.length+(P-pa), lb=bd.length+(P-pb), maxL=Math.max(la,lb);
+    W=Math.max(la,lb,answer.length);
+    const at=(s,pad,r)=>{ const k=s.length-1-(r-pad); return r<pad||k<0?null:+s[k]; };      // 右から r けた目の数字（なければ null）
+    const top=r=>at(ad,P-pa,r), bot=r=>at(bd,P-pb,r);
+    const sm=row("in",add?"carry":"borrow",true), ra=row("given","a"), rb=row("given","b"); rule(-1,W-1); const ans=row("in","ans");
+    put(ra,ad,W-1-(P-pa)); put(rb,bd,W-1-(P-pb)); put(ans,answer,W-1,true); answer=hsPt(answer,P);
+    if(pa) ra.pt=W-1-P; if(pb) rb.pt=W-1-P; if(P) ans.pt=W-1-P;
+    lead={row:rb.i,text:add?"+":"−"};
+    const aid=r=>"r"+ans.i+"c"+(W-1-r), sid=r=>"r"+sm.i+"c"+(W-1-r);
+    if(add){
+      let c=0; const car=[];
+      for(let r=0;r<W;r++){ const s=(top(r)||0)+(bot(r)||0)+c; c=s>=10?1:0; car[r+1]=c; }
+      for(let r=1;r<maxL;r++) cell(sm,W-1-r,car[r]?"1":"",false,car[r]?[]:["","0"]);
+      for(let r=0;r<ans.cells.length;r++){ order.push(aid(r)); if(r+1<maxL&&car[r+1]) order.push(sid(r+1)); }
+    } else {
+      const bor=[]; let b=0;
+      for(let r=0;r<la;r++){ const t=(top(r)||0)-b, u=bot(r)||0; b=t<u?1:0; bor[r]=b; }
+      for(let r=1;r<la;r++){ const tr=top(r); if(tr==null) continue; const v=bor[r-1]?String(tr>0?tr-1:9):""; cell(sm,W-1-r,v,false,v?[]:["",String(tr)]); }
+      for(let r=0;r<ans.cells.length;r++){ if(bor[r]&&cells[sid(r+1)]) order.push(sid(r+1)); order.push(aid(r)); }
+    }
+  } else if(op==="×"||op==="*"){
+    const pa=fr(A), pb=fr(B), P=pa+pb, ad=dg(A), bd=dg(B), ai=+ad, la=ad.length;
+    answer=String(ai*+bd).padStart(P+1,"0");
+    const parts=[]; for(let k=0;k<bd.length;k++){ const m=+bd[bd.length-1-k]; if(m) parts.push({k,m,v:String(ai*m)}); }
+    if(!parts.length) return null;
+    W=Math.max(la,bd.length,answer.length,...parts.map(p=>p.v.length+p.k));
+    const carryOf=m=>{ const out=[]; let c=0; for(let j=0;j<la;j++){ const t=+ad[la-1-j]*m+c; c=Math.floor(t/10); out[j+1]=c; } return out; };
+    const crow=[...parts].reverse().map(p=>({p,r:row("in","carry",true)})).reverse();      // 上の行ほど あとで かける数
+    const ra=row("given","a"), rb=row("given","b"); rule(-1,W-1);
+    put(ra,ad,W-1); put(rb,bd,W-1); if(pa) ra.pt=W-1-pa; if(pb) rb.pt=W-1-pb;
+    lead={row:rb.i,text:"×"};
+    crow.forEach(x=>{ x.car=carryOf(x.p.m); for(let j=1;j<la;j++){ const c=x.car[j]; cell(x.r,W-1-j,c?String(c):"",false,c?[]:["","0"]); } });
+    const cid=(x,j)=>"r"+x.r.i+"c"+(W-1-j);
+    if(parts.length===1){
+      const ans=row("in","ans"); put(ans,answer,W-1,true); if(P) ans.pt=W-1-P;
+      const x=crow[0], k=x.p.k;
+      for(let r=0;r<ans.cells.length;r++){ order.push("r"+ans.i+"c"+(W-1-r)); const j=r-k; if(j>=0&&j+1<la&&x.car[j+1]) order.push(cid(x,j+1)); }
+    } else {
+      const prow=parts.map((p,n)=>{ const r=row("in","part"); r.n=n+1; put(r,p.v,W-1-p.k,true); return r; });
+      rule(-1,W-1); const ans=row("in","ans"); put(ans,answer,W-1,true); if(P) ans.pt=W-1-P;
+      parts.forEach((p,n)=>{ const x=crow[n]; for(let j=0;j<p.v.length;j++){ order.push("r"+prow[n].i+"c"+(W-1-p.k-j)); if(j+1<la&&x.car[j+1]) order.push(cid(x,j+1)); } });
+      for(let r=0;r<ans.cells.length;r++) order.push("r"+ans.i+"c"+(W-1-r));
+    }
+    answer=hsPt(answer,P);
+  } else if(op==="÷"||op==="/"){
+    if(B.includes(".")||(o.g&&o.g<4)) return null;          // わる数が小数・3年（九九のわり算）は マスにしない
+    const dd=dg(A), n=dd.length, pa=fr(A), ones=n-1-pa, dv=+B;
+    if(!dv) return null;
+    let s=-1, cur=0; for(let i=0;i<n;i++){ cur=cur*10+ +dd[i]; if(cur>=dv){ s=i; break; } }
+    if(s<0) return null;
+    if(pa&&s>ones){ s=ones; }
+    cur=+dd.slice(0,s+1);
+    W=n; lead={row:1,text:B};
+    const qr=row("in","quot"), dr=row("given","dividend"); put(dr,dd,n-1); if(pa){ dr.pt=ones; qr.pt=ones; }
+    let q="", w=null, rem=null;
+    for(let i=s;i<n;i++){
+      const qd=Math.floor(cur/dv); q+=qd; order.push(cell(qr,i,qd,true).id);
+      if(qd>0){
+        const p=qd*dv, pr=row("in","prod"); put(pr,p,i,true); pr.cells.forEach(x=>order.push(x.id));
+        const c0=Math.min(i-String(p).length+1,w?w.c0:0); rule(c0,i);
+        const diff=cur-p;
+        if(i<n-1){ cur=diff*10+ +dd[i+1]; w=row("in","diff"); put(w,cur,i+1,true); w.c0=i+1-String(cur).length+1; w.cells.forEach(x=>order.push(x.id)); }
+        else { rem=diff; const fr2=row("in","diff"); put(fr2,diff,i,true); fr2.cells.forEach(x=>order.push(x.id)); w=fr2; }
+      } else if(i<n-1){
+        const nv=cur*10+ +dd[i+1];
+        if(w){
+          if(cur===0){ const z=w.cells.pop(); delete cells[z.id]; order.splice(order.indexOf(z.id),1); }
+          order.push(cell(w,i+1,dd[i+1],true).id); w.c0=i+1-String(nv).length+1;
+        }
+        cur=nv;
+      } else { rem=cur; if(!w) return null; }
+    }
+    if(pa&&rem) return null;                                 // 小数のわり算は わりきれるときだけ
+    const qi=q.replace(/^0+(?=\d)/,"");
+    answer=pa?(q.slice(0,ones-s+1)||"0")+"."+q.slice(ones-s+1):qi;
+    if(o.amari){ const rr=row("in","rem"); rr.solo=true; put(rr,rem,String(rem).length-1,true); rr.cells.forEach(x=>order.push(x.id)); answer+="|"+rem; }
+  } else return null;
+  const ok=o.val==null||(()=>{ const v=String(o.val); if(v.includes("|")){ const [a,b]=v.split("|"); return answer===a+"|"+b||(answer===a&&b==="0"); } return Number(v)===Number(answer); })();
+  if(!ok) return null;
+  return {op,W,lead,rows,cells,order,answer};
+}
+/* HSC-END */
 /* 1問 → 画面用（答え方ごとに入力の長さを決める） */
 function renderHissan(v){
   const d=v.hissan||v, op=String(d.op||"+"), a=String(d.a), b=String(d.b);
@@ -5076,7 +5217,8 @@ function showWorksheet(ids,n=20){
 function uCur(it,forceChoice){
   const u=UBY[it.unit], mode=(forceChoice||it.ans==="choice4"||!it.choices)?"choice4":it.ans;
   const formula=/^[0-9.\s+−×÷()\/と]+$/.test(it.q), val=String(it.val);
-  const c={uid:it.unit,id:it.unit+": "+it.q,q:it.q,a:it.a,ch:it.choices,picture:it.picture,hissan:it.hissan,small:it.stem||(formula?"= ?":" "),u:it,mode,ex:u?u.ex:"",title:u?u.title:"",tries:0,subj:it.subj};
+  const c={uid:it.unit,id:it.unit+": "+it.q,q:it.q,a:it.a,ch:it.choices,picture:it.picture,hissan:it.hissan,small:it.stem||(formula?"= ?":" "),u:it,mode,mode0:mode,ex:u?u.ex:"",title:u?u.title:"",tries:0,subj:it.subj};
+  if(it.hissan&&/^(num|dec|amari)$/.test(it.ans)&&typeof hsCells==="function"){ c.hsL=hsCells(it.hissan,{val:it.val,amari:it.ans==="amari",g:it.g||(u&&u.g)}); if(c.hsL&&hsPref()) c.mode="cells"; }
   if(mode==="num"||mode==="dec") c.len=[val.length];
   else if(mode==="amari"){ const [a,b]=val.split("|"); c.len=[a.length,b.length]; }
   else if(mode==="frac"){ const [w,n,d]=val.split("|"); c.len=w==="0"?[n.length,d.length]:[w.length,n.length,d.length]; }
@@ -5250,7 +5392,7 @@ function startUnitRun(c){
     <div class="umarks" id="um" aria-label="${esc(T("u.marks"))}"></div>
     <div class="fb" id="fb" aria-live="polite"></div>
     <div id="area"></div>
-    <div class="uexrow"><button type="button" class="btn sub s" id="uexb">💡 ${T("u.ex")}</button></div>
+    <div class="uexrow"><span class="pills hstog" id="hstog"></span><button type="button" class="btn sub s" id="uexb">💡 ${T("u.ex")}</button></div>
     <div class="score" id="scw">${T("p.score",0)}</div></div>`;
   if(c.task) $("#bk").onclick=()=>{ stopTimer(); finish(); };      // 授業モード：ホームへは行かず、結果の画面へ
   $("#unm").textContent=rbp(names).length>28?rbp(names).slice(0,27)+"…":names;
@@ -5272,10 +5414,16 @@ function uMarksHtml(marks,max){
 function unitNext(){
   const U=P.u;
   if(U.pi>=U.pool.length){ U.round++; U.pool=UN.unitPick(U.ids,U.n,U.seed+"-"+U.round,U.mix); U.pi=0; if(!U.pool.length) return finish(); }
-  const c=uCur(U.pool[U.pi++],U.choice); P.cur=c; P.inp={f:(c.len||[]).map(()=>""),at:0}; P.lock=false;
+  const c=uCur(U.pool[U.pi++],U.choice); P.cur=c;
   if(c.mode==="choice4") P.chN++; else P.inN++;
+  uDraw();
+}
+function uDraw(){
+  const c=P.cur; P.inp={f:(c.len||[]).map(()=>""),at:0}; P.lock=false; P.hs=c.mode==="cells"?hsNew(c.hsL):null;
+  const pg=app.querySelector(".play.pg"); if(pg) pg.classList.toggle("cellmode",!!P.hs);
+  const tg=$("#hstog"); if(tg) tg.replaceChildren(...(c.hsL?[upill(T("hs.on"),!!P.hs,()=>hsSwitch(true)),upill(T("hs.off"),!P.hs,()=>hsSwitch(false))]:[]));
   const pic=$("#qpic"); if(pic) pic.replaceChildren(...(c.picture?[MH_MATHVIEW.pictureSVG(c.picture,document)].filter(Boolean):[]));
-   const qq=$("#qq"); qq.className="big"+(rbp(c.q).length>16?" long":""); showQuestion(qq,c); clockIn(qq,c.uid,c.q);
+   const qq=$("#qq"); qq.className="big"+(P.hs?" hscw":rbp(c.q).length>16?" long":""); if(P.hs){ qq.textContent=""; qq.setAttribute("aria-label",c.q); hsRender(); } else { qq.removeAttribute("aria-label"); showQuestion(qq,c); } clockIn(qq,c.uid,c.q);
   if(c.subj==="eigo") qq.insertAdjacentHTML("beforeend",spkBtn("eigo",c.q));
   $("#qs").textContent=c.small; $("#um").textContent=""; $("#um").insertAdjacentHTML("beforeend",uMarksHtml(P.marks,12));
   const area=$("#area");
@@ -5285,6 +5433,12 @@ function unitNext(){
     area.innerHTML=`<div class="choices${c.picture&&c.ch.includes("あお")&&c.ch.includes("あか")?" colorpick":""}">${visibleChoices.map((x,i)=>`<button class="choice ${cls[i]}" data-c="${esc(x)}"><span class="kh" aria-hidden="true">${i+1}</span>${chLabel(x,c)}</button>`).join("")}</div>`;
     mathIn(area); area.querySelectorAll("[data-c]").forEach(b=>b.onclick=()=>uPick(b));
     return;
+  }
+  if(P.hs){
+    const kb=k=>`<button data-k="${k}">${k}</button>`, keys=["7","8","9"].map(kb).join("")+`<button data-k="⌫" aria-label="${esc(T("u.del"))}">⌫</button>`+["4","5","6","0","1","2","3"].map(kb).join("")+`<button class="ok okc" data-k="OK">${T("pad.ok")}</button>`;
+    area.innerHTML=`<div class="pad hspad">${keys}</div>`;
+    area.querySelectorAll("[data-k]").forEach(b=>b.onclick=()=>uKey(b.dataset.k));
+    hsFit(); return;
   }
   const m=c.mode, dot=m==="dec"||(m==="unit"&&c.dot);
   const sp=m==="amari"?`<button data-k="あまり" class="pk">${T("u.amari")}</button>`:m==="frac"?`<button data-k="▶" class="pk ar" aria-label="${esc(T("u.nextf"))}">▶</button>`:dot?`<button data-k=".">.</button>`:"";
@@ -5310,6 +5464,7 @@ function uShowInp(){
 function uKey(k){
   if(!P||!P.u||P.lock||P.review||!P.cur) return;
   const c=P.cur, I=P.inp, m=c.mode; if(m==="choice4") return;
+  if(m==="cells") return hsKey(k);
   if(k==="⌫"){ if(I.f[I.at]) I.f[I.at]=I.f[I.at].slice(0,-1); else if(I.at>0) I.at--; }
   else if(k==="OK") return uSubmit();
   else if(k==="あまり"){ if(m==="amari") I.at=1; }
@@ -5357,11 +5512,14 @@ function uJudge(right){
   } else {
     c.tries++;
     if(!p.missObjs.includes(c)){ p.misses.push(`${c.q} → ${c.a}`); p.missObjs.push(c); }
+    if(c.tries<2&&c.mode==="cells"&&p.hs){ fb.className="fb ng"; hsRetry(fb); p.lock=false; return; }
     if(c.tries<2){ fb.className="fb ng"; fb.textContent=T("u.retry"); p.inp={f:(c.len||[]).map(()=>""),at:0}; if(c.mode!=="choice4") uShowInp(); p.lock=false; return; }
     mark="×"; p.ng++;
     fb.className="fb ng"; fb.textContent=T("fb.ng",c.a); wait=1700;
     if(c.mode==="choice4") $("#area").querySelectorAll(".choice").forEach(e=>{ if(e.dataset.c===c.a) e.classList.add("right"); else e.classList.add("wrong"); });
+    if(c.mode==="cells"&&p.hs){ p.hs.show=true; hsRender(); wait=2600; }
   }
+  if(right&&c.mode==="cells"&&p.hs){ p.hs.ok=true; hsRender(); }
   p.marks.push(mark); $("#um").innerHTML=uMarksHtml(p.marks,12);
   p.uSt=p.uSt||{}; const us=p.uSt[c.uid]=p.uSt[c.uid]||{n:0,o:0}; us.n++; if(mark==="○") us.o++;
   $("#sc").textContent=p.ok;
@@ -5374,6 +5532,93 @@ function uKeydown(e){
   else if(e.key==="."||e.key===",") uKey(".");
   else if(e.key==="Backspace") uKey("⌫");
   else if(e.key==="Enter") uKey("OK");
+  else if(c.mode==="cells"&&(e.key==="ArrowLeft"||e.key==="ArrowRight")){ e.preventDefault(); uKey(e.key==="ArrowLeft"?"←":"→"); }
+}
+
+/* ---- ひっ算のマス入力（単元練習・計算スプリント）。1マス1数字、入れると つぎのマスへ。小さいマス（くり上がり・くり下がり）は書かなくてもよい ---- */
+const HSC_PREF="mh_hsc", hsPref=()=>store.get(HSC_PREF,true)!==false;
+const HS_LAB={quot:"hs.quot",prod:"hs.prod",diff:"hs.diff",rem:"hs.rem",part:"hs.part",ans:"hs.ans",carry:"hs.carry",borrow:"hs.borrow"};
+function hsNew(L){ return {L,v:{},at:L.order[0],bad:new Set(),mark:new Set(),soft:new Set(),show:false,ok:false}; }
+function hsBox(G,c,r,style){
+  const L=G.L, mine=G.v[c.id]||"", fix=G.show&&c.req&&mine!==c.v, val=fix?c.v:mine;
+  const cls="hsb"+(r.small?" sm":"")+(r.pt===c.col?" pt":"")+(G.at===c.id&&!G.show&&!G.ok?" at":"")+(G.bad.has(c.id)?" bad":"")+(G.soft.has(c.id)?" soft":"")+(fix?" fix":"")+(G.ok&&c.req?" good":"")+(val?" on":"");
+  return h("button",{type:"button",class:cls,style,"data-id":c.id,"aria-label":T(HS_LAB[r.kind]||"hs.ans"),text:val,onclick:()=>hsTap(c.id)});
+}
+function hsView(G){
+  const L=G.L, div=L.op==="÷"||L.op==="/", grid=h("div",{class:"hsg"+(div?" div":"")}), tpl=[];
+  L.rows.forEach(r=>{ if(r.solo) return; r.gr=tpl.length+1; tpl.push(r.t==="rule"?"var(--rl)":r.small?"calc(var(--cs)*.6)":"var(--cs)"); });
+  grid.style.gridTemplateColumns=`auto repeat(${L.W},var(--cs)) calc(var(--cs)*.5)`; grid.style.gridTemplateRows=tpl.join(" ");
+  const badRows=new Set([...G.mark].map(id=>L.cells[id].row));
+  let rem=null;
+  L.rows.forEach(r=>{
+    if(r.solo){ rem=h("div",{class:"hsrem"+(badRows.has(r.i)?" rbad":"")},h("span",{class:"hsrl",text:T("u.amari")}),...r.cells.map(c=>hsBox(G,c,r,""))); return; }
+    const at=col=>`grid-row:${r.gr};grid-column:${col}`;
+    if(r.t==="rule"){ grid.append(h("i",{class:"hsr",style:at(`${r.c0+2}/${r.c1+3}`)})); return; }
+    if(L.lead&&L.lead.row===r.i) grid.append(h("span",{class:"hsl"+(div?" dv":""),style:at(1),text:L.lead.text}));
+    if(badRows.has(r.i)) grid.append(h("span",{class:"hsm",style:at(L.W+2),"aria-hidden":"true",text:"◀"}));
+    r.cells.forEach(c=>{ const st=at(c.col+2);
+      if(r.t==="given") grid.append(h("span",{class:"hsd"+(r.pt===c.col?" pt":"")+(r.kind==="dividend"?" dvd"+(c.col===0?" dvd0":""):""),style:st,text:c.v}));
+      else grid.append(hsBox(G,c,r,st)); });
+  });
+  return h("div",{class:"hsc",role:"group","aria-label":T("hs.aria")},grid,rem);
+}
+function hsRender(){
+  const qq=$("#qq"), G=P&&P.hs; if(!qq||!G) return;
+  const old=[...qq.children].find(x=>x.className==="hsc"), cs=old&&old.style.getPropertyValue("--cs"), v=hsView(G);
+  if(cs) v.style.setProperty("--cs",cs);
+  if(old) old.replaceWith(v); else { qq.textContent=""; qq.append(v); }
+}
+/* 画面に入る大きさ（スマホでも入力パッドが画面の外に出ない）にマスを合わせる */
+function hsFit(){
+  const qq=$("#qq"), g=qq&&[...qq.children].find(x=>x.className==="hsc"), q=g&&g.closest&&g.closest(".q"), area=$("#area"); if(!q||!area||!P||!P.hs) return;
+  const L=P.hs.L, wide=innerWidth>=1024;
+  let cs=Math.max(22,Math.min(wide?64:50,Math.floor((q.clientWidth-20)/(L.W+2.4))));
+  const set=()=>g.style.setProperty("--cs",cs+"px"), over=()=>Math.max(...[q,area,$(".uexrow")].filter(Boolean).map(e=>e.getBoundingClientRect().bottom))>innerHeight-4;
+  const pg=g.closest(".play"); if(pg) pg.classList.add("hsfit");      // 自然な高さで はかる
+  set(); for(let i=0;i<30&&cs>22&&over();i++){ cs-=2; set(); }
+  if(pg) pg.classList.remove("hsfit");
+}
+const hsFilled=G=>Object.values(G.L.cells).every(c=>!c.req||G.v[c.id]);
+function hsNext(G){
+  const o=G.L.order, i=o.indexOf(G.at);
+  if(G.bad.size){ const rest=[...o.slice(i+1),...o.slice(0,i+1)].find(id=>G.bad.has(id)); if(rest) return rest; }
+  if(i>=0&&i<o.length-1) return o[i+1];
+  return o.find(id=>G.L.cells[id].req&&!G.v[id])||G.at;
+}
+function hsTap(id){ const G=P&&P.hs; if(!G||P.lock||G.show||G.ok) return; G.at=id; hsRender(); }
+function hsKey(k){
+  const G=P.hs; if(!G||G.show||G.ok) return;
+  const o=G.L.order;
+  if(/^\d$/.test(k)){
+    G.v[G.at]=k; G.bad.delete(G.at); G.soft.delete(G.at); if(!G.bad.size) G.mark.clear();
+    if(hsFilled(G)&&!G.bad.size){ hsRender(); return hsSubmit(); }
+    G.at=hsNext(G);
+  } else if(k==="⌫"){
+    if(G.v[G.at]) delete G.v[G.at];
+    else { const i=o.indexOf(G.at); if(i>0){ G.at=o[i-1]; delete G.v[G.at]; } }
+  } else if(k==="OK"){
+    if(hsFilled(G)) return hsSubmit();
+    G.at=o.find(id=>G.L.cells[id].req&&!G.v[id])||G.at;
+  } else if(k==="←"||k==="→"){ const i=o.indexOf(G.at), j=i+(k==="→"?1:-1); if(j>=0&&j<o.length) G.at=o[j]; }
+  hsRender();
+}
+function hsSubmit(){
+  const G=P.hs; G.bad=new Set(); G.soft=new Set();
+  for(const c of Object.values(G.L.cells)){ const v=G.v[c.id]||""; if(c.req){ if(v!==c.v) G.bad.add(c.id); } else if(v!==c.v&&!c.alt.includes(v)) G.soft.add(c.id); }
+  G.mark=new Set(G.bad);
+  uJudge(!G.bad.size);
+}
+/* まちがえたマスだけを空にして、赤くする（どの段かは ◀ と ことばで知らせる） */
+function hsRetry(fb){
+  const G=P.hs, L=G.L, kinds=[...new Set([...G.bad].map(id=>L.rows[L.cells[id].row].kind))];
+  G.bad.forEach(id=>delete G.v[id]); G.at=L.order.find(id=>G.bad.has(id))||G.at;
+  fb.textContent=T("u.retry")+"　"+T("hs.look",kinds.map(k=>T(HS_LAB[k])).join("・"));
+  hsRender();
+}
+function hsSwitch(on){
+  store.set(HSC_PREF,!!on);
+  const c=P&&P.cur; if(!c||!c.hsL||P.lock) return;
+  c.mode=on?"cells":c.mode0; uDraw();
 }
 
 let activePracticeHash=location.hash;

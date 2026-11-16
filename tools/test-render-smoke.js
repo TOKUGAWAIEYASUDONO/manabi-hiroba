@@ -6,13 +6,13 @@ const html=fs.readFileSync(path.join(root,'index.html'),'utf8');
 const src=html.slice(html.lastIndexOf('<script>')+8,html.lastIndexOf('</script>'))
   .replace(/fgFromHash\(\); fgWalk\(document\.body\); refreshMedals\(\); route\(\);\s*$/,'');
 function element(){return {
-  style:{},dataset:{},classList:{add(){},remove(){},toggle(){}},children:[],
+  style:{getPropertyValue(){return ''},setProperty(){}},dataset:{},replaceWith(){},classList:{add(){},remove(){},toggle(){}},children:[],
   appendChild(x){this.children.push(x);return x},append(...xs){this.children.push(...xs)},
   insertAdjacentHTML(){},
-  replaceChildren(...xs){this.children=xs},setAttribute(){},addEventListener(){},removeEventListener(){},
+  replaceChildren(...xs){this.children=xs},setAttribute(){},removeAttribute(){},closest(){return null},addEventListener(){},removeEventListener(){},
   querySelector(){return element()},querySelectorAll(){return []},getAttribute(){return null},
   focus(){},remove(){},scrollIntoView(){},getBoundingClientRect(){return {width:375,height:667}},
-  innerHTML:'',textContent:'',value:'calc',options:[],firstChild:{textContent:''}
+  innerHTML:'',get textContent(){return this._t||''},set textContent(v){this._t=v;this.children=[]},value:'calc',options:[],firstChild:{textContent:''}
 }};
 const byId=new Map();
 const document={body:element(),documentElement:element(),head:element(),
@@ -62,7 +62,14 @@ if(!unitCheck.length||unitCheck.some(q=>!q.ch.includes(q.a))) throw Error('unit 
 for(const id of ['m2-add-hissan','m3-kake-hissan1','m4-wari-21']){
   vm.runInContext(`startUnitRun({ids:['${id}'],n:1,seed:123,mix:true,choice:false})`,ctx,{filename:'sprint-'+id});
   if(!vm.runInContext('P.cur.hissan',ctx)) throw Error('sprint lost hissan: '+id);
+  if(byId.get('qq').children[0]?.className!=='hsc') throw Error('sprint did not render hissan cells: '+id);
+  vm.runInContext('hsSwitch(false)',ctx,{filename:'hs-off-'+id});
   if(byId.get('qq').children[0]?.className!=='hissan') throw Error('sprint did not render vertical calculation: '+id);
+  vm.runInContext('hsSwitch(true)',ctx,{filename:'hs-on-'+id});
+  if(byId.get('qq').children[0]?.className!=='hsc') throw Error('hissan cells did not come back: '+id);
+  // マスに正しい数字を順に入れると、自動で答え合わせになる
+  vm.runInContext('(()=>{const L=P.hs.L;let n=0;while(P.hs&&!P.lock&&n<40){uKey(L.cells[P.hs.at].v);n++;}})()',ctx,{filename:'hs-type-'+id});
+  if(vm.runInContext('P.ok',ctx)!==1) throw Error('hissan cells correct input was not accepted: '+id);
 }
 console.log('render smoke: home 1〜6年、単元選び、先生画面、練習 OK');
 if(!process.env.RIKA_SMOKE_PUBLIC){
