@@ -6,6 +6,7 @@ const path = require("path");
 const crypto = require("crypto");
 const NM = require("./data/ngwords.js");   // 児童が入力する名前の検査（ブラウザ・先生の端末と同じ部品）
 const QZ = require("./data/quizlib.js");   // 先生のもんだい：形式チェックとクイズの進行（ブラウザと同じ部品）
+const AW = require("./data/awardlib.js");
 const COOP = require("./data/cooplib.js"); // 協力モード「ロケット はっしゃ」の進行（ブラウザ・先生の端末と同じ部品）
 
 const PORT = +process.env.PORT || 8787;
@@ -101,6 +102,7 @@ function pub(room, host) {
     players: room.co ? coPlayers(room, host) : [...room.players.values()].map(p => room.qz
       ? { pid: p.pid, name: nm(p), emoji: p.emoji, v: p.v, ok: p.ok, ng: p.ng, st: p.st | 0, lp: p.lp | 0, lc: p.lc | 0, ...(host && room.qz.phase === "end" ? { rec: p.rec || "" } : {}), ...(host && room.qz.phase === "q" && room.qz.answeredBy(p.pid) ? { a: 1 } : {}) }
       : { pid: p.pid, name: nm(p), emoji: p.emoji, v: p.v, ok: p.ok, ng: p.ng }),
+    ...(room.status === "ended" ? { awards: AW.awards(room.mode, room.rule, [...room.players.values()]), ...(host ? { awardStats: [...room.players.values()].map(p=>({pid:p.pid,name:p.name,correct:p.ok,streak:p.maxStreak||0,averageMs:p.speedCount?Math.round(p.speedSum/p.speedCount):null,comeback:p.comeback||0,chest:p.chest||0,star:p.star||0,boost:p.boost||0})) } : {}) } : {}),
     ...(room.qz ? { quiz: room.qz.pub() } : {})
   };
 }
@@ -117,6 +119,13 @@ function kidMsg(room, res, base) {
   return "data: " + base + (p ? ',"me":' + JSON.stringify(p.name) + (room.qz && room.qz.phase === "end" ? ',"myrec":' + JSON.stringify(p.rec || "") : "") : "") + "}\n\n";
 }
 // クイズの得点などを、部屋の参加者の表に写す
+function awardAnswer(p, right, ms) {
+  p.streak = right ? (p.streak || 0) + 1 : 0;
+  p.maxStreak = Math.max(p.maxStreak || 0, p.streak);
+  if (right) { if (p.afterWrong) p.comeback = (p.comeback || 0) + 1; p.afterWrong = false;
+    if (Number.isFinite(ms) && ms >= 0) { p.speedSum = (p.speedSum || 0) + ms; p.speedCount = (p.speedCount || 0) + 1; }
+  } else p.afterWrong = true;
+}
 function qzSync(room) {
   const E = room.qz;
   for (const [pid, p] of room.players) { const s = E.P.get(pid); if (s) Object.assign(p, { v: s.v, ok: s.ok, ng: s.ng, st: s.st, lp: s.lp, lc: s.lc }); if (E.phase === "end") p.rec = E.recStr(pid); }
@@ -277,7 +286,7 @@ const API = {
     const room = rooms.get(String(b.code));
     if (!room || room.hostKey !== b.hostKey) return [403, { error: "先生の画面からのみ操作できます" }];
     if (!room.players.size) return [409, { error: "まだ誰も参加していません" }];
-    for (const p of room.players.values()) Object.assign(p, { v: 0, ok: 0, ng: 0 });
+    for (const p of room.players.values()) Object.assign(p, { v: 0, ok: 0, ng: 0, streak: 0, maxStreak: 0, comeback: 0, afterWrong: false, speedSum: 0, speedCount: 0, chest: 0, star: 0, boost: 0 });
     if (room.qz) { room.status = "playing"; room.endAt = 0; room.qz.begin(Date.now()); qzSync(room); broadcast(room, true); return [200, { ok: true }]; }
     if (room.co) { room.status = "playing"; room.endAt = 0; room.co.begin(Date.now()); broadcast(room, true); return [200, { ok: true }]; }
     room.status = "playing"; room.endAt = Date.now() + room.t * 1000 + 3000; // 3秒のカウントダウン
@@ -299,7 +308,7 @@ const API = {
     if (room.status !== "ended") return [409, { error: "今は始められません" }];
     const low = room.qz.low(0.6).map(i => room.qz.qs[i]);
     if (!low.length) return [409, { error: "正答率の低い問題はありません" }];
-    room.status = "playing"; room.endAt = 0; room.qz.begin(Date.now(), low); qzSync(room); broadcast(room, true);
+    room.status = "playing"; room.endAt = 0; for (const p of room.players.values()) Object.assign(p,{streak:0,maxStreak:0,comeback:0,afterWrong:false,speedSum:0,speedCount:0}); room.qz.begin(Date.now(), low); qzSync(room); broadcast(room, true);
     return [200, { ok: true }];
   },
   // たからばこ・すごろくで使う、先生のもんだい（参加している児童だけが読める）
@@ -324,21 +333,22 @@ const API = {
       // Never accept client-supplied counters as boost credit.
       if (b.op === "boost" && ("count" in b || "correct" in b || "ok" in b)) return [400, { error: "boost counters are not accepted" }];
       const r = room.co.act(p.pid, b.op, b, Date.now());
-      if (r[0] === 200) { if (r[2]) broadcast(room, true); else broadcast(room); }
+      if (r[0] === 200) { if (b.op === "cans" && !r[1].late) awardAnswer(p, b.ok === true, null); if (b.op === "boost") p.boost = (p.boost || 0) + 1; if (r[2]) broadcast(room, true); else broadcast(room); }
       return [r[0], r[1]];
     }
     if (room.qz) {      // クイズ：答えの番号だけ受け取り、点数は部屋の側で決める
       if (b.op !== "qans") return [403, { error: "この遊び方では使えない操作です" }];
       const r = room.qz.answer(p.pid, b.i, b.c, Date.now());
       if (!r.ok) return [409, { error: r.why === "late" ? "もう時間がおわりました" : "この答えは使えません" }];
+      { const a=room.qz.ans.get(p.pid); if (a) awardAnswer(p, a.correct, Math.max(0,Date.now()-room.qz.qStart)); }
       if (room.qz.tick(Date.now())) { qzSync(room); broadcast(room, true); } else broadcast(room);
       return [200, { ok: true }];
     }
     if (room.rule === "easy" && EASY_NG.includes(b.op)) return [403, { error: "やさしいルールの部屋では使えません" }];
     const out = { ok: true };
     switch (b.op) {
-      case "answer": b.right ? p.ok++ : p.ng++; break;
-      case "add": p.v += Math.min(50, Math.max(0, b.n | 0)); break;
+      case "answer": b.right ? p.ok++ : p.ng++; awardAnswer(p, b.right === true, null); break;
+      case "add": p.v += Math.min(50, Math.max(0, b.n | 0)); p.chest = (p.chest || 0) + 1; break;
       case "x2": if (room.mode === "chest") p.v = Math.min(p.v * 2, 100000); break;
       case "lose": out.n = Math.round(p.v * 0.25); p.v -= out.n; break;
       case "steal": {

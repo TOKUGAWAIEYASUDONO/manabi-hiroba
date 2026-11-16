@@ -295,6 +295,7 @@ h2{font-size:20px;margin:18px 0 8px}
 .digits{display:flex;gap:10px;justify-content:center;margin:12px 0}
 .digit{width:60px;height:72px;border:3px solid var(--line);border-radius:10px;background:#fff;font-size:40px;font-weight:800;display:flex;align-items:center;justify-content:center}
 .digit.on{border-color:var(--go)}
+.award-show{margin:16px auto;max-width:800px;text-align:center}.award-card{background:#fff7d5;border:3px solid #e7b83e;border-radius:18px;padding:14px;margin:12px auto;color:#253b30}.award-podium{display:flex;flex-direction:column;gap:8px}.award-winner{font-size:clamp(20px,3vw,34px);margin:6px}.award-card[hidden]{display:none}
 .hrank{display:grid;grid-template-columns:60px 1fr auto auto;gap:12px;align-items:center;padding:10px 16px;border-radius:6px;background:#fff;margin-bottom:6px;border:2px solid var(--line);font-size:28px}
 .hrank b{font-size:32px}
 .hrank .note{font-size:22px}
@@ -3815,6 +3816,10 @@ function renderHost(){
       syncPieces(s.players.map(p=>({n:p.pid,e:p.emoji,v:p.v,me:false})));      // 駒の目印は pid（名前を使わない）
     }
   };
+  const awardsHtml=s=>{ const a=s.awards||[], easy=s.rule==="easy";
+    return a.length?`<section class="award-show"><h2>?? ???? ?????</h2><button type="button" class="btn sub" id="award-skip">??? ?????</button><div id="award-list">${a.map((c,j)=>`<div class="award-card" data-award="${j}" hidden><h3>${esc(c.title)} ???</h3><div class="award-podium">${(easy?c.winners:c.winners.map((w,i)=>({...w,rank:i+1})).reverse()).map(w=>`<div class="award-winner">${easy?"??":w.rank===1?"??":w.rank===2?"??":"??"} ${face(w.emoji)} ${esc(w.name)}${easy?"":"?"+w.rank+"????"}</div>`).join("")}</div></div>`).join("")}</div></section>`:"";
+  };
+  const awardsReveal=()=>{ const cards=[...document.querySelectorAll(".award-card")]; let i=0; const next=()=>{ if(i>=cards.length)return; cards[i++].hidden=false; if(i<cards.length) setTimeout(next,850); }; const b=document.getElementById("award-skip"); if(b)b.onclick=()=>{ i=cards.length; cards.forEach(x=>x.hidden=false); b.hidden=true; }; next(); };
   const endBuild=s=>{
     M=null; px.className="px";
     const ps=sorted(s.players), rows=ps.map((p,i)=>{const t=p.ok+p.ng;return {i:i+1,p,t,acc:t?Math.round(p.ok/t*100):0}});
@@ -3826,7 +3831,8 @@ function renderHost(){
     /* 大画面には 上位3人の名前と点だけ（正解 n/m は出さない）。全員の表は「先生だけ みる」。やさしいルールは 名前つきの順位表を出さない */
     const topHtml=rows.slice(0,3).map(r=>`<div class="hrank ${"t"+r.i}" data-pid="${esc(r.p.pid)}" role="button" tabindex="0"><b>${r.i}</b><span>${face(r.p.emoji)} ${esc(r.p.name)}</span><span>${val(r.p)}</span></div>`).join("");
     px.innerHTML=easyR?`<div class="px-end easy"><div class="celebrate" aria-hidden="true">🏆</div><h2 class="px-h2">みんな おめでとう！</h2></div>`
-      :`<div class="px-end"><h2 class="px-h2">🏆 ${T("px.res")}</h2>${topHtml}</div>`;
+      :`<div class="px-end"><h2 class="px-h2">🏆 ${T("px.res")}</h2>${topHtml}${awardsHtml(s)}</div>`;
+    awardsReveal();
     const extra=document.getElementById("pxextra");
     extra.innerHTML=`<div class="note">${T("px.avg",ps.length,avg)}・${T("z.all",allOk)}</div>`;
     if(!easyR) extra.append(teacherOnly(h("div",{innerHTML:rows.slice(0,vis).map(rowHtml).join("")+(rows.length>vis?`<p class="px-more">${T("px.more",rows.length-vis)}</p>`:"")})));
@@ -4097,7 +4103,7 @@ function rkHostUpd(s){
     else if(co.ph==="mini") mid.innerHTML=`<div class="rkm-card"><h2>${T("rk.st")}</h2><div class="hint">${T("rk.h.st")}</div><div class="rkm-big" id="rkbig"></div><div class="hint">${T("rk.h.st.p")}</div><div class="rkm-bar star"><i id="rkmb"></i></div></div>`;
     else if(co.ph==="again") mid.innerHTML=`<div class="rkm-card"><h2>${T("rk.again")}</h2><div class="hint">${T("rk.again.h")}</div></div>`;
     else if(co.ph==="clear"){ mid.innerHTML=`<div class="rkm-card"><div class="rkm-clear">${T("rk.clear",co.st)}</div><h2>${T("rk.reach",T("rk.dest",rkDest(co,co.st-1)))}</h2></div>`; party(); }
-    else if(co.ph==="end"){ mid.innerHTML=`<div class="rkm-card"><div class="rkm-end">${(co.res?co.res.st:co.st)>0?T("rk.end",co.res?co.res.st:co.st):T("rk.end0")}</div>${co.res&&co.res.an>0?`<h2>${T("rk.an",co.res.an)}</h2>`:""}</div>`; party(); }
+    else if(co.ph==="end"){ mid.innerHTML=`<div class="rkm-card"><div class="rkm-end">${(co.res?co.res.st:co.st)>0?T("rk.end",co.res?co.res.st:co.st):T("rk.end0")}</div>${co.res&&co.res.an>0?`<h2>${T("rk.an",co.res.an)}</h2>`:""}<div class="award-show">${hostAwardsHtml(s)}</div></div>`; party(); }
   }
   const mb=$$("rkmb"); if(mb&&co.mg) mb.style.width=co.mg.p+"%";
   rkRowDraw(); rkHostFrame();
@@ -4819,6 +4825,7 @@ function qzHostDraw(s,warnHtml){
     h("h2",{class:"th2",innerHTML:ic("flag")+"クイズ けっか"}),
     easy?h("div",{class:"q"},h("div",{class:"big",text:T("z.all",Z.all||0)}),h("div",{class:"small",text:"やさしいルールなので、児童《じどう》の画面《がめん》には順位《じゅんい》を出《だ》していません。"})):pod,
     easy?null:h("div",{class:"q"},h("div",{class:"big",text:T("z.all",allOk)})),
+    h("div",{class:"award-show",innerHTML:hostAwardsHtml(s)}),
     easy?null:teacherOnly(h("div",null,h("h3",{text:s.nm==="auto"?"結果《けっか》（ニックネームと点数《てんすう》）":"結果《けっか》（名前《なまえ》と点数《てんすう》）"}),h("div",{style:"overflow:auto"},tb),
       h("p",{class:"note",text:s.nm==="auto"?"※ 名前《なまえ》は自動《じどう》でつけたニックネームです。":"※ 名前《なまえ》は児童《じどう》が入力《にゅうりょく》したものです。名前《なまえ》のあるファイルは、大切《たいせつ》に扱《あつか》ってください。"}))),
     h("h3",{text:"問題《もんだい》ごとの正答率《せいとうりつ》（赤《あか》は60%未満《みまん》）"}),acc,
@@ -4826,6 +4833,7 @@ function qzHostDraw(s,warnHtml){
       low.length?h("button",{type:"button",class:"btn",innerHTML:ic("rotate-ccw")+`正答率《せいとうりつ》の低《ひく》い ${low.length}問《もん》を、もう一度《いちど》出《だ》す`,onclick:()=>api("qreplay",HOST).catch(e=>{ herr.textContent=e.message; })}):null,
       h("button",{type:"button",class:"btn sub",text:"同《おな》じ設定《せってい》で新《あたら》しい部屋《へや》",onclick:async()=>{ try{ const r=await api("create",roomArgs(HOST)); HOST={...r,...hostPlain(HOST)}; sset("mh_host",HOST); route(); }catch(e){ herr.textContent=e.message; } }})),herr));
 }
+function hostAwardsHtml(s){ const easy=s.rule==="easy"; return (s.awards||[]).map(c=>`<div class="award-card"><h3>?? ${esc(c.title)} ???</h3>${(easy?c.winners:c.winners.map((w,i)=>({...w,rank:i+1})).reverse()).map(w=>`<div class="award-winner">${easy?"??":w.rank===1?"??":w.rank===2?"??":"??"} ${face(w.emoji)} ${esc(w.name)}${easy?"":"?"+w.rank+"????"}</div>`).join("")}</div>`).join(""); }
 function qzHostLive(s){
   const Z=s.quiz, qa=document.getElementById("qa"); if(qa&&Z) qa.textContent=`${Z.answered} / ${Z.total} 人《にん》が答《こた》えた`;
 }
