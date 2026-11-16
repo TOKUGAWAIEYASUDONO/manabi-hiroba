@@ -1,0 +1,185 @@
+﻿<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>プライバシーポリシー｜Qalc</title>
+  <meta name="description" content="Qalc のプライバシーポリシーです。取得する情報、利用目的、保存場所、第三者提供について説明しています。">
+  <meta name="theme-color" content="#124a94">
+  <link rel="canonical" href="https://qalc.giga-school.com/privacy.html">
+  <style>
+    :root {
+      color-scheme: light dark;
+      --bg: #ffffff; --surface: #f4f7fb; --surface-strong: #e8eefa;
+      --text: #1b2430; --text-muted: #414b57; --accent: #124a94;
+      --link: #0b4aa8; --link-visited: #5e3590; --border: #c9d2dd;
+      --code-bg: #eef1f5; --callout-bg: #eef4fd;
+    }
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg: #14171b; --surface: #1e232a; --surface-strong: #262d36;
+        --text: #e8ebef; --text-muted: #aab3bd; --accent: #8ab4f8;
+        --link: #9cc3fb; --link-visited: #d3b6f5; --border: #3a424c;
+        --code-bg: #262d36; --callout-bg: #1c2530;
+      }
+    }
+    * { box-sizing: border-box; }
+    body {
+      font-family: "Hiragino Sans", "Hiragino Kaku Gothic ProN", "Noto Sans JP",
+        "Yu Gothic UI", "Meiryo", -apple-system, "Segoe UI", sans-serif;
+      font-size: 1.0625rem; line-height: 1.9; letter-spacing: .01em;
+      max-width: 820px; margin: 0 auto; padding: 24px 20px 48px;
+      color: var(--text); background: var(--bg); -webkit-text-size-adjust: 100%;
+    }
+    a { color: var(--link); text-decoration: underline; text-underline-offset: .18em; }
+    a:visited { color: var(--link-visited); }
+    :focus-visible { outline: 3px solid var(--link); outline-offset: 2px; border-radius: 3px; }
+    h1 { font-size: 1.75rem; line-height: 1.5; margin: 0 0 12px; padding-bottom: 10px; border-bottom: 3px solid var(--accent); }
+    h2 { font-size: 1.25rem; line-height: 1.6; margin: 2.2em 0 .6em; color: var(--accent); }
+    p, li { color: var(--text); }
+    ul, ol { padding-left: 1.5em; }
+    li { margin-bottom: .4em; }
+    code { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; background: var(--code-bg); padding: 2px 6px; border-radius: 4px; font-size: .92em; overflow-wrap: anywhere; }
+    .meta { font-size: .95rem; color: var(--text-muted); margin: 0 0 24px; }
+    .callout { background: var(--callout-bg); border: 1px solid var(--border); border-left: 5px solid var(--accent); border-radius: 10px; padding: 16px 20px; margin: 20px 0; }
+    .callout :first-child { margin-top: 0; } .callout :last-child { margin-bottom: 0; }
+    .table-wrap { overflow-x: auto; margin: 16px 0; border: 1px solid var(--border); border-radius: 10px; }
+    table { border-collapse: collapse; width: 100%; font-size: .98rem; }
+    th, td { border-bottom: 1px solid var(--border); padding: 10px 14px; text-align: left; vertical-align: top; }
+    thead th { background: var(--surface-strong); white-space: nowrap; }
+    tbody tr:last-child th, tbody tr:last-child td { border-bottom: 0; }
+    @media screen and (max-width: 600px) {
+      .table-wrap { border: 0; border-radius: 0; overflow-x: visible; }
+      table { display: block; } thead { display: none; }
+      tbody, tbody tr, tbody th, tbody td { display: block; width: 100%; }
+      tbody tr { border: 1px solid var(--border); border-radius: 10px; padding: 12px 14px; margin-bottom: 12px; }
+      tbody th, tbody td { border-bottom: 0; padding: 0; }
+      tbody th { margin-bottom: 6px; font-weight: 600; }
+      td::before { content: attr(data-label); display: block; font-size: .85em; font-weight: 600; color: var(--text-muted); margin-bottom: 2px; }
+    }
+    footer { margin-top: 3em; padding-top: 16px; border-top: 1px solid var(--border); font-size: .95rem; color: var(--text-muted); }
+    @media (max-width: 480px) { body { padding: 16px 14px 40px; } h1 { font-size: 1.5rem; } }
+    @media print {
+      :root { --bg:#fff; --surface:#fff; --surface-strong:#fff; --text:#000; --text-muted:#333; --accent:#000; --link:#000; --link-visited:#000; --border:#999; --code-bg:#fff; --callout-bg:#fff; }
+      body { max-width: none; font-size: 10.5pt; }
+    }
+  </style>
+</head>
+
+<body>
+  <main>
+    <h1>プライバシーポリシー</h1>
+    <p class="meta"><span>Qalc</span><span>最終更新：2026年11月15日</span></p>
+
+    <div class="callout">
+      <p><strong>要点</strong></p>
+      <ul>
+        <li>Qalc は、利用者を追跡するための情報を集めていません。アカウント登録・ログイン・広告・アクセス解析はありません。</li>
+        <li>成績や学習の記録は、利用者の端末のブラウザ内に保存されます。氏名・出席番号・メールアドレスなどは扱いません。</li>
+        <li>「みんなであそぶ」を使うときだけ、同じへやの端末どうしで、児童が入力したニックネームとスコアをやりとりします。つなぐために外部のサーバー（PeerJS・Google）を使います（4・6をご覧ください）。</li>
+        <li>制作者が、利用者のデータを閲覧したり、第三者に販売・提供したりすることはありません。</li>
+      </ul>
+    </div>
+
+        <h2>1. 事業者の名称と連絡先</h2>
+    <ul>
+      <li>名称：GIGAyama（個人／小学校教員）</li>
+      <li>連絡先：<a href="mailto:basstar.1102@gmail.com">basstar.1102@gmail.com</a></li>
+      <li>サイト：<a href="https://giga-school.com/">https://giga-school.com/</a></li>
+    </ul>
+
+        <h2>2. 取得する情報と利用目的</h2>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr><th>情報の種類</th><th>取得する場面</th><th>利用目的</th><th>保存場所</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <th>成績・学習の記録・設定（レベル・コイン・きせかえ・ミッション・まちがえた問題・自作コース・学習ログなど）</th>
+            <td data-label="取得する場面">アプリの利用中</td>
+            <td data-label="利用目的">アプリの機能を提供するため、学習のふりかえりのため</td>
+            <td data-label="保存場所">利用者の端末のブラウザ内（ローカルストレージ）</td>
+          </tr>
+          <tr>
+            <th>学習ログの写し（解いた問題・正誤・かかった時間。氏名などは含みません）</th>
+            <td data-label="取得する場面">まだ写していない学習ログがあるとき（アプリを開いたとき・約60秒ごと・画面を切りかえたとき）。<code>qalc.giga-school.com</code> から開いたときだけ写します</td>
+            <td data-label="利用目的">GIGA school の学習ポータルで、ほかのアプリの記録とあわせてふりかえるため</td>
+            <td data-label="保存場所">同じ端末のブラウザ内の「記録ボックス」（<code>gamification.giga-school.com</code>）。見えない枠（iframe）を開き、ブラウザの中で写します</td>
+          </tr>
+          <tr>
+            <th>ニックネーム（児童が入力。8文字まで）・スコア・コンボ・ゲームの進みぐあい</th>
+            <td data-label="取得する場面">「みんなであそぶ」で同じへやにいるとき</td>
+            <td data-label="利用目的">へやの中で順位や協力プレイを表示するため</td>
+            <td data-label="保存場所">同じへやの端末どうしで直接やりとりし、どこにも保存しません（制作者のサーバーは通りません）</td>
+          </tr>
+          <tr>
+            <th>へやの番号と、端末をつなぐための接続情報（IP アドレスなど）</th>
+            <td data-label="取得する場面">「みんなであそぶ」でへやを作る・へやに入るとき</td>
+            <td data-label="利用目的">端末どうしをつなぐため</td>
+            <td data-label="保存場所">PeerJS のシグナリングサーバー（<code>0.peerjs.com</code>）と、STUN／TURN サーバー（<code>stun.l.google.com</code>・<code>eu-0.turn.peerjs.com</code>・<code>us-0.turn.peerjs.com</code>）が接続のために扱います</td>
+          </tr>
+          <tr>
+            <th>アクセスログ</th>
+            <td data-label="取得する場面">ページの表示時</td>
+            <td data-label="利用目的">配信基盤（GitHub Pages）の運用およびセキュリティ確保のため</td>
+            <td data-label="保存場所">GitHub 社のサーバー（制作者は個別のログを参照できません）</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+        <h2>3. 配信のしくみと保存先について</h2>
+    <p>Qalc は、静的ファイルとして <a href="https://pages.github.com/" target="_blank" rel="noopener">GitHub Pages</a> から配信されています。</p><p>制作者が独自に運用するデータベースやアプリケーションサーバーはありません。そのため、利用者が入力したデータが制作者の手元に集まることはありません。</p>
+
+    <h2>4. 「みんなであそぶ」の通信について</h2>
+    <p>「みんなであそぶ」は、同じへやの端末どうしを WebRTC で直接つなぎます。ひとりで遊ぶときは、この通信は行いません。</p>
+    <ul>
+      <li>端末どうしでやりとりするのは、児童が入力したニックネーム（8文字まで）、スコア・コンボ、問題とゲームの進みぐあいです。氏名を入力しない運用をおすすめします（へやに入るときは、ひらがな・カタカナ・英数字のニックネームを使ってください）。</li>
+      <li>へやの番号は、アプリがその場で作るランダムな10けたの数字です。番号を知っていても、リーダーが許可するまで、へやの中のことは届きません。</li>
+      <li>端末どうしを見つけてつなぐために、PeerJS のシグナリングサーバー（<code>0.peerjs.com</code>）に、へやの番号と接続のための情報（IP アドレスなど）が送られます。</li>
+      <li>校内のネットワークによっては端末どうしが直接つながらないため、STUN サーバー（Google の <code>stun.l.google.com</code>）と TURN サーバー（PeerJS の <code>eu-0.turn.peerjs.com</code>・<code>us-0.turn.peerjs.com</code>）を使います。TURN サーバーを中継するときも、通信は暗号化されていて、中継するサーバーは中身を読めません。</li>
+      <li>これらのサーバーは、PeerJS と Google がそれぞれの定めにしたがって運用しています。「みんなであそぶ」を使わせない場合は、<code>0.peerjs.com</code> を校内のフィルタで止めると、ひとりで遊ぶモードだけになります。</li>
+    </ul>
+    <p>Qalc は Google アカウントへのログインを求めません。AI で問題を作る機能は、先生が AI のサイトに指示文を自分で貼りつけて使うもので、Qalc から AI のサービスへは何も送りません。</p>
+
+        <h2>5. Cookie・ローカルストレージ</h2>
+    <p>Qalc は、成績・学習の記録・設定を保存するために、ブラウザのローカルストレージを使います（<code>qalc_stats</code>・<code>qalc_courses</code>・<code>qalc_mistakes</code>・<code>qalc_resume</code>・<code>study.records.v1</code> など）。
+      これらは利用者の端末内に保存され、ブラウザの設定から削除できます。
+      学習ログ（<code>study.records.v1</code>）は、2に書いたとおり、同じ端末のブラウザ内の「記録ボックス」（<code>gamification.giga-school.com</code>）にも写します。
+      Cookie は使っていません。</p>
+    <p>先生が作る「かだいリンク」には、モード・ドリルの名前・時間（自作のドリルは問題も）が、リンクの「#」から後ろに入ります。「#」から後ろはサーバーへ送られないので、リンクを開いても中身はどこにも届きません。受けとった かだいは、その端末のローカルストレージ（<code>qalc_kadai</code>）に保存されます。</p>
+
+        <h2>6. 第三者提供・外国への送信について</h2>
+    <p>法令に基づく場合を除き、制作者が利用者の情報を第三者に販売・提供することはありません。</p>
+    <p>「みんなであそぶ」を使うときは、4に書いたとおり、端末をつなぐための情報（へやの番号・IP アドレスなど）が PeerJS と Google のサーバーに送られます。これらのサーバーは日本国外にある場合があります。</p>
+
+    <h2>7. データの保存期間</h2>
+    <p>本アプリは、利用者が自分で削除するまでデータを保持します。制作者が保存期間を一方的に定めることはありません。</p><ul><li>端末のブラウザ内（ローカルストレージ）に保存されたデータは、利用者が削除するまで残ります。共用の端末では、次に使う人からも見えることに注意してください（氏名などは含まないため、だれの記録かは分かりません）。</li><li>学習ログは、新しいものから500件までを残し、それより古いものは自動で消えます。</li><li>「みんなであそぶ」でやりとりしたニックネームやスコアは、へやを出ると どの端末にも残りません（自分の結果だけが、自分の端末の記録に残ります）。</li></ul>
+
+    <h2>8. データの削除</h2>
+    <ul>
+      <li>ブラウザ内に保存されたデータは、ブラウザの「閲覧データの削除」（サイトのデータ）から削除できます。自作コースは、アプリの「コース管理」からも消せます。</li>
+      <li>「記録ボックス」に写した学習ログは、<code>gamification.giga-school.com</code> のサイトのデータとして同じ方法で削除できます。</li>
+    </ul>
+
+        <h2>9. 児童・生徒の利用について</h2>
+    <p>学校での利用を想定しています。児童生徒が利用する場合は、教職員の指導のもとでご利用ください。</p><p>本アプリは個人が開発したものであり、学校・教育委員会の公式なサービスではありません。<strong>導入にあたっては、設置者（教育委員会等）が定める情報セキュリティポリシーや個人情報の取扱基準を必ずご確認ください。</strong></p><p>16歳未満の方の個人情報については、保護者（法定代理人）の方にご確認いただいたうえでご利用ください。氏名など個人が特定される情報は、必要以上に入力しない運用を推奨します。</p>
+
+    <h2>10. 本ポリシーの変更</h2>
+    <p>内容を変更する場合は、本ページの「最終更新」日を改めて掲示します。</p>
+
+        <h2>11. お問い合わせ</h2>
+    <p>本ポリシーに関するお問い合わせは <a href="mailto:basstar.1102@gmail.com">basstar.1102@gmail.com</a> までご連絡ください。</p>
+
+    <p><a href="https://qalc.giga-school.com/">← Qalc に戻る</a>　/　<a href="https://giga-school.com/">GIGA school トップ</a>　/　<a href="https://qalc.giga-school.com/terms.html">利用規約</a></p>
+  </main>
+
+  <footer>
+    <p>Qalc（qalc.giga-school.com）／ GIGAyama</p>
+  </footer>
+</body>
+
+</html>
+

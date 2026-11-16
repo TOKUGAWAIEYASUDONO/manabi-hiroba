@@ -334,6 +334,7 @@ h2{font-size:20px;margin:18px 0 8px}
 .rtable th,.rtable td{padding:8px 10px;border-bottom:1px solid var(--line);text-align:left}
 .rtable th{background:var(--main2)}
 .countdown{font-size:120px;font-weight:800;color:var(--go)}
+.tile.ext{text-decoration:none;color:inherit}.extico{display:grid;place-items:center;width:100%;height:100%;font-weight:800;font-size:1.3em;border-radius:12px;background:#fff3c4;color:#7a4b00}
 /* ===== 学年えらび・九九・？ボタン ===== */
 .gradegrid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;max-width:420px;margin:0 auto}
 .gbtn{min-height:72px;font-size:30px;font-weight:800;border-radius:16px;background:#fff;color:var(--ink)}
@@ -1944,6 +1945,11 @@ function homeNext(x,best){
   const goal=(x.type==="choice"?MEDAL_CH:MEDAL_IN)[m], need=Math.ceil(goal-1e-9)-(best?best.score:0), nm=MEDAL_ICO[m];
   return need>0?T("r.next",nm,need):T("h.careful",nm);
 }
+/* 組みこみアプリ（MIT・GIGAyama作）：apps/README.md に出典 */
+function extTiles(){
+  return [["apps/100masu/index.html","100","100マス けいさん","たし算《ざん》・ひき算《ざん》・かけ算《ざん》の 100マス"],["apps/qalc/index.html","Q","Qalc（カルク）","1〜6年《ねん》の けいさんゲーム"]]
+    .map(([u,i,t,d])=>`<a class="tile ext" href="${u}"><span class="tico"><span class="extico">${i}</span></span><span class="tbody"><span class="tt">${t}</span><span class="td">${d}</span></span></a>`).join("");
+}
 function gameTile(x,b){
   const best=b[x.id], m=best?best.medal:0;
   return `<button class="tile" data-id="${x.id}"><span class="tico">${svgU(x.art)}</span><span class="tbody"><span class="tt">${x.t}</span>
@@ -1969,7 +1975,7 @@ function renderHome(){
   app.innerHTML=`<div class="home${easy?" easy":""}">
     ${easy?`<div class="guide">${mbs("n")}<span class="say">${T("home.guide")}</span></div>`:""}
     ${COLOK?colDoor():""}
-    <div class="zones" data-n="${zones.length+1}">${zones.map(([k,l])=>`<section class="zone s-${k}"><h2>${subjN(k)}</h2>${k==="rika"?rikaWarning():""}<div class="tiles">${l.map(x=>gameTile(x,b)).join("")}${k==="rika"?`<button class="tile unitgo" data-un="rika"><span class="tico">${svgU("a-rika")}</span><span class="tbody"><span class="tt">${T("u.pick")}</span></span></button>`:easy||k==="math"?"":unitTile(k)}</div></section>`).join("")}${easy?`<section class="zone s-math"><div class="tiles">${unitTile("math")}</div></section>`:""}
+    <div class="zones" data-n="${zones.length+1}">${zones.map(([k,l])=>`<section class="zone s-${k}"><h2>${subjN(k)}</h2>${k==="rika"?rikaWarning():""}<div class="tiles">${l.map(x=>gameTile(x,b)).join("")}${k==="math"?extTiles():""}${k==="rika"?`<button class="tile unitgo" data-un="rika"><span class="tico">${svgU("a-rika")}</span><span class="tbody"><span class="tt">${T("u.pick")}</span></span></button>`:easy||k==="math"?"":unitTile(k)}</div></section>`).join("")}${easy?`<section class="zone s-math"><div class="tiles">${unitTile("math")}</div></section>`:""}
       <section class="zone s-btl"><h2>${ic("swords")}${T("home.battle")}</h2><div class="tiles">${MODES.map(m=>modeTile(m,b)).join("")}</div></section></div>
     ${zones.length?"":`<div class="empty">${T("home.empty")}</div>`}
     <div class="bottom">

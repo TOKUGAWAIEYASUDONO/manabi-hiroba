@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+  <meta charset="UTF-8" />
+
+  <!--
+    Content Security Policy（GIGA Standard v5 §2-13）
+
+    ⚠️ script-src に 'unsafe-inline' を足さないこと。足すと CSP を入れた意味が
+       ほとんど無くなる。インラインの <script> と onclick= は使わない設計にしてある
+       （インストールの合図の捕捉は install-hook.js に切り出してある）。
+
+    ⚠️ style-src の 'unsafe-inline' は外せない。React が style 属性で
+       マスの大きさを渡しており、これを外すと表が崩れる。
+
+    ⚠️ frame-ancestors はここには書かない。<meta> では無視され、
+       読み込みのたびにコンソールへ警告が出るだけになる。
+       他サイトへの埋め込みを止めるには HTTP ヘッダーが必要だが、
+       GitHub Pages では足せない。独自ドメインや CDN を挟むときに設定すること。
+  -->
+  <meta http-equiv="Content-Security-Policy" content="
+    default-src 'self';
+    script-src 'self';
+    style-src 'self' 'unsafe-inline';
+    font-src 'self';
+    img-src 'self' data: blob:;
+    connect-src 'self';
+    frame-src 'self' https://gamification.giga-school.com;
+    worker-src 'self';
+    manifest-src 'self';
+    object-src 'none';
+    base-uri 'self';
+    form-action 'self';
+  " />
+
+  <!--
+    ① インストールの合図を「いちばん先に」受け取る。
+       Chrome は条件が揃うと即座に beforeinstallprompt を出すため、
+       React の読み込みより後だと合図を取りこぼし、通信が遅い端末で
+       「インストール」ボタンが出なくなる（§3-2）。
+  -->
+  <script src="./install-hook.js"></script>
+
+  <!-- interactive-widget=resizes-content: ソフトウェアキーボード表示時に画面を覆わず縮めて表示する (Chrome) -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, interactive-widget=resizes-content" />
+  <meta name="description" content="小学生向けの無料オンライン100マス計算。たし算・引き算・かけ算をタイム計測つきで練習できます。手書き入力にも対応。" />
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="GIGA school">
+  <meta property="og:locale" content="ja_JP">
+  <meta property="og:title" content="100マス計算 | GIGA山">
+  <meta property="og:description" content="小学生向けの無料オンライン100マス計算。たし算・引き算・かけ算をタイム計測つきで練習できます。手書き入力にも対応。">
+  <meta property="og:url" content="https://online-100square-calculation.giga-school.com/">
+  <meta property="og:image" content="https://giga-school.com/assets/og.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="GIGA school｜学校で使える Web アプリ">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="theme-color" content="#334155" />
+  <!-- 児童用アプリなので配色は固定する。端末のダークモードで色が反転すると
+       「正解=みどり／まちがい=あか」の手がかりが崩れる -->
+  <meta name="color-scheme" content="light" />
+
+  <link rel="icon" type="image/png" href="./favicon.png" />
+  <!-- ⚠️ apple-touch-icon には透明を含む画像を指さない。
+       iOS は透明部分を黒で埋めるため、ホーム画面でアイコンの四隅だけが黒く出る。
+       apple-touch-icon.png は下地を端まで塗った専用画像（180×180・透明なし）。 -->
+  <link rel="apple-touch-icon" sizes="180x180" href="./apple-touch-icon.png" />
+
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+  <meta name="apple-mobile-web-app-title" content="100マス計算" />
+
+  <!-- 書体は自分のところから配る（生成物。node tools/fonts/build-fonts.mjs で作り直す）。
+       ここに Google Fonts への link を戻さないこと。学校のフィルタが
+       塞ぐと書体が当たらず、塞ぎ方によっては画面そのものが出ない。 -->
+  
+
+  <title>100マス計算 | GIGA山</title>
+  <script type="module" crossorigin src="./assets/index-42ef5787.js"></script>
+  <link rel="modulepreload" crossorigin href="./assets/helpers-de833af9.js">
+  <link rel="stylesheet" href="./assets/index-7def2d84.css">
+<link rel="manifest" href="./manifest.webmanifest"></head>
+
+<body>
+  <div id="root"></div>
+  
+  <!-- 学習ログを記録ハブ（まなびクエスト）へ写す。読むだけで、このアプリの記録には触れない -->
+
+  <!-- 利用規約・プライバシーへの行き先。中身は正本の部品
+       standards/web/giga-app-links.js（配布物 public/giga-app-links.js）が、
+       src/App.jsx のフッターに置いた <span data-giga-links> の中に出す。
+       data-links は置き場所の側に書いてある。 -->
+  <script src="./giga-app-links.js" defer></script>
+</body>
+
+</html>
