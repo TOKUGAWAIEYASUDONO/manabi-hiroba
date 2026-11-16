@@ -11,5 +11,5 @@ for(const op of ['+','−','×','÷']) for(const [a,b] of [['23','45'],['12.3','
   assert(!el.children.some(x=>x.textContent==='2'||x.textContent==='1'));
 }
 const target=new El('div');ctx.showQuestion(target,{q:'23 + 45',hissan:{a:23,b:45,op:'+'}});assert.equal(target.children[0].className,'hissan');
-assert.match(html,/hissan:it\.hissan/);assert.match(html,/showQuestion\(qq,c\)/);assert.match(html,/showQuestion\(\$\("#qq"\),P\.cur\)/);
+assert.match(html,/hissan:it\.hissan/);assert.match(html,/showQuestion\(qq,c\)/);assert.match(html,/showQuestion\(qq,P\.cur\)/);assert.match(html,/P\.cur\.hsL=calcCells\(P\.cur,P\.g\)/);
 console.log('hissan: 4演算・小数・あまり・画面接続 OK');

@@ -1103,6 +1103,7 @@ body[data-v=host] .wrap{max-width:none;padding:0}
   .play.pg.cellmode>.q{grid-column:1;grid-row:3/8;margin:0}
   .play.pg.cellmode>#um{grid-column:2;grid-row:3}.play.pg.cellmode>#fb{grid-column:2;grid-row:4}.play.pg.cellmode>#area{grid-column:2;grid-row:5;margin-top:auto}
   .play.pg.cellmode>.uexrow{grid-column:2;grid-row:6}.play.pg.cellmode>.score{grid-column:2;grid-row:7}
+  .play.pg.cellmode:has(>.banner){grid-template-rows:auto auto auto auto auto 1fr auto auto}.play.pg.cellmode:has(>.banner)>.q{grid-row:4/9}.play.pg.cellmode:has(>.banner)>#fb{grid-row:5}.play.pg.cellmode:has(>.banner)>#area{grid-row:6}.play.pg.cellmode:has(>.banner)>.uexrow{grid-row:7}.play.pg.cellmode:has(>.banner)>.score{grid-row:8}
   .play.pg.cellmode .pad button{min-height:56px}
 }
 .worksheet{position:fixed;inset:0;z-index:9999;overflow:auto;background:#fff;color:#000;padding:20px}.worksheet-tools{display:flex;gap:12px;margin-bottom:18px}.worksheet-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:22px}.worksheet-item{border:1px solid #aaa;min-height:145px;padding:10px;break-inside:avoid}.worksheet-question{font-size:24px}.worksheet-question .hissan{font-size:28px;color:#000}.worksheet-answer{height:32px;border-bottom:1px solid #333;margin:4px 8px 0 32px}.worksheet .hissan .hs-rule{min-height:0;height:0}@media print{body:has(.worksheet) #app{display:none}.worksheet{position:static;padding:0}.worksheet-tools{display:none}.worksheet-item{border-color:#ccc}}
@@ -1123,7 +1124,20 @@ body[data-v=host] .wrap{max-width:none;padding:0}
 .up.kc .set-chips .pill{min-height:40px;font-size:14px;padding:4px 10px;margin:0}
 .up.kc .set-chips .pill span{display:inline}
 .up.kc .ucards{margin:0}
-.up.kc .ugh{margin:10px 0 2px;font-size:18px}
+.up.kc .ugh{position:sticky;top:var(--ufh,46px);z-index:5;display:block;margin:8px 0 4px;padding:2px 10px 0;font-size:16px;line-height:2.1;background:var(--board);color:#fff;border:0;border-radius:8px}
+.up.kc .ugrp{scroll-margin-top:calc(var(--ufh,46px) + 4px)}
+.up.kc .useries{margin:0 0 6px;background:#fff;border:3px solid var(--edge);border-radius:12px;box-shadow:0 3px 0 var(--edge)}
+.up.kc .useries.has{border-color:#0f6a3a;background:#f4fbf3}
+.up.kc .usrs{display:flex;align-items:center;gap:8px;min-height:52px;padding:4px 10px;cursor:pointer;list-style:none}
+.up.kc .usrs::-webkit-details-marker{display:none}
+.up.kc .usrn{flex:none;font-weight:800;font-size:16px;border-left:5px solid var(--go);padding-left:6px;line-height:1.5}
+.up.kc .usrc{flex:none;font-size:13px;font-weight:700;padding:1px 8px;border-radius:999px;background:#eef2ec;white-space:nowrap}
+.up.kc .useries.has .usrc{background:#d6f0d9;color:#0f6a3a}
+.up.kc .usrp{flex:1;min-width:0;font-size:12px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.up.kc .usrk{flex:none;width:12px;height:12px;border-right:3px solid var(--edge);border-bottom:3px solid var(--edge);transform:rotate(45deg);margin:-4px 4px 0}
+.up.kc .useries[open] .usrk{transform:rotate(-135deg);margin-top:6px}
+.up.kc .usrb{padding:0 8px 8px;display:grid;gap:6px}
+.up.kc .usall{justify-self:start;min-height:40px;font-size:14px;padding:2px 12px;margin:0}
 .up.kc .uitem{margin:0 0 6px}
 .up.kc .uih{margin:6px 0 4px;font-size:14px;color:var(--muted);border-left:5px solid var(--go);padding-left:6px;line-height:1.6}
 .up.kc .ugrid.ucomp{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,300px),1fr));gap:6px}
@@ -2167,6 +2181,7 @@ function renderPlay(q){
     <div class="q"><div class="big" id="qq"></div><div class="small" id="qs"></div></div>
     <div class="fb" id="fb" aria-live="polite"></div>
     <div id="area"></div>
+    ${x.id==="calc"?`<div class="uexrow"><span class="pills hstog" id="hstog"></span></div>`:""}
     <div class="score" id="scw">${T("p.score",0)}</div>
   </div>`;
   if(task) $("#bk").onclick=()=>{ stopTimer(); finish(); };     // 授業モード：ホームへは行かず、結果の画面へ
@@ -2191,10 +2206,28 @@ function next(){
   if(P.review){ if(!P.queue.length) return reviewDone(); P.cur=P.queue.shift(); }
   else if(P.x.id==="kuku"&&P.kuku) P.cur=kukuNext();
   else P.cur=gen(P.x.id,P.g,P.opt);
-  P.inp=""; P.lock=false;
   if(P.cur.ch) P.chN++; else P.inN++;
-  showQuestion($("#qq"),P.cur); if(P.x.id==="eigo") $("#qq").insertAdjacentHTML("beforeend",spkBtn(P.x.id,P.cur.q)); $("#qs").textContent=P.cur.small||"= ?";
+  if(P.x.id==="calc"&&P.cur.hsL===undefined) P.cur.hsL=calcCells(P.cur,P.g);
+  drawCur();
+}
+/* 計算スプリントのひっ算も マスで とける（2年以上・整数か小数の答え・わる数が小数のわり算は のぞく）。対戦・プロジェクターは こたえだけ */
+function calcCells(c,g){
+  if(c.ch||!c.hissan||g<2||c.unit==="add20"||c.unit==="sub20"||typeof hsCells!=="function") return null;
+  return hsCells(c.hissan,{val:String(c.a),g})||null;
+}
+function drawCur(){
+  P.inp=""; P.lock=false; P.hs=P.cur.hsL&&hsPref()?hsNew(P.cur.hsL):null;
+  const pg=app.querySelector(".play.pg"); if(pg) pg.classList.toggle("cellmode",!!P.hs);
+  const tg=$("#hstog"); if(tg) tg.replaceChildren(...(P.cur.hsL?[upill(T("hs.on"),!!P.hs,()=>hsSwitch(true)),upill(T("hs.off"),!P.hs,()=>hsSwitch(false))]:[]));
+  const qq=$("#qq"); qq.classList.toggle("hscw",!!P.hs);
+  if(P.hs){ qq.textContent=""; qq.setAttribute("aria-label",P.cur.q); hsRender(); } else { qq.removeAttribute("aria-label"); showQuestion(qq,P.cur); } if(P.x.id==="eigo") $("#qq").insertAdjacentHTML("beforeend",spkBtn(P.x.id,P.cur.q)); $("#qs").textContent=P.cur.small||"= ?";
   const area=$("#area");
+  if(P.hs){
+    const kb=k=>`<button data-k="${k}">${k}</button>`;
+    area.innerHTML=`<div class="pad hspad">${["7","8","9"].map(kb).join("")}<button data-k="⌫" aria-label="${esc(T("u.del"))}">⌫</button>${["4","5","6","0","1","2","3"].map(kb).join("")}<button class="ok okc" data-k="OK">${T("pad.ok")}</button></div>`;
+    area.querySelectorAll("[data-k]").forEach(b=>b.onclick=()=>key(b.dataset.k));
+    hsFit(); return;
+  }
   if(!P.cur.ch){
     const dot=P.g>=4;   // 1〜3年の計算には小数が出ないので「.」キーは出さない
     const keys=dot?["7","8","9","4","5","6","1","2","3",".","0","⌫"]:["7","8","9","4","5","6","1","2","3","0","⌫"];
@@ -2210,6 +2243,7 @@ function next(){
 }
 function key(k){
   if(!P||P.lock) return;
+  if(P.hs) return hsKey(k);
   if(k==="⌫") P.inp=P.inp.slice(0,-1);
   else if(k==="OK"){ if(P.inp!=="") judge(parseFloat(P.inp)===P.cur.a, P.cur.a); return; }
   else if(P.inp.length<7) P.inp+=k;
@@ -2221,7 +2255,7 @@ function pick(b){
   $("#area").querySelectorAll(".choice").forEach(e=>{ if(e.dataset.c===P.cur.a) e.classList.add("right"); else e.classList.add("wrong"); });
   judge(right,P.cur.a);
 }
-function judge(right,ans){
+function judge(right,ans,wait){
   const p=P; p.lock=true;
   const fb=$("#fb");
   sfx(right?"ok":"ng");
@@ -2233,7 +2267,7 @@ function judge(right,ans){
   }
   if(p.review) $("#scw").innerHTML=T("p.left",p.queue.length); else $("#sc").textContent=p.ok;
   // 4択をでたらめに連打させないよう、まちがえたあとは1.8秒待つ
-  setTimeout(()=>{ if(P!==p) return; if(p.review||(p.left>0&&timerId)){ fb.className="fb"; fb.textContent=""; next(); } }, right?350:(p.cur.ch?1800:1100));
+  setTimeout(()=>{ if(P!==p) return; if(p.review||(p.left>0&&timerId)){ fb.className="fb"; fb.textContent=""; next(); } }, wait||(right?350:(p.cur.ch?1800:1100)));
 }
 function finish(){
   const p=P; if(!p||p.done) return; p.done=true; p.lock=true;
@@ -2306,6 +2340,7 @@ document.addEventListener("keydown",e=>{
     if(/^[0-9.]$/.test(e.key)&&(e.key!=="."||P.g>=4)) key(e.key);
     else if(e.key==="Backspace") key("⌫");
     else if(e.key==="Enter") key("OK");
+    else if(P.hs&&(e.key==="ArrowLeft"||e.key==="ArrowRight")){ e.preventDefault(); key(e.key==="ArrowLeft"?"←":"→"); }
   } else if(/^[1-4]$/.test(e.key)){
     const b=$("#area").querySelectorAll(".choice")[+e.key-1]; if(b) pick(b);
   }
@@ -5512,7 +5547,7 @@ function renderUnits(q){
   const root=h("div",{class:"up"+(kid?" kid":"")+(kc?" kc":"")}), filt=h("div",{class:"upf"}), sets=h("div"), panel=h("div",{class:"form upanel"}), cards=h("div",{class:"ucards"}), msg=h("div",{class:"err",role:"alert"}), out=h("div",{class:"lkout"});
   root.dataset.subject=subj;
   const chosen=()=>UPK.sel.filter(i=>UBY[i]);
-  const LK={task:!kid&&!!q.get("pick"), col0:false};      // リンクとQR：ガイドから来たとき（?pick=）は「授業で使う」を はじめからオン
+  const LK={task:!kid&&!!q.get("pick"), col0:false}, uOpen=new Set();      // uOpen：ひらいている まとまり（学年|項目）      // リンクとQR：ガイドから来たとき（?pick=）は「授業で使う」を はじめからオン
   /* かたまり1：しぼりこみ */
   function drawFilter(){
     const items=[...new Set(pool(subj).map(u=>u.item).filter(Boolean))], rows=[];
@@ -5539,9 +5574,21 @@ function renderUnits(q){
       const card=u=>h("div",{class:"ucardw"},
         h("button",{type:"button",class:"ucard",role:"checkbox","aria-checked":"false","data-id":u.id,onclick:()=>toggle(u.id)},h("span",{class:"ubox","aria-hidden":"true"}),h("span",{class:"ubody"},h("b",{text:u.title}),h("span",{class:"unote",text:u.note}))),
         h("button",{type:"button",class:"btn sub s uexb",text:"💡","aria-label":T("u.ex")+"："+u.title,title:T("u.ex"),onclick:()=>uEx(u)}));
+      /* 学年 → 学習項目。3つ以上ある項目（たし算の段階など）は 1行に たたみ、ひらくと段階の順に カードが出る */
+      const stepOf=u=>u.series&&u.step!=null?u.step:1e9;
+      const min=grades.length>1?2:3, item=(g,it,list,many)=>{      // 学年が「ぜんぶ」のときは 2つから たたむ
+        if(!many||list.length<min) return h("div",{class:"uitem"},it?h("h4",{class:"uih",text:it}):null,h("div",{class:"ugrid ucomp"},...list.map(card)));
+        const key=g+"|"+it, ids=list.map(u=>u.id);
+        const all=h("button",{type:"button",class:"pill small usall",onclick:()=>selAll(ids)});
+        return h("details",{class:"useries",open:uOpen.has(key),"data-ids":ids.join(","),ontoggle:e=>{ e.target.open?uOpen.add(key):uOpen.delete(key); }},
+          h("summary",{class:"usrs"},h("span",{class:"usrn",text:it||T("u.all")}),h("span",{class:"usrc",text:list.length+"こ"}),
+            h("span",{class:"usrp",text:list.map(u=>u.stepLabel||u.title).join("・")}),h("span",{class:"usrk","aria-hidden":"true"})),
+          h("div",{class:"usrb"},all,h("div",{class:"ugrid ucomp"},...list.map(card))));
+      };
       cards.replaceChildren(...(grades.length?grades.map(g=>{ const byI={}; byG[g].forEach(u=>(byI[u.item||""]=byI[u.item||""]||[]).push(u));
+        const its=Object.keys(byI); its.forEach(it=>{ byI[it]=byI[it].map((u,i)=>({u,i})).sort((a,b)=>stepOf(a.u)-stepOf(b.u)||a.i-b.i).map(x=>x.u); });
         return h("section",{class:"ugrp",id:"ugrade-"+g},grades.length>1?h("h3",{class:"ugh",text:g+"年《ねん》"}):null,
-          ...Object.keys(byI).map(it=>h("div",{class:"uitem"},it?h("h4",{class:"uih",text:it}):null,h("div",{class:"ugrid ucomp"},...byI[it].map(card))))); }):[h("div",{class:"empty",text:"この条件《じょうけん》の単元《たんげん》はありません"})]));
+          ...its.map(it=>item(g,it,byI[it],its.length>1))); }):[h("div",{class:"empty",text:"この条件《じょうけん》の単元《たんげん》はありません"})]));
       paint(); return;
     }
     const groups=grades.map(g=>h("section",{class:"ugrp",id:"ugrade-"+g},h("h3",{text:g+"年《ねん》"}),
@@ -5554,7 +5601,15 @@ function renderUnits(q){
     cards.replaceChildren(...(groups.length?[...(!kid&&grades.length>1?[h("nav",{class:"ugrade-jump","aria-label":"学年《がくねん》へとぶ"},h("span",{text:"学年《がくねん》へとぶ："}),...grades.map(g=>h("a",{href:"#ugrade-"+g,text:g+"年《ねん》",onclick:e=>{e.preventDefault();document.getElementById("ugrade-"+g)?.scrollIntoView({behavior:"smooth"});}})))]:[]),...groups]:[h("div",{class:"empty",text:"この条件《じょうけん》の単元《たんげん》はありません"})]));
     paint();
   }
-  function paint(){ cards.querySelectorAll(".ucard").forEach(b=>{ const on=UPK.sel.includes(b.dataset.id); b.setAttribute("aria-checked",on?"true":"false"); b.firstChild.textContent=on?"✅":""; }); }
+  function paint(){ cards.querySelectorAll(".ucard").forEach(b=>{ const on=UPK.sel.includes(b.dataset.id); b.setAttribute("aria-checked",on?"true":"false"); b.firstChild.textContent=on?"✅":""; });
+    cards.querySelectorAll(".useries").forEach(d=>{ const ids=d.dataset.ids.split(","), n=ids.filter(i=>UPK.sel.includes(i)).length;
+      d.classList.toggle("has",n>0); d.querySelector(".usrc").textContent=n?`✅${n}／${ids.length}`:ids.length+"こ";
+      d.querySelector(".usall").textContent=n===ids.length?T("u.clear"):"ぜんぶ えらぶ"; }); }
+  function selAll(ids){
+    if(ids.every(i=>UPK.sel.includes(i))) UPK.sel=UPK.sel.filter(i=>!ids.includes(i));
+    else { const add=ids.filter(i=>!UPK.sel.includes(i)), room=UMAX-UPK.sel.length; UPK.sel.push(...add.slice(0,Math.max(0,room))); msg.textContent=add.length>room?`単元《たんげん》は${UMAX}個《こ》までです`:""; }
+    uSave(); paint(); drawPanel();
+  }
   function toggle(id){
     const i=UPK.sel.indexOf(id);
     if(i>=0) UPK.sel.splice(i,1); else if(UPK.sel.length>=UMAX){ msg.textContent=`単元《たんげん》は${UMAX}個《こ》までです`; return; } else UPK.sel.push(id);
@@ -5628,6 +5683,7 @@ function renderUnits(q){
   if(kc) root.append(
     h("div",{class:"topbar"},h("button",{type:"button",class:"back",innerHTML:BK(),onclick:()=>go("#home")}),h("h2",{class:"th2 uttl",text:`${SUBJ_JA[subj]}　${T("u.pick")}`}),h("span")),
     h("div",{class:"ufilters"},filt,sets),cards,h("div",{class:"ufoot kbar"},panel,startBtn));
+  if(kc&&window.ResizeObserver){ const uf=root.querySelector(".ufilters"); new ResizeObserver(()=>root.style.setProperty("--ufh",uf.offsetHeight+"px")).observe(uf); }      // 学年の見出しを しぼりこみの すぐ下に とめる
   else root.append(...[
     h("div",{class:"topbar"},h("button",{type:"button",class:"back",innerHTML:kid?BK():ic("arrow-left")+"先生《せんせい》の画面《がめん》",onclick:()=>go(kid?"#home":"#teacher")}),h("b"),h("span")),
     h("h2",{class:"th2",innerHTML:kid?"":ic("check")+"単元《たんげん》から つくる",text:kid?`${SUBJ_JA[subj]&&easyG(kg)?T("subj."+SJ[subj]):SUBJ_JA[subj]}　${T("u.pick")}`:null}),
@@ -5885,7 +5941,9 @@ function hsSubmit(){
   const G=P.hs; G.bad=new Set(); G.soft=new Set();
   for(const c of Object.values(G.L.cells)){ const v=G.v[c.id]||""; if(c.req){ if(v!==c.v) G.bad.add(c.id); } else if(v!==c.v&&!c.alt.includes(v)) G.soft.add(c.id); }
   G.mark=new Set(G.bad);
-  uJudge(!G.bad.size);
+  if(P.u) return uJudge(!G.bad.size);
+  const ok=!G.bad.size; if(ok) G.ok=true; else G.show=true;
+  hsRender(); judge(ok,P.cur.a,ok?0:2600);
 }
 /* まちがえたマスだけを空にして、赤くする（どの段かは ◀ と ことばで知らせる） */
 function hsRetry(fb){
@@ -5897,6 +5955,7 @@ function hsRetry(fb){
 function hsSwitch(on){
   store.set(HSC_PREF,!!on);
   const c=P&&P.cur; if(!c||!c.hsL||P.lock) return;
+  if(!P.u) return drawCur();
   c.mode=on?"cells":c.mode0; uDraw();
 }
 
