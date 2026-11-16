@@ -830,6 +830,20 @@ body[data-v=host] .wrap{max-width:none;padding:0}
   .rk-fs{animation:none!important}.rk-beat.go,.rkm-big.go{animation:none}.rkh-rocket,.rkh-rocket.shake,.rkh-rocket .fl1,.rkh-rocket .fl2{transition:none;animation:none}.rkh-rocket .fl2{opacity:0}
   .rk-hbar i,.rkm-bar i,#rkfill{transition:none}.rkh-row [data-pid].hop{animation:none}}
 
+
+/* ???????????????????? */
+.rkk{--space:#10163a;--energy:#42d4ff;background:#10163a;color:#fff;border:3px solid #42d4ff;border-radius:20px;box-shadow:inset 0 0 18px #42d4ff;padding:14px;min-height:65vh;background-image:linear-gradient(#10163acc,#10163acc),var(--rk-scene);background-size:cover;background-position:center}
+.rkk .rk-hd,.rkk .rk-kg,.rkk .q,.rkk .rk-qh,.rkk .rk-sc,.rkk .rk-rd,.rkk .rk-got{color:#fff}
+.rkk .rk-hd,.rkk .rk-kg,.rkk .q{background:#10163ae8;border:2px solid #42d4ff;border-radius:14px;padding:9px}
+.rkk .rk-kg{border:2px solid #42d4ff}.rkk .rk-hbar{background:#10163a;border-color:#42d4ff;box-shadow:0 0 9px #42d4ff}.rkk .rk-hbar i{background:#42d4ff;box-shadow:0 0 12px #42d4ff}
+.rkk .rk-boost{background:#ffd84a;color:#10163a}.rkk .rk-press{background:#e8453c;color:#fff}
+.rkk .rk-sky{background-image:linear-gradient(#10163a55,#10163a55),url('vendor/img/space/bg-star-sea-norocket-v2.webp');background-size:cover}
+.rk-px .rkh{border:4px solid #42d4ff;box-shadow:inset 0 0 22px #42d4ff;background:#10163a}
+.rk-px .rkh-bg{background-image:var(--rk-scene);background-size:cover;background-position:center}
+.rk-px .rkh-top>span,.rk-px .rkh-gauge .gl,.rk-px .rkh-gauge .gp,.rk-px .rkm-card,.rk-px .rkh-n{background:#10163af0;border-color:#42d4ff;color:#fff;box-shadow:0 0 9px #42d4ff}
+.rk-px .rkh-bg use{display:none}
+.rk-px #rkfill{fill:#42d4ff}
+
 /* Phone / tablet / desktop layout: the same controls are retained at every width. */
 @media (max-width:599px){
   .wrap{padding:8px 10px}
@@ -1337,7 +1351,7 @@ const TX={
  "rk.an":[n=>`クラスで ${n}もん こたえた！`],
  "rk.dest":[i=>["くも","そら","うちゅう","つき","ほし"][i]||""],
  "rk.q":["問題《もんだい》に 答《こた》えて ねんりょうを ためよう！","もんだいに こたえて ねんりょうを ためよう！"],
- "rk.fuel":["みんなの ねんりょう"],
+ "rk.fuel":["みんなの エネルギー"],
  "rk.right":["⭕ せいかい！ ねんりょう ＋5"],
  "rk.wrong":[a=>`ちょうせん ＋1！ こたえは ${a}`],
  "rk.cap":["みんなの ばん！ ほかの 人《ひと》を おうえんしよう","みんなの ばん！ ほかの ひとを おうえんしよう"],
@@ -3821,6 +3835,9 @@ const RKMODE={id:"rocket",ico:"🚀"}; tget(RKMODE,"t","m.rocket.t"); tget(RKMOD
 let RK=null, RKH=null;
 const rkArt=()=>loadScript("data/rocket-art.js?v=c0d0be8b",()=>!!document.getElementById("rocket-art"));
 const rkSvg=(id,vb,c)=>`<svg class="${c||"rks"}" viewBox="${vb}" aria-hidden="true" focusable="false"><use href="#${id}"/></svg>`;
+const RK_SCENES=["bg-launch-norocket.webp","bg-clouds-norocket.webp","bg-upper-sky-norocket.webp","bg-space-norocket.webp","bg-moon-norocket.webp","bg-star-sea-norocket-v2.webp"];
+const rkSceneUrl=i=>`url("vendor/img/space/${RK_SCENES[Math.max(0,Math.min(5,i))]}")`;
+function rkAudio(k){ if(!SND||SND_DEAD) return; const t=Date.now(); try{ aload("sfx-"+k).then(b=>{if(SND&&Date.now()-t<1500) aplay(b,.4);}).catch(()=>{}); }catch(e){} }
 const rkNow=()=>Date.now()+RK.off;
 const rkDest=(co,i)=>co.ns===3?[1,3,4][i]:i, rkScn=(co,i)=>co.ns===3?[0,2,4,5][i]:i;      // みじかい（3ステージ）は、行き先と背景を 5つのうちの 3つに割りあてる
 function rkKidStop(){ stopTimer(); if(RK){ clearInterval(RK.fl); RK.fl=0; } }
@@ -3842,6 +3859,7 @@ function rkHead(){
 const rkGaugeK=co=>`<div class="rk-kg"><span>${T("rk.fuel")}</span><div class="rk-hbar"><i id="rkg" style="width:${co.p}%"></i></div><b id="rkgp">${co.p}％</b></div>`;
 function rkKidDraw(){
   const K=RK, co=K.co, m=co.mg; rkKidStop();
+  app.style.setProperty("--rk-scene",rkSceneUrl(rkScn(co,co.ph==="clear"?co.st:co.sg)));
   if(co.ph==="count"){
     app.innerHTML=`<div class="play rkk">${rkHead()}<div class="q"><div>${T("n.soon")}</div><div class="countdown" id="rkcd"></div></div></div>`;
     const tick=()=>{ const c=$("#rkcd"); if(c){ const n=Math.max(0,Math.ceil((K.co.ae-rkNow())/1000)); if(c.textContent!==String(n)){ if(n>0) sfx("tick"); c.textContent=n; } } };
@@ -3866,7 +3884,7 @@ function rkKidDraw(){
   } else if(co.ph==="again"){
     app.innerHTML=`<div class="play rkk">${rkHead()}<div class="q">${rkSvg("rk-rocket","0 0 120 150","rks big")}<div class="big">${T("rk.again")}</div><div class="small">${T("rk.again.h")}</div></div></div>`;
   } else if(co.ph==="clear"){
-    sfx("medal"); party();
+    rkAudio("clear"); party();
     app.innerHTML=`<div class="play rkk">${rkHead()}<div class="q">${rkSvg("rk-rocket","0 0 120 150","rks big")}<div class="big">${T("rk.clear",co.st)}</div><div class="small">${T("rk.reach",T("rk.dest",rkDest(co,co.st-1)))}</div></div></div>`;
   }
 }
@@ -4024,7 +4042,7 @@ function rkHostUpd(s){
   R.s=s; R.co=co; R.off=s.now-Date.now();
   const $$=id=>document.getElementById(id), fin=co.ph==="clear"||co.ph==="end";
   const scene=fin?co.st:co.sg;
-  if(scene!==R.scene){ R.scene=scene; $$("rkbg").setAttribute("href","#rk-bg"+rkScn(co,scene)); $$("rkpad").style.display=scene===0?"":"none"; }
+  if(scene!==R.scene){ R.scene=scene; $$("rkh").style.setProperty("--rk-scene",rkSceneUrl(rkScn(co,scene))); $$("rkbg").setAttribute("href","#rk-bg"+rkScn(co,scene)); $$("rkpad").style.display=scene===0?"":"none"; }
   const k5=5/co.ns, alt=(fin?co.st:co.sg+(co.ph==="play"?co.p/100*.6:.8))*k5;
   const r=$$("rkr"); r.style.bottom=(5.5+alt/5*34.5)+"%"; r.style.transform=`scale(${(.8+.05*co.st*k5).toFixed(2)})`;
   r.classList.toggle("shake",co.ph==="count"||co.ph==="clear");
@@ -4032,7 +4050,7 @@ function rkHostUpd(s){
   $$("rkside").style.display=co.st*k5>=2?"":"none";
   $$("rkst").textContent=co.ph==="end"?T((co.res?co.res.st:co.st)>0?"rk.end.h":"rk.end.h0"):T("rk.stage",co.sg+1,co.ns)+"　→ "+T("rk.dest",rkDest(co,co.sg));
   [...$$("rkdots").children].forEach((d,i)=>{ d.style.display=i<co.ns?"":"none"; d.className=i<co.st?"done":(i===co.sg&&co.ph!=="end"?"cur":""); });
-  const p=co.ph==="mini"||fin?100:co.p; $$("rkfill").style.transform=`scaleY(${p/100})`; $$("rkgp").textContent=p+"％";
+  const p=co.ph==="mini"||fin?100:co.p; if(co.ph==="play"&&co.p>=100&&R.lastP<100) rkAudio("energy-full"); R.lastP=co.p; $$("rkfill").style.transform=`scaleY(${p/100})`; $$("rkgp").textContent=p+"％";
   $$("rkn").textContent=T("rk.h.n",co.n);
   if(co.ev&&co.ev.t==="bo"&&co.ev.id!==R.evSeen){ R.bn=1; R.bt=Date.now()+3500; }
   R.evSeen=co.ev?co.ev.id:-1;
