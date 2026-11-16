@@ -555,6 +555,11 @@ body[data-v=host] header,body[data-v=host] .foot{display:none}
 body[data-v=host] .px-lobby .chips,body[data-v=host] .rkh-note{display:none}
 body[data-v=host] .px-end .px-more{display:none}
 body[data-v=host] .px-r .px-ev{display:none}
+body[data-v=host] .px-play .px-ttl,body[data-v=host] .px-race .px-ttl,body[data-v=host] .px-more{display:none}
+body[data-v=host] .px-play{grid-template-columns:1fr 230px}
+body[data-v=host] .rkh-n{display:none}
+body[data-v=host] .rkm-card .hint{display:none}
+body[data-v=host] .qzhq .small{display:none}
 body[data-v=host] .px-r .px-h:last-of-type{display:none}
 body[data-v=host] .wrap{max-width:none;padding:0}
 .px{flex:1;display:flex;flex-direction:column;min-height:100dvh;background:var(--board);color:#fff;padding:14px 26px 92px;font-size:28px;line-height:1.3;overflow:hidden}
@@ -3776,8 +3781,8 @@ function renderHost(){
   const RH=58;
   const chestBuild=(s,m,x)=>{
     px.className="px";
-    px.innerHTML=`<div class="px-play"><div class="px-l"><div class="px-ttl">${m.ico} ${m.t}・${x.t}</div><div class="px-bars" id="pxbars"></div><div class="px-more" id="pxmore"></div></div>
-      <div class="px-r"><div class="px-tl">${T("px.left")}</div><div class="px-timer" id="pxt"></div><h3 class="px-h">${T("px.ev")}</h3><div class="px-ev" id="pxev"></div></div></div>`;
+    px.innerHTML=`<div class="px-play"><div class="px-l"><div class="px-bars" id="pxbars"></div><div class="px-more" id="pxmore"></div></div>
+      <div class="px-r"><div class="px-tl">のこり</div><div class="px-timer" id="pxt"></div></div></div>`;
     B.rows=new Map();
   };
   const chestUpd=s=>{
@@ -3797,9 +3802,8 @@ function renderHost(){
   const raceBuild=(s,m,x)=>{
     px.className="px px-race-w";
     px.innerHTML=`<div class="px-race"><div class="px-bd" id="pxbd">${boardSvg(evOf(s.rule))}</div>
-      <div class="px-r"><div class="px-ttl">${m.ico} ${m.t}・${x.t}</div><div class="px-tl">${T("px.left")}</div><div class="px-timer" id="pxt"></div>
-        <h3 class="px-h">${T("px.top3")}</h3><div class="px-top" id="pxtop"></div><div class="px-more" id="pxmore"></div>
-        <h3 class="px-h">${T("px.ev")}</h3><div class="px-ev" id="pxev"></div></div></div>`;
+      <div class="px-r"><div class="px-tl">のこり</div><div class="px-timer" id="pxt"></div>
+        <div class="px-top" id="pxtop"></div><div class="px-more" id="pxmore"></div></div></div>`;
     M={pk:{},host:true};
   };
   const raceUpd=s=>{
@@ -4077,7 +4081,7 @@ function rkHostUpd(s){
   r.classList.toggle("shake",co.ph==="count"||co.ph==="clear");
   r.classList.toggle("idle",co.st===0&&(co.ph==="count"||(co.ph==="play"&&co.p<10)));      // 発射台にいるあいだは炎を出さない
   $$("rkside").style.display=co.st*k5>=2?"":"none";
-  $$("rkst").textContent=co.ph==="end"?T((co.res?co.res.st:co.st)>0?"rk.end.h":"rk.end.h0"):T("rk.stage",co.sg+1,co.ns)+"　→ "+T("rk.dest",rkDest(co,co.sg));
+  $$("rkst").textContent=co.ph==="end"?"おわり":`${Math.min(co.sg+1,co.ns)} / ${co.ns}`;
   [...$$("rkdots").children].forEach((d,i)=>{ d.style.display=i<co.ns?"":"none"; d.className=i<co.st?"done":(i===co.sg&&co.ph!=="end"?"cur":""); });
   const p=co.ph==="mini"||fin?100:co.p; if(co.ph==="play"&&co.p>=100&&R.lastP<100) rkAudio("energy-full"); R.lastP=co.p; $$("rkfill").style.transform=`scaleY(${p/100})`; $$("rkgp").textContent=p+"％";
   $$("rkn").textContent=T("rk.h.n",co.n);
@@ -4088,7 +4092,7 @@ function rkHostUpd(s){
     if((R.key.startsWith("count")&&co.ph==="play")||co.ph==="clear") sfx("launch");      // 3・2・1 のあとの はっしゃ／ステージクリアで上へ
     R.key=key; const mid=$$("rkmid");
     if(co.ph==="count") mid.innerHTML=`<div class="rkm-card"><h2>${T("rk.h.soon")}</h2><div class="rkm-big" id="rkbig"></div></div>`;
-    else if(co.ph==="play") mid.innerHTML=`<div class="rkm-card"><h2>${T("rk.h.q")}</h2></div>`;
+    else if(co.ph==="play") mid.innerHTML="";
     else if(co.ph==="mini"&&co.mg.k==="sy") mid.innerHTML=`<div class="rkm-card"><h2>${T("rk.sy")}</h2><div class="hint">${T("rk.h.sy")}</div><div class="rkm-big" id="rkbig"></div><div class="hint">${T("rk.h.sy.p")}</div><div class="rkm-bar"><i id="rkmb"></i></div></div>`;
     else if(co.ph==="mini") mid.innerHTML=`<div class="rkm-card"><h2>${T("rk.st")}</h2><div class="hint">${T("rk.h.st")}</div><div class="rkm-big" id="rkbig"></div><div class="hint">${T("rk.h.st.p")}</div><div class="rkm-bar star"><i id="rkmb"></i></div></div>`;
     else if(co.ph==="again") mid.innerHTML=`<div class="rkm-card"><h2>${T("rk.again")}</h2><div class="hint">${T("rk.again.h")}</div></div>`;
@@ -4783,7 +4787,7 @@ function qzHostDraw(s,warnHtml){
     app.replaceChildren(h("div",{class:"qzh"},wrapWarn,
       h("div",{class:"qzh-top"},h("b",{text:T0("z.qn",Z.idx+1,Z.n)}),h("span",{id:"qa",text:`${Z.answered} / ${Z.total} 人《にん》が答《こた》えた`}),h("span",{class:"timer",id:"qt","aria-hidden":"true",text:rev?"":String(q.sec)})),
       h("div",{class:"tbar",id:"qtbar"},h("i",{id:"qb",style:rev?"width:0":"width:100%"})),
-      h("div",{class:"q qzhq"},rich(h("div",{class:"big"}),q.q),h("div",{class:"small",text:`${q.t==="tf"?"○×":"4択《たく》"}・${q.sec}秒《びょう》・得点《とくてん》 ${QZ.PT_JA[q.pt]}${rev&&q.ok.length>1?"・どれを選《えら》んでも正解《せいかい》":""}`})),
+      h("div",{class:"q qzhq"},rich(h("div",{class:"big"}),q.q)),
       h("div",{class:"qzh-grid"+(q.t==="tf"?" tf2":"")},...tiles),
       ctl(rev?h("button",{type:"button",class:"btn",id:"qnx",text:last?"結果《けっか》を見《み》る →":"つぎへ →",onclick:()=>api("qnext",HOST).catch(()=>{})})
             :h("button",{type:"button",class:"btn",id:"qnx",text:"しめきって正解《せいかい》を見《み》せる",onclick:()=>api("qnext",HOST).catch(()=>{})}),endBtn()),
@@ -4792,9 +4796,9 @@ function qzHostDraw(s,warnHtml){
   }
   if(s.status==="playing"&&Z.phase==="board"){
     const rows=ps.slice(0,pxVis(ps.length,5));       // 4人以上のときは最下位の子の名前は出さない
-    const box=h("div",{style:"max-width:640px;margin:0 auto"}); box.innerHTML=rows.map((p,i)=>`<div class="hrank" data-pid="${esc(p.pid)}" role="button" tabindex="0"><b>${i+1}</b><span>${face(p.emoji)} ${esc(p.name)}</span><span>${p.v} 点《てん》</span><span class="note">正解《せいかい》 ${p.ok}</span></div>`).join("");
+    const box=h("div",{style:"max-width:640px;margin:0 auto"}); box.innerHTML=rows.map((p,i)=>`<div class="hrank" data-pid="${esc(p.pid)}" role="button" tabindex="0"><b>${i+1}</b><span>${face(p.emoji)} ${esc(p.name)}</span><span>${p.v} てん</span></div>`).join("");
     app.replaceChildren(h("div",{class:"qzh"},wrapWarn,top(h("span",{text:`${Z.idx+1} / ${Z.n} 問《もん》が終《お》わりました`})),
-      h("h2",{class:"th2",innerHTML:ic("trophy")+"ここまでの 上位《じょうい》5人《にん》"}),box,ctl(h("button",{type:"button",class:"btn",id:"qnx",text:"つぎへ →",onclick:()=>api("qnext",HOST).catch(()=>{})}),endBtn()),h("div",{class:"err",id:"herr"})));
+      box,ctl(h("button",{type:"button",class:"btn",id:"qnx",text:"つぎへ →",onclick:()=>api("qnext",HOST).catch(()=>{})}),endBtn()),h("div",{class:"err",id:"herr"})));
     return;
   }
   /* 終わり：表彰台・結果表・問題ごとの正答率 */
