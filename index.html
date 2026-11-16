@@ -1049,6 +1049,52 @@ body[data-v=host] .wrap{max-width:none;padding:0}
 }
 .worksheet{position:fixed;inset:0;z-index:9999;overflow:auto;background:#fff;color:#000;padding:20px}.worksheet-tools{display:flex;gap:12px;margin-bottom:18px}.worksheet-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:22px}.worksheet-item{border:1px solid #aaa;min-height:145px;padding:10px;break-inside:avoid}.worksheet-question{font-size:24px}.worksheet-question .hissan{font-size:28px;color:#000}.worksheet-answer{height:32px;border-bottom:1px solid #333;margin:4px 8px 0 32px}.worksheet .hissan .hs-rule{min-height:0;height:0}@media print{body:has(.worksheet) #app{display:none}.worksheet{position:static;padding:0}.worksheet-tools{display:none}.worksheet-item{border-color:#ccc}}
 </style>
+<style id="unitpick-style">
+/* 児童の単元えらび（3〜6年・計算スプリントの入口）：学年は小さいチップ、おすすめは たたむ、えらんだ単元は下のバー */
+.up.kc{display:block!important;max-width:1366px;margin:0 auto}
+.up.kc>.topbar{margin-bottom:2px}
+.up.kc .uttl{flex:1;min-width:0;margin:0;font-size:18px;text-align:center;line-height:1.5}
+.up.kc>.ufilters{position:sticky!important;top:0;z-index:6;max-height:none!important;overflow:visible!important;display:flex!important;flex-wrap:wrap;align-items:center;gap:4px 8px;background:var(--field);padding:4px 0 6px;margin:0}
+.up.kc .upf{margin:0;min-width:0;max-width:100%}
+.up.kc .upf .gchips{display:flex!important;flex-wrap:nowrap;overflow-x:auto;gap:4px;margin:0;padding:2px 2px 4px}
+.up.kc .gchips .pill,.up.kc .usetd summary{width:auto;min-width:0;min-height:38px;padding:2px 12px;font-size:15px;flex:none;margin:0;box-shadow:0 2px 0 var(--edge)}
+.up.kc .usetd summary{display:inline-flex;align-items:center;cursor:pointer;font-weight:700;border-radius:999px;background:#fff3d6;border:2px solid var(--edge);list-style:none}
+.up.kc .usetd summary::-webkit-details-marker{display:none}
+.up.kc .usetd[open]{flex-basis:100%}
+.up.kc .set-chips{display:flex;flex-wrap:wrap;gap:6px;margin:6px 0 2px}
+.up.kc .set-chips .pill{min-height:40px;font-size:14px;padding:4px 10px;margin:0}
+.up.kc .set-chips .pill span{display:inline}
+.up.kc .ucards{margin:0}
+.up.kc .ugh{margin:10px 0 2px;font-size:18px}
+.up.kc .uitem{margin:0 0 6px}
+.up.kc .uih{margin:6px 0 4px;font-size:14px;color:var(--muted);border-left:5px solid var(--go);padding-left:6px;line-height:1.6}
+.up.kc .ugrid.ucomp{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,300px),1fr));gap:6px}
+.up.kc .ucardw{gap:4px}
+.up.kc .ucard{min-height:58px;padding:6px 8px;gap:8px}
+.up.kc .ubody b{font-size:16px;line-height:1.45}.up.kc .unote{font-size:12px;line-height:1.5}
+.up.kc .ubox{width:30px;height:30px;font-size:18px;flex:none}
+.up.kc .uexb{min-width:44px;font-size:18px}
+.ufoot.kbar{position:sticky;bottom:0;z-index:7;display:flex;align-items:center;gap:8px;background:#fff;border:3px solid var(--edge);border-radius:14px 14px 0 0;padding:6px 8px;margin-top:8px}
+.kbar .upanel{flex:1;display:flex;align-items:center;gap:8px;flex-wrap:nowrap;padding:0;border:0;background:none;box-shadow:none;margin:0;min-width:0;position:static;max-height:none;overflow:visible}
+.kbar .upanel::before{display:none}
+.kbar .uselbox{position:static;min-width:0}
+.kbar .usum{cursor:pointer;font-weight:800;font-size:15px;list-style:none;padding:8px 10px;border-radius:10px;background:#eef2ec;white-space:nowrap;min-height:44px;display:flex;align-items:center}
+.kbar .usum::-webkit-details-marker{display:none}
+.kbar .usum.on{background:#e1f0e3;color:#0f6a3a}
+.kbar .uselpop{position:absolute;bottom:calc(100% + 6px);left:0;width:min(100%,560px);background:#fff;border:3px solid var(--edge);border-radius:12px;padding:8px;max-height:55dvh;overflow:auto;box-shadow:0 6px 18px rgba(0,0,0,.2);display:flex;flex-direction:column;gap:8px;align-items:flex-start}
+.kbar .uhow{display:flex;gap:4px;margin:0;flex-wrap:nowrap;align-items:center}.kbar .uhow .pill{min-height:40px;font-size:13px;padding:2px 10px;margin:0}
+.kbar .uhow.pop{display:none}
+.kbar .err:empty{display:none}.kbar .err{font-size:13px}
+.kbar .ustart{flex:none;font-size:18px!important;padding:10px 18px!important;margin:0 0 0 auto;min-height:48px}
+@media (max-width:599px){.kbar .uhow.bar{display:none}.kbar .uhow.pop{display:flex;flex-wrap:wrap}.kbar .ustart{font-size:16px!important;padding:8px 12px!important}.up.kc .uttl{font-size:16px}}
+@media (min-width:1024px){.up.kc .ugrid.ucomp{grid-template-columns:repeat(auto-fill,minmax(300px,1fr))}.up.kc>.ufilters{top:0}}
+/* たからばこ・すごろく・部屋づくりの単元えらび（unitPicker）も 学年を小さいチップに・おすすめを たたむ */
+#modeUnits .grade-pills,#roomUnits .grade-pills{display:flex!important;flex-wrap:nowrap;overflow-x:auto;gap:4px}
+#modeUnits .subject-pills,#roomUnits .subject-pills{display:flex!important;flex-wrap:wrap;gap:4px;margin-bottom:4px}
+#modeUnits :is(.grade-pills,.subject-pills) .pill,#roomUnits :is(.grade-pills,.subject-pills) .pill{width:auto;min-width:0;min-height:38px;padding:2px 12px;font-size:15px;flex:none;margin:0}
+#modeUnits .usetd summary,#roomUnits .usetd summary{cursor:pointer;font-weight:700;display:inline-flex;align-items:center;min-height:38px;padding:2px 12px;border-radius:999px;background:#fff3d6;border:2px solid var(--edge);list-style:none;font-size:15px}
+#modeUnits .usetd .set-grid,#roomUnits .usetd .set-grid{margin-top:6px}
+</style>
 </head>
 <body>
 <svg xmlns="http://www.w3.org/2000/svg" style="position:absolute;width:0;height:0;overflow:hidden" aria-hidden="true" focusable="false"><defs>
@@ -5063,7 +5109,7 @@ function unitPicker(root,grade){
   const selected=[], easy=grade===1||grade===2;
   const subjects=["sansu","kokugo","shakai",...(window.RIKA_PUBLIC?["rika"]:[]),"eigo"].filter(s=>!easy||UREADY.some(u=>u.subj===s&&u.g===grade));      // 1〜2年は その学年の単元がある教科だけ
   const gradeOf=s=>grade>=1&&grade<=6&&UREADY.some(u=>u.subj===s&&u.g===grade)?grade:0;      // はじめは いまの学年の単元だけ（ぜんぶ だと 100枚をこえて長すぎる）
-  let subject="sansu", filter=easy?grade:gradeOf("sansu");
+  let subject="sansu", filter=easy?grade:gradeOf("sansu"); let setsOpen=false;
   const setLabel=t=>{ const m=String(t).match(/^(.*?)(（[^（）]*）)$/); return m?[h("span",{text:m[1]}),h("span",{class:"nw",text:m[2]})]:[h("span",{text:t})]; };      // 「（4〜6年）」は 1行のまま
   const draw=()=>{
     const pool=UREADY.filter(u=>u.subj===subject&&(!easy||u.g===grade));
@@ -5072,7 +5118,8 @@ function unitPicker(root,grade){
     if(!easy) controls.append(h("div",{class:"pills grade-pills"},...([0,1,2,3,4,5,6].map(g=>upill(g?g+"年《ねん》":"ぜんぶ",filter===g,()=>{filter=g;draw();})))));
     const cards=h("div",{class:"ugrid"+(easy?" kidunits":"")},...pool.filter(u=>!filter||u.g===filter).map(u=>h("button",{type:"button",class:"ucard",role:"checkbox","aria-checked":selected.includes(u.id)?"true":"false",onclick:()=>{const i=selected.indexOf(u.id);if(i>=0)selected.splice(i,1);else if(selected.length<UMAX)selected.push(u.id);draw();}},
       h("span",{class:"ubox",text:selected.includes(u.id)?"✅":""}),h("span",{class:"ubody"},h("b",{text:u.title}),!easy?h("span",{class:"unote",text:u.note}):null))));
-    const sets=easy?null:h("div",{class:"upsets"},h("b",{class:"pl",text:"おすすめの組《く》み合《あ》わせ"}),h("div",{class:"set-grid"},...(UN.UNIT_SETS||[]).filter(s=>s.units.length>1&&s.units.every(id=>UBY[id]&&UBY[id].subj===subject)).map(s=>{ const b=upill("",false,()=>{selected.splice(0,selected.length,...s.units.slice(0,UMAX));draw();}); b.replaceChildren(...setLabel(s.title)); return b; })));
+    const setList=easy?[]:(UN.UNIT_SETS||[]).filter(s=>s.units.length>1&&s.units.every(id=>UBY[id]&&UBY[id].subj===subject)).map(s=>{ const b=upill("",false,()=>{selected.splice(0,selected.length,...s.units.slice(0,UMAX));setsOpen=false;draw();}); b.replaceChildren(...setLabel(s.title)); return b; });
+    const sets=setList.length?h("details",{class:"upsets usetd",open:setsOpen,ontoggle:e=>{ setsOpen=e.target.open; }},h("summary",{text:"⭐ おすすめの組《く》み合《あ》わせ"}),h("div",{class:"set-grid"},...setList)):null;      // おすすめは たたんでおく（単元カードを先に見せる）
     root.replaceChildren(...[h("h2",{text:"単元《たんげん》をえらぶ（えらばなければ学年《がくねん》の問題《もんだい》）"}),controls,sets,
       h("div",{class:"note",text:selected.length?selected.map(id=>UBY[id].title).join("・"):"単元《たんげん》は まだえらんでいません"}),cards].filter(Boolean));
   };
@@ -5252,7 +5299,8 @@ function renderUnits(q){
   const pool=s=>UREADY.filter(u=>u.subj===s&&(!kid||!easy||u.g===kg));
   let fg=kid&&kg&&pool(subj).some(u=>u.g===kg)?kg:0, fi="";
   if(kid){ const keep=UPK.sel.filter(id=>UBY[id].subj===subj&&(!easy||UBY[id].g===kg)); if(keep.length!==UPK.sel.length){ UPK.sel=keep; } }
-  const root=h("div",{class:"up"+(kid?" kid":"")}), filt=h("div",{class:"upf"}), sets=h("div"), panel=h("div",{class:"form upanel"}), cards=h("div",{class:"ucards"}), msg=h("div",{class:"err",role:"alert"}), out=h("div",{class:"lkout"});
+  const kc=kid&&!easy;      // 児童（3〜6年）：学年は小さいチップ、おすすめは たたむ、えらんだ単元は下のバー → 単元カードが画面の大部分
+  const root=h("div",{class:"up"+(kid?" kid":"")+(kc?" kc":"")}), filt=h("div",{class:"upf"}), sets=h("div"), panel=h("div",{class:"form upanel"}), cards=h("div",{class:"ucards"}), msg=h("div",{class:"err",role:"alert"}), out=h("div",{class:"lkout"});
   root.dataset.subject=subj;
   const chosen=()=>UPK.sel.filter(i=>UBY[i]);
   const LK={task:!kid&&!!q.get("pick"), col0:false};      // リンクとQR：ガイドから来たとき（?pick=）は「授業で使う」を はじめからオン
@@ -5261,21 +5309,32 @@ function renderUnits(q){
     const items=[...new Set(pool(subj).map(u=>u.item).filter(Boolean))], rows=[];
     if(!kid) rows.push(h("div",{class:"pills subject-pills"},h("b",{class:"pl",text:"教科《きょうか》"}),...subjs.map(s=>upill(SUBJ_JA[s],s===subj,()=>{ subj=s; root.dataset.subject=s; fg=0; fi=""; drawFilter(); drawSets(); drawCards(); drawPanel(); }))));
     const gs=[...new Set(pool(subj).map(u=>u.g))].sort((a,b)=>a-b);
-    if(!(kid&&easy)&&gs.length>1) rows.push(h("div",{class:"pills grade-pills"},h("b",{class:"pl",text:T("u.grade")}),upill(T("u.all"),fg===0,()=>{ fg=0; drawFilter(); drawCards(); }),...gs.map(g=>upill(g+"年《ねん》",fg===g,()=>{ fg=g; drawFilter(); drawCards(); }))));
+    if(!(kid&&easy)&&gs.length>1) rows.push(h("div",{class:"pills grade-pills"+(kc?" gchips":""),role:kc?"group":null,"aria-label":kc?T("u.grade"):null},kc?null:h("b",{class:"pl",text:T("u.grade")}),upill(T("u.all"),fg===0,()=>{ fg=0; drawFilter(); drawCards(); }),...gs.map(g=>upill(g+"年《ねん》",fg===g,()=>{ fg=g; drawFilter(); drawCards(); }))));
     if(!kid&&items.length>1) rows.push(h("div",{class:"pills item-pills"},h("b",{class:"pl",text:"学習《がくしゅう》項目《こうもく》"}),upill("ぜんぶ",fi==="",()=>{ fi=""; drawFilter(); drawCards(); }),...items.map(it=>upill(it,fi===it,()=>{ fi=it; drawFilter(); drawCards(); }))));
     filt.replaceChildren(...(subj==="rika"?[h("p",{class:"rika-warning",text:RIKA_WARNING})]:[]),...rows);
   }
   /* かたまり2：おすすめの組み合わせ */
   function drawSets(){
     const ok=(UN.UNIT_SETS||[]).map(s=>({s,us:s.units.filter(i=>UBY[i])})).filter(x=>x.us.length>1&&x.us.every(i=>UBY[i].subj===subj)&&(!kid||(!easy&&x.us.every(i=>UBY[i].g<=(kg||6)))));
+    const setBtns=()=>ok.map(x=>h("button",{type:"button",class:"pill small set",onclick:()=>{ UPK.sel=x.us.slice(0,UMAX); uSave(); paint(); drawPanel(); }},h("span",null,...x.s.title.split(/(（[^）]*）|\([^)]*\))/).map((p,k)=>k%2?h("span",{class:"nw",text:p}):p))));
+    if(kc){ sets.replaceChildren(...(ok.length?[h("details",{class:"usetd"},h("summary",{text:"⭐ "+T("u.sets")}),h("div",{class:"set-chips"},...setBtns()))]:[])); return; }
     sets.replaceChildren(...(ok.length?[h("div",{class:"upsets"},h("b",{class:"pl",text:kid?T("u.sets"):"おすすめの組《く》み合《あ》わせ（タップで選《えら》ぶ）"}),
-      h("div",{class:"set-grid"},...ok.map(x=>h("button",{type:"button",class:"pill small set",onclick:()=>{ UPK.sel=x.us.slice(0,UMAX); uSave(); paint(); drawPanel(); }},h("span",null,...x.s.title.split(/(（[^）]*）|\([^)]*\))/).map((p,k)=>k%2?h("span",{class:"nw",text:p}):p))))))]:[]));
+      h("div",{class:"set-grid"},...setBtns()))]:[]));
   }
   /* かたまり3：カード */
   function drawCards(){
     const us=pool(subj).filter(u=>(!fg||u.g===fg)&&(!fi||u.item===fi)), byG={};
     us.forEach(u=>(byG[u.g]=byG[u.g]||[]).push(u));
     const grades=Object.keys(byG).sort((a,b)=>a-b);
+    if(kc){      // 学年 → 学習項目（たし算・わり算…）ごとに、小さいカードを並べる
+      const card=u=>h("div",{class:"ucardw"},
+        h("button",{type:"button",class:"ucard",role:"checkbox","aria-checked":"false","data-id":u.id,onclick:()=>toggle(u.id)},h("span",{class:"ubox","aria-hidden":"true"}),h("span",{class:"ubody"},h("b",{text:u.title}),h("span",{class:"unote",text:u.note}))),
+        h("button",{type:"button",class:"btn sub s uexb",text:"💡","aria-label":T("u.ex")+"："+u.title,title:T("u.ex"),onclick:()=>uEx(u)}));
+      cards.replaceChildren(...(grades.length?grades.map(g=>{ const byI={}; byG[g].forEach(u=>(byI[u.item||""]=byI[u.item||""]||[]).push(u));
+        return h("section",{class:"ugrp",id:"ugrade-"+g},grades.length>1?h("h3",{class:"ugh",text:g+"年《ねん》"}):null,
+          ...Object.keys(byI).map(it=>h("div",{class:"uitem"},it?h("h4",{class:"uih",text:it}):null,h("div",{class:"ugrid ucomp"},...byI[it].map(card))))); }):[h("div",{class:"empty",text:"この条件《じょうけん》の単元《たんげん》はありません"})]));
+      paint(); return;
+    }
     const groups=grades.map(g=>h("section",{class:"ugrp",id:"ugrade-"+g},h("h3",{text:g+"年《ねん》"}),
       h("div",{class:"ugrid"},...byG[g].map(u=>h("div",{class:"ucardw"},
         h("button",{type:"button",class:"ucard",role:"checkbox","aria-checked":"false","data-id":u.id,onclick:()=>toggle(u.id)},
@@ -5324,6 +5383,14 @@ function renderUnits(q){
     const chips=k?h("div",{class:"uchips"},...ids.map(id=>h("button",{type:"button",class:"uchip","aria-label":UBY[id].title+" をはずす",onclick:()=>toggle(id)},
       h("span",{class:"ucg",text:UBY[id].g+"年《ねん》"}),h("span",{text:UBY[id].title}),h("span",{class:"ucp",text:per+"%"}),h("span",{class:"ucx","aria-hidden":"true",text:"✕"})))):h("div",{class:"note",text:T("u.none")});
     const cho=uChoice(ids,UPK.choice);
+    if(kc){      // 下のバー：えらんだ数（ひらくと一覧）・答え方・スタート
+      const howOk=!ids.length||!ids.every(id=>UBY[id].subj==="rika");
+      const how=cls=>howOk?h("div",{class:"pills uhow "+cls,role:"group","aria-label":T("u.how")},cls==="pop"?h("b",{class:"pl",text:T("u.how")}):null,upill(T("u.type"),!cho,()=>{ UPK.choice=false; uSave(); drawPanel(); }),upill(T("u.c4"),cho,()=>{ UPK.choice=true; uSave(); drawPanel(); })):null;
+      const wasOpen=!!panel.querySelector(".uselbox[open]");
+      const list=h("details",{class:"uselbox",open:wasOpen},h("summary",{class:"usum"+(k?" on":""),text:T("u.sel",k)+" ▴"}),h("div",{class:"uselpop"},chips,k?h("div",{class:"note",text:T("u.ratio.k",Math.min(UPK.n,20),k)}):null,how("pop"),k?h("button",{type:"button",class:"btn sub s",text:T("u.clear"),onclick:()=>{ UPK.sel=[]; uSave(); paint(); drawPanel(); }}):null));
+      panel.replaceChildren(...[list,how("bar"),hasRika(ids)?h("p",{class:"rika-warning",text:RIKA_WARNING}):null,msg].filter(Boolean));
+      startBtn.disabled=!k; startBtn.textContent=T("u.go"); return;
+    }
     const rows=[h("div",{class:"uphead"},h("b",{class:"fh",text:T("u.sel",k)}),k?h("button",{type:"button",class:"btn sub s",text:T("u.clear"),onclick:()=>{ UPK.sel=[]; uSave(); paint(); drawPanel(); }}):null),chips];
     if(k) rows.push(h("div",{class:"note",text:kid?T("u.ratio.k",UPK.n,k):`${UPK.n}問《もん》を${k}単元《たんげん》で等分《とうぶん》します（1単元《たんげん》あたり ${eachTxt}問《もん》・${per}%ずつ）`}));
     if(!kid){
@@ -5349,7 +5416,10 @@ function renderUnits(q){
     if(kid) startBtn.disabled=!k, startBtn.textContent=T("u.go");
   }
   const startBtn=h("button",{type:"button",class:"btn again ustart",text:T("u.go"),onclick:()=>{ if(!need()) return; uSave(); go(uHash({...cfg(),n:Math.min(UPK.n,20)})); }});
-  root.append(...[
+  if(kc) root.append(
+    h("div",{class:"topbar"},h("button",{type:"button",class:"back",innerHTML:BK(),onclick:()=>go("#home")}),h("h2",{class:"th2 uttl",text:`${SUBJ_JA[subj]}　${T("u.pick")}`}),h("span")),
+    h("div",{class:"ufilters"},filt,sets),cards,h("div",{class:"ufoot kbar"},panel,startBtn));
+  else root.append(...[
     h("div",{class:"topbar"},h("button",{type:"button",class:"back",innerHTML:kid?BK():ic("arrow-left")+"先生《せんせい》の画面《がめん》",onclick:()=>go(kid?"#home":"#teacher")}),h("b"),h("span")),
     h("h2",{class:"th2",innerHTML:kid?"":ic("check")+"単元《たんげん》から つくる",text:kid?`${SUBJ_JA[subj]&&easyG(kg)?T("subj."+SJ[subj]):SUBJ_JA[subj]}　${T("u.pick")}`:null}),
     kid?null:h("p",{class:"note",text:"教科《きょうか》・学年《がくねん》でしぼって、単元《たんげん》をいくつでも選《えら》べます（学年《がくねん》をまたいでもOK）。選《えら》んだ単元《たんげん》を等分《とうぶん》にまぜて出題《しゅつだい》します。"}),

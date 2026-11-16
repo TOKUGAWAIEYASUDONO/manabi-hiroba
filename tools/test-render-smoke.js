@@ -50,6 +50,7 @@ for(let g=1;g<=6;g++) {
 for(const [name,expr] of [['units','renderUnits(new URLSearchParams())'],['teacher','renderTeacher(new URLSearchParams())'],['practice',`renderUnitLink("#u=${window.RIKA_PUBLIC?'r3-living':'m3-amari'}&n=1")`]]) {
   vm.runInContext(expr,ctx,{filename:name});
 }
+for(const g of [2,4,6]) vm.runInContext(`ui.grade=${g}; renderUnits(new URLSearchParams('kid=1&subj=sansu'))`,ctx,{filename:'kid-units-'+g});      // 児童の単元えらび（3〜6年はコンパクト版）
 vm.runInContext('renderFeedback()',ctx,{filename:'feedback'});
 if(!vm.runInContext('app.innerHTML',ctx).includes('id="fbBody"')) throw Error('feedback form missing');
 for(const grade of [1,2,3]){
