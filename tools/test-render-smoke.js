@@ -8,14 +8,16 @@ const src=html.slice(html.lastIndexOf('<script>')+8,html.lastIndexOf('</script>'
 function element(){return {
   style:{},dataset:{},classList:{add(){},remove(){},toggle(){}},children:[],
   appendChild(x){this.children.push(x);return x},append(...xs){this.children.push(...xs)},
+  insertAdjacentHTML(){},
   replaceChildren(...xs){this.children=xs},setAttribute(){},addEventListener(){},removeEventListener(){},
   querySelector(){return element()},querySelectorAll(){return []},getAttribute(){return null},
   focus(){},remove(){},scrollIntoView(){},getBoundingClientRect(){return {width:375,height:667}},
   innerHTML:'',textContent:'',value:'calc',options:[],firstChild:{textContent:''}
 }};
+const byId=new Map();
 const document={body:element(),documentElement:element(),head:element(),
   createElement:element,createElementNS:element,createTextNode:t=>({textContent:t}),
-  getElementById:()=>element(),querySelector:()=>element(),querySelectorAll:()=>[],
+  getElementById:id=>{if(!byId.has(id)) byId.set(id,element());return byId.get(id)},querySelector:s=>s.startsWith('#')?document.getElementById(s.slice(1)):element(),querySelectorAll:()=>[],
   addEventListener(){},removeEventListener(){}};
 const storage={getItem(){return null},setItem(){},removeItem(){}};
 const window={document,location:{hash:'#home',href:'http://localhost/',protocol:'http:'},
@@ -57,6 +59,11 @@ for(const grade of [1,2,3]){
 vm.runInContext('renderTeacher(new URLSearchParams())',ctx,{filename:'teacher-unit-setup'});
 const unitCheck=vm.runInContext('unitModeQuestions(["m3-amari"])',ctx);
 if(!unitCheck.length||unitCheck.some(q=>!q.ch.includes(q.a))) throw Error('unit battle choices invalid');
+for(const id of ['m2-add-hissan','m3-kake-hissan1','m4-wari-21']){
+  vm.runInContext(`startUnitRun({ids:['${id}'],n:1,seed:123,mix:true,choice:false})`,ctx,{filename:'sprint-'+id});
+  if(!vm.runInContext('P.cur.hissan',ctx)) throw Error('sprint lost hissan: '+id);
+  if(byId.get('qq').children[0]?.className!=='hissan') throw Error('sprint did not render vertical calculation: '+id);
+}
 console.log('render smoke: home 1〜6年、単元選び、先生画面、練習 OK');
 if(!process.env.RIKA_SMOKE_PUBLIC){
   const {spawnSync}=require('child_process');

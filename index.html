@@ -959,6 +959,9 @@ body[data-v=host] .wrap{max-width:none;padding:0}
 <style id="hissan-style">
 .hissan{display:inline-grid;grid-template-columns:1.15em auto;max-width:100%;font-family:ui-monospace,SFMono-Regular,Consolas,monospace;font-variant-numeric:tabular-nums;font-size:clamp(24px,7vw,44px);line-height:1.15;text-align:right;vertical-align:middle;white-space:pre;color:var(--ink)}
 .hissan .hs-num{grid-column:2;justify-self:end}.hissan .hs-op{grid-column:1;grid-row:2;text-align:center}.hissan .hs-rule{grid-column:1/-1;border-top:2px solid currentColor;min-height:1.15em}.hissan .hs-divisor{grid-column:1;align-self:end}.hissan .hs-dividend{grid-column:2;border-top:2px solid currentColor;border-left:2px solid currentColor;border-top-left-radius:.45em;padding:0 .12em}.hissan .hs-quotient{grid-column:2;min-height:1.15em}.hissan .hs-rem{font-size:.48em;grid-column:1/-1;text-align:right}.q .big:has(.hissan){white-space:normal!important;overflow:visible}.q .hissan{font-size:clamp(24px,7vw,44px)}@media print{.hissan{color:#000;break-inside:avoid}.hissan .hs-rule,.hissan .hs-dividend{border-color:#000}}
+.play.pg .q .hissan{font-size:clamp(26px,7vw,36px);line-height:1.05}.play.pg .q:has(.hissan){padding:6px;margin-bottom:4px}.play.pg .q:has(.hissan) .small{display:none}
+.proj .pq .hissan,.qzhq .hissan{font-size:clamp(52px,9vw,110px);color:inherit}
+.worksheet{position:fixed;inset:0;z-index:9999;overflow:auto;background:#fff;color:#000;padding:20px}.worksheet-tools{display:flex;gap:12px;margin-bottom:18px}.worksheet-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:22px}.worksheet-item{border:1px solid #aaa;min-height:145px;padding:10px;break-inside:avoid}.worksheet-question{font-size:24px}.worksheet-question .hissan{font-size:28px;color:#000}.worksheet-answer{height:32px;border-bottom:1px solid #333;margin:4px 8px 0 32px}.worksheet .hissan .hs-rule{min-height:0;height:0}@media print{body:has(.worksheet) #app{display:none}.worksheet{position:static;padding:0}.worksheet-tools{display:none}.worksheet-item{border-color:#ccc}}
 </style>
 </head>
 <body>
@@ -1726,7 +1729,13 @@ document.addEventListener("click",e=>{ const b=e.target.closest&&e.target.closes
 
 /* ================= 問題を作る ================= */
 /* 計算は data/calc.js で学年の単元に合わせて作る（分数の学年は4択になる） */
-function makeCalc(g){ return window.MH_CALC.make(g,rnd,shuffle); }
+function makeCalc(g){
+  const q=window.MH_CALC.make(g,rnd,shuffle);
+  // 学年別スプリントは MH_CALC 側の式から作るため、単元データの hissan はここへ届かない。
+  const m=/^([\d.]+)\s*([+−×÷])\s*([\d.]+)$/.exec(q.q);
+  if(m&&q.unit!=="kuku"&&q.unit!=="div99") q.hissan={a:m[1],b:m[3],op:m[2]};
+  return q;
+}
 function makeKuku(){ const a=1+rnd(9),b=1+rnd(9); return {q:`${a} × ${b}`,a:a*b}; }
 /* 4択：まちがいの選択肢を、正解と「長さ・種類」が近いものから選ぶ（選びかたは data/choices.js） */
 function makeKanji(g){
@@ -2707,7 +2716,7 @@ function startProjector(id,g,n,sec){
     const q=qs[i]; let left=sec;
     const draw=(reveal)=>{
       el.innerHTML=`<div class="ptop"><span>${x.ico} ${x.t}（${g}年《ねん》）</span><span>${i+1} / ${qs.length}</span><span class="count">${reveal?"":left}</span></div>
-        <div class="pq"><div>${esc(q.q)}<div style="font-size:.35em;opacity:.7;margin-top:10px">${esc(q.small||"")}</div></div></div>
+        <div class="pq"><div>${q.hissan?renderHissan(q.hissan).outerHTML:esc(q.q)}<div style="font-size:.35em;opacity:.7;margin-top:10px">${esc(q.small||"")}</div></div></div>
         <div class="pc">${q.ch.map((c,k)=>`<div class="${reveal&&c!==q.a?"dim":""}" style="background:${cols[k]};color:${fgs[k]}">${lab[k]}. ${chLabel(c,q)}${reveal&&c===q.a?" ⭕":""}</div>`).join("")}</div>
         <div class="pbtns">${reveal
           ?(i<qs.length-1?`<button class="btn" id="nx">次《つぎ》の問題《もんだい》 →</button>`:`<button class="btn" id="fin">おわり</button>`)
@@ -4809,7 +4818,7 @@ function qzHostDraw(s,warnHtml){
     app.replaceChildren(h("div",{class:"qzh"},wrapWarn,
       h("div",{class:"qzh-top"},h("b",{text:T0("z.qn",Z.idx+1,Z.n)}),h("span",{id:"qa",text:`${Z.answered} / ${Z.total} 人《にん》が答《こた》えた`}),h("span",{class:"timer",id:"qt","aria-hidden":"true",text:rev?"":String(q.sec)})),
       h("div",{class:"tbar",id:"qtbar"},h("i",{id:"qb",style:rev?"width:0":"width:100%"})),
-      h("div",{class:"q qzhq"},rich(h("div",{class:"big"}),q.q)),
+      h("div",{class:"q qzhq"},q.hissan?h("div",{class:"big"},renderHissan(q.hissan)):rich(h("div",{class:"big"}),q.q)),
       h("div",{class:"qzh-grid"+(q.t==="tf"?" tf2":"")},...tiles),
       ctl(rev?h("button",{type:"button",class:"btn",id:"qnx",text:last?"結果《けっか》を見《み》る →":"つぎへ →",onclick:()=>api("qnext",HOST).catch(()=>{})})
             :h("button",{type:"button",class:"btn",id:"qnx",text:"しめきって正解《せいかい》を見《み》せる",onclick:()=>api("qnext",HOST).catch(()=>{})}),endBtn()),
@@ -4971,6 +4980,14 @@ function renderHissan(v){
   return el;
 }
 function showQuestion(el,c){ el.textContent=""; if(c.hissan) el.append(renderHissan(c.hissan)); else { el.textContent=c.q; mathIn(el); } }
+function showWorksheet(ids,n=20){
+  const items=UN.unitPick(ids,n,uSeed(),true), sheet=h("div",{class:"worksheet",role:"dialog","aria-modal":"true"});
+  const close=()=>sheet.remove();
+  sheet.append(h("div",{class:"worksheet-tools"},h("button",{type:"button",class:"btn sub",text:"とじる",onclick:close}),h("button",{type:"button",class:"btn",text:"印刷《いんさつ》する",onclick:()=>window.print()})),h("h1",{text:"計算《けいさん》プリント"}));
+  const grid=h("div",{class:"worksheet-grid"});
+  items.forEach((it,i)=>{const q=h("div",{class:"worksheet-question"});showQuestion(q,it);grid.append(h("div",{class:"worksheet-item"},h("b",{text:`${i+1}. `}),q,h("div",{class:"worksheet-answer","aria-label":"答《こた》えを書《か》く欄《らん》"})));});
+  sheet.append(grid);document.body.append(sheet);
+}
 function uCur(it,forceChoice){
   const u=UBY[it.unit], mode=(forceChoice||it.ans==="choice4"||!it.choices)?"choice4":it.ans;
   const formula=/^[0-9.\s+−×÷()\/と]+$/.test(it.q), val=String(it.val);
@@ -5097,6 +5114,7 @@ function renderUnits(q){
         h("label",{class:"chk inl"},h("input",{type:"checkbox",checked:LK.task,onchange:e=>{ LK.task=e.target.checked; }})," 授業で使う（ほかの画面に行かせない）"),   //T
         h("label",{class:"chk inl"},h("input",{type:"checkbox",checked:LK.col0,onchange:e=>{ LK.col0=e.target.checked; }})," ひろばを出さない"),   //T
         h("button",{type:"button",class:"btn sub",innerHTML:ic("copy")+"リンクとQR",onclick:showLink}),
+        h("button",{type:"button",class:"btn sub",text:"印刷《いんさつ》プリントを作《つく》る",onclick:run(()=>showWorksheet(chosen(),UPK.n))}),
         h("button",{type:"button",class:"btn sub",innerHTML:ic("play")+"ひとりで ためす",onclick:run(()=>{ go(uHash(cfg())); })})),
         h("div",{class:"note",text:"「出題《しゅつだい》」と「セットにする」は、問題《もんだい》を4択《たく》にして先生《せんせい》のもんだいセットに保存《ほぞん》します（出題《しゅつだい》は同《おな》じ単元《たんげん》なら上書《うわが》き）。リンクとQRは単元《たんげん》IDと設定《せってい》だけなので短《みじか》く、開《ひら》くたびに児童《じどう》の端末《たんまつ》で同《おな》じ問題《もんだい》を作《つく》ります。"}));
     }
