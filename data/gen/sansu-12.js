@@ -2,6 +2,31 @@
 (function (G) {
   const g = G.gens, { ch, numFb, noCarry, noBorrow } = G;
   const nf = (r, n, o) => numFb(r, n, o);
+  // 細分単元: 条件を満たす組だけから作る（上限付き抽選）。
+  g.detail12 = (r, p) => {
+    const [amin, amax, bmin, bmax] = p.range;
+    let a, b, v, found = false;
+    for (let i = 0; i < 20000; i++) {
+      a = r.range(amin, amax); b = r.range(bmin, bmax);
+      v = p.op === '−' ? a - b : p.op === '×' ? a * b : a + b;
+      if (v < 0 || (p.min != null && v < p.min) || (p.max != null && v > p.max)) continue;
+      const ones = a % 10 + b % 10;
+      if (p.carry === 'none' && (ones >= 10 || Math.floor(a / 10) + Math.floor(b / 10) >= 10)) continue;
+      if (p.carry === 'ones' && (ones < 10 || v >= 100)) continue;
+      if (p.borrow === 'none' && (a % 10 < b % 10 || Math.floor(a / 10) < Math.floor(b / 10))) continue;
+      if (p.borrow === 'ones' && (a <= b || a % 10 >= b % 10) && a !== 100) continue;
+      found = true; break;
+    }
+    if (!found) throw Error('detail12 candidate');
+    const q = `${a} ${p.op || '+'} ${b}`;
+    return { q, a: String(v), hissan: p.hissan ? { a, b, op: p.op || '+' } : undefined,
+      choices: ch(r, v, [v + 1, v - 1, v + 10, v - 10, a, b].map(String), nf(r, v, { min: 0, max: p.max || 198 }), { loose: true }) };
+  };
+  g.detailAdd3 = (r, p) => {
+    let a, b, c, s;
+    do { a = r.range(1, p.max === 10 ? 5 : 9); b = r.range(1, p.max === 10 ? 5 : 9); c = r.range(1, p.max === 10 ? 5 : 9); s = a + b + c; } while (s < p.min || s > p.max);
+    return { q: `${a} + ${b} + ${c}`, a: String(s), choices: ch(r, s, [s + 1, s - 1, s + 2, s - 2].map(String), nf(r, s, { min: p.min, max: p.max }), { loose: true }) };
+  };
 
   // ===== 1年 =====
   g.kazoeru = (r, p) => {                                  // 絵文字を数える（20まで）

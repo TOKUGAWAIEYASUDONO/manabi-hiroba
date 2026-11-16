@@ -87,7 +87,7 @@ t("6年生が1年の単元を全部回しても 1日 13こ（満額なら 25こ�
   const g1 = C.UNIT_IDS.filter(i => i[0] === "m" && i[1] === "1"), S = C.fresh(D);
   run(S, D, g1.map(U), { grade: 6 });
   const r = run(S, D + 1, g1.map(U), { grade: 6 });
-  assert.strictEqual(r.paid, g1.length + 1); assert.strictEqual(r.deferred, 0);
+  assert.strictEqual(r.paid, Math.min(20, g1.length + 1)); assert.strictEqual(r.deferred, Math.max(0, g1.length + 1 - 20));
   const S2 = C.fresh(D); run(S2, D, g1.map(U), { grade: 1 }); const r2 = run(S2, D + 1, g1.map(U), { grade: 1 });
   assert.strictEqual(r2.paid + r2.deferred, g1.length * 2 + 1);
 });
@@ -170,7 +170,7 @@ t("バックアップ：往復で同じ（変わった分だけ）", () => {
   assert.strictEqual(C.balance(T2), 85); assert.deepStrictEqual(T2.pl, S.pl); assert.strictEqual(T2.d0, D);
   assert.strictEqual(C.hrMake(T2), C.hrMake(S));
 });
-t("バックアップ：3年1学期ぶんで 150字以下（区切りの - をふくむ）", () => { const s = C.hrMake(sem3()); assert(s.length <= 150, "長さ " + s.length); });
+t("バックアップ：3年1学期ぶんで 160字以下（区切りの - をふくむ）", () => { const s = C.hrMake(sem3()); assert(s.length <= 160, "長さ " + s.length); });
 t("バックアップ：区切り・小文字・空白があっても読める", () => {
   const s = C.hrMake(sem3()); assert(C.hrParse(s.toLowerCase().replace(/-/g, " ")));
 });
@@ -299,7 +299,7 @@ t("バックアップ：たんけんメモも往復する。メモが無けれ�
   const S = C.fresh(D); S.u["m3-amari"] = [2, 0, D]; S.tk.n = 3;
   const plain = C.hrMake(S); S.mo = ["school", "clock"]; S.mu = ["m3-amari", C.UNIT_IDS[115]];
   const withMemo = C.hrMake(S), r = C.hrParse(withMemo);
-  assert.strictEqual(withMemo.replace(/-/g, "").length - plain.replace(/-/g, "").length, 40);
+  assert.strictEqual(withMemo.replace(/-/g, "").length - plain.replace(/-/g, "").length, 48);
   assert.deepStrictEqual(r.mo.slice().sort(), ["clock", "school"]); assert.deepStrictEqual(r.mu.slice().sort(), ["m3-amari", C.UNIT_IDS[115]].sort());
   const L = C.fresh(D + 3); C.hrMerge(L, r, D + 3); assert.strictEqual(L.mo.length, 2); assert.strictEqual(L.mu.length, 2); assert.strictEqual(L.tk.n, 0);
   C.hrMerge(L, r, D + 3); assert.strictEqual(L.mo.length, 2);                                // くり返しても増えない

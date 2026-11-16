@@ -3,6 +3,21 @@
   const g = G.gens, { ch, numFb, noCarry, noBorrow, dec, frac, gcd } = G;
   const nf = (r, n, o) => numFb(r, n, o);
   const S = x => x.map(String);
+  g.detail3 = (r, p) => {
+    const carries = (a, b, sub) => { const out = []; let c = 0; for (let i = 0; i < 3; i++) { const x = a % 10, y = b % 10; c = sub ? +(x - c < y) : +(x + y + c >= 10); out.push(c); a = Math.floor(a / 10); b = Math.floor(b / 10); } return out.join(''); };
+    const mc = (a, b) => { let c = 0, yes = false; while (a) { c = Math.floor((a % 10 * b + c) / 10); yes ||= c > 0; a = Math.floor(a / 10); } return yes; };
+    let a, b, v, found = false;
+    for (let i = 0; i < 100000; i++) {
+      a = r.range(...p.a); b = r.range(...p.b); v = p.op === '−' ? a - b : p.op === '×' ? a * b : a + b;
+      if (v < (p.min || 1) || v > (p.max || 9999)) continue;
+      if (p.pattern && carries(a, b, p.op === '−') !== p.pattern) continue;
+      if (p.zero && !(Math.floor(a / 10) % 10 === 0 && a % 10 < b % 10)) continue;
+      if (p.mul) { const yes = mc(a, b % 10) || (b >= 10 && (mc(a, Math.floor(b / 10)) || carries(a * (b % 10), a * Math.floor(b / 10) * 10, false) !== '000')); if ((p.mul === 'carry') !== yes) continue; }
+      found = true; break;
+    }
+    if (!found) throw Error('detail3 candidate');
+    return { q: `${a} ${p.op} ${b}`, a: String(v), hissan: { a, b, op: p.op }, choices: ch(r, v, S([v + 1, v - 1, v + 10, v - 10, v + 100, v - 100]), nf(r, v, { min: 1, max: p.max || 9999 }), { loose: true }) };
+  };
   const nz = x => x % 10 !== 0;                            // 小数にしたとき末尾が0にならない
 
   // ===== 3年 =====
@@ -48,7 +63,7 @@
     let d, qq, rem, n;
     do {
       d = r.range(p.d[0], p.d[1]); qq = r.range(p.q[0], p.q[1]);
-      rem = r.chance(p.amariP) ? r.range(1, d - 1) : 0; n = d * qq + rem;
+      rem = r.chance(p.amariP) ? r.range(p.rem ? p.rem[0] : 1, Math.min(d - 1, p.rem ? p.rem[1] : d - 1)) : 0; n = d * qq + rem;
     } while (n > (p.nMax || 9999) || (p.zero && !/0/.test(String(qq))) && r.chance(0.8));
     const f = (a, b) => b ? `${a}あまり${b}` : String(a), A = f(qq, rem);
     const w = [];
@@ -71,6 +86,8 @@
       if (!nz(a) || !nz(b)) continue;
       const A = a * 10 ** (P - pa), B = b * 10 ** (P - pb);
       if (sub && A <= B) continue;
+      if (p.detailCarry === 'no' && a % 10 + b % 10 >= 10) continue;
+      if (p.detailCarry === 'yes' && a % 10 + b % 10 < 10) continue;
       const ans = sub ? A - B : A + B;
       if (!nz(ans)) continue;
       const wr = [sub ? Math.abs(a - b) : a + b, ans + 1, ans - 1, ans + 10, ans - 10, ans + 100, ans - 100].filter((x, i) => i < 1 ? pa !== pb : true);
