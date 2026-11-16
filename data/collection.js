@@ -8,6 +8,13 @@
    ・たんけんチケット（v2）：「できた」「マスター」が 5つで 1まい。持てるのは 3まい。1日に もらえるのは 2まい、つかえるのは 2回まで（先生が 0〜5）。
      たんけんの 中の せいかいは チケットの ★ にならない（recordRun を通さない）。どんぐりも出さない
    ・たんけんメモ（v2）：ゴールで 1つ。ひろばの物の豆知識（16）か、単元の例題の一言。保存は mo（物）と mu（単元）
+   ・まなびっこ（v3.0。plan/collection-v3-plan.md 5章・7章）：教科の 小さな なかま。
+     ① はじめて 5問《もん》以上 こたえた回（先生の クイズは 3問）で 1たい「えらべる」（初日に かならず 1たい）
+     ② 単元が「できた」に なるたびに 1たい えらべる（2学年以上 下の単元は ふやさない）。えらぶ候補は 3つ（その教科の子を先に。
+        足りなければ ほかの教科の子で うめる）。まだ えらんでいない分は q に たまり、なくならない（新しい子が ふえたら えらべる）
+     ③ なかよし 3段階（であった→なかよし→いっしょに まなぶ）。その教科を 5問以上 れんしゅうした「べつの日」ごとに +1、
+        その教科の「できた」「マスター」で +1。3 と 8 で 次の すがた。下がらない・世話の罰なし
+     ④ ひろばに 3たいまで だせる（sh）。きらきら（k）・おまけシール・アバターは のちの段階（データの場所だけ k を とってある）
    ・名前・順位・やりとりはない。保存は端末の localStorage（キー mh_col）だけ */
 (function (root, factory) {
   const M = factory();
@@ -63,6 +70,18 @@
   const PRICE_TOTAL = DECOR.reduce((n, d) => n + d.price, 0);
   /* たんけんメモ（ひろばの物ぶん）：がっこう ＋ 固定ゾーン 8 ＋ かざり 7 ＝ 16 */
   const MEMO_O = ["school"].concat(PARTS.map(p => p.id), DECOR.map(d => d.id));
+  /* まなびっこ（v3.0）。MK_IDS は バックアップ・（のちの）友だち対戦で送る番号なので、追加だけ。順番を変えない。
+     subj は 単元 ID の1字目と同じ。art は vendor/img/manabikko/{art}-{base|grown|joy}-v3-{256|128}.webp（null なら絵がまだ＝出さない）。
+     理科（r）など 絵のない教科は MK_SOON に 書いておき、画面では「もうすぐ」の枠だけ出す */
+  const MK_IDS = ["sankakuru", "kotohane", "chizupon", "eimaru"];
+  const MK = [
+    { id: "sankakuru", subj: "m", art: "math" }, { id: "kotohane", subj: "j", art: "japanese" },
+    { id: "chizupon", subj: "s", art: "social" }, { id: "eimaru", subj: "e", art: "english" }
+  ];
+  const MK_SOON = ["r"];
+  const MK_BY = {}; MK.forEach(c => { MK_BY[c.id] = c; });
+  const MK_STAGE = [0, 3, 8], MK_CAND = 3, MK_SHOW = 3, MK_QMAX = 24, MK_ART = ["base", "grown", "joy"];
+  const QCODE = "*mjser";        // q の中身：* はじめの1たい／m j s e r その教科の「できた」
 
   const int = (v, lo, hi, d) => { v = Math.floor(+v); return Number.isFinite(v) ? Math.min(hi, Math.max(lo, v)) : d; };
   const dayNum = d => Math.floor(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()) / 864e5);
@@ -70,7 +89,30 @@
 
   function fresh(today) {
     return { v: 1, d0: today, last: today, u: {}, ac: { e: 0, s: 0 }, day: { n: today, got: 0, carry: 0, first: 0, quiz: 0, cap: 0, shown: 0 },
-      own: [], pl: {}, gift: 0, done: 0, theme: 0, vp: 0, vz: 0, tk: { n: 0, star: 0, d: today, got: 0, used: 0 }, mo: [], mu: [] };
+      own: [], pl: {}, gift: 0, done: 0, theme: 0, vp: 0, vz: 0, tk: { n: 0, star: 0, d: today, got: 0, used: 0 }, mo: [], mu: [], mk: mkFresh() };
+  }
+  /* mk：w はじめの1たいを もらった／q えらべる分（QCODE の字）／own { id: { d もらった日, p なかよし, ld なかよしが ふえた日, k きらきら(のちの段階), v 見せた段階 } }
+     sh ひろばに だしている子／mg 古い記録から 計算した（はじめの 案内を出す） */
+  function mkFresh() { return { w: 0, q: [], own: {}, sh: [], mg: 0 }; }
+  const uniq = (a, ok) => (Array.isArray(a) ? a : []).filter((id, i, b) => typeof id === "string" && ok(id) && b.indexOf(id) === i);
+  const mkStageP = p => (p >= MK_STAGE[2] ? 2 : p >= MK_STAGE[1] ? 1 : 0);
+  function mkClean(raw, S, today) {
+    const M = mkFresh();
+    if (!raw || typeof raw !== "object") {          // まなびっこの前の記録：これまでの学びから えらべる分を 計算する（一方向・1回だけ）
+      if (Object.keys(S.u).length) { M.w = 1; M.q.push("*"); }
+      for (const id of UNIT_IDS) if (S.u[id] && S.u[id][0] >= 2 && M.q.length < MK_QMAX) M.q.push(id[0]);
+      M.mg = M.q.length ? 1 : 0;
+      return M;
+    }
+    M.w = raw.w ? 1 : 0; M.mg = raw.mg ? 1 : 0;
+    M.q = (Array.isArray(raw.q) ? raw.q : []).filter(h => typeof h === "string" && h.length === 1 && QCODE.includes(h)).slice(0, MK_QMAX);
+    if (raw.own && typeof raw.own === "object") for (const id of Object.keys(raw.own)) {
+      if (!MK_BY[id] || !raw.own[id] || typeof raw.own[id] !== "object") continue;
+      const o = raw.own[id];
+      M.own[id] = { d: int(o.d, 0, 9e6, today), p: int(o.p, 0, 1295, 0), ld: int(o.ld, 0, 9e6, 0), k: o.k ? 1 : 0, v: int(o.v, 0, 2, 0) };
+    }
+    M.sh = uniq(raw.sh, id => id in M.own).slice(0, MK_SHOW);
+    return M;
   }
   /* 保存された物を、形を確かめて作り直す（壊れていても、使える所だけ残す） */
   function clean(raw, today) {
@@ -95,8 +137,8 @@
     S.vp = int(raw.vp, 0, 99, 0); S.vz = int(raw.vz, 0, 999, 0);
     const k = raw.tk && typeof raw.tk === "object" ? raw.tk : {};            // v2：古い記録には無い（そのときは 0 から）
     S.tk = { n: int(k.n, 0, TK_MAX, 0), star: int(k.star, 0, TK_STARS, 0), d: int(k.d, 0, 9e6, today), got: int(k.got, 0, TK_GET, 0), used: int(k.used, 0, TK_USE_MAX, 0) };
-    const uniq = (a, ok) => (Array.isArray(a) ? a : []).filter((id, i, b) => typeof id === "string" && ok(id) && b.indexOf(id) === i);
     S.mo = uniq(raw.mo, id => MEMO_O.includes(id)); S.mu = uniq(raw.mu, id => id in IDX);
+    S.mk = mkClean(raw.mk, S, today);                                       // v3.0：古い記録には無い（そのときは 学びから 計算）
     return S;
   }
   const balance = S => S.ac.e - S.ac.s;
@@ -268,11 +310,43 @@
     }
   }
 
+  /* ---------- まなびっこ ---------- */
+  const mkStage = (S, id) => (S.mk.own[id] ? mkStageP(S.mk.own[id].p) : -1);
+  const mkFree = S => MK.filter(c => c.art && !S.mk.own[c.id]);              // まだ なかまに なっていない（絵のある）子
+  const mkAvail = S => Math.min(S.mk.q.length, mkFree(S).length);            // いま えらべる数
+  function mkPush(S, h, ctx) { if (S.mk.q.length < MK_QMAX) { S.mk.q.push(h); if (ctx) ctx.mk.add++; } }
+  /* えらぶ候補（最大3）。q の先頭の教科の子が先。はじめの1たい（*）や その教科の子が いないときは、
+     よく れんしゅうしている教科の子 → 表の順。同じ記録なら いつも 同じ候補 */
+  function mkCands(S) {
+    if (!mkAvail(S)) return [];
+    const h = S.mk.q[0], cnt = {}; MK.forEach(c => { cnt[c.subj] = count(S, c.subj, 1); });
+    return mkFree(S).map((c, i) => ({ c, i })).sort((a, b) => ((a.c.subj === h ? 0 : 1) - (b.c.subj === h ? 0 : 1)) || (cnt[b.c.subj] - cnt[a.c.subj]) || (a.i - b.i))
+      .slice(0, MK_CAND).map(x => x.c);
+  }
+  function mkPick(S, id, today) {
+    if (!mkCands(S).some(c => c.id === id)) return false;
+    S.mk.q.shift(); S.mk.own[id] = { d: today, p: 0, ld: today, k: 0, v: 0 }; S.mk.mg = 0;
+    if (S.mk.sh.length < MK_SHOW) S.mk.sh.push(id);
+    return true;
+  }
+  /* ひろばに だす／もどす。3たいまで */
+  function mkShow(S, id) {
+    const i = S.mk.sh.indexOf(id);
+    if (i >= 0) { S.mk.sh.splice(i, 1); return true; }
+    if (!S.mk.own[id] || S.mk.sh.length >= MK_SHOW) return false;
+    S.mk.sh.push(id); return true;
+  }
+  /* つぎの すがたまで：{ st 段階0〜2, left あと いくつ（さいごなら 0）, p } */
+  function mkNext(S, id) {
+    const o = S.mk.own[id]; if (!o) return null;
+    const st = mkStageP(o.p); return { st, p: o.p, left: st >= 2 ? 0 : MK_STAGE[st + 1] - o.p };
+  }
+
   /* 1回の れんしゅう（単元・ゲーム・先生のクイズ）が終わったときの処理。
      run = { today, grade, units:[{id,n,o}], answered, correct, quiz }
-     返り値 = { blocked, events:[{t,id?,gain?}], paid, deferred, capFirst, newParts:[id] } */
+     返り値 = { blocked, events:[{t,id?,gain?}], paid, deferred, capFirst, newParts:[id], mk:{ add えらべる分が ふえた数, grow:[すがたが かわった子] } } */
   function recordRun(S, run) {
-    const ctx = { blocked: false, events: [], paid: 0, deferred: 0, capFirst: false, newParts: [], tickets: 0 };
+    const ctx = { blocked: false, events: [], paid: 0, deferred: 0, capFirst: false, newParts: [], tickets: 0, mk: { add: 0, grow: [] } };
     if (sync(S, run.today)) { ctx.blocked = true; return ctx; }
     const before = new Set(parts(S).filter(p => p.have).map(p => p.id)), today = run.today;
     for (const r of run.units || []) {
@@ -296,6 +370,17 @@
     if (!S.day.first && ans >= 5 && cor / ans >= 0.6) { S.day.first = 1; give(S, 1, ctx); ctx.events.push({ t: "first", gain: 1 }); }
     if (run.quiz && !S.day.quiz && ans >= 3) { S.day.quiz = 1; give(S, 2, ctx); ctx.events.push({ t: "quiz", gain: 2 }); }
     ctx.newParts = parts(S).filter(p => p.have && !before.has(p.id)).map(p => p.id);
+    /* まなびっこ：はじめの1たい・「できた」で えらべる分。なかよしは べつの日の れんしゅうと「できた」「マスター」で。下の学年（2つ以上）は 数えない */
+    const M = S.mk, low = id => !gapFull(run.grade, uGrade(id));
+    if (!M.w && (ans >= 5 || (run.quiz && ans >= 3))) { M.w = 1; mkPush(S, "*", ctx); }
+    for (const e of ctx.events) if (e.t === "can" && !low(e.id)) mkPush(S, e.id[0], ctx);
+    const per = {}; for (const r of run.units || []) if (r.id in IDX && r.n > 0 && !low(r.id)) per[r.id[0]] = (per[r.id[0]] || 0) + (r.n | 0);
+    for (const id in M.own) {
+      const o = M.own[id], subj = MK_BY[id].subj, st0 = mkStageP(o.p);
+      if ((per[subj] || 0) >= 5 && today > o.ld) { o.p++; o.ld = today; }
+      o.p = Math.min(1295, o.p + ctx.events.filter(e => (e.t === "can" || e.t === "master") && e.id[0] === subj && !low(e.id)).length);
+      if (mkStageP(o.p) > st0) ctx.mk.grow.push(id);
+    }
     return ctx;
   }
   /* ひろばをはじめて開いたとき、はじめの どんぐり5こ（1回だけ。1日の上限には入れない） */
@@ -329,8 +414,11 @@
 
   /* ---------- バックアップの文字 HR1（MH1／MH2 とは別。変わった分だけ） ----------
      「HR1」＋ はじめの日(3)・もらった(3)・つかった(3)・完成日(3)・かざりの持ち物(2)・かざりの場所(7)・個数(2)＋（単元 2字ずつ：番号×4＋段階）＋確認(3)。英数字だけ。
-     日は 2020-01-01 からの日数。 */
-  const EPOCH = 18262, RE = /^HR1[0-9A-Z]+$/;
+     日は 2020-01-01 からの日数。
+     HR2（v3.0）＝「HR2」＋ まなびっこの部分 ＋ HR1 と同じ中身 ＋ 確認(3)。まなびっこが まだ 何もないときは 今まで通り HR1 を作る。
+     HR1 は これからも 読める（読んだあと、まなびっこの えらべる分を 学びから 計算する）。古い版のサイトは HR2 を こわれた文字として 断る（だまって 消えない）。
+     まなびっこの部分：しるし(1：はじめの1たい)・数(1)・［番号(2)・なかよし(2)・きらきら(1)］×数・えらべる分（QCODE の字ごとの数(1)×6）・ひろばの数(1)・［番号(2)］×数 */
+  const EPOCH = 18262, RE = /^HR[12][0-9A-Z]+$/;
   const b36 = (n, w) => Math.min(Math.pow(36, w) - 1, Math.max(0, n | 0)).toString(36).toUpperCase().padStart(w, "0");
   const sum3 = t => { let h = 7; for (const c of t) h = (h * 31 + c.charCodeAt(0)) % 46656; return h.toString(36).toUpperCase().padStart(3, "0"); };
   const HEAD = 3 + 3 + 3 + 3 + 2 + DECOR.length + 2;
@@ -343,18 +431,43 @@
     for (let c = 0; c * 20 < UNIT_IDS.length; c++) { let v = 0; for (let i = 0; i < 20; i++) { const id = UNIT_IDS[c * 20 + i]; if (id && S.mu.includes(id)) v |= 1 << i; } out += b36(v, 4); }
     return out;
   }
+  function mkStr(S) {
+    const M = S.mk, ids = MK_IDS.filter(id => M.own[id]);
+    if (!M.w && !ids.length && !M.q.length) return "";
+    const q = M.q.slice(0, MK_QMAX), sh = M.sh.filter(id => M.own[id]).slice(0, MK_SHOW);
+    return b36(M.w ? 1 : 0, 1) + b36(ids.length, 1) + ids.map(id => b36(MK_IDS.indexOf(id), 2) + b36(M.own[id].p, 2) + b36(M.own[id].k ? 1 : 0, 1)).join("")
+      + QCODE.split("").map(h => b36(q.filter(x => x === h).length, 1)).join("") + b36(sh.length, 1) + sh.map(id => b36(MK_IDS.indexOf(id), 2)).join("");
+  }
+  function mkParse(body) {
+    let p = 0; const rd = w => { if (p + w > body.length) throw new Error("short"); const v = parseInt(body.slice(p, p + w), 36); p += w; return v; };
+    try {
+      const w = rd(1), n = rd(1), own = {}; if (w > 1) return null;
+      for (let i = 0; i < n; i++) { const id = MK_IDS[rd(2)], pt = rd(2), k = rd(1); if (!id || own[id] || k > 1) return null; own[id] = { p: pt, k }; }
+      const q = []; for (const h of QCODE) { const c = rd(1); for (let i = 0; i < c; i++) q.push(h); }
+      if (q.length > MK_QMAX) return null;
+      const sn = rd(1), sh = []; if (sn > MK_SHOW) return null;
+      for (let i = 0; i < sn; i++) { const id = MK_IDS[rd(2)]; if (!id || !own[id] || sh.includes(id)) return null; sh.push(id); }
+      return { mk: { w, own, q, sh }, len: p };
+    } catch (e) { return null; }
+  }
   function hrMake(S) {
-    const ids = UNIT_IDS.filter(id => stage(S, id) >= 1);
+    const ids = UNIT_IDS.filter(id => stage(S, id) >= 1), mks = mkStr(S), tag = mks ? "HR2" : "HR1";
     let own = 0; DECOR.forEach((d, i) => { if (S.own.includes(d.id)) own |= 1 << i; });
-    const body = b36(S.d0 - EPOCH, 3) + b36(S.ac.e, 3) + b36(S.ac.s, 3) + b36(S.done ? S.done - EPOCH : 0, 3) + b36(own, 2)
+    const body = mks + b36(S.d0 - EPOCH, 3) + b36(S.ac.e, 3) + b36(S.ac.s, 3) + b36(S.done ? S.done - EPOCH : 0, 3) + b36(own, 2)
       + DECOR.map(d => (S.pl[d.id] || 0).toString(36).toUpperCase()).join("") + b36(ids.length, 2)
       + ids.map(id => b36(IDX[id] * 4 + stage(S, id), 2)).join("") + memoStr(S);
-    return ("HR1" + body + sum3("HR1" + body)).match(/.{1,8}/g).join("-");
+    return (tag + body + sum3(tag + body)).match(/.{1,8}/g).join("-");
   }
   function hrParse(str) {
     const t = String(str || "").toUpperCase().replace(/[^0-9A-Z]/g, "");
     if (!RE.test(t) || t.length < 3 + HEAD + 3) return null;
-    const body = t.slice(3, -3); if (sum3("HR1" + body) !== t.slice(-3)) return null;
+    const tag = t.slice(0, 3); let body = t.slice(3, -3); if (sum3(tag + body) !== t.slice(-3)) return null;
+    let mk = null;
+    if (tag === "HR2") { const m = mkParse(body); if (!m) return null; mk = m.mk; body = body.slice(m.len); if (body.length < HEAD) return null; }
+    const r = coreParse(body); if (r) r.mk = mk;
+    return r;
+  }
+  function coreParse(body) {
     let p = 0; const rd = w => { const v = parseInt(body.slice(p, p + w), 36); p += w; return v; };
     const d0 = rd(3), e = rd(3), s = rd(3), dn = rd(3), ownM = rd(2);
     if (!(s <= e) || ownM >= (1 << DECOR.length)) return null;
@@ -388,10 +501,14 @@
      今日の分・持ちこし・日付のしるしは読みこまない（読みこみで上限は戻らない） */
   function hrMerge(S, r, today) {
     S.d0 = Math.min(S.d0, r.d0 > 0 ? r.d0 : S.d0);
+    const raised = [];             // この読みこみで はじめて「できた」以上に なった単元（HR1 のとき まなびっこを 計算する）
     for (const id in r.u) {
-      const c = S.u[id]; if (!c) S.u[id] = [r.u[id], 0, r.u[id] >= 2 ? today : 0];
+      const c = S.u[id], was = c ? c[0] : 0;
+      if (!c) S.u[id] = [r.u[id], 0, r.u[id] >= 2 ? today : 0];
       else if (r.u[id] > c[0]) { c[0] = r.u[id]; if (c[0] >= 2 && !c[2]) c[2] = today; }
+      if (was < 2 && r.u[id] >= 2) raised.push(id);
     }
+    mkMerge(S, r, raised, today);
     for (const id of r.own) if (!S.own.includes(id)) S.own.push(id);
     for (const id in r.pl) if (!(id in S.pl) && !cellOf(S, r.pl[id])) S.pl[id] = r.pl[id];
     S.ac.e = Math.max(S.ac.e, r.e); S.ac.s = Math.min(Math.max(S.ac.s, r.s), S.ac.e);
@@ -402,7 +519,29 @@
     checkDone(S, S.done || today);
     return S;
   }
+  /* まなびっこの合成。くり返し読みこんでも ふえない：なかまは 両方・なかよしは 大きいほう・えらべる分は 字ごとに 多いほう。
+     読みこんだ記録が はじめの1たいを もらっていれば、この端末の まだ えらんでいない はじめの1たいは 消す（二重に もらわない） */
+  function mkMerge(S, r, raised, today) {
+    const M = S.mk;
+    if (!r.mk) {                   // 古い HR1：合成した あとの 学びから 計算する
+      if (!M.w && Object.keys(r.u).length) { M.w = 1; mkPush(S, "*"); }
+      for (const id of raised) mkPush(S, id[0]);
+      return;
+    }
+    const x = r.mk;
+    if (x.w && M.q.includes("*")) M.q.splice(M.q.indexOf("*"), 1);
+    M.w = M.w || x.w ? 1 : 0;
+    const cnt = a => { const o = {}; a.forEach(h => { o[h] = (o[h] || 0) + 1; }); return o; }, a = cnt(M.q), b = cnt(x.q);
+    for (const h in b) for (let i = a[h] || 0; i < b[h]; i++) mkPush(S, h);
+    for (const id in x.own) {
+      const o = M.own[id], y = x.own[id];
+      if (!o) M.own[id] = { d: today, p: y.p, ld: today, k: y.k ? 1 : 0, v: mkStageP(y.p) };
+      else { o.p = Math.max(o.p, y.p); o.k = o.k || y.k ? 1 : 0; o.v = Math.max(o.v, mkStageP(o.p)); }
+    }
+    for (const id of x.sh) if (M.sh.length < MK_SHOW && !M.sh.includes(id)) M.sh.push(id);
+  }
 
   return { TK_MAX, TK_GET, TK_STARS, TK_USE, MEMO_O, tkRoll, tkLimit, tkState, tkUse, memoCount, memoTotal, memoAdd, memoPick, explorerMap, CAP, GIFT, CELLS, UNIT_IDS, IDX, PARTS, DECOR, PRICE_TOTAL, TRACK_SUBJ, uGrade, dayNum, dayDate, fresh, clean, balance, sync, give, gapFull,
+    MK, MK_IDS, MK_SOON, MK_STAGE, MK_CAND, MK_SHOW, MK_ART, mkFresh, mkStage, mkFree, mkAvail, mkCands, mkPick, mkShow, mkNext,
     count, parts, stage, pending, recordRun, claimGift, buy, cellOf, place, unplace, checkDone, summary, hrMake, hrParse, hrMerge };
 });

@@ -1,4 +1,4 @@
-// コレクション v1（data/collection.js：どんぐり・ずかん・ひろば・バックアップ）の単体テスト。 node tools/test-collection.js
+// コレクション v1〜v3.0（data/collection.js：どんぐり・ずかん・ひろば・バックアップ・たんけん・まなびっこ）の単体テスト。 node tools/test-collection.js
 const assert = require("assert"), fs = require("fs"), path = require("path"), vm = require("vm");
 const C = require("../data/collection.js");
 let n = 0;
@@ -158,6 +158,7 @@ const sem3 = () => {       // 3年 1学期ぶん：3年の算数17単元＋ほ�
   const S = C.fresh(D), m3 = C.UNIT_IDS.filter(i => i[0] === "m" && i[1] === "3"), others = C.UNIT_IDS.filter(i => i[0] === "m" && i[1] === "2").concat(C.UNIT_IDS.filter(i => i[0] === "m" && i[1] === "1")).slice(0, 15);
   run(S, D, [...m3, ...others].map(U)); run(S, D + 1, m3.map(U)); run(S, D + 2, m3.slice(0, 5).map(U));
   S.ac.e = 120; S.ac.s = 35; S.own = ["tree", "flower", "bench"]; S.pl = { tree: 2, flower: 7 };
+  S.mk = C.mkFresh();      // まなびっこ（v3.0）の前の記録として HR1 を くらべる（まなびっこは 下の v3.0 の テスト）
   return S;
 };
 t("バックアップ：往復で同じ（変わった分だけ）", () => {
@@ -168,6 +169,7 @@ t("バックアップ：往復で同じ（変わった分だけ）", () => {
   const T2 = C.hrMerge(C.fresh(D + 50), r, D + 50);
   for (const id of C.UNIT_IDS) assert.strictEqual(C.stage(T2, id), C.stage(S, id));
   assert.strictEqual(C.balance(T2), 85); assert.deepStrictEqual(T2.pl, S.pl); assert.strictEqual(T2.d0, D);
+  assert(/^HR2/.test(C.hrMake(T2))); T2.mk = C.mkFresh();          // HR1 を読むと まなびっこの えらべる分が 計算されて HR2 になる（それを のぞけば 同じ）
   assert.strictEqual(C.hrMake(T2), C.hrMake(S));
 });
 t("バックアップ：3年1学期ぶんで 160字以下（区切りの - をふくむ）", () => { const s = C.hrMake(sem3()); assert(s.length <= 160, "長さ " + s.length); });
@@ -329,5 +331,119 @@ t("ひろばたんけんの地図：ひろばの物が多いほど、かべが�
   assert(b.loops - a.loops <= 3);
   let more = 0; for (let s = 1; s <= 100; s++) if (C.explorerMap(s, 16).loops > C.explorerMap(s, 0).loops) more++;
   assert(more > 30, "道が変わる：" + more);
+});
+/* ---------- v3.0：まなびっこ ---------- */
+const OLD_HR1 = "HR11CA00-U00F0000-33000000-05023IAP-B7C20001-000001KW-00000000-00000000-00000000-00000000-00000000-000017I";   // v3.0 の前の版で作った文字
+t("まなびっこ：表は4たい・番号は重ならない・絵がそろっている", () => {
+  assert.deepStrictEqual(C.MK.map(c => c.id), C.MK_IDS); assert.strictEqual(new Set(C.MK_IDS).size, C.MK_IDS.length);
+  assert.deepStrictEqual(C.MK.map(c => c.subj).sort(), ["e", "j", "m", "s"]); assert(C.MK.every(c => /^[a-z]+$/.test(c.art)));
+  for (const c of C.MK) for (const st of C.MK_ART) for (const px of [128, 256]) assert(fs.existsSync(path.join(__dirname, "..", "vendor/img/manabikko", `${c.art}-${st}-v3-${px}.webp`)), c.art + st + px);
+  assert.deepStrictEqual(C.MK_SOON, ["r"]);
+});
+t("まなびっこ：はじめの日、1回 れんしゅうすると かならず 1たい えらべる（候補は3つ）", () => {
+  const S = C.fresh(D); assert.strictEqual(C.mkAvail(S), 0);
+  const r0 = run(S, D, [], { answered: 4, correct: 4 }); assert.strictEqual(r0.mk.add, 0);          // 4問では まだ
+  const r = run(S, D, [{ id: "m3-amari", n: 5, o: 1 }]); assert.strictEqual(r.mk.add, 1); assert.strictEqual(C.mkAvail(S), 1);   // 正解が少なくても もらえる
+  const cs = C.mkCands(S); assert.strictEqual(cs.length, 3); assert.strictEqual(cs[0].id, "sankakuru");          // れんしゅうした教科の子が先
+  assert(!C.mkPick(S, "nope", D)); const other = C.MK.find(c => !cs.includes(c)); assert(!C.mkPick(S, other.id, D));   // 候補の外は えらべない
+  assert(C.mkPick(S, cs[1].id, D)); assert.strictEqual(C.mkAvail(S), 0); assert.strictEqual(C.mkStage(S, cs[1].id), 0); assert.deepStrictEqual(S.mk.sh, [cs[1].id]);
+  assert.strictEqual(run(S, D + 1, [], { answered: 10, correct: 10 }).mk.add, 0);                     // はじめの1たいは 1回だけ
+  const Q = C.fresh(D); assert.strictEqual(run(Q, D, [], { quiz: true, answered: 3, correct: 0 }).mk.add, 1);   // 先生の クイズは 3問
+});
+t("まなびっこ：単元が「できた」に なると 1たい えらべる。その教科の子が 先頭", () => {
+  const S = C.fresh(D); const s4 = C.UNIT_IDS.find(i => i[0] === "s" && i[1] === "4"), m4 = C.UNIT_IDS.find(i => i[0] === "m" && i[1] === "4");
+  run(S, D, [U(s4)], { grade: 4 }); assert.strictEqual(C.mkCands(S)[0].id, "chizupon"); C.mkPick(S, "chizupon", D);    // はじめの1たい（社会の子）
+  assert.strictEqual(C.mkAvail(S), 0);
+  const r1 = run(S, D + 1, [U(m4), U(s4)], { grade: 4 }); assert.strictEqual(r1.mk.add, 1);          // s4 が できた
+  const r2 = run(S, D + 2, [U(m4)], { grade: 4 }); assert.strictEqual(r2.mk.add, 1);                 // m4 が できた
+  assert.strictEqual(C.mkAvail(S), 2); assert.deepStrictEqual(S.mk.q, ["s", "m"]);
+  const cs = C.mkCands(S); assert.strictEqual(cs.length, 3); assert(!cs.some(c => c.id === "chizupon"));   // 社会の子は もう なかま → ほかの教科で うめる
+  assert(C.mkPick(S, "eimaru", D + 2)); assert.strictEqual(C.mkCands(S)[0].id, "sankakuru");                // つぎは 算数の「できた」の分
+});
+t("まなびっこ：2学年以上 下の単元の「できた」では ふえない／全員 なかまでも なくならず たまる", () => {
+  const S = C.fresh(D); const m1 = C.UNIT_IDS.find(i => i[0] === "m" && i[1] === "1");
+  run(S, D, [U(m1)], { grade: 5 }); assert.deepStrictEqual(S.mk.q, ["*"]);
+  run(S, D + 1, [U(m1)], { grade: 5 }); assert.deepStrictEqual(S.mk.q, ["*"]);
+  const A = C.fresh(D); C.MK.forEach(c => { A.mk.own[c.id] = { d: D, p: 0, ld: D, k: 0, v: 0 }; }); A.mk.w = 1;
+  const m3a = m3.slice(0, 2); run(A, D, m3a.map(U)); run(A, D + 1, m3a.map(U));
+  assert.strictEqual(C.mkAvail(A), 0); assert.deepStrictEqual(A.mk.q, ["m", "m"]); assert.deepStrictEqual(C.mkCands(A), []);
+});
+t("なかよし：べつの日の れんしゅうで 3段階。同じ日は 1回・ほかの教科・下の学年では ふえない・下がらない", () => {
+  const S = C.fresh(D); run(S, D, [U(m3[0])]); assert(C.mkPick(S, "sankakuru", D));
+  run(S, D, [U(m3[5])]); assert.strictEqual(S.mk.own.sankakuru.p, 0);                     // もらった日は ふえない
+  run(S, D + 1, [{ id: "j3-kanji-yomi", n: 10, o: 10 }]); assert.strictEqual(S.mk.own.sankakuru.p, 0);   // 国語では ふえない
+  const r1 = run(S, D + 1, [U(m3[5])]); assert.strictEqual(S.mk.own.sankakuru.p, 2);      // べつの日 +1、m3[5] が できた +1
+  assert.deepStrictEqual(r1.mk.grow, []);
+  run(S, D + 1, [U(m3[6])]); assert.strictEqual(S.mk.own.sankakuru.p, 2);                // 同じ日は もう ふえない
+  run(S, D + 2, [{ id: m3[7], n: 4, o: 4 }]); assert.strictEqual(S.mk.own.sankakuru.p, 2);  // 5問 ないと ふえない
+  const g = run(S, D + 3, [{ id: m3[8], n: 6, o: 2 }]); assert.strictEqual(S.mk.own.sankakuru.p, 3);   // 正解が少なくても れんしゅうした日は ふえる
+  assert.deepStrictEqual(g.mk.grow, ["sankakuru"]); assert.strictEqual(C.mkStage(S, "sankakuru"), 1); assert.strictEqual(C.mkNext(S, "sankakuru").left, 5);
+  const lowS = C.fresh(D); run(lowS, D, [U(m3[0])], { grade: 6 }); C.mkPick(lowS, "sankakuru", D); run(lowS, D + 1, [U(C.UNIT_IDS[0])], { grade: 6 }); assert.strictEqual(lowS.mk.own.sankakuru.p, 0);
+  for (let d = 4; d < 12; d++) run(S, D + d, [{ id: m3[9], n: 5, o: 0 }]);
+  assert.strictEqual(C.mkStage(S, "sankakuru"), 2); assert.deepStrictEqual(C.mkNext(S, "sankakuru"), { st: 2, p: S.mk.own.sankakuru.p, left: 0 });
+  const p = S.mk.own.sankakuru.p; for (let d = 12; d < 40; d += 9) run(S, D + d, []); assert.strictEqual(S.mk.own.sankakuru.p, p);      // 休んでも 下がらない
+  const snap = JSON.stringify(S.mk); run(S, D + 3, [U(m3[9])]); assert.strictEqual(JSON.stringify(S.mk), snap);   // 時計を もどしても ふえない
+});
+t("まなびっこ：ひろばに だすのは 3たいまで", () => {
+  const S = C.fresh(D); C.MK.forEach(c => { S.mk.own[c.id] = { d: D, p: 0, ld: D, k: 0, v: 0 }; });
+  assert(C.mkShow(S, "sankakuru")); assert(C.mkShow(S, "kotohane")); assert(C.mkShow(S, "chizupon")); assert(!C.mkShow(S, "eimaru"));
+  assert(C.mkShow(S, "kotohane")); assert.deepStrictEqual(S.mk.sh, ["sankakuru", "chizupon"]); assert(C.mkShow(S, "eimaru"));
+  const T0 = C.fresh(D); assert(!C.mkShow(T0, "eimaru"));
+});
+t("まなびっこ：古い mh_col（mk なし）は これまでの学びから えらべる分を 計算。保存し直しても ふえない", () => {
+  const old = C.fresh(D); delete old.mk; old.u["m3-amari"] = [2, 0, D]; old.u["s4-kencho-th"] = [3, 0, D]; old.u["j3-kanji-yomi"] = [1, 0, D];
+  const S = C.clean(JSON.parse(JSON.stringify(old)), D + 1);
+  assert.deepStrictEqual(S.mk.q, ["*", "m", "s"]); assert.strictEqual(S.mk.w, 1); assert.strictEqual(S.mk.mg, 1); assert.strictEqual(C.mkAvail(S), 3);
+  const again = C.clean(JSON.parse(JSON.stringify(S)), D + 2); assert.deepStrictEqual(again.mk, S.mk);
+  const none = C.fresh(D); delete none.mk; const N = C.clean(JSON.parse(JSON.stringify(none)), D); assert.deepStrictEqual(N.mk.q, []); assert.strictEqual(N.mk.w, 0);
+  const bad = C.clean({ ...C.fresh(D), mk: { w: 1, q: ["*", "x", 5, "m"], own: { sankakuru: { p: 99999, d: "x" }, ghost: { p: 1 } }, sh: ["ghost", "sankakuru", "sankakuru"] } }, D);
+  assert.deepStrictEqual(bad.mk.q, ["*", "m"]); assert.deepStrictEqual(Object.keys(bad.mk.own), ["sankakuru"]); assert.strictEqual(bad.mk.own.sankakuru.p, 1295); assert.deepStrictEqual(bad.mk.sh, ["sankakuru"]);
+});
+const mkState = () => {
+  const S = sem3(); S.mk.w = 1; S.mk.own.sankakuru = { d: D, p: 9, ld: D + 2, k: 0, v: 2 }; S.mk.own.kotohane = { d: D, p: 3, ld: D + 1, k: 0, v: 1 };
+  S.mk.q = ["m", "m", "s"]; S.mk.sh = ["kotohane", "sankakuru"]; return S;
+};
+t("バックアップ HR2：まなびっこも 往復する（なかよし・えらべる分・ひろば）。のこりは HR1 と 同じ", () => {
+  const S = mkState(), s = C.hrMake(S), r = C.hrParse(s);
+  assert(/^HR2/.test(s)); assert(r && r.mk); assert.strictEqual(r.mk.w, 1);
+  assert.deepStrictEqual(r.mk.own, { sankakuru: { p: 9, k: 0 }, kotohane: { p: 3, k: 0 } }); assert.deepStrictEqual(r.mk.q, ["m", "m", "s"]); assert.deepStrictEqual(r.mk.sh, ["kotohane", "sankakuru"]);
+  const plain = sem3(); assert.deepStrictEqual({ ...C.hrParse(C.hrMake(plain)), mk: null }, { ...r, mk: null });
+  assert(s.length <= C.hrMake(plain).length + 30, "長さ " + s.length);
+  const T2 = C.hrMerge(C.fresh(D + 50), r, D + 50);
+  assert.strictEqual(C.mkStage(T2, "sankakuru"), 2); assert.strictEqual(C.mkStage(T2, "kotohane"), 1); assert.deepStrictEqual(T2.mk.q, ["m", "m", "s"]); assert.deepStrictEqual(T2.mk.sh, ["kotohane", "sankakuru"]);
+  assert.strictEqual(C.hrMake(T2), s);
+  C.hrMerge(T2, r, D + 51); C.hrMerge(T2, C.hrParse(C.hrMake(T2)), D + 51);                // くり返し読みこんでも ふえない
+  assert.deepStrictEqual(T2.mk.q, ["m", "m", "s"]); assert.strictEqual(Object.keys(T2.mk.own).length, 2); assert.strictEqual(C.hrMake(T2), s);
+});
+t("バックアップ HR2：1文字でも変えると拒否／こわれた まなびっこの部分も拒否", () => {
+  const s = C.hrMake(mkState()).replace(/-/g, "");
+  for (let i = 3; i < 30; i++) { const c = s[i] === "A" ? "B" : "A"; assert.strictEqual(C.hrParse(s.slice(0, i) + c + s.slice(i + 1)), null, "位置 " + i); }
+  const sum3 = tx => { let h = 7; for (const c of tx) h = (h * 31 + c.charCodeAt(0)) % 46656; return h.toString(36).toUpperCase().padStart(3, "0"); };
+  const core = C.hrMake(sem3()).replace(/-/g, "").slice(3, -3), mk = body => "HR2" + body + sum3("HR2" + body);
+  assert(C.hrParse(mk("01" + "00" + "03" + "0" + "000000" + "0" + core)));                 // 正しい形（さんかくる なかよし3）
+  assert.strictEqual(C.hrParse(mk("01" + "Z9" + "03" + "0" + "000000" + "0" + core)), null);  // 表に ない 番号
+  assert.strictEqual(C.hrParse(mk("02" + "00030" + "00030" + "000000" + "0" + core)), null);   // 同じ子が 2回
+  assert.strictEqual(C.hrParse(mk("01" + "00" + "03" + "2" + "000000" + "0" + core)), null);  // きらきらの しるしが おかしい
+  assert.strictEqual(C.hrParse(mk("01" + "00" + "03" + "0" + "000000" + "1" + "01" + core)), null);   // もっていない子を ひろばに
+  assert.strictEqual(C.hrParse(mk("21" + "00" + "03" + "0" + "000000" + "0" + core)), null);  // はじめの しるしが おかしい
+  assert.strictEqual(C.hrParse(mk("00" + "Z00000" + "0" + core)), null);                      // えらべる分が 多すぎる
+  assert.strictEqual(C.hrParse(mk("01")), null);                                               // 短すぎる
+});
+t("バックアップ：v3.0 の前の HR1 も 読める。合成した あとの 学びから えらべる分を 計算し、くり返しても ふえない", () => {
+  const r = C.hrParse(OLD_HR1); assert(r); assert.strictEqual(r.mk, null);
+  assert.strictEqual(r.e, 30); assert.deepStrictEqual(r.own, ["tree", "flower"]); assert.deepStrictEqual(r.mo, ["school"]); assert.strictEqual(r.u["s4-kencho-th"], 3);
+  const L = C.fresh(D + 9); C.hrMerge(L, r, D + 9);
+  assert.deepStrictEqual(L.mk.q.slice().sort(), ["*", "e", "m", "m", "s"]); assert.strictEqual(L.mk.w, 1); assert.strictEqual(C.mkAvail(L), 4);
+  C.hrMerge(L, C.hrParse(OLD_HR1), D + 9); assert.strictEqual(L.mk.q.length, 5);
+  const P = C.fresh(D + 9); run(P, D + 9, [U("m3-amari")]); C.mkPick(P, "sankakuru", D + 9);            // この端末で はじめの1たいを もう もらった
+  C.hrMerge(P, C.hrParse(OLD_HR1), D + 9); assert(!P.mk.q.includes("*")); assert.deepStrictEqual(P.mk.q.slice().sort(), ["e", "m", "m", "s"]);
+  assert.strictEqual(C.hrMake(C.fresh(D)).slice(0, 3), "HR1");                                           // まなびっこが 何もない記録は 今まで通り HR1
+});
+t("バックアップ：HR2 を 読むと、この端末の まだ えらんでいない はじめの1たいは 二重に ならない", () => {
+  const A = mkState(); A.mk.q = []; const s = C.hrMake(A);
+  const B = C.fresh(D + 9); run(B, D + 9, [U("m3-amari")]); assert.deepStrictEqual(B.mk.q, ["*"]);
+  C.hrMerge(B, C.hrParse(s), D + 9); assert.deepStrictEqual(B.mk.q, []); assert.strictEqual(Object.keys(B.mk.own).length, 2);
+  const B2 = C.fresh(D + 9); B2.mk.q = ["*"]; B2.mk.w = 1; const A2 = mkState(); A2.mk.q = ["*"]; A2.mk.own = {}; A2.mk.sh = [];
+  C.hrMerge(B2, C.hrParse(C.hrMake(A2)), D + 9); assert.deepStrictEqual(B2.mk.q, ["*"]);      // 両方 まだ えらんでいない → 1つだけ
 });
 console.log(`\n${n} 件のテストを実行${process.exitCode ? "（失敗あり）" : "：すべて成功"}`);

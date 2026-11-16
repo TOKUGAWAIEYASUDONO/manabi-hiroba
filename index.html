@@ -822,6 +822,56 @@ body[data-v=host] .wrap{max-width:none;padding:0}
 .ac{width:1.3em;height:1.3em;vertical-align:-.3em;display:inline-block}
 @media (min-width:700px){.fz{grid-template-columns:repeat(8,1fr)}.gridh{grid-template-columns:repeat(6,1fr)}.hscene{padding:12px;gap:12px}.fs .cap{font-size:12px}}
 @media (prefers-reduced-motion:reduce){.door,.hc{transition:none}}
+/* まなびっこ（v3.0）：えらぶ・ひろばの なかま・ずかん。絵は vendor/img/manabikko（透明背景の webp） */
+.mki{display:block;width:100%;height:auto;aspect-ratio:1;object-fit:contain;margin:0 auto}
+.mki.none{display:flex;align-items:center;justify-content:center;font-size:32px;font-weight:800;color:var(--muted);border:3px dashed var(--line);border-radius:50%;width:72px;height:72px}
+.mkp{background:#fff;border:3px solid var(--edge);border-radius:16px;box-shadow:0 4px 0 var(--edge);padding:12px 12px 14px;margin:10px 0;text-align:center}
+.mkp h3{margin:2px 0 4px;font-size:20px}
+.mkp p{margin:4px 0 6px;line-height:1.6}
+.mkcs{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:8px 0 10px}
+.mkc{display:flex;flex-direction:column;align-items:center;gap:3px;padding:6px 4px 8px;border:3px solid var(--line);border-radius:14px;background:#fffdf6;cursor:pointer;min-width:0;font:inherit;color:var(--ink)}
+.mkc .mki{width:min(100%,128px)}
+.mkc b{font-size:16px;line-height:1.2}
+.mkc .mkk{font-size:12px;line-height:1.4;color:var(--muted)}
+.mkc.on{border-color:var(--edge);background:#fff3c4;box-shadow:0 0 0 3px var(--sun)}
+.mks{display:inline-block;font-size:12px;font-weight:800;border-radius:999px;padding:0 8px;background:#eef3ee;color:var(--ink)}
+.mks.m{background:#fde6df}.mks.j{background:#e1ecfb}.mks.s{background:#dff3e8}.mks.e{background:#efe3fa}.mks.r{background:#d8f2ed}
+.mkbtns{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
+.mkbtns .btn{margin:0;min-height:52px;font-size:18px}
+.mkgot .mki{width:min(56vw,200px)}
+.mki.mkpop{animation:mkpop .6s cubic-bezier(.2,1.5,.4,1) both}
+@keyframes mkpop{from{transform:scale(.4);opacity:0}to{transform:none;opacity:1}}
+.mkrow{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;background:rgba(255,255,255,.5);border-radius:12px;padding:6px}
+.mkr{display:flex;flex-direction:column;align-items:center;justify-content:flex-end;min-width:0;padding:2px;border-radius:12px;background:transparent;border:0;cursor:pointer;font:inherit;color:var(--ink);min-height:48px}
+.mkr .mki{width:min(100%,104px);filter:drop-shadow(0 3px 0 rgba(22,55,42,.2))}
+.mkr.off{border:3px dashed rgba(22,55,42,.3);justify-content:center;cursor:default;color:var(--muted)}
+.mkr .cap{font-size:12px;font-weight:700}
+.mkr.hop .mki{animation:mkhop .45s ease-out 2}
+@keyframes mkhop{50%{transform:translateY(-10px)}}
+.mksay{margin:0;background:#fff;border-radius:10px;padding:6px 10px;font-size:14px;line-height:1.6}.mksay:empty{display:none}
+.zk-mk h2{background:var(--sun);color:var(--ink)}
+.mknx{margin:8px 12px;font-size:14px;line-height:1.6}
+.mknx .btn{margin:0;width:100%;min-height:52px;font-size:18px}
+.mkzg{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;padding:4px 12px 12px}
+.mkz{display:flex;flex-direction:column;align-items:center;gap:2px;padding:6px 4px 8px;border-radius:14px;min-width:0;font:inherit;color:var(--ink);text-align:center}
+.mkz.on{background:#fffdf6;border:3px solid var(--edge);box-shadow:0 3px 0 var(--edge);cursor:pointer}
+.mkz.on.sel{background:#fff3c4}
+.mkz.on .mki{width:min(100%,128px)}
+.mkz.off,.mkz.soon{border:3px dashed var(--line);color:var(--muted)}
+.mkz.off .mki{width:72px;opacity:.5;filter:saturate(.5)}
+.mkz b{font-size:15px}.mkz small{font-size:12px;line-height:1.4}
+.mkh{color:#e0476b;font-size:15px;letter-spacing:1px;line-height:1}.mkh i{font-style:normal;color:#d9d2c4}
+.mkd{border-top:2px dotted var(--line);margin:0 12px;padding:10px 0 12px;display:grid;gap:8px}
+.mkd .mki{width:min(60vw,200px)}
+.mkd h3{margin:0;font-size:20px;text-align:center}
+.mkd dl{margin:0;display:grid;grid-template-columns:auto 1fr;gap:4px 10px;font-size:15px;line-height:1.5}.mkd dt{font-weight:800;color:var(--muted)}.mkd dd{margin:0}
+.mkd p{margin:0;line-height:1.6}
+.mkfs{display:flex;gap:8px;justify-content:center;align-items:flex-end}
+.mkf{display:flex;flex-direction:column;align-items:center;font-size:11px;color:var(--muted)}
+.mkf .mki{width:56px}
+.mkd .btn{margin:0;min-height:50px}
+@media (min-width:700px){.mkzg{grid-template-columns:repeat(5,1fr)}.mkd{grid-template-columns:220px 1fr;align-items:start}.mkd .mkdi{grid-row:span 3}.mkr .mki{width:min(100%,120px)}}
+@media (prefers-reduced-motion:reduce){.mki.mkpop,.mkr.hop .mki{animation:none}}
 /* ===== ロケット はっしゃ（協力モード） ===== */
 .rks{width:1.2em;height:1.2em;vertical-align:-.2em;flex:none}
 .rks.sm{width:28px;height:28px}
@@ -1209,7 +1259,7 @@ body[data-v=host] .wrap{max-width:none;padding:0}
 <script src="data/gen/sansu-56.js?v=b0125467"></script>
 <script src="data/gen/textbook-extra.js?v=b2d3f58f"></script>
 <script src="data/units.js?v=ea0deb93"></script>
-<script src="data/collection.js?v=8488a5b1"></script>
+<script src="data/collection.js?v=217cb6b1"></script>
 <script>
 /* ================= 画面の文言（1つの表） =================
    TX["キー"] = [ふつうの文言, 1〜2年の「やさしい文字」]（やさしい側がないものは同じ文言）。
@@ -1475,6 +1525,41 @@ const TX={
  "col.zk.other":["ほかの 学年《がくねん》の ページ","ほかの ねんの ページ"],
  "col.zk.n":[(a,b)=>`${a} / ${b}`],"col.zk.all":[(a,b)=>`できた ${a} / ${b}`],
  "col.zk.note":["すきな ところから うめて いいよ。たんげんを おすと、くわしく みられるよ。"],
+ /* v3.0：まなびっこ（教科の なかま。名前・せいかく・すきな ばしょ・ひとことは plan/manabikko-art.md） */
+ "col.mk.name":["まなびっこ"],"col.mk.zk":["まなびっこ ずかん"],"col.mk.n":[(a,b)=>`なかま ${a} / ${b}`],
+ "col.mk.s.m":["算数《さんすう》","さんすう"],"col.mk.s.j":["国語《こくご》","こくご"],"col.mk.s.s":["社会《しゃかい》","しゃかい"],"col.mk.s.e":["英語《えいご》","えいご"],"col.mk.s.r":["理科《りか》","りか"],
+ "col.mk.pick.t":["なかまが あいに 来《き》たよ！","なかまが あいに きたよ！"],
+ "col.mk.pick.d":["いっしょに 学《まな》ぶ 1たいを えらんでね。","いっしょに まなぶ 1たいを えらんでね。"],
+ "col.mk.pick.can":[s=>`「できた」の おいわいに、${s}の なかまを 先《さき》に つれて 来《き》たよ。`,s=>`「できた」の おいわいだよ。${s}の なかまが さきに きたよ。`],
+ "col.mk.pick.mg":["これまでの 学《まな》びを 見《み》て、なかまが 来《き》てくれたよ！","これまでの がんばりを みて、なかまが きてくれたよ！"],
+ "col.mk.pick.more":[n=>`この あとも ${n}たい えらべるよ。`],
+ "col.mk.pick.ok":["この子《こ》に きめた！","この こに きめた！"],"col.mk.pick.later":["あとで えらぶ"],
+ "col.mk.pick.sel":["1たい タップして えらんでね。"],
+ "col.mk.got":[n=>`${n}が なかまに なったよ！`],"col.mk.close":["とじる"],
+ "col.mk.open":[n=>`なかまを えらぶ（あと ${n}たい）`],
+ "col.mk.next0":["れんしゅうを 1かい（5問《もん》）すると、さいしょの なかまが 来《き》てくれるよ。","れんしゅうを 1かい（5もん）すると、さいしょの なかまが きてくれるよ。"],
+ "col.mk.next":["単元《たんげん》を 1つ「できた」に すると、つぎの なかまを えらべるよ。","たんげんを 1つ「できた」に すると、つぎの なかまを えらべるよ。"],
+ "col.mk.next.all":["いまは みんな なかま！ あたらしい なかまも じゅんびちゅうだよ。"],
+ "col.mk.st.0":["であったよ"],"col.mk.st.1":["なかよし"],"col.mk.st.2":["いっしょに まなぶ なかま"],
+ "col.mk.left":[(s,n)=>`${s}を べつの 日《ひ》に れんしゅうすると、なかよしが ふえるよ。つぎの すがたまで あと ${n}。`,(s,n)=>`${s}を べつの ひに れんしゅうすると、なかよしが ふえるよ。つぎの すがたまで あと ${n}。`],
+ "col.mk.max":["いちばん なかよしの すがたに なったよ！"],
+ "col.mk.where":[s=>`${s}で 出会《であ》いやすいよ`,s=>`${s}で であいやすいよ`],
+ "col.mk.soon":["もうすぐ 来《く》るよ","もうすぐ くるよ"],"col.mk.soon.r":["理科《りか》の なかま","りかの なかま"],"col.mk.soon.x":["あたらしい なかま"],
+ "col.mk.show":["ひろばに だす"],"col.mk.hide":["ひろばから もどす"],"col.mk.full":["ひろばに だせるのは 3たいまで。"],
+ "col.mk.row":["ひろばの なかま"],"col.mk.slot":["あき"],
+ "col.mk.l.kind":["せいかく"],"col.mk.l.like":["すきな ばしょ"],"col.mk.forms":["すがた"],
+ "col.mk.grow":[n=>`${n}と もっと なかよしに なったよ！ すがたが かわったよ。`],
+ "col.mk.r.new":["まなびっこが なかまに なりたがっているよ！ ひろばで えらぼう。"],
+ "col.mk.r.grow":[n=>`${n}と もっと なかよしに なったよ！`],
+ "col.mk.bk":["まなびっこも この 文字《もじ》に 入《はい》るよ。","まなびっこも この もじに はいるよ。"],
+ "col.mk.c.sankakuru":["さんかくる"],"col.mk.c.sankakuru.kind":["まじめで ひらめき上手《じょうず》","まじめで ひらめきじょうず"],"col.mk.c.sankakuru.like":["図形《ずけい》の 広場《ひろば》","ずけいの ひろば"],
+ "col.mk.c.sankakuru.say":["三角定規《さんかくじょうぎ》で、むずかしい 形《かたち》も 楽《たの》しく 見《み》つけるよ。","さんかくじょうぎで、むずかしい かたちも たのしく みつけるよ。"],
+ "col.mk.c.kotohane":["ことはね"],"col.mk.c.kotohane.kind":["お話《はなし》好《ず》きで やさしい","おはなしずきで やさしい"],"col.mk.c.kotohane.like":["本《ほん》の 森《もり》","ほんの もり"],
+ "col.mk.c.kotohane.say":["ことばの 種《たね》を 集《あつ》めて、すてきな お話《はなし》を 育《そだ》てるよ。","ことばの たねを あつめて、すてきな おはなしを そだてるよ。"],
+ "col.mk.c.chizupon":["ちずぽん"],"col.mk.c.chizupon.kind":["好奇心《こうきしん》いっぱい","しりたがりやさん"],"col.mk.c.chizupon.like":["地図《ちず》の 丘《おか》","ちずの おか"],
+ "col.mk.c.chizupon.say":["地図《ちず》を ひらけば、知《し》らない 町《まち》も 友《とも》だちに なるよ。","ちずを ひらけば、しらない まちも ともだちに なるよ。"],
+ "col.mk.c.eimaru":["えいまる"],"col.mk.c.eimaru.kind":["元気《げんき》で 人《ひと》なつっこい","げんきで ひとなつっこい"],"col.mk.c.eimaru.like":["ことばの 港《みなと》","ことばの みなと"],
+ "col.mk.c.eimaru.say":["世界《せかい》の あいさつを 覚《おぼ》えて、みんなに 笑顔《えがお》を 届《とど》けるよ。","せかいの あいさつを おぼえて、みんなに えがおを とどけるよ。"],
  /* v2：たんけんチケット・ひろばたんけん・たんけんメモ */
  "col.tk.name":["たんけんチケット"],"col.tk.go":["たんけんに いく"],
  "col.tk.n":[n=>`チケット ${n}まい`],
@@ -2317,7 +2402,7 @@ function renderRecord(msg){
   $("#bkGo").onclick=()=>{
     const m=$("#bkMsg"), v=$("#bkIn").value.trim();
     if(!v){ m.className="err"; m.textContent=T("rec.bk.empty"); return; }
-    if(/^HR1/i.test(v.replace(/[^0-9A-Za-z]/g,""))){ if(!colImport(v)){ m.className="err"; m.textContent=T("rec.bk.ng"); return; } renderRecord(T("col.bk.ok")); return; }      // ひろばの文字（HR1）も、ここに入れてよい
+    if(/^HR[12]/i.test(v.replace(/[^0-9A-Za-z]/g,""))){ if(!colImport(v)){ m.className="err"; m.textContent=T("rec.bk.ng"); return; } renderRecord(T("col.bk.ok")); return; }      // ひろばの文字（HR1）も、ここに入れてよい
     const r=bkRead(v); if(!r){ m.className="err"; m.textContent=T("rec.bk.ng"); return; }
     bkApply(r); refreshMedals(); renderRecord(T("rec.bk.ok"));
   };
@@ -2346,7 +2431,7 @@ const colHave=S=>COL.parts(S).filter(p=>p.have).length;
 /* ホームの入口 */
 function colDoor(){
   if(colMode()!=="on") return "";
-  const S=colTouch(), nw=colHave(S)>S.vp||colStageSum(S)>S.vz;
+  const S=colTouch(), nw=colHave(S)>S.vp||colStageSum(S)>S.vz||COL.mkAvail(S)>0;
   return `<button class="door" id="colDoor">${acornSvg()}<span class="dt">${T("col.name")}<small>${T("col.door.d",COL.balance(S))}</small></span>${nw?`<span class="new">${T("col.door.new")}</span>`:""}</button>`;
 }
 /* 結果画面のどんぐりの1行。学習の流れを止めない。初日は何も増えなくても出す */
@@ -2366,6 +2451,8 @@ function colRun(info){
   if(ev("quiz").length) L.push(T(info.rocket?"col.r.rocket":"col.r.quiz"));
   if(r.newParts.length) L.push(T("col.r.part"));
   if(r.tickets>0&&colTkOn()) L.push(T("col.tk.got"));
+  if(r.mk&&r.mk.add>0&&COL.mkAvail(S)>0) L.push(T("col.mk.r.new"));            // まなびっこ：えらべる分が ふえた（えらぶのは ひろばで。学習の流れは 止めない）
+  if(r.mk) r.mk.grow.slice(0,1).forEach(id=>L.push(T("col.mk.r.grow",mkNm(id))));
   if(r.capFirst){ L.push(T("col.cap")); S.day.shown=1; colSave(); }
   if(!L.length&&!r.paid&&S.d0===today) L.push(T("col.r.day1"));
   if(!L.length&&!r.paid) return "";
@@ -2379,7 +2466,7 @@ function colRunPlay(p){      // finish() から：単元ごとの正解数と、
 /* ----- じぶんの ひろば ----- */
 function renderHiroba(){
   if(colMode()!=="on") return go("#home");
-  setLG(ui.grade); HS={sel:null,shop:false,gift:0,cap:0,done:0};
+  setLG(ui.grade); HS={sel:null,shop:false,gift:0,cap:0,done:0,mkSel:null,mkGot:null,mkLater:false,mkInfo:null,mkGrow:[]};
   app.innerHTML=`<div class="hb"></div>`;
   loadScript("data/hiroba-art.js?v=e89b7885",()=>!!document.getElementById("hiroba-art")).then(()=>{ if(params().path==="hiroba") hbDraw(true); },()=>{ app.innerHTML=`<div class="q">${T("col.err")}</div>`; });
 }
@@ -2388,7 +2475,10 @@ function hbDraw(first){
   if(first){
     HS.gift=COL.claimGift(S,today);
     if(S.day.cap&&!S.day.shown){ HS.cap=1; S.day.shown=1; }
-    S.vp=colHave(S); S.vz=colStageSum(S); colSave();
+    S.vp=colHave(S); S.vz=colStageSum(S);
+    HS.mkGrow=Object.keys(S.mk.own).filter(id=>COL.mkStage(S,id)>S.mk.own[id].v);      // まなびっこ：前に見たときより すがたが かわった子
+    HS.mkGrow.forEach(id=>{ S.mk.own[id].v=COL.mkStage(S,id); });
+    colSave();
   }
   const sel=HS.sel, bal=COL.balance(S), D={}; COL.DECOR.forEach(d=>{ D[d.id]=d; });
   const slot=(art,key,on)=>`<div class="fs ${on?"on":"off"}"><div class="fsb">${on?svgU(art):""}</div><span class="cap">${on?T("col.p."+key):"？"}</span></div>`;
@@ -2417,14 +2507,18 @@ function hbDraw(first){
   root.innerHTML=`<div class="topbar"><button class="back" onclick="go('#home')">${BK()}</button><b>${T("col.name")}</b><span class="acn" aria-label="${esc(T("col.door.d",bal))}">${acornSvg()}<b>${bal}</b></span></div>
     ${HS.gift?`<div class="hmsg">${acornSvg("ac")} ${T("col.gift")}</div>`:""}
     ${HS.cap?`<div class="hmsg">${T("col.cap")}</div>`:""}
+    ${HS.mkGrow.map(id=>`<div class="hmsg">${T("col.mk.grow",mkNm(id))}</div>`).join("")}
+    ${mkPickHtml(S)}
     ${done}
     <div class="hscene t${S.theme}">
+      ${mkRowHtml(S)}
       <div class="fz">${fz}</div>
       ${nx.length?`<div class="nx"><b>${T("col.next")}</b><span class="nxs">${nx.map(a=>svgU(a,"sil")).join("")}</span><small>${T("col.next.how")}</small></div>`:""}
       <div class="gridh" role="group" aria-label="${esc(T("col.grid"))}">${cells.join("")}</div>
     </div>
     ${bar}
     <div class="hops"><button type="button" class="btn" id="hbShop" aria-expanded="${HS.shop}">${acornSvg("ac")}${T("col.shop")}</button><button type="button" class="btn" id="hbZk">${ic("book-open")}${T("col.zukan")}</button></div>
+    ${mkZkHtml(S)}
     ${tkBox()}
     <section class="shop${HS.shop?"":" hidden"}" id="shopBox"><h3>${T("col.shop")}</h3>${shop}</section>
     <p class="note">${T("col.local")}</p>`;
@@ -2438,6 +2532,73 @@ function hbDraw(first){
   if(q("#hbTk")) q("#hbTk").onclick=()=>go("#tanken");
   if(q("#hbStore")) q("#hbStore").onclick=()=>{ COL.unplace(S,HS.sel); HS.sel=null; colSave(); hbDraw(false); };
   if(q("#hbCancel")) q("#hbCancel").onclick=()=>{ HS.sel=null; hbDraw(false); };
+  mkBind(root,S);
+}
+/* ----- まなびっこ（v3.0。中身は data/collection.js の mk*）：えらぶ・ひろばに だす・ずかん。
+   「できた」（と はじめの1回）で えらべる分が たまり、ここで 候補3つから 1たい えらぶ（いまは 絵が 4たいなので、その教科の子＋ほかの教科の子）。
+   授業モード・先生のオフでは ひろばごと 出ない（colMode）。動きは 短く、動きを へらす設定では 止める ----- */
+const mkC=id=>COL.MK.find(c=>c.id===id);
+const mkNm=id=>T("col.mk.c."+id);
+function mkImg(c,st,px,cls){
+  if(!c||!c.art) return `<span class="mki none" aria-hidden="true">？</span>`;      // 絵が まだの子（のちの段階）は 枠だけ
+  return `<img class="mki${cls?" "+cls:""}" src="vendor/img/manabikko/${c.art}-${COL.MK_ART[st]}-v3-${px}.webp" alt="" width="${px}" height="${px}" decoding="async" onerror="this.style.visibility='hidden'">`;
+}
+const mkHearts=st=>`<span class="mkh" role="img" aria-label="${esc(rbp(T("col.mk.st."+st)))}">${[0,1,2].map(i=>i<=st?"♥":"<i>♥</i>").join("")}</span>`;
+function mkPickHtml(S){
+  if(HS.mkGot){ const c=mkC(HS.mkGot);
+    return `<section class="mkp" id="mkPanel" role="status" aria-live="polite"><div class="mkgot">${mkImg(c,2,256,"mkpop")}</div><h3>${T("col.mk.got",mkNm(c.id))}</h3><p>${T("col.mk.c."+c.id+".say")}</p>
+      ${COL.mkAvail(colGet())?`<p class="note">${T("col.mk.pick.more",COL.mkAvail(colGet()))}</p>`:""}<div class="mkbtns"><button type="button" class="btn" id="mkClose">${COL.mkAvail(colGet())?T("col.mk.open",COL.mkAvail(colGet())):T("col.mk.close")}</button></div></section>`; }
+  const n=COL.mkAvail(S); if(!n||HS.mkLater) return "";
+  const cs=COL.mkCands(S), h=S.mk.q[0], sel=cs.some(c=>c.id===HS.mkSel)?HS.mkSel:null;
+  const lead=S.mk.mg?T("col.mk.pick.mg"):h&&h!=="*"&&cs.some(c=>c.subj===h)?T("col.mk.pick.can",T("col.mk.s."+h)):"";
+  const cards=cs.map(c=>`<button type="button" class="mkc${sel===c.id?" on":""}" data-mkc="${c.id}" aria-pressed="${sel===c.id}">${mkImg(c,0,256)}<b>${mkNm(c.id)}</b><span class="mks ${c.subj}">${T("col.mk.s."+c.subj)}</span><span class="mkk">${T("col.mk.c."+c.id+".kind")}</span></button>`).join("");
+  return `<section class="mkp" id="mkPanel" aria-labelledby="mkPt"><h3 id="mkPt">${T("col.mk.pick.t")}</h3>${lead?`<p>${lead}</p>`:""}<p>${T("col.mk.pick.d")}</p>
+    <div class="mkcs" role="group" aria-label="${esc(rbp(T("col.mk.pick.d")))}">${cards}</div>
+    ${n>1?`<p class="note">${T("col.mk.pick.more",n-1)}</p>`:""}
+    <div class="mkbtns"><button type="button" class="btn" id="mkOk"${sel?"":" disabled"}>${T(sel?"col.mk.pick.ok":"col.mk.pick.sel")}</button><button type="button" class="btn sub" id="mkLater">${T("col.mk.pick.later")}</button></div></section>`;
+}
+function mkRowHtml(S){
+  if(!Object.keys(S.mk.own).length) return "";
+  const slots=[0,1,2].map(i=>{ const id=S.mk.sh[i];
+    return id?`<button type="button" class="mkr" data-mkr="${id}" aria-label="${esc(rbp(mkNm(id)))}">${mkImg(mkC(id),COL.mkStage(S,id),128)}<span class="cap">${mkNm(id)}</span></button>`
+      :`<div class="mkr off"><span class="cap">${T("col.mk.slot")}</span></div>`; }).join("");
+  return `<div class="mkrow" role="group" aria-label="${esc(rbp(T("col.mk.row")))}">${slots}</div><p class="mksay" id="mkSay" role="status" aria-live="polite"></p>`;
+}
+function mkZkHtml(S){
+  const have=COL.MK.filter(c=>S.mk.own[c.id]).length, n=COL.mkAvail(S);
+  const nx=n?`<button type="button" class="btn" id="mkOpen">${T("col.mk.open",n)}</button>`:!S.mk.w?T("col.mk.next0"):COL.mkFree(S).length?T("col.mk.next"):T("col.mk.next.all");
+  const cards=COL.MK.map(c=>{ const o=S.mk.own[c.id];
+    if(o){ const st=COL.mkStage(S,c.id); return `<button type="button" class="mkz on${HS.mkInfo===c.id?" sel":""}" data-mki="${c.id}" aria-expanded="${HS.mkInfo===c.id}" aria-controls="mkInfo">${mkImg(c,st,256)}<b>${mkNm(c.id)}</b>${mkHearts(st)}</button>`; }
+    return `<div class="mkz off">${mkImg(c,0,128)}<b>${mkNm(c.id)}</b><small>${T("col.mk.where",T("col.mk.s."+c.subj))}</small></div>`; }).join("")
+    +COL.MK_SOON.map(sj=>`<div class="mkz soon">${mkImg(null)}<b>${T(sj==="r"&&window.RIKA_PUBLIC?"col.mk.soon.r":"col.mk.soon.x")}</b><small>${T("col.mk.soon")}</small></div>`).join("");
+  let info="";
+  if(HS.mkInfo&&S.mk.own[HS.mkInfo]){ const c=mkC(HS.mkInfo), x=COL.mkNext(S,c.id), on=S.mk.sh.includes(c.id), full=!on&&S.mk.sh.length>=COL.MK_SHOW;
+    const forms=COL.MK_ART.map((a,i)=>`<span class="mkf">${mkImg(c,i,128,i<=x.st?"":"sil")}${i<=x.st?T("col.mk.st."+i):"？"}</span>`).join("");
+    info=`<div class="mkd" id="mkInfo"><div class="mkdi">${mkImg(c,x.st,256)}<h3>${mkNm(c.id)}</h3></div>
+      <dl><dt>${T("col.mk.l.kind")}</dt><dd>${T("col.mk.c."+c.id+".kind")}</dd><dt>${T("col.mk.l.like")}</dt><dd>${T("col.mk.c."+c.id+".like")}</dd><dt>${T("col.mk.st.1")}</dt><dd>${mkHearts(x.st)} ${T("col.mk.st."+x.st)}</dd></dl>
+      <p>「${T("col.mk.c."+c.id+".say")}」</p>
+      <div><b>${T("col.mk.forms")}</b><div class="mkfs">${forms}</div></div>
+      <p class="note">${x.st<2?T("col.mk.left",T("col.mk.s."+c.subj),x.left):T("col.mk.max")}</p>
+      <button type="button" class="btn${on?" sub":""}" id="mkShow"${full?" disabled":""}>${T(on?"col.mk.hide":"col.mk.show")}</button>${full?`<p class="note">${T("col.mk.full")}</p>`:""}</div>`; }
+  return `<section class="zks zk-mk" aria-labelledby="mkZt"><h2 id="mkZt">${T("col.mk.zk")}<span class="zkn" style="color:inherit;margin-left:10px">${T("col.mk.n",have,COL.MK.length)}</span></h2>
+    <div class="mknx">${nx}</div><div class="mkzg">${cards}</div>${info}</section>`;
+}
+function mkBind(root,S){
+  const q=id=>root.querySelector(id), today=colToday();
+  const redraw=f=>{ hbDraw(false); const e=f&&app.querySelector(f); if(e){ e.scrollIntoView({block:"nearest"}); } };
+  root.querySelectorAll("[data-mkc]").forEach(b=>b.onclick=()=>{ HS.mkSel=b.dataset.mkc; redraw(); const o=app.querySelector("#mkOk"); if(o) o.focus(); });
+  if(q("#mkOk")) q("#mkOk").onclick=()=>{ const id=HS.mkSel; if(!id||!COL.mkPick(S,id,today)) return; colSave(); HS.mkGot=id; HS.mkSel=null; sfx("medal"); party(); redraw("#mkPanel"); };
+  if(q("#mkLater")) q("#mkLater").onclick=()=>{ HS.mkLater=true; redraw(); };
+  if(q("#mkClose")) q("#mkClose").onclick=()=>{ HS.mkGot=null; redraw(COL.mkAvail(S)?"#mkPanel":""); };
+  if(q("#mkOpen")) q("#mkOpen").onclick=()=>{ HS.mkLater=false; HS.mkGot=null; redraw("#mkPanel"); };
+  root.querySelectorAll("[data-mki]").forEach(b=>b.onclick=()=>{ HS.mkInfo=HS.mkInfo===b.dataset.mki?null:b.dataset.mki; redraw(HS.mkInfo?"#mkInfo":""); });
+  if(q("#mkShow")) q("#mkShow").onclick=()=>{ if(COL.mkShow(S,HS.mkInfo)){ colSave(); redraw("#mkInfo"); } };
+  root.querySelectorAll("[data-mkr]").forEach(b=>b.onclick=()=>{          // タップすると 1びょう ほど よろこぶ（絵を よろこびに かえる）
+    const id=b.dataset.mkr, c=mkC(id), im=b.querySelector("img"), say=q("#mkSay"); if(!c||!im) return;
+    const src=im.getAttribute("src"); clearTimeout(b._t); im.setAttribute("src",`vendor/img/manabikko/${c.art}-joy-v3-128.webp`); b.classList.remove("hop"); void b.offsetWidth; b.classList.add("hop");
+    if(say) say.innerHTML=`<b>${mkNm(id)}</b>「${T("col.mk.c."+id+".say")}」`;
+    b._t=setTimeout(()=>{ im.setAttribute("src",src); b.classList.remove("hop"); },1200);
+  });
 }
 function hbCell(c){
   const S=colGet(), id=COL.cellOf(S,c);
@@ -2613,11 +2774,11 @@ function colMemoHtml(S){
 function colBackupHtml(){
   if(colMode()!=="on") return "";
   return `<div class="bak"><h3>${ic("save")} ${T("col.bk")}</h3>
-    <p class="note" style="margin:0">${T("col.local")}</p>
+    <p class="note" style="margin:0">${T("col.local")} ${T("col.mk.bk")}</p>
     <div><button class="btn" id="hrMake">${T("col.bk.make")}</button></div>
     <div id="hrOut" class="hidden"><div class="code" id="hrCode"></div><div id="hrQr" class="hqr"></div><p class="note">${T("col.bk.hint")}</p><button class="btn sub" id="hrCopy">${ic("copy")}${T("r.copy")}</button></div>
     <label for="hrIn"><b>${T("col.bk.read")}</b></label>
-    <input id="hrIn" type="text" maxlength="260" autocomplete="off" autocapitalize="characters" spellcheck="false" aria-describedby="hrMsg">
+    <input id="hrIn" type="text" maxlength="400" autocomplete="off" autocapitalize="characters" spellcheck="false" aria-describedby="hrMsg">
     <div><button class="btn" id="hrGo">${ic("upload")}${T("rec.bk.go")}</button></div>
     <div id="hrMsg" role="status"></div></div>`;
 }
@@ -2648,7 +2809,7 @@ function colTeacherHtml(){
   return `<div class="form" style="margin-top:16px">
       <b style="font-size:18px">その他の設定：ひろば（どんぐり・ずかん）</b>
       <span class="prep"><b>準備：なし</b>（この端末の中だけに保存されます）</span>
-      <span class="note">勉強したあとが形になる「じぶんの ひろば」です。ランキング・くじ・課金・広告はありません。どんぐりは 1日 20こまでで、授業モード（課題リンク）では画面に出ません。</span>
+      <span class="note">勉強したあとが形になる「じぶんの ひろば」です。教科の なかま「まなびっこ」は、はじめての練習と、単元が「できた」になったときに 3つの候補から 1たい 選んで 迎えます（くじではありません。2学年以上 下の単元では増えません）。別の日に その教科を練習すると「なかよし」が3段階で育ち、休んでも下がりません。ランキング・くじ・課金・広告はありません。どんぐりは 1日 20こまでで、授業モード（課題リンク）では画面に出ません。</span>
       <label style="display:flex;gap:10px;align-items:center;font-size:16px"><input type="checkbox" id="colOn"${on?" checked":""} style="width:24px;height:24px"> この端末で ひろば・ずかん・どんぐりを つかう</label>
       <span class="note">オフにすると、ホーム・結果画面・きろく画面から ひろばが消えます（学習のきろくは今まで通り）。課題リンクの末尾に <b>&amp;col=0</b> を付けると、そのリンクだけ ひろばを出しません。<b>オフが優先</b>なので、オフの端末では、リンクに col=1 を付けてもオンになりません。</span>
       <label style="display:flex;gap:10px;align-items:center;font-size:16px;flex-wrap:wrap">ひろばたんけんの チケット：1日に つかえる数 <select id="colTk" style="font-size:16px;padding:6px">${[0,1,2,3,4,5].map(n=>`<option value="${n}"${n===(((store.get(COLCFG,null)||{}).tk)??2)?" selected":""}>${n}回${n===2?"（ふつう）":n===0?"（たんけんを出さない）":""}</option>`).join("")}</select></label>
