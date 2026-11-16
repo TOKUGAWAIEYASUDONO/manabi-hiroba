@@ -1056,6 +1056,7 @@ body[data-v=host] .wrap{max-width:none;padding:0}
 
 <!-- 問題データ（file:// でも読めるよう script タグで読む） -->
 <script src="data/questions.js?v=e7a7757e"></script>
+<script src="data/config.js?v=493aa644"></script>
 <script src="data/calc.js?v=60621312"></script>
 <script src="data/choices.js?v=1cc6792c"></script>
 <script src="data/quizlib.js?v=43bdb5a8"></script>
@@ -1837,6 +1838,7 @@ function renderHome(){
         <p class="note"><a href="#check">${ic("plug")} ${T("home.check")}</a></p></details>
       <a class="gdlink" href="guide/index.html">${T("home.guide.l")}</a>
       <a class="gdlink" href="guide/about.html">${T("home.about.l")}</a>`}
+      <a class="gdlink" href="#feedback">こまったこと・こうしてほしいこと</a>
     </div></div>`;     // 先生・ICT向けのリンクは、1〜2年には出さない
   const dr=$("#colDoor"); if(dr) dr.onclick=()=>go("#hiroba");
   $("#hJoin2").onclick=()=>go("#join"); $("#hTeach2").onclick=()=>go("#teacher");
@@ -2527,7 +2529,7 @@ function renderTeacher(q){
   const setOpt=qsets.length?`<optgroup label="先生の もんだい">${qsets.map(s=>`<option value="set:${esc(s.id)}">📝 ${esc(s.title||"（なまえなし）")}（${s.qs.length}問）</option>`).join("")}</optgroup>`:"";
   app.innerHTML=`
     <h2 class="th2">${ic("graduation-cap")}先生の画面</h2>
-    <p class="note">ログインは不要です。友だち対戦で児童が入れた名前は、先生の端末のメモリにだけ置き、部屋を閉じると消えます。　<a href="#check">${ic("plug")} 接続テスト</a><br><a class="gdlink" href="guide/index.html">学年・単元から さがす（先生向け）</a></p>
+    <p class="note">ログインは不要です。友だち対戦で児童が入れた名前は、先生の端末のメモリにだけ置き、部屋を閉じると消えます。　<a href="#check">${ic("plug")} 接続テスト</a><br><a class="gdlink" href="guide/index.html">学年・単元から さがす（先生向け）</a>　<a href="#feedback">ご意見・ご要望</a></p>
     <details class="tguide" id="tguide"><summary>${ic("lock")} つかう まえに（児童の情報の あつかい・先生向けの説明）</summary>
       <ol>${TGUIDE.map(t=>`<li>${esc(t)}</li>`).join("")}</ol></details>
     <div class="t3" role="group" aria-label="やりたいこと">
@@ -5285,7 +5287,41 @@ function lessonEndButton(){
 }
 /* ================= ルーター ================= */
 function shouldBlockLessonNavigation(lockedHash,requested,isTask){ return !!lockedHash&&requested!==lockedHash&&!isTask; }
+function renderFeedback(){
+  setLG(ui.grade);
+  const key="mh_feedback_draft";
+  let draft={}; try{draft=JSON.parse(localStorage.getItem(key)||"{}");}catch(e){}
+  const previous=ui.feedbackFrom||"#home";
+  app.innerHTML=`<section class="form"><h2>ご意見《いけん》・ご要望《ようぼう》</h2>
+    <p class="note">名前《なまえ》や学校名《がっこうめい》は書《か》かないでね。入力《にゅうりょく》した内容《ないよう》は、この端末《たんまつ》に下書《したが》きとして残《のこ》ります。</p>
+    <label>種類《しゅるい》<select id="fbType"><option>こまっている</option><option>こうしてほしい</option><option>まちがいを見《み》つけた</option><option>その他《そのた》</option></select></label>
+    <label>どの画面《がめん》・単元《たんげん》か（書《か》かなくてもよい）<input id="fbWhere" maxlength="200" autocomplete="off"></label>
+    <label>内容《ないよう》（2000字《じ》まで）<textarea id="fbBody" maxlength="2000" rows="8"></textarea></label>
+    <p class="note" id="fbCount"></p><div id="fbActions"></div><p><a href="${esc(previous)}">もどる</a></p></section>`;
+  const type=$("#fbType"),where=$("#fbWhere"),body=$("#fbBody"),actions=$("#fbActions");
+  type.value=draft.type||"こまっている";
+  where.value=draft.where||previous;
+  body.value=draft.body||"";
+  function update(){
+    body.value=body.value.slice(0,2000);
+    const d={type:type.value,where:where.value,body:body.value};
+    try{localStorage.setItem(key,JSON.stringify(d));}catch(e){}
+    $("#fbCount").textContent=`${body.value.length} / 2000字《じ》`;
+    const summary=`種類《しゅるい》: ${d.type}\n画面《がめん》・単元《たんげん》: ${d.where}\n内容《ないよう》:\n${d.body}`;
+    const formUrl=window.FEEDBACK_FORM_URL;
+    if(formUrl){
+      actions.innerHTML='<a class="btn" id="fbOpen" target="_blank" rel="noopener noreferrer">送《おく》る（外部《がいぶ》フォームを開《ひら》く）</a>';
+      try{const u=new URL(formUrl,location.href);if(!/^https?:$/.test(u.protocol))throw Error();$("#fbOpen").href=u.href;}catch(e){actions.textContent="フォームの設定《せってい》を確認《かくにん》してください。";}
+    }else{
+      actions.innerHTML='<button type="button" class="btn" id="fbCopy">文《ぶん》をコピー</button> <a class="btn sub" id="fbIssue" target="_blank" rel="noopener noreferrer">GitHub Issue を開《ひら》く</a>';
+      $("#fbCopy").onclick=async()=>{try{await navigator.clipboard.writeText(summary);$("#fbCopy").textContent="コピーしました";}catch(e){$("#fbCopy").textContent="コピーできませんでした";}};
+      $("#fbIssue").href="https://github.com/TOKUGAWAIEYASUDONO/manabi-hiroba/issues/new?"+new URLSearchParams({title:`[ご意見《いけん》・ご要望《ようぼう》] ${d.type}`,body:summary});
+    }
+  }
+  [type,where,body].forEach(e=>e.addEventListener("input",update)); update();
+}
 function route(){
+  if(location.hash!=="#feedback") ui.feedbackFrom=location.hash||"#home";
   // 授業リンクの元の URL をタブ内に記憶し、戻る・アドレス欄の変更を先に拒否する。
   // 結果・終了画面は同じ hash のまま描画するため、この URL だけを許可する。
   const requested=location.hash;
@@ -5306,16 +5342,17 @@ function route(){
   if(ES){ ES.close(); ES=null; }
   const {path:path0,q}=params(), path=location.hash.startsWith("#q=")?"qlink":location.hash.startsWith("#u=")?"ulink":path0;
   setLG(path==="home"||path==="modesetup"||path==="join"||path==="record"?ui.grade:0);
-  document.body.dataset.v=["check","play","setup","modesetup","mode","join","lobby","host","teacher","record","make","qlink","units","ulink","hiroba","zukan","tanken"].includes(path)?path:"home";
+  document.body.dataset.v=["check","play","setup","modesetup","mode","join","lobby","host","teacher","record","make","qlink","units","ulink","hiroba","zukan","tanken","feedback"].includes(path)?path:"home";
   // 課題リンク（task=1）で開いたゲームでは、ほかの画面への入口を隠す（授業モード）
   const lesson=!!lockedHash||((path==="play"||path==="mode")&&q.get("task")==="1")||((path==="qlink"||path==="ulink")&&/[&?]task=1(?![0-9])/.test(location.hash));
   LESSON=lesson; document.body.classList.toggle("lesson",lesson); const lic=document.getElementById("licLink"); if(lic) lic.hidden=lesson;
   const lg=$("#logo"); if(lg) lg.disabled=lesson;          // 授業モードではロゴからホームへ行けない
   window.scrollTo(0,0);
-  if(!DATA_OK&&path!=="check"&&path!=="teacher"&&path!=="make"&&path!=="qlink"){
+  if(!DATA_OK&&path!=="check"&&path!=="teacher"&&path!=="make"&&path!=="qlink"&&path!=="feedback"){
     app.innerHTML=`<div class="q">問題《もんだい》データ（data フォルダ）を読《よ》み込《こ》めませんでした。<br>index.html と同《おな》じ場所《ばしょ》に data フォルダがあるか確認《かくにん》してください。</div>`; return;
   }
-  if(path==="check") renderCheck();
+  if(path==="feedback") renderFeedback();
+  else if(path==="check") renderCheck();
   else if(path==="play") renderPlay(q);
   else if(path==="setup") renderSetup(q);
   else if(path==="modesetup") renderModeSetup(q);

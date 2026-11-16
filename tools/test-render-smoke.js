@@ -48,6 +48,8 @@ for(let g=1;g<=6;g++) {
 for(const [name,expr] of [['units','renderUnits(new URLSearchParams())'],['teacher','renderTeacher(new URLSearchParams())'],['practice',`renderUnitLink("#u=${window.RIKA_PUBLIC?'r3-living':'m3-amari'}&n=1")`]]) {
   vm.runInContext(expr,ctx,{filename:name});
 }
+vm.runInContext('renderFeedback()',ctx,{filename:'feedback'});
+if(!vm.runInContext('app.innerHTML',ctx).includes('id="fbBody"')) throw Error('feedback form missing');
 for(const grade of [1,2,3]){
   vm.runInContext(`ui.grade=${grade}; renderModeSetup(new URLSearchParams("m=chest"))`,ctx,{filename:'mode-unit-setup'});
   vm.runInContext(`ui.grade=${grade}; renderModeSetup(new URLSearchParams("m=race"))`,ctx,{filename:'race-unit-setup'});
