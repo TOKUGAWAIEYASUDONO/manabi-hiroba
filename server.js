@@ -7,6 +7,7 @@ const crypto = require("crypto");
 const NM = require("./data/ngwords.js");   // 児童が入力する名前の検査（ブラウザ・先生の端末と同じ部品）
 const QZ = require("./data/quizlib.js");   // 先生のもんだい：形式チェックとクイズの進行（ブラウザと同じ部品）
 const AW = require("./data/awardlib.js");
+const COL = require("./data/collection.js");   // まなびっこの ID の表（アバター：ID と 段階だけを 受けとる）
 const COOP = require("./data/cooplib.js"); // 協力モード「ロケット はっしゃ」の進行（ブラウザ・先生の端末と同じ部品）
 
 const PORT = +process.env.PORT || 8787;
@@ -88,6 +89,9 @@ const joinBlock = room => room.status === "ended" ? [409, { error: "この対戦
   : room.closed ? [409, { error: "入室はしめきられました" }] : null;
 const NAME_ERR = { empty: "名前を入れてね", long: "名前は8文字までです", chars: "使えない文字が入っています", ng: "その名前は使えません", pii: "数字が長くならぶ名前や、メール・URLの名前は使えません" };
 const allNames = (room, except) => [...room.players.values()].filter(q => q !== except).map(q => q.name);
+// まなびっこ（v3.1-a）：児童から 来た 値は ID の表に ある子と 段階 0〜2 だけ（ほかは 何も 出さない）
+const mkIn = b => { const w = COL.mkWire(b.mk, b.ms); return w ? { mk: w.mk, ms: w.ms } : { mk: "", ms: 0 }; };
+const mkPub = p => p.mk ? { mk: p.mk, ms: p.ms | 0 } : {};
 function newCode() {
   for (;;) { const c = String(1000 + rnd(9000)); if (!rooms.has(c)) return c; }
 }
@@ -100,17 +104,17 @@ function pub(room, host) {
     gt: room.gt || "",
     ...(room.co ? { co: room.co.pub(Date.now(), host) } : {}),
     players: room.co ? coPlayers(room, host) : [...room.players.values()].map(p => room.qz
-      ? { pid: p.pid, name: nm(p), emoji: p.emoji, v: p.v, ok: p.ok, ng: p.ng, st: p.st | 0, lp: p.lp | 0, lc: p.lc | 0, ...(host && room.qz.phase === "end" ? { rec: p.rec || "" } : {}), ...(host && room.qz.phase === "q" && room.qz.answeredBy(p.pid) ? { a: 1 } : {}) }
-      : { pid: p.pid, name: nm(p), emoji: p.emoji, v: p.v, ok: p.ok, ng: p.ng }),
+      ? { pid: p.pid, name: nm(p), emoji: p.emoji, ...mkPub(p), v: p.v, ok: p.ok, ng: p.ng, st: p.st | 0, lp: p.lp | 0, lc: p.lc | 0, ...(host && room.qz.phase === "end" ? { rec: p.rec || "" } : {}), ...(host && room.qz.phase === "q" && room.qz.answeredBy(p.pid) ? { a: 1 } : {}) }
+      : { pid: p.pid, name: nm(p), emoji: p.emoji, ...mkPub(p), v: p.v, ok: p.ok, ng: p.ng }),
     ...(room.status === "ended" ? { awards: AW.awards(room.mode, room.rule, [...room.players.values()]).map(c => host ? c : { ...c, winners: c.winners.map(w => ({ ...w, name: "" })) }), ...(host ? { awardStats: [...room.players.values()].map(p=>({pid:p.pid,name:p.name,correct:p.ok,streak:p.maxStreak||0,averageMs:p.speedCount?Math.round(p.speedSum/p.speedCount):null,comeback:p.comeback||0,chest:p.chest||0,star:p.star||0,boost:p.boost||0})) } : {}) } : {}),
     ...(room.qz ? { quiz: room.qz.pub() } : {})
   };
 }
 // 協力モード：対戦中は人の一覧を送らない（小さく保つ）。先生の画面だけは、名前の吹き出しのために一覧を受け取る
 function coPlayers(room, host) {
-  if (host) return [...room.players.values()].map(p => ({ pid: p.pid, name: p.name, emoji: p.emoji, ix: room.co.P.get(p.pid) ? room.co.P.get(p.pid).ix : 0 }));
+  if (host) return [...room.players.values()].map(p => ({ pid: p.pid, name: p.name, emoji: p.emoji, ...mkPub(p), ix: room.co.P.get(p.pid) ? room.co.P.get(p.pid).ix : 0 }));
   if (room.status === "playing") return [];
-  return [...room.players.values()].map(p => ({ pid: p.pid, name: "", emoji: p.emoji }));
+  return [...room.players.values()].map(p => ({ pid: p.pid, name: "", emoji: p.emoji, ...mkPub(p) }));
 }
 // 児童の画面：全員ぶんは名前なし。自分の名前だけを me に添える（他の子の名前は入らない）
 function kidMsg(room, res, base) {
@@ -231,7 +235,7 @@ const API = {
       if (!c.ok) { hitOk("bad:" + ip, 5, 10000, now); return [400, { error: NAME_ERR[c.why], why: c.why }]; }
       who = { name: NM.dedupe(c.name, allNames(room)), emoji: pickEmoji(room) };
     } else who = nick(room);
-    const p = { pid: id(), token: id(), ...who, v: 0, ok: 0, ng: 0 };
+    const p = { pid: id(), token: id(), ...who, ...mkIn(b), v: 0, ok: 0, ng: 0 };
     room.players.set(p.pid, p); if (room.qz) room.qz.add(p.pid); if (room.co) room.co.add(p.pid); broadcast(room);
     return [200, { code: room.code, pid: p.pid, token: p.token, name: p.name, emoji: p.emoji, nm: room.nm }];
   },
@@ -241,6 +245,13 @@ const API = {
     if (room.nm === "input") p.emoji = pickEmoji(room); else Object.assign(p, nick(room));      // 入力の部屋は、アイコンだけ変える
     broadcast(room);
     return [200, { name: p.name, emoji: p.emoji }];
+  },
+  // 児童が待合室で まなびっこを かえる（ID と 段階だけ。mkIn で 調べる）
+  avatar(b) {
+    const room = rooms.get(String(b.code)), p = player(room, b);
+    if (!p || room.status !== "lobby") return [409, { error: "今は変えられません" }];
+    Object.assign(p, mkIn(b)); broadcast(room);
+    return [200, { ok: true }];
   },
   // 児童が待合室で名前を入れなおす
   rename(b) {

@@ -1,4 +1,4 @@
-// server.js（予備の対戦サーバー）のクイズまわりの検査。 node tools/test-server-quiz.js
+// server.js（予備の対戦サーバー）のクイズまわり・まなびっこアバターの検査。 node tools/test-server-quiz.js
 // 自分でサーバーを起動して（空いているポート）、入力検証・権限・進行を確かめて、止める。
 const { spawn } = require("child_process");
 const path = require("path");
@@ -60,6 +60,22 @@ let n = 0; const t = async (name, fn) => { try { await fn(); n++; console.log("o
     const m = (await post("create", { mode: "chest", game: "mine", g: 3, t: 120, gt: "ちゃんと", qs })).j, p = (await post("join", { code: m.code, name: "あ" })).j;
     assert.strictEqual((await post("set", { code: m.code, pid: p.pid, token: "no" })).s, 403);
     const s = await post("set", { code: m.code, pid: p.pid, token: p.token }); assert.strictEqual(s.s, 200); assert.strictEqual(s.j.qs.length, 2, "たからばこ・すごろくには4択だけ"); assert.ok(s.j.qs.every(q => q.t === "mc"));
+  });
+  await t("まなびっこアバター：ID の表に ある子と 段階 0〜2 だけ。ほかの値は 出さない。待合室でだけ かえられる", async () => {
+    const r = (await post("create", { mode: "chest", game: "calc", g: 3, t: 120, nm: "auto" })).j;
+    const a = (await post("join", { code: r.code, mk: "sankakuru", ms: 2 })).j, b = (await post("join", { code: r.code, mk: "<img src=x>", ms: 1 })).j, c = (await post("join", { code: r.code, mk: "kotohane", ms: 99, name: "x" })).j;
+    const state = async () => { const es = await fetch(`http://127.0.0.1:${PORT}/api/events`, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ code: r.code, pid: a.pid, token: a.token }) }); const rd = es.body.getReader(); const d = JSON.parse(new TextDecoder().decode((await rd.read()).value).split("data: ")[1].split("\n")[0]); await rd.cancel(); return d; };
+    let d = await state(); const of = id => d.players.find(p => p.pid === id);
+    assert.deepStrictEqual([of(a.pid).mk, of(a.pid).ms], ["sankakuru", 2]);
+    assert.ok(!("mk" in of(b.pid)) && !("ms" in of(b.pid)), "表に ない ID は 送らない");
+    assert.deepStrictEqual([of(c.pid).mk, of(c.pid).ms], ["kotohane", 0], "段階が おかしいときは 0");
+    assert.ok(Object.keys(of(a.pid)).every(k => ["pid", "name", "emoji", "mk", "ms", "v", "ok", "ng"].includes(k)), "ほかの値は ふえない");
+    assert.strictEqual((await post("avatar", { code: r.code, pid: a.pid, token: "bad", mk: "eimaru" })).s, 409);
+    assert.strictEqual((await post("avatar", { code: r.code, pid: a.pid, token: a.token, mk: "eimaru", ms: 1 })).s, 200);
+    assert.strictEqual((await post("avatar", { code: r.code, pid: b.pid, token: b.token })).s, 200);       // なし
+    d = await state(); assert.deepStrictEqual([of(a.pid).mk, of(a.pid).ms], ["eimaru", 1]); assert.ok(!("mk" in of(b.pid)));
+    assert.strictEqual((await post("start", { code: r.code, hostKey: r.hostKey })).s, 200);
+    assert.strictEqual((await post("avatar", { code: r.code, pid: a.pid, token: a.token, mk: "chizupon" })).s, 409, "はじまったら かえられない");
   });
   console.log(`\n${n} 件のテストを実行${process.exitCode ? "（失敗あり）" : "：すべて成功"}`);
 })().catch(e => { console.error(e); process.exitCode = 1; }).finally(async () => {

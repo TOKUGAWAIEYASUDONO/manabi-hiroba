@@ -1,4 +1,4 @@
-// コレクション v1〜v3.0（data/collection.js：どんぐり・ずかん・ひろば・バックアップ・たんけん・まなびっこ）の単体テスト。 node tools/test-collection.js
+// コレクション v1〜v3.1-a（data/collection.js：どんぐり・ずかん・ひろば・バックアップ・たんけん・まなびっこ）の単体テスト。 node tools/test-collection.js
 const assert = require("assert"), fs = require("fs"), path = require("path"), vm = require("vm");
 const C = require("../data/collection.js");
 let n = 0;
@@ -445,5 +445,20 @@ t("バックアップ：HR2 を 読むと、この端末の まだ えらんで�
   C.hrMerge(B, C.hrParse(s), D + 9); assert.deepStrictEqual(B.mk.q, []); assert.strictEqual(Object.keys(B.mk.own).length, 2);
   const B2 = C.fresh(D + 9); B2.mk.q = ["*"]; B2.mk.w = 1; const A2 = mkState(); A2.mk.q = ["*"]; A2.mk.own = {}; A2.mk.sh = [];
   C.hrMerge(B2, C.hrParse(C.hrMake(A2)), D + 9); assert.deepStrictEqual(B2.mk.q, ["*"]);      // 両方 まだ えらんでいない → 1つだけ
+});
+t("アバター（v3.1-a）：受けとる 値は ID の表と 段階 0〜2 だけ。ほかは 出さない", () => {
+  assert.deepStrictEqual(C.mkWire("sankakuru", 2), { mk: "sankakuru", ms: 2 });
+  assert.deepStrictEqual(C.mkWire("eimaru"), { mk: "eimaru", ms: 0 });
+  for (const ms of [3, -1, 1.5, "2", null, NaN, Infinity]) assert.strictEqual(C.mkWire("kotohane", ms).ms, 0);    // 段階が おかしい → 0
+  for (const id of ["", "nope", "__proto__", "constructor", "toString", 1, null, undefined, {}, ["sankakuru"], "sankakuru ", "<img src=x>", "x".repeat(99)]) assert.strictEqual(C.mkWire(id, 1), null);
+});
+t("アバター：自分の 子は もっている子だけ。きめていなければ ひろばの 1ばんめ。空の文字は なし。もっていなければ なし", () => {
+  const S = mkState();
+  assert.deepStrictEqual(C.mkAvatar(S), { mk: "kotohane", ms: 1 });             // ひろばの 1ばんめ
+  assert.deepStrictEqual(C.mkAvatar(S, "sankakuru"), { mk: "sankakuru", ms: 2 });
+  assert.deepStrictEqual(C.mkAvatar(S, "eimaru"), { mk: "kotohane", ms: 1 });   // もっていない子は えらべない
+  assert.strictEqual(C.mkAvatar(S, ""), null);
+  S.mk.sh = []; assert.strictEqual(C.mkAvatar(S).mk, "sankakuru");               // ひろばに いなければ 表の じゅん
+  assert.strictEqual(C.mkAvatar(C.fresh(D)), null); assert.strictEqual(C.mkAvatar(null), null);
 });
 console.log(`\n${n} 件のテストを実行${process.exitCode ? "（失敗あり）" : "：すべて成功"}`);

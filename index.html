@@ -133,6 +133,13 @@ h2{font-size:20px;margin:18px 0 8px}
 .ti{display:inline-block;width:28px;height:28px;vertical-align:-7px}
 .mi{display:inline-block;width:1.3em;height:1.3em;vertical-align:-.3em}
 .fc{display:inline-block;width:1.25em;height:1.25em;vertical-align:-.3em;flex:none}
+.mkav{display:inline-block;width:1.3em;height:1.3em;vertical-align:-.32em;margin-left:.08em;object-fit:contain;flex:none}
+.px .mkav,.rkh-row .mkav{width:40px;height:40px;vertical-align:middle}.nmenu .hd .mkav{width:48px;height:48px}
+.mkavp{margin:12px auto 4px;max-width:420px}.mkavp .note{margin:0 0 6px}
+.mkavs{display:flex;gap:6px;justify-content:center;flex-wrap:wrap}
+.mkavb{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;width:76px;min-height:84px;padding:4px;border:3px solid var(--line);border-radius:14px;background:#fffdf6;cursor:pointer;font:inherit;font-size:12px;line-height:1.25;color:var(--ink)}
+.mkavb .mki{width:52px;height:52px}.mkavb.on{border-color:var(--edge);background:#fff3c4;box-shadow:0 0 0 3px var(--sun)}
+.mkavb:focus-visible{outline:3px solid var(--edge);outline-offset:2px}
 .tile .tstat .bv{margin-left:6px}
 .tile .tnext{font-size:14px;font-weight:700;color:#8a3b00}
 .tile .td{font-size:13px;color:var(--muted);font-weight:400}
@@ -1259,7 +1266,7 @@ body[data-v=host] .wrap{max-width:none;padding:0}
 <script src="data/gen/sansu-56.js?v=b0125467"></script>
 <script src="data/gen/textbook-extra.js?v=b2d3f58f"></script>
 <script src="data/units.js?v=ea0deb93"></script>
-<script src="data/collection.js?v=217cb6b1"></script>
+<script src="data/collection.js?v=454a5106"></script>
 <script>
 /* ================= 画面の文言（1つの表） =================
    TX["キー"] = [ふつうの文言, 1〜2年の「やさしい文字」]（やさしい側がないものは同じ文言）。
@@ -1533,6 +1540,7 @@ const TX={
  "col.mk.pick.can":[s=>`「できた」の おいわいに、${s}の なかまを 先《さき》に つれて 来《き》たよ。`,s=>`「できた」の おいわいだよ。${s}の なかまが さきに きたよ。`],
  "col.mk.pick.mg":["これまでの 学《まな》びを 見《み》て、なかまが 来《き》てくれたよ！","これまでの がんばりを みて、なかまが きてくれたよ！"],
  "col.mk.pick.more":[n=>`この あとも ${n}たい えらべるよ。`],
+ "mk.av.t":["いっしょに あそぶ まなびっこ"],"mk.av.d":["えらんだ子《こ》が 名前《なまえ》の よこに でるよ","えらんだ こが なまえの よこに でるよ"],"mk.av.none":["なし"],
  "col.mk.pick.ok":["この子《こ》に きめた！","この こに きめた！"],"col.mk.pick.later":["あとで えらぶ"],
  "col.mk.pick.sel":["1たい タップして えらんでね。"],
  "col.mk.got":[n=>`${n}が なかまに なったよ！`],"col.mk.close":["とじる"],
@@ -2543,6 +2551,34 @@ function mkImg(c,st,px,cls){
   if(!c||!c.art) return `<span class="mki none" aria-hidden="true">？</span>`;      // 絵が まだの子（のちの段階）は 枠だけ
   return `<img class="mki${cls?" "+cls:""}" src="vendor/img/manabikko/${c.art}-${COL.MK_ART[st]}-v3-${px}.webp" alt="" width="${px}" height="${px}" decoding="async" onerror="this.style.visibility='hidden'">`;
 }
+/* ----- まなびっこアバター（v3.1-a。plan/collection-v3-plan.md 7章3）：友だち対戦・ゲームで 名前の よこに 出す。
+   送る：この端末で もっている子から えらんだ ID と すがたの段階（0〜2）だけ（えらんだ ID は mh_mkav。"" は なし）。名前・文字・絵は 送らない。
+   出す：受けとった 値は COL.mkWire で ID の表に あるか 調べ、なければ 出さない。先生の オフ・リンクの col=0・授業モードでは 送らない・出さない ----- */
+const MKAV="mh_mkav";
+const mkAvOn=()=>colMode()==="on"&&!LESSON;
+function mkAvMine(){ if(!mkAvOn()) return null; const c=store.get(MKAV,null); return COL.mkAvatar(colGet(),c&&typeof c.id==="string"?c.id:undefined); }
+const mkAvBody=()=>{ const a=mkAvMine(); return a?{mk:a.mk,ms:a.ms}:{}; };
+function mkAv(mk,ms){
+  if(!mkAvOn()) return ""; const w=COL.mkWire(mk,ms); if(!w) return ""; const c=mkC(w.mk);
+  return `<img class="mkav" src="vendor/img/manabikko/${c.art}-${COL.MK_ART[w.ms]}-v3-128.webp" alt="" width="128" height="128" decoding="async" onerror="this.remove()">`;
+}
+const fm=p=>face(p.emoji)+mkAv(p.mk,p.ms);          // 動物の顔＋まなびっこ（ある子だけ）
+const mkPubOf=p=>p&&p.mk?{mk:p.mk,ms:p.ms|0}:{};     // 部屋の表から 送るとき（先生の端末で 調べた 値だけが 入っている）
+function mkAvPicker(){          // 待合室：もっている子から えらぶ（もっていなければ 出さない）
+  if(!mkAvOn()) return "";
+  const S=colGet(), have=COL.MK.filter(c=>c.art&&S.mk.own[c.id]); if(!have.length) return "";
+  const cur=mkAvMine(), on=id=>(cur?cur.mk:"")===id;
+  const b=(id,inner,lbl)=>`<button type="button" class="mkavb${on(id)?" on":""}" data-av="${id}" aria-pressed="${on(id)}" aria-label="${esc(rbp(lbl))}">${inner}</button>`;
+  return `<div class="mkavp" role="group" aria-label="${esc(rbp(T("mk.av.t")))}"><div class="note">${T("mk.av.t")}<br><small>${T("mk.av.d")}</small></div><div class="mkavs">${have.map(c=>b(c.id,mkImg(c,COL.mkStage(S,c.id),128)+`<span>${mkNm(c.id)}</span>`,mkNm(c.id))).join("")}${b("",`<span>${T("mk.av.none")}</span>`,T("mk.av.none"))}</div></div>`;
+}
+function mkAvBind(){
+  app.querySelectorAll("[data-av]").forEach(x=>x.onclick=()=>{
+    if(!mkAvOn()||!NET) return; store.set(MKAV,{id:x.dataset.av});
+    api("avatar",{...NET,...(x.dataset.av?mkAvBody():{})}).catch(()=>{});
+    if(LSTATE) lobbyView(LSTATE);
+    const n=app.querySelector(`[data-av="${x.dataset.av}"]`); if(n) n.focus();
+  });
+}
 const mkHearts=st=>`<span class="mkh" role="img" aria-label="${esc(rbp(T("col.mk.st."+st)))}">${[0,1,2].map(i=>i<=st?"♥":"<i>♥</i>").join("")}</span>`;
 function mkPickHtml(S){
   if(HS.mkGot){ const c=mkC(HS.mkGot);
@@ -3097,7 +3133,7 @@ function renderMode(q){
   const rule=q.has("r")?ruleOf(q.get("r")):defaultRule(g);
   setLG(g);
   M={m,x,g,t,task,rule,unitQs,unitIndex:0,ev:evOf(rule),ok:0,ng:0,misses:[],missObjs:[],phase:"q",end:Date.now()+t*1000,
-     me:{n:T("b.me"),e:(l=>l[rnd(l.length)][1])(NICK_ANI.filter(a=>!BOTS.some(b=>b.e===a[1]))),v:0,me:true},
+     me:{n:T("b.me"),e:(l=>l[rnd(l.length)][1])(NICK_ANI.filter(a=>!BOTS.some(b=>b.e===a[1]))),v:0,me:true,...(mkAvMine()||{})},
      bots:BOTS.map((b,i)=>({...b,v:0,wait:rr(2,5)*botK(g),spd:[1,1.15,0.85][i]})),
      over:false};
   app.innerHTML=`<div class="mplay${m.id==="race"?" racew":""}">
@@ -3144,7 +3180,7 @@ function mPick(b){
   else { M.ng++; const mo=mineMiss(); M.misses.push(`${mo.q} → ${mo.a}`); M.missObjs.push(mo); fb.className="fb ng"; fb.textContent=T("fb.ng",mo.a); setTimeout(()=>M===mm&&showQ(),1800); }   // まちがえたあとは1.8秒待つ
 }
 function players(){
-  if(M.net) return M.state.players.map(p=>({n:p.name,e:p.emoji,v:p.v,me:p.pid===NET.pid}));
+  if(M.net) return M.state.players.map(p=>({n:p.name,e:p.emoji,mk:p.mk,ms:p.ms,v:p.v,me:p.pid===NET.pid}));
   return [M.me,...M.bots];
 }
 function topList(ps){ // 人数が多いときは上位8人＋自分だけ表示
@@ -3154,7 +3190,7 @@ function topList(ps){ // 人数が多いときは上位8人＋自分だけ表示
 function leaderBot(){ return [...M.bots].sort((a,b)=>b.v-a.v)[0]; }
 /* やさしいルール：順位の数字は出さず、上の3人と自分だけ（最下位は出さない） */
 function easyList(ps){ const top=ps.slice(0,3).map(p=>[p,0]), i=ps.findIndex(p=>p.me); return i>=3?[...top,[ps[i],0]]:top; }
-const rankRows=(rows,unit)=>rows.map(([p,i])=>`<div class="rank ${p.me?"me":""}">${i?i+". ":""}${face(p.e)} ${esc(p.n)}<span class="v">${unit(p)}</span></div>`).join("");
+const rankRows=(rows,unit)=>rows.map(([p,i])=>`<div class="rank ${p.me?"me":""}">${i?i+". ":""}${face(p.e)}${mkAv(p.mk,p.ms)} ${esc(p.n)}<span class="v">${unit(p)}</span></div>`).join("");
 
 /* --- ごほうび（モードごと） --- */
 function reward(){ M.phase="reward"; if(M.m.id==="chest") chestReward(); else raceReward(); }
@@ -3260,7 +3296,7 @@ function drawSide(){
   const ps=[...players()].sort((a,b)=>b.v-a.v);
   if(M.net){          // 児童の端末：自分の点と順位だけ。全体の順位表と盤は前の大画面で見る
     const i=ps.findIndex(p=>p.me), me=ps[i]||M.me, easy=M.rule==="easy";
-    $("#mside").innerHTML=`<span class="me1">${face(M.me.e)}<b>${esc(M.me.n)}</b></span><span>${M.m.id==="chest"?"🪙 "+me.v:T("b.line.me",me.v)}</span>${easy?"":`<span>${T("z.rank",i+1,ps.length)}</span>`}`;
+    $("#mside").innerHTML=`<span class="me1">${face(M.me.e)}${mkAv(M.me.mk,M.me.ms)}<b>${esc(M.me.n)}</b></span><span>${M.m.id==="chest"?"🪙 "+me.v:T("b.line.me",me.v)}</span>${easy?"":`<span>${T("z.rank",i+1,ps.length)}</span>`}`;
     return;
   }
   if(M.m.id==="chest"){
@@ -3269,7 +3305,7 @@ function drawSide(){
       <p class="note">${T("b.right",M.ok)}</p>`;
   } else {
     const me=ps.find(p=>p.me), easy=M.rule==="easy";      // 盤の上の1行：あなたは何マス目か／1位はだれか（やさしいルールでは順位を出さない）
-    const line=T("b.line.me",me?me.v:0)+(easy?"":ps[0]&&ps[0].me?T("b.line.1st"):`／${T("b.line.top",face(ps[0].e)+esc(ps[0].n),ps[0].v)}`);
+    const line=T("b.line.me",me?me.v:0)+(easy?"":ps[0]&&ps[0].me?T("b.line.1st"):`／${T("b.line.top",face(ps[0].e)+mkAv(ps[0].mk,ps[0].ms)+esc(ps[0].n),ps[0].v)}`);
     const rk=`${rankRows(easy?easyList(ps):topList(ps),p=>p.v+"マス")}`;
     if(!M.sgBuilt){          // 盤は1回だけ作る（作り直すと駒の動きが止まるので、あとは駒・文字だけ更新）
       M.sgBuilt=true; M.pk={};
@@ -3469,15 +3505,15 @@ function hrPub(r,host){
     gt:r.gt||"",
     ...(r.co?{co:r.co.pub(Date.now(),host)}:{}),
     players:r.co?hrCoPlayers(r,host):[...r.players.values()].map(p=>r.qz
-      ?{pid:p.pid,name:nm(p),emoji:p.emoji,v:p.v,ok:p.ok,ng:p.ng,st:p.st|0,lp:p.lp|0,lc:p.lc|0,...(host&&r.qz.phase==="end"?{rec:p.rec||""}:{}),...(host&&r.qz.phase==="q"&&r.qz.answeredBy(p.pid)?{a:1}:{})}
-      :{pid:p.pid,name:nm(p),emoji:p.emoji,v:p.v,ok:p.ok,ng:p.ng}),
+      ?{pid:p.pid,name:nm(p),emoji:p.emoji,...mkPubOf(p),v:p.v,ok:p.ok,ng:p.ng,st:p.st|0,lp:p.lp|0,lc:p.lc|0,...(host&&r.qz.phase==="end"?{rec:p.rec||""}:{}),...(host&&r.qz.phase==="q"&&r.qz.answeredBy(p.pid)?{a:1}:{})}
+      :{pid:p.pid,name:nm(p),emoji:p.emoji,...mkPubOf(p),v:p.v,ok:p.ok,ng:p.ng}),
     ...(r.qz?{quiz:r.qz.pub()}:{})};
 }
 /* 協力モード：対戦中は人の一覧を送らない（小さく保つ）。先生の画面だけは、名前の吹き出しのために一覧を受け取る（児童には名前を送らない） */
 function hrCoPlayers(r,host){
-  if(host) return [...r.players.values()].map(p=>{ const q=r.co.P.get(p.pid); return {pid:p.pid,name:p.name,emoji:p.emoji,ix:q?q.ix:0}; });
+  if(host) return [...r.players.values()].map(p=>{ const q=r.co.P.get(p.pid); return {pid:p.pid,name:p.name,emoji:p.emoji,...mkPubOf(p),ix:q?q.ix:0}; });
   if(r.status==="playing") return [];
-  return [...r.players.values()].map(p=>({pid:p.pid,name:"",emoji:p.emoji}));
+  return [...r.players.values()].map(p=>({pid:p.pid,name:"",emoji:p.emoji,...mkPubOf(p)}));
 }
 function hrKid(r,conn,kid){      // その児童だけに、自分の名前（me）を添える
   const p=conn._pid&&r.players.get(conn._pid); kid=kid||hrPub(r,false);
@@ -3514,6 +3550,8 @@ function hrRate(r,conn){
   if(conn._jt.length>=5||r.jt.length>=10) return false;
   conn._jt.push(now); r.jt.push(now); return true;
 }
+/* 児童から 来た まなびっこ：ID の表に ある子だけ（COL.mkWire）。この端末（先生）で コレクションが オフなら 受けとらない */
+const hrAv=b=>{ const w=mkAvOn()&&COL.mkWire(b.mk,b.ms); return w?{mk:w.mk,ms:w.ms}:{mk:"",ms:0}; };
 const hrNames=(r,except)=>[...r.players.values()].filter(q=>q!==except).map(q=>q.name);
 function hrApi(r,name,b){
   const pl=()=>{const p=r.players.get(b.pid); return p&&p.token===b.token?p:null;};
@@ -3526,11 +3564,13 @@ function hrApi(r,name,b){
       const c=NM.check(b.name); if(!c.ok) return [400,{error:NAME_ERR[c.why],why:c.why}];
       who={name:NM.dedupe(c.name,hrNames(r)),emoji:hrEmoji(r)};
     } else who=hrNick(r);
-    const p={pid:rid(),token:rid(),...who,v:0,ok:0,ng:0}; r.players.set(p.pid,p); if(r.qz) r.qz.add(p.pid); if(r.co) r.co.add(p.pid); hrBroadcast(r);
+    const p={pid:rid(),token:rid(),...who,...hrAv(b),v:0,ok:0,ng:0}; r.players.set(p.pid,p); if(r.qz) r.qz.add(p.pid); if(r.co) r.co.add(p.pid); hrBroadcast(r);
     return [200,{code:r.code,pid:p.pid,token:p.token,name:p.name,emoji:p.emoji,nm:r.nm}];
   }
   if(name==="reroll"){ const p=pl(); if(!p||r.status!=="lobby") return [409,{error:"今は変えられません"}];
     if(r.nm==="input") p.emoji=hrEmoji(r); else Object.assign(p,hrNick(r)); hrBroadcast(r); return [200,{name:p.name,emoji:p.emoji}]; }
+  if(name==="avatar"){ const p=pl(); if(!p||r.status!=="lobby") return [409,{error:"今は変えられません"}];      // 待合室で まなびっこを かえる（ID だけ）
+    Object.assign(p,hrAv(b)); hrBroadcast(r); return [200,{ok:true}]; }
   if(name==="rename"){ const p=pl(); if(!p||r.status!=="lobby"||r.nm!=="input") return [409,{error:"今は変えられません"}];
     const c=NM.check(b.name); if(!c.ok) return [400,{error:NAME_ERR[c.why],why:c.why}];
     p.name=NM.dedupe(c.name,hrNames(r,p)); hrBroadcast(r,true); return [200,{name:p.name,emoji:p.emoji}]; }
@@ -3598,12 +3638,12 @@ function hrHandle(r,conn,m){
     else{
       const old=!hrJoinBlock(r)&&conn._pid&&r.players.get(conn._pid);      // 同じ接続でもう一度入るときは、前の分を外す（1つの接続で人数をふやさない）
       if(old){ r.players.delete(old.pid); if(r.qz) r.qz.remove(old.pid); if(r.co) r.co.remove(old.pid); conn._pid=""; }
-      res=hrApi(r,"join",{name:body.name}); if(res[0]===200){ r.conns.add(conn); conn._pid=res[1].pid; } else if(old) hrBroadcast(r);
+      res=hrApi(r,"join",{name:body.name,mk:body.mk,ms:body.ms}); if(res[0]===200){ r.conns.add(conn); conn._pid=res[1].pid; } else if(old) hrBroadcast(r);
     }
   }
   else if(m.name==="hello"){ const b=body, p=r.players.get(b.pid);
     if(p&&p.token===b.token){ r.conns.add(conn); conn._pid=p.pid; res=[200,{ok:true}]; } else res=[403,{error:"参加情報が見つかりません"}]; }
-  else if(m.name==="reroll"||m.name==="rename"||m.name==="act"||m.name==="set") res=hrApi(r,m.name,body);
+  else if(m.name==="reroll"||m.name==="rename"||m.name==="avatar"||m.name==="act"||m.name==="set") res=hrApi(r,m.name,body);
   else res=[400,{error:"不明な操作です"}];               // start / end / 名前の管理は児童からはできない
   try{ conn.send({id:m.id,status:res[0],obj:res[1]}); }catch(e){}
   if(res[0]===200&&(m.name==="join"||m.name==="hello")) try{ conn.send({type:"state",s:hrKid(r,conn)}); }catch(e){}
@@ -3675,7 +3715,7 @@ async function api(name,body){
     const [c,o]=hrApi(HR,name,body); if(c!==200) throw new Error(o.error); return o;
   }
   if(name==="info"){ await kcConnect(String(body.code)); return kcReq("info",{}); }
-  if(name==="join"){ const code=String(body.code); if(!KC||KC.code!==code||!KC.conn||!KC.conn.open) await kcConnect(code); return kcReq("join",{name:body.name}); }
+  if(name==="join"){ const code=String(body.code); if(!KC||KC.code!==code||!KC.conn||!KC.conn.open) await kcConnect(code); return kcReq("join",{name:body.name,mk:body.mk,ms:body.ms}); }
   return kcReq(name,body);
 }
 function listen(code,onState,onLost){
@@ -3725,7 +3765,7 @@ function renderJoin(q){
   const busy=on=>{ $("#jpad").classList.toggle("hidden",on); $("#jauto").classList.toggle("hidden",!on); };
   let STEP="code";
   const doJoin=async(code,name,replace,keep)=>{
-    const r=await api("join",{code,name});
+    const r=await api("join",{code,name,...mkAvBody()});      // まなびっこは ID と 段階だけ（コレクションが オフなら 何も つけない）
     if(params().path!=="join") return;                         // つないでいる間にほかの画面へ移ったとき
     NET=r; MINE=null; NETSET_P=null; sset("mh_net",NET);
     if(name) nameRemember(name,!!keep);                        // 次に入るときの初期値：ふつうはこのタブだけ。「じぶんだけ」のときだけ localStorage（きろくのバックアップには入れない）
@@ -3802,15 +3842,17 @@ function lobbyView(s){
   app.innerHTML=`<div class="play">
     <div class="q"><div class="note">${T("l.room")} ${s.code}・${modeOf(s).ico} ${modeOf(s).t}・${gameOf(s).t}（${s.g}年《ねん》）・${ruleName(s.rule)}</div>
       <div style="margin-top:14px">${T("l.name")}</div>
-      <div style="font-size:44px;font-weight:bold">${face(me.emoji)} ${esc(me.name)}</div>
+      <div style="font-size:44px;font-weight:bold">${fm(me)} ${esc(me.name)}</div>
       ${inp?`<div><button class="btn sub" id="ri">${T("nm.icon")}</button><button class="btn sub" id="rr">${T("l.change")}</button></div>
         <div class="hidden" id="led"><input class="nmi" id="nmi2" type="text" maxlength="12" autocomplete="off" autocapitalize="off" spellcheck="false" aria-label="${esc(rbp(T("nm.ask")))}">
           <div class="err" id="lerr" role="alert"></div><button class="btn" id="lsv">${T("nm.save")}</button><button class="btn sub" id="lcx">${T("nm.cancel")}</button></div>`
         :`<button class="btn sub" id="rr">${T("l.change")}</button>`}
+      ${mkAvPicker()}
       <p style="font-size:20px">${T("l.wait")}</p>
       <div class="note" id="lcnt">${T("l.n",s.players.length)}</div>
     </div>${privacy()}</div>`;
   const reroll=()=>api("reroll",NET).then(r=>{NET={...NET,...r};sset("mh_net",NET);}).catch(()=>{});
+  mkAvBind();
   if(!inp){ $("#rr").onclick=reroll; return; }
   $("#ri").onclick=reroll;
   $("#rr").onclick=()=>{ LEDIT=true; $("#led").classList.remove("hidden"); const i=$("#nmi2"); i.value=me.name; i.focus(); i.select(); };
@@ -3828,7 +3870,7 @@ function startNetGame(s){
   const end=s.endAt-off, startAt=end-s.t*1000;
   const mine=s.players.find(p=>p.pid===NET.pid);
   M={m,x,g:s.g,t:s.t,task:false,rule:ruleOf(s.rule),ev:evOf(s.rule),ok:mine.ok||0,ng:mine.ng||0,misses:[],missObjs:[],phase:"count",end,net:true,state:s,
-     me:{n:mine.name,e:mine.emoji,v:mine.v,me:true},bots:[],over:false};
+     me:{n:mine.name,e:mine.emoji,mk:mine.mk,ms:mine.ms,v:mine.v,me:true},bots:[],over:false};
   app.innerHTML=`<div class="mplay">
     <div class="topbar"><span class="note" style="white-space:nowrap">${T("l.room")} ${s.code}</span><span><b>${m.ico} ${m.t}</b> <span class="note">${x.t}・${s.g}年《ねん》・${ruleName(s.rule)}</span></span><span class="timer" id="tm" aria-hidden="true">${s.t}</span></div>
     <div class="tbar" id="tbar"><i id="tb"></i></div>
@@ -3851,7 +3893,7 @@ function startNetGame(s){
 }
 function netResultHtml(s,meId,easy){
   const ps=sorted(s.players), u=s.mode==="quiz"?T("z.unit"):unitOf(s);
-  const rows=ps.map(p=>({n:p.name,e:p.emoji,v:p.v,me:p.pid===meId}));
+  const rows=ps.map(p=>({n:p.name,e:p.emoji,mk:p.mk,ms:p.ms,v:p.v,me:p.pid===meId}));
   const i=rows.findIndex(p=>p.me);          // 児童の端末：自分の行だけ（全体の順位表は前の画面）
   return i<0?"":`<div style="margin:10px auto;max-width:360px">${rankRows([[rows[i],easy?0:i+1]],p=>p.v+" "+u)}</div>`;
 }
@@ -3934,7 +3976,7 @@ function nameMenu(pid){
   const p=HLAST&&HLAST.players.find(x=>x.pid===pid); if(!p||!HOST) return;
   nameMenuClose();
   const d=document.createElement("div"); d.id="nmenu"; d.className="nmenu";
-  d.innerHTML=`<div class="box" role="dialog" aria-modal="true" aria-label="名前の管理"><div class="hd">${face(p.emoji)}<b class="nn"></b></div>
+  d.innerHTML=`<div class="box" role="dialog" aria-modal="true" aria-label="名前の管理"><div class="hd">${fm(p)}<b class="nn"></b></div>
     <div class="ed hidden"><input class="nmi" type="text" maxlength="12" autocomplete="off" aria-label="新しい名前"><button type="button" class="btn" data-a="save">かえる</button></div>
     <div class="err" role="alert"></div>
     <div class="acts"><button type="button" class="btn sub" data-a="rename">名前を かえる</button><button type="button" class="btn sub" data-a="nick">ニックネームに する</button><button type="button" class="btn sub" data-a="kick">へやから だす</button><button type="button" class="btn" data-a="close">とじる</button></div></div>`;
@@ -3996,7 +4038,7 @@ function popShow(ev){
   if(PST.live.length>=POP.max){ if(!ev.fresh) return; const o=PST.live.shift(); o.el.remove(); }      // いっぱいのときは、まだ出ていない子のために古いものを消す
   const l=popLayer(), el=document.createElement("div"); el.className="pop";
   const mark={join:"👋",get:"🪙",star:"⭐",move:"👣",goal:"🏁",rk1:"🔥",rk2:"⚡",rk3:"⭐"}[ev.k]||"";
-  el.innerHTML=ev.anon?`${face(ev.emoji)}<span class="pn">こたえた！</span>`:`${face(ev.emoji)}<span class="pn"></span><span class="pi">${mark}</span>`;
+  el.innerHTML=ev.anon?`${face(ev.emoji)}<span class="pn">こたえた！</span>`:`${fm(ev)}<span class="pn"></span><span class="pi">${mark}</span>`;
   if(!ev.anon) el.querySelector(".pn").textContent=ev.name;
   l.appendChild(el);
   const used=new Set(PST.live.map(o=>o.slot)); let slot=0; while(used.has(slot)) slot++;
@@ -4030,7 +4072,7 @@ function popStep(s){
   const prev=PST.prev; PST.prev=s;
   if(PST.st!==s.status){ if(s.status==="playing") popReset(); PST.st=s.status; for(const o of PST.live) o.el.remove(); PST.live=[]; }     // ゲームのはじまりで「まだ出ていない」を数えなおす
   if(!prev||prev.code!==s.code||prev.status!==s.status) return;
-  const was=new Map(prev.players.map(p=>[p.pid,p])), evs=[], mk=(p,k,o)=>({pid:p.pid,name:p.name,emoji:p.emoji,k,...o});
+  const was=new Map(prev.players.map(p=>[p.pid,p])), evs=[], mk=(p,k,o)=>({pid:p.pid,name:p.name,emoji:p.emoji,mk:p.mk,ms:p.ms,k,...o});
   for(const p of s.players){
     const o=was.get(p.pid);
     if(s.status==="lobby"){ if(!o) evs.push(mk(p,"join")); continue; }
@@ -4049,7 +4091,7 @@ function pxEvents(s,prev,evs){      // 前回との差から「できごと」�
   const was=new Map(prev.players.map(p=>[p.pid,p])), out=[];
   for(const p of s.players){
     const o=was.get(p.pid); if(!o||p.v===o.v) continue;
-    const d=p.v-o.v, w=`${face(p.emoji)}<b>${esc(p.name)}</b>`, anon=`<b>${T("px.ev.who")}</b>`;      // 良いことだけ名前を出す。失点・もどるときは「だれか」
+    const d=p.v-o.v, w=`${fm(p)}<b>${esc(p.name)}</b>`, anon=`<b>${T("px.ev.who")}</b>`;      // 良いことだけ名前を出す。失点・もどるときは「だれか」
     if(s.mode==="chest") out.push([Math.abs(d),d>0?T("px.ev.get",w,d):T("px.ev.lose",anon,-d)]);
     else if(p.v>=GOAL) out.push([99,T("px.ev.goal",w)]);
     else out.push([Math.abs(d),d>0?T("px.ev.move",w,d):T("px.ev.back",anon,-d)]);
@@ -4104,7 +4146,7 @@ function renderHost(){
     if(cl){ document.getElementById("hclt").textContent=T(s.closed?"px.open":"px.close"); cl.setAttribute("aria-pressed",s.closed?"true":"false"); }
     if(lk) lk.classList.toggle("hidden",!s.closed);
     const lim=B.allChips?60:12;      // 名前を押すと、名前をかえる／ニックネームにする／へやから出す
-    const chips=s.players.slice(0,lim).map(p=>`<button type="button" class="chip nmb" data-pid="${esc(p.pid)}">${face(p.emoji)} ${esc(p.name)}</button>`).join("")
+    const chips=s.players.slice(0,lim).map(p=>`<button type="button" class="chip nmb" data-pid="${esc(p.pid)}">${fm(p)} ${esc(p.name)}</button>`).join("")
       +(s.players.length>lim?`<button type="button" class="chip more" id="pxmorebtn">${T("px.more",s.players.length-lim)}</button>`:"");
     document.getElementById("pxchips").innerHTML=chips||`<span class="chip more">${T("px.none")}</span>`;
     const mb=document.getElementById("pxmorebtn"); if(mb) mb.onclick=()=>{ B.allChips=true; lobbyUpd(s); };
@@ -4123,7 +4165,7 @@ function renderHost(){
     ps.forEach((p,i)=>{
       let r=B.rows.get(p.pid);
       if(!r){ r=document.createElement("div"); r.className="px-row"; r.dataset.pid=p.pid; r.setAttribute("role","button"); r.tabIndex=0; r.innerHTML=`<span class="rk"></span><span class="ic"></span><span class="nm"></span><span class="bar"><i></i></span><span class="val"></span>`; box.appendChild(r); B.rows.set(p.pid,r); }
-      if(r.dataset.e!==p.emoji){ r.dataset.e=p.emoji; r.querySelector(".ic").innerHTML=face(p.emoji); }
+      const fk=p.emoji+(p.mk||"")+(p.ms|0); if(r.dataset.e!==fk){ r.dataset.e=fk; r.querySelector(".ic").innerHTML=fm(p); }
       r.querySelector(".nm").textContent=p.name;
       r.style.display=i<vis?"":"none"; r.style.top=i*RH+"px";
       r.querySelector(".rk").textContent=i+1; r.querySelector(".bar i").style.width=Math.max(3,Math.round(p.v/max*100))+"%"; r.querySelector(".val").innerHTML=COIN+p.v;
@@ -4139,7 +4181,7 @@ function renderHost(){
   };
   const raceUpd=s=>{
     const ps=sorted(s.players);
-    document.getElementById("pxtop").innerHTML=ps.slice(0,3).map((p,i)=>`<div class="r" data-pid="${esc(p.pid)}" role="button" tabindex="0"><span class="rk">${i+1}</span>${face(p.emoji)}<span class="nm">${esc(p.name)}</span><span class="val">${p.v}${T("px.masu")}</span></div>`).join("");
+    document.getElementById("pxtop").innerHTML=ps.slice(0,3).map((p,i)=>`<div class="r" data-pid="${esc(p.pid)}" role="button" tabindex="0"><span class="rk">${i+1}</span>${fm(p)}<span class="nm">${esc(p.name)}</span><span class="val">${p.v}${T("px.masu")}</span></div>`).join("");
     document.getElementById("pxmore").textContent=ps.length>3?T("px.more",ps.length-3):"";
     if(M&&M.pk){
       for(const k of Object.keys(M.pk)) if(!s.players.some(p=>p.pid===k)){ M.pk[k].el.remove(); clearTimeout(M.pk[k].timer); delete M.pk[k]; }      // へやから出された子
@@ -4153,10 +4195,10 @@ function renderHost(){
     B.tsv=()=>{ const wn=csvWithNames(); return ["順位\t名前\t"+u+"\t正解\t解答数\t正答率",...rows.map(r=>`${r.i}\t${wn?r.p.name:"児童"+r.i}\t${r.p.v}\t${r.p.ok}\t${r.t}\t${r.acc}%`)].join("\n"); };   //T
     const val=p=>s.mode==="chest"?COIN+p.v:p.v+T("px.masu");
     const easyR=ruleOf(s.rule)==="easy", allOk=ps.reduce((n,p)=>n+p.ok,0);
-    const rowHtml=r=>`<div class="hrank ${r.i<=3?"t"+r.i:""}" data-pid="${esc(r.p.pid)}" role="button" tabindex="0"><b>${r.i}</b><span>${face(r.p.emoji)} ${esc(r.p.name)}</span><span>${val(r.p)}</span><span class="note">${T("px.ok",r.p.ok,r.t)}</span></div>`;
+    const rowHtml=r=>`<div class="hrank ${r.i<=3?"t"+r.i:""}" data-pid="${esc(r.p.pid)}" role="button" tabindex="0"><b>${r.i}</b><span>${fm(r.p)} ${esc(r.p.name)}</span><span>${val(r.p)}</span><span class="note">${T("px.ok",r.p.ok,r.t)}</span></div>`;
     /* 大画面の主役は「しょう」。順位は 上位3人の名前と点だけを 上に小さく1行（正解 n/m は出さない）。全員の表は「先生だけ みる」。
        やさしいルールは 名前つきの順位を出さず、「〇〇しょう」だけ（数字なし） */
-    const topHtml=`<div class="px-top3">${rows.slice(0,3).map(r=>`<div class="hrank ${"t"+r.i}" data-pid="${esc(r.p.pid)}" role="button" tabindex="0"><b>${AWM[r.i-1]}</b><span>${face(r.p.emoji)} ${esc(r.p.name)}</span><span>${val(r.p)}</span></div>`).join("")}</div>`;
+    const topHtml=`<div class="px-top3">${rows.slice(0,3).map(r=>`<div class="hrank ${"t"+r.i}" data-pid="${esc(r.p.pid)}" role="button" tabindex="0"><b>${AWM[r.i-1]}</b><span>${fm(r.p)} ${esc(r.p.name)}</span><span>${val(r.p)}</span></div>`).join("")}</div>`;
     const aw=hostAwardsHtml(s);
     px.innerHTML=easyR?`<div class="px-end easy${aw?" has-aw":""}">${aw?"":`<div class="celebrate" aria-hidden="true">🏆</div>`}<h2 class="px-h2">${aw?"🏆 ":""}みんな おめでとう！</h2>${aw?`<section class="award-show px-aw">${aw}</section>`:""}</div>`
       :`<div class="px-end${aw?" has-aw":""}"><h2 class="px-h2">🏆 ${T("px.res")}</h2>${topHtml}${aw?`<section class="award-show px-aw">${aw}</section>`:""}</div>`;
@@ -4394,14 +4436,14 @@ function rkRowDraw(){
   const by=new Map(R.s.players.map(p=>[p.pid,p]));
   R.row=R.row.filter(x=>by.has(x));
   for(const p of R.s.players){ if(R.row.length>=14) break; if(!R.row.includes(p.pid)) R.row.push(p.pid); }
-  const sig=R.row.join(",")+"|"+R.row.map(x=>by.get(x).emoji).join("");
+  const sig=R.row.join(",")+"|"+R.row.map(x=>by.get(x).emoji+(by.get(x).mk||"")+(by.get(x).ms|0)).join("");
   if(box.dataset.sig===sig) return; box.dataset.sig=sig;
-  box.innerHTML=R.row.map(x=>`<span data-pid="${esc(x)}" role="button" tabindex="0">${face(by.get(x).emoji)}</span>`).join("");
+  box.innerHTML=R.row.map(x=>`<span data-pid="${esc(x)}" role="button" tabindex="0">${fm(by.get(x))}</span>`).join("");
 }
 function rkPop(s){
   const R=RKH, b=R&&R.co&&R.co.bb; if(!b||b.i===R.bbi) return; R.bbi=b.i;
   const by=new Map(s.players.map(p=>[p.ix,p])), evs=[];
-  for(const [ix,kind] of b.l){ const p=by.get(ix); if(!p) continue; rkRowPut(p); evs.push({pid:p.pid,name:p.name,emoji:p.emoji,k:"rk"+kind}); }
+  for(const [ix,kind] of b.l){ const p=by.get(ix); if(!p) continue; rkRowPut(p); evs.push({pid:p.pid,name:p.name,emoji:p.emoji,mk:p.mk,ms:p.ms,k:"rk"+kind}); }
   if(evs.length) popFeed(evs);
 }
 function rkHostUpd(s){
@@ -5068,7 +5110,7 @@ function qzKidDraw(){
     return;
   }
   if(Z.phase==="board"){
-    const rows=[[{n:me.name,e:me.emoji,v:me.v,me:true},place]];      // 自分だけ。上位の表は前の画面
+    const rows=[[{n:me.name,e:me.emoji,mk:me.mk,ms:me.ms,v:me.v,me:true},place]];      // 自分だけ。上位の表は前の画面
     const box=h("div",{style:"margin:10px auto;max-width:360px"});
     box.innerHTML=rankRows(rows,p=>p.v+"");          // 名前は esc 済み（ニックネームだけ）
     app.replaceChildren(h("div",{class:"play"},h("div",{class:"res"},h("div",{class:"num",text:T("z.rank",place,ps.length)}),box,h("div",{class:"fb",text:T("z.wait")}))));
@@ -5130,7 +5172,7 @@ function qzHostDraw(s,warnHtml){
   }
   if(s.status==="playing"&&Z.phase==="board"){
     const rows=ps.slice(0,pxVis(ps.length,5));       // 4人以上のときは最下位の子の名前は出さない
-    const box=h("div",{style:"max-width:640px;margin:0 auto"}); box.innerHTML=rows.map((p,i)=>`<div class="hrank" data-pid="${esc(p.pid)}" role="button" tabindex="0"><b>${i+1}</b><span>${face(p.emoji)} ${esc(p.name)}</span><span>${p.v} てん</span></div>`).join("");
+    const box=h("div",{style:"max-width:640px;margin:0 auto"}); box.innerHTML=rows.map((p,i)=>`<div class="hrank" data-pid="${esc(p.pid)}" role="button" tabindex="0"><b>${i+1}</b><span>${fm(p)} ${esc(p.name)}</span><span>${p.v} てん</span></div>`).join("");
     app.replaceChildren(h("div",{class:"qzh"},wrapWarn,top(h("span",{text:`${Z.idx+1} / ${Z.n} 問《もん》が終《お》わりました`})),
       box,ctl(h("button",{type:"button",class:"btn",id:"qnx",text:"つぎへ →",onclick:()=>api("qnext",HOST).catch(()=>{})}),endBtn()),h("div",{class:"err",id:"herr"})));
     return;
@@ -5143,7 +5185,7 @@ function qzHostDraw(s,warnHtml){
   if(!easy) for(const k of [1,0,2]){ const p=ps[k]; if(!p) continue; const d=h("div",{class:"pod p"+(k+1)},h("div",{class:"pn",text:["🥇","🥈","🥉"][k]})); d.append(h("div",{class:"pnm",text:p.name}),h("div",{class:"pv",text:p.v+" 点《てん》"})); pod.append(d); }
   const tb=h("table",{class:"rtable"},h("thead",null,h("tr",null,["順位《じゅんい》","名前《なまえ》","点数《てんすう》","正解《せいかい》","正答率《せいとうりつ》"].map(x=>h("th",{text:x})))));
   const tbody=h("tbody"); tb.append(tbody);
-  ps.forEach((p,i)=>{ const t=p.ok+p.ng; const tr=h("tr",{"data-pid":p.pid},h("td",{text:String(i+1)}),h("td"),h("td",{text:String(p.v)}),h("td",{text:`${p.ok} / ${t}`}),h("td",{text:t?Math.round(p.ok/t*100)+"%":"−"})); tr.children[1].innerHTML=`${face(p.emoji)} ${esc(p.name)}`; tbody.append(tr); });
+  ps.forEach((p,i)=>{ const t=p.ok+p.ng; const tr=h("tr",{"data-pid":p.pid},h("td",{text:String(i+1)}),h("td"),h("td",{text:String(p.v)}),h("td",{text:`${p.ok} / ${t}`}),h("td",{text:t?Math.round(p.ok/t*100)+"%":"−"})); tr.children[1].innerHTML=`${fm(p)} ${esc(p.name)}`; tbody.append(tr); });
   const acc=h("div",{class:"accl"},...stat.map((x,i)=>{ const pc=x.tot?Math.round(x.ok/x.tot*100):0;
     return h("div",{class:"acc"+(low.includes(i)?" low":"")},h("b",{text:String(i+1)}),h("div",null,h("div",{class:"at",text:QZ.plain(list[i]||"")}),h("div",{class:"ab"},h("i",{style:`width:${pc}%`}))),h("span",{text:x.tot?`${pc}%（${x.ok}/${x.tot}）`:"−"})); }));
   const csv=()=>{ const wn=csvWithNames(); return QZ.resultsCsv({qs:list.map(t=>({q:t})),nameHead:s.nm==="auto"?"ニックネーム":"名前",players:ps.map((p,i)=>({name:wn?p.name:"児童"+(i+1),v:p.v,ok:p.ok,rec:p.rec})),stat}); };   //T
@@ -5166,7 +5208,7 @@ function qzHostDraw(s,warnHtml){
    やさしいルールは 順位の数字を出さず、1部門 1人の「〇〇しょう」。児童の画面には 自分の賞だけ（ほかの子の名前は届かない） */
 const AWM=["🥇","🥈","🥉"];
 function awardCardHtml(c,easy){
-  return `<div class="award-card"><h3>${esc(c.title)}しょう</h3><div class="award-podium">${c.winners.map((w,i)=>`<div class="award-winner r${easy?0:i+1}"><span class="am" aria-hidden="true">${easy?"🎉":AWM[i]||""}</span>${face(w.emoji)}<span class="an">${esc(w.name)}</span>${easy?"":`<span class="ar">${i+1}位《い》</span>`}</div>`).join("")}</div></div>`;
+  return `<div class="award-card"><h3>${esc(c.title)}しょう</h3><div class="award-podium">${c.winners.map((w,i)=>`<div class="award-winner r${easy?0:i+1}"><span class="am" aria-hidden="true">${easy?"🎉":AWM[i]||""}</span>${fm(w)}<span class="an">${esc(w.name)}</span>${easy?"":`<span class="ar">${i+1}位《い》</span>`}</div>`).join("")}</div></div>`;
 }
 function hostAwardsHtml(s){ const a=(s&&s.awards)||[], easy=ruleOf(s&&s.rule)==="easy";
   return a.length?`<div class="aw-hd"><h2>🏅 しょうの はっぴょう</h2><button type="button" class="btn sub aw-skip">とばす ⏭</button></div><div class="aw-list n${a.length}">${a.map(c=>awardCardHtml(c,easy)).join("")}</div>`:""; }

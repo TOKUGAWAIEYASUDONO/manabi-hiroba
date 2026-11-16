@@ -1,6 +1,7 @@
 // 部門賞はサーバーで確定する。順位の公開値には集計の数字を含めない。
 const BASE=[['correct','ものしり はかせ'],['streak','れんぞく ロケット'],['speed','いなずま アンサー'],['comeback','あきらめない ヒーロー']];
 const EXTRA={chest:['chest','たからさがし名人《めいじん》'],race:['star','ラッキースター'],rocket:['boost','エンジン全開《ぜんかい》']};
+const mkOf=p=>p.mk?{mk:p.mk,ms:p.ms|0}:{};      // まなびっこ（ID と 段階だけ。部屋に 入るときに 調べた 値）
 function awards(mode,rule,players){
   const cats=[...BASE,...(EXTRA[mode]?[EXTRA[mode]]:[])], first=new Map(), shown=new Map();
   return cats.map(([key,title])=>{
@@ -9,11 +10,11 @@ function awards(mode,rule,players){
     if(rule==='easy'){
       const winner=(available.find(x=>!shown.has(x.p.pid))||available[0]);
       if(winner) shown.set(winner.p.pid,true);
-      return {key,title,winners:winner?[{pid:winner.p.pid,name:winner.p.name,emoji:winner.p.emoji}]:[]};
+      return {key,title,winners:winner?[{pid:winner.p.pid,name:winner.p.name,emoji:winner.p.emoji,...mkOf(winner.p)}]:[]};
     }
     const top=available[0]; if(top) first.set(top.p.pid,(first.get(top.p.pid)||0)+1);
     const rest=candidates.filter(x=>x!==top).slice(0,2);
-    return {key,title,winners:[top,...rest].filter(Boolean).map(x=>({pid:x.p.pid,name:x.p.name,emoji:x.p.emoji}))};
+    return {key,title,winners:[top,...rest].filter(Boolean).map(x=>({pid:x.p.pid,name:x.p.name,emoji:x.p.emoji,...mkOf(x.p)}))};
   }).filter(x=>x.winners.length);
 }
 module.exports={awards};

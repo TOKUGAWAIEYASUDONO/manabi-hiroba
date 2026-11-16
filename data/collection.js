@@ -14,7 +14,8 @@
         足りなければ ほかの教科の子で うめる）。まだ えらんでいない分は q に たまり、なくならない（新しい子が ふえたら えらべる）
      ③ なかよし 3段階（であった→なかよし→いっしょに まなぶ）。その教科を 5問以上 れんしゅうした「べつの日」ごとに +1、
         その教科の「できた」「マスター」で +1。3 と 8 で 次の すがた。下がらない・世話の罰なし
-     ④ ひろばに 3たいまで だせる（sh）。きらきら（k）・おまけシール・アバターは のちの段階（データの場所だけ k を とってある）
+     ④ ひろばに 3たいまで だせる（sh）。きらきら（k）・おまけシールは のちの段階（データの場所だけ k を とってある）
+     ⑤ アバター（v3.1-a）：友だち対戦で 自分の子を 名前の よこに 出せる。送るのは ID と 段階だけ（mkWire で 調べる）
    ・名前・順位・やりとりはない。保存は端末の localStorage（キー mh_col）だけ */
 (function (root, factory) {
   const M = factory();
@@ -336,6 +337,21 @@
     if (!S.mk.own[id] || S.mk.sh.length >= MK_SHOW) return false;
     S.mk.sh.push(id); return true;
   }
+  /* アバター（v3.1-a）：友だち対戦で 送るのは MK_IDS の ID と すがたの段階（0〜2）だけ。名前・文字・絵は 送らない。
+     mkWire は 受けとった 値を 調べる：ID は 表（MK_IDS）に あって 絵の ある子だけ。段階は 0〜2 に まるめる（ちがえば 0）。だめなら null */
+  function mkWire(id, ms) {
+    if (typeof id !== "string" || id.length > 16 || !MK_IDS.includes(id) || !MK_BY[id] || !MK_BY[id].art) return null;
+    const st = typeof ms === "number" && Number.isInteger(ms) && ms >= 0 && ms <= 2 ? ms : 0;
+    return { mk: id, ms: st };
+  }
+  /* 自分の アバター：pref が "" なら「なし」。pref が もっている子なら その子。それ以外は ひろばの 1ばんめ→もっている 1ばんめ→なし */
+  function mkAvatar(S, pref) {
+    if (!S || !S.mk) return null;
+    const ok = id => !!(id && S.mk.own[id] && MK_BY[id] && MK_BY[id].art);
+    if (pref === "") return null;
+    const id = ok(pref) ? pref : S.mk.sh.find(ok) || MK_IDS.find(ok);
+    return id ? { mk: id, ms: mkStageP(S.mk.own[id].p) } : null;
+  }
   /* つぎの すがたまで：{ st 段階0〜2, left あと いくつ（さいごなら 0）, p } */
   function mkNext(S, id) {
     const o = S.mk.own[id]; if (!o) return null;
@@ -542,6 +558,6 @@
   }
 
   return { TK_MAX, TK_GET, TK_STARS, TK_USE, MEMO_O, tkRoll, tkLimit, tkState, tkUse, memoCount, memoTotal, memoAdd, memoPick, explorerMap, CAP, GIFT, CELLS, UNIT_IDS, IDX, PARTS, DECOR, PRICE_TOTAL, TRACK_SUBJ, uGrade, dayNum, dayDate, fresh, clean, balance, sync, give, gapFull,
-    MK, MK_IDS, MK_SOON, MK_STAGE, MK_CAND, MK_SHOW, MK_ART, mkFresh, mkStage, mkFree, mkAvail, mkCands, mkPick, mkShow, mkNext,
+    MK, MK_IDS, MK_SOON, MK_STAGE, MK_CAND, MK_SHOW, MK_ART, mkFresh, mkStage, mkFree, mkAvail, mkCands, mkPick, mkShow, mkNext, mkWire, mkAvatar,
     count, parts, stage, pending, recordRun, claimGift, buy, cellOf, place, unplace, checkDone, summary, hrMake, hrParse, hrMerge };
 });
