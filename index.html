@@ -638,6 +638,20 @@ body[data-v=host] .wrap{max-width:none;padding:0}
 .px-end .hrank.t1{background:#fff3c4}
 .px-h2{font-size:40px;margin:6px 0 14px;display:flex;align-items:center;gap:12px}
 .px-h2 small{font-size:28px;font-weight:400;color:var(--chalk)}
+/* 待合室と発表は投影に必要な情報だけ。補足と名簿は右上のメニューへ。 */
+.px-lobby .lcol{min-width:0}.px-lobby .bigcode{font-size:clamp(90px,15vw,230px)}
+.px-lobby .cnt{font-size:clamp(36px,4vw,64px)}.px-lobby .cnt b{font-size:1.45em}
+.px-lobby .qrbox svg{width:min(62vh,46vw,540px)}
+.px-end{width:min(100%,1100px);margin:auto;display:grid;gap:18px;align-content:center}
+.px-end .px-h2{font-size:clamp(52px,6vw,88px);justify-content:center;margin:0 0 16px}
+.px-end .hrank{font-size:clamp(32px,3.7vw,56px);padding:14px 22px;margin:0}
+.px-end .hrank b{font-size:1.2em}.px-end .hrank span:nth-child(2){flex:1}
+.px-end.easy{min-height:65vh;text-align:center;place-content:center}
+.px-end.easy .px-h2{font-size:clamp(64px,8vw,120px)}
+.px-end.easy .celebrate{font-size:clamp(110px,19vw,260px);line-height:1}
+.px-menu-panel .chips{max-height:28vh;overflow:auto}.px-menu-panel .chip{font-size:18px}
+.px-menu-panel .lockmsg{font-size:18px}
+@media (max-width:900px){.px-lobby .qrbox svg{width:min(42vh,78vw)}.px-end .hrank{font-size:clamp(28px,5vw,46px)}}
 .qzh{padding:12px 16px 92px}
 .qzh-ctl{position:fixed;right:14px;bottom:12px;margin:0;z-index:25}
 .qzh-ctl .btn{font-size:20px;min-height:52px}
@@ -1068,7 +1082,7 @@ const TX={
  /* 前に映す大画面（先生の端末） */
  "px.fs":["全画面《ぜんがめん》"],"px.back":["先生《せんせい》の画面《がめん》"],"px.start":["スタート！"],"px.end":["ここで終《お》わる"],"px.copy":["結果《けっか》をコピー"],"px.new":["同《おな》じ設定《せってい》で新《あたら》しい部屋《へや》"],
  "px.close":["入室《にゅうしつ》をしめきる"],"px.open":["しめきりを やめる"],"px.locked":["入室《にゅうしつ》はしめきりました"],
- "px.memo":["先生《せんせい》用《よう》"],"px.url":["参加《さんか》のアドレス："],"px.code":["コードで参加《さんか》"],"px.n":["参加《さんか》："],"px.nin":["人《にん》"],"px.none":["まだ誰《だれ》もいません"],
+ "px.memo":["先生《せんせい》用《よう》"],"px.url":["参加《さんか》のアドレス："],"px.code":["コードで参加《さんか》","こーど"],"px.n":["参加《さんか》：","さんか "],"px.nin":["人《にん》","にん"],"px.none":["まだ誰《だれ》もいません"],
  "px.more":[n=>`ほか ${n}人《にん》`],"px.left":["のこり時間《じかん》"],"px.ev":["できごと"],"px.top3":["上位《じょうい》3人《にん》"],"px.masu":["マス"],
  "px.res":["結果《けっか》"],"px.avg":[(n,a)=>`${n}人《にん》・平均《へいきん》正答率《せいとうりつ》 ${a}%`],"px.ok":[(a,b)=>`正解《せいかい》 ${a}/${b}`],
  "px.ev.get":[(w,n)=>`${w} が たからばこを あけた！ 🪙 +${n}`],"px.ev.lose":[(w,n)=>`${w} は コインを ${n}まい おとした…`],
@@ -3709,8 +3723,8 @@ function pxEvents(s,prev,evs){      // 前回との差から「できごと」�
   evs.length=Math.min(evs.length,s.mode==="race"?3:4);
 }
 function renderHost(){
-  setLG(0);
   HOST=HOST||sget("mh_host"); if(!HOST) return go("#teacher");
+  setLG(HOST.g);
   if(NETMODE==="p2p"&&(!HR||HR.code!==HOST.code)){
     app.innerHTML=`<div class="q">この部屋はもうありません。<br>先生の端末がサーバー役なので、ページを開き直すと部屋は消えます。<br><button class="btn" onclick="go('#teacher')">新しい部屋を作る</button></div>`; return;   //T
   }
@@ -3725,7 +3739,7 @@ function renderHost(){
   function dockSet(k){
     if(dockKind===k) return; dockKind=k;
     const d=document.getElementById("pxdock");
-    const note=`<details class="px-note"><summary>${T("px.memo")}</summary><div class="pn">${warn()}${privacy()}<div class="note">${T("px.url")}${esc(joinUrl)}</div><div class="note">全員《ぜんいん》がそろったら「入室をしめきる」を押してください（ゲームが始まると、あとからは入れません）。コードを教室の外の人に知られたときは、「先生の画面」にもどって部屋を作りなおすと、新しいコードになります。名前が気になる子は、名前を押すと変えたり出したりできます。</div><div class="err" id="herr"></div></div></details>`;   //T
+    const note=`<details class="px-note"><summary>${T("px.memo")}</summary><div class="pn">${warn()}${privacy()}<div class="note">${T("px.url")}${esc(joinUrl)}</div><div class="note">全員《ぜんいん》がそろったら「入室をしめきる」を押してください（ゲームが始まると、あとからは入れません）。コードを教室の外の人に知られたときは、「先生の画面」にもどって部屋を作りなおすと、新しいコードになります。名前が気になる子は、名前を押すと変えたり出したりできます。</div><div id="pxextra"></div><div class="err" id="herr"></div></div></details>`;   //T
     const bk=`<button type="button" class="btn sub" onclick="go('#teacher')">${ic("arrow-left")}${T("px.back")}</button>`;
     const main=k==="lobby"?`<button type="button" class="btn sub" id="hcl" aria-pressed="false">${ic("lock")}<span id="hclt">${T("px.close")}</span></button><button type="button" class="btn" id="hs">${T("px.start")}</button>`
       :k==="rkend"?`<button type="button" class="btn" id="hn">${T("px.new")}</button>`
@@ -3740,10 +3754,11 @@ function renderHost(){
     if(b("hc")) b("hc").onclick=()=>navigator.clipboard?.writeText(B.tsv()).then(()=>b("hc").textContent=T("r.copied"),()=>{});
   }
   const lobbyBuild=s=>{
-    px.className="px";
+    px.className="px px-lobby-screen";
     px.innerHTML=`<div class="px-lobby"><div class="lcol"><div class="lead">${T("px.code")}</div><div class="bigcode">${s.code}</div>
-        <div class="cnt">${T("px.n")}<b id="pxn"></b>${T("px.nin")}</div><div class="lockmsg hidden" id="pxlock" role="status">${ic("lock")} ${T("px.locked")}</div><div class="chips" id="pxchips"></div></div>
+        <div class="cnt">${T("px.n")}<b id="pxn"></b>${T("px.nin")}</div></div>
       <div class="rcol"><div class="qrbox" id="qrbox"></div></div></div>`;
+    document.getElementById("pxextra").innerHTML=`<div class="lockmsg hidden" id="pxlock" role="status">${ic("lock")} ${T("px.locked")}</div><div class="chips" id="pxchips"></div>`;
     showQr(document.getElementById("qrbox"),joinUrl);
   };
   const lobbyUpd=s=>{
@@ -3806,13 +3821,14 @@ function renderHost(){
     const rowHtml=r=>`<div class="hrank ${r.i<=3?"t"+r.i:""}" data-pid="${esc(r.p.pid)}" role="button" tabindex="0"><b>${r.i}</b><span>${face(r.p.emoji)} ${esc(r.p.name)}</span><span>${val(r.p)}</span><span class="note">${T("px.ok",r.p.ok,r.t)}</span></div>`;
     /* 大画面には 上位3人の名前と点だけ（正解 n/m は出さない）。全員の表は「先生だけ みる」。やさしいルールは 名前つきの順位表を出さない */
     const topHtml=rows.slice(0,3).map(r=>`<div class="hrank ${"t"+r.i}" data-pid="${esc(r.p.pid)}" role="button" tabindex="0"><b>${r.i}</b><span>${face(r.p.emoji)} ${esc(r.p.name)}</span><span>${val(r.p)}</span></div>`).join("");
-    px.innerHTML=`<div class="px-end"><h2 class="px-h2">${ic("flag")}${T("px.res")}<small>${T("px.avg",ps.length,avg)}</small></h2>
-      <p class="px-more" style="font-size:34px;font-weight:800">${T("z.all",allOk)}</p>
-      ${easyR?"":topHtml}<div id="pxto"></div></div>`;
-    if(!easyR) $("#pxto").append(teacherOnly(h("div",{innerHTML:rows.slice(0,vis).map(rowHtml).join("")+(rows.length>vis?`<p class="px-more">${T("px.more",rows.length-vis)}</p>`:"")})));
+    px.innerHTML=easyR?`<div class="px-end easy"><div class="celebrate" aria-hidden="true">🏆</div><h2 class="px-h2">みんな おめでとう！</h2></div>`
+      :`<div class="px-end"><h2 class="px-h2">🏆 ${T("px.res")}</h2>${topHtml}</div>`;
+    const extra=document.getElementById("pxextra");
+    extra.innerHTML=`<div class="note">${T("px.avg",ps.length,avg)}・${T("z.all",allOk)}</div>`;
+    if(!easyR) extra.append(teacherOnly(h("div",{innerHTML:rows.slice(0,vis).map(rowHtml).join("")+(rows.length>vis?`<p class="px-more">${T("px.more",rows.length-vis)}</p>`:"")})));
   };
   const draw=s=>{
-    last=s; HLAST=s; bgmSync(); const m=modeOf(s), x=gameOf(s);
+    last=s; HLAST=s; setLG(s.g); bgmSync(); const m=modeOf(s), x=gameOf(s);
     if(s.mode==="quiz"&&s.status!=="lobby"){ kind="quiz"; qzHostDraw(s,()=>""); popStep(s); return; }
     if(s.mode==="rocket"&&s.status!=="lobby"){      // 協力モード：ロケットの大画面
       if(!document.getElementById("rocket-art")&&!B.artTry){ B.artTry=1; rkArt().catch(()=>{}).then(()=>{ if(last) draw(last); }); return; }      // 絵を読みこんでから作る
