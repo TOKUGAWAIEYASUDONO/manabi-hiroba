@@ -8,11 +8,12 @@ const NM = require("./data/ngwords.js");   // 児童が入力する名前の検�
 const QZ = require("./data/quizlib.js");   // 先生のもんだい：形式チェックとクイズの進行（ブラウザと同じ部品）
 const AW = require("./data/awardlib.js");
 const COL = require("./data/collection.js");   // まなびっこの ID の表（アバター：ID と 段階だけを 受けとる）
+const M100 = require("./data/masu100.js"); // 100マス はっぴょう：児童の集計（数字だけ）の検査とランキング（ブラウザ・先生の端末と同じ部品）
 const COOP = require("./data/cooplib.js"); // 協力モード（ロケット はっしゃ・ボスバトル）と じんとりバトルの進行（ブラウザ・先生の端末と同じ部品）
 
 const PORT = +process.env.PORT || 8787;
 const PAGE = ["manabi-hiroba.html", "index.html"].map(f => path.join(__dirname, f)).find(f => fs.existsSync(f));
-const MODES = ["chest", "race", "quiz", "rocket", "boss", "jin"];
+const MODES = ["chest", "race", "quiz", "rocket", "boss", "jin", "m100"];
 const GAMES = ["calc", "kuku", "kanji", "kencho", "eigo"];
 const GOAL = 40;
 const EV = { 4: "⭐", 9: "🌀", 13: "⭐", 17: "🌀", 21: "⭐", 25: "🌀", 27: "⭐", 31: "🌀", 35: "⭐", 38: "🌀" };
@@ -105,11 +106,14 @@ function pub(room, host) {
     ...(room.co ? { co: room.co.pub(Date.now(), host) } : {}),
     players: room.co ? coPlayers(room, host) : [...room.players.values()].map(p => room.qz
       ? { pid: p.pid, name: nm(p), emoji: p.emoji, ...mkPub(p), v: p.v, ok: p.ok, ng: p.ng, st: p.st | 0, lp: p.lp | 0, lc: p.lc | 0, ...(host && room.qz.phase === "end" ? { rec: p.rec || "" } : {}), ...(host && room.qz.phase === "q" && room.qz.answeredBy(p.pid) ? { a: 1 } : {}) }
-      : { pid: p.pid, name: nm(p), emoji: p.emoji, ...mkPub(p), v: p.v, ok: p.ok, ng: p.ng }),
-    ...(room.status === "ended" ? { awards: AW.awards(room.mode, room.rule, [...room.players.values()]).map(c => host ? c : { ...c, winners: c.winners.map(w => ({ ...w, name: "" })) }), ...(host ? { awardStats: [...room.players.values()].map(p=>({pid:p.pid,name:p.name,correct:p.ok,streak:p.maxStreak||0,averageMs:p.speedCount?Math.round(p.speedSum/p.speedCount):null,comeback:p.comeback||0,chest:p.chest||0,star:p.star||0,boost:p.boost||0})) } : {}) } : {}),
+      : { pid: p.pid, name: nm(p), emoji: p.emoji, ...mkPub(p), v: p.v, ok: p.ok, ng: p.ng, ...(host && p.m1 ? { m1: 1 } : {}) }),
+    ...(room.mode === "m100" && host ? { m1: M100.rank(m1Entries(room)) } : {}),      // 100マス はっぴょう：ランキングは 先生の画面だけ（児童には送らない）
+    ...(room.status === "ended" && room.mode !== "m100" ? { awards: AW.awards(room.mode, room.rule, [...room.players.values()]).map(c => host ? c : { ...c, winners: c.winners.map(w => ({ ...w, name: "" })) }), ...(host ? { awardStats: [...room.players.values()].map(p=>({pid:p.pid,name:p.name,correct:p.ok,streak:p.maxStreak||0,averageMs:p.speedCount?Math.round(p.speedSum/p.speedCount):null,comeback:p.comeback||0,chest:p.chest||0,star:p.star||0,boost:p.boost||0})) } : {}) } : {}),
     ...(room.qz ? { quiz: room.qz.pub() } : {})
   };
 }
+// 100マス はっぴょう：「せんせいに みせる」を押した子の集計（部屋の側で しらべた物）
+const m1Entries = room => [...room.players.values()].filter(p => p.m1).map(p => ({ pid: p.pid, s: p.m1, t: p.m1t }));
 // 協力モード：対戦中は人の一覧を送らない（小さく保つ）。先生の画面だけは、名前の吹き出しのために一覧を受け取る
 function coPlayers(room, host) {
   const tm = p => room.co.teamOf ? { tm: room.co.teamOf(p.pid) } : {};      // じんとり：チーム（0＝あか／1＝あお）
@@ -121,7 +125,7 @@ function coPlayers(room, host) {
 function kidMsg(room, res, base) {
   const p = res.pid && room.players.get(res.pid);
   // クイズの終了後は、その子自身の○×の記録（myrec）だけを添える（ほかの子の記録は送らない）
-  return "data: " + base + (p ? ',"me":' + JSON.stringify(p.name) + (room.co && room.co.mine ? ',"mt":' + (room.co.mine(p.pid).mt | 0) : "") + (room.qz && room.qz.phase === "end" ? ',"myrec":' + JSON.stringify(p.rec || "") : "") : "") + "}\n\n";
+  return "data: " + base + (p ? ',"me":' + JSON.stringify(p.name) + (room.co && room.co.mine ? ',"mt":' + (room.co.mine(p.pid).mt | 0) : "") + (room.qz && room.qz.phase === "end" ? ',"myrec":' + JSON.stringify(p.rec || "") : "") + (p.m1 ? ',"m1me":1' : "") : "") + "}\n\n";
 }
 // クイズの得点などを、部屋の参加者の表に写す
 function awardAnswer(p, right, ms) {
@@ -196,11 +200,11 @@ const API = {
       return [429, { error: "部屋をつくりすぎです。しばらくしてから、もう一度ためしてね" }];
     if (rooms.size >= LIM.roomsTotal) return [503, { error: "いま部屋がいっぱいです。しばらくしてから、もう一度ためしてね" }];
     if ([...rooms.values()].filter(r => r.ip === ip).length >= LIM.roomsPerIp * RATE_SCALE) return [429, { error: "同時につくれる部屋の数をこえました。使い終わった部屋を「ここで終わる」で閉じてね" }];
-    const own = b.mode === "quiz" || b.game === "mine";       // 先生のもんだいを使う部屋
-    if (!MODES.includes(b.mode) || !(own || GAMES.includes(b.game))) return [400, { error: "設定が正しくありません" }];
+    const own = b.mode !== "m100" && (b.mode === "quiz" || b.game === "mine");       // 先生のもんだいを使う部屋（100マス はっぴょうは 問題を使わない）
+    if (!MODES.includes(b.mode) || !(own || GAMES.includes(b.game) || b.mode === "m100")) return [400, { error: "設定が正しくありません" }];
     const g = Math.min(6, Math.max(1, b.g | 0)), t = b.mode === "rocket" ? 300 : Math.min(300, Math.max(60, b.t | 0));
     const rule = RULES.includes(b.rule) ? b.rule : "normal";
-    const room = { code: newCode(), hostKey: id(), mode: b.mode, game: b.mode === "quiz" ? "quiz" : b.game, g, t, rule, status: "lobby", endAt: 0,
+    const room = { code: newCode(), hostKey: id(), mode: b.mode, game: b.mode === "quiz" ? "quiz" : b.mode === "m100" ? "calc" : b.game, g, t, rule, status: "lobby", endAt: 0,
       players: new Map(), clients: new Set(), created: Date.now(), last: Date.now(), ip, timer: null, gt: "", nm: b.nm === "auto" ? "auto" : "input", nh: b.nh === 0 ? 0 : 1 };      // nh：1＝児童の結果画面にひろば（どんぐり）を出さない（初期値）／0＝出す
     if (own) {
       const r = QZ.cleanSet({ title: b.gt, qs: b.qs });         // 型・文字数・個数・時間の値を調べてから使う
@@ -313,6 +317,7 @@ const API = {
     const room = rooms.get(String(b.code));
     if (!room || room.hostKey !== b.hostKey) return [403, { error: "先生の画面からのみ操作できます" }];
     if (!room.players.size) return [409, { error: "まだ誰も参加していません" }];
+    if (room.mode === "m100") return [409, { error: "100マス はっぴょうには「はじめる」はありません" }];
     for (const p of room.players.values()) Object.assign(p, { v: 0, ok: 0, ng: 0, streak: 0, maxStreak: 0, comeback: 0, afterWrong: false, speedSum: 0, speedCount: 0, chest: 0, star: 0, boost: 0 });
     if (room.qz) { room.status = "playing"; room.endAt = 0; room.qz.begin(Date.now()); qzSync(room); broadcast(room, true); return [200, { ok: true }]; }
     if (room.co) { room.status = "playing"; room.endAt = 0; room.co.begin(Date.now()); broadcast(room, true); return [200, { ok: true }]; }
@@ -352,6 +357,14 @@ const API = {
   act(b) {
     const room = rooms.get(String(b.code)), p = player(room, b);
     if (!p) return [403, { error: "参加情報が正しくありません" }];
+    if (room.mode === "m100") {      // 100マス はっぴょう：「せんせいに みせる」で 集計（数字だけ）を受けとる。形と はんいを しらべてから使う
+      if (b.op !== "m100") return [403, { error: "この遊び方では使えない操作です" }];
+      if (room.status === "ended") return [409, { error: "もう おわりました" }];
+      const now = Date.now(); if (p.m1at && now - p.m1at < 2000) return [429, { error: "すこし まってから おしてね" }];
+      const s = M100.clampWire(b.s); if (!s) return [400, { error: "きろくの形が正しくありません" }];
+      p.m1 = s; p.m1at = now; p.m1t = p.m1t || now; room.m1n = (room.m1n || 0) + 1; broadcast(room, true);
+      return [200, { ok: true }];
+    }
     if (room.status !== "playing") return [409, { error: "対戦中ではありません" }];
     if (b.op !== "answer" && !(MODE_OPS[room.mode] || []).includes(b.op)) return [403, { error: "この遊び方では使えない操作です" }];
     if (room.co) {      // 協力モード：判定は共有部品（cooplib）。児童の値は型・範囲を調べてから使う

@@ -26,7 +26,8 @@ const MODES = [
   { t: "すごろく", d: "クラス対戦" },
   { t: "ロケット", d: "協力ゲーム（ロケット はっしゃ）" },
   { t: "ボスバトル", d: "協力ゲーム（みんなでモンスターをおいはらう）" },
-  { t: "じんとりバトル", d: "2チーム対戦（正解でマスをぬる）" }
+  { t: "じんとりバトル", d: "2チーム対戦（正解でマスをぬる）" },
+  { t: "100マス はっぴょう", d: "100マス計算の記録をクラスで発表（算数・単元に関係なく）", only: "sansu" }
 ];
 const minutes = u => (u.ans === "choice4" ? "10問で 約3分" : "10問で 約5分");
 const unitHref = u => `../index.html#u=${u.id}&amp;n=10&amp;s=${SEED}`;
@@ -118,7 +119,7 @@ function unitCard(u, list) {
   out.push(`<p class="meta">${[`${GJ(u.g)} ${SUBJ[u.subj]}`, areaName(u), u.item].filter(Boolean).map(esc).join(" ／ ")}</p>`);
   if (u.note) out.push(`<p class="note">${esc(plain(u.note))}</p>`);
   if (!rd) { out.push(`<p class="soon">この単元は、図や絵が必要なため、いま準備中です。公開したら この一覧にゲームが出ます。</p></article>`); return out.join("\n"); }
-  out.push(`<div class="ex"><b>この単元で使えるゲーム</b><ul class="modes">${MODES.map(m => `<li${m.soon ? ' class="soon"' : ""}><b>${m.t}</b><span>${esc(m.d)}</span></li>`).join("")}</ul></div>`);
+  out.push(`<div class="ex"><b>この単元で使えるゲーム</b><ul class="modes">${MODES.filter(m => !m.only || m.only === u.subj).map(m => `<li${m.soon ? ' class="soon"' : ""}><b>${m.t}</b><span>${esc(m.d)}</span></li>`).join("")}</ul></div>`);
   const ex2 = [], used = new Set();
   for (let i = 1; i <= 100 && ex2.length < 2; i++) {
     const it = UN.make(u, `guide|${u.id}|${i}`), key = plain(it.q);
@@ -222,7 +223,7 @@ function indexPage() {
   h += `</section>\n`;
   h += `<section aria-labelledby="use"><h2 id="use" class="sect">3. 使い方（どの単元でも同じです）</h2><ol class="how3"><li><b>ひとりで</b>：「この単元で ためす」を押すと、すぐ始まります。児童にもこのリンクを配れます。</li><li><b>課題として配る</b>：先生の画面の「単元からつくる」で単元を選ぶと、課題リンクと QR コードを作れます。</li><li><b>クラスで</b>：同じ画面から クイズ・たからばこ・すごろくの問題セットにできます。</li></ol></section>\n`;
   h += `<section aria-labelledby="cus" class="aside"><h2 id="cus" class="sect">どの教科でも使える：先生の問題で遊ぶ</h2><p>単元に合う問題が見つからないときは、先生が自分で問題を作って、クイズ・たからばこ・すごろく・ロケットはっしゃで遊べます。表（Excel など）からの取り込みもできます。<br><a class="btn sub" href="custom.html">先生の問題で遊ぶ 使い方を見る</a></p></section>\n`;
-  const sh = [["計算スプリント", "小1〜小6", "たし算・ひき算・九九・わり算・かけ算・小数・分数（学年ごと）"], ["九九チャレンジ", "小2〜小3", "九九"], ["漢字よみクイズ", "小1〜小6", "学年配当の漢字の読み"], ["県庁所在地クイズ", "小4〜小6", "社会 都道府県"], ["英単語クイズ", "小5〜小6", "英語 単語の意味"]];
+  const sh = [["計算スプリント", "小1〜小6", "たし算・ひき算・九九・わり算・かけ算・小数・分数（学年ごと）"], ["九九チャレンジ", "小2〜小3", "九九"], ["漢字よみクイズ", "小1〜小6", "学年配当の漢字の読み"], ["県庁所在地クイズ", "小4〜小6", "社会 都道府県"], ["英単語クイズ", "小5〜小6", "英語 単語の意味"], ["100マス はっぴょう（クラス）", "小1〜小6", "100マス計算（たし算・ひき算・かけ算）の記録を、先生の大画面で計算ごとに発表（はやさ・のびりつ・自己ベスト更新・ていねい・コツコツ・がんばり）。児童が「せんせいに みせる」を押したときだけ、数字の集計が届きます"]];
   h += `<section aria-labelledby="games"><h2 id="games" class="sect">ゲーム名から さがす（ひろば本体のゲーム）</h2><p class="note">単元に関係なく遊べる、はじめからあるゲームです。</p>\n<div class="tablewrap"><table class="grid games"><thead><tr><th scope="col">ゲーム</th><th scope="col">対象学年</th><th scope="col">内容・単元</th></tr></thead><tbody>${sh.map(r => `<tr><th scope="row">${r[0]}</th><td>${r[1]}</td><td>${r[2]}</td></tr>`).join("")}</tbody></table></div>\n`;
   h += `<h3 class="sub3">計算スプリントの学年ごとの単元</h3><ul class="calc">${Object.keys(W.MH_CALC.UNITS).map(g => `<li><b>${GJ(g)}</b>：${Object.values(W.MH_CALC.UNITS[g]).map(x => esc(plain(x))).join("、")}</li>`).join("")}</ul></section>\n`;
   h += `<section class="aside"><h2 class="sect">この一覧について</h2><p class="note">単元の名前・学年は まなびひろばのデータ（data/units.js）から自動で作っています。学習指導要領の項目番号はAIが作成したもので、人の確認待ちです。教科書の会社によって単元の名前や順番が ちがうことがあります。</p></section>\n`;
@@ -270,7 +271,7 @@ function aboutPage() {
 <p>まなびひろばは、個人が開発・運営する無料の学習ゲームです。登録も広告もありません。お問い合わせ・不具合の報告は <a href="https://github.com/TOKUGAWAIEYASUDONO/manabi-hiroba/issues">GitHub リポジトリの Issues</a> へお願いします。公開投稿なので、児童の個人情報は書かないでください。</p>
 <p>ホームでは学年に合った教科・単元を選んで遊べます。授業リンク・課題リンクからも、先生が指定した内容に直接進めます。</p>
 ${SUBJ.rika ? '<p><strong>理科は AI が作り、運営者が全問を確認しました。先生（教員）の確認はまだです。</strong>気になる問題は「この もんだい、おかしい？」から知らせてください。児童の個人情報は書かないでください。</p>' : ''}
-<h2>集めない物・端末に残る物</h2><p>このサイトの運営者は名前、メールアドレス、アカウント、位置情報、成績を収集しません。端末には学年・遊びの記録・どんぐり・ふりがな等の設定が保存されます。主な保存キー：<code>mh_setup</code>、<code>mh_best</code>、<code>mh_col</code>（ひろば・ずかん・どんぐり・まなびっこ・きせかえ。きせかえは どんぐりで買うか学びでもらう見た目だけの品で、抽選・期間限定・順位はありません）、<code>mh_colcfg</code>、<code>mh_mkav</code>（友だち対戦で名前の横に出すまなびっこ。部屋の端末へ送るのは、まなびっこの種類のID と成長段階と、つけている「ぼうし」の品のID だけで、名前・文字・画像は送りません。コレクションがオフの端末と授業モードでは送りません）、<code>mh_fg</code>、<code>mh_ui</code>、<code>mh_sound</code>、<code>mh_quiz_sets</code>、<code>mh_upick</code>、<code>mh_hsc</code>（ひっ算のマス入力のオン・オフ）、<code>mh_spbest</code>（計算スプリントのタイムアタック・サドンデスの自己ベスト。単元の組み合わせごとに、タイムと連続正解数だけ）、<code>mh_nigate</code>（にがてボックス：計算スプリント・単元練習で1回目に正解できなかった問題の中身を新しい順に50問まで。1回目で正解すると消えます。名前は入れません）、<code>mh_toolcfg</code>（計算スプリント・単元練習の「ずで かんがえる どうぐ」を この端末で出すかどうかの先生の設定。オン・オフだけ）、<code>mh_troom</code>。対戦中の一時情報：<code>mh_net</code>、<code>mh_host</code>、<code>mh_name_s</code>。授業リンクの固定には、このタブだけに <code>mh_lesson_hash</code> を使います。自分専用の端末と指定した場合だけ <code>mh_name</code> に名前が残ります。共有端末では指定しないでください。記録は端末で遊んだ履歴であり、成績評価には使えません。</p>
+<h2>集めない物・端末に残る物</h2><p>このサイトの運営者は名前、メールアドレス、アカウント、位置情報、成績を収集しません。端末には学年・遊びの記録・どんぐり・ふりがな等の設定が保存されます。主な保存キー：<code>mh_setup</code>、<code>mh_best</code>、<code>mh_col</code>（ひろば・ずかん・どんぐり・まなびっこ・きせかえ。きせかえは どんぐりで買うか学びでもらう見た目だけの品で、抽選・期間限定・順位はありません）、<code>mh_colcfg</code>、<code>mh_mkav</code>（友だち対戦で名前の横に出すまなびっこ。部屋の端末へ送るのは、まなびっこの種類のID と成長段階と、つけている「ぼうし」の品のID だけで、名前・文字・画像は送りません。コレクションがオフの端末と授業モードでは送りません）、<code>mh_fg</code>、<code>mh_ui</code>、<code>mh_sound</code>、<code>mh_quiz_sets</code>、<code>mh_upick</code>、<code>mh_hsc</code>（ひっ算のマス入力のオン・オフ）、<code>mh_spbest</code>（計算スプリントのタイムアタック・サドンデスの自己ベスト。単元の組み合わせごとに、タイムと連続正解数だけ）、<code>mh_nigate</code>（にがてボックス：計算スプリント・単元練習で1回目に正解できなかった問題の中身を新しい順に50問まで。1回目で正解すると消えます。名前は入れません）、<code>mh_toolcfg</code>（計算スプリント・単元練習の「ずで かんがえる どうぐ」を この端末で出すかどうかの先生の設定。オン・オフだけ）、<code>mh_troom</code>、<code>mh_m100</code>（100マス計算の回から どんぐりを数えおわった時刻と、その日に数えた回数・渡した数だけ。1日3こまで）。100マス計算（<code>apps/100masu</code>）が保存する <code>study.records.v1</code>・<code>giga_calc_records_v4</code> は、ホームの どんぐりと「100マス はっぴょう」で読むだけで、書きかえません。「100マス はっぴょう」で先生の端末へ送るのは、児童が「せんせいに みせる」を押したときの計算ごとの数字（きょうのベスト・前の自己ベスト・きょうのセット数・全問正解の回数・正答率・今週の日数）だけです。対戦中の一時情報：<code>mh_net</code>、<code>mh_host</code>、<code>mh_name_s</code>。授業リンクの固定には、このタブだけに <code>mh_lesson_hash</code> を使います。自分専用の端末と指定した場合だけ <code>mh_name</code> に名前が残ります。共有端末では指定しないでください。記録は端末で遊んだ履歴であり、成績評価には使えません。</p>
 <p>共有画像 <code>vendor/img/og-home.png</code> は 2026-11-13 にサイトの黒板と芽のキャラクターをもとに図形と文字で作った自作画像です。以前の AI 生成画像（実在の人物ではありません）は <code>vendor/img/og-home-v1.png</code> として保管しています。</p>
 <p>授業リンクの固定には、このタブだけに <code>mh_lesson_lock</code>（固定を始めた時刻）を使います。開いてから90分、または日付が変わるまで固定します。先生が結果画面で終えるときは、終了ボタンを2秒長押しします。タブを閉じると消えます。</p>
 <h2>対戦時の名前・通信</h2><p>名前は既定では自動ニックネームです。先生が名前入力を選んだ場合だけ児童が入力できます。</p>
