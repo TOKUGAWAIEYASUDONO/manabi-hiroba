@@ -978,6 +978,90 @@ body[data-v=host] .wrap{max-width:none;padding:0}
 .rk-px #rkfill{fill:#42d4ff}
 .rk-px .rkh-pad{display:none}.rkk .rk-beat{color:#fff}.rkk .rk-beat.go{color:#ffd84a}.rkk .rk-hit{color:#8dffb8}.rkk .rk-hit.soft{color:#cfe3ff}.res:has(.rks.big) .num{line-height:1.3}
 @media (max-width:599px){.rkk{margin:0 -7px;padding:10px 4px}.rkk .rk-hd,.rkk .rk-kg,.rkk .q{padding:6px 9px}.rkk .rk-sc{font-size:16px}.rkk .rk-qh{line-height:1.3}}
+/* ===== ボスバトル・じんとりバトル（児童：スマホ 375px／先生：大画面 1024px〜） ===== */
+.bsk .q .big,.jnk .q .big{word-break:keep-all;overflow-wrap:anywhere}
+.bsart{width:100%;height:100%;display:block;overflow:visible}
+.bs-st{display:flex;align-items:center;gap:10px;background:#fff;border:3px solid var(--edge);border-radius:14px;padding:6px 10px;margin-bottom:6px;position:relative;overflow:hidden}
+.bs-mini{width:58px;height:58px;flex:none;transition:opacity .3s}
+.bs-stx{flex:1;min-width:0}.bs-stx b{font-size:17px;display:block}.bs-stx .note{font-size:13px}
+.bs-hp{height:18px;margin:3px 0 0}.bs-hp i{background:#e86a9a}
+.bs-dn{font-weight:800;text-align:center;line-height:1.15;flex:none}.bs-dn small{display:block;font-size:12px;color:var(--muted)}.bs-dn b{font-size:22px}
+.bs-trk{min-height:26px;text-align:center;font-weight:800;color:#7a4cc8;font-size:17px}
+.bs-st.tr0::after{content:"";position:absolute;inset:0;pointer-events:none;background:radial-gradient(circle at 20% 80%,#bfe6ff 0 8px,transparent 9px),radial-gradient(circle at 70% 70%,#bfe6ff 0 6px,transparent 7px),radial-gradient(circle at 45% 30%,#d8f0ff 0 5px,transparent 6px);animation:bsbub 1.2s ease-in-out infinite alternate}
+.bs-st.tr1 .bs-mini{animation:bsspin 1s linear infinite}
+.bs-st.tr2 .bs-mini{opacity:.12}
+.bs-runq .bs-runa,.res .bs-runa{width:150px;height:150px;margin:0 auto}
+.bs-runq .bs-runa{animation:bsrun 2.4s ease-in forwards}
+.jn-me{display:inline-block;border-radius:12px;padding:2px 10px;color:#fff;font-weight:800}
+.jn-me.t0{background:#c7281f}.jn-me.t1{background:#2f6fd8;background-image:repeating-linear-gradient(135deg,rgba(255,255,255,.18) 0 6px,transparent 6px 12px)}
+.jnk.jt0{border-top:6px solid #c7281f}.jnk.jt1{border-top:6px solid #2f6fd8}
+.jn-st{display:flex;align-items:center;gap:12px;justify-content:center;margin-bottom:4px}
+.jn-bd{display:grid;grid-template-columns:repeat(7,1fr);gap:2px;width:154px;aspect-ratio:1;background:var(--edge);border:3px solid var(--edge);border-radius:8px;flex:none}
+.jn-bd .c{display:flex;align-items:center;justify-content:center;background:#f4f1e6;font-style:normal;font-size:10px;font-weight:800;color:#6a5a2a;position:relative;overflow:hidden;line-height:1}
+.jn-bd .c.o0{background:#e2594c;color:#fff}
+.jn-bd .c.o1{background:#4a86e8;background-image:repeating-linear-gradient(135deg,rgba(255,255,255,.28) 0 3px,transparent 3px 7px);color:#fff}
+.jn-bd .c.hm{font-size:13px}
+.jn-bd .c.tg{box-shadow:inset 0 0 0 3px #ffd84a}
+.jn-bd .c u{position:absolute;left:0;bottom:0;height:5px;background:#ffd84a;text-decoration:none}
+.jn-bd .c.fl{animation:jnfl 1s ease-out}
+.jn-sc{display:flex;align-items:center;gap:8px;font-size:18px;font-weight:800}
+.jn-sc b{font-size:28px;font-variant-numeric:tabular-nums}.jn-sc .t0 b{color:#c7281f}.jn-sc .t1 b{color:#2f6fd8}.jn-sc .vs{color:var(--muted)}
+.jn-sc.big{justify-content:center;font-size:26px}.jn-sc.big b{font-size:44px}
+.jn-endb{display:flex;justify-content:center;margin:6px 0}.jn-endb .jn-bd{width:210px}
+.lobby-team{margin:10px auto;font-size:22px}
+.bs-tdk{font-size:24px;font-weight:800;margin:6px 0}
+/* 先生の大画面 */
+.px.co-px{padding:12px 20px 92px;gap:10px}
+.coh-top{display:flex;align-items:center;gap:14px;flex-wrap:wrap;padding-right:170px}
+.coh-top>span{background:rgba(255,255,255,.12);border:3px solid #fff;border-radius:16px;padding:2px 16px;font-weight:800;white-space:nowrap}
+.coh-top>span:empty{display:none}.coh-top .t{margin-left:auto;font-variant-numeric:tabular-nums}.coh-top .t.warn{background:#b3261e}
+.coh-top .ls{background:#ffd84a;color:var(--ink);border-color:var(--edge)}
+.bsh{flex:1;display:grid;grid-template-columns:1.3fr 1fr;gap:24px;align-items:center;min-height:0}
+.bsh-stage{position:relative;height:min(58vh,46vw);display:flex;flex-direction:column;align-items:center;justify-content:center}
+.bsh-boss{width:min(46vh,34vw);height:min(46vh,34vw);transition:transform .6s cubic-bezier(.3,1.4,.5,1)}
+.bsh-stage.run .bsh-boss{animation:bsrun 2.4s ease-in forwards}
+.bsh-stage.tr1 .bsh-boss{animation:bsspin 1s linear infinite}
+.bsh-stage.tr2 .bsh-boss{opacity:.1}
+.bsh-stage.tr0::after{content:"";position:absolute;inset:0;pointer-events:none;background:radial-gradient(circle at 18% 75%,#bfe6ffcc 0 22px,transparent 23px),radial-gradient(circle at 80% 62%,#bfe6ffcc 0 16px,transparent 17px),radial-gradient(circle at 34% 24%,#d8f0ffcc 0 12px,transparent 13px),radial-gradient(circle at 66% 18%,#d8f0ffcc 0 20px,transparent 21px);animation:bsbub 1.2s ease-in-out infinite alternate}
+.bsh-nm{font-size:40px;font-weight:900;color:#ffe066;text-shadow:3px 3px 0 var(--edge)}
+.bsh-tr{min-height:1.3em;font-size:32px;font-weight:800}
+.bsh-side{background:rgba(255,255,255,.1);border:3px solid #fff;border-radius:22px;padding:16px 22px}
+.bsh-side .lbl{font-weight:800;margin-top:6px}.bsh-side .lbl.sm{font-size:28px;color:var(--chalk);margin-top:14px}
+.bsh-hp{height:46px;background:rgba(255,255,255,.2);border:4px solid #fff;border-radius:24px;overflow:hidden;margin:6px 0 10px}
+.bsh-hp i{display:block;height:100%;width:100%;background:linear-gradient(90deg,#e86a9a,#ff9ec0);transition:width .5s ease}
+.bsh-td{font-size:min(14vw,110px);font-weight:900;color:#ffe066;line-height:1.05;font-variant-numeric:tabular-nums}
+.co-row{display:flex;gap:6px;flex-wrap:wrap;min-height:54px}
+.co-row [data-pid]{display:inline-flex;background:rgba(255,255,255,.9);border:3px solid var(--edge);border-radius:50%;padding:2px;cursor:pointer}
+.co-row .fc{width:44px;height:44px}
+.co-msg{position:fixed;left:50%;top:50%;transform:translate(-50%,-50%);width:min(1000px,92vw);z-index:6;pointer-events:none}
+.co-msg.low{top:auto;bottom:96px;transform:translateX(-50%)}
+.co-msg.side{left:auto;right:20px;top:76px;transform:none;width:min(700px,54vw)}
+.co-px .rkm-end{font-size:54px}.co-px .rkm-card h2{font-size:36px}
+.co-msg:empty{display:none}.co-msg .co-end{pointer-events:auto;max-height:78vh;overflow:auto}
+.co-px .rkm-card{background:rgba(22,55,42,.95)}
+.jnh{flex:1;display:grid;grid-template-columns:auto 1fr;gap:26px;align-items:start;min-height:0}
+.jn-bd.big{width:min(68vh,54vw);gap:4px;border-width:5px;border-radius:14px}
+.jn-bd.big .c{font-size:min(3.4vh,2.6vw);border-radius:4px}.jn-bd.big .c.hm{font-size:min(5.4vh,4vw)}
+.jn-bd.big .c.tg{box-shadow:inset 0 0 0 6px #ffd84a}.jn-bd.big .c u{height:10px}
+.jn-bd.big .c.tg::before{content:"◎";position:absolute;top:2px;right:4px;font-size:.8em;color:#7a5a00}
+.jn-bd.big .c.o0.tg::before,.jn-bd.big .c.o1.tg::before{color:#fff}
+.jnh-side{display:flex;flex-direction:column;gap:14px}
+.jn-tm{border:4px solid #fff;border-radius:20px;padding:10px 18px;background:rgba(255,255,255,.08)}
+.jn-tm.t0{border-left:18px solid #e2594c}.jn-tm.t1{border-left:18px solid #4a86e8}
+.jn-tm .nm{font-weight:900;font-size:32px;white-space:nowrap}.jn-tm .pt b{font-size:60px;color:#ffe066;margin-right:6px;font-variant-numeric:tabular-nums}
+.jn-tm .cn{color:var(--chalk)}
+.jnh-side .lbl.sm{font-size:28px;color:var(--chalk);line-height:1.25}
+.jn-lob{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:14px}
+.jn-lob .jn-tm{padding:6px 12px}.jn-lob .nm{font-size:28px}.jn-lob .fcs{display:flex;flex-wrap:wrap;gap:4px;min-height:44px}
+.jn-menu{margin:10px 0;color:var(--ink);font-size:18px}.jn-menu .btn{margin:8px 0}
+.jn-col{margin:6px 0;padding:6px;border-radius:10px;background:#f4f7f5}.jn-col.t0{border-left:8px solid #e2594c}.jn-col.t1{border-left:8px solid #4a86e8}
+.jn-col b{display:block}.jn-col .chip{margin:3px;font-size:16px}
+@media (max-width:1100px){.bsh{grid-template-columns:1fr 1fr}.jn-tm .pt b{font-size:56px}.jn-tm .nm{font-size:28px}}
+@keyframes bsrun{0%{transform:scale(.6) rotate(0)}30%{transform:scale(.55) translateY(-20px) rotate(-8deg)}100%{transform:scale(.25) translate(160vw,-10px) rotate(20deg);opacity:0}}
+@keyframes bsspin{0%{transform:rotate(-10deg)}50%{transform:rotate(10deg)}100%{transform:rotate(-10deg)}}
+@keyframes bsbub{from{transform:translateY(6px)}to{transform:translateY(-8px)}}
+@keyframes jnfl{0%{filter:brightness(1.8)}100%{filter:none}}
+@media (prefers-reduced-motion:reduce){.bs-st.tr0::after,.bsh-stage.tr0::after,.bs-st.tr1 .bs-mini,.bsh-stage.tr1 .bsh-boss,.jn-bd .c.fl{animation:none}.bsh-stage.run .bsh-boss,.bs-runq .bs-runa{animation:none;opacity:.4}.bsh-boss,.bsh-hp i{transition:none}}
 
 /* Phone / tablet / desktop layout: the same controls are retained at every width. */
 @media (max-width:599px){
@@ -1334,7 +1418,7 @@ body[data-v=host] .wrap{max-width:none;padding:0}
 <script src="data/quizlib.js?v=43bdb5a8"></script>
 <script src="data/mathview.js?v=90c14913"></script>
 <script src="data/ngwords.js?v=c8b8a674"></script>
-<script src="data/cooplib.js?v=cff69a3a"></script>
+<script src="data/cooplib.js?v=3840c621"></script>
 <!-- 単元ごとの問題の型（単元から出題） -->
 <script src="data/gen/core.js?v=bceaee0a"></script>
 <script>window.RIKA_PUBLIC=true;</script>
@@ -1745,7 +1829,52 @@ const TX={
  "rk.h.sy":["みんなで いっしょに「1」で おそう！"],"rk.h.sy.p":["そろいぐあい"],
  "rk.h.st":["ながれぼしを あつめよう！"],"rk.h.st.p":["あつまった ほし"],
  "rk.h.soon":["まもなく はっしゃ！"],
- "rk.h.bo":["そろった！ ブースト ＋10％"],"rk.h.wind":["おいかぜが ふいた！"]
+ "rk.h.bo":["そろった！ ブースト ＋10％"],"rk.h.wind":["おいかぜが ふいた！"],
+ "m.boss.t":["ボスバトル（みんなで きょうりょく）"],
+ "m.boss.d":["みんなで 答《こた》えて、いたずらモンスターを くすぐって おいはらおう！ 時間《じかん》の 中《なか》で 何《なん》びき おいはらえるかな？","みんなで こたえて、いたずらモンスターを くすぐって おいはらおう！ じかんの なかで なんびき おいはらえるかな？"],
+ "m.jin.t":["じんとりバトル（2チーム）"],
+ "m.jin.d":["あかと あおの チームに わかれて、正解《せいかい》で 7×7の マスを ぬろう！ 点《てん》の 多《おお》い チームの かち","あかと あおの チームに わかれて、せいかいで マスを ぬろう！ てんの おおい チームの かち"],
+ "rk.right0":["⭕ せいかい！"],
+ "bs.name":["ボスバトル"],
+ "bs.boss":[k=>["もくもくん","ぷるりん","にゃんたろう","ぽこぽこドン","ふわりん","くすくすキング"][k%6]],
+ "bs.super":["スーパー "],
+ "bs.q":["正解《せいかい》で ボスを くすぐろう！","せいかいで ボスを くすぐろう！"],
+ "bs.hp":["ボスの げんき"],
+ "bs.tdl":["みんなの くすぐりパワー"],
+ "bs.dn":[n=>`おいはらった ${n}ひき`],"bs.dnl":["おいはらった"],"bs.dnk":[n=>`${n}ひき`],
+ "bs.hit":[n=>`⭕ せいかい！ くすぐり ＋${n}`],
+ "bs.wrong":[a=>`ちょうせん ＋1！ こたえは ${a}`],
+ "bs.ko":["⭕ さいごの ひとくすぐり！ ボスが わらって にげだした！"],
+ "bs.run":["わらいすぎて にげていった！"],
+ "bs.next":["つぎの ボスが くるよ…"],
+ "bs.soon":["まもなく ボスが あらわれる！"],
+ "bs.tr0":["🫧 ボスの いたずら：あわ ぶくぶく！"],
+ "bs.tr1":["🌀 ボスの いたずら：ぐるぐる おどり！"],
+ "bs.tr2":["🙈 ボスの いたずら：かくれんぼ！"],
+ "bs.end":[n=>`みんなで ${n}ひき おいはらった！`],"bs.end.h":["みんなの ちからで がんばったね！"],
+ "bs.end0":["あと すこしで おいはらえたよ！"],"bs.end.h0":["つぎは きっと おいはらえるよ！"],
+ "bs.td":[n=>`みんなの くすぐりパワー ${n}`],
+ "bs.me.d":[n=>`くすぐりパワー ${n}`],"bs.me.ko":[n=>`さいごの ひとくすぐり ${n}かい`],
+ "bs.me.none":["いっしょに あそんで くれて ありがとう！"],
+ "bs.h.n":[n=>`いま ${n}にんで あそんでいるよ`],
+ "bs.h.lv":[n=>`${n}ひきめ`],
+ "jn.name":["じんとりバトル"],
+ "jn.team":[t=>["あかの ウサギ","あおの ペンギン"][t]||""],
+ "jn.you":[t=>`あなたは ${["あかの ウサギ","あおの ペンギン"][t]||""} チーム`],
+ "jn.q":["正解《せいかい》で チームの マスを ぬろう！","せいかいで チームの マスを ぬろう！"],
+ "jn.ok":[n=>`⭕ せいかい！ ${n}マス ぬれた！`],"jn.ok0":["⭕ せいかい！ インクが たまった！"],
+ "jn.ng":[a=>`おしい！ こたえは ${a}`],
+ "jn.ls":["⚡ ラストスパート！ ぬりが 2ばい！"],
+ "jn.soon":["まもなく スタート！"],
+ "jn.pt":[n=>`${n}てん`],"jn.pt0":["てん"],
+ "jn.cells":[n=>`${n}マス`],"jn.ppl":[n=>`${n}にん`],
+ "jn.win":[t=>`${["あかの ウサギ","あおの ペンギン"][t]||""}の かち！`],
+ "jn.draw":["ひきわけ！ どちらも すごい！"],
+ "jn.good":[n=>`いい しょうぶだった！ あと ${n}てん`],
+ "jn.yay":["おめでとう！ チームの ちからだね！"],
+ "jn.me.c":[n=>`ぬった マス ${n}`],
+ "jn.rule":["◎＝いま ぬっている マス・★＝てんが おおきい マス"],
+ "jn.board":[(a,b)=>`あか ${a}マス、あお ${b}マス`]
 };
 /*TX-END*/
 const rbp=s=>{ const Q=window.MH_QUIZ; return Q?Q.plain(s):String(s==null?"":s).replace(/《[^《》]*》/g,""); };   // 読みを除いた本文
@@ -3234,7 +3363,7 @@ function renderTeacher(q){
       <b style="font-size:18px">① クラスで友だち対戦（児童の端末を使う）</b>
       <span class="note"><b>準備：児童の端末とネット接続。</b>部屋を作ると4桁のコードが出ます。先に <a href="#check">${ic("plug")} 接続テスト</a> をすると安心です。</span>
       <div class="tcols rooms">
-        <label>あそびかた<select id="nm">${[...MODES,RKMODE,QMODE].map(m=>`<option value="${m.id}">${m.ico} ${m.t}</option>`).join("")}</select></label>
+        <label>あそびかた<select id="nm">${[...MODES,RKMODE,BSMODE,JNMODE,QMODE].map(m=>`<option value="${m.id}">${m.ico} ${m.t}</option>`).join("")}</select></label>
         <label>問題<select id="ng">${opt}${setOpt}</select></label>
         <label>学年<select id="ngr"></select></label>
         <label id="nsl" class="hidden">ステージの数<select id="nstg"><option value="5" selected>ふつう（5ステージ・約5分）</option><option value="3">みじかい（3ステージ・約3分）</option></select></label>
@@ -3246,10 +3375,12 @@ function renderTeacher(q){
       <label class="chk"><input type="checkbox" id="nnh" checked> ひろばを出さない（児童の結果画面に、どんぐり・「ひろばを みる」を出しません）</label>
       <button class="btn" id="mkroom">部屋を作る</button>
       <div class="err" id="roomErr"></div>
-      <details class="tguide" id="roomHelp"><summary>くわしい説明（名前・ルール・ロケット）</summary>
+      <details class="tguide" id="roomHelp"><summary>くわしい説明（名前・ルール・ロケット・ボス・じんとり）</summary>
       <span class="note">部屋を作ると4桁のコードが出ます。児童は「コードで参加」からコードを入れて、名前を入力します（名前は先生の画面に出ます。大画面に映すと、クラスの全員に見えます）。ふざけた名前は、先生の画面で名前を押すと変更・ニックネーム化・退出ができます。全員がそろったら「入室をしめきる」を押してください。ゲームが始まったあとは入れません。「なまえの きめかた」を自動ニックネームにすると、動物の名前になります。終わると全員の正解数・正答率が集まります。</span>
       <span class="note">「クイズ」は先生のもんだいだけで遊べます（③のタブでセットをつくります）。たからばこ・すごろくでも、先生のセットの4択を使えます。学年は、児童の画面の文字（1〜2年はやさしい文字）に使います。</span>
       <span class="note">やさしいルール：たからばこで「うばう・入れかえ・落とす」が出ず、すごろくに🌀（もどる）がありません。1〜2年を選ぶと、はじめは「やさしい」になります。</span>
+      <span class="note hidden" id="bsnote"><b>ボスバトル（協力モード）</b>：クラス全員で、いたずらモンスター（ボス）を「くすぐって」おいはらいます。だれかが正解するたびにボスの「げんき」がへり、0になるとボスは笑ってにげていき、少しだけ げんきの多い次のボスが来ます。時間の中で何ひき おいはらえるかをクラスでめざします（時間は「時間」でえらびます）。正解は 10（連続正解で最大 20）、まちがいでも答えれば 1。1人が出せる量には上限があります。20〜30秒ごとのボスの「いたずら」は見た目だけで、点数や問題には何も起きません。順位や個人の正誤は大画面にも児童の画面にも出ません。</span>
+      <span class="note hidden" id="jnnote"><b>じんとりバトル（2チーム）</b>：あか（ウサギ）と あお（ペンギン）に分かれ、正解で 7×7 の盤のマスをぬります。ぬるマスは自動で決まり（えらべません）、マスごとに必要な正解の数がちがいます（ふつう2・★4・まんなか6。相手のマスは+1、自分の陣地からはなれたマスは+1）。ぬったばかりのマスは15秒うばえません。のこり30秒はラストスパート（2倍）。人数がちがっても、チームの力が同じになるように調整します。チームは参加した順に交互に入り、大画面のメニューで「自動で分けなおす」や1人ずつの移動ができます（始まると変えられません）。「やさしい」ルールでは、相手のマスをうばえません（全部ぬれたら終わり）。</span>
       <span class="note hidden" id="rknote"><b>ロケット はっしゃ（協力モード）</b>：クラス全員で1つのロケットを飛ばします。問題（上の「問題」で選んだもの）に答えて燃料をため、目標に届くとミニゲーム（せーので はっしゃ／ほしを あつめよう）が全員同時に始まり、クリアで次のステージへ（ふつう5ステージ・約5分／みじかい3ステージ・約3分。「ステージの数」でえらびます）。失敗しても「もういちど」は1回だけで、2回目は条件がゆるくなり必ず進みます。燃料の目標は人数・学年から自動で決まり、「やさしい」ルールではもっと低くなります。1人が出せる燃料には上限があり、順位や個人の正誤は大画面にも児童の画面にも出ません（名前が出るのは、良いことをした瞬間の吹き出しだけ）。時間の設定は使いません。</span>
       </details>
     </div>
@@ -3332,7 +3463,7 @@ function renderTeacher(q){
   $("#nstg").onchange=remember;
   const syncMode=()=>{ const quiz=$("#nm").value==="quiz", rk=$("#nm").value==="rocket";
     $("#ntl").classList.toggle("hidden",quiz||rk); $("#nsl").classList.toggle("hidden",!rk);
-    $("#rknote").classList.toggle("hidden",!rk);
+    $("#rknote").classList.toggle("hidden",!rk); $("#bsnote").classList.toggle("hidden",$("#nm").value!=="boss"); $("#jnnote").classList.toggle("hidden",$("#nm").value!=="jin");
     [...$("#ng").options].forEach(o=>{ o.disabled=quiz&&!o.value.startsWith("set:"); });
     if(quiz&&!$("#ng").value.startsWith("set:")){ const f=[...$("#ng").options].find(o=>o.value.startsWith("set:")); if(f){ $("#ng").value=f.value; fillG("#ng","#ngr"); setRule(); } }
     if(quiz&&!qsets.length) $("#roomErr").innerHTML='クイズは先生のもんだいで出します。先に ③のタブの ②「もんだいを つくる」でセットをつくってください。<br><a class="btn s" href="#make" style="display:inline-flex;align-items:center;margin-top:6px;text-decoration:none">③のタブの ② もんだいを つくる</a>';
@@ -3340,7 +3471,7 @@ function renderTeacher(q){
   $("#nm").onchange=()=>{ syncMode(); remember(); };
   syncMode();
   const roomFromForm=()=>{ const mode=$("#nm").value, gv=$("#ng").value, base={mode,g:+$("#ngr").value,t:+$("#nt").value,rule:ruleOf($("#nr").value),nm:$("#nmm").value==="input"?"input":"auto",nh:$("#nnh").checked?1:0,ns:$("#nm").value==="rocket"&&$("#nstg").value==="3"?3:5};
-    if((mode==="chest"||mode==="race")&&roomSelected().length){
+    if((mode==="chest"||mode==="race"||mode==="boss"||mode==="jin")&&roomSelected().length){
       const ids=roomSelected(), qs=unitModeQuestions(ids).map(q=>({t:"mc",q:q.q,ch:q.ch,ok:[q.ch.indexOf(q.a)],sec:20,pt:"normal"}));
       return {...base,game:"mine",gt:"単元《たんげん》："+ids.map(id=>UBY[id].title).join("・"),qs,unitIds:ids};
     }
@@ -3859,13 +3990,13 @@ function hrPub(r,host){
 }
 /* 協力モード：対戦中は人の一覧を送らない（小さく保つ）。先生の画面だけは、名前の吹き出しのために一覧を受け取る（児童には名前を送らない） */
 function hrCoPlayers(r,host){
-  if(host) return [...r.players.values()].map(p=>{ const q=r.co.P.get(p.pid); return {pid:p.pid,name:p.name,emoji:p.emoji,...mkPubOf(p),ix:q?q.ix:0}; });
+  if(host) return [...r.players.values()].map(p=>{ const q=r.co.P.get(p.pid); return {pid:p.pid,name:p.name,emoji:p.emoji,...mkPubOf(p),ix:q?q.ix:0,...(r.co.teamOf?{tm:r.co.teamOf(p.pid)}:{})}; });
   if(r.status==="playing") return [];
   return [...r.players.values()].map(p=>({pid:p.pid,name:"",emoji:p.emoji,...mkPubOf(p)}));
 }
 function hrKid(r,conn,kid){      // その児童だけに、自分の名前（me）を添える
   const p=conn._pid&&r.players.get(conn._pid); kid=kid||hrPub(r,false);
-  return p?{...kid,me:p.name,...(r.qz&&r.qz.phase==="end"?{myrec:p.rec||""}:{})}:kid;      // ○×の記録は、その子の分だけ
+  return p?{...kid,me:p.name,...(r.co&&r.co.mine?r.co.mine(p.pid):{}),...(r.qz&&r.qz.phase==="end"?{myrec:p.rec||""}:{})}:kid;      // じんとり：自分のチーム（mt）だけ      // ○×の記録は、その子の分だけ
 }
 function hrBroadcast(r,now){
   const send=()=>{ r.timer=null; const kid=hrPub(r,false);
@@ -3943,11 +4074,15 @@ function hrApi(r,name,b){
   if(name==="qreplay"){ if(!r.qz||r.status!=="ended") return [409,{error:"今は始められません"}];     // クイズ：正答率の低い問題だけ、同じ部屋でもう一度
     const low=r.qz.low(0.6).map(i=>r.qz.qs[i]); if(!low.length) return [409,{error:"正答率の低い問題はありません"}];
     r.status="playing"; r.endAt=0; r.qz.begin(Date.now(),low); qzSync(r); hrBroadcast(r,true); return [200,{ok:true}]; }
-  if(name==="set"){ const p=pl(); if(!p||!r.set) return [403,{error:"参加情報が正しくありません"}]; return [200,r.set]; }     // たからばこ・すごろくで使う先生のもんだい
+  if(name==="set"){ const p=pl(); if(!p||!r.set) return [403,{error:"参加情報が正しくありません"}]; return [200,r.set]; }
+  if(name==="team"||name==="tsplit"){      // 先生の端末からだけ：じんとりの チームを うごかす／自動で 分けなおす（待合室のときだけ）
+    if(!r.co||!r.co.setTeam) return [403,{error:"この遊び方では使えません"}];
+    if(r.status!=="lobby"||!(name==="team"?r.co.setTeam(b.pid,b.tm):r.co.split())) return [409,{error:"今は変えられません"}];
+    hrBroadcast(r,true); return [200,{ok:true}]; }     // たからばこ・すごろくで使う先生のもんだい
   if(name!=="act") return [400,{error:"不明な操作です"}];
   const p=pl(); if(!p) return [403,{error:"参加情報が正しくありません"}];
   if(r.status!=="playing") return [409,{error:"対戦中ではありません"}];
-  const MODE_OPS={chest:["add","x2","lose","steal","swap"],race:["move"],quiz:["qans"],rocket:["cans","boost","mini"]};   // 遊び方ごとに受け付ける操作
+  const MODE_OPS={chest:["add","x2","lose","steal","swap"],race:["move"],quiz:["qans"],rocket:["cans","boost","mini"],boss:["cans"],jin:["cans"]};   // 遊び方ごとに受け付ける操作
   if(b.op!=="answer"&&!(MODE_OPS[r.mode]||[]).includes(b.op)) return [403,{error:"この遊び方では使えない操作です"}];
   if(r.rule==="easy"&&["steal","swap","lose"].includes(b.op)) return [403,{error:"やさしいルールの部屋では使えません"}];
   if(r.co){      // 協力モード：判定は共有部品（cooplib）。児童の値は型・範囲を調べてから使う
@@ -3998,7 +4133,9 @@ function hrHandle(r,conn,m){
 }
 async function hrCreate(s){
   let set=null, qz=null;
-  const co=s.mode==="rocket"?COOP.engine({easy:ruleOf(s.rule)==="easy",g:s.g,stages:s.ns===3?3:5}):null;      // 協力モード「ロケット はっしゃ」
+  const easyR=ruleOf(s.rule)==="easy", tt=Math.min(300,Math.max(60,s.t|0));
+  const co=s.mode==="rocket"?COOP.engine({easy:easyR,g:s.g,stages:s.ns===3?3:5})      // 協力モード「ロケット はっしゃ」
+    :s.mode==="boss"?COOP.bossEngine({easy:easyR,g:s.g,t:tt}):s.mode==="jin"?COOP.jinEngine({easy:easyR,g:s.g,t:tt}):null;      // ボスバトル／じんとりバトル
   if(s.mode==="quiz"||s.game==="mine"){        // 先生のもんだい：型・文字数・個数・時間の値を調べてから使う
     const c=QZ.cleanSet({title:s.gt,qs:s.qs}); if(!c.ok) throw new Error("もんだいが正しくありません："+c.why);
     const qs=s.mode==="quiz"?c.set.qs:c.set.qs.filter(x=>x.t==="mc"); if(!qs.length) throw new Error("4択の問題がありません");
@@ -4011,7 +4148,7 @@ async function hrCreate(s){
     try{ await withTimeout(new Promise((ok,ng)=>{peer.on("open",ok);peer.on("error",ng);}),10000,"つなぎ役のサーバーに接続できませんでした"); }
     catch(e){ try{peer.destroy()}catch(_){} if(e&&e.type==="unavailable-id") continue;
       throw new Error("つなぎ役のサーバーに接続できませんでした"+(e&&e.type?"（"+e.type+"）":"")); }
-    const r={code,mode:s.mode,game:s.mode==="quiz"?"quiz":s.game,g:s.g,t:co?300:s.t,rule:ruleOf(s.rule),status:"lobby",endAt:0,players:new Map(),conns:new Set(),allc:new Set(),closed:false,listeners:new Set(),timer:null,peer,gt:set?set.title:"",set:qz?null:set,qz,co,nm:s.nm==="auto"?"auto":"input",nh:s.nh===0?0:1};
+    const r={code,mode:s.mode,game:s.mode==="quiz"?"quiz":s.game,g:s.g,t:s.mode==="rocket"?300:tt,rule:ruleOf(s.rule),status:"lobby",endAt:0,players:new Map(),conns:new Set(),allc:new Set(),closed:false,listeners:new Set(),timer:null,peer,gt:set?set.title:"",set:qz?null:set,qz,co,nm:s.nm==="auto"?"auto":"input",nh:s.nh===0?0:1};
     peer.on("connection",conn=>{ if(r.allc.size>=200){ try{conn.close()}catch(e){} return; }      // つながる数の上限（いたずら対策）
       r.allc.add(conn); conn.on("data",m=>hrHandle(r,conn,m)); conn.on("close",()=>{ r.conns.delete(conn); r.allc.delete(conn); }); });
     peer.on("disconnected",()=>{ try{peer.reconnect()}catch(e){} });   // 途中参加できるよう仲介サーバーにつなぎ直す
@@ -4058,7 +4195,7 @@ function kcReq(name,body){
 async function api(name,body){
   if(NETMODE==="server") return srvApi(name,body);
   if(name==="create") return hrCreate(body);
-  if(name==="start"||name==="end"||name==="qnext"||name==="qreplay"||name==="hrename"||name==="hnick"||name==="kick"||name==="close"){
+  if(name==="start"||name==="end"||name==="qnext"||name==="qreplay"||name==="hrename"||name==="hnick"||name==="kick"||name==="close"||name==="team"||name==="tsplit"){
     if(!HR||HR.code!==body.code) throw new Error("この端末で作った部屋ではありません");
     const [c,o]=hrApi(HR,name,body); if(c!==200) throw new Error(o.error); return o;
   }
@@ -4090,7 +4227,7 @@ function listen(code,onState,onLost){
   })();
 }
 /*T-END*/
-const modeOf=s=>s.mode==="quiz"?QMODE:s.mode==="rocket"?RKMODE:MODES.find(m=>m.id===s.mode), gameOf=s=>(s.game==="mine"||s.game==="quiz")?MINEGAME(s.gt):GAMES.find(x=>x.id===s.game);
+const modeOf=s=>s.mode==="quiz"?QMODE:s.mode==="rocket"?RKMODE:s.mode==="boss"?BSMODE:s.mode==="jin"?JNMODE:MODES.find(m=>m.id===s.mode), gameOf=s=>(s.game==="mine"||s.game==="quiz")?MINEGAME(s.gt):GAMES.find(x=>x.id===s.game);
 /* 集めている情報の表示（待合室・結果・先生の部屋画面） */
 let LASTNM="input";      // いまの部屋の「なまえの きめかた」（input＝児童が入力／auto＝自動ニックネーム）
 const privacy=()=>`<p class="note privacy" style="text-align:center">${ic("lock")} ${T("pv",NETMODE==="server",LASTNM)}</p>`;
@@ -4168,17 +4305,18 @@ function renderJoin(q){
 function renderLobby(){
   NET=NET||sget("mh_net"); if(!NET) return go("#join");
   listen(NET.code,s=>{
-    if(s.mode==="rocket"&&s.status!=="lobby"){ if(typeof s.me!=="string") return kickedView(); return rkKidState(s); }      // 協力モード：対戦中は人の一覧が来ない。自分の名前（me）が無ければ、へやから出された
+    if(s.mode==="rocket"&&s.status!=="lobby"){ if(typeof s.me!=="string") return kickedView(); return rkKidState(s); }
+    if(isCoB(s.mode)&&s.status!=="lobby"){ if(typeof s.me!=="string") return kickedView(); return ckKidState(s); }      // ボスバトル・じんとり：同じく対戦中は一覧が来ない      // 協力モード：対戦中は人の一覧が来ない。自分の名前（me）が無ければ、へやから出された
     if(!s.players.some(p=>p.pid===NET.pid)) return kickedView();       // 先生が へやから だした
     if(s.mode==="quiz") return qzKidState(s);
     if(s.status==="lobby") lobbyView(s);
     else if(s.status==="playing"){ if(!M||!M.net){ if(s.game==="mine"&&!MINE){ NETLAST=s; if(!NETSET_P) ensureMine(s); } else startNetGame(s); } else { M.state=s; drawSide(); } }
     else { if(M&&M.net){ M.state=s; netFinish(); kidAwardFill(s); } else netFinishView(s); }
-  },()=>{ if(M&&M.net&&M.over) return; if(QK&&QK.ended) return; if(RK&&RK.ended) return;
+  },()=>{ if(M&&M.net&&M.over) return; if(QK&&QK.ended) return; if(RK&&RK.ended) return; if(CB&&CB.ended) return;
     app.innerHTML=`<div class="play"><div class="q">${T("n.lost")}<br><button class="btn" onclick="go('#join')">${T("n.rejoin")}</button></div></div>`; });
 }
 function kickedView(){
-  if(ES){ ES.close(); ES=null; } stopTimer(); M=null; QK=null; RK=null; NET=null; try{ sessionStorage.removeItem("mh_net"); }catch(e){}
+  if(ES){ ES.close(); ES=null; } stopTimer(); M=null; QK=null; RK=null; CB=null; NET=null; try{ sessionStorage.removeItem("mh_net"); }catch(e){}
   app.innerHTML=`<div class="play"><div class="q">${T("k.out")}<br><button class="btn" onclick="go('#join')">${T("n.rejoin")}</button></div></div>`;
 }
 let LEDIT=false, LSTATE=null;
@@ -4196,6 +4334,7 @@ function lobbyView(s){
           <div class="err" id="lerr" role="alert"></div><button class="btn" id="lsv">${T("nm.save")}</button><button class="btn sub" id="lcx">${T("nm.cancel")}</button></div>`
         :`<button class="btn sub" id="rr">${T("l.change")}</button>`}
       ${mkAvPicker()}
+      ${s.mode==="jin"&&(s.mt===0||s.mt===1)?`<div class="lobby-team"><span class="jn-me t${s.mt}">${JN_FACE[s.mt]} ${T("jn.you",s.mt)}</span></div>`:""}
       <p style="font-size:20px">${T("l.wait")}</p>
       <div class="note" id="lcnt">${T("l.n",s.players.length)}</div>
     </div>${privacy()}</div>`;
@@ -4327,7 +4466,7 @@ function nameMenu(pid){
   d.innerHTML=`<div class="box" role="dialog" aria-modal="true" aria-label="名前の管理"><div class="hd">${fm(p)}<b class="nn"></b></div>
     <div class="ed hidden"><input class="nmi" type="text" maxlength="12" autocomplete="off" aria-label="新しい名前"><button type="button" class="btn" data-a="save">かえる</button></div>
     <div class="err" role="alert"></div>
-    <div class="acts"><button type="button" class="btn sub" data-a="rename">名前を かえる</button><button type="button" class="btn sub" data-a="nick">ニックネームに する</button><button type="button" class="btn sub" data-a="kick">へやから だす</button><button type="button" class="btn" data-a="close">とじる</button></div></div>`;
+    <div class="acts"><button type="button" class="btn sub" data-a="rename">名前を かえる</button><button type="button" class="btn sub" data-a="nick">ニックネームに する</button><button type="button" class="btn sub" data-a="kick">へやから だす</button>${HLAST.mode==="jin"&&HLAST.status==="lobby"&&(p.tm===0||p.tm===1)?`<button type="button" class="btn sub" data-a="team">チームを かえる（→ ${p.tm?"あか":"あお"}）</button>`:""}<button type="button" class="btn" data-a="close">とじる</button></div></div>`;
   d.querySelector(".nn").textContent=p.name;
   document.body.appendChild(d);
   const err=d.querySelector(".err"), ed=d.querySelector(".ed"), inp=d.querySelector(".nmi");
@@ -4340,6 +4479,7 @@ function nameMenu(pid){
     else if(a==="rename"){ ed.classList.remove("hidden"); inp.value=p.name; inp.focus(); inp.select(); }
     else if(a==="save"){ const c=NM.check(inp.value); if(!c.ok) return void(err.textContent=NAME_ERR[c.why]); run("hrename",{name:c.name}); }
     else if(a==="nick") run("hnick");
+    else if(a==="team") run("team",{tm:1-p.tm});
     else if(a==="kick"){ if(confirm("「"+p.name+"」を へやから だしますか？")) run("kick"); }
   };
   inp.onkeydown=e=>{ if(e.key==="Enter"){ e.preventDefault(); d.querySelector('[data-a="save"]').click(); } };
@@ -4385,7 +4525,7 @@ function popShow(ev){
   if(params().path!=="host") return;
   if(PST.live.length>=POP.max){ if(!ev.fresh) return; const o=PST.live.shift(); o.el.remove(); }      // いっぱいのときは、まだ出ていない子のために古いものを消す
   const l=popLayer(), el=document.createElement("div"); el.className="pop";
-  const mark={join:"👋",get:"🪙",star:"⭐",move:"👣",goal:"🏁",rk1:"🔥",rk2:"⚡",rk3:"⭐"}[ev.k]||"";
+  const mark={join:"👋",get:"🪙",star:"⭐",move:"👣",goal:"🏁",rk1:"🔥",rk2:"⚡",rk3:"⭐",bs1:"✨",bs2:"🎉",jn1:"🖌️"}[ev.k]||"";
   el.innerHTML=ev.anon?`${face(ev.emoji)}<span class="pn">こたえた！</span>`:`${fm(ev)}<span class="pn"></span><span class="pi">${mark}</span>`;
   if(!ev.anon) el.querySelector(".pn").textContent=ev.name;
   l.appendChild(el);
@@ -4482,7 +4622,7 @@ function renderHost(){
   const lobbyBuild=s=>{
     px.className="px px-lobby-screen";
     px.innerHTML=`<div class="px-lobby"><div class="lcol"><div class="lead">${T("px.code")}</div><div class="bigcode">${s.code}</div>
-        <div class="cnt">${T("px.n")}<b id="pxn"></b>${T("px.nin")}</div></div>
+        <div class="cnt">${T("px.n")}<b id="pxn"></b>${T("px.nin")}</div>${s.mode==="jin"?`<div id="jnlob"></div>`:""}</div>
       <div class="rcol"><div class="qrbox" id="qrbox"></div></div></div>`;
     document.getElementById("pxextra").innerHTML=`<div class="lockmsg hidden" id="pxlock" role="status">${ic("lock")} ${T("px.locked")}</div><div class="chips" id="pxchips"></div>`;
     showQr(document.getElementById("qrbox"),joinUrl);
@@ -4497,6 +4637,13 @@ function renderHost(){
     const chips=s.players.slice(0,lim).map(p=>`<button type="button" class="chip nmb" data-pid="${esc(p.pid)}">${fm(p)} ${esc(p.name)}</button>`).join("")
       +(s.players.length>lim?`<button type="button" class="chip more" id="pxmorebtn">${T("px.more",s.players.length-lim)}</button>`:"");
     document.getElementById("pxchips").innerHTML=chips||`<span class="chip more">${T("px.none")}</span>`;
+    if(s.mode==="jin"){      // じんとり：大画面には チームの人数と顔だけ。名前つきの チーム表は メニューの中
+      const jl=document.getElementById("jnlob"); if(jl) jl.innerHTML=jnLobbyHtml(s);
+      let jm=document.getElementById("jnmenu"); if(!jm){ jm=document.createElement("div"); jm.id="jnmenu"; document.getElementById("pxextra").prepend(jm); }
+      jm.innerHTML=jnLobbyMenu(s);
+      jm.querySelector("#jnsplit").onclick=()=>api("tsplit",HOST).catch(err);
+      jm.querySelectorAll("[data-mv]").forEach(b=>b.onclick=()=>api("team",{...HOST,pid:b.dataset.mv,tm:+b.dataset.tm}).catch(err));
+    }
     const mb=document.getElementById("pxmorebtn"); if(mb) mb.onclick=()=>{ B.allChips=true; lobbyUpd(s); };
   };
   const RH=58;
@@ -4558,6 +4705,11 @@ function renderHost(){
   const draw=s=>{
     last=s; HLAST=s; setLG(s.g); bgmSync(); const m=modeOf(s), x=gameOf(s);
     if(s.mode==="quiz"&&s.status!=="lobby"){ kind="quiz"; qzHostDraw(s,()=>""); popStep(s); return; }
+    if(isCoB(s.mode)&&s.status!=="lobby"){      // ボスバトル・じんとりの大画面
+      const k2=s.status==="playing"?s.mode:"rkend";
+      if(k2!==kind){ kind=k2; evs=[]; prev=null; dockSet(k2==="rkend"?"rkend":"play"); coHostBuild(px,s); }
+      coHostUpd(s); coPop(s); prev=s; return;
+    }
     if(s.mode==="rocket"&&s.status!=="lobby"){      // 協力モード：ロケットの大画面
       if(!document.getElementById("rocket-art")&&!B.artTry){ B.artTry=1; rkArt().catch(()=>{}).then(()=>{ if(last) draw(last); }); return; }      // 絵を読みこんでから作る
       const k2=s.status==="playing"?"rocket":"rkend";
@@ -4850,6 +5002,221 @@ function rkHostFrame(){
     const on=[]; if(R.bn&&Date.now()<R.bt) on.push(T("rk.h.bo")); if(co.ph==="play"&&co.wd) on.push(T("rk.h.wind"));
     const html=on.map(x=>`<span>${x}</span>`).join(""); if(note.dataset.h!==html){ note.dataset.h=html; note.innerHTML=html; }
   }
+}
+
+/* ================= ボスバトル（協力）・じんとりバトル（2チーム） =================
+   Qalc（MIT © 2026 GIGAyama）の BossBattle.jsx・TerritoryBattle.jsx の遊び方を参考に作り直した（apps/README.md）。
+   進行と判定は data/cooplib.js（先生の端末と server.js で同じ部品）。児童の端末が送るのは「答えた（ok・連番）」だけ。
+   児童の画面：問題と、ボスの小さな ようす／自分のチームと小さな盤。ほかの子の名前・正誤は出さない。
+   先生の大画面：ボス・げんきの棒・みんなの合計／7×7 の盤・チームの点。名前は 良いことの吹き出しだけ */
+const BSMODE={id:"boss",ico:"👾"}; tget(BSMODE,"t","m.boss.t"); tget(BSMODE,"d","m.boss.d");
+const JNMODE={id:"jin",ico:"🏳️"}; tget(JNMODE,"t","m.jin.t"); tget(JNMODE,"d","m.jin.d");
+const isCoB=m=>m==="boss"||m==="jin";
+const BS_COL=["#8e6cf0","#2fae9c","#f08a5d","#e8b21f","#5aa0f0","#e86a9a"];
+/* ボスの絵（いたずらモンスター）：k＝しゅるい、mood 0 ふつう／1 くたびれた／2 わらって にげる。外の画像は使わない */
+function bsArt(k,mood){
+  const c=BS_COL[k%6], s='stroke="#16372a" stroke-width="6" stroke-linejoin="round" stroke-linecap="round"';
+  const acc=[`<path d="M66 58 54 22 88 48M134 58 146 22 112 48" fill="${c}" ${s}/>`,
+    `<path d="M100 46V18" fill="none" ${s}/><circle cx="100" cy="16" r="11" fill="#ffd84a" ${s}/>`,
+    `<path d="M58 66 70 20 98 48M142 66 130 20 102 48" fill="${c}" ${s}/>`,
+    `<path d="M64 52h72l-8-30-16 14-12-22-12 22-16-14z" fill="#ffd84a" ${s}/>`,
+    `<path d="M62 60c-6-26 18-36 28-20M138 60c6-26-18-36-28-20" fill="#fff" ${s}/>`,
+    `<path d="M58 54h84l-6-34-18 16-18-26-18 26-18-16z" fill="#ffe066" ${s}/><circle cx="100" cy="30" r="6" fill="#e86a9a" ${s}/>`][k%6];
+  const eye=mood===2?`<path d="M66 104q12-14 24 0M110 104q12-14 24 0" fill="none" ${s}/>`
+    :`<circle cx="78" cy="104" r="15" fill="#fff" ${s}/><circle cx="122" cy="104" r="15" fill="#fff" ${s}/><circle cx="${mood?76:80}" cy="${mood?108:104}" r="6" fill="#16372a"/><circle cx="${mood?120:124}" cy="${mood?108:104}" r="6" fill="#16372a"/>`;
+  const mouth=mood===2?`<path d="M80 132q20 30 40 0z" fill="#ff8f8f" ${s}/>`:mood===1?`<path d="M82 140q9-8 18 0t18 0" fill="none" ${s}/>`:`<path d="M78 134q22 20 44 0" fill="none" ${s}/><path d="M92 141v8h8v-6" fill="#fff" stroke="#16372a" stroke-width="4"/>`;
+  const sweat=mood===1?`<path d="M150 70q8 12 0 18q-8-6 0-18z" fill="#9fd8ff" stroke="#16372a" stroke-width="4"/>`:"";
+  return `<svg class="bsart" viewBox="0 0 200 200" aria-hidden="true" focusable="false">${acc}<path d="M100 44c46 0 72 38 72 80 0 40-30 60-72 60s-72-20-72-60c0-42 26-80 72-80z" fill="${c}" ${s}/>
+    <ellipse cx="100" cy="150" rx="40" ry="24" fill="#fff" opacity=".35"/><ellipse cx="72" cy="186" rx="18" ry="9" fill="${c}" ${s}/><ellipse cx="128" cy="186" rx="18" ry="9" fill="${c}" ${s}/>${eye}${mouth}${sweat}
+    <circle cx="60" cy="128" r="8" fill="#ff8f8f" opacity=".6"/><circle cx="140" cy="128" r="8" fill="#ff8f8f" opacity=".6"/></svg>`;
+}
+const bsName=lv=>(lv>=6?T("bs.super"):"")+T("bs.boss",lv%6);
+const bsMood=co=>co.ph==="run"?2:co.hp<=35?1:0;
+const JN_FACE=["🐰","🐧"];
+/* 盤（大画面・児童の小さな盤で同じ）。色だけに たよらない：あおは しま模様、本陣は動物、★は点の大きいマス */
+function jnBoardHtml(co,big){
+  const D=COOP.JN_DEF, flash=new Set((co.pa||[]).map(x=>x[0]));
+  return `<div class="jn-bd${big?" big":""}" role="img" aria-label="${esc(rbp(T("jn.board",co.cn[0],co.cn[1])))}">${[...co.cl].map((ch,i)=>{
+    const d=D[i], o=ch==="a"?0:ch==="b"?1:-1, tg=co.ph==="play"?co.tg.indexOf(i):-1;
+    const lab=d.home>=0?JN_FACE[d.home]:d.star===2?"★5":d.star?"★":"";
+    return `<i class="c${o>=0?" o"+o:""}${d.home>=0?" hm":""}${d.star?" st":""}${big&&flash.has(i)?" fl":""}${tg>=0?" tg tg"+tg:""}" data-i="${i}">${lab}${tg>=0&&big?`<u style="width:${co.tp[tg]}%"></u>`:""}</i>`; }).join("")}</div>`;
+}
+/* ----- 児童の端末 ----- */
+let CB=null;
+const ckNow=()=>Date.now()+CB.off;
+function ckStop(){ stopTimer(); }
+function ckKidState(s){
+  const co=COOP&&COOP.clean(s.co); if(!co||co.k!==(s.mode==="boss"?"bs":"jn")) return;
+  setLG(s.g);
+  if(!CB||CB.code!==s.code) CB={code:s.code,offs:[],off:0,key:"",k:0,ans:0,ok:0,d:0,ko:0,cells:0,ended:false,cur:null,lock:false,mt:0,trI:0};
+  const K=CB; K.s=s; K.co=co; if(s.mt===0||s.mt===1) K.mt=s.mt;
+  const o=s.now-Date.now(); K.offs.push(o); if(K.offs.length>10) K.offs.shift(); K.off=Math.max(...K.offs);
+  if(s.status==="ended"||co.ph==="end") return ckKidEnd();
+  const key=co.ph+":"+(co.k==="bs"?co.lv:"");
+  if(K.key!==key){ K.key=key; ckKidDraw(); } else ckKidLive();
+}
+function ckHead(){
+  const K=CB, bs=K.co.k==="bs";
+  return `<div class="rk-hd"><span>${bs?"👾 "+T("bs.name"):`<span class="jn-me t${K.mt}">${JN_FACE[K.mt]} ${T("jn.team",K.mt)}</span>`}</span><span class="note">${T("l.room")} ${esc(K.s.code)}</span></div>`;
+}
+function ckStatus(){
+  const K=CB, co=K.co;
+  if(co.k==="bs") return `<div class="bs-st${co.tr?" tr"+co.tr.k:""}" id="bsst"><span class="bs-mini">${bsArt(co.lv,bsMood(co))}</span><div class="bs-stx"><b>${esc(bsName(co.lv))}</b><div class="rk-hbar bs-hp"><i id="bshpk" style="width:${co.hp}%"></i></div><span class="note">${T("bs.hp")}</span></div><span class="bs-dn"><small>${T("bs.dnl")}</small><b id="bsdnk">${T("bs.dnk",co.dn)}</b></span></div><div class="bs-trk" id="bstrk" aria-live="polite">${co.tr?T("bs.tr"+co.tr.k):""}</div>`;
+  return `<div class="jn-st"><div id="jnbk">${jnBoardHtml(co,false)}</div><div class="jn-sc" id="jnsck">${ckJnScore(co)}</div></div><div class="bs-trk" id="jnlsk" aria-live="polite">${co.ls?T("jn.ls"):""}</div>`;
+}
+const ckJnScore=co=>`<span class="t0">${JN_FACE[0]} <b>${co.sc[0]}</b></span><span class="vs">−</span><span class="t1"><b>${co.sc[1]}</b> ${JN_FACE[1]}</span>`;
+function ckKidDraw(){
+  const K=CB, co=K.co, bs=co.k==="bs"; ckStop();
+  const cls=`play ${bs?"bsk":"jnk jt"+K.mt}`;
+  if(co.ph==="count"||co.ph==="lobby"){
+    app.innerHTML=`<div class="${cls}">${ckHead()}${bs?"":ckStatus()}<div class="q"><div>${T(bs?"bs.soon":"jn.soon")}</div><div class="countdown" id="ckcd"></div></div></div>`;
+    const tick=()=>{ const c=$("#ckcd"); if(c&&K.co.pe){ const n=Math.max(0,Math.ceil((K.co.pe-ckNow())/1000)); if(c.textContent!==String(n)){ if(n>0) sfx("tick"); c.textContent=n; } } };
+    tick(); timerId=setInterval(tick,100);
+  } else if(co.ph==="run"){
+    sfx("star"); party();
+    app.innerHTML=`<div class="${cls}">${ckHead()}<div class="q bs-runq"><div class="bs-runa">${bsArt(co.lv,2)}</div><div class="big">${T("bs.run")}</div><div class="small">${T("bs.next")}</div></div></div>`;
+  } else {
+    app.innerHTML=`<div class="${cls}">${ckHead()}${ckStatus()}<div class="rk-qh">${T(bs?"bs.q":"jn.q")}</div><div id="ckq"></div><div class="rk-sc" id="cktm"></div></div>`;
+    ckShowQ(); ckClock(); timerId=setInterval(ckClock,500);
+  }
+}
+function ckClock(){ const K=CB, e=$("#cktm"); if(!K||!e) return; const n=Math.max(0,Math.ceil((K.co.ae-ckNow())/1000)); const t=T("rk.h.left")+" "+clock(n); if(e.textContent!==t) e.textContent=t; }
+function ckKidLive(){
+  const K=CB, co=K.co;
+  if(co.k==="bs"){
+    const h=$("#bshpk"); if(h) h.style.width=co.hp+"%";
+    const st=$("#bsst"); if(st){ st.className="bs-st"+(co.tr?" tr"+co.tr.k:""); const m=st.querySelector(".bs-mini"), md=bsMood(co); if(m&&m.dataset.m!==String(md)){ m.dataset.m=md; m.innerHTML=bsArt(co.lv,md); } }
+    const tr=$("#bstrk"), tt=co.tr?T("bs.tr"+co.tr.k):""; if(tr&&tr.dataset.t!==tt){ tr.dataset.t=tt; tr.innerHTML=tt; }
+    const dn=$("#bsdnk"); if(dn) dn.textContent=T("bs.dnk",co.dn);
+  } else {
+    const b=$("#jnbk"); if(b){ const sig=co.cl+co.tg.join(","); if(b.dataset.sig!==sig){ b.dataset.sig=sig; b.innerHTML=jnBoardHtml(co,false); } }
+    const sc=$("#jnsck"); if(sc) sc.innerHTML=ckJnScore(co);
+    const ls=$("#jnlsk"); if(ls&&!!co.ls!==!!ls.textContent){ ls.innerHTML=co.ls?T("jn.ls"):""; if(co.ls) sfx("tick"); }
+  }
+}
+function ckShowQ(){
+  const K=CB; if(!K||K.co.ph!=="play") return;
+  const s=K.s, box=$("#ckq"); if(!box) return;
+  if(s.game==="mine"&&!MINE){
+    if(!NETSET_P) NETSET_P=api("set",NET).then(r=>{ const c=QZ.cleanSet(r), qs=c.ok?c.set.qs.filter(x=>x.t==="mc"):[]; if(!qs.length) throw new Error("no set"); MINE={qs,order:[],i:0}; }).catch(()=>{ NETSET_P=null; });
+    box.innerHTML=`<div class="q">${T("rk.load")}</div>`;
+    NETSET_P.then(()=>{ if(CB===K&&MINE) ckShowQ(); }); return;
+  }
+  const q=K.cur=(s.game==="mine"?genMine():genChoice(s.game,s.g)); K.lock=false;
+  const cls=["ca","cb","cc","cd"];
+  box.innerHTML=`<div class="q"><div class="big">${q.rich?"":esc(q.q)}${spkBtn(s.game,q.q)}</div><div class="small">${esc(q.small||"")}</div></div>
+    <div class="fb" id="fb" aria-live="polite"></div>
+    <div class="choices">${q.ch.map((c,i)=>`<button class="choice ${cls[i]}" data-c="${esc(c)}"><span class="kh" aria-hidden="true">${i+1}</span>${q.rich?"":chLabel(c,q)}</button>`).join("")}</div>`;
+  if(q.rich){ box.querySelector(".big").prepend(rubyNode(q.q)); box.querySelectorAll(".choice").forEach((b,i)=>b.append(rubyNode(q.ch[i]))); }
+  box.querySelectorAll("[data-c]").forEach(b=>b.onclick=()=>ckPick(b));
+}
+function ckPick(b){
+  const K=CB; if(!K||K.lock||K.co.ph!=="play") return; K.lock=true;
+  const q=K.cur, isOk=c=>q.rich?q.oks.includes(c):c===q.a, right=isOk(b.dataset.c), bs=K.co.k==="bs";
+  document.querySelectorAll("#ckq .choice").forEach(e=>e.classList.add(isOk(e.dataset.c)?"right":"wrong"));
+  K.ans++; if(right) K.ok++;
+  sfx(right?"ok":"ng");
+  const fb=$("#fb"), ans=q.rich?QZ.plain(q.a):q.a, say=(c,t)=>{ const f=$("#fb"); if(f&&CB===K){ f.className="fb "+c; f.innerHTML=t; } };
+  say(right?"ok":"ng",right?T("rk.right0"):T(bs?"bs.wrong":"jn.ng",esc(ans)));
+  api("act",{...NET,op:"cans",ok:right,k:++K.k}).then(r=>{
+    if(CB!==K||!r||r.late) return;
+    if(bs){ K.d+=r.dm|0; if(r.ko){ K.ko++; say("ok",T("bs.ko")); } else if(r.cap) say("ok",T("rk.cap")); else if(right) say("ok",T("bs.hit",r.dm|0)); }
+    else if(right){ K.cells+=r.pt|0; say("ok",(r.pt|0)>0?T("jn.ok",r.pt):T("jn.ok0")); }
+  }).catch(()=>{});
+  setTimeout(()=>{ if(CB===K&&K.co.ph==="play") ckShowQ(); },right?1300:2600);      // 答えのあとは 1.3秒（まちがいは 2.6秒）あける
+}
+function ckKidEnd(){
+  const K=CB; if(K.ended) return; K.ended=true; ckStop();
+  const co=K.co, bs=co.k==="bs", r=co.res||{};
+  sfx("medal"); party();
+  const colHtml=COLOK?colRun({units:[],answered:K.ans,correct:K.ok,quiz:true,quiet:K.s.nh!==0}):"";      // どんぐり：ロケットと同じ（3問以上こたえた子に +2・1日1回。勝ち負けでは ふえない）
+  let head;
+  if(bs) head=`<div class="bs-runa">${bsArt(Math.max(0,co.lv),r.dn>0?2:0)}</div><div class="num">${r.dn>0?T("bs.end",r.dn):T("bs.end0")}</div><div class="note">${T(r.dn>0?"bs.end.h":"bs.end.h0")}</div><div class="big2 bs-tdk">${T("bs.td",r.td|0)}</div>`;
+  else { const w=r.w, mine=K.mt, diff=Math.abs(r.sc[0]-r.sc[1]);
+    head=`<div class="jn-endb">${jnBoardHtml({...co,ph:"end",tg:[-1,-1],tp:[0,0]},false)}</div><div class="num">${w<0?T("jn.draw"):T("jn.win",w)}</div><div class="jn-sc big">${ckJnScore({sc:r.sc})}</div>
+      <div class="note">${w<0||w===mine?T("jn.yay"):T("jn.good",diff)}</div>`; }
+  const mine=[K.ok?T("rk.me.ok",K.ok):"",bs&&K.d?T("bs.me.d",K.d):"",bs&&K.ko?T("bs.me.ko",K.ko):"",!bs&&K.cells?T("jn.me.c",K.cells):""].filter(Boolean);
+  app.innerHTML=`<div class="play"><div class="res">${head}${r.an>0?`<div class="note">${T("rk.an",r.an)}</div>`:""}
+    <div class="q rk-me"><div class="small">${T("rk.me")}</div>${(mine.length?mine:[T("bs.me.none")]).map(x=>`<div class="big2">${x}</div>`).join("")}</div>
+    <div id="myaward">${kidAwardHtml(K.s,NET.pid)}</div>${colHtml}<div class="actions"><button class="btn again" onclick="go('#home')">${T("n.home")}</button></div></div>${privacy()}</div>`;
+}
+/* ----- 先生の大画面 ----- */
+let CH=null;
+function coRowHtml(ps){ return ps.slice(0,14).map(p=>`<span data-pid="${esc(p.pid)}" role="button" tabindex="0">${fm(p)}</span>`).join(""); }
+function coHostBuild(px,s){
+  popInit(); M=null;
+  CH={s,co:null,off:0,bbi:0,key:"",iv:0,pn:-1,sig:""};
+  const bs=s.mode==="boss";
+  px.className="px co-px "+(bs?"bs-px":"jn-px");
+  px.innerHTML=bs?`<div class="coh-top"><span>👾 ${T("bs.name")}</span><span id="bslv"></span><span id="bsdn"></span><span class="t" id="cot"></span></div>
+    <div class="bsh"><div class="bsh-stage" id="bsstage"><div class="bsh-boss" id="bsb"></div><div class="bsh-nm" id="bsnm"></div><div class="bsh-tr" id="bstr"></div></div>
+      <div class="bsh-side"><div class="lbl">${T("bs.hp")}</div><div class="bsh-hp"><i id="bshp"></i></div>
+        <div class="lbl">${T("bs.tdl")}</div><div class="bsh-td" id="bstd">0</div><div class="lbl sm" id="bsn"></div></div></div>
+    <div class="co-row" id="corow"></div><div class="co-msg" id="comsg"></div>`
+    :`<div class="coh-top"><span>🏳️ ${T("jn.name")}</span><span class="ls" id="jnls"></span><span class="t" id="cot"></span></div>
+    <div class="jnh"><div class="jnh-bd" id="jnbd"></div>
+      <div class="jnh-side">${[0,1].map(t=>`<div class="jn-tm t${t}"><div class="nm">${JN_FACE[t]} ${T("jn.team",t)}</div><div class="pt"><b id="jnsc${t}">0</b>${T("jn.pt0")}</div><div class="cn" id="jncn${t}"></div><div class="co-row" id="jnrow${t}"></div></div>`).join("")}
+        <div class="lbl sm">${T("jn.rule")}</div></div></div><div class="co-msg" id="comsg"></div>`;
+  CH.iv=setInterval(coHostFrame,250);
+}
+function coPop(s){
+  const R=CH, b=R&&R.co&&R.co.bb; if(!b||b.i===R.bbi) return; R.bbi=b.i;
+  const by=new Map(s.players.map(p=>[p.ix,p])), evs=[], pre=R.co.k;
+  for(const [ix,kind] of b.l){ const p=by.get(ix); if(p) evs.push({pid:p.pid,name:p.name,emoji:p.emoji,mk:p.mk,ms:p.ms,k:pre+kind}); }
+  if(evs.length) popFeed(evs);
+}
+function coHostUpd(s){
+  const R=CH, co=COOP.clean(s.co); if(!R||!co) return;
+  R.s=s; R.co=co; R.off=s.now-Date.now();
+  const $$=id=>document.getElementById(id), msg=$$("comsg");
+  const key=co.ph+":"+(co.k==="bs"?co.lv:"");
+  const fresh=key!==R.key; R.key=key;
+  if(co.k==="bs"){
+    $$("bslv").textContent=T("bs.h.lv",co.lv+1); $$("bsdn").textContent=T("bs.dn",co.dn);
+    const md=bsMood(co), stg=$$("bsstage"), bx=$$("bsb");
+    if(bx.dataset.k!==co.lv+":"+md){ bx.dataset.k=co.lv+":"+md; bx.innerHTML=bsArt(co.lv,md); $$("bsnm").textContent=rbp(bsName(co.lv)); }
+    bx.style.transform=co.ph==="run"?"":`scale(${(.55+.45*co.hp/100).toFixed(3)})`;
+    stg.className="bsh-stage"+(co.ph==="run"?" run":"")+(co.tr?" tr"+co.tr.k:"");
+    { const tr=$$("bstr"), tt=co.tr?T("bs.tr"+co.tr.k):""; if(tr.dataset.t!==tt){ tr.dataset.t=tt; tr.innerHTML=tt; } }
+    $$("bshp").style.width=(co.ph==="run"?0:co.hp)+"%"; $$("bstd").textContent=co.td; $$("bsn").textContent=T("bs.h.n",co.n);
+    const sig=s.players.map(p=>p.pid+p.emoji+(p.mk||"")).join(); if(sig!==R.sig){ R.sig=sig; $$("corow").innerHTML=coRowHtml(s.players); }
+    if(fresh){ msg.classList.remove("low");
+      if(co.ph==="count") msg.innerHTML=`<div class="rkm-card"><h2>${T("bs.soon")}</h2><div class="rkm-big" id="cobig"></div></div>`;
+      else if(co.ph==="run"){ msg.classList.add("low"); msg.innerHTML=`<div class="rkm-card"><div class="rkm-clear">${T("bs.run")}</div><h2>${T("bs.next")}</h2></div>`; party(); sfx("launch"); }
+      else if(co.ph==="end"){ const r=co.res||{}; msg.innerHTML=`<div class="rkm-card co-end"><div class="rkm-end">${r.dn>0?T("bs.end",r.dn):T("bs.end0")}</div><h2>${T("bs.td",r.td|0)}・${T("rk.an",r.an|0)}</h2><div class="award-show">${hostAwardsHtml(s)}</div></div>`; party(); awardReveal(msg); }
+      else msg.innerHTML="";
+    }
+  } else {
+    const sig=co.cl+co.tg.join()+co.tp.join()+co.pn+co.ph;
+    if(sig!==R.sig){ R.sig=sig; $$("jnbd").innerHTML=jnBoardHtml(co,true); if(co.pn!==R.pn&&R.pn>=0) sfx("coin"); R.pn=co.pn; }
+    for(const t of [0,1]){ $$("jnsc"+t).textContent=co.sc[t]; $$("jncn"+t).textContent=T("jn.cells",co.cn[t])+"・"+T("jn.ppl",co.tn[t]);
+      const ps=s.players.filter(p=>p.tm===t), rs=ps.map(p=>p.pid+p.emoji).join(), row=$$("jnrow"+t); if(row.dataset.sig!==rs){ row.dataset.sig=rs; row.innerHTML=coRowHtml(ps); } }
+    { const ls=$$("jnls"), tt=co.ls?T("jn.ls"):""; if(ls.dataset.t!==tt){ ls.dataset.t=tt; ls.innerHTML=tt; } }
+    if(fresh){ msg.classList.remove("side");
+      if(co.ph==="count") msg.innerHTML=`<div class="rkm-card"><h2>${T("jn.soon")}</h2><div class="rkm-big" id="cobig"></div></div>`;
+      else if(co.ph==="end"){ const r=co.res||{}; msg.classList.add("side"); msg.innerHTML=`<div class="rkm-card co-end"><div class="rkm-end">${r.w<0?T("jn.draw"):T("jn.win",r.w)}</div><h2>${JN_FACE[0]} ${T("jn.pt",r.sc[0])}　${JN_FACE[1]} ${T("jn.pt",r.sc[1])}</h2><div class="award-show">${hostAwardsHtml(s)}</div></div>`; party(); awardReveal(msg); }
+      else msg.innerHTML="";
+    }
+  }
+  coHostFrame();
+}
+function coHostFrame(){
+  const R=CH; if(!R||params().path!=="host"){ if(R) clearInterval(R.iv); return; }
+  const co=R.co; if(!co) return;
+  const now=Date.now()+R.off, t=document.getElementById("cot");
+  const tt=co.ph==="play"||co.ph==="run"?T("rk.h.left")+" "+clock(Math.max(0,Math.ceil((co.ae-now)/1000))):"";
+  if(t&&t.textContent!==tt){ t.textContent=tt; t.classList.toggle("warn",co.ae-now<=10000); }
+  const big=document.getElementById("cobig");
+  if(big&&co.ph==="count"){ const n=String(Math.max(0,Math.ceil((co.pe-now)/1000))); if(big.textContent!==n){ if(+n>0) sfx("tick"); big.textContent=n; } }
+}
+/* 先生：じんとりの待合室。大画面には チームの人数と 顔だけ（名前は出さない）。名前つきの チーム表と「チームを かえる」は メニューの中 */
+function jnLobbyHtml(s){
+  const n=[0,1].map(t=>s.players.filter(p=>p.tm===t));
+  return `<div class="jn-lob">${[0,1].map(t=>`<div class="jn-tm t${t}"><div class="nm">${JN_FACE[t]} ${T("jn.team",t)}</div><div class="cn">${T("jn.ppl",n[t].length)}</div><div class="fcs">${n[t].slice(0,20).map(p=>fm(p)).join("")}</div></div>`).join("")}</div>`;
+}
+function jnLobbyMenu(s){      //T
+  return `<div class="jn-menu"><b>チーム分《わ》け</b>（名前《なまえ》を押《お》すと、もう一方《いっぽう》のチームへ移《うつ》ります）<button type="button" class="btn sub" id="jnsplit">🔀 自動《じどう》で分《わ》けなおす（人数《にんずう》をそろえる）</button>
+    ${[0,1].map(t=>`<div class="jn-col t${t}"><b>${JN_FACE[t]} ${T("jn.team",t)}</b>${s.players.filter(p=>p.tm===t).map(p=>`<button type="button" class="chip jnmv" data-mv="${esc(p.pid)}" data-tm="${1-t}">${fm(p)} ${esc(p.name)} ⇄</button>`).join("")}</div>`).join("")}</div>`;
 }
 
 /*T-BEGIN*/

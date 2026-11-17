@@ -8,11 +8,11 @@ const NM = require("./data/ngwords.js");   // 児童が入力する名前の検�
 const QZ = require("./data/quizlib.js");   // 先生のもんだい：形式チェックとクイズの進行（ブラウザと同じ部品）
 const AW = require("./data/awardlib.js");
 const COL = require("./data/collection.js");   // まなびっこの ID の表（アバター：ID と 段階だけを 受けとる）
-const COOP = require("./data/cooplib.js"); // 協力モード「ロケット はっしゃ」の進行（ブラウザ・先生の端末と同じ部品）
+const COOP = require("./data/cooplib.js"); // 協力モード（ロケット はっしゃ・ボスバトル）と じんとりバトルの進行（ブラウザ・先生の端末と同じ部品）
 
 const PORT = +process.env.PORT || 8787;
 const PAGE = ["manabi-hiroba.html", "index.html"].map(f => path.join(__dirname, f)).find(f => fs.existsSync(f));
-const MODES = ["chest", "race", "quiz", "rocket"];
+const MODES = ["chest", "race", "quiz", "rocket", "boss", "jin"];
 const GAMES = ["calc", "kuku", "kanji", "kencho", "eigo"];
 const GOAL = 40;
 const EV = { 4: "⭐", 9: "🌀", 13: "⭐", 17: "🌀", 21: "⭐", 25: "🌀", 27: "⭐", 31: "🌀", 35: "⭐", 38: "🌀" };
@@ -21,7 +21,7 @@ const MAX_PLAYERS = 60;
 const RULES = ["normal", "easy"];
 const EASY_NG = ["steal", "swap", "lose"];
 // 遊び方ごとに受け付ける操作（answer はどちらでも可）
-const MODE_OPS = { chest: ["add", "x2", "lose", "steal", "swap"], race: ["move"], quiz: ["qans"], rocket: COOP.OPS };
+const MODE_OPS = { chest: ["add", "x2", "lose", "steal", "swap"], race: ["move"], quiz: ["qans"], rocket: COOP.OPS, boss: ["cans"], jin: ["cans"] };
 const COOP_SCALE = +process.env.COOP_TIME_SCALE > 0 && +process.env.COOP_TIME_SCALE <= 1 ? +process.env.COOP_TIME_SCALE : 1;   // 検査用：協力モードの時間をちぢめる倍率（ふつうは 1）
 const evOf = rule => rule === "easy" ? Object.fromEntries(Object.entries(EV).filter(([, e]) => e !== "🌀")) : EV;
 // ページが読み込む問題データ（data フォルダの .js だけを返す）
@@ -112,7 +112,8 @@ function pub(room, host) {
 }
 // 協力モード：対戦中は人の一覧を送らない（小さく保つ）。先生の画面だけは、名前の吹き出しのために一覧を受け取る
 function coPlayers(room, host) {
-  if (host) return [...room.players.values()].map(p => ({ pid: p.pid, name: p.name, emoji: p.emoji, ...mkPub(p), ix: room.co.P.get(p.pid) ? room.co.P.get(p.pid).ix : 0 }));
+  const tm = p => room.co.teamOf ? { tm: room.co.teamOf(p.pid) } : {};      // じんとり：チーム（0＝あか／1＝あお）
+  if (host) return [...room.players.values()].map(p => ({ pid: p.pid, name: p.name, emoji: p.emoji, ...mkPub(p), ix: room.co.P.get(p.pid) ? room.co.P.get(p.pid).ix : 0, ...tm(p) }));
   if (room.status === "playing") return [];
   return [...room.players.values()].map(p => ({ pid: p.pid, name: "", emoji: p.emoji, ...mkPub(p) }));
 }
@@ -120,7 +121,7 @@ function coPlayers(room, host) {
 function kidMsg(room, res, base) {
   const p = res.pid && room.players.get(res.pid);
   // クイズの終了後は、その子自身の○×の記録（myrec）だけを添える（ほかの子の記録は送らない）
-  return "data: " + base + (p ? ',"me":' + JSON.stringify(p.name) + (room.qz && room.qz.phase === "end" ? ',"myrec":' + JSON.stringify(p.rec || "") : "") : "") + "}\n\n";
+  return "data: " + base + (p ? ',"me":' + JSON.stringify(p.name) + (room.co && room.co.mine ? ',"mt":' + (room.co.mine(p.pid).mt | 0) : "") + (room.qz && room.qz.phase === "end" ? ',"myrec":' + JSON.stringify(p.rec || "") : "") : "") + "}\n\n";
 }
 // クイズの得点などを、部屋の参加者の表に写す
 function awardAnswer(p, right, ms) {
@@ -210,6 +211,8 @@ const API = {
       if (b.mode === "quiz") room.qz = QZ.engine(qs, { easy: rule === "easy" });
     }
     if (b.mode === "rocket") room.co = COOP.engine({ easy: rule === "easy", g, scale: COOP_SCALE, stages: b.ns === 3 ? 3 : 5 });
+    if (b.mode === "boss") room.co = COOP.bossEngine({ easy: rule === "easy", g, t, scale: COOP_SCALE });
+    if (b.mode === "jin") room.co = COOP.jinEngine({ easy: rule === "easy", g, t, scale: COOP_SCALE });
     tlist.push(nowC); rooms.set(room.code, room);
     return [200, { code: room.code, hostKey: room.hostKey, nm: room.nm }];
   },
@@ -293,6 +296,19 @@ const API = {
     broadcast(room, true);
     return [200, { ok: true }];
   },
+  // 先生：じんとりの チームを うごかす／自動で 分けなおす（待合室のときだけ）
+  team(b) {
+    const room = rooms.get(String(b.code));
+    if (!room || room.hostKey !== b.hostKey || !room.co || !room.co.setTeam) return [403, { error: "先生の画面からのみ操作できます" }];
+    if (room.status !== "lobby" || !room.co.setTeam(b.pid, b.tm)) return [409, { error: "今は変えられません" }];
+    broadcast(room, true); return [200, { ok: true }];
+  },
+  tsplit(b) {
+    const room = rooms.get(String(b.code));
+    if (!room || room.hostKey !== b.hostKey || !room.co || !room.co.split) return [403, { error: "先生の画面からのみ操作できます" }];
+    if (room.status !== "lobby" || !room.co.split()) return [409, { error: "今は変えられません" }];
+    broadcast(room, true); return [200, { ok: true }];
+  },
   start(b) {
     const room = rooms.get(String(b.code));
     if (!room || room.hostKey !== b.hostKey) return [403, { error: "先生の画面からのみ操作できます" }];
@@ -339,12 +355,13 @@ const API = {
     if (room.status !== "playing") return [409, { error: "対戦中ではありません" }];
     if (b.op !== "answer" && !(MODE_OPS[room.mode] || []).includes(b.op)) return [403, { error: "この遊び方では使えない操作です" }];
     if (room.co) {      // 協力モード：判定は共有部品（cooplib）。児童の値は型・範囲を調べてから使う
-      if (!COOP.OPS.includes(b.op)) return [403, { error: "この遊び方では使えない操作です" }];
+      if (!room.co.OPS.includes(b.op)) return [403, { error: "この遊び方では使えない操作です" }];
       // Boost eligibility is calculated only from answers accepted by the room engine.
       // Never accept client-supplied counters as boost credit.
       if (b.op === "boost" && ("count" in b || "correct" in b || "ok" in b)) return [400, { error: "boost counters are not accepted" }];
       const r = room.co.act(p.pid, b.op, b, Date.now());
-      if (r[0] === 200) { if (b.op === "cans" && !r[1].late) awardAnswer(p, b.ok === true, null); if (b.op === "boost") p.boost = (p.boost || 0) + 1; if (r[2]) broadcast(room, true); else broadcast(room); }
+      if (r[0] === 200) { if (b.op === "cans" && !r[1].late) { awardAnswer(p, b.ok === true, null); if (room.mode !== "rocket") b.ok ? p.ok++ : p.ng++; }      // ボス・じんとり：しょうの「正解の数」に使う（部屋の側で数えた答えだけ）
+        if (b.op === "boost") p.boost = (p.boost || 0) + 1; if (r[2]) broadcast(room, true); else broadcast(room); }
       return [r[0], r[1]];
     }
     if (room.qz) {      // クイズ：答えの番号だけ受け取り、点数は部屋の側で決める

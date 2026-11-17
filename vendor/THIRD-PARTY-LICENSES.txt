@@ -237,7 +237,7 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
 - vendor/img/space/（背景6枚〔*-norocket と -v2 をふくむ〕と、エネルギー・モニター・星の部品3枚）：AI生成画像。Codex（OpenAI）の画像生成でこのプロジェクト向けに作成。実在の人物の写真ではない。
 - vendor/audio/sfx-launch.mp3・sfx-clear.mp3・sfx-energy-full.mp3：Kenney の CC0 1.0 素材を変換したもの（元：Sci-Fi Sounds / spaceEngineLow_000、Interface Sounds / confirmation_001、Digital Audio / powerUp10）。https://kenney.nl/　https://creativecommons.org/publicdomain/zero/1.0/
 
-## Qalc（計算スプリントのタイムアタック・サドンデス・にがてボックスと、ずで かんがえる どうぐ（data/tools-viz.js）の元。作り直して移植。apps/qalc/ にも同梱）
+## Qalc（計算スプリントのタイムアタック・サドンデス・にがてボックス、ずで かんがえる どうぐ（data/tools-viz.js）、友だち対戦の ボスバトル・じんとりバトル（data/cooplib.js）の元。作り直して移植。apps/qalc/ にも同梱）
 https://github.com/GIGAyama/Qalc commit 813bbc5
 MIT License
 
