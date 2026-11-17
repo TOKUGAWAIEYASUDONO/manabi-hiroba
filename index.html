@@ -1505,6 +1505,78 @@ body[data-v=host] .wrap{max-width:none;padding:0}
 <footer class="foot"><a id="licLink" href="vendor/THIRD-PARTY-LICENSES.txt" target="_blank" rel="noopener"></a></footer>
 
 <!-- 問題データ（file:// でも読めるよう script タグで読む） -->
+<style>/* めもり名人（#meter） */
+.mt .mtcalm{text-align:center;margin:2px 0 8px}
+.mtbud{display:flex;align-items:center;gap:10px;justify-content:center;margin:4px auto 8px;max-width:560px}
+.mtbpic{flex:none;width:72px;height:72px;display:flex;align-items:center;justify-content:center}
+.mtbpic>*{max-width:72px;max-height:72px}.mtbpic .mkw,.mtbpic img,.mtbpic svg{width:72px;height:72px}
+.mtsay{background:#fff;border:3px solid var(--edge);border-radius:14px;padding:8px 12px;margin:0;font-size:17px;font-weight:700;color:var(--ink);line-height:1.45}
+.mtsay.solo{text-align:center;margin:6px auto;max-width:560px}
+.mtopts{display:flex;flex-wrap:wrap;gap:6px 8px;align-items:center;justify-content:center;margin-bottom:10px}
+.mtol{font-size:14px;font-weight:700;color:var(--muted);margin-left:6px}
+.mtgrp h3{margin:10px 0 6px;font-size:18px;border-bottom:3px solid var(--board);display:inline-block;padding-right:14px}
+.mtcards{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.mtcard{display:grid;grid-template-columns:auto minmax(0,1fr);align-content:start;column-gap:8px;row-gap:2px;text-align:left;background:#fff;border:3px solid var(--edge);box-shadow:0 4px 0 var(--edge);border-radius:12px;padding:8px 10px;min-height:100px;cursor:pointer;color:var(--ink)}
+.mtcard>.mtct,.mtcard>.mtcd,.mtcard>.mtst{grid-column:2}
+.mtcard:active:not(:disabled){transform:translateY(3px);box-shadow:0 1px 0 var(--edge)}
+.mtcard.lock{background:#eef2ee}.mtcard.done{background:#fffbe6}
+.mtno{grid-row:1/4;width:34px;height:34px;border-radius:50%;background:var(--board);color:#fff;display:flex;align-items:center;justify-content:center;font-size:17px}
+.mtct{font-size:16px;font-weight:800;line-height:1.3}
+.mtcd{font-size:13px;color:var(--muted);font-weight:400;line-height:1.35}
+.mtst i{font-style:normal;color:#b9c2bb;font-size:20px;letter-spacing:1px}
+.mtst i.on{color:#e39d00;text-shadow:0 1px 0 #7a5a00}
+.mtst.big i{font-size:58px}
+.tile .mtst i{font-size:16px}
+.mtplay .topbar .mttl{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.mtdots{display:flex;gap:4px;flex:none}
+.mtdots i{width:12px;height:12px;border-radius:50%;background:#fff;border:2px solid var(--edge)}
+.mtdots i.ok{background:#e39d00}.mtdots i.ng{background:#9fb3a8}.mtdots i.now{background:var(--go)}
+.mtq{padding:10px 8px 12px;margin-bottom:8px}
+.mtask{font-size:clamp(19px,5.4vw,28px);font-weight:800;line-height:1.4;margin-bottom:4px}
+.mtchips{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;margin-bottom:6px}
+.mtchips:empty{display:none}
+.mtchip{font-size:13px;padding:1px 8px;white-space:nowrap;border-radius:14px;border:2px solid var(--chalk);color:var(--chalk)}
+.mtchip.now{background:#ffd84d;color:#1b2a22;border-color:#ffd84d;font-weight:800}
+.mtchip.ok{background:#2e7d4f;color:#fff;border-color:#7be08f}
+.mtpic{position:relative}
+.mtpic svg{display:block;width:100%;height:auto}
+.mtline{max-width:680px;margin:0 auto}
+.mtline.tap{cursor:pointer;touch-action:manipulation}
+.mtdw{position:relative;margin:0 auto;width:min(100%,41dvh,440px)}
+.mtlens{position:absolute;bottom:-4px;width:42%;aspect-ratio:1;border-radius:50%;overflow:hidden;border:5px solid var(--wood);background:#fffbea;box-shadow:0 3px 10px rgba(0,0,0,.45)}
+.mtlens.l{left:-6px}.mtlens.r{right:-6px}
+.mtpic .mtlens svg{width:100%;height:100%}
+.mtneedle{transition:transform .8s cubic-bezier(.34,1.56,.64,1)}
+.mtwob>svg.mtdial{animation:mtwob .6s ease-out}
+@keyframes mtwob{0%{transform:rotate(0)}25%{transform:rotate(-2deg)}50%{transform:rotate(2deg)}75%{transform:rotate(-1deg)}100%{transform:rotate(0)}}
+.mtstamp{position:absolute;left:50%;top:42%;transform:translate(-50%,-50%) rotate(-8deg);background:#ffd84d;color:#7a2e00;border:4px solid #7a2e00;border-radius:16px;padding:4px 16px;font-size:clamp(26px,8vw,44px);font-weight:900;pointer-events:none;white-space:nowrap;animation:mtpop .5s ease-out both}
+@keyframes mtpop{0%{transform:translate(-50%,-50%) scale(.3) rotate(-8deg);opacity:0}70%{transform:translate(-50%,-50%) scale(1.15) rotate(-8deg);opacity:1}100%{transform:translate(-50%,-50%) scale(1) rotate(-8deg);opacity:1}}
+@media (prefers-reduced-motion:reduce){.mtneedle{transition:none}.mtwob>svg.mtdial,.mtstamp{animation:none}}
+.mtside .fb{min-height:28px;font-size:18px;margin-bottom:6px}
+.mtans{display:flex;align-items:flex-end;justify-content:center;gap:6px;margin-bottom:8px}
+.mtans .answer{margin:0;min-width:130px;text-align:center}
+.mtu{font-size:28px;font-weight:800}
+.mtbox{min-width:84px;min-height:54px;font-size:34px;font-weight:800;background:#fff;border:3px solid var(--line);border-radius:10px;color:var(--ink)}
+.mtbox.on{border-color:var(--go);box-shadow:0 0 0 3px #b9e4c9}
+.pad.mtpad{grid-template-columns:repeat(4,1fr);max-width:400px}.mtpad button{min-height:52px}.mtpad .ok{font-size:17px;padding:0;background:var(--go);color:#fff}
+.mtog{display:inline-flex;align-items:center;gap:6px;flex-wrap:wrap;justify-content:center}
+.mttools{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;margin-top:10px}
+.mtplace{display:grid;grid-template-columns:72px minmax(0,1fr) 72px;gap:10px;max-width:420px;margin:0 auto}
+.mtplace .btn{min-height:60px;font-size:24px;padding:0}
+.mthelp{text-align:center;margin:6px 0}
+.mtitems{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;max-width:420px;margin:0 auto 10px}
+.mtitem{display:flex;flex-direction:column;align-items:center;min-height:84px;background:#fff;border:3px solid var(--edge);box-shadow:0 4px 0 var(--edge);border-radius:12px;padding:4px;cursor:pointer;color:var(--ink);font-size:15px}
+.mtitem .mte{font-size:34px;line-height:1.1}
+.mtitem small{color:var(--muted);font-weight:400}
+.mtitem.on{background:#fff3c4;border-color:#b07a00;transform:translateY(3px);box-shadow:0 1px 0 #b07a00}
+.mtnext{text-align:center}
+.mtnext .btn{min-width:200px;min-height:56px;font-size:22px}
+.mtch{max-width:460px;margin:0 auto}
+@media (min-width:900px) and (max-height:800px){.home:not(.easy) #mtTile .td{display:none}}
+.mtres .mtbigst{text-align:center}.mtrl{font-size:18px;font-weight:700;color:var(--muted)}
+.mtres .mtbud{margin-top:10px}
+@media(min-width:760px){.mtcards{grid-template-columns:repeat(4,minmax(0,1fr))}.mtgrid{display:grid;grid-template-columns:minmax(0,1.55fr) minmax(300px,1fr);gap:16px;align-items:start}.play.mtplay{max-width:1100px}.mtq{margin-bottom:0}.mtdw{width:min(100%,62dvh*1.5,640px);display:grid;grid-template-columns:minmax(0,1fr) 34%;gap:8px;align-items:end}.mtdw:not(:has(.mtlens)){grid-template-columns:minmax(0,1fr);width:min(100%,62dvh,460px)}.mtpic .mtlens{position:static;width:100%}}
+</style>
 <script src="data/questions.js?v=e7a7757e"></script>
 <script src="data/config.js?v=8904bcfc"></script>
 <script src="data/calc.js?v=60621312"></script>
@@ -2439,7 +2511,7 @@ function renderHome(){
   app.innerHTML=`<div class="home${easy?" easy":""}">
     ${easy?`<div class="guide">${mbs("n")}<span class="say">${T("home.guide")}</span></div>`:""}
     ${COLOK?colDoor():""}
-    <div class="zones" data-n="${zones.length+1}">${zones.map(([k,l])=>`<section class="zone s-${k}"><h2>${subjN(k)}</h2>${k==="rika"?rikaWarning():""}<div class="tiles">${l.map(x=>gameTile(x,b)).join("")}${k==="math"?extTiles():""}${k==="rika"?`<button class="tile unitgo" data-un="rika"><span class="tico">${svgU("a-rika")}</span><span class="tbody"><span class="tt">${T("u.pick")}</span></span></button>`:easy||k==="math"?"":unitTile(k)}</div></section>`).join("")}${easy?`<section class="zone s-math"><div class="tiles">${unitTile("math")}</div></section>`:""}
+    <div class="zones" data-n="${zones.length+1}">${zones.map(([k,l])=>`<section class="zone s-${k}"><h2>${subjN(k)}</h2>${k==="rika"?rikaWarning():""}<div class="tiles">${l.map(x=>gameTile(x,b)).join("")}${k==="math"?meterTile()+extTiles():""}${k==="rika"?`<button class="tile unitgo" data-un="rika"><span class="tico">${svgU("a-rika")}</span><span class="tbody"><span class="tt">${T("u.pick")}</span></span></button>`:easy||k==="math"?"":unitTile(k)}</div></section>`).join("")}${easy?`<section class="zone s-math"><div class="tiles">${unitTile("math")}</div></section>`:""}
       <section class="zone s-btl"><h2>${ic("swords")}${T("home.battle")}</h2><div class="tiles">${MODES.map(m=>modeTile(m,b)).join("")}</div></section></div>
     ${zones.length?"":`<div class="empty">${T("home.empty")}</div>`}
     <div class="bottom">
@@ -2455,6 +2527,7 @@ function renderHome(){
     </div></div>`;     // 先生・ICT向けのリンクは、1〜2年には出さない
   const dr=$("#colDoor"); if(dr) dr.onclick=()=>go("#hiroba");
   $("#hJoin2").onclick=()=>go("#join"); $("#hTeach2").onclick=()=>go("#teacher");
+  const mtt=$("#mtTile"); if(mtt) mtt.onclick=()=>go("#meter");
   app.querySelectorAll("[data-id]").forEach(e=>e.onclick=()=>{
     const x=GAMES.find(y=>y.id===e.dataset.id);
     withGrade(g0=>x.id==="calc"?go("#units?kid=1&subj=sansu"):openGame(x,g0));
@@ -3601,6 +3674,14 @@ function renderTeacher(q){
       <button class="btn" id="mk">リンクを作る</button>
       <div class="out hidden" id="lo"></div>
     </div>
+    <div class="form" style="margin-top:16px">
+      <b style="font-size:18px">めもり名人（数直線・はかりの目もり）の 課題リンク</b>
+      <span class="note">3年「重さ」の はかりの読み取りと、その前の 数直線の練習です。時間は はかりません。ステージを えらぶと、児童は その ステージだけを くりかえせます（ほかのステージ・ひろばへの入口は 出ません）。</span>
+      <label>ステージ<select id="tmst"><option value="1">1 1めもり＝1（数直線）</option><option value="2">2 ここは どこ？（数直線にタッチ）</option><option value="3">3 1めもりは いくつ？（2・5・10・100）</option><option value="4">4 数直線を よむ</option><option value="5">5 ここは どこ？ 2</option><option value="6">6 はかりの さいだい・0</option><option value="7">7 はかりの 1めもり</option><option value="8">8 はりを よむ（g）</option><option value="9">9 kgと g（□kg□g）</option><option value="10">10 ぴったり おかいもの</option><option value="11">11 テスト（まぜて）</option></select></label>
+      <label class="chk"><input type="checkbox" id="tmnh"> ひろばを出さない（<b>&amp;col=0</b>）</label>
+      <button class="btn" id="mkmt">リンクを作る</button>
+      <div class="out hidden" id="lomt"></div>
+    </div>
     <div class="form" style="margin-top:16px;border-color:var(--accent)">
       <b style="font-size:18px">② 単元のリンクを作る</b>
       <span class="note">単元をえらんで「リンクとQR」を押すと、短いリンクとQRができます。「授業で使う（ほかの画面に行かせない）」と「ひろばを出さない」をえらべます。授業リンクは開いてから90分、または日付が変わるまで固定されます。終わったら結果画面の「先生：じゅぎょうを おわる」を2秒長押ししてください。</span>
@@ -3697,6 +3778,11 @@ function renderTeacher(q){
     const lo=$("#lo"); lo.classList.remove("hidden");
     lo.innerHTML=`<b>課題リンク</b><br><span id="lu">${esc(url)}</span><br><button class="btn sub" id="lc">コピー</button> <a href="${esc(url)}" target="_blank">試しに開く ↗</a>`;
     $("#lc").onclick=()=>navigator.clipboard?.writeText(url).then(()=>$("#lc").textContent="コピーしました",()=>{});
+  };
+  $("#mkmt").onclick=()=>{
+    const url=location.href.split("#")[0]+`#meter?st=${$("#tmst").value}&task=1${$("#tmnh").checked?"&col=0":""}`, lo=$("#lomt"); lo.classList.remove("hidden");
+    lo.innerHTML=`<b>課題リンク</b><br><span>${esc(url)}</span><br><button class="btn sub" id="lcmt">コピー</button> <a href="${esc(url)}" target="_blank">試しに開く ↗</a>`;
+    $("#lcmt").onclick=()=>navigator.clipboard?.writeText(url).then(()=>$("#lcmt").textContent="コピーしました",()=>{});
   };
   $("#pj").onclick=()=>startProjector($("#pg").value,+$("#pgr").value,+$("#pn").value,+$("#ps").value);
   if(q&&q.get("nm")==="input") $("#nmm").value="input";      // 「なまえの きめかた」は、はじめから自動ニックネーム。#teacher?nm=input で「児童が入力」をえらんだ状態にできる（nm=auto もそのまま使える）
@@ -6970,6 +7056,241 @@ function lessonEndButton(){
   ["pointerup","pointercancel","pointerleave","lostpointercapture"].forEach(x=>b.addEventListener(x,cancel));b.addEventListener("contextmenu",e=>e.preventDefault());res.appendChild(b);
 }
 /* ================= ルーター ================= */
+/* ================= めもり名人《めいじん》（数直線と はかりの めもりを よむ。data/meter.js） =================
+   ステージ1〜11：数直線 1めもり＝1 → ここは どこ → 1めもりは いくつ → 数直線を よむ → ここは どこ2 → はかりの さいだい → 1めもり → はりを よむ → kgと g → ぴったり おかいもの → テスト。
+   時間は はからない（カウントダウンなし）。1回 5問（おかいものは 4問・テストは 6問）。1回目で せいかいした 数で ★1〜3。
+   ★1つで つぎの ステージが ひらく（1 と はかりの 6 は はじめから）。前の ステージは いつでも もう一回 できる。
+   「ステップで よむ」：はりを よむ 問題を、さいだい → 1めもり → はり の 小問に わける。まちがえると 数字と めもりが 光り、かぞえる 数字が 出る。2回 まちがえたら 答えを 見せて「つぎへ」。
+   きろく：★は mh_meter（端末だけ）。どんぐり・まなびっこの なかよしは ほかの ゲームと 同じく colRun（単元の「できた」は ない＝units:[]）。
+   授業モード（#meter?st=N&task=1）：その ステージだけ。まなびっこ・ほかの ステージへの 入口を 出さず、結果は 先生に おくる 文に する。 */
+const MTKEY="mh_meter", MT_N=11;
+let MT=null;
+function mtCfg(){ const c=store.get(MTKEY,null); const o=c&&typeof c==="object"?c:{}; return {s:o.s&&typeof o.s==="object"?o.s:{},guide:o.guide===0?0:1,ch:o.ch===1?1:0}; }
+function mtSet(f){ const c=mtCfg(); f(c); store.set(MTKEY,c); return c; }
+const mtStars=(c,id)=>Math.max(0,Math.min(3,c.s[id]|0));
+const mtOpen=(c,id)=>id===1||id===6||mtStars(c,id-1)>0;
+const mtStarH=(n,big)=>`<span class="mtst${big?" big":""}" role="img" aria-label="ほし ${n}">${[0,1,2].map(i=>`<i class="${i<n?"on":""}" aria-hidden="true">★</i>`).join("")}</span>`;
+const mtToolOk=()=>tlCfgOn()&&!TLH;
+const mtIco=()=>`<svg class="art" viewBox="0 0 56 56" aria-hidden="true"><rect x="5" y="10" width="46" height="43" rx="10" fill="#2f6db0"/><rect x="13" y="3" width="30" height="6" rx="3" fill="#aab6c2"/><circle cx="28" cy="32" r="18" fill="#fffbea" stroke="#13304d" stroke-width="2"/>${[0,1,2,3,4,5,6,7,8,9,10].map(i=>{ const a=(i*33-90)*Math.PI/180; return `<line x1="${(28+16*Math.cos(a)).toFixed(1)}" y1="${(32+16*Math.sin(a)).toFixed(1)}" x2="${(28+(i%5?13:11)*Math.cos(a)).toFixed(1)}" y2="${(32+(i%5?13:11)*Math.sin(a)).toFixed(1)}" stroke="#13202b" stroke-width="1.6"/>`; }).join("")}<line x1="28" y1="32" x2="38" y2="20" stroke="#d32f2f" stroke-width="2.6" stroke-linecap="round"/><circle cx="28" cy="32" r="2.8" fill="#d32f2f"/></svg>`;
+/* ホームの 算数の タイル（2〜4年と「ぜんぶ」のとき） */
+function meterTile(){
+  if(ui.grade&&![2,3,4].includes(ui.grade)) return "";
+  const c=mtCfg(); let n=0; for(let i=1;i<=MT_N;i++) n+=mtStars(c,i);
+  return `<button class="tile" id="mtTile"><span class="tico">${mtIco()}</span><span class="tbody"><span class="tt">めもり名人《めいじん》</span><span class="td">数直線《すうちょくせん》と はかりを よもう</span><span class="tstat"><span class="mtst" aria-hidden="true"><i class="on">★</i></span> ${n} / ${MT_N*3}</span></span></button>`;
+}
+/* おうえん：まなびっこ（ひろばが オンで、授業モードでないとき）。いなければ めばえ。授業モードでは 出さない */
+function mtBuddy(msg){
+  if(LESSON) return msg?`<p class="mtsay solo">${msg}</p>`:"";
+  let pic="";
+  if(colMode()==="on"){ const S=colGet(), id=(S.mk.sh||[]).find(x=>x&&S.mk.own[x])||Object.keys(S.mk.own)[0], c=id&&mkC(id); if(c&&c.art) pic=mkDress(c,COL.mkStage(S,id),96,COL.kzOf(S,id)); }
+  if(!pic) pic=mbs("h");
+  return `<div class="mtbud"><span class="mtbpic">${pic}</span><p class="mtsay">${msg}</p></div>`;
+}
+function renderMeter(q){
+  setLG(ui.grade);
+  app.innerHTML=`<div class="play mt"><div class="q">…</div></div>`;
+  loadScript("data/meter.js?v=0d101672",()=>!!window.MH_METER).then(()=>{
+    if(params().path!=="meter") return;
+    const st=+q.get("st"), task=q.get("task")==="1";
+    if(st) mtStart(st,task); else if(LESSON) go("#home"); else mtMenu();
+  },()=>{ app.innerHTML=`<div class="q">よみこめませんでした。もう一度《いちど》 ひらいてね。</div>`; });
+}
+function mtMenu(){
+  const c=mtCfg(), S=MH_METER.STAGES;
+  const card=s=>{ const op=mtOpen(c,s.id), n=mtStars(c,s.id);
+    return `<button type="button" class="mtcard${op?"":" lock"}${n?" done":""}" data-st="${s.id}"${op?"":" disabled"}><span class="mtno">${s.id}</span><span class="mtct">${s.t}</span><span class="mtcd">${op?s.d:"🔒 まえの ステージで ★1つ"}</span>${mtStarH(n)}</button>`; };
+  const grp=(t,g)=>`<section class="mtgrp"><h3>${t}</h3><div class="mtcards">${S.filter(s=>s.g===g).map(card).join("")}</div></section>`;
+  const pill=(k,v,l)=>`<button type="button" class="pill small${c[k]===v?" on":""}" data-o="${k}" data-v="${v}" aria-pressed="${c[k]===v}">${l}</button>`;
+  app.innerHTML=`<div class="play mt mtmenu">
+    <div class="topbar"><button class="back" id="mtbk">${BK()}</button><b>めもり名人《めいじん》</b><span></span></div>
+    ${mtBuddy("さいだい → 1めもり → はり の じゅんに よむと、めもり名人《めいじん》に なれるよ！")}
+    <p class="note mtcalm">じかんは はからないよ。ゆっくり かぞえてね。</p>
+    <div class="mtopts"><span class="mtog"><span class="mtol">ステップで よむ</span>${pill("guide",1,"する")}${pill("guide",0,"しない")}</span><span class="mtog"><span class="mtol">こたえかた</span>${pill("ch",0,"すうじを 入《い》れる")}${pill("ch",1,"4つから えらぶ")}</span></div>
+    ${grp("すうちょくせん","line")}${grp("はかり","dial")}${grp("めいじん","all")}
+  </div>`;
+  $("#mtbk").onclick=()=>go("#home");
+  app.querySelectorAll("[data-st]").forEach(b=>b.onclick=()=>go(`#meter?st=${b.dataset.st}`));
+  app.querySelectorAll("[data-o]").forEach(b=>b.onclick=()=>{ mtSet(x=>{ x[b.dataset.o]=+b.dataset.v; }); mtMenu(); const n=app.querySelector(`[data-o="${b.dataset.o}"][data-v="${b.dataset.v}"]`); if(n) n.focus(); });
+}
+function mtStart(st,task){
+  const S=MH_METER.STAGES.find(s=>s.id===st); if(!S) return go(task?"#home":"#meter");
+  const c=mtCfg();
+  if(!task&&!mtOpen(c,st)) return go("#meter");
+  MT={st,S,task,list:MH_METER.round(st),i:0,first:0,res:[],guide:!!c.guide,ch:!!c.ch,tool:false,zoomOn:true,tm:0,done:false};
+  app.innerHTML=`<div class="play mt mtplay">
+    ${task?`<div class="banner">${ic("pencil")} めもり名人《めいじん》 ステージ${st}「${S.t}」</div>`:""}
+    <div class="topbar"><button class="back" id="mtbk">${task?ic("x")+T("back.end"):BK()}</button><span class="mttl"><b>ステージ${st}</b> <span class="note">${S.t}</span></span><span class="mtdots" id="mtdots" aria-hidden="true"></span></div>
+    <div class="mtgrid">
+      <div class="q mtq"><div class="mtask" id="mtask" aria-live="polite"></div><div class="mtchips" id="mtchips"></div><div class="mtpic" id="mtpic"></div></div>
+      <div class="mtside"><div class="fb" id="fb" aria-live="polite"></div><div id="mtarea"></div><div class="mttools" id="mttools"></div></div>
+    </div></div>`;
+  $("#mtbk").onclick=()=>{ if(task) mtEnd(); else go("#meter"); };
+  mtQ();
+}
+function mtQ(){
+  const m=MT, q=m.list[m.i];
+  m.cur=q; m.steps=m.guide&&q.steps?q.steps:[q.ask]; m.si=0; m.firstOk=true; m.chips=[];
+  m.shopOn=[]; m.prevV=0; m.okK=null; m.mark=null;
+  mtSub();
+}
+function mtSub(){
+  const m=MT; m.sub=MH_METER.sub(m.cur,m.steps[m.si]); m.tries=0; m.hl=null; m.inp=["",""]; m.box=0; m.lock=false; m.chs=null; m.reveal=false;
+  const fb=$("#fb"); if(fb){ fb.className="fb"; fb.textContent=""; }
+  mtDraw();
+}
+const mtSum=()=>MT.shopOn.reduce((s,i)=>s+MT.cur.items[i].w,0);
+function mtZoomAt(){
+  const m=MT, q=m.cur, s=m.sub;
+  if(m.hl&&m.hl.z!=null) return m.hl.z;
+  if(s.ask==="max") return q.sp.max; if(s.ask==="zero") return q.sp.t*2;
+  if(s.ask==="tick") return (q.sp.max>1000?q.sp.mid:q.sp.lab)/2;
+  return q.ask==="shop"?mtSum():q.v;
+}
+function mtDraw(){
+  const m=MT, q=m.cur, s=m.sub, M=MH_METER;
+  $("#mtdots").innerHTML=m.list.map((_,i)=>`<i class="${i<m.i?(m.res[i]?"ok":"ng"):i===m.i?"now":""}"></i>`).join("");
+  $("#mtask").textContent=s.ask==="place"?`${q.v} は どこ？ めもりを タッチしよう`:s.q;
+  $("#mtchips").innerHTML=m.steps.length>1?m.steps.map((a,i)=>`<span class="mtchip${i<m.si?" ok":i===m.si?" now":""}">${i<m.si?"✓ "+esc(m.chips[i]):["① ","② ","③ "][i]+(a==="max"?"さいだい":a==="tick"?"1めもり":"よむ")}</span>`).join(""):"";
+  mtPic(); mtArea(); mtTools();
+}
+function mtPic(anim){
+  const m=MT, q=m.cur, M=MH_METER, el=$("#mtpic");
+  if(q.kind==="line"){
+    el.innerHTML=M.lineSVG(q.sp,{v:q.ask==="place"?null:q.v,mark:m.mark,hl:m.hl,tool:m.tool,ok:m.okK,label:q.ask==="place"?"すうちょくせん。めもりを タッチして えらぶ":"すうちょくせん"});
+    if(q.ask==="place"&&!m.lock){ const sv=el.querySelector("svg"); sv.classList.add("tap"); sv.onclick=e=>{ const r=sv.getBoundingClientRect(), x=(e.clientX-r.left)/r.width*360, k=Math.round((x-24)/(312/q.sp.n)); m.mark=Math.max(0,Math.min(q.sp.n,k)); mtPic(); mtArea(); }; }
+    return;
+  }
+  const v=q.ask==="shop"?mtSum():q.v, v0=anim?m.prevV:v, z=m.zoomOn?mtZoomAt():null, deg=M.needleDeg(q.sp,v);
+  const items=q.ask==="shop"?m.shopOn.map(i=>q.items[i].e):null;
+  el.innerHTML=`<div class="mtdw">${M.dialSVG(q.sp,{v:v0,hl:m.hl,tool:m.tool,items,label:"はかり"})}${z!=null?`<div class="mtlens ${M.needleDeg(q.sp,z)<180?"l":"r"}" aria-hidden="true">${M.dialSVG(q.sp,{v:v0,hl:m.hl,tool:m.tool,zoom:z})}</div>`:""}</div>`;
+  if(anim) requestAnimationFrame(()=>requestAnimationFrame(()=>el.querySelectorAll(".mtneedle").forEach(n=>n.style.transform=`rotate(${deg}deg)`)));
+  m.prevV=v;
+}
+function mtArea(){
+  const m=MT, q=m.cur, s=m.sub, M=MH_METER, area=$("#mtarea");
+  if(m.reveal){ area.innerHTML=`<div class="mtnext"><button class="btn" id="mtgo">つぎへ ▶</button></div>`; $("#mtgo").onclick=mtAfterReveal; $("#mtgo").focus(); return; }
+  if(s.ask==="place"){
+    area.innerHTML=`<div class="mtplace"><button type="button" class="btn sub mtnud" data-d="-1" aria-label="ひだりへ">◀</button><button type="button" class="btn mtok" id="mtpok"${m.mark==null||m.lock?" disabled":""}>ここ！</button><button type="button" class="btn sub mtnud" data-d="1" aria-label="みぎへ">▶</button></div><p class="note mthelp">めもりを タッチ。◀ ▶ で うごかせるよ</p>`;
+    area.querySelectorAll("[data-d]").forEach(b=>b.onclick=()=>mtNudge(+b.dataset.d)); $("#mtpok").onclick=mtPlaceOk; return;
+  }
+  if(s.ask==="shop"){
+    area.innerHTML=`<p class="note mthelp">のせると はりが うごくよ。はりを よんで ${M.kgg(q.target)} に しよう</p><div class="mtitems">${q.items.map((it,i)=>`<button type="button" class="mtitem${m.shopOn.includes(i)?" on":""}" data-it="${i}" aria-pressed="${m.shopOn.includes(i)}"><span class="mte" aria-hidden="true">${it.e}</span><span>${it.nm}</span><small>${m.shopOn.includes(i)?"のせた":"？g"}</small></button>`).join("")}</div><div class="mtnext"><button type="button" class="btn" id="mtpt"${m.lock?" disabled":""}>ぴったり！</button></div>`;
+    area.querySelectorAll("[data-it]").forEach(b=>b.onclick=()=>{ if(m.lock) return; const i=+b.dataset.it, k=m.shopOn.indexOf(i); if(k>=0) m.shopOn.splice(k,1); else m.shopOn.push(i); sfx("click"); m.hl=null; mtPic(true); mtArea(); const n=area.querySelector(`[data-it="${i}"]`); if(n) n.focus(); });
+    $("#mtpt").onclick=()=>mtJudge(mtSum()); return;
+  }
+  if(m.ch){
+    if(!m.chs) m.chs=M.choices(s);
+    const cls=["ca","cb","cc","cd"];
+    area.innerHTML=`<div class="choices mtch">${m.chs.map((c,i)=>`<button type="button" class="choice ${cls[i]}" data-c="${i}"${m.lock?" disabled":""}><span class="kh" aria-hidden="true">${i+1}</span>${esc(c.label)}</button>`).join("")}</div>`;
+    area.querySelectorAll("[data-c]").forEach(b=>b.onclick=()=>{ const c=m.chs[+b.dataset.c]; if(m.lock) return; if(!M.check(s,c.v)) b.disabled=true; mtJudge(c.v); }); return;
+  }
+  const keys=["7","8","9","⌫","4","5","6","0","1","2","3"];
+  const box=(i,u)=>`<button type="button" class="mtbox${m.box===i?" on":""}" data-b="${i}" aria-label="${u}の ところ">${m.inp[i]?esc(m.inp[i]):"&nbsp;"}</button><span class="mtu">${u}</span>`;
+  area.innerHTML=`<div class="mtans">${s.ask==="kgg"?box(0,"kg")+box(1,"g"):`<span class="answer mta" id="mta">${m.inp[0]?esc(m.inp[0]):"&nbsp;"}</span>${s.unit?`<span class="mtu">${s.unit}</span>`:""}`}</div>
+    <div class="pad mtpad">${keys.map(k=>`<button type="button" data-k="${k}"${k==="⌫"?` aria-label="${esc(T("u.del"))}"`:""}>${k}</button>`).join("")}<button type="button" class="ok" data-k="OK">${T("pad.ok")}</button></div>`;
+  area.querySelectorAll("[data-k]").forEach(b=>b.onclick=()=>mtKey(b.dataset.k));
+  area.querySelectorAll("[data-b]").forEach(b=>b.onclick=()=>{ m.box=+b.dataset.b; mtArea(); });
+}
+function mtTools(){
+  const m=MT, q=m.cur, el=$("#mttools"), b=[];
+  if(mtToolOk()) b.push(`<button type="button" class="pill small${m.tool?" on":""}" id="mttl" aria-pressed="${m.tool}">🧰 めもりを 光《ひか》らせる</button>`);
+  if(q.kind==="dial") b.push(`<button type="button" class="pill small${m.zoomOn?" on":""}" id="mtzm" aria-pressed="${m.zoomOn}">🔍 ルーペ</button>`);
+  if(q.steps) b.push(`<button type="button" class="pill small${m.guide?" on":""}" id="mtgd" aria-pressed="${m.guide}">ステップで よむ</button>`);
+  if(q.ask!=="place"&&q.ask!=="shop") b.push(`<button type="button" class="pill small${m.ch?" on":""}" id="mtcs" aria-pressed="${m.ch}">4つから えらぶ</button>`);
+  el.innerHTML=b.join("");
+  const on=(id,f)=>{ const x=$("#"+id); if(x) x.onclick=()=>{ f(); const y=$("#"+id); if(y) y.focus(); }; };
+  on("mttl",()=>{ m.tool=!m.tool; mtPic(); mtTools(); });
+  on("mtzm",()=>{ m.zoomOn=!m.zoomOn; mtPic(); mtTools(); });
+  on("mtgd",()=>{ if(m.lock) return; m.guide=!m.guide; mtSet(x=>{ x.guide=m.guide?1:0; }); m.steps=m.guide&&q.steps?q.steps:[q.ask]; m.si=0; m.chips=[]; mtSub(); });
+  on("mtcs",()=>{ if(m.lock) return; m.ch=!m.ch; mtSet(x=>{ x.ch=m.ch?1:0; }); mtArea(); mtTools(); });
+}
+function mtKey(k){
+  const m=MT; if(!m||m.lock||m.reveal) return;
+  const kg=m.sub.ask==="kgg", i=kg?m.box:0;
+  if(k==="⌫"){ if(!m.inp[i]&&kg&&i===1) m.box=0; else m.inp[i]=m.inp[i].slice(0,-1); }
+  else if(k==="OK"){
+    if(kg){ if(m.inp[0]===""&&m.inp[1]==="") return; return mtJudge({kg:+(m.inp[0]||0),g:+(m.inp[1]||0)}); }
+    if(m.inp[0]!=="") mtJudge(+m.inp[0]); return;
+  }
+  else if(kg&&i===0){ if(m.inp[0].length<1){ m.inp[0]+=k; m.box=1; } }
+  else if(m.inp[i].length<(kg?3:4)) m.inp[i]=(m.inp[i]==="0"?"":m.inp[i])+k;
+  mtArea();
+}
+function mtNudge(d){ const m=MT; if(!m||m.lock) return; const n=m.cur.sp.n; m.mark=Math.max(0,Math.min(n,(m.mark==null?Math.round(n/2):m.mark+d))); mtPic(); mtArea(); const b=app.querySelector(`[data-d="${d}"]`); if(b) b.focus(); }
+function mtPlaceOk(){ const m=MT; if(!m||m.lock||m.mark==null) return; mtJudge(m.mark*m.cur.sp.t); }
+function mtJudge(x){
+  const m=MT; if(!m||m.lock) return;
+  const M=MH_METER, s=m.sub, q=m.cur, fb=$("#fb");
+  if(M.check(s,x)){
+    sfx("ok"); m.hl=null;
+    if(m.si<m.steps.length-1){ m.chips[m.si]=M.chip(s); m.si++; mtSub(); fb.className="fb ok"; fb.textContent="⭕ そう！ つぎは…"; return; }
+    m.lock=true; m.res[m.i]=m.firstOk?1:0; if(m.firstOk) m.first++;
+    if(q.kind==="line"&&q.ask==="place") m.okK=m.mark;
+    fb.className="fb ok"; fb.textContent=q.ask==="shop"?"🎉 ピッタリ！":q.ask==="place"?"⭕ そこ！ せいかい！":`⭕ せいかい！ ${s.ask==="kgg"?M.kgg(q.v):M.fmt(s)}`;
+    mtDraw(); mtCheer(q.ask==="shop"?"ピッタリ！":"せいかい！");
+    m.tm=setTimeout(mtNext,q.ask==="shop"?1600:1100); return;
+  }
+  sfx("ng"); m.firstOk=false; m.tries++;
+  const h=M.hint(s,x,m.tries,q.ask==="shop"?mtSum():undefined);
+  m.hl=h.hl; if(q.kind==="dial") m.zoomOn=true;
+  if(s.ask==="place"&&m.tries>=3){ m.okK=q.v/q.sp.t; h.reveal=true; h.msg=`ここが ${q.v} だよ。`; }
+  fb.className="fb ng"; fb.textContent="🤔 "+h.msg;
+  if(h.reveal){ m.reveal=true; m.lock=true; }
+  m.inp=["",""]; m.box=0;
+  mtPic(); mtArea(); mtTools();
+}
+function mtAfterReveal(){
+  const m=MT; if(!m) return; m.reveal=false;
+  if(m.si<m.steps.length-1){ m.chips[m.si]=MH_METER.chip(m.sub); m.si++; mtSub(); return; }
+  m.res[m.i]=0; mtNext();
+}
+function mtCheer(t){
+  const dw=app.querySelector(".mtdw")||app.querySelector(".mtpic"); if(!dw) return;
+  dw.classList.remove("mtwob"); void dw.offsetWidth; dw.classList.add("mtwob");
+  const st=document.createElement("span"); st.className="mtstamp"; st.textContent=t; st.setAttribute("aria-hidden","true"); dw.appendChild(st);
+}
+function mtNext(){ const m=MT; if(!m||m.done) return; m.i++; if(m.i>=m.list.length) mtEnd(); else mtQ(); }
+function mtEnd(){
+  const m=MT; if(!m||m.done) return; m.done=true; m.lock=true; clearTimeout(m.tm);
+  const N=m.list.length, ans=m.res.filter(x=>x!=null).length, f=m.first;
+  const stars=ans<N?(ans?1:0):f===N?3:f>=Math.ceil(N*.6)?2:1;
+  const c0=mtCfg(), isNew=stars>mtStars(c0,m.st);
+  if(isNew) mtSet(c=>{ c.s[m.st]=stars; });
+  if(stars===3) party(); if(stars>0) sfx("medal");
+  const colHtml=COLOK&&ans?colRun({units:[],answered:ans,correct:f,quiet:!!m.task}):"";
+  const nx=MH_METER.STAGES.find(s=>s.id===m.st+1), nxOpen=nx&&mtOpen(mtCfg(),nx.id);
+  const say=stars===3?"めもり名人《めいじん》だね！ すごい！":stars===2?"いい ちょうし！ もう少《すこ》しで ★3つ":stars===1?"かぞえかたが わかってきたね。":"また やってみよう。";
+  const rep=`【めもり名人】ステージ${m.st}「${rbp(m.S.t)}」｜1回目で正解 ${f}問／${N}問（答えた ${ans}問）`;   //T
+  app.innerHTML=`<div class="play mt"><div class="res mtres">
+    <div class="mtbigst">${mtStarH(stars,true)}</div>
+    <div class="mtrl">1回目《かいめ》で せいかい</div><div class="num">${f} / ${N}</div>
+    ${isNew&&!m.task?`<div class="newbest">ほしが ふえた！</div>`:""}
+    ${m.task?"":mtBuddy(say)}
+    ${colHtml}
+    <div class="actions"><button class="btn again" id="mtag">${ic("rotate-ccw")}${T("r.again")}</button>
+      <div class="subs">${!m.task&&nxOpen?`<button class="btn sub" id="mtnx">つぎの ステージ ▶</button>`:""}${m.task?"":`<button class="btn sub" id="mtmn">ステージを えらぶ</button>`}</div></div>
+    ${m.task?`<div class="miss"><b>${T("r.send")}</b><br><span id="rep">${esc(rep)}</span><br><button class="btn sub" id="cp">${T("r.copy")}</button></div>`:""}
+  </div></div>`;
+  $("#mtag").onclick=()=>mtStart(m.st,m.task);
+  const nb=$("#mtnx"); if(nb) nb.onclick=()=>go(`#meter?st=${nx.id}`);
+  const mb=$("#mtmn"); if(mb) mb.onclick=()=>go("#meter");
+  const cp=$("#cp"); if(cp) cp.onclick=()=>{ navigator.clipboard?.writeText(rep).then(()=>cp.textContent=T("r.copied"),()=>{}); };
+  if(m.task) lessonEndButton();
+}
+document.addEventListener("keydown",e=>{
+  if(!MT||MT.done||params().path!=="meter"||e.ctrlKey||e.metaKey||e.altKey) return;
+  const tg=e.target&&e.target.tagName; if(tg==="INPUT"||tg==="TEXTAREA"||tg==="SELECT") return;
+  if(MT.reveal){ if(e.key==="Enter"){ e.preventDefault(); mtAfterReveal(); } return; }
+  if(MT.lock) return;
+  const a=MT.sub&&MT.sub.ask;
+  if(a==="place"){ if(e.key==="ArrowLeft"||e.key==="ArrowRight"){ e.preventDefault(); mtNudge(e.key==="ArrowLeft"?-1:1); } else if(e.key==="Enter"){ e.preventDefault(); mtPlaceOk(); } return; }
+  if(a==="shop") return;
+  if(MT.ch){ if(/^[1-4]$/.test(e.key)){ const b=app.querySelectorAll(".mtch .choice")[+e.key-1]; if(b&&!b.disabled) b.click(); } return; }
+  if(/^[0-9]$/.test(e.key)) mtKey(e.key);
+  else if(e.key==="Backspace") mtKey("⌫");
+  else if(e.key==="Enter"){ e.preventDefault(); mtKey("OK"); }
+  else if(a==="kgg"&&(e.key==="ArrowLeft"||e.key==="ArrowRight")){ e.preventDefault(); MT.box=e.key==="ArrowLeft"?0:1; mtArea(); }
+});
 function shouldBlockLessonNavigation(lockedHash,requested,isTask){ return !!lockedHash&&requested!==lockedHash&&!isTask; }
 function renderFeedback(){
   setLG(ui.grade);
@@ -7009,7 +7330,7 @@ function route(){
   // 授業リンクの元の URL をタブ内に記憶し、戻る・アドレス欄の変更を先に拒否する。
   // 結果・終了画面は同じ hash のまま描画するため、この URL だけを許可する。
   const requested=location.hash;
-  const isTask=/^(?:#(?:play|mode)\?[^#]*[?&]task=1(?![0-9])|#(?:q|u)=[^#]*[&?]task=1(?![0-9]))/.test(requested);
+  const isTask=/^(?:#(?:play|mode|meter)\?[^#]*[?&]task=1(?![0-9])|#(?:q|u)=[^#]*[&?]task=1(?![0-9]))/.test(requested);
   let lockedHash; try{ lockedHash=sessionStorage.getItem("mh_lesson_hash"); }catch(e){}
   let lockInfo; try{ lockInfo=JSON.parse(sessionStorage.getItem("mh_lesson_lock")||"null"); }catch(e){}
   if(lockedHash&&(!lockInfo||Date.now()-lockInfo.at>=5400000||new Date(lockInfo.at).toDateString()!==new Date().toDateString())){ lessonUnlock(); lockedHash=null; }
@@ -7020,15 +7341,16 @@ function route(){
   fgFromHash(); COLH=/[?&#]col=0(?![0-9])/.test(location.hash); TLH=/[?&#]tool=0(?![0-9])/.test(location.hash); COLS=null; QKA=0;
   { const m=/[?&#]tk=([0-5])(?![0-9])/.exec(location.hash); TKH=m?+m[1]:null; }
   if(EX){ clearTimeout(EX.tm); EX=null; }
+  if(MT){ clearTimeout(MT.tm); MT=null; }
   if(qzFlush){ qzFlush(); qzFlush=null; }
   if(params().path!=="host"){ BGMON=false; bgmStop(); }
   stopTimer(); P=null; M=null; QK=null; QS=null; QH=null; if(RKH) clearInterval(RKH.iv); RK=null; RKH=null; ckStop(); prStop(); wakeOff();
   if(ES){ ES.close(); ES=null; }
   const {path:path0,q}=params(), path=location.hash.startsWith("#q=")?"qlink":location.hash.startsWith("#u=")?"ulink":path0;
   setLG(path==="home"||path==="modesetup"||path==="join"||path==="record"?ui.grade:0);
-  document.body.dataset.v=["check","play","setup","modesetup","mode","join","lobby","host","teacher","record","make","qlink","units","ulink","hiroba","zukan","tanken","feedback"].includes(path)?path:"home";
+  document.body.dataset.v=["check","play","setup","modesetup","mode","join","lobby","host","teacher","record","make","qlink","units","ulink","hiroba","zukan","tanken","feedback","meter"].includes(path)?path:"home";
   // 課題リンク（task=1）で開いたゲームでは、ほかの画面への入口を隠す（授業モード）
-  const lesson=!!lockedHash||((path==="play"||path==="mode")&&q.get("task")==="1")||((path==="qlink"||path==="ulink")&&/[&?]task=1(?![0-9])/.test(location.hash));
+  const lesson=!!lockedHash||((path==="play"||path==="mode"||path==="meter")&&q.get("task")==="1")||((path==="qlink"||path==="ulink")&&/[&?]task=1(?![0-9])/.test(location.hash));
   LESSON=lesson; document.body.classList.toggle("lesson",lesson); const lic=document.getElementById("licLink"); if(lic) lic.hidden=lesson;
   const lg=$("#logo"); if(lg) lg.disabled=lesson;          // 授業モードではロゴからホームへ行けない
   window.scrollTo(0,0);
@@ -7048,6 +7370,7 @@ function route(){
   else if(path==="make") renderMake(q);
   else if(path==="qlink") renderQuizLink(location.hash.slice(3).split(/[&?]/)[0]);
   else if(path==="units") renderUnits(q);
+  else if(path==="meter") renderMeter(q);
   else if(path==="ulink") renderUnitLink(location.hash);
   else if(path==="record") renderRecord();
   else if(path==="hiroba"&&COLOK) renderHiroba();
