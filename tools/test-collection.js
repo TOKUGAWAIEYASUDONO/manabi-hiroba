@@ -1,4 +1,4 @@
-// コレクション v1〜v3.1-a（data/collection.js：どんぐり・ずかん・ひろば・バックアップ・たんけん・まなびっこ）の単体テスト。 node tools/test-collection.js
+// コレクション v1〜v3.3（data/collection.js：どんぐり・ずかん・ひろば・バックアップ・たんけん・まなびっこ）の単体テスト。 node tools/test-collection.js
 const assert = require("assert"), fs = require("fs"), path = require("path"), vm = require("vm");
 const C = require("../data/collection.js");
 let n = 0;
@@ -139,12 +139,14 @@ t("買う・置く・しまう：足りないと買えない／重ねて置け�
   assert(!C.place(S, "bench", 1)); assert(!C.place(S, "tree", 13)); assert(C.unplace(S, "tree")); assert(!C.unplace(S, "tree"));
   assert(C.place(S, "flower", 3));
 });
-t("完成：かざり7つそろえて全部置く。完成日を1回だけ記録し、その後どんぐりは出ない", () => {
+t("完成：かざり7つそろえて全部置く。完成日を1回だけ記録。そのあと どんぐりは まだ買っていない きせかえが あるあいだだけ出る（v3.3）", () => {
   const S = C.fresh(D); S.ac.e = C.PRICE_TOTAL;
   C.DECOR.forEach((d, i) => { assert(C.buy(S, d.id)); assert(!C.checkDone(S, D + 9)); });
   C.DECOR.forEach((d, i) => C.place(S, d.id, i + 1));
   assert(C.checkDone(S, D + 9)); assert.strictEqual(S.done, D + 9); assert(!C.checkDone(S, D + 20)); assert.strictEqual(S.done, D + 9);
-  assert.strictEqual(gain(run(S, D + 30, [], { answered: 10, correct: 10 })), 0);
+  assert.strictEqual(gain(run(S, D + 30, [], { answered: 10, correct: 10 })), 1);           // きせかえが のこっている
+  S.kz.o = C.KZ.filter(k => k.price).map(k => k.id);
+  assert.strictEqual(gain(run(S, D + 31, [], { answered: 10, correct: 10 })), 0);           // ぜんぶ 買ったら 出ない
 });
 t("clean：壊れた保存を直す", () => {
   const S = C.clean({ v: 1, d0: D, last: D, u: { "m3-amari": [9, 5, 5], "zzz": [3, 0, 0], "m3-div1": "x" }, ac: { e: 10, s: 99 }, own: ["tree", "tree", "ghost"], pl: { tree: 5, ghost: 2, flower: 5 } }, D);
@@ -460,5 +462,111 @@ t("アバター：自分の 子は もっている子だけ。きめていなけ
   assert.strictEqual(C.mkAvatar(S, ""), null);
   S.mk.sh = []; assert.strictEqual(C.mkAvatar(S).mk, "sankakuru");               // ひろばに いなければ 表の じゅん
   assert.strictEqual(C.mkAvatar(C.fresh(D)), null); assert.strictEqual(C.mkAvatar(null), null);
+});
+/* ---------- v3.3：きせかえ（Qalc 合体 段階4。どんぐりで 買う・学びで もらう） ---------- */
+const kzState = () => { const S = mkState(); S.ac.e = 200; S.ac.s = 0; return S; };
+t("きせかえ：品の表（ぼうし12・もちもの8・はいけい8・しょうごう12）。ID は ちがう・値段は 1〜20（1日の上限より 高くない）・絵文字は Unicode 12 まで", () => {
+  const by = sl => C.KZ.filter(k => k.s === sl).length;
+  assert.deepStrictEqual([by("h"), by("p"), by("b"), by("t")], [12, 8, 8, 12]);
+  assert.strictEqual(new Set(C.KZ_IDS).size, C.KZ_IDS.length);
+  assert(C.KZ_IDS.length <= 1294, "番号＋1 が 2字に 入る");
+  for (const k of C.KZ) {
+    assert(/^[hpbt]-[a-z0-9]+$/.test(k.id) && k.id.length <= 16 && k.id[0] === k.s, k.id);
+    assert(!!k.price !== !!k.un, k.id + "：買う物か もらう物の どちらか");
+    if (k.price) assert(Number.isInteger(k.price) && k.price >= 1 && k.price <= C.CAP, k.id);
+    if (k.un) assert(["can", "mst", "nk"].includes(k.un[0]) && Number.isInteger(k.un[1]), k.id);
+    if (k.s === "b") assert(Array.isArray(k.bg) && k.bg.length >= 2 && k.bg.every(c => /^#[0-9a-f]{6}$/.test(c)), k.id);
+    for (const ch of k.ch) { const cp = ch.codePointAt(0); assert(cp < 0x1FA70 || cp === 0xFE0F, k.id + " " + cp.toString(16)); }   // 1FA70〜（Unicode 12 の後半〜）は つかわない
+  }
+  const cheap = C.KZ.filter(k => k.price && k.price <= 5).length, mid = C.KZ.filter(k => k.price > 5 && k.price <= 8).length;
+  assert(cheap >= 8 && mid >= 8, "はじめの 1つが 1〜2日で 買える 値段が 多い");
+  assert(C.KZ.filter(k => k.un).length >= 8, "買わなくても もらえる物が ある");
+  assert(Math.min(...C.KZ.filter(k => k.price).map(k => k.price)) <= C.GIFT, "はじめの 5こで 1つ 買える");
+});
+t("きせかえ：買う（どんぐりが へる・二重に 買えない・足りないと 買えない・もらう物は 買えない・まなびっこが いないと 買えない）", () => {
+  const S = kzState();
+  assert(C.kzBuy(S, "h-ribbon")); assert.strictEqual(C.balance(S), 197); assert(!C.kzBuy(S, "h-ribbon")); assert.strictEqual(C.balance(S), 197);
+  assert(!C.kzBuy(S, "h-sprout")); assert(!C.kzBuy(S, "nope")); assert(!C.kzBuy(S, "__proto__"));
+  S.ac.s = S.ac.e - 14; assert(!C.kzBuy(S, "h-crown")); S.ac.s--; assert(C.kzBuy(S, "h-crown")); assert.strictEqual(C.balance(S), 0);
+  const F = C.fresh(D); F.ac.e = 50; assert(!C.kzBuy(F, "h-ribbon"));
+  assert(C.kzHas(S, "h-crown")); assert(!C.kzHas(S, "h-cap"));
+});
+t("きせかえ：学びで もらう物（できた・マスター・なかよし）。条件を こえると もっている。下がらない", () => {
+  const S = kzState(), sm = C.summary(S);
+  assert(C.kzHas(S, "t-ippo"));                                                   // まなびっこが いれば はじめから
+  assert.strictEqual(C.kzHas(S, "h-sprout"), sm.can >= 1);
+  assert.strictEqual(C.kzHas(S, "t-owl"), sm.master >= 1);
+  assert(C.kzHas(S, "p-bag") && C.kzHas(S, "t-friend") && C.kzHas(S, "b-stars"));  // さんかくるが いっしょに まなぶ（p=9）
+  const F = C.fresh(D); assert(!C.kzHas(F, "t-ippo"));                            // まなびっこが いなければ まだ
+  F.mk.own.eimaru = { d: D, p: 0, ld: D, k: 0, v: 0 }; assert(C.kzHas(F, "t-ippo")); assert(!C.kzHas(F, "h-sprout")); assert(!C.kzHas(F, "p-bag"));
+  F.u["m3-amari"] = [2, D, D]; assert(C.kzHas(F, "h-sprout")); assert(!C.kzHas(F, "t-owl"));
+  F.mk.own.eimaru.p = 3; assert(C.kzHas(F, "p-bag")); assert(!C.kzHas(F, "b-stars"));
+});
+t("きせかえ：つける・はずす・つけかえる（その場所の物で、もっている物だけ。もっていない子には つけない）", () => {
+  const S = kzState(); C.kzBuy(S, "h-ribbon"); C.kzBuy(S, "h-cap"); C.kzBuy(S, "b-sea");
+  assert(C.kzWear(S, "sankakuru", "h", "h-ribbon")); assert.deepStrictEqual(C.kzOf(S, "sankakuru"), { h: "h-ribbon" });
+  assert(C.kzWear(S, "sankakuru", "h", "h-cap")); assert.deepStrictEqual(C.kzOf(S, "sankakuru"), { h: "h-cap" });
+  assert(C.kzWear(S, "kotohane", "h", "h-cap")); assert.strictEqual(C.kzOf(S, "kotohane").h, "h-cap");   // 同じ物を べつの子にも
+  assert(!C.kzWear(S, "sankakuru", "h", "h-crown"), "もっていない"); assert(!C.kzWear(S, "sankakuru", "p", "h-ribbon"), "場所が ちがう");
+  assert(!C.kzWear(S, "eimaru", "h", "h-cap"), "まだ なかまでない子"); assert(!C.kzWear(S, "__proto__", "h", "h-cap")); assert(!C.kzWear(S, "sankakuru", "x", "h-cap"));
+  assert(C.kzWear(S, "sankakuru", "b", "b-sea")); assert(C.kzWear(S, "sankakuru", "t", "t-ippo"));
+  assert.deepStrictEqual(C.kzOf(S, "sankakuru"), { h: "h-cap", b: "b-sea", t: "t-ippo" });
+  assert(C.kzWear(S, "sankakuru", "h", "h-cap")); assert(!("h" in C.kzOf(S, "sankakuru")), "同じ物で はずす");
+  assert(C.kzWear(S, "sankakuru", "b", "")); assert(C.kzWear(S, "sankakuru", "t", "")); assert(!S.kz.e.sankakuru);
+  S.kz.e.kotohane.h = "h-crown"; assert.deepStrictEqual(C.kzOf(S, "kotohane"), {}, "もっていない物は 出さない");
+});
+t("きせかえ：clean（古い記録は 空・こわれた値は すてる・もっていない子や 場所ちがいは すてる）。買った物は 消えない", () => {
+  const S = kzState(); C.kzBuy(S, "h-ribbon"); C.kzWear(S, "sankakuru", "h", "h-ribbon");
+  const R = C.clean(JSON.parse(JSON.stringify(S)), D + 3);
+  assert.deepStrictEqual(R.kz.o, ["h-ribbon"]); assert.deepStrictEqual(R.kz.e, { sankakuru: { h: "h-ribbon" } }); assert.strictEqual(C.balance(R), C.balance(S));
+  const old = JSON.parse(JSON.stringify(S)); delete old.kz; assert.deepStrictEqual(C.clean(old, D + 3).kz, { o: [], e: {} });
+  const bad = JSON.parse(JSON.stringify(S)); bad.kz = { o: ["h-ribbon", "h-ribbon", "t-ippo", "zz", 5, "__proto__"], e: { sankakuru: { h: "p-book", p: "p-book", b: 3 }, eimaru: { h: "h-cap" }, constructor: { h: "h-cap" }, kotohane: "x" } };
+  const B = C.clean(bad, D + 3); assert.deepStrictEqual(B.kz.o, ["h-ribbon"]); assert.deepStrictEqual(B.kz.e, { sankakuru: { p: "p-book" } });
+  assert.deepStrictEqual(C.clean(Object.assign(JSON.parse(JSON.stringify(S)), { kz: "x" }), D).kz, { o: [], e: {} });
+});
+t("きせかえ：友だち対戦で 送る ぼうしは 表の ぼうしだけ（ほかの場所の物・文字は 付けない）。アバターに つけている ぼうし", () => {
+  assert.deepStrictEqual(C.mkWire("sankakuru", 1, "h-crown"), { mk: "sankakuru", ms: 1, mh: "h-crown" });
+  for (const mh of ["p-book", "t-ippo", "b-sea", "nope", "__proto__", "<b>", 1, null, {}, ["h-cap"], "h-cap ", "h".repeat(40)]) assert.deepStrictEqual(C.mkWire("sankakuru", 1, mh), { mk: "sankakuru", ms: 1 });
+  assert.strictEqual(C.mkWire("nope", 1, "h-cap"), null);
+  const S = kzState(); C.kzBuy(S, "h-cap"); C.kzWear(S, "kotohane", "h", "h-cap"); C.kzBuy(S, "p-book"); C.kzWear(S, "kotohane", "p", "p-book");
+  assert.deepStrictEqual(C.mkAvatar(S), { mk: "kotohane", ms: 1, mh: "h-cap" });   // もちもの・はいけい・しょうごうは 送らない
+  assert.deepStrictEqual(C.mkAvatar(S, "sankakuru"), { mk: "sankakuru", ms: 2 });
+});
+t("きせかえ：バックアップ HR3 で 往復（買った物・つけている物）。きせかえが なければ 今まで通り HR2／HR1", () => {
+  const S = kzState(); assert(/^HR2/.test(C.hrMake(S)));
+  C.kzBuy(S, "h-ribbon"); C.kzBuy(S, "b-rainbow"); C.kzBuy(S, "t-star"); C.kzWear(S, "sankakuru", "h", "h-ribbon"); C.kzWear(S, "kotohane", "b", "b-rainbow"); C.kzWear(S, "kotohane", "t", "t-ippo");
+  const s = C.hrMake(S), r = C.hrParse(s);
+  assert(/^HR3/.test(s)); assert(r && r.kz && r.mk);
+  assert.deepStrictEqual(r.kz.o.slice().sort(), ["b-rainbow", "h-ribbon", "t-star"]); assert.deepStrictEqual(r.kz.e, { sankakuru: { h: "h-ribbon" }, kotohane: { b: "b-rainbow", t: "t-ippo" } });
+  const B = C.hrMerge(C.fresh(D + 9), r, D + 9);
+  assert.deepStrictEqual(B.kz.o.slice().sort(), ["b-rainbow", "h-ribbon", "t-star"]); assert.deepStrictEqual(C.kzOf(B, "sankakuru"), { h: "h-ribbon" }); assert.strictEqual(C.balance(B), C.balance(S));
+  C.hrMerge(B, C.hrParse(s), D + 9); assert.strictEqual(B.kz.o.length, 3); assert.strictEqual(C.balance(B), C.balance(S));        // くり返しても ふえない・へらない
+  const L = kzState(); C.kzBuy(L, "h-cap"); C.kzWear(L, "sankakuru", "h", "h-cap"); C.hrMerge(L, r, D + 9);
+  assert.strictEqual(C.kzOf(L, "sankakuru").h, "h-cap", "この端末で つけている物は そのまま"); assert(L.kz.o.includes("h-ribbon") && L.kz.o.includes("h-cap"));
+  const W = C.fresh(D); W.ac.e = 9; W.kz.o = ["h-leaf"]; const rw = C.hrParse(C.hrMake(W)); assert(rw && rw.mk && !Object.keys(rw.mk.own).length && rw.kz.o[0] === "h-leaf");   // まなびっこが いなくても 読める
+});
+t("きせかえ：HR3 の こわれた文字は 断る（1字かえる・表に ない番号・場所ちがい・もっていない子）。HR1／HR2 は これからも 読める", () => {
+  const S = kzState(); C.kzBuy(S, "h-ribbon"); C.kzWear(S, "sankakuru", "h", "h-ribbon");
+  const s = C.hrMake(S).replace(/-/g, ""), body = s.slice(3, -3);
+  const sum3 = tx => { let h = 7; for (const c of tx) h = (h * 31 + c.charCodeAt(0)) % 46656; return h.toString(36).toUpperCase().padStart(3, "0"); };
+  const mk = b => "HR3" + b + sum3("HR3" + b);
+  assert(C.hrParse(mk(body)));
+  assert.strictEqual(C.hrParse(s.slice(0, 10) + (s[10] === "A" ? "B" : "A") + s.slice(11)), null);
+  const kzLen = 1 + 4 * 2 + 1 + 10, rest = body.slice(kzLen);
+  assert.strictEqual(body.slice(0, kzLen), "2" + "0001" + "0000" + "1" + "00" + "01" + "00" + "00" + "00");
+  assert.strictEqual(C.hrParse(mk("2" + "0001" + "0000" + "1" + "00" + "0D" + "00" + "00" + "00" + rest)), null);   // ぼうしの場所に もちもの（p-pencil＝13番）
+  assert.strictEqual(C.hrParse(mk("2" + "0001" + "0000" + "1" + "00" + "ZZ" + "00" + "00" + "00" + rest)), null);   // 表に ない番号
+  assert.strictEqual(C.hrParse(mk("2" + "0001" + "0000" + "1" + "03" + "01" + "00" + "00" + "00" + rest)), null);   // もっていない子（えいまる）
+  assert.strictEqual(C.hrParse(mk("2" + "00SG" + "0000" + "0" + rest)), null);                                       // もらう物（h-sprout）は 買った物に 入らない
+  assert.strictEqual(C.hrParse(mk("9" + "0001" + rest)), null);                                                      // かたまりの数が おかしい
+  assert.strictEqual(C.hrParse(mk("2" + "0001")), null);                                                             // 短すぎる
+  assert(C.hrParse(OLD_HR1)); assert(/^HR2/.test(C.hrMake(mkState())) && C.hrParse(C.hrMake(mkState())).kz === null);
+});
+t("きせかえ：値段の すじみち（はじめの 5こ＋1日1〜3こで、1〜2日めに 1つ・1週間で 数こ）", () => {
+  const prices = C.KZ.filter(k => k.price).map(k => k.price).sort((a, b) => a - b);
+  assert(prices[0] <= C.GIFT);                                           // 1日め：はじめの 5こで 1つ
+  const week = C.GIFT + 7 * 2; let n = 0, m = week; for (const p of prices) if (p <= m) { m -= p; n++; }
+  assert(n >= 3 && n <= 7, "1日 2こなら 1週間で 3〜7こ（" + n + "）");
+  assert(C.KZ_PRICE_TOTAL >= 150 && C.KZ_PRICE_TOTAL <= 300, "ぜんぶで " + C.KZ_PRICE_TOTAL);
 });
 console.log(`\n${n} 件のテストを実行${process.exitCode ? "（失敗あり）" : "：すべて成功"}`);

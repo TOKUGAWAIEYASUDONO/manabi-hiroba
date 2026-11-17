@@ -878,7 +878,41 @@ body[data-v=host] .wrap{max-width:none;padding:0}
 .mkf .mki{width:56px}
 .mkd .btn{margin:0;min-height:50px}
 @media (min-width:700px){.mkzg{grid-template-columns:repeat(5,1fr)}.mkd{grid-template-columns:220px 1fr;align-items:start}.mkd .mkdi{grid-row:span 3}.mkr .mki{width:min(100%,120px)}}
-@media (prefers-reduced-motion:reduce){.mki.mkpop,.mkr.hop .mki{animation:none}}
+@media (prefers-reduced-motion:reduce){.mki.mkpop,.mkr.hop .mki,.mkr.hop .mkw{animation:none}}
+/* きせかえ（v3.3。Qalc 合体 段階4）：まなびっこに かさねる ぼうし・もちもの（絵文字）・はいけい・しょうごう */
+.mkw{position:relative;display:block;margin:0 auto;border-radius:16px;line-height:0;flex:none}
+.mkw>.mki{width:100%!important;position:relative;z-index:1}
+.mkw.kzbg{box-shadow:inset 0 0 0 2px rgba(22,55,42,.12)}
+.kzo,.kzb{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;overflow:visible}
+.kzb{z-index:0}.kzo{z-index:2}
+.mkr .mkw{width:min(100%,104px)}.mkr .mkw>.mki{filter:drop-shadow(0 3px 0 rgba(22,55,42,.2))}
+.mkr.hop .mkw{animation:mkhop .45s ease-out 2}.mkr.hop .mkw>.mki{animation:none}
+.mkz.on .mkw{width:min(100%,128px)}
+.mkd .mkdi .mkw{width:min(60vw,200px)}
+.mkavb .mkw{width:52px}
+.kzt{display:block;max-width:100%;font-size:11px;font-weight:800;line-height:1.45;color:#6b4b00;background:#fff3c4;border:1px solid #e8cf7a;border-radius:999px;padding:0 7px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.mkd .kzt{font-size:14px;margin:4px auto 0;width:max-content}
+.mkavw{position:relative;display:inline-block;line-height:0;vertical-align:-.32em;margin-left:.08em}
+.mkavw>.mkav{vertical-align:top;margin-left:0}
+.kzw{display:grid;gap:6px}
+.kzrow{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.kzl{flex:0 0 100%;font-size:13px;font-weight:800;color:var(--muted)}
+.kzb2{display:inline-flex;align-items:center;gap:4px;min-height:44px;min-width:44px;padding:2px 8px;border:3px solid var(--line);border-radius:12px;background:#fffdf6;cursor:pointer;font:inherit;font-size:13px;color:var(--ink)}
+.kzb2.on{border-color:var(--edge);background:#fff3c4;box-shadow:0 0 0 3px var(--sun)}
+.kzb2:focus-visible{outline:3px solid var(--edge);outline-offset:2px}
+.kzi{display:inline-flex;align-items:center;justify-content:center;width:34px;height:34px;font-size:24px;line-height:1;border-radius:10px;flex:none}
+.kzi.bg{box-shadow:inset 0 0 0 2px rgba(22,55,42,.15);font-size:18px}
+.shop .stabs{margin:4px 0 6px}
+.kzh4{margin:10px 0 4px;font-size:15px}
+.kzg{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px}
+.kzcd{display:flex;flex-direction:column;align-items:center;gap:3px;padding:6px 4px 8px;border:2px solid var(--line);border-radius:12px;text-align:center;min-width:0}
+.kzcd .kzi{width:44px;height:44px;font-size:30px}.kzcd .kzi.bg{width:64px;font-size:22px}
+.kzcd b{font-size:14px;line-height:1.3}
+.kzcd .note{margin:0;font-size:12px;line-height:1.4}
+.kzcd .note.ok{color:#2c7a3f;font-weight:800}
+.kzcd.own{background:#fbfaf2}
+.kzcd .btn{margin:0;min-width:84px;min-height:44px;display:inline-flex;align-items:center;justify-content:center;gap:4px}.kzcd .btn .art{width:20px;height:20px}
+@media (min-width:700px){.mkr .mkw{width:min(100%,120px)}.kzg{grid-template-columns:repeat(4,minmax(0,1fr))}.mkd .kzw{grid-column:1/-1}}
 /* ===== ロケット はっしゃ（協力モード） ===== */
 .rks{width:1.2em;height:1.2em;vertical-align:-.2em;flex:none}
 .rks.sm{width:28px;height:28px}
@@ -1039,7 +1073,7 @@ body[data-v=host] .wrap{max-width:none;padding:0}
 .co-px .rkm-end{font-size:54px}.co-px .rkm-card h2{font-size:36px}
 .co-msg:empty{display:none}.co-msg .co-end{pointer-events:auto;max-height:78vh;overflow:auto}
 .co-px .rkm-card{background:rgba(22,55,42,.95)}
-.jnh{flex:1;display:grid;grid-template-columns:auto 1fr;gap:26px;align-items:start;min-height:0}
+.jnh{flex:1;display:grid;grid-template-columns:auto 1fr;gap:18px 26px;align-items:start;align-content:start;min-height:0}
 .jn-bd.big{width:min(68vh,54vw);gap:4px;border-width:5px;border-radius:14px}
 .jn-bd.big .c{font-size:min(3.4vh,2.6vw);border-radius:4px}.jn-bd.big .c.hm{font-size:min(5.4vh,4vw)}
 .jn-bd.big .c.tg{box-shadow:inset 0 0 0 6px #ffd84a}.jn-bd.big .c u{height:10px}
@@ -1050,7 +1084,8 @@ body[data-v=host] .wrap{max-width:none;padding:0}
 .jn-tm.t0{border-left:18px solid #e2594c}.jn-tm.t1{border-left:18px solid #4a86e8}
 .jn-tm .nm{font-weight:900;font-size:32px;white-space:nowrap}.jn-tm .pt b{font-size:60px;color:#ffe066;margin-right:6px;font-variant-numeric:tabular-nums}
 .jn-tm .cn{color:var(--chalk)}
-.jnh-side .lbl.sm{font-size:28px;color:var(--chalk);line-height:1.25}
+.jnh-leg{grid-column:1/-1;display:flex;flex-wrap:wrap;justify-content:center;gap:4px 36px;font-size:clamp(18px,2.2vw,28px);color:var(--chalk);line-height:1.3}
+.jnh-leg span{white-space:nowrap}
 .jn-lob{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:14px}
 .jn-lob .jn-tm{padding:6px 12px}.jn-lob .nm{font-size:28px}.jn-lob .fcs{display:flex;flex-wrap:wrap;gap:4px;min-height:44px}
 .jn-menu{margin:10px 0;color:var(--ink);font-size:18px}.jn-menu .btn{margin:8px 0}
@@ -1430,7 +1465,7 @@ body[data-v=host] .wrap{max-width:none;padding:0}
 <script src="data/gen/textbook-extra.js?v=b2d3f58f"></script>
 <script src="data/units.js?v=ea0deb93"></script>
 <script src="data/tools-viz.js?v=929e0edf"></script>
-<script src="data/collection.js?v=454a5106"></script>
+<script src="data/collection.js?v=f5963821"></script>
 <script>
 /* ================= 画面の文言（1つの表） =================
    TX["キー"] = [ふつうの文言, 1〜2年の「やさしい文字」]（やさしい側がないものは同じ文言）。
@@ -1695,6 +1730,7 @@ const TX={
  "col.done":["かんせい！ ひろばが いっぱいに なったよ。"],
  "col.done.on":[(m,d)=>`かんせいした 日《ひ》：${m}月《がつ》${d}日《にち》`,(m,d)=>`かんせいした ひ：${m}がつ ${d}にち`],
  "col.done.n":["どんぐりは もう ふえません。ずかんを うめよう。"],
+ "col.done.k":["どんぐりで まなびっこの きせかえが かえるよ。きせかえを ぜんぶ かうまで、どんぐりは ふえるよ。"],
  "col.theme":["もようがえ"],"col.theme.0":["みどり"],"col.theme.1":["あき"],"col.theme.2":["ゆき"],
  "col.local":["ひろばは、その 端末《たんまつ》の ものです。ほかの 端末《たんまつ》では、あたらしく はじまります。","ひろばは、その たんまつの ものです。ほかの たんまつでは、あたらしく はじまるよ。"],
  "col.err":["ひろばの 絵《え》を 読《よ》みこめませんでした。もういちど ひらいてね。","ひろばの えを よみこめなかったよ。もういちど ひらいてね。"],
@@ -1744,7 +1780,29 @@ const TX={
  "col.mk.grow":[n=>`${n}と もっと なかよしに なったよ！ すがたが かわったよ。`],
  "col.mk.r.new":["まなびっこが なかまに なりたがっているよ！ ひろばで えらぼう。"],
  "col.mk.r.grow":[n=>`${n}と もっと なかよしに なったよ！`],
- "col.mk.bk":["まなびっこも この 文字《もじ》に 入《はい》るよ。","まなびっこも この もじに はいるよ。"],
+ "col.mk.bk":["まなびっこと きせかえも この 文字《もじ》に 入《はい》るよ。","まなびっこと きせかえも この もじに はいるよ。"],
+ /* v3.3：きせかえ（どんぐりで かう・学びで もらう。ガチャ・セール・順位は ない） */
+ "col.kz.tab.d":["かざり"],"col.kz.tab.k":["きせかえ"],"col.kz.tabs":["おみせの しゅるい"],
+ "col.kz.s.h":["ぼうし"],"col.kz.s.p":["もちもの"],"col.kz.s.b":["はいけい"],"col.kz.s.t":["しょうごう"],
+ "col.kz.d":["まなびっこに つける ものだよ。いちど かうと ずっと つかえて、いつでも つけかえられるよ。"],
+ "col.kz.need":["まなびっこが なかまに なると かえるよ。"],
+ "col.kz.have":["もっているよ"],"col.kz.got":["もらえたよ！"],
+ "col.kz.un.can0":["なかまが いれば もらえるよ"],
+ "col.kz.un.can":[n=>`単元《たんげん》を ${n}つ「できた」に すると もらえるよ`,n=>`たんげんを ${n}つ「できた」に すると もらえるよ`],
+ "col.kz.un.mst":[n=>`「マスター」が ${n}つで もらえるよ`],
+ "col.kz.un.nk.1":["まなびっこと「なかよし」に なると もらえるよ"],"col.kz.un.nk.2":["まなびっこが「いっしょに まなぶ なかま」に なると もらえるよ"],
+ "col.kz.bought":[n=>`「${n}」を かったよ！`],"col.kz.wear":["まなびっこに つける"],
+ "col.kz.wear.t":["きせかえ"],"col.kz.none":["なし"],
+ "col.kz.empty":["まだ ないよ。おみせの「きせかえ」で かえるよ。"],
+ "col.kz.i.h-ribbon":["リボン"],"col.kz.i.h-leaf":["はっぱ"],"col.kz.i.h-cap":["キャップ"],"col.kz.i.h-flower":["はなかざり"],"col.kz.i.h-straw":["むぎわらぼうし"],"col.kz.i.h-clover":["クローバー"],
+ "col.kz.i.h-star":["ぴかぴかぼし"],"col.kz.i.h-sunflower":["ひまわり"],"col.kz.i.h-tophat":["シルクハット"],"col.kz.i.h-crown":["おうかん"],"col.kz.i.h-sprout":["ふたば"],"col.kz.i.h-grad":["はかせぼうし"],
+ "col.kz.i.p-pencil":["えんぴつ"],"col.kz.i.p-book":["ほん"],"col.kz.i.p-ball":["ボール"],"col.kz.i.p-palette":["パレット"],"col.kz.i.p-ruler":["さんかくじょうぎ"],"col.kz.i.p-telescope":["ぼうえんきょう"],
+ "col.kz.i.p-bag":["ランドセル"],"col.kz.i.p-abacus":["そろばん"],
+ "col.kz.i.b-forest":["もり"],"col.kz.i.b-sakura":["さくら"],"col.kz.i.b-sea":["うみ"],"col.kz.i.b-momiji":["もみじ"],"col.kz.i.b-sunrise":["あさひ"],"col.kz.i.b-rainbow":["にじ"],
+ "col.kz.i.b-snow":["ゆきやま"],"col.kz.i.b-stars":["ほしぞら"],
+ "col.kz.i.t-ippo":["はじめの いっぽ"],"col.kz.i.t-renshu":["れんしゅう だいすき"],"col.kz.i.t-lucky":["にこにこ ラッキー"],"col.kz.i.t-chall":["チャレンジャー"],
+ "col.kz.i.t-monoshiri":["ものしり はかせ"],"col.kz.i.t-tantei":["なぞとき めいたんてい"],"col.kz.i.t-hirameki":["ひらめき はかせ"],"col.kz.i.t-star":["きらきら スター"],
+ "col.kz.i.t-kotsu":["コツコツ がんばりや"],"col.kz.i.t-friend":["なかよし なかま"],"col.kz.i.t-owl":["ちえの フクロウ"],"col.kz.i.t-100":["ひゃくてん まんてん"],
  "col.mk.c.sankakuru":["さんかくる"],"col.mk.c.sankakuru.kind":["まじめで ひらめき上手《じょうず》","まじめで ひらめきじょうず"],"col.mk.c.sankakuru.like":["図形《ずけい》の 広場《ひろば》","ずけいの ひろば"],
  "col.mk.c.sankakuru.say":["三角定規《さんかくじょうぎ》で、むずかしい 形《かたち》も 楽《たの》しく 見《み》つけるよ。","さんかくじょうぎで、むずかしい かたちも たのしく みつけるよ。"],
  "col.mk.c.kotohane":["ことはね"],"col.mk.c.kotohane.kind":["お話《はなし》好《ず》きで やさしい","おはなしずきで やさしい"],"col.mk.c.kotohane.like":["本《ほん》の 森《もり》","ほんの もり"],
@@ -1873,7 +1931,7 @@ const TX={
  "jn.good":[n=>`いい しょうぶだった！ あと ${n}てん`],
  "jn.yay":["おめでとう！ チームの ちからだね！"],
  "jn.me.c":[n=>`ぬった マス ${n}`],
- "jn.rule":["◎＝いま ぬっている マス・★＝てんが おおきい マス"],
+ "jn.rule.a":["◎＝いま ぬっている マス"],"jn.rule.b":["★＝てんが おおきい マス"],
  "jn.board":[(a,b)=>`あか ${a}マス、あお ${b}マス`]
 };
 /*TX-END*/
@@ -2875,7 +2933,7 @@ function renderRecord(msg){
   $("#bkGo").onclick=()=>{
     const m=$("#bkMsg"), v=$("#bkIn").value.trim();
     if(!v){ m.className="err"; m.textContent=T("rec.bk.empty"); return; }
-    if(/^HR[12]/i.test(v.replace(/[^0-9A-Za-z]/g,""))){ if(!colImport(v)){ m.className="err"; m.textContent=T("rec.bk.ng"); return; } renderRecord(T("col.bk.ok")); return; }      // ひろばの文字（HR1）も、ここに入れてよい
+    if(/^HR[123]/i.test(v.replace(/[^0-9A-Za-z]/g,""))){ if(!colImport(v)){ m.className="err"; m.textContent=T("rec.bk.ng"); return; } renderRecord(T("col.bk.ok")); return; }      // ひろばの文字（HR1）も、ここに入れてよい
     const r=bkRead(v); if(!r){ m.className="err"; m.textContent=T("rec.bk.ng"); return; }
     bkApply(r); refreshMedals(); renderRecord(T("rec.bk.ok"));
   };
@@ -2939,7 +2997,7 @@ function colRunPlay(p){      // finish() から：単元ごとの正解数と、
 /* ----- じぶんの ひろば ----- */
 function renderHiroba(){
   if(colMode()!=="on") return go("#home");
-  setLG(ui.grade); HS={sel:null,shop:false,gift:0,cap:0,done:0,mkSel:null,mkGot:null,mkLater:false,mkInfo:null,mkGrow:[]};
+  setLG(ui.grade); HS={sel:null,shop:false,gift:0,cap:0,done:0,mkSel:null,mkGot:null,mkLater:false,mkInfo:null,mkGrow:[],tab:"d",kzMsg:null};
   app.innerHTML=`<div class="hb"></div>`;
   loadScript("data/hiroba-art.js?v=e89b7885",()=>!!document.getElementById("hiroba-art")).then(()=>{ if(params().path==="hiroba") hbDraw(true); },()=>{ app.innerHTML=`<div class="q">${T("col.err")}</div>`; });
 }
@@ -2970,7 +3028,7 @@ function hbDraw(first){
       :placed?`<span class="note">${T("col.placed")}</span>`:`<button type="button" class="btn s" data-put="${d.id}">${T("col.put")}</button>`;
     return `<div class="row">${svgU(d.art)}<span class="nm">${T("col.d."+d.id)}</span>${act}</div>`; }).join("");
   const dd=S.done?COL.dayDate(S.done):null;
-  const done=S.done?`<div class="hmsg done">${HS.done?`<b>${T("col.done")}</b><br>`:""}${T("col.done.on",dd.getUTCMonth()+1,dd.getUTCDate())}<br>${T("col.done.n")}
+  const done=S.done?`<div class="hmsg done">${HS.done?`<b>${T("col.done")}</b><br>`:""}${T("col.done.on",dd.getUTCMonth()+1,dd.getUTCDate())}<br>${T(COL.kzLeft(S)?"col.done.k":"col.done.n")}
     <div class="pills" style="margin-top:8px"><b class="pl">${T("col.theme")}</b>${[0,1,2].map(i=>`<button type="button" class="pill small${S.theme===i?" on":""}" data-th="${i}" aria-pressed="${S.theme===i}">${T("col.theme."+i)}</button>`).join("")}</div></div>`:"";
   const tkBox=()=>{ if(!colTkOn()) return ""; const st=COL.tkState(S,today,colTkLimit());
     const icons=Array.from({length:COL.TK_MAX},(_,i)=>`<span class="tkc${i<st.n?" on":""}">${svgU("h-ticket")}</span>`).join("");
@@ -2993,12 +3051,17 @@ function hbDraw(first){
     <div class="hops"><button type="button" class="btn" id="hbShop" aria-expanded="${HS.shop}">${acornSvg("ac")}${T("col.shop")}</button><button type="button" class="btn" id="hbZk">${ic("book-open")}${T("col.zukan")}</button></div>
     ${mkZkHtml(S)}
     ${tkBox()}
-    <section class="shop${HS.shop?"":" hidden"}" id="shopBox"><h3>${T("col.shop")}</h3>${shop}</section>
+    <section class="shop${HS.shop?"":" hidden"}" id="shopBox"><h3>${T("col.shop")}</h3>
+      <div class="pills stabs" role="group" aria-label="${esc(T("col.kz.tabs"))}">${["d","k"].map(k=>`<button type="button" class="pill small${HS.tab===k?" on":""}" data-stab="${k}" aria-pressed="${HS.tab===k}">${T("col.kz.tab."+k)}</button>`).join("")}</div>
+      ${HS.tab==="k"?kzShopHtml(S,bal):shop}</section>
     <p class="note">${T("col.local")}</p>`;
   root.querySelectorAll("[data-c]").forEach(b=>b.onclick=()=>hbCell(+b.dataset.c));
   root.querySelectorAll("[data-buy]").forEach(b=>b.onclick=()=>{ if(COL.buy(S,b.dataset.buy)){ HS.sel=b.dataset.buy; HS.shop=false; sfx("coin"); colSave(); hbDraw(false); } });
   root.querySelectorAll("[data-put]").forEach(b=>b.onclick=()=>{ HS.sel=b.dataset.put; HS.shop=false; hbDraw(false); });
   root.querySelectorAll("[data-th]").forEach(b=>b.onclick=()=>{ S.theme=+b.dataset.th; colSave(); hbDraw(false); });
+  root.querySelectorAll("[data-stab]").forEach(b=>b.onclick=()=>{ HS.tab=b.dataset.stab; HS.kzMsg=null; hbDraw(false); const f=app.querySelector(`[data-stab="${HS.tab}"]`); if(f) f.focus(); });
+  root.querySelectorAll("[data-kzbuy]").forEach(b=>b.onclick=()=>{ const id=b.dataset.kzbuy; if(!COL.kzBuy(S,id)) return; HS.kzMsg=id; sfx("coin"); colSave(); hbDraw(false); const f=app.querySelector("#kzGoWear"); if(f) f.focus(); });
+  if(root.querySelector("#kzGoWear")) root.querySelector("#kzGoWear").onclick=()=>{ HS.mkInfo=S.mk.sh.find(id=>S.mk.own[id])||COL.MK_IDS.find(id=>S.mk.own[id])||null; HS.shop=false; HS.kzMsg=null; hbDraw(false); const e=app.querySelector("#mkInfo"); if(e){ e.scrollIntoView({block:"start"}); const f=e.querySelector(".kzb2.on,.kzb2"); if(f) f.focus({preventScroll:true}); } };
   const q=id=>root.querySelector(id);
   q("#hbShop").onclick=()=>{ HS.shop=!HS.shop; hbDraw(false); };
   q("#hbZk").onclick=()=>go("#zukan");
@@ -3016,25 +3079,58 @@ function mkImg(c,st,px,cls){
   if(!c||!c.art) return `<span class="mki none" aria-hidden="true">？</span>`;      // 絵が まだの子（のちの段階）は 枠だけ
   return `<img class="mki${cls?" "+cls:""}" src="vendor/img/manabikko/${c.art}-${COL.MK_ART[st]}-v3-${px}.webp" alt="" width="${px}" height="${px}" decoding="async" onerror="this.style.visibility='hidden'">`;
 }
+/* ----- きせかえ（v3.3。中身は data/collection.js の kz*）：ぼうし・もちものは 絵文字を 絵の 上に かさねる（SVG の文字なので 大きさに あわせて のびちぢみ）。
+   はいけいは 絵の うしろの 色と もよう。しょうごうは 決まった表の ことばだけ（自由な 文字は ない）。先生の オフ・授業モードでは ひろばごと 出ない ----- */
+const kzC=id=>COL.KZ.find(k=>k.id===id);
+const kzNm=id=>T("col.kz.i."+id);
+const kzBgCss=k=>k&&k.bg?`background:linear-gradient(180deg,${k.bg.join(",")})`:"";
+const kzIcon=k=>k.s==="b"?`<span class="kzi bg" style="${kzBgCss(k)}" aria-hidden="true">${k.ch}</span>`:`<span class="kzi" aria-hidden="true">${k.ch}</span>`;
+const kzHatSvg=(k,y,fs)=>`<text x="50" y="${y}" font-size="${fs}" text-anchor="middle" transform="rotate(-8 50 ${y-10})">${k.ch}</text>`;
+function mkDress(c,st,px,eq,cls){          // まなびっこの絵＋きせかえ。eq＝COL.kzOf の { h, p, b, t }
+  const img=mkImg(c,st,px,cls); if(!c||!c.art) return img;
+  const e=eq||{}, b=e.b&&kzC(e.b), h=e.h&&kzC(e.h), p=e.p&&kzC(e.p);
+  const ov=h||p?`<svg class="kzo" viewBox="0 0 100 100" aria-hidden="true">${h?kzHatSvg(h,26,30):""}${p?`<text x="83" y="94" font-size="26" text-anchor="middle">${p.ch}</text>`:""}</svg>`:"";
+  const bm=b?`<svg class="kzb" viewBox="0 0 100 100" aria-hidden="true"><text x="15" y="24" font-size="18" text-anchor="middle" opacity=".6">${b.ch}</text><text x="88" y="44" font-size="12" text-anchor="middle" opacity=".45">${b.ch}</text></svg>`:"";
+  return `<span class="mkw${b?" kzbg":""}"${b?` style="${kzBgCss(b)}"`:""}>${bm}${img}${ov}</span>`;
+}
+const kzTitle=eq=>{ const k=eq&&eq.t&&kzC(eq.t); return k?`<span class="kzt">${k.ch} ${kzNm(k.id)}</span>`:""; };
+function kzUnTxt(k){ const [c,n]=k.un; return c==="can"?(n?T("col.kz.un.can",n):T("col.kz.un.can0")):c==="mst"?T("col.kz.un.mst",n):T("col.kz.un.nk."+n); }
+function kzShopHtml(S,bal){        // おみせの「きせかえ」：ぜんぶの 品と 値段・もらえる 条件を 見せる（抽選・期間限定は ない）
+  const has=Object.keys(S.mk.own).length>0;
+  const card=k=>{ const own=COL.kzHas(S,k.id);
+    const act=k.price?(own?`<span class="note">${T("col.kz.have")}</span>`:`<button type="button" class="btn s" data-kzbuy="${k.id}"${!has||bal<k.price?" disabled":""}>${acornSvg("ac")}${T("col.price",k.price)}</button>`)
+      :(own?`<span class="note ok">${T("col.kz.got")}</span>`:`<span class="note">${kzUnTxt(k)}</span>`);
+    return `<div class="kzcd${own?" own":""}">${kzIcon(k)}<b>${kzNm(k.id)}</b>${act}</div>`; };
+  return `<p class="note">${T("col.kz.d")}</p>${has?"":`<p class="note"><b>${T("col.kz.need")}</b></p>`}
+    ${HS.kzMsg?`<div class="hmsg" role="status">${T("col.kz.bought",kzNm(HS.kzMsg))}<br><button type="button" class="btn s" id="kzGoWear">${T("col.kz.wear")}</button></div>`:""}
+    ${COL.KZ_SLOT.map(sl=>`<h4 class="kzh4">${T("col.kz.s."+sl)}</h4><div class="kzg">${COL.KZ.filter(k=>k.s===sl).map(card).join("")}</div>`).join("")}`;
+}
+function kzWearHtml(S,id){         // ずかんの くわしい所：もっている物から えらんで つける（「なし」で はずす）
+  const eq=COL.kzOf(S,id);
+  return `<div class="kzw"><b>${T("col.kz.wear.t")}</b>${COL.KZ_SLOT.map(sl=>{ const items=COL.KZ.filter(k=>k.s===sl&&COL.kzHas(S,k.id));
+    const b=(k,on)=>`<button type="button" class="kzb2${on?" on":""}" data-kzw="${sl}" data-kzi="${k?k.id:""}" aria-pressed="${on}"${k&&sl!=="t"?` aria-label="${esc(rbp(kzNm(k.id)))}"`:""}>${k?kzIcon(k)+(sl==="t"?`<span>${kzNm(k.id)}</span>`:""):T("col.kz.none")}</button>`;
+    return `<div class="kzrow" role="group" aria-label="${esc(rbp(T("col.kz.s."+sl)))}"><span class="kzl">${T("col.kz.s."+sl)}</span>${items.length?b(null,!eq[sl])+items.map(k=>b(k,eq[sl]===k.id)).join(""):`<span class="note">${T("col.kz.empty")}</span>`}</div>`; }).join("")}</div>`;
+}
 /* ----- まなびっこアバター（v3.1-a。plan/collection-v3-plan.md 7章3）：友だち対戦・ゲームで 名前の よこに 出す。
    送る：この端末で もっている子から えらんだ ID と すがたの段階（0〜2）だけ（えらんだ ID は mh_mkav。"" は なし）。名前・文字・絵は 送らない。
    出す：受けとった 値は COL.mkWire で ID の表に あるか 調べ、なければ 出さない。先生の オフ・リンクの col=0・授業モードでは 送らない・出さない ----- */
 const MKAV="mh_mkav";
 const mkAvOn=()=>colMode()==="on"&&!LESSON;
 function mkAvMine(){ if(!mkAvOn()) return null; const c=store.get(MKAV,null); return COL.mkAvatar(colGet(),c&&typeof c.id==="string"?c.id:undefined); }
-const mkAvBody=()=>{ const a=mkAvMine(); return a?{mk:a.mk,ms:a.ms}:{}; };
-function mkAv(mk,ms){
-  if(!mkAvOn()) return ""; const w=COL.mkWire(mk,ms); if(!w) return ""; const c=mkC(w.mk);
-  return `<img class="mkav" src="vendor/img/manabikko/${c.art}-${COL.MK_ART[w.ms]}-v3-128.webp" alt="" width="128" height="128" decoding="async" onerror="this.remove()">`;
+const mkAvBody=()=>{ const a=mkAvMine(); return a?{mk:a.mk,ms:a.ms,...(a.mh?{mh:a.mh}:{})}:{}; };     // v3.3：つけている ぼうしの ID も（表の ぼうしだけ）
+function mkAv(mk,ms,mh){
+  if(!mkAvOn()) return ""; const w=COL.mkWire(mk,ms,mh); if(!w) return ""; const c=mkC(w.mk);
+  const img=`<img class="mkav" src="vendor/img/manabikko/${c.art}-${COL.MK_ART[w.ms]}-v3-128.webp" alt="" width="128" height="128" decoding="async" onerror="this.remove()">`;
+  const h=w.mh&&kzC(w.mh); return h?`<span class="mkavw">${img}<svg class="kzo" viewBox="0 0 100 100" aria-hidden="true">${kzHatSvg(h,30,34)}</svg></span>`:img;
 }
-const fm=p=>face(p.emoji)+mkAv(p.mk,p.ms);          // 動物の顔＋まなびっこ（ある子だけ）
-const mkPubOf=p=>p&&p.mk?{mk:p.mk,ms:p.ms|0}:{};     // 部屋の表から 送るとき（先生の端末で 調べた 値だけが 入っている）
+const fm=p=>face(p.emoji)+mkAv(p.mk,p.ms,p.mh);          // 動物の顔＋まなびっこ（ある子だけ）
+const mkPubOf=p=>p&&p.mk?{mk:p.mk,ms:p.ms|0,...(p.mh?{mh:p.mh}:{})}:{};     // 部屋の表から 送るとき（先生の端末で 調べた 値だけが 入っている）
 function mkAvPicker(){          // 待合室：もっている子から えらぶ（もっていなければ 出さない）
   if(!mkAvOn()) return "";
   const S=colGet(), have=COL.MK.filter(c=>c.art&&S.mk.own[c.id]); if(!have.length) return "";
   const cur=mkAvMine(), on=id=>(cur?cur.mk:"")===id;
   const b=(id,inner,lbl)=>`<button type="button" class="mkavb${on(id)?" on":""}" data-av="${id}" aria-pressed="${on(id)}" aria-label="${esc(rbp(lbl))}">${inner}</button>`;
-  return `<div class="mkavp" role="group" aria-label="${esc(rbp(T("mk.av.t")))}"><div class="note">${T("mk.av.t")}<br><small>${T("mk.av.d")}</small></div><div class="mkavs">${have.map(c=>b(c.id,mkImg(c,COL.mkStage(S,c.id),128)+`<span>${mkNm(c.id)}</span>`,mkNm(c.id))).join("")}${b("",`<span>${T("mk.av.none")}</span>`,T("mk.av.none"))}</div></div>`;
+  return `<div class="mkavp" role="group" aria-label="${esc(rbp(T("mk.av.t")))}"><div class="note">${T("mk.av.t")}<br><small>${T("mk.av.d")}</small></div><div class="mkavs">${have.map(c=>b(c.id,mkDress(c,COL.mkStage(S,c.id),128,COL.kzOf(S,c.id))+`<span>${mkNm(c.id)}</span>`,mkNm(c.id))).join("")}${b("",`<span>${T("mk.av.none")}</span>`,T("mk.av.none"))}</div></div>`;
 }
 function mkAvBind(){
   app.querySelectorAll("[data-av]").forEach(x=>x.onclick=()=>{
@@ -3061,7 +3157,7 @@ function mkPickHtml(S){
 function mkRowHtml(S){
   if(!Object.keys(S.mk.own).length) return "";
   const slots=[0,1,2].map(i=>{ const id=S.mk.sh[i];
-    return id?`<button type="button" class="mkr" data-mkr="${id}" aria-label="${esc(rbp(mkNm(id)))}">${mkImg(mkC(id),COL.mkStage(S,id),128)}<span class="cap">${mkNm(id)}</span></button>`
+    return id?`<button type="button" class="mkr" data-mkr="${id}" aria-label="${esc(rbp(mkNm(id)))}">${mkDress(mkC(id),COL.mkStage(S,id),128,COL.kzOf(S,id))}<span class="cap">${mkNm(id)}</span>${kzTitle(COL.kzOf(S,id))}</button>`
       :`<div class="mkr off"><span class="cap">${T("col.mk.slot")}</span></div>`; }).join("");
   return `<div class="mkrow" role="group" aria-label="${esc(rbp(T("col.mk.row")))}">${slots}</div><p class="mksay" id="mkSay" role="status" aria-live="polite"></p>`;
 }
@@ -3069,18 +3165,20 @@ function mkZkHtml(S){
   const have=COL.MK.filter(c=>S.mk.own[c.id]).length, n=COL.mkAvail(S);
   const nx=n?`<button type="button" class="btn" id="mkOpen">${T("col.mk.open",n)}</button>`:!S.mk.w?T("col.mk.next0"):COL.mkFree(S).length?T("col.mk.next"):T("col.mk.next.all");
   const cards=COL.MK.map(c=>{ const o=S.mk.own[c.id];
-    if(o){ const st=COL.mkStage(S,c.id); return `<button type="button" class="mkz on${HS.mkInfo===c.id?" sel":""}" data-mki="${c.id}" aria-expanded="${HS.mkInfo===c.id}" aria-controls="mkInfo">${mkImg(c,st,256)}<b>${mkNm(c.id)}</b>${mkHearts(st)}</button>`; }
+    if(o){ const st=COL.mkStage(S,c.id), eq=COL.kzOf(S,c.id); return `<button type="button" class="mkz on${HS.mkInfo===c.id?" sel":""}" data-mki="${c.id}" aria-expanded="${HS.mkInfo===c.id}" aria-controls="mkInfo">${mkDress(c,st,256,eq)}<b>${mkNm(c.id)}</b>${kzTitle(eq)}${mkHearts(st)}</button>`; }
     return `<div class="mkz off">${mkImg(c,0,128)}<b>${mkNm(c.id)}</b><small>${T("col.mk.where",T("col.mk.s."+c.subj))}</small></div>`; }).join("")
     +COL.MK_SOON.map(sj=>`<div class="mkz soon">${mkImg(null)}<b>${T(sj==="r"&&window.RIKA_PUBLIC?"col.mk.soon.r":"col.mk.soon.x")}</b><small>${T("col.mk.soon")}</small></div>`).join("");
   let info="";
   if(HS.mkInfo&&S.mk.own[HS.mkInfo]){ const c=mkC(HS.mkInfo), x=COL.mkNext(S,c.id), on=S.mk.sh.includes(c.id), full=!on&&S.mk.sh.length>=COL.MK_SHOW;
     const forms=COL.MK_ART.map((a,i)=>`<span class="mkf">${mkImg(c,i,128,i<=x.st?"":"sil")}${i<=x.st?T("col.mk.st."+i):"？"}</span>`).join("");
-    info=`<div class="mkd" id="mkInfo"><div class="mkdi">${mkImg(c,x.st,256)}<h3>${mkNm(c.id)}</h3></div>
+    const eq=COL.kzOf(S,c.id);
+    info=`<div class="mkd" id="mkInfo"><div class="mkdi">${mkDress(c,x.st,256,eq)}<h3>${mkNm(c.id)}</h3>${kzTitle(eq)}</div>
       <dl><dt>${T("col.mk.l.kind")}</dt><dd>${T("col.mk.c."+c.id+".kind")}</dd><dt>${T("col.mk.l.like")}</dt><dd>${T("col.mk.c."+c.id+".like")}</dd><dt>${T("col.mk.st.1")}</dt><dd>${mkHearts(x.st)} ${T("col.mk.st."+x.st)}</dd></dl>
       <p>「${T("col.mk.c."+c.id+".say")}」</p>
       <div><b>${T("col.mk.forms")}</b><div class="mkfs">${forms}</div></div>
       <p class="note">${x.st<2?T("col.mk.left",T("col.mk.s."+c.subj),x.left):T("col.mk.max")}</p>
-      <button type="button" class="btn${on?" sub":""}" id="mkShow"${full?" disabled":""}>${T(on?"col.mk.hide":"col.mk.show")}</button>${full?`<p class="note">${T("col.mk.full")}</p>`:""}</div>`; }
+      <button type="button" class="btn${on?" sub":""}" id="mkShow"${full?" disabled":""}>${T(on?"col.mk.hide":"col.mk.show")}</button>${full?`<p class="note">${T("col.mk.full")}</p>`:""}
+      ${kzWearHtml(S,c.id)}</div>`; }
   return `<section class="zks zk-mk" aria-labelledby="mkZt"><h2 id="mkZt">${T("col.mk.zk")}<span class="zkn" style="color:inherit;margin-left:10px">${T("col.mk.n",have,COL.MK.length)}</span></h2>
     <div class="mknx">${nx}</div><div class="mkzg">${cards}</div>${info}</section>`;
 }
@@ -3094,10 +3192,14 @@ function mkBind(root,S){
   if(q("#mkOpen")) q("#mkOpen").onclick=()=>{ HS.mkLater=false; HS.mkGot=null; redraw("#mkPanel"); };
   root.querySelectorAll("[data-mki]").forEach(b=>b.onclick=()=>{ HS.mkInfo=HS.mkInfo===b.dataset.mki?null:b.dataset.mki; redraw(HS.mkInfo?"#mkInfo":""); });
   if(q("#mkShow")) q("#mkShow").onclick=()=>{ if(COL.mkShow(S,HS.mkInfo)){ colSave(); redraw("#mkInfo"); } };
+  root.querySelectorAll("[data-kzw]").forEach(b=>b.onclick=()=>{          // きせかえを つける／はずす（同じ物を もう一度 おすと はずす）
+    const sl=b.dataset.kzw, id=b.dataset.kzi; if(!COL.kzWear(S,HS.mkInfo,sl,id)) return; colSave(); redraw();
+    const f=app.querySelector(`[data-kzw="${sl}"][data-kzi="${id}"]`); if(f) f.focus({preventScroll:true}); });
   root.querySelectorAll("[data-mkr]").forEach(b=>b.onclick=()=>{          // タップすると 1びょう ほど よろこぶ（絵を よろこびに かえる）
     const id=b.dataset.mkr, c=mkC(id), im=b.querySelector("img"), say=q("#mkSay"); if(!c||!im) return;
     const src=im.getAttribute("src"); clearTimeout(b._t); im.setAttribute("src",`vendor/img/manabikko/${c.art}-joy-v3-128.webp`); b.classList.remove("hop"); void b.offsetWidth; b.classList.add("hop");
-    if(say) say.innerHTML=`<b>${mkNm(id)}</b>「${T("col.mk.c."+id+".say")}」`;
+    const tt=COL.kzOf(S,id).t;
+    if(say) say.innerHTML=`<b>${tt?esc(rbp(kzNm(tt)))+"の ":""}${mkNm(id)}</b>「${T("col.mk.c."+id+".say")}」`;
     b._t=setTimeout(()=>{ im.setAttribute("src",src); b.classList.remove("hop"); },1200);
   });
 }
@@ -3279,7 +3381,7 @@ function colBackupHtml(){
     <div><button class="btn" id="hrMake">${T("col.bk.make")}</button></div>
     <div id="hrOut" class="hidden"><div class="code" id="hrCode"></div><div id="hrQr" class="hqr"></div><p class="note">${T("col.bk.hint")}</p><button class="btn sub" id="hrCopy">${ic("copy")}${T("r.copy")}</button></div>
     <label for="hrIn"><b>${T("col.bk.read")}</b></label>
-    <input id="hrIn" type="text" maxlength="400" autocomplete="off" autocapitalize="characters" spellcheck="false" aria-describedby="hrMsg">
+    <input id="hrIn" type="text" maxlength="1200" autocomplete="off" autocapitalize="characters" spellcheck="false" aria-describedby="hrMsg">
     <div><button class="btn" id="hrGo">${ic("upload")}${T("rec.bk.go")}</button></div>
     <div id="hrMsg" role="status"></div></div>`;
 }
@@ -3659,7 +3761,7 @@ function mPick(b){
   else { M.ng++; const mo=mineMiss(); M.misses.push(`${mo.q} → ${mo.a}`); M.missObjs.push(mo); fb.className="fb ng"; fb.textContent=T("fb.ng",mo.a); setTimeout(()=>M===mm&&showQ(),1800); }   // まちがえたあとは1.8秒待つ
 }
 function players(){
-  if(M.net) return M.state.players.map(p=>({n:p.name,e:p.emoji,mk:p.mk,ms:p.ms,v:p.v,me:p.pid===NET.pid}));
+  if(M.net) return M.state.players.map(p=>({n:p.name,e:p.emoji,mk:p.mk,ms:p.ms,mh:p.mh,v:p.v,me:p.pid===NET.pid}));
   return [M.me,...M.bots];
 }
 function topList(ps){ // 人数が多いときは上位8人＋自分だけ表示
@@ -3669,7 +3771,7 @@ function topList(ps){ // 人数が多いときは上位8人＋自分だけ表示
 function leaderBot(){ return [...M.bots].sort((a,b)=>b.v-a.v)[0]; }
 /* やさしいルール：順位の数字は出さず、上の3人と自分だけ（最下位は出さない） */
 function easyList(ps){ const top=ps.slice(0,3).map(p=>[p,0]), i=ps.findIndex(p=>p.me); return i>=3?[...top,[ps[i],0]]:top; }
-const rankRows=(rows,unit)=>rows.map(([p,i])=>`<div class="rank ${p.me?"me":""}">${i?i+". ":""}${face(p.e)}${mkAv(p.mk,p.ms)} ${esc(p.n)}<span class="v">${unit(p)}</span></div>`).join("");
+const rankRows=(rows,unit)=>rows.map(([p,i])=>`<div class="rank ${p.me?"me":""}">${i?i+". ":""}${face(p.e)}${mkAv(p.mk,p.ms,p.mh)} ${esc(p.n)}<span class="v">${unit(p)}</span></div>`).join("");
 
 /* --- ごほうび（モードごと） --- */
 function reward(){ M.phase="reward"; if(M.m.id==="chest") chestReward(); else raceReward(); }
@@ -3775,7 +3877,7 @@ function drawSide(){
   const ps=[...players()].sort((a,b)=>b.v-a.v);
   if(M.net){          // 児童の端末：自分の点と順位だけ。全体の順位表と盤は前の大画面で見る
     const i=ps.findIndex(p=>p.me), me=ps[i]||M.me, easy=M.rule==="easy";
-    $("#mside").innerHTML=`<span class="me1">${face(M.me.e)}${mkAv(M.me.mk,M.me.ms)}<b>${esc(M.me.n)}</b></span><span>${M.m.id==="chest"?"🪙 "+me.v:T("b.line.me",me.v)}</span>${easy?"":`<span>${T("z.rank",i+1,ps.length)}</span>`}`;
+    $("#mside").innerHTML=`<span class="me1">${face(M.me.e)}${mkAv(M.me.mk,M.me.ms,M.me.mh)}<b>${esc(M.me.n)}</b></span><span>${M.m.id==="chest"?"🪙 "+me.v:T("b.line.me",me.v)}</span>${easy?"":`<span>${T("z.rank",i+1,ps.length)}</span>`}`;
     return;
   }
   if(M.m.id==="chest"){
@@ -3784,7 +3886,7 @@ function drawSide(){
       <p class="note">${T("b.right",M.ok)}</p>`;
   } else {
     const me=ps.find(p=>p.me), easy=M.rule==="easy";      // 盤の上の1行：あなたは何マス目か／1位はだれか（やさしいルールでは順位を出さない）
-    const line=T("b.line.me",me?me.v:0)+(easy?"":ps[0]&&ps[0].me?T("b.line.1st"):`／${T("b.line.top",face(ps[0].e)+mkAv(ps[0].mk,ps[0].ms)+esc(ps[0].n),ps[0].v)}`);
+    const line=T("b.line.me",me?me.v:0)+(easy?"":ps[0]&&ps[0].me?T("b.line.1st"):`／${T("b.line.top",face(ps[0].e)+mkAv(ps[0].mk,ps[0].ms,ps[0].mh)+esc(ps[0].n),ps[0].v)}`);
     const rk=`${rankRows(easy?easyList(ps):topList(ps),p=>p.v+"マス")}`;
     if(!M.sgBuilt){          // 盤は1回だけ作る（作り直すと駒の動きが止まるので、あとは駒・文字だけ更新）
       M.sgBuilt=true; M.pk={};
@@ -4030,7 +4132,7 @@ function hrRate(r,conn){
   conn._jt.push(now); r.jt.push(now); return true;
 }
 /* 児童から 来た まなびっこ：ID の表に ある子だけ（COL.mkWire）。この端末（先生）で コレクションが オフなら 受けとらない */
-const hrAv=b=>{ const w=mkAvOn()&&COL.mkWire(b.mk,b.ms); return w?{mk:w.mk,ms:w.ms}:{mk:"",ms:0}; };
+const hrAv=b=>{ const w=mkAvOn()&&COL.mkWire(b.mk,b.ms,b.mh); return w?{mk:w.mk,ms:w.ms,mh:w.mh||""}:{mk:"",ms:0,mh:""}; };
 const hrNames=(r,except)=>[...r.players.values()].filter(q=>q!==except).map(q=>q.name);
 function hrApi(r,name,b){
   const pl=()=>{const p=r.players.get(b.pid); return p&&p.token===b.token?p:null;};
@@ -4121,7 +4223,7 @@ function hrHandle(r,conn,m){
     else{
       const old=!hrJoinBlock(r)&&conn._pid&&r.players.get(conn._pid);      // 同じ接続でもう一度入るときは、前の分を外す（1つの接続で人数をふやさない）
       if(old){ r.players.delete(old.pid); if(r.qz) r.qz.remove(old.pid); if(r.co) r.co.remove(old.pid); conn._pid=""; }
-      res=hrApi(r,"join",{name:body.name,mk:body.mk,ms:body.ms}); if(res[0]===200){ r.conns.add(conn); conn._pid=res[1].pid; } else if(old) hrBroadcast(r);
+      res=hrApi(r,"join",{name:body.name,mk:body.mk,ms:body.ms,mh:body.mh}); if(res[0]===200){ r.conns.add(conn); conn._pid=res[1].pid; } else if(old) hrBroadcast(r);
     }
   }
   else if(m.name==="hello"){ const b=body, p=r.players.get(b.pid);
@@ -4200,7 +4302,7 @@ async function api(name,body){
     const [c,o]=hrApi(HR,name,body); if(c!==200) throw new Error(o.error); return o;
   }
   if(name==="info"){ await kcConnect(String(body.code)); return kcReq("info",{}); }
-  if(name==="join"){ const code=String(body.code); if(!KC||KC.code!==code||!KC.conn||!KC.conn.open) await kcConnect(code); return kcReq("join",{name:body.name,mk:body.mk,ms:body.ms}); }
+  if(name==="join"){ const code=String(body.code); if(!KC||KC.code!==code||!KC.conn||!KC.conn.open) await kcConnect(code); return kcReq("join",{name:body.name,mk:body.mk,ms:body.ms,mh:body.mh}); }
   return kcReq(name,body);
 }
 function listen(code,onState,onLost){
@@ -4357,7 +4459,7 @@ function startNetGame(s){
   const end=s.endAt-off, startAt=end-s.t*1000;
   const mine=s.players.find(p=>p.pid===NET.pid);
   M={m,x,g:s.g,t:s.t,task:false,rule:ruleOf(s.rule),ev:evOf(s.rule),ok:mine.ok||0,ng:mine.ng||0,misses:[],missObjs:[],phase:"count",end,net:true,state:s,
-     me:{n:mine.name,e:mine.emoji,mk:mine.mk,ms:mine.ms,v:mine.v,me:true},bots:[],over:false};
+     me:{n:mine.name,e:mine.emoji,mk:mine.mk,ms:mine.ms,mh:mine.mh,v:mine.v,me:true},bots:[],over:false};
   app.innerHTML=`<div class="mplay">
     <div class="topbar"><span class="note" style="white-space:nowrap">${T("l.room")} ${s.code}</span><span><b>${m.ico} ${m.t}</b> <span class="note">${x.t}・${s.g}年《ねん》・${ruleName(s.rule)}</span></span><span class="timer" id="tm" aria-hidden="true">${s.t}</span></div>
     <div class="tbar" id="tbar"><i id="tb"></i></div>
@@ -4380,7 +4482,7 @@ function startNetGame(s){
 }
 function netResultHtml(s,meId,easy){
   const ps=sorted(s.players), u=s.mode==="quiz"?T("z.unit"):unitOf(s);
-  const rows=ps.map(p=>({n:p.name,e:p.emoji,mk:p.mk,ms:p.ms,v:p.v,me:p.pid===meId}));
+  const rows=ps.map(p=>({n:p.name,e:p.emoji,mk:p.mk,ms:p.ms,mh:p.mh,v:p.v,me:p.pid===meId}));
   const i=rows.findIndex(p=>p.me);          // 児童の端末：自分の行だけ（全体の順位表は前の画面）
   return i<0?"":`<div style="margin:10px auto;max-width:360px">${rankRows([[rows[i],easy?0:i+1]],p=>p.v+" "+u)}</div>`;
 }
@@ -4560,7 +4662,7 @@ function popStep(s){
   const prev=PST.prev; PST.prev=s;
   if(PST.st!==s.status){ if(s.status==="playing") popReset(); PST.st=s.status; for(const o of PST.live) o.el.remove(); PST.live=[]; }     // ゲームのはじまりで「まだ出ていない」を数えなおす
   if(!prev||prev.code!==s.code||prev.status!==s.status) return;
-  const was=new Map(prev.players.map(p=>[p.pid,p])), evs=[], mk=(p,k,o)=>({pid:p.pid,name:p.name,emoji:p.emoji,mk:p.mk,ms:p.ms,k,...o});
+  const was=new Map(prev.players.map(p=>[p.pid,p])), evs=[], mk=(p,k,o)=>({pid:p.pid,name:p.name,emoji:p.emoji,mk:p.mk,ms:p.ms,mh:p.mh,k,...o});
   for(const p of s.players){
     const o=was.get(p.pid);
     if(s.status==="lobby"){ if(!o) evs.push(mk(p,"join")); continue; }
@@ -4660,7 +4762,7 @@ function renderHost(){
     ps.forEach((p,i)=>{
       let r=B.rows.get(p.pid);
       if(!r){ r=document.createElement("div"); r.className="px-row"; r.dataset.pid=p.pid; r.setAttribute("role","button"); r.tabIndex=0; r.innerHTML=`<span class="rk"></span><span class="ic"></span><span class="nm"></span><span class="bar"><i></i></span><span class="val"></span>`; box.appendChild(r); B.rows.set(p.pid,r); }
-      const fk=p.emoji+(p.mk||"")+(p.ms|0); if(r.dataset.e!==fk){ r.dataset.e=fk; r.querySelector(".ic").innerHTML=fm(p); }
+      const fk=p.emoji+(p.mk||"")+(p.ms|0)+(p.mh||""); if(r.dataset.e!==fk){ r.dataset.e=fk; r.querySelector(".ic").innerHTML=fm(p); }
       r.querySelector(".nm").textContent=p.name;
       r.style.display=i<vis?"":"none"; r.style.top=i*RH+"px";
       r.querySelector(".rk").textContent=i+1; r.querySelector(".bar i").style.width=Math.max(3,Math.round(p.v/max*100))+"%"; r.querySelector(".val").innerHTML=COIN+p.v;
@@ -4936,14 +5038,14 @@ function rkRowDraw(){
   const by=new Map(R.s.players.map(p=>[p.pid,p]));
   R.row=R.row.filter(x=>by.has(x));
   for(const p of R.s.players){ if(R.row.length>=14) break; if(!R.row.includes(p.pid)) R.row.push(p.pid); }
-  const sig=R.row.join(",")+"|"+R.row.map(x=>by.get(x).emoji+(by.get(x).mk||"")+(by.get(x).ms|0)).join("");
+  const sig=R.row.join(",")+"|"+R.row.map(x=>by.get(x).emoji+(by.get(x).mk||"")+(by.get(x).ms|0)+(by.get(x).mh||"")).join("");
   if(box.dataset.sig===sig) return; box.dataset.sig=sig;
   box.innerHTML=R.row.map(x=>`<span data-pid="${esc(x)}" role="button" tabindex="0">${fm(by.get(x))}</span>`).join("");
 }
 function rkPop(s){
   const R=RKH, b=R&&R.co&&R.co.bb; if(!b||b.i===R.bbi) return; R.bbi=b.i;
   const by=new Map(s.players.map(p=>[p.ix,p])), evs=[];
-  for(const [ix,kind] of b.l){ const p=by.get(ix); if(!p) continue; rkRowPut(p); evs.push({pid:p.pid,name:p.name,emoji:p.emoji,mk:p.mk,ms:p.ms,k:"rk"+kind}); }
+  for(const [ix,kind] of b.l){ const p=by.get(ix); if(!p) continue; rkRowPut(p); evs.push({pid:p.pid,name:p.name,emoji:p.emoji,mk:p.mk,ms:p.ms,mh:p.mh,k:"rk"+kind}); }
   if(evs.length) popFeed(evs);
 }
 function rkHostUpd(s){
@@ -5156,13 +5258,13 @@ function coHostBuild(px,s){
     :`<div class="coh-top"><span>🏳️ ${T("jn.name")}</span><span class="ls" id="jnls"></span><span class="t" id="cot"></span></div>
     <div class="jnh"><div class="jnh-bd" id="jnbd"></div>
       <div class="jnh-side">${[0,1].map(t=>`<div class="jn-tm t${t}"><div class="nm">${JN_FACE[t]} ${T("jn.team",t)}</div><div class="pt"><b id="jnsc${t}">0</b>${T("jn.pt0")}</div><div class="cn" id="jncn${t}"></div><div class="co-row" id="jnrow${t}"></div></div>`).join("")}
-        <div class="lbl sm">${T("jn.rule")}</div></div></div><div class="co-msg" id="comsg"></div>`;
+        </div><div class="jnh-leg"><span>${T("jn.rule.a")}</span><span>${T("jn.rule.b")}</span></div></div><div class="co-msg" id="comsg"></div>`;
   CH.iv=setInterval(coHostFrame,250);
 }
 function coPop(s){
   const R=CH, b=R&&R.co&&R.co.bb; if(!b||b.i===R.bbi) return; R.bbi=b.i;
   const by=new Map(s.players.map(p=>[p.ix,p])), evs=[], pre=R.co.k;
-  for(const [ix,kind] of b.l){ const p=by.get(ix); if(p) evs.push({pid:p.pid,name:p.name,emoji:p.emoji,mk:p.mk,ms:p.ms,k:pre+kind}); }
+  for(const [ix,kind] of b.l){ const p=by.get(ix); if(p) evs.push({pid:p.pid,name:p.name,emoji:p.emoji,mk:p.mk,ms:p.ms,mh:p.mh,k:pre+kind}); }
   if(evs.length) popFeed(evs);
 }
 function coHostUpd(s){
@@ -5825,7 +5927,7 @@ function qzKidDraw(){
     return;
   }
   if(Z.phase==="board"){
-    const rows=[[{n:me.name,e:me.emoji,mk:me.mk,ms:me.ms,v:me.v,me:true},place]];      // 自分だけ。上位の表は前の画面
+    const rows=[[{n:me.name,e:me.emoji,mk:me.mk,ms:me.ms,mh:me.mh,v:me.v,me:true},place]];      // 自分だけ。上位の表は前の画面
     const box=h("div",{style:"margin:10px auto;max-width:360px"});
     box.innerHTML=rankRows(rows,p=>p.v+"");          // 名前は esc 済み（ニックネームだけ）
     app.replaceChildren(h("div",{class:"play"},h("div",{class:"res"},h("div",{class:"num",text:T("z.rank",place,ps.length)}),box,h("div",{class:"fb",text:T("z.wait")}))));

@@ -89,9 +89,9 @@ const joinBlock = room => room.status === "ended" ? [409, { error: "この対戦
   : room.closed ? [409, { error: "入室はしめきられました" }] : null;
 const NAME_ERR = { empty: "名前を入れてね", long: "名前は8文字までです", chars: "使えない文字が入っています", ng: "その名前は使えません", pii: "数字が長くならぶ名前や、メール・URLの名前は使えません" };
 const allNames = (room, except) => [...room.players.values()].filter(q => q !== except).map(q => q.name);
-// まなびっこ（v3.1-a）：児童から 来た 値は ID の表に ある子と 段階 0〜2 だけ（ほかは 何も 出さない）
-const mkIn = b => { const w = COL.mkWire(b.mk, b.ms); return w ? { mk: w.mk, ms: w.ms } : { mk: "", ms: 0 }; };
-const mkPub = p => p.mk ? { mk: p.mk, ms: p.ms | 0 } : {};
+// まなびっこ（v3.1-a）：児童から 来た 値は ID の表に ある子と 段階 0〜2 だけ（ほかは 何も 出さない）。v3.3：ぼうしは 表の ぼうしの ID だけ（mh）
+const mkIn = b => { const w = COL.mkWire(b.mk, b.ms, b.mh); return w ? { mk: w.mk, ms: w.ms, mh: w.mh || "" } : { mk: "", ms: 0, mh: "" }; };
+const mkPub = p => p.mk ? { mk: p.mk, ms: p.ms | 0, ...(p.mh ? { mh: p.mh } : {}) } : {};
 function newCode() {
   for (;;) { const c = String(1000 + rnd(9000)); if (!rooms.has(c)) return c; }
 }

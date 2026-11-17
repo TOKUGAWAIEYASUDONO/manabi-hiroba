@@ -69,11 +69,18 @@ let n = 0; const t = async (name, fn) => { try { await fn(); n++; console.log("o
     assert.deepStrictEqual([of(a.pid).mk, of(a.pid).ms], ["sankakuru", 2]);
     assert.ok(!("mk" in of(b.pid)) && !("ms" in of(b.pid)), "表に ない ID は 送らない");
     assert.deepStrictEqual([of(c.pid).mk, of(c.pid).ms], ["kotohane", 0], "段階が おかしいときは 0");
-    assert.ok(Object.keys(of(a.pid)).every(k => ["pid", "name", "emoji", "mk", "ms", "v", "ok", "ng"].includes(k)), "ほかの値は ふえない");
+    assert.ok(Object.keys(of(a.pid)).every(k => ["pid", "name", "emoji", "mk", "ms", "mh", "v", "ok", "ng"].includes(k)), "ほかの値は ふえない");
+    assert.ok(!("mh" in of(a.pid)), "ぼうしを つけていなければ mh は 送らない");
     assert.strictEqual((await post("avatar", { code: r.code, pid: a.pid, token: "bad", mk: "eimaru" })).s, 409);
     assert.strictEqual((await post("avatar", { code: r.code, pid: a.pid, token: a.token, mk: "eimaru", ms: 1 })).s, 200);
     assert.strictEqual((await post("avatar", { code: r.code, pid: b.pid, token: b.token })).s, 200);       // なし
     d = await state(); assert.deepStrictEqual([of(a.pid).mk, of(a.pid).ms], ["eimaru", 1]); assert.ok(!("mk" in of(b.pid)));
+    assert.strictEqual((await post("avatar", { code: r.code, pid: a.pid, token: a.token, mk: "eimaru", ms: 1, mh: "h-crown" })).s, 200);      // v3.3：表の ぼうしだけ 通る
+    d = await state(); assert.strictEqual(of(a.pid).mh, "h-crown");
+    assert.strictEqual((await post("avatar", { code: r.code, pid: a.pid, token: a.token, mk: "eimaru", ms: 1, mh: "p-book" })).s, 200);
+    d = await state(); assert.ok(!("mh" in of(a.pid)), "ぼうしで ない物・はずした ときは 送らない");
+    assert.strictEqual((await post("avatar", { code: r.code, pid: a.pid, token: a.token, mk: "eimaru", ms: 1, mh: "<img src=x>" })).s, 200);
+    d = await state(); assert.ok(!("mh" in of(a.pid)));
     assert.strictEqual((await post("start", { code: r.code, hostKey: r.hostKey })).s, 200);
     assert.strictEqual((await post("avatar", { code: r.code, pid: a.pid, token: a.token, mk: "chizupon" })).s, 409, "はじまったら かえられない");
   });

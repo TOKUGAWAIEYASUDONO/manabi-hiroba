@@ -16,6 +16,9 @@
         その教科の「できた」「マスター」で +1。3 と 8 で 次の すがた。下がらない・世話の罰なし
      ④ ひろばに 3たいまで だせる（sh）。きらきら（k）・おまけシールは のちの段階（データの場所だけ k を とってある）
      ⑤ アバター（v3.1-a）：友だち対戦で 自分の子を 名前の よこに 出せる。送るのは ID と 段階だけ（mkWire で 調べる）
+     ⑥ きせかえ（v3.3。Qalc 合体 段階4）：まなびっこに ぼうし・もちもの・はいけい・しょうごうを つける。どんぐりで 買うか、学びで もらう。
+        ガチャ・期間限定・セール・順位はない。買った物は なくならず、いつでも つけかえられる。友だち対戦で 送るのは ぼうしの ID だけ（mkWire で 調べる）
+   ・ひろばが 完成した あとも、まだ 買っていない きせかえが あるあいだは どんぐりが ふえる
    ・名前・順位・やりとりはない。保存は端末の localStorage（キー mh_col）だけ */
 (function (root, factory) {
   const M = factory();
@@ -83,6 +86,31 @@
   const MK_BY = {}; MK.forEach(c => { MK_BY[c.id] = c; });
   const MK_STAGE = [0, 3, 8], MK_CAND = 3, MK_SHOW = 3, MK_QMAX = 24, MK_ART = ["base", "grown", "joy"];
   const QCODE = "*mjser";        // q の中身：* はじめの1たい／m j s e r その教科の「できた」
+  /* きせかえ（v3.3）。s＝つける場所（h ぼうし／p もちもの／b はいけい／t しょうごう）。ch＝絵文字（Unicode 12 までの物だけ。Windows 10・ChromeOS で 出る）。
+     price＝どんぐり（1日に もらえるのは 20こまで。ふつうは 1日 1〜3こ なので、3〜4こ＝1〜2日、5〜8こ＝数日、10〜15こ＝1〜2週間）。
+     un＝買わずに 学びで もらえる：["can",n] できた以上の単元が n こ／["mst",n] マスターが n こ／["nk",st] どれかの まなびっこが なかよしの すがた st。
+     bg＝はいけいの 色（上→下）。名前は 画面の文言の表（col.kz.i.*）。KZ_IDS は バックアップと 友だち対戦で 送る 番号なので、追加だけ。順番を変えない。
+     品は Qalc（MIT, GIGAyama）src/data/shop.js の ぼうし・もちもの・はいけい・しょうごうから 学校に 合う物を えらび、値段を どんぐりに 合わせた */
+  const KZ = [
+    { id: "h-ribbon", s: "h", ch: "🎀", price: 3 }, { id: "h-leaf", s: "h", ch: "🍃", price: 3 }, { id: "h-cap", s: "h", ch: "🧢", price: 4 },
+    { id: "h-flower", s: "h", ch: "🌸", price: 5 }, { id: "h-straw", s: "h", ch: "👒", price: 6 }, { id: "h-clover", s: "h", ch: "🍀", price: 6 },
+    { id: "h-star", s: "h", ch: "🌟", price: 8 }, { id: "h-sunflower", s: "h", ch: "🌻", price: 8 }, { id: "h-tophat", s: "h", ch: "🎩", price: 10 },
+    { id: "h-crown", s: "h", ch: "👑", price: 15 }, { id: "h-sprout", s: "h", ch: "🌱", un: ["can", 1] }, { id: "h-grad", s: "h", ch: "🎓", un: ["mst", 3] },
+    { id: "p-pencil", s: "p", ch: "✏️", price: 3 }, { id: "p-book", s: "p", ch: "📖", price: 4 }, { id: "p-ball", s: "p", ch: "⚽", price: 4 },
+    { id: "p-palette", s: "p", ch: "🎨", price: 6 }, { id: "p-ruler", s: "p", ch: "📐", price: 6 }, { id: "p-telescope", s: "p", ch: "🔭", price: 10 },
+    { id: "p-bag", s: "p", ch: "🎒", un: ["nk", 1] }, { id: "p-abacus", s: "p", ch: "🧮", un: ["can", 10] },
+    { id: "b-forest", s: "b", ch: "🌳", price: 6, bg: ["#e6f5d9", "#a9d98f"] }, { id: "b-sakura", s: "b", ch: "🌸", price: 8, bg: ["#fff0f5", "#f6bfd3"] },
+    { id: "b-sea", s: "b", ch: "🌊", price: 8, bg: ["#e3f4fc", "#94cdee"] }, { id: "b-momiji", s: "b", ch: "🍁", price: 8, bg: ["#fff1dc", "#f2b183"] },
+    { id: "b-sunrise", s: "b", ch: "🌅", price: 10, bg: ["#fff4c7", "#ffb999"] }, { id: "b-rainbow", s: "b", ch: "🌈", price: 12, bg: ["#ffe3e3", "#fff4c2", "#dcf5d6", "#d9ecff", "#eadcff"] },
+    { id: "b-snow", s: "b", ch: "🏔️", price: 12, bg: ["#f6f9fc", "#c3d7ec"] }, { id: "b-stars", s: "b", ch: "🌠", un: ["nk", 2], bg: ["#c9d2f5", "#8f86d1"] },
+    { id: "t-ippo", s: "t", ch: "🌱", un: ["can", 0] }, { id: "t-renshu", s: "t", ch: "✏️", price: 3 }, { id: "t-lucky", s: "t", ch: "🍀", price: 4 },
+    { id: "t-chall", s: "t", ch: "🎲", price: 5 }, { id: "t-monoshiri", s: "t", ch: "📚", price: 6 }, { id: "t-tantei", s: "t", ch: "🔍", price: 8 },
+    { id: "t-hirameki", s: "t", ch: "🧠", price: 10 }, { id: "t-star", s: "t", ch: "🌟", price: 12 }, { id: "t-kotsu", s: "t", ch: "🐢", un: ["can", 3] },
+    { id: "t-friend", s: "t", ch: "🤝", un: ["nk", 1] }, { id: "t-owl", s: "t", ch: "🦉", un: ["mst", 1] }, { id: "t-100", s: "t", ch: "💯", un: ["mst", 5] }
+  ];
+  const KZ_IDS = KZ.map(k => k.id), KZ_SLOT = ["h", "p", "b", "t"];
+  const KZ_BY = new Map(KZ.map(k => [k.id, k]));
+  const KZ_PRICE_TOTAL = KZ.reduce((n, k) => n + (k.price || 0), 0);
 
   const int = (v, lo, hi, d) => { v = Math.floor(+v); return Number.isFinite(v) ? Math.min(hi, Math.max(lo, v)) : d; };
   const dayNum = d => Math.floor(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()) / 864e5);
@@ -90,11 +118,23 @@
 
   function fresh(today) {
     return { v: 1, d0: today, last: today, u: {}, ac: { e: 0, s: 0 }, day: { n: today, got: 0, carry: 0, first: 0, quiz: 0, cap: 0, shown: 0 },
-      own: [], pl: {}, gift: 0, done: 0, theme: 0, vp: 0, vz: 0, tk: { n: 0, star: 0, d: today, got: 0, used: 0 }, mo: [], mu: [], mk: mkFresh() };
+      own: [], pl: {}, gift: 0, done: 0, theme: 0, vp: 0, vz: 0, tk: { n: 0, star: 0, d: today, got: 0, used: 0 }, mo: [], mu: [], mk: mkFresh(), kz: kzFresh() };
   }
   /* mk：w はじめの1たいを もらった／q えらべる分（QCODE の字）／own { id: { d もらった日, p なかよし, ld なかよしが ふえた日, k きらきら(のちの段階), v 見せた段階 } }
      sh ひろばに だしている子／mg 古い記録から 計算した（はじめの 案内を出す） */
   function mkFresh() { return { w: 0, q: [], own: {}, sh: [], mg: 0 }; }
+  /* kz（v3.3）：o 買った きせかえ（学びで もらう物は 入れない＝その時の 記録から 計算）／e { まなびっこの id: { h, p, b, t } } つけている物 */
+  function kzFresh() { return { o: [], e: {} }; }
+  function kzClean(raw, M) {
+    const K = kzFresh(); if (!raw || typeof raw !== "object") return K;
+    K.o = uniq(raw.o, id => KZ_BY.has(id) && KZ_BY.get(id).price > 0);
+    if (raw.e && typeof raw.e === "object") for (const mk of Object.keys(raw.e)) {
+      const x = raw.e[mk]; if (!MK_IDS.includes(mk) || !M.own[mk] || !x || typeof x !== "object") continue;
+      const o = {}; for (const sl of KZ_SLOT) { const id = x[sl]; if (typeof id === "string" && KZ_BY.has(id) && KZ_BY.get(id).s === sl) o[sl] = id; }
+      if (Object.keys(o).length) K.e[mk] = o;
+    }
+    return K;
+  }
   const uniq = (a, ok) => (Array.isArray(a) ? a : []).filter((id, i, b) => typeof id === "string" && ok(id) && b.indexOf(id) === i);
   const mkStageP = p => (p >= MK_STAGE[2] ? 2 : p >= MK_STAGE[1] ? 1 : 0);
   function mkClean(raw, S, today) {
@@ -140,6 +180,7 @@
     S.tk = { n: int(k.n, 0, TK_MAX, 0), star: int(k.star, 0, TK_STARS, 0), d: int(k.d, 0, 9e6, today), got: int(k.got, 0, TK_GET, 0), used: int(k.used, 0, TK_USE_MAX, 0) };
     S.mo = uniq(raw.mo, id => MEMO_O.includes(id)); S.mu = uniq(raw.mu, id => id in IDX);
     S.mk = mkClean(raw.mk, S, today);                                       // v3.0：古い記録には無い（そのときは 学びから 計算）
+    S.kz = kzClean(raw.kz, S.mk);                                           // v3.3：古い記録には無い（そのときは 空）
     return S;
   }
   const balance = S => S.ac.e - S.ac.s;
@@ -156,7 +197,7 @@
   }
   /* どんぐりを渡す。1日 CAP まで。あふれた分は持ちこし。完成後は出さない。 */
   function give(S, n, ctx) {
-    if (n <= 0 || S.done) return;
+    if (n <= 0 || (S.done && !kzLeft(S))) return;          // 完成後は、まだ 買っていない きせかえが あるあいだだけ
     const room = Math.max(0, CAP - S.day.got), pay = Math.min(room, n), rest = n - pay;
     S.day.got += pay; S.ac.e += pay; S.day.carry += rest;
     ctx.paid += pay; ctx.deferred += rest;
@@ -337,25 +378,65 @@
     if (!S.mk.own[id] || S.mk.sh.length >= MK_SHOW) return false;
     S.mk.sh.push(id); return true;
   }
-  /* アバター（v3.1-a）：友だち対戦で 送るのは MK_IDS の ID と すがたの段階（0〜2）だけ。名前・文字・絵は 送らない。
-     mkWire は 受けとった 値を 調べる：ID は 表（MK_IDS）に あって 絵の ある子だけ。段階は 0〜2 に まるめる（ちがえば 0）。だめなら null */
-  function mkWire(id, ms) {
+  /* アバター（v3.1-a）：友だち対戦で 送るのは MK_IDS の ID と すがたの段階（0〜2）と（v3.3）つけている ぼうしの ID だけ。名前・文字・絵は 送らない。
+     mkWire は 受けとった 値を 調べる：ID は 表（MK_IDS）に あって 絵の ある子だけ。段階は 0〜2 に まるめる（ちがえば 0）。だめなら null。
+     ぼうし（mh）は KZ_IDS の ぼうし（s:"h"）の ときだけ 返す（ちがえば 付けない） */
+  function mkWire(id, ms, mh) {
     if (typeof id !== "string" || id.length > 16 || !MK_IDS.includes(id) || !MK_BY[id] || !MK_BY[id].art) return null;
     const st = typeof ms === "number" && Number.isInteger(ms) && ms >= 0 && ms <= 2 ? ms : 0;
-    return { mk: id, ms: st };
+    const r = { mk: id, ms: st };
+    if (kzHatOk(mh)) r.mh = mh;
+    return r;
   }
+  const kzHatOk = mh => typeof mh === "string" && mh.length <= 16 && KZ_IDS.includes(mh) && KZ_BY.get(mh).s === "h";
   /* 自分の アバター：pref が "" なら「なし」。pref が もっている子なら その子。それ以外は ひろばの 1ばんめ→もっている 1ばんめ→なし */
   function mkAvatar(S, pref) {
     if (!S || !S.mk) return null;
     const ok = id => !!(id && S.mk.own[id] && MK_BY[id] && MK_BY[id].art);
     if (pref === "") return null;
     const id = ok(pref) ? pref : S.mk.sh.find(ok) || MK_IDS.find(ok);
-    return id ? { mk: id, ms: mkStageP(S.mk.own[id].p) } : null;
+    if (!id) return null;
+    const r = { mk: id, ms: mkStageP(S.mk.own[id].p) }, h = kzOf(S, id).h;
+    if (h) r.mh = h;
+    return r;
   }
   /* つぎの すがたまで：{ st 段階0〜2, left あと いくつ（さいごなら 0）, p } */
   function mkNext(S, id) {
     const o = S.mk.own[id]; if (!o) return null;
     const st = mkStageP(o.p); return { st, p: o.p, left: st >= 2 ? 0 : MK_STAGE[st + 1] - o.p };
+  }
+
+  /* ---------- きせかえ（v3.3） ---------- */
+  /* 学びで もらう物の 条件を 満たしているか。can／mst は 全部の教科の 単元の数、nk は まなびっこの いちばん 進んだ すがた。どれも 下がらない */
+  function kzUnlocked(S, k) {
+    if (!k || !k.un || !Object.keys(S.mk.own).length) return false;     // まなびっこが いないと つける子が いない
+    const [c, n] = k.un;
+    if (c === "nk") return Object.keys(S.mk.own).some(id => mkStageP(S.mk.own[id].p) >= n);
+    const sm = summary(S);
+    return c === "can" ? sm.can >= n : c === "mst" ? sm.master >= n : false;
+  }
+  const kzHas = (S, id) => { const k = KZ_BY.get(id); return !!k && (k.price ? S.kz.o.includes(id) : kzUnlocked(S, k)); };
+  const kzLeft = S => KZ.filter(k => k.price && !S.kz.o.includes(k.id)).length;      // まだ 買っていない（どんぐりの）きせかえの数
+  /* 買う：どんぐりの品・まだ もっていない・まなびっこが 1たい以上・のこりが 足りる */
+  function kzBuy(S, id) {
+    const k = KZ_BY.get(id);
+    if (!k || !k.price || S.kz.o.includes(id) || !Object.keys(S.mk.own).length || balance(S) < k.price) return false;
+    S.ac.s += k.price; S.kz.o.push(id); return true;
+  }
+  /* つける：id が その場所の物で もっている物。id を "" に すると はずす。同じ物を もう一度 つけると はずす */
+  function kzWear(S, mk, sl, id) {
+    if (!MK_IDS.includes(mk) || !S.mk.own[mk] || !KZ_SLOT.includes(sl)) return false;
+    const e = S.kz.e[mk] || {};
+    if (id) { const k = KZ_BY.get(id); if (!k || k.s !== sl || !kzHas(S, id)) return false; if (e[sl] === id) delete e[sl]; else e[sl] = id; }
+    else delete e[sl];
+    if (Object.keys(e).length) S.kz.e[mk] = e; else delete S.kz.e[mk];
+    return true;
+  }
+  /* その子が いま つけている物（もっていない物は 出さない） */
+  function kzOf(S, mk) {
+    const e = S && S.kz && MK_IDS.includes(mk) ? S.kz.e[mk] : null, o = {};
+    if (e) for (const sl of KZ_SLOT) if (e[sl] && kzHas(S, e[sl])) o[sl] = e[sl];
+    return o;
   }
 
   /* 1回の れんしゅう（単元・ゲーム・先生のクイズ）が終わったときの処理。
@@ -433,8 +514,11 @@
      日は 2020-01-01 からの日数。
      HR2（v3.0）＝「HR2」＋ まなびっこの部分 ＋ HR1 と同じ中身 ＋ 確認(3)。まなびっこが まだ 何もないときは 今まで通り HR1 を作る。
      HR1 は これからも 読める（読んだあと、まなびっこの えらべる分を 学びから 計算する）。古い版のサイトは HR2 を こわれた文字として 断る（だまって 消えない）。
-     まなびっこの部分：しるし(1：はじめの1たい)・数(1)・［番号(2)・なかよし(2)・きらきら(1)］×数・えらべる分（QCODE の字ごとの数(1)×6）・ひろばの数(1)・［番号(2)］×数 */
-  const EPOCH = 18262, RE = /^HR[12][0-9A-Z]+$/;
+     まなびっこの部分：しるし(1：はじめの1たい)・数(1)・［番号(2)・なかよし(2)・きらきら(1)］×数・えらべる分（QCODE の字ごとの数(1)×6）・ひろばの数(1)・［番号(2)］×数
+     HR3（v3.3）＝「HR3」＋ きせかえの部分 ＋ まなびっこの部分（何もなくても 入れる）＋ HR1 と同じ中身 ＋ 確認(3)。きせかえを 買っても つけても いなければ 今まで通り HR2／HR1。
+     きせかえの部分：かたまりの数(1)・［買った物 20ビット(4)］×数（KZ_IDS の順）・つけている子の数(1)・［子の番号(2)・ぼうし・もちもの・はいけい・しょうごう（KZ_IDS の番号＋1、なしは 0）(2)×4］×数。
+     古い版のサイトは HR3 を こわれた文字として 断る（だまって 消えない） */
+  const EPOCH = 18262, RE = /^HR[123][0-9A-Z]+$/;
   const b36 = (n, w) => Math.min(Math.pow(36, w) - 1, Math.max(0, n | 0)).toString(36).toUpperCase().padStart(w, "0");
   const sum3 = t => { let h = 7; for (const c of t) h = (h * 31 + c.charCodeAt(0)) % 46656; return h.toString(36).toUpperCase().padStart(3, "0"); };
   const HEAD = 3 + 3 + 3 + 3 + 2 + DECOR.length + 2;
@@ -447,9 +531,9 @@
     for (let c = 0; c * 20 < UNIT_IDS.length; c++) { let v = 0; for (let i = 0; i < 20; i++) { const id = UNIT_IDS[c * 20 + i]; if (id && S.mu.includes(id)) v |= 1 << i; } out += b36(v, 4); }
     return out;
   }
-  function mkStr(S) {
+  function mkStr(S, force) {
     const M = S.mk, ids = MK_IDS.filter(id => M.own[id]);
-    if (!M.w && !ids.length && !M.q.length) return "";
+    if (!force && !M.w && !ids.length && !M.q.length) return "";
     const q = M.q.slice(0, MK_QMAX), sh = M.sh.filter(id => M.own[id]).slice(0, MK_SHOW);
     return b36(M.w ? 1 : 0, 1) + b36(ids.length, 1) + ids.map(id => b36(MK_IDS.indexOf(id), 2) + b36(M.own[id].p, 2) + b36(M.own[id].k ? 1 : 0, 1)).join("")
       + QCODE.split("").map(h => b36(q.filter(x => x === h).length, 1)).join("") + b36(sh.length, 1) + sh.map(id => b36(MK_IDS.indexOf(id), 2)).join("");
@@ -466,8 +550,36 @@
       return { mk: { w, own, q, sh }, len: p };
     } catch (e) { return null; }
   }
+  function kzStr(S) {
+    const K = S.kz, o = K.o.filter(id => KZ_BY.has(id)), eq = MK_IDS.filter(id => S.mk.own[id] && K.e[id] && Object.keys(K.e[id]).length);
+    if (!o.length && !eq.length) return "";
+    const nc = Math.ceil(KZ_IDS.length / 20); let out = b36(nc, 1);
+    for (let c = 0; c < nc; c++) { let v = 0; for (let i = 0; i < 20; i++) { const id = KZ_IDS[c * 20 + i]; if (id && o.includes(id)) v |= 1 << i; } out += b36(v, 4); }
+    out += b36(eq.length, 1);
+    for (const id of eq) out += b36(MK_IDS.indexOf(id), 2) + KZ_SLOT.map(sl => b36(K.e[id][sl] ? KZ_IDS.indexOf(K.e[id][sl]) + 1 : 0, 2)).join("");
+    return out;
+  }
+  function kzParse(body) {
+    let p = 0; const rd = w => { if (p + w > body.length) throw new Error("short"); const v = parseInt(body.slice(p, p + w), 36); p += w; return v; };
+    try {
+      const nc = rd(1), o = [], e = {};
+      if (!(nc >= 1 && nc <= Math.ceil(KZ_IDS.length / 20))) return null;
+      for (let c = 0; c < nc; c++) {
+        const v = rd(4); if (!(v >= 0 && v < (1 << 20))) return null;
+        for (let i = 0; i < 20; i++) if (v & (1 << i)) { const k = KZ_BY.get(KZ_IDS[c * 20 + i]); if (!k || !k.price) return null; o.push(k.id); }
+      }
+      const n = rd(1);
+      for (let j = 0; j < n; j++) {
+        const mk = MK_IDS[rd(2)]; if (!mk || e[mk]) return null;
+        const x = {};
+        for (const sl of KZ_SLOT) { const v = rd(2); if (!(v >= 0)) return null; if (!v) continue; const k = KZ_BY.get(KZ_IDS[v - 1]); if (!k || k.s !== sl) return null; x[sl] = k.id; }
+        e[mk] = x;
+      }
+      return { kz: { o, e }, len: p };
+    } catch (err) { return null; }
+  }
   function hrMake(S) {
-    const ids = UNIT_IDS.filter(id => stage(S, id) >= 1), mks = mkStr(S), tag = mks ? "HR2" : "HR1";
+    const kzs = kzStr(S), ids = UNIT_IDS.filter(id => stage(S, id) >= 1), mks = kzs ? kzs + mkStr(S, true) : mkStr(S), tag = kzs ? "HR3" : mks ? "HR2" : "HR1";
     let own = 0; DECOR.forEach((d, i) => { if (S.own.includes(d.id)) own |= 1 << i; });
     const body = mks + b36(S.d0 - EPOCH, 3) + b36(S.ac.e, 3) + b36(S.ac.s, 3) + b36(S.done ? S.done - EPOCH : 0, 3) + b36(own, 2)
       + DECOR.map(d => (S.pl[d.id] || 0).toString(36).toUpperCase()).join("") + b36(ids.length, 2)
@@ -478,9 +590,13 @@
     const t = String(str || "").toUpperCase().replace(/[^0-9A-Z]/g, "");
     if (!RE.test(t) || t.length < 3 + HEAD + 3) return null;
     const tag = t.slice(0, 3); let body = t.slice(3, -3); if (sum3(tag + body) !== t.slice(-3)) return null;
-    let mk = null;
-    if (tag === "HR2") { const m = mkParse(body); if (!m) return null; mk = m.mk; body = body.slice(m.len); if (body.length < HEAD) return null; }
-    const r = coreParse(body); if (r) r.mk = mk;
+    let mk = null, kz = null;
+    if (tag === "HR3") { const k = kzParse(body); if (!k) return null; kz = k.kz; body = body.slice(k.len); }
+    if (tag === "HR2" || tag === "HR3") {
+      const m = mkParse(body); if (!m) return null; mk = m.mk; body = body.slice(m.len); if (body.length < HEAD) return null;
+      if (kz) for (const id in kz.e) if (!mk.own[id]) return null;           // もっていない子の きせかえ
+    }
+    const r = coreParse(body); if (r) { r.mk = mk; r.kz = kz; }
     return r;
   }
   function coreParse(body) {
@@ -525,6 +641,10 @@
       if (was < 2 && r.u[id] >= 2) raised.push(id);
     }
     mkMerge(S, r, raised, today);
+    if (r.kz) {                    // きせかえ：買った物は 両方。つけている物は この端末で まだ 何も つけていない子だけ
+      for (const id of r.kz.o) if (KZ_BY.has(id) && !S.kz.o.includes(id)) S.kz.o.push(id);
+      for (const mk in r.kz.e) if (S.mk.own[mk] && !S.kz.e[mk] && Object.keys(r.kz.e[mk]).length) S.kz.e[mk] = { ...r.kz.e[mk] };
+    }
     for (const id of r.own) if (!S.own.includes(id)) S.own.push(id);
     for (const id in r.pl) if (!(id in S.pl) && !cellOf(S, r.pl[id])) S.pl[id] = r.pl[id];
     S.ac.e = Math.max(S.ac.e, r.e); S.ac.s = Math.min(Math.max(S.ac.s, r.s), S.ac.e);
@@ -558,6 +678,7 @@
   }
 
   return { TK_MAX, TK_GET, TK_STARS, TK_USE, MEMO_O, tkRoll, tkLimit, tkState, tkUse, memoCount, memoTotal, memoAdd, memoPick, explorerMap, CAP, GIFT, CELLS, UNIT_IDS, IDX, PARTS, DECOR, PRICE_TOTAL, TRACK_SUBJ, uGrade, dayNum, dayDate, fresh, clean, balance, sync, give, gapFull,
-    MK, MK_IDS, MK_SOON, MK_STAGE, MK_CAND, MK_SHOW, MK_ART, mkFresh, mkStage, mkFree, mkAvail, mkCands, mkPick, mkShow, mkNext, mkWire, mkAvatar,
+    MK, MK_IDS, MK_SOON, MK_STAGE, MK_CAND, MK_SHOW, MK_ART, mkFresh,
+    KZ, KZ_IDS, KZ_SLOT, KZ_PRICE_TOTAL, kzFresh, kzUnlocked, kzHas, kzLeft, kzBuy, kzWear, kzOf, kzHatOk, mkStage, mkFree, mkAvail, mkCands, mkPick, mkShow, mkNext, mkWire, mkAvatar,
     count, parts, stage, pending, recordRun, claimGift, buy, cellOf, place, unplace, checkDone, summary, hrMake, hrParse, hrMerge };
 });
