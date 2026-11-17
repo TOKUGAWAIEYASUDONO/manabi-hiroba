@@ -15,6 +15,7 @@
 - `data/collection.js` … コレクション v1（じぶんの ひろば・たんげん ずかん・どんぐり）の中身。画面は持たず、`tools/test-collection.js` で単体テストする
 - `data/hiroba-art.js` … ひろばの絵（SVG の symbol）。ひろばを開くときだけ読みこむ
 - `tools/test-collection.js` … どんぐり・ずかん・バックアップの単体テスト。`node tools/test-collection.js`
+- `data/tools-viz.js` … 算数の「🧰 ずで かんがえる」どうぐ（ブロック・さくらんぼ・アレイ・くらい・ぶんすう）の判定と図。Qalc（MIT）の かんがえるどうぐ を作り直したもの。判定は `tools/test-tools-viz.js` で検査
 - `tools/test-quiz.js` … 「先生がつくる もんだい」の部品の単体テスト。`node tools/test-quiz.js`
 
 ## 問題の確認状況
