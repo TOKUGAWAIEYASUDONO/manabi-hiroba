@@ -236,3 +236,27 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
 ## 宇宙の世界観の素材（2026-11）
 - vendor/img/space/（背景6枚〔*-norocket と -v2 をふくむ〕と、エネルギー・モニター・星の部品3枚）：AI生成画像。Codex（OpenAI）の画像生成でこのプロジェクト向けに作成。実在の人物の写真ではない。
 - vendor/audio/sfx-launch.mp3・sfx-clear.mp3・sfx-energy-full.mp3：Kenney の CC0 1.0 素材を変換したもの（元：Sci-Fi Sounds / spaceEngineLow_000、Interface Sounds / confirmation_001、Digital Audio / powerUp10）。https://kenney.nl/　https://creativecommons.org/publicdomain/zero/1.0/
+
+## Qalc（計算スプリントのタイムアタック・サドンデス・にがてボックスの元。index.html に作り直して移植。apps/qalc/ にも同梱）
+https://github.com/GIGAyama/Qalc commit 813bbc5
+MIT License
+
+Copyright (c) 2026 GIGAyama
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.

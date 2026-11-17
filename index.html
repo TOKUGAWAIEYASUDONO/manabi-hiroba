@@ -1166,6 +1166,27 @@ body[data-v=host] .wrap{max-width:none;padding:0}
 #modeUnits :is(.grade-pills,.subject-pills) .pill,#roomUnits :is(.grade-pills,.subject-pills) .pill{width:auto;min-width:0;min-height:38px;padding:2px 12px;font-size:15px;flex:none;margin:0}
 #modeUnits .usetd summary,#roomUnits .usetd summary{cursor:pointer;font-weight:700;display:inline-flex;align-items:center;min-height:38px;padding:2px 12px;border-radius:999px;background:#fff3d6;border:2px solid var(--edge);list-style:none;font-size:15px}
 #modeUnits .usetd .set-grid,#roomUnits .usetd .set-grid{margin-top:6px}
+/* 計算スプリントの あそびかた（いつもの／タイムアタック／サドンデス）と にがて ボックス */
+.spwrap{margin:10px auto 0;max-width:520px;text-align:center}
+.pills.spm{display:inline-flex;flex-wrap:nowrap;gap:0;margin:0;border:3px solid var(--edge);border-radius:999px;background:#fff;overflow:hidden;box-shadow:0 2px 0 var(--edge);max-width:100%}
+.pills.spm .pill{margin:0;border:0;border-radius:0;box-shadow:none;min-height:40px;padding:2px 12px;font-size:14px;white-space:nowrap;flex:1 1 auto}
+.pills.spm .pill+.pill{border-left:2px solid var(--edge)}
+.pills.spm .pill.on{background:var(--board);color:#fff}
+.spwrap .spmd{margin:4px 0 0;min-height:1.6em}
+.up.kid>.spwrap{margin-bottom:10px}
+#spres{text-align:center;margin:6px 0 2px}
+#spres .pills.spm .pill{padding:2px 7px;font-size:13px;min-height:40px}
+.spbadge{display:inline-block;margin:0 4px;padding:0 8px;vertical-align:middle;line-height:1.6;border-radius:999px;background:var(--board);color:#fff;font-size:13px;font-weight:700}
+.tbar.up>i{transition:width .3s ease-out}
+.tbar.spsd{display:none}
+.timer.sp{font-variant-numeric:tabular-nums;min-width:3.6ch}
+.res .num .spsub{display:block;font-size:16px;font-weight:700;color:var(--muted)}
+.boxdoor{display:flex;align-items:center;gap:10px;width:100%;max-width:640px;margin:2px 0 8px;padding:6px 12px;min-height:52px;background:#fff3d6;border:3px solid var(--edge);border-radius:12px;box-shadow:0 3px 0 var(--edge);text-align:left;color:var(--ink);cursor:pointer;font:inherit}
+.boxdoor .bxi{font-size:24px;flex:none}
+.boxdoor .bxt{flex:1;min-width:0;display:flex;flex-direction:column;line-height:1.4}
+.boxdoor .bxt b{font-size:16px}.boxdoor .bxt small{font-size:12px;color:var(--muted)}
+.boxdoor .bxa{flex:none;font-size:14px}
+@media (max-width:599px){.pills.spm .pill{padding:2px 9px;font-size:13px}.boxdoor .bxt small{display:none}}
 </style>
 </head>
 <body>
@@ -1506,6 +1527,22 @@ const TX={
  "u.ok2":["△ 2回《かい》目《め》でせいかい！","△ 2かいめで せいかい！"],
  "u.marks":["○ 1回《かい》で正解《せいかい》　△ 2回《かい》目《め》で正解《せいかい》　× まちがい","○ 1かいで せいかい　△ 2かいめで せいかい　× まちがい"],
  "u.marks.t":["○△×のきろく","○△×の きろく"],
+ /* 計算スプリントの あそびかた（タイムアタック・サドンデス）と にがて ボックス。Qalc（MIT・GIGAyama）の あそびかたを もとにした */
+ "sp.mode":["あそびかた"],"sp.n":["いつもの"],"sp.ta":["タイムアタック"],"sp.sd":["サドンデス"],
+ "sp.n.d":["1分《ぷん》で いくつ とけるかな？","1ぷんで いくつ とけるかな？"],
+ "sp.ta.d":[n=>`${n}問《もん》を どれだけ はやく とけるかな？`,n=>`${n}もんを どれだけ はやく とけるかな？`],
+ "sp.sd.d":["1問《もん》 まちがえたら おわり。なん問《もん》 つづくかな？","1もん まちがえたら おわり。なんもん つづくかな？"],
+ "sp.left":[n=>`のこり <b id="spl">${n}</b> 問《もん》`,n=>`のこり <b id="spl">${n}</b> もん`],
+ "sp.sec":[s=>`${s} 秒《びょう》`,s=>`${s} びょう`],
+ "sp.streak":[n=>`${n} 問《もん》 れんぞく せいかい`,n=>`${n} もん れんぞく せいかい`],
+ "sp.best":[v=>`じぶんの ベスト ${v}`],
+ "sp.newbest":["★ じぶんの ベスト こうしん！"],
+ "sp.tamin":[n=>`${n}問《もん》 いじょう せいかいすると、タイムが きろくに のこるよ`,n=>`${n}もん いじょう せいかいすると、タイムが きろくに のこるよ`],
+ "sp.nomedal":["この あそびかたは メダルには 入《はい》らないよ","この あそびかたは メダルには はいらないよ"],
+ "sp.box":[n=>`にがて ボックス ${n}もん`],"sp.box.t":["にがて ボックス"],
+ "sp.box.d":["まちがえた 問題《もんだい》が たまるよ。1回目《かいめ》で せいかいすると きえるよ","まちがえた もんだいが たまるよ。1かいめで せいかいすると きえるよ"],
+ "sp.box.left":[n=>`にがて ボックス のこり ${n}もん`],"sp.box.clear":["にがて ボックスが からっぽに なったよ！"],
+ "sp.box.back":["たんげんを えらぶ"],
  /* コレクション（じぶんの ひろば・ずかん・どんぐり）。児童向けの文言は 全部《》つき。1〜2年（右）は ひらがな */
  "col.name":["じぶんの ひろば"],
  "col.door.d":[n=>`どんぐり ${n}こ`],"col.door.new":["あたらしい！"],
@@ -2168,32 +2205,26 @@ function renderPlay(q){
   const opt={k:q.get("k")==="diff"?"diff":""};
   const kuku=x.id==="kuku"?{d:parseDans(q.get("d")),o:["up","down","rand"].includes(q.get("o"))?q.get("o"):"rand",seq:[],i:0}:null;
   if(kuku) kuku.seq=kukuSeq(kuku.d,kuku.o);
-  P={x,g,t,left:t,ok:0,ng:0,cur:null,inp:"",misses:[],missObjs:[],task,lock:false,over:false,opt,kuku,chN:0,inN:0};
+  const sm=x.id==="calc"?spModeOf(task):"n";      // あそびかたは 計算スプリントだけ（課題リンクは いつもの）
+  P={x,g,t,left:t,ok:0,ng:0,cur:null,inp:"",misses:[],missObjs:[],task,lock:false,over:false,opt,kuku,chN:0,inN:0,sm,spN:SP_TA};
   const info=kuku?kukuLabel(kuku):(opt.k==="diff"?T("kc.diff"):"");
   app.innerHTML=`<div class="play pg">
      ${task?`<div class="banner">${ic("pencil")} ${T("p.task",`${x.t}（${g<=2?"":g+"年《ねん》・"}${t}${T("sec")}）`)}</div>`:""}
     <div class="topbar">
       ${task?`<button class="back" id="bk">${ic("x")}${T("back.end")}</button>`:`<button class="back" onclick="stopTimer();go('#home')">${BK()}</button>`}
-       <span><b>${tico(x)} ${x.t}</b> <span class="note">${g<=2?"":g+"年《ねん》"}${info?(g<=2?"":"・")+esc(info):""}</span></span>
-      <span class="timer" id="tm" aria-hidden="true">${t}</span>
+       <span><b>${tico(x)} ${x.t}</b> ${sm==="n"?"":`<span class="spbadge">${T("sp."+sm)}</span>`}<span class="note">${g<=2?"":g+"年《ねん》"}${info?(g<=2?"":"・")+esc(info):""}</span></span>
+      <span class="timer${sm==="n"?"":" sp"}" id="tm" aria-hidden="true">${sm==="n"?t:sm==="ta"?"0.0":""}</span>
     </div>
-    <div class="tbar" id="tbar"><i id="tb"></i></div>
+    <div class="tbar${sm==="n"?"":" up"}" id="tbar"><i id="tb"${sm==="n"?"":' style="width:0%"'}></i></div>
     <div class="q"><div class="big" id="qq"></div><div class="small" id="qs"></div></div>
     <div class="fb" id="fb" aria-live="polite"></div>
     <div id="area"></div>
     ${x.id==="calc"?`<div class="uexrow"><span class="pills hstog" id="hstog"></span></div>`:""}
-    <div class="score" id="scw">${T("p.score",0)}</div>
+    <div class="score" id="scw">${T("p.score",0)}${sm==="ta"?"　"+T("sp.left",SP_TA):""}</div>
   </div>`;
   if(task) $("#bk").onclick=()=>{ stopTimer(); finish(); };     // 授業モード：ホームへは行かず、結果の画面へ
   next();
-  stopTimer();
-  const end=Date.now()+t*1000;
-  timerId=setInterval(()=>{
-    P.left=Math.max(0,(end-Date.now())/1000);
-    $("#tm").textContent=Math.ceil(P.left); $("#tb").style.width=(P.left/t*100)+"%";
-    const warn=P.left<=10; $("#tm").classList.toggle("warn",warn); $("#tbar").classList.toggle("warn",warn);   // 残り10秒：赤くて大きい
-    if(P.left<=0){ stopTimer(); timeUp(); }
-  },100);
+  spClock(P);
 }
 /* 時間切れ：「おわり！」を0.8秒出して、そのあいだボタンを押せなくする */
 function timeUp(){
@@ -2245,7 +2276,7 @@ function key(k){
   if(!P||P.lock) return;
   if(P.hs) return hsKey(k);
   if(k==="⌫") P.inp=P.inp.slice(0,-1);
-  else if(k==="OK"){ if(P.inp!=="") judge(parseFloat(P.inp)===P.cur.a, P.cur.a); return; }
+  else if(k==="OK"){ if(P.inp!=="") judge(parseFloat(P.inp)===Number(P.cur.a), P.cur.a); return; }
   else if(P.inp.length<7) P.inp+=k;
   $("#ans").innerHTML=P.inp?esc(P.inp):"&nbsp;";
 }
@@ -2266,49 +2297,64 @@ function judge(right,ans,wait){
     fb.className="fb ng"; fb.textContent=T("fb.ng",ans); mathIn(fb);
   }
   if(p.review) $("#scw").innerHTML=T("p.left",p.queue.length); else $("#sc").textContent=p.ok;
+  boxNote(p,right);                // にがて ボックス（計算スプリント・単元のふくしゅう）
   // 4択をでたらめに連打させないよう、まちがえたあとは1.8秒待つ
-  setTimeout(()=>{ if(P!==p) return; if(p.review||(p.left>0&&timerId)){ fb.className="fb"; fb.textContent=""; next(); } }, wait||(right?350:(p.cur.ch?1800:1100)));
+  const w=wait||(right?350:(p.cur.ch?1800:1100));
+  if(spEnd(p,right,w)) return;     // タイムアタックの さいご・サドンデスの まちがい
+  setTimeout(()=>{ if(P!==p) return; if(p.review||(p.left>0&&timerId)){ fb.className="fb"; fb.textContent=""; next(); } }, w);
 }
 function finish(){
-  const p=P; if(!p||p.done) return; p.done=true; p.lock=true;
+  const p=P; if(!p||p.done) return; p.done=true; p.lock=true; stopTimer();
+  const sp=p.sm&&p.sm!=="n"?p.sm:"", bx=!!(p.u&&p.u.box), plain=!sp&&!bx;      // plain：いつもの（メダル・自己ベストに入る）
   const total=p.ok+p.ng, acc=total?Math.round(p.ok/total*100):0;
   const per=p.ok*60/p.t;                       // 1分あたりの正解数
   /* メダルの基準：4択か入力かで分ける（両方が出るときは出た割合で混ぜる）。正答率の条件もつける */
   const nAll=p.chN+p.inN, wc=nAll?p.chN/nAll:(p.x.type==="choice"?1:0);
   const goal=[0,1,2].map(i=>wc*MEDAL_CH[i]+(1-wc)*MEDAL_IN[i]);
-  let medal=0; for(let i=0;i<3;i++) if(per>=goal[i]&&acc>=MEDAL_ACC[i]) medal=i+1;
+  let medal=0; if(plain) for(let i=0;i<3;i++) if(per>=goal[i]&&acc>=MEDAL_ACC[i]) medal=i+1;
   let nextMsg=T("r.top");
-  if(medal<3){
+  if(!plain) nextMsg="";
+  else if(medal<3){
     const nm=["🥉","🥈","🥇"][medal], need=Math.ceil(goal[medal]*p.t/60-1e-9)-p.ok;
     nextMsg=need>0?T("r.next",nm,need):T("r.nextacc",nm,MEDAL_ACC[medal]);
   }
   const all=bests(), key=p.x.id, prev=all[key]||{score:0,medal:0};
-  const isNew=p.ok>prev.score && !p.task && !p.u, showNew=isNew&&p.ok>=2;      // 「いちばん たくさん できた！」は、正解が2問以上のときだけ
+  const isNew=plain && p.ok>prev.score && !p.task && !p.u, showNew=isNew&&p.ok>=2;      // 「いちばん たくさん できた！」は、正解が2問以上のときだけ
   if(medal>0) sfx("medal");
   if(medal===3||(isNew&&medal>0)) party();
-  all[key]={score:Math.max(prev.score,p.ok),medal:Math.max(prev.medal,medal)};
   let ures=null;
-  if(!p.u){ store.set("mh_best",all); refreshMedals(); } else ures=uRecord(p);       // 単元練習は、単元ごとのきろく（u:単元ID）に残す
+  if(plain){ all[key]={score:Math.max(prev.score,p.ok),medal:Math.max(prev.medal,medal)};
+    if(!p.u){ store.set("mh_best",all); refreshMedals(); } else ures=uRecord(p); }       // 単元練習は、単元ごとのきろく（u:単元ID）に残す
+  const spr=sp&&!bx?spRecord(p):null;               // タイムアタック・サドンデスの じぶんの ベスト（mh_spbest）
+  if(spr&&spr.isNew){ sfx("medal"); party(); }
+  if(sp==="ta"&&spr&&!spr.counted) nextMsg=T("sp.tamin",SP_TA_OK);
+  const spNote=sp&&!bx?T("sp.nomedal"):"";
+  const boxLeft=bx?boxFor(p.u.box.subj).length:0;
+  if(bx) nextMsg=boxLeft?T("sp.box.left",boxLeft):T("sp.box.clear");
+  const numHtml=sp==="ta"&&p.el!=null?`${T("sp.sec",spFmt(p.el))}<small class="spsub">${T("r.num",p.ok)}／${T("r.n",total)}</small>`:sp==="sd"?T("sp.streak",p.ok):T("r.num",p.ok);
+  const bestHtml=plain?(p.u||!all[key]||!all[key].score?"":`<span>${T("r.best")} <b>${T("r.n",all[key].score)}</b></span>`):spr&&spr.best!=null?`<span>${T("sp.best","")} <b>${spBestTxt(sp,spr.best)}</b></span>`:"";
   const colHtml=COLOK?colRunPlay(p):"";
   const report=`【${T0("g."+p.x.id+".t")}】${p.g}年 ${p.t}秒｜せいかい${p.ok}問／${total}問（正答率${acc}%）`;   //T
   if(p.u&&p.cur&&p.cur.tries>0&&!p.missObjs.includes(p.cur)) p.missObjs.push(p.cur);
    const repFull=(p.u?unitReport(p):report)+missIds(p.missObjs,p.x);          // 課題リンクの結果の末尾に、まちがえた問題のID（単元のリンクは、単元名と ○△× の数）
   app.innerHTML=`<div class="play"><div class="res">
     ${p.u&&hasRika(p.u.ids)?rikaWarning():""}
-    ${medRow(medal,acc,showNew)}
-    <div class="num">${T("r.num",p.ok)}</div>
-    ${p.task?"":`<div class="nextm">${medalize(esc(nextMsg))}</div>`}
+    ${medRow(medal,acc,showNew||!!(spr&&spr.isNew)||(bx&&!boxLeft))}
+    <div class="num">${numHtml}</div>
+    ${p.task||!nextMsg?"":`<div class="nextm">${medalize(esc(nextMsg))}</div>`}${spNote?`<div class="note">${esc(spNote)}</div>`:""}
     ${colHtml}
-    ${showNew?`<div class="newbest">${T("r.new")}</div>`:""}
-    <div class="actions"><button class="btn again" id="again">${ic("rotate-ccw")}${T("r.again")}</button>
+    ${showNew?`<div class="newbest">${T("r.new")}</div>`:spr&&spr.isNew?`<div class="newbest">${T("sp.newbest")}</div>`:""}
+    ${(p.x.id==="calc"||p.u)&&spOn(p.task)?`<div id="spres"></div>`:""}
+    <div class="actions"><button class="btn again" id="again">${ic("rotate-ccw")}${bx&&!boxLeft?T("sp.box.back"):T("r.again")}</button>
       <div class="subs">${p.missObjs.length?`<button class="btn sub" id="redo">${T("r.redo")}</button>`:""}${p.task?"":`<button class="btn sub" onclick="go('#home')">${T("r.other")}</button>`}</div></div>
-    <div class="stats"><span>${T("r.answered")} <b>${T("r.n",total)}</b></span><span>${T("r.acc")} <b>${acc}%</b></span>${p.u||!all[key].score?"":`<span>${T("r.best")} <b>${T("r.n",all[key].score)}</b></span>`}</div>
+    <div class="stats"><span>${T("r.answered")} <b>${T("r.n",total)}</b></span><span>${T("r.acc")} <b>${acc}%</b></span>${bestHtml}</div>
     ${p.u?`<div class="umr"><b>${T("u.marks.t")}</b><div class="umarks big">${uMarksHtml(p.marks)}</div><div class="note">${esc(T("u.marks"))}</div>${ures&&ures.length?`<div class="ubk">${ures.map(r=>`<div class="stamp"><span class="sn">${esc(UBY[r.id].title)}<small>${T("u.best",r.o)}</small></span><span class="slots" aria-hidden="true">${MEDAL_ICO.map((em,i)=>`<span class="slot${r.medal>i?" on":""}">${msvg(r.medal>i?i+1:0)}</span>`).join("")}</span></div>`).join("")}</div>`:""}</div>`:""}
     ${p.missObjs.length?missCards(p.missObjs,p.x):""}
     ${p.task?`<div class="miss"><b>${T("r.send")}</b><br><span id="rep">${esc(repFull)}</span><br><button class="btn sub" id="cp">${T("r.copy")}</button></div>`:""}
   </div></div>`;
   mathIn(app);
-  $("#again").onclick=()=>p.u?p.u.again():route();
+  const spres=$("#spres"); if(spres&&!(bx&&!boxLeft)) spres.replaceChildren(spChips({note:false}));      // つぎの あそびかたを えらんで「もう一回」
+  $("#again").onclick=()=>bx&&!boxLeft?go(p.u.box.back):p.u?p.u.again():route();
   const rd=$("#redo"); if(rd) rd.onclick=()=>startReview(p.missObjs,p.x,p.g,p.task);
   const cp=$("#cp"); if(cp) cp.onclick=()=>{ navigator.clipboard?.writeText(repFull).then(()=>cp.textContent=T("r.copied"),()=>{}); };
   if(p.task) lessonEndButton();
@@ -2322,7 +2368,7 @@ function startReview(items,x,g,task){
   app.innerHTML=`<div class="play pg">
     <div class="topbar">
       ${task?`<button class="back" onclick="reviewDone()">${ic("x")}${T("back.end")}</button>`:`<button class="back" onclick="go('#home')">${BK()}</button>`}
-      <span><b>${tico(x)} ${T("p.review")}</b> <span class="note">${x.t}・${g}年《ねん》</span></span>      <span class="timer" id="tm" aria-hidden="true"></span>    </div>    <div class="q"><div class="big" id="qq"></div><div class="small" id="qs"></div></div>    <div class="fb" id="fb" aria-live="polite"></div>    <div id="area"></div>    <div class="score" id="scw">"scw">${T("p.left",queue.length)}</div>
+      <span><b>${tico(x)} ${T("p.review")}</b> <span class="note">${x.t}・${g}年《ねん》</span></span>      <span class="timer" id="tm" aria-hidden="true"></span>    </div>    <div class="q"><div class="big" id="qq"></div><div class="small" id="qs"></div></div>    <div class="fb" id="fb" aria-live="polite"></div>    <div id="area"></div>    <div class="score" id="scw">${T("p.left",queue.length)}</div>
     <p class="note">${T("p.reviewnote")}</p>
   </div>`;
   window.scrollTo(0,0);
@@ -2332,6 +2378,162 @@ function reviewDone(){
   const p=P; p.lock=true;
   app.innerHTML=`<div class="play"><div class="res">${medRow(3)}<div class="num">${T("p.reviewclear")}</div>
     <div>${p.task?`<button class="btn" onclick="route()">${T("r.again")}</button>`:`<button class="btn" onclick="go('#home')">${T("n.home")}</button>`}</div></div></div>`;
+}
+/* ================= 計算スプリントの あそびかた・にがて ボックス =================
+   Qalc（MIT・GIGAyama。apps/README.md）の「タイムアタック」「サドンデス」「にがて克服ボックス」を もとに作りなおした。
+   ・いつもの：今までの 1分スプリント（メダル・自己ベスト・単元のメダル）
+   ・タイムアタック：20問を どれだけ はやく。16問以上 ○ のときだけ タイムを のこす（でたらめに おして はやくしても きろくに ならない）
+   ・サドンデス：1問 まちがえたら おわり（やりなおしなし）。れんぞく せいかいの 数を のこす
+   メダル・自己ベスト（mh_best）・単元のメダルには 入れない（1分あたりの数ではないため）。どんぐり（recordRun）は、
+   タイムアタックは ふつうに 数える（20問・正答率がそのまま）。サドンデスは 単元の「できた」に 入れない（まちがえるまで つづくので、
+   なんども ためすと まぐれの れんぞくで 正答率が 高く 出る）。こたえた数は その日の はじめての れんしゅうに 入る。
+   にがて ボックス：まちがえた問題（1回目で ○ でなかった問題）を 新しい順に 50問まで ためる。1回目で ○ なら けす。
+   ボックスの回は 見たことのある問題なので、メダル・ベスト・「できた」に 入れない（ふくしゅうと同じ）。
+   授業モード（課題リンク・授業の固定中）は いつもの だけ。あそびかたと ボックスの入口は 出さない */
+/* SPR-BEGIN 画面に依存しない きまり（tools/test-sprint-modes.js で検査） */
+const SP_TA=20, SP_TA_OK=16, BOX_MAX=50, SPB_MAX=60;
+const SP_ANS=["choice4","num","dec","amari","frac","unit"];
+const spStr=(s,n)=>typeof s==="string"&&s.length<=n;
+const spPlainObj=o=>o==null||(typeof o==="object"&&!Array.isArray(o));
+function boxValid(it){
+  if(!it||typeof it!=="object"||Array.isArray(it)) return false;
+  if(!spStr(it.q,400)||!it.q||!spStr(it.a,200)||!spStr(it.val,200)||!SP_ANS.includes(it.ans)) return false;
+  if(!Array.isArray(it.choices)||it.choices.length>8||!it.choices.every(c=>spStr(c,200))) return false;
+  if(!(it.unit===""||(spStr(it.unit,40)&&/^[a-z0-9-]+$/.test(it.unit)))||!spStr(it.subj,10)) return false;
+  if(!Number.isInteger(it.g)||it.g<1||it.g>6||(it.stem!=null&&!spStr(it.stem,300))) return false;
+  if(!spPlainObj(it.hissan)||!spPlainObj(it.picture)) return false;
+  if(it.ans!=="choice4"&&!it.choices.length&&it.unit!=="") return false;
+  try{ return JSON.stringify(it).length<=4000; }catch(e){ return false; }
+}
+const boxKey=it=>(it.unit||"c")+"|"+it.q+"|"+(it.stem||"");
+function boxClean(v){
+  if(!Array.isArray(v)) return [];
+  const seen=new Set(), out=[];
+  for(const it of v){ if(out.length>=BOX_MAX) break; if(!boxValid(it)) continue; const k=boxKey(it); if(seen.has(k)) continue; seen.add(k); out.push(it); }
+  return out;
+}
+const boxPut=(list,it)=>[it,...list.filter(x=>boxKey(x)!==boxKey(it))].slice(0,BOX_MAX);     // 新しい順。同じ問題は 前へ
+const boxDrop=(list,key)=>list.filter(x=>boxKey(x)!==key);
+const spFmt=sec=>(Math.round(Math.max(0,sec)*10)/10).toFixed(1);
+const spTaCounted=(done,ok)=>done>=SP_TA&&ok>=SP_TA_OK;
+/* じぶんの ベスト：{key:{ta:秒, sd:問, at:時刻}}。タイムは 小さいほど、れんぞくは 大きいほど よい。60件まで（古いものから けす） */
+function spBestClean(v){
+  const out={}; if(!v||typeof v!=="object"||Array.isArray(v)) return out;
+  for(const k of Object.keys(v)){ const e=v[k]; if(!spStr(k,400)||!e||typeof e!=="object") continue;
+    const o={at:typeof e.at==="number"?e.at:0};
+    if(typeof e.ta==="number"&&e.ta>0&&e.ta<36000) o.ta=Math.round(e.ta*10)/10;
+    if(Number.isInteger(e.sd)&&e.sd>0&&e.sd<100000) o.sd=e.sd;
+    if(o.ta!=null||o.sd!=null) out[k]=o; }
+  return out;
+}
+function spBestPut(all,key,mode,v,now){
+  all=spBestClean(all); const e=all[key]||{at:0}, old=e[mode];
+  const isNew=mode==="ta"?(v>0&&(old==null||v<old)):(v>0&&(old==null||v>old));
+  if(isNew){ e[mode]=mode==="ta"?Math.round(v*10)/10:v; e.at=now; all[key]=e; }
+  const ks=Object.keys(all).sort((a,b)=>all[b].at-all[a].at); ks.slice(SPB_MAX).forEach(k=>delete all[k]);
+  return {all,isNew,best:all[key]?all[key][mode]:undefined};
+}
+/* SPR-END */
+const SPBK="mh_spbest", NGK="mh_nigate";
+let SPM="n";                                   // えらんでいる あそびかた（n いつもの／ta タイムアタック／sd サドンデス）。はじめは いつもの。保存しない
+const spOn=task=>!task&&!LESSON;
+const spModeOf=task=>spOn(task)?SPM:"n";
+const spKey=p=>p.u?"u:"+[...p.u.ids].sort().join(","):"c:"+p.g;
+const spBestOf=(key,mode)=>{ const e=spBestClean(store.get(SPBK,null))[key]; return e?e[mode]:undefined; };
+const spBestTxt=(mode,v)=>mode==="ta"?T("sp.sec",spFmt(v)):T("r.n",v);
+function spRecord(p){
+  const mode=p.sm, key=spKey(p);
+  if(mode==="ta"&&!spTaCounted(p.ok+p.ng,p.ok)) return {mode,counted:false,best:spBestOf(key,mode)};
+  const v=mode==="ta"?Math.round(p.el*10)/10:p.ok;
+  const r=spBestPut(store.get(SPBK,null),key,mode,v,Date.now()); store.set(SPBK,r.all);
+  return {mode,counted:true,isNew:r.isNew,best:r.best};
+}
+/* あそびかたの チップ（ひとりで れんしゅうするときだけ）。note があれば その下に せつめいと じぶんの ベスト */
+function spChips(o){
+  o=o||{}; const row=h("div",{class:"pills spm",role:"group","aria-label":T("sp.mode")}), note=h("div",{class:"note spmd"});
+  const draw=()=>{ row.replaceChildren(...["n","ta","sd"].map(m=>upill(T("sp."+m),SPM===m,()=>{ SPM=m; draw(); if(o.onPick) o.onPick(m); })));
+    const b=o.bestKey&&SPM!=="n"?spBestOf(o.bestKey,SPM):undefined;
+    note.textContent=(SPM==="n"?T("sp.n.d"):SPM==="ta"?T("sp.ta.d",o.taN||SP_TA):T("sp.sd.d"))+(b!=null?"　"+T("sp.best",spBestTxt(SPM,b)):""); };
+  draw(); return o.note===false?row:h("div",{class:"spwrap"},row,note);
+}
+/* ---- にがて ボックス（mh_nigate）。問題の中身だけ（名前は入れない）。この端末の中だけ ---- */
+function boxGet(){ return boxClean(store.get(NGK,null)); }
+function boxFor(subj){ return boxGet().filter(x=>!subj||x.subj===subj); }
+function boxItem(c,g){      // いま出ている問題 → ボックスに入れる形（単元の問題は そのまま。計算スプリントの式は 単元の問題の形に そろえる）
+  if(c.u&&typeof c.u==="object"){ const it=c.u, o={unit:it.unit||"",subj:it.subj||"sansu",g:(it.g|0)||(g|0)||1,q:String(it.q),a:String(it.a),choices:(it.choices||[]).map(String),ans:it.ans,val:String(it.val)};
+    for(const k of ["hissan","picture","stem","tag"]) if(it[k]!=null) o[k]=it[k];
+    if(it.hs===0) o.hs=0; return o; }
+  if(!UNITS_OK||c.a==null) return null;
+  const a=String(c.a), ans=c.ch?"choice4":a.includes(".")?"dec":"num", val=UN.canon(ans,a);
+  if(val==null) return null;
+  const o={unit:"",subj:"sansu",g:Math.min(6,Math.max(1,g|0)),q:String(c.q),a,choices:c.ch?c.ch.map(String):[],ans,val:String(val)};
+  if(c.hissan) o.hissan=c.hissan;
+  if(!c.hsL) o.hs=0;           // 学年別スプリントで マスにしない式（1年の たし算など）は、ボックスでも マスにしない
+  return o;
+}
+function boxNote(p,good){      // 1回目で ○ → けす／それ以外 → ためる
+  if(!UNITS_OK||!p||!p.cur||!(p.x.id==="calc"||p.x.id==="unit")) return;
+  const it=boxItem(p.cur,p.g); if(!it||!boxValid(it)) return;
+  const l=boxGet(), k=boxKey(it);
+  if(good){ if(l.some(x=>boxKey(x)===k)) store.set(NGK,boxDrop(l,k)); }
+  else store.set(NGK,boxPut(l,it));
+}
+/* 単元えらびの いちばん上：ボックスに 問題が あるときだけ */
+function boxDoor(subj,back){
+  if(!spOn(false)||!UNITS_OK) return null;
+  const n=boxFor(subj).length; if(!n) return null;
+  return h("button",{type:"button",class:"boxdoor",onclick:()=>renderBoxIntro(subj,back)},h("span",{class:"bxi","aria-hidden":"true",text:"📦"}),h("span",{class:"bxt"},h("b",{text:T("sp.box",n)}),h("small",{text:T("sp.box.d")})),h("span",{class:"bxa","aria-hidden":"true",text:"▶"}));
+}
+function renderBoxIntro(subj,back){
+  stopTimer(); P=null; const items=boxFor(subj); if(!items.length) return go(back);
+  setLG(Math.max(...items.map(x=>x.g)));
+  app.replaceChildren(h("div",{class:"play up"},
+    h("div",{class:"topbar"},h("button",{type:"button",class:"back",innerHTML:BK(),onclick:()=>go(back)}),h("b"),h("span")),
+    h("div",{class:"q"},h("div",{class:"big",text:"📦 "+T("sp.box.t")}),h("div",{class:"small",text:T("sp.box",items.length)})),
+    h("p",{class:"note",style:"text-align:center",text:T("sp.box.d")}),
+    spChips({taN:Math.min(SP_TA,items.length)}),
+    h("div",{style:"margin-top:12px"},h("button",{type:"button",class:"btn again",id:"ugo",text:T("u.go"),onclick:()=>startBoxRun(subj,back)}))));
+  window.scrollTo(0,0);
+}
+function startBoxRun(subj,back){
+  const items=boxFor(subj); if(!items.length) return go(back);
+  const ids=[...new Set(items.map(x=>x.unit).filter(i=>UBY[i]))];
+  startUnitRun({ids,n:items.length,seed:uSeed(),mix:true,choice:false,box:{subj,back,items,g:Math.max(...items.map(x=>x.g))}});
+}
+/* タイマー：いつもの は のこり時間。タイムアタックは 0から 数える（バーは すすんだ分）。サドンデスは 時間なし */
+function spClock(p){
+  stopTimer();
+  if(p.sm==="n"){
+    const t=p.t, end=Date.now()+t*1000;
+    timerId=setInterval(()=>{
+      if(P!==p){ stopTimer(); return; }
+      p.left=Math.max(0,(end-Date.now())/1000);
+      $("#tm").textContent=Math.ceil(p.left); $("#tb").style.width=(p.left/t*100)+"%";
+      const warn=p.left<=10; $("#tm").classList.toggle("warn",warn); $("#tbar").classList.toggle("warn",warn);   // 残り10秒：赤くて大きい
+      if(p.left<=0){ stopTimer(); timeUp(); }
+    },100);
+    return;
+  }
+  p.left=1; p.t0=Date.now();
+  const tb=$("#tbar"); if(tb) tb.classList.toggle("spsd",p.sm==="sd");
+  spTick(p);
+  timerId=setInterval(()=>{ if(P!==p){ stopTimer(); return; } if(p.sm==="ta"){ const tm=$("#tm"); if(tm) tm.textContent=spFmt((Date.now()-p.t0)/1000); } },100);
+}
+function spTick(p){
+  if(p.sm!=="ta") return;
+  const done=p.u?p.marks.length:p.ok+p.ng, l=$("#spl"), b=$("#tb");
+  if(l) l.textContent=Math.max(0,p.spN-done); if(b) b.style.width=(Math.min(1,done/p.spN)*100)+"%";
+}
+/* 1問 おわったあと：タイムアタックの さいご・サドンデスの まちがいなら おわり（true） */
+function spEnd(p,good,wait){
+  if(!p.sm||p.sm==="n"||p.review) return false;
+  spTick(p);
+  const done=p.u?p.marks.length:p.ok+p.ng;
+  if(!(p.sm==="sd"?!good:done>=p.spN)) return false;
+  p.el=(Date.now()-p.t0)/1000; stopTimer();
+  if(p.sm==="ta"){ const tm=$("#tm"); if(tm) tm.textContent=spFmt(p.el); }
+  setTimeout(()=>{ if(P===p) finish(); },good?500:wait);
+  return true;
 }
 document.addEventListener("keydown",e=>{
   if(!P||!(timerId||P.review)||!P.cur||P.lock) return;
@@ -2501,8 +2703,8 @@ function colRun(info){
   if(!L.length&&!r.paid) return "";
   return `<div class="acl" role="status">${acornSvg()}<div class="acb">${r.paid>0?`<b>${T("col.r.get",r.paid)}</b>`:""}${L.map(l=>`<div>${esc(l)}</div>`).join("")}</div><button type="button" class="btn sub s" onclick="go('#hiroba')">${T("col.r.go")}</button></div>`;
 }
-function colRunPlay(p){      // finish() から：単元ごとの正解数と、ゲーム全体の正解数
-  const units=p.u&&p.uSt?Object.keys(p.uSt).map(id=>({id,n:p.uSt[id].n,o:p.uSt[id].o})):[];
+function colRunPlay(p){      // finish() から：単元ごとの正解数と、ゲーム全体の正解数（サドンデス・にがて ボックスの回は 単元の「できた」に 入れない）
+  const units=p.u&&p.uSt&&p.sm!=="sd"&&!p.u.box?Object.keys(p.uSt).map(id=>({id,n:p.uSt[id].n,o:p.uSt[id].o})):[];
   return colRun({units,answered:p.ok+p.ng,correct:p.ok,quiet:!!p.task});
 }
 
@@ -5508,8 +5710,8 @@ function showWorksheet(ids,n=20){
 function uCur(it,forceChoice){
   const u=UBY[it.unit], mode=(forceChoice||it.ans==="choice4"||!it.choices)?"choice4":it.ans;
   const formula=/^[0-9.\s+−×÷()\/と]+$/.test(it.q), val=String(it.val);
-  const c={uid:it.unit,id:it.unit+": "+it.q,q:it.q,a:it.a,ch:it.choices,picture:it.picture,hissan:it.hissan,small:it.stem||(formula?"= ?":" "),u:it,mode,mode0:mode,ex:u?u.ex:"",title:u?u.title:"",tries:0,subj:it.subj};
-  if(it.hissan&&/^(num|dec|amari)$/.test(it.ans)&&typeof hsCells==="function"){ c.hsL=hsCells(it.hissan,{val:it.val,amari:it.ans==="amari",g:it.g||(u&&u.g)}); if(c.hsL&&hsPref()) c.mode="cells"; }
+  const c={uid:it.unit,id:(it.unit||"calc")+": "+it.q,q:it.q,a:it.a,ch:it.choices&&it.choices.length?it.choices:undefined,picture:it.picture,hissan:it.hissan,small:it.stem||(formula?"= ?":" "),u:it,mode,mode0:mode,ex:u?u.ex:"",title:u?u.title:"",tries:0,subj:it.subj};
+  if(it.hissan&&it.hs!==0&&/^(num|dec|amari)$/.test(it.ans)&&typeof hsCells==="function"){ c.hsL=hsCells(it.hissan,{val:it.val,amari:it.ans==="amari",g:it.g||(u&&u.g)}); if(c.hsL&&hsPref()) c.mode="cells"; }
   if(mode==="num"||mode==="dec") c.len=[val.length];
   else if(mode==="amari"){ const [a,b]=val.split("|"); c.len=[a.length,b.length]; }
   else if(mode==="frac"){ const [w,n,d]=val.split("|"); c.len=w==="0"?[n.length,d.length]:[w.length,n.length,d.length]; }
@@ -5531,7 +5733,9 @@ function renderUnits(q){
     app.replaceChildren(h("div",{class:"up kid"},
       h("div",{class:"topbar"},h("button",{type:"button",class:"back",innerHTML:BK(),onclick:()=>go("#home")})),
       h("h2",{class:"th2",text:T("u.pick")}),
+      boxDoor("","#units?kid=1"),
        h("p",{class:"note",text:T("u.pick.d")}),
+      spChips(),
       h("div",{class:"ugrid kidunits"},...units.map(u=>h("button",{type:"button",class:"ucard",onclick:()=>startUnitRun({ids:[u.id],n:20,t:20,seed:uSeed(),mix:true,choice:null})},
         h("span",{class:"ubody"},h("b",{text:u.title})))))));
     return;
@@ -5682,6 +5886,7 @@ function renderUnits(q){
   const startBtn=h("button",{type:"button",class:"btn again ustart",text:T("u.go"),onclick:()=>{ if(!need()) return; uSave(); go(uHash({...cfg(),n:Math.min(UPK.n,20)})); }});
   if(kc) root.append(
     h("div",{class:"topbar"},h("button",{type:"button",class:"back",innerHTML:BK(),onclick:()=>go("#home")}),h("h2",{class:"th2 uttl",text:`${SUBJ_JA[subj]}　${T("u.pick")}`}),h("span")),
+    ...[boxDoor(SJ[subj]?subj:"",`#units?kid=1&subj=${subj}`)].filter(Boolean),
     h("div",{class:"ufilters"},filt,sets),cards,h("div",{class:"ufoot kbar"},panel,startBtn));
   if(kc&&window.ResizeObserver){ const uf=root.querySelector(".ufilters"); new ResizeObserver(()=>root.style.setProperty("--ufh",uf.offsetHeight+"px")).observe(uf); }      // 学年の見出しを しぼりこみの すぐ下に とめる
   else root.append(...[
@@ -5703,44 +5908,39 @@ function renderUnitLink(hash){
   if(!c.ids.every(id=>UBY[id].subj==="rika")) draw();
   app.replaceChildren(h("div",{class:"play up"},
     h("div",{class:"topbar"},c.task?h("span"):h("button",{type:"button",class:"back",innerHTML:BK(),onclick:()=>go("#home")}),h("b"),h("span")),
-    h("div",{class:"q"},h("div",{class:"big",text:T("u.intro")}),h("div",{class:"small",text:T("u.1min")})),
+    h("div",{class:"q"},h("div",{class:"big",text:T("u.intro")}),spOn(c.task)?null:h("div",{class:"small",text:T("u.1min")})),
     hasRika(c.ids)?h("p",{class:"rika-warning",text:RIKA_WARNING}):null,
     h("div",{class:"uchips cen"},...c.ids.map(id=>h("span",{class:"uchipw"},h("span",{class:"uchip static"},c.task&&UBY[id].g<=2?null:h("span",{class:"ucg",text:UBY[id].g+"年《ねん》"}),h("span",{text:UBY[id].title})),
       h("button",{type:"button",class:"btn sub s uexb",text:T("u.ex"),"aria-label":T("u.ex")+"："+UBY[id].title,onclick:()=>uEx(UBY[id])})))),
-    how,h("div",{style:"margin-top:12px"},h("button",{type:"button",class:"btn again",id:"ugo",text:T("u.go"),onclick:()=>startUnitRun({...c,choice})}))));
+    how,spOn(c.task)?spChips({bestKey:"u:"+[...c.ids].sort().join(",")}):null,
+    h("div",{style:"margin-top:12px"},h("button",{type:"button",class:"btn again",id:"ugo",text:T("u.go"),onclick:()=>startUnitRun({...c,choice})}))));
   const b=document.getElementById("ugo"); if(b) b.focus();
 }
 function startUnitRun(c){
   stopTimer();
-  const ids=c.ids, g=uMaxG(ids), choice=uChoice(ids,c.choice); setLG(g);
-  const t=60;
-  P={x:UNITX,g,t,left:t,ok:0,ng:0,cur:null,inp:null,misses:[],missObjs:[],task:!!c.task,lock:false,over:false,chN:0,inN:0,marks:[],
-     u:{ids,n:c.n,seed:c.seed,mix:c.mix,choice,round:0,pool:UN.unitPick(ids,c.n,c.seed,c.mix),pi:0,
-        again:()=>startUnitRun({...c,seed:uSeed()})}};
-  const names=ids.map(i=>UBY[i].title).join("・");
+  const ids=c.ids, bx=c.box||null, g=bx?bx.g:uMaxG(ids), choice=uChoice(ids,c.choice); setLG(g);
+  const t=60, sm=spModeOf(c.task), spN=bx?Math.min(SP_TA,bx.items.length):SP_TA;      // タイムアタックは 20問（ボックスが少ないときは その数）
+  const pool=bx?shuffle(bx.items):UN.unitPick(ids,sm==="ta"?SP_TA:c.n,c.seed,c.mix);
+  P={x:UNITX,g,t,left:t,ok:0,ng:0,cur:null,inp:null,misses:[],missObjs:[],task:!!c.task,lock:false,over:false,chN:0,inN:0,marks:[],sm,spN,
+     u:{ids,n:c.n,seed:c.seed,mix:c.mix,choice,round:0,pool,pi:0,box:bx,
+        again:()=>bx?startBoxRun(bx.subj,bx.back):startUnitRun({...c,seed:uSeed()})}};
+  const names=bx?T("sp.box.t"):ids.map(i=>UBY[i].title).join("・");
   app.innerHTML=`<div class="play pg">
     <div class="topbar">${c.task?`<button class="back" id="bk">${ic("x")}${T("back.end")}</button>`:`<button class="back" onclick="stopTimer();go('#home')">${BK()}</button>`}
-      <span><b>${tico(UNITX)} ${T("g.unit.t")}</b> <span class="note" id="unm"></span></span><span class="timer" id="tm" aria-hidden="true">${t}</span></div>
+      <span><b>${tico(UNITX)} ${T("g.unit.t")}</b> ${sm==="n"?"":`<span class="spbadge">${T("sp."+sm)}</span>`}<span class="note" id="unm"></span></span><span class="timer${sm==="n"?"":" sp"}" id="tm" aria-hidden="true">${sm==="n"?t:sm==="ta"?"0.0":""}</span></div>
     ${hasRika(ids)?rikaWarning():""}
-    <div class="tbar" id="tbar"><i id="tb"></i></div>
+    <div class="tbar${sm==="n"?"":" up"}" id="tbar"><i id="tb"${sm==="n"?"":' style="width:0%"'}></i></div>
     <div class="q"><div id="qpic"></div><div class="big" id="qq"></div><div class="small" id="qs"></div></div>
     <div class="umarks" id="um" aria-label="${esc(T("u.marks"))}"></div>
     <div class="fb" id="fb" aria-live="polite"></div>
     <div id="area"></div>
     <div class="uexrow"><span class="pills hstog" id="hstog"></span><button type="button" class="btn sub s" id="uexb">💡 ${T("u.ex")}</button></div>
-    <div class="score" id="scw">${T("p.score",0)}</div></div>`;
+    <div class="score" id="scw">${T("p.score",0)}${sm==="ta"?"　"+T("sp.left",spN):""}</div></div>`;
   if(c.task) $("#bk").onclick=()=>{ stopTimer(); finish(); };      // 授業モード：ホームへは行かず、結果の画面へ
   $("#unm").textContent=rbp(names).length>28?rbp(names).slice(0,27)+"…":names;
-  $("#uexb").onclick=()=>{ if(P&&P.cur&&P.u) uEx(UBY[P.cur.uid]); };
+  $("#uexb").onclick=()=>{ if(P&&P.cur&&P.u&&UBY[P.cur.uid]) uEx(UBY[P.cur.uid]); };
   unitNext();
-  const end=Date.now()+t*1000, p=P;
-  timerId=setInterval(()=>{
-    if(P!==p){ stopTimer(); return; }
-    P.left=Math.max(0,(end-Date.now())/1000);
-    $("#tm").textContent=Math.ceil(P.left); $("#tb").style.width=(P.left/t*100)+"%";
-    const warn=P.left<=10; $("#tm").classList.toggle("warn",warn); $("#tbar").classList.toggle("warn",warn);
-    if(P.left<=0){ stopTimer(); timeUp(); }
-  },100);
+  spClock(P);
 }
 function uMarksHtml(marks,max){
   const m=max?marks.slice(-max):marks, cls={"○":"mo","△":"mt","×":"mx"};
@@ -5748,7 +5948,7 @@ function uMarksHtml(marks,max){
 }
 function unitNext(){
   const U=P.u;
-  if(U.pi>=U.pool.length){ U.round++; U.pool=UN.unitPick(U.ids,U.n,U.seed+"-"+U.round,U.mix); U.pi=0; if(!U.pool.length) return finish(); }
+  if(U.pi>=U.pool.length){ U.round++; U.pool=U.box?shuffle(boxFor(U.box.subj)):UN.unitPick(U.ids,U.n,U.seed+"-"+U.round,U.mix); U.pi=0; if(!U.pool.length) return finish(); }      // ボックスの回は、のこっている問題を もう一周
   const c=uCur(U.pool[U.pi++],U.choice); P.cur=c;
   if(c.mode==="choice4") P.chN++; else P.inN++;
   uDraw();
@@ -5757,6 +5957,7 @@ function uDraw(){
   const c=P.cur; P.inp={f:(c.len||[]).map(()=>""),at:0}; P.lock=false; P.hs=c.mode==="cells"?hsNew(c.hsL):null;
   const pg=app.querySelector(".play.pg"); if(pg) pg.classList.toggle("cellmode",!!P.hs);
   const tg=$("#hstog"); if(tg) tg.replaceChildren(...(c.hsL?[upill(T("hs.on"),!!P.hs,()=>hsSwitch(true)),upill(T("hs.off"),!P.hs,()=>hsSwitch(false))]:[]));
+  const ub=$("#uexb"); if(ub) ub.hidden=!UBY[c.uid];      // にがて ボックスの 計算スプリントの式には 例題が ない
   const pic=$("#qpic"); if(pic) pic.replaceChildren(...(c.picture?[MH_MATHVIEW.pictureSVG(c.picture,document)].filter(Boolean):[]));
    const qq=$("#qq"); qq.className="big"+(P.hs?" hscw":rbp(c.q).length>16?" long":""); if(P.hs){ qq.textContent=""; qq.setAttribute("aria-label",c.q); hsRender(); } else { qq.removeAttribute("aria-label"); showQuestion(qq,c); } clockIn(qq,c.uid,c.q);
   if(c.subj==="eigo") qq.insertAdjacentHTML("beforeend",spkBtn("eigo",c.q));
@@ -5847,8 +6048,9 @@ function uJudge(right){
   } else {
     c.tries++;
     if(!p.missObjs.includes(c)){ p.misses.push(`${c.q} → ${c.a}`); p.missObjs.push(c); }
-    if(c.tries<2&&c.mode==="cells"&&p.hs){ fb.className="fb ng"; hsRetry(fb); p.lock=false; return; }
-    if(c.tries<2){ fb.className="fb ng"; fb.textContent=T("u.retry"); p.inp={f:(c.len||[]).map(()=>""),at:0}; if(c.mode!=="choice4") uShowInp(); p.lock=false; return; }
+    const again=c.tries<2&&p.sm!=="sd";      // サドンデスは やりなおしなし
+    if(again&&c.mode==="cells"&&p.hs){ fb.className="fb ng"; hsRetry(fb); p.lock=false; return; }
+    if(again){ fb.className="fb ng"; fb.textContent=T("u.retry"); p.inp={f:(c.len||[]).map(()=>""),at:0}; if(c.mode!=="choice4") uShowInp(); p.lock=false; return; }
     mark="×"; p.ng++;
     fb.className="fb ng"; fb.textContent=T("fb.ng",c.a); wait=1700;
     if(c.mode==="choice4") $("#area").querySelectorAll(".choice").forEach(e=>{ if(e.dataset.c===c.a) e.classList.add("right"); else e.classList.add("wrong"); });
@@ -5858,6 +6060,8 @@ function uJudge(right){
   p.marks.push(mark); $("#um").innerHTML=uMarksHtml(p.marks,12);
   p.uSt=p.uSt||{}; const us=p.uSt[c.uid]=p.uSt[c.uid]||{n:0,o:0}; us.n++; if(mark==="○") us.o++;
   $("#sc").textContent=p.ok;
+  boxNote(p,mark==="○");          // にがて ボックス：1回目で ○ なら けす、△・× なら ためる
+  if(spEnd(p,mark==="○",wait)) return;
   setTimeout(()=>{ if(P!==p) return; if(p.left>0&&timerId){ fb.className="fb"; fb.textContent=""; unitNext(); } },wait);
 }
 function uKeydown(e){
