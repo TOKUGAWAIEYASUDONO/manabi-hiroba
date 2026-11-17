@@ -2330,7 +2330,7 @@ function homeNext(x,best){
 }
 /* 組みこみアプリ（MIT・GIGAyama作）：apps/README.md に出典 */
 function extTiles(){
-  return [["apps/100masu/index.html","100","100マス けいさん","たし算《ざん》・ひき算《ざん》・かけ算《ざん》の 100マス"],["apps/qalc/index.html","Q","Qalc（カルク）","1〜6年《ねん》の けいさんゲーム"]]
+  return [["apps/100masu/index.html","100","100マス けいさん","たし算《ざん》・ひき算《ざん》・かけ算《ざん》の 100マス"]]
     .map(([u,i,t,d])=>`<a class="tile ext" href="${u}"><span class="tico"><span class="extico">${i}</span></span><span class="tbody"><span class="tt">${t}</span><span class="td">${d}</span></span></a>`).join("");
 }
 function gameTile(x,b){

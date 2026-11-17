@@ -1,74 +1,16 @@
 <!doctype html>
-<html lang="ja">
-  <head>
-    <meta charset="UTF-8" />
-    <!--
-      インストールの合図(beforeinstallprompt)を、いちばん先に受け取る。
-      Chrome は条件がそろうと即座にこのイベントを出すため、React や CSS の
-      読みこみより後だと取りこぼし、通信が遅い端末で「インストール」ボタンが出なくなる。
-      中身と、インラインにしていない理由は public/pwa-install.js に書いてある。
-    -->
-    <script src="./pwa-install.js"></script>
-    <!--
-      Content Security Policy
-      GitHub Pages は HTTP レスポンスヘッダを設定できないため meta で指定する。
-      この方式では frame-ancestors / report-uri / sandbox は効かないので、変更したときは
-      全画面を手で踏んでコンソールに違反が出ないことを確かめること。
-
-      各指定の理由:
-        script-src 'self'          … CDNからの動的読み込みをやめ、すべて同梱した
-        style-src  'unsafe-inline' … テーマ切り替えが動的<style>、framer-motionがstyle属性を書きかえるため必須
-        font-src   'self'          … フォントも同梱したので外部は不要
-        connect-src                … PeerJS のシグナリング(へやの番号のやりとり)だけを許可する
-        object-src 'none' / base-uri / form-action … 使っていない機能をふさぐ
-
-      WebRTC の ICE(STUN/TURN)は CSP では制御できない。
-      stun:／turn: を connect-src に書いても、ブラウザは「不正なソース」として無視する
-      （webrtc-src 相当のディレクティブは現在のブラウザに存在しない）。
-      接続先そのものは src/roomAccess.js の PEER_OPTIONS に明示しており、
-      校内フィルタで許可が必要なホストは README にまとめてある。
-    -->
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; font-src 'self'; img-src 'self' data:; connect-src 'self' https://0.peerjs.com wss://0.peerjs.com; worker-src 'self'; manifest-src 'self'; media-src 'none'; object-src 'none'; frame-src https://gamification.giga-school.com; base-uri 'self'; form-action 'none'" />
-    <link rel="icon" type="image/png" href="./favicon.png" />
-    <link rel="icon" type="image/png" sizes="192x192" href="./icon-192.png" />
-    <link rel="icon" type="image/png" sizes="512x512" href="./icon-512.png" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-    <title>Qalc | カルク ～目指せ、計算マスター～</title>
-    <meta name="description" content="小学生向け計算ゲーム学習アプリ。みんなで楽しく算数を学ぼう！" />
-    <meta property="og:type" content="website">
-    <meta property="og:site_name" content="GIGA school">
-    <meta property="og:locale" content="ja_JP">
-    <meta property="og:title" content="Qalc | カルク ～目指せ、計算マスター～">
-    <meta property="og:description" content="小学生向け計算ゲーム学習アプリ。みんなで楽しく算数を学ぼう！">
-    <meta property="og:url" content="https://qalc.giga-school.com/">
-    <meta property="og:image" content="https://giga-school.com/assets/og.png">
-    <meta property="og:image:width" content="1200">
-    <meta property="og:image:height" content="630">
-    <meta property="og:image:alt" content="GIGA school｜学校で使える Web アプリ">
-    <meta name="twitter:card" content="summary_large_image">
-    <!-- 本文フォントは自分のサイトから配る(src/main.jsx で読みこみ)。外部への通信はない -->
-    <link rel="manifest" href="./manifest.webmanifest" />
-    <meta name="theme-color" content="#FF6B6B" />
-    <link rel="apple-touch-icon" href="./apple-touch-icon.png" />
-    <meta name="apple-mobile-web-app-capable" content="yes" />
-    <meta name="mobile-web-app-capable" content="yes" />
-    <meta name="apple-mobile-web-app-status-bar-style" content="default" />
-    <meta name="apple-mobile-web-app-title" content="Qalc" />
-    <script type="module" crossorigin src="./assets/index-BYfs8Nvd.js"></script>
-    <link rel="stylesheet" crossorigin href="./assets/index-BYMYW7tH.css">
-  </head>
-  <body>
-    <div id="root"></div>
-    <!-- 学習ログを記録ハブ（まなびクエスト）へ写す。読むだけで、このアプリの記録には触れない -->
-
-  <!-- 利用規約・プライバシーへの行き先。中身は正本の部品
-       standards/web/giga-app-links.js（配布物 public/giga-app-links.js）が、
-       src/App.jsx のフッターに置いた <span data-giga-links> の中に出す。
-
-       ⚠️ あのフッターは {view !== 'game' && ...} で、あそんでいるあいだは
-          置き場所ごと消える。部品はそれを見て出しなおす（正本 #112）。
-
-       ⚠️ data-links は置き場所の側に書いてある。 -->
-  <script src="./giga-app-links.js" defer></script>
-</body>
-</html>
+<html lang="ja"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>まなびひろば</title>
+<meta http-equiv="refresh" content="1;url=../../index.html#units?kid=1&amp;subj=sansu">
+<style>body{font-family:sans-serif;background:#e8f2e3;color:#1f4a3a;text-align:center;padding:48px 16px;font-size:20px;line-height:1.7}a{color:#1f6b4a;font-weight:bold}</style>
+</head><body>
+<p>Qalc（カルク）は「けいさん スプリント」に なかまいり しました。</p>
+<p><a href="../../index.html#units?kid=1&amp;subj=sansu">けいさん スプリントへ</a></p>
+<script>
+/* 前の Qalc のサービスワーカーを止めてから移動する（記録 qalc_* は消さない） */
+(async()=>{try{if(navigator.serviceWorker){const rs=await navigator.serviceWorker.getRegistrations();for(const r of rs){if(r.scope.indexOf("/apps/qalc/")>=0)await r.unregister();}}
+if(self.caches){const ks=await caches.keys();for(const k of ks){if(k.indexOf("qalc-cache-")===0)await caches.delete(k);}}}catch(e){}
+location.replace("../../index.html#units?kid=1&subj=sansu");})();
+</script>
+</body></html>
