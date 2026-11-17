@@ -1463,9 +1463,10 @@ body[data-v=host] .wrap{max-width:none;padding:0}
 <script src="data/gen/sansu-34.js?v=d8e15b90"></script>
 <script src="data/gen/sansu-56.js?v=b0125467"></script>
 <script src="data/gen/textbook-extra.js?v=b2d3f58f"></script>
-<script src="data/units.js?v=ea0deb93"></script>
-<script src="data/tools-viz.js?v=929e0edf"></script>
-<script src="data/collection.js?v=f5963821"></script>
+<script src="data/gen/bunsho.js?v=8a761a98"></script>
+<script src="data/units.js?v=03ebc862"></script>
+<script src="data/tools-viz.js?v=bfaebda6"></script>
+<script src="data/collection.js?v=afa8fd37"></script>
 <script>
 /* ================= 画面の文言（1つの表） =================
    TX["キー"] = [ふつうの文言, 1〜2年の「やさしい文字」]（やさしい側がないものは同じ文言）。
@@ -2161,7 +2162,7 @@ function mathText(root){
   if(!root) return;
   const w=document.createTreeWalker(root,NodeFilter.SHOW_TEXT), nodes=[]; let n;
   while((n=w.nextNode())) if(/\d+(?:と\d+)?\/\d+/.test(n.nodeValue)&&!n.parentElement.closest("rt,.frac,script,style")) nodes.push(n);
-  nodes.forEach(n=>n.replaceWith(MH_MATHVIEW.fracNodes(n.nodeValue,document)));
+  nodes.forEach(n=>{ const f=MH_MATHVIEW.fracNodes(n.nodeValue,document); if(f.querySelector&&f.querySelector(".frac")) n.replaceWith(f); });      // 分数に ならない文字（「1/2L」など）は そのまま（入れかえると 見はりが また よんで 止まらなくなる）
 }
 function mathIn(root){ mathText(root); return root; }
 new MutationObserver(ms=>{ for(const m of ms){

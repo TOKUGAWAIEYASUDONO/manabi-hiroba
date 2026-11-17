@@ -51,7 +51,8 @@
     "m1-add10-small","m1-add10-ten","m1-make10","m1-add-over10","m1-sub10-small","m1-sub10-ten","m1-sub-over10","m1-add-2d1-no","m1-add3-under10","m1-add3-over10","m2-add-2d-no","m2-add-2d-ones","m2-add-2d-100","m2-add-2d1d","m2-sub-2d-no","m2-sub-2d-ones","m2-sub-100","m2-kuku-2","m2-kuku-3","m2-kuku-4","m2-kuku-5","m2-kuku-6","m2-kuku-7","m2-kuku-8","m2-kuku-9","m3-add-3d-no","m3-add-3d-ones","m3-add-3d-tens","m3-add-3d-1000","m3-sub-3d-no","m3-sub-3d-ones","m3-sub-3d-chain","m3-sub-3d-zero","m3-mul-2d1d-no","m3-mul-2d1d-carry","m3-mul-3d1d","m3-mul-2d2d-no","m3-mul-2d2d-carry","m3-div-kuku","m3-div-rem-small","m3-div-rem-large","m3-dec-add-no","m3-dec-add-carry","m3-dec-sub",
     "m4-div-2d1d-exact","m4-div-2d1d-rem","m4-div-3d1d-short","m4-div-3d1d-zero","m4-div-3d1d-rem","m4-div-2d2d-exact","m4-div-2d2d-rem","m4-div-3d2d-1q","m4-div-3d2d-2q","m4-mul-3d2d-no","m4-mul-3d2d-carry","m4-dec-add-hundredth","m4-dec-sub-hundredth","m4-dec-mul-int","m4-dec-div-int","m4-frac-mixed-add","m4-frac-mixed-sub",
     "m5-dec-mul-tenths","m5-dec-mul-hundredths","m5-dec-div-tenths","m5-dec-div-hundredths","m5-frac-reduce-one","m5-frac-reduce-multi","m5-frac-common-multiple","m5-frac-common-coprime","m5-frac-add-simple","m5-frac-add-reduce","m5-frac-sub-simple","m5-frac-sub-reduce","m5-frac-mul-int","m5-frac-div-int",
-    "m6-frac-mul-proper","m6-frac-mul-cross","m6-frac-div-proper","m6-frac-div-mixed","m6-mix-dec-frac","m6-ratio-reduce","m6-speed-distance","m6-speed-time"
+    "m6-frac-mul-proper","m6-frac-mul-cross","m6-frac-div-proper","m6-frac-div-mixed","m6-mix-dec-frac","m6-ratio-reduce","m6-speed-distance","m6-speed-time",
+    "m1-bun-awase","m1-bun-nokori","m1-bun-chigai","m1-bun-junjo","m1-bun-3kazu","m1-bun-add20","m1-bun-sub20","m1-nanjuu","m2-bun-add","m2-bun-sub","m2-bun-gyaku","m2-bun-kake","m2-bun-tani","m2-nanjuu","m2-kuku-1","m3-bun-addsub","m3-bun-kake","m3-bun-bai","m3-bun-amari","m3-bun-kiri","m3-bun-tani","m3-byou","m4-bun-bai","m4-bun-shiki","m4-bun-shosu","m5-bun-wariai","m5-bun-buai","m6-bun-hi","m6-bun-bunsu"
   ];
   const IDX = {}; UNIT_IDS.forEach((id, i) => { IDX[id] = i; });
   const GRADE_FIX = { "m6-hayasa": 5, "m5-bunsu-int": 6, "m5-frac-mul-int": 6, "m5-frac-div-int": 6, "m6-speed-distance": 5, "m6-speed-time": 5 }; /* 現行教科書に合わせて学年を直した単元（IDは互換のため据え置き） */
@@ -522,14 +523,15 @@
   const b36 = (n, w) => Math.min(Math.pow(36, w) - 1, Math.max(0, n | 0)).toString(36).toUpperCase().padStart(w, "0");
   const sum3 = t => { let h = 7; for (const c of t) h = (h * 31 + c.charCodeAt(0)) % 46656; return h.toString(36).toUpperCase().padStart(3, "0"); };
   const HEAD = 3 + 3 + 3 + 3 + 2 + DECOR.length + 2;
-  /* たんけんメモ（あるときだけ 末尾に 28字）：ひろばの物 16ビット(4字)＋単元 20ビットずつ×6(24字) */
-  const MEMO_LEN = 4 + 4 * Math.ceil(UNIT_IDS.length / 20);
+  /* たんけんメモ（あるときだけ 末尾）：ひろばの物 16ビット(4字)＋単元 20ビットずつ(4字ずつ)。
+     単元が ふえると かたまりも ふえる。読むときは 前の版の 少ない かたまりの 文字も 読める（単元は 末尾に 足すだけなので 番号は 同じ） */
+  const MEMO_CH = Math.ceil(UNIT_IDS.length / 20);
   function memoStr(S) {
     if (!S.mo.length && !S.mu.length) return "";
     let m = 0; MEMO_O.forEach((id, i) => { if (S.mo.includes(id)) m |= 1 << i; });
-    let out = b36(m, 4);
-    for (let c = 0; c * 20 < UNIT_IDS.length; c++) { let v = 0; for (let i = 0; i < 20; i++) { const id = UNIT_IDS[c * 20 + i]; if (id && S.mu.includes(id)) v |= 1 << i; } out += b36(v, 4); }
-    return out;
+    const ch = [];
+    for (let c = 0; c < MEMO_CH; c++) { let v = 0; for (let i = 0; i < 20; i++) { const id = UNIT_IDS[c * 20 + i]; if (id && S.mu.includes(id)) v |= 1 << i; } ch.push(v); }
+    return b36(m, 4) + ch.map(v => b36(v, 4)).join("");
   }
   function mkStr(S, force) {
     const M = S.mk, ids = MK_IDS.filter(id => M.own[id]);
@@ -611,7 +613,8 @@
     }
     const n = rd(2);
     const rest = body.length - (p + n * 2);
-    if (!(n >= 0) || (rest !== 0 && rest !== MEMO_LEN)) return null;
+    const nch = (rest - 4) / 4;
+    if (!(n >= 0) || (rest !== 0 && !(Number.isInteger(nch) && nch >= 1 && nch <= MEMO_CH))) return null;
     const u = {}, seen = new Set();
     for (let i = 0; i < n; i++) {
       const v = rd(2), idx = Math.floor(v / 4), st = v % 4;
@@ -622,7 +625,7 @@
     if (rest) {
       const mm = rd(4); if (!(mm >= 0) || mm >= (1 << MEMO_O.length)) return null;
       MEMO_O.forEach((id, i) => { if (mm & (1 << i)) mo.push(id); });
-      for (let c = 0; c * 20 < UNIT_IDS.length; c++) {
+      for (let c = 0; c < nch; c++) {
         const v = rd(4); if (!(v >= 0 && v < (1 << 20))) return null;
         for (let i = 0; i < 20; i++) if (v & (1 << i)) { const id = UNIT_IDS[c * 20 + i]; if (!id) return null; mu.push(id); }
       }

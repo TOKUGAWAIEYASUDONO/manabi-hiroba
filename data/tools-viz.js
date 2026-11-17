@@ -82,6 +82,16 @@
     if (per < 1 || per > 12 || rows < 1 || rows > 12 || per * rows > 100) return null;
     return { id: "array", per, total: per * rows, rows, kind: "mul" };
   }
+  /* 1年の 文章題（data/gen/bunsho.js）：単元IDと ことばから 式を 読む（あわせて＝＋、のこり・ちがい＝−）。じゅんばんは 図に しない */
+  function wordExpr1(unit, q) {
+    const s = plain(q).replace(/1れつ/g, ""), n = (s.match(/\d+/g) || []).map(Number), E = (nums, ops) => ({ nums, ops });
+    if (unit === "m1-bun-3kazu" && n.length === 3) return E(n, /おりて/.test(s) ? ["-", "+"] : /のこり/.test(s) ? ["-", "-"] : ["+", "+"]);
+    if (n.length !== 2 || !/^m1-bun-(awase|nokori|chigai|add20|sub20)$/.test(unit)) return null;
+    if (/それより/.test(s)) return E(n, ["-"]);
+    if (/あと/.test(s)) return E([n[1], n[0]], ["-"]);
+    if (/のこり|ちがい|すわれない|もらえない|のらない/.test(s)) return /のこり/.test(s) ? E(n, ["-"]) : E([Math.max(...n), Math.min(...n)], ["-"]);
+    return E(n, ["+"]);
+  }
   function kuraiOf(ctx, q, e) {
     const s = plain(q), unit = ctx.unit || "";
     const pairs = [...s.matchAll(/(\d+)が\s*(\d+)こ/g)].map(m => [+m[1], +m[2]]).filter(([p]) => /^10*$/.test(String(p)));
@@ -107,6 +117,7 @@
   }
   function bunsuOf(ctx, q, e) {
     const s = plain(q);
+    if (/^m6-bun-/.test(ctx.unit || "")) return null;                       // 分数の かけ算・わり算の 文章題は 面積図が いる（いまは 出さない）
     let m = s.match(/(\d+)つに\s*わけた\s*(\d+)つ\s*ぶん/);
     if (m && +m[1] >= 2 && +m[1] <= 12) return { id: "bunsu", fr: [{ w: 0, n: +m[2], d: +m[1] }], hide: true };
     const fr = parseFracs(s);
@@ -127,7 +138,7 @@
     if (NO_TOOL.test(unit) || !q) return [];
     const out = [], add = t => { if (t && !out.some(x => x.id === t.id)) out.push({ ...t, label: LABEL[t.id] }); };
     const h = ctx.hissan && typeof ctx.hissan === "object" ? ctx.hissan : null;
-    const e = h && h.a != null && h.b != null && OPN[h.op] ? { nums: [Number(h.a), Number(h.b)], ops: [OPN[h.op]] } : parseExpr(q);
+    const e = h && h.a != null && h.b != null && OPN[h.op] ? { nums: [Number(h.a), Number(h.b)], ops: [OPN[h.op]] } : parseExpr(q) || wordExpr1(unit, q);
     if (PV_UNITS.has(unit)) { add(kuraiOf(ctx, q, null)); return out; }
     add(bunsuOf(ctx, q, e)); if (out.length) return out;
     const s = plain(q), mk = s.match(/(\d+)は\s*(\d+)と\s*いくつ/);

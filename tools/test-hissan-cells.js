@@ -75,7 +75,7 @@ assert.equal(H({a:5,b:9,op:'−'},{val:'-4'}),null);
 
 // 実データ：ひっ算のある単元の問題は、マスにできる（または わざと しない）こと・正解の数字が答えと合うこと
 const w={console,Math,Date}; w.window=w; vm.createContext(w);
-for(const f of ['data/kanji-grade.js','data/questions.js','data/calc.js','data/choices.js','data/quizlib.js','data/mathview.js','data/gen/core.js','data/gen/rika.js','data/gen/other.js','data/gen/sansu-12.js','data/gen/sansu-34.js','data/gen/sansu-56.js','data/gen/textbook-extra.js','data/units.js'])
+for(const f of ['data/kanji-grade.js','data/questions.js','data/calc.js','data/choices.js','data/quizlib.js','data/mathview.js','data/gen/core.js','data/gen/rika.js','data/gen/other.js','data/gen/sansu-12.js','data/gen/sansu-34.js','data/gen/sansu-56.js','data/gen/textbook-extra.js','data/gen/bunsho.js','data/units.js'])
   if(fs.existsSync(path.join(root,f))) vm.runInContext(fs.readFileSync(path.join(root,f),'utf8'),w,{filename:f});
 const U=w.MH_UNITS; let made=0, units=new Set();
 for(const u of U.UNITS.filter(u=>u.status==='ready'&&u.gen)){

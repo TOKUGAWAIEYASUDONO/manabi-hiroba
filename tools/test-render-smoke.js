@@ -28,7 +28,7 @@ const ctx={window,document,location:window.location,localStorage:storage,session
   fetch(){return Promise.resolve({ok:false})},MutationObserver:class{observe(){} disconnect(){}}};
 vm.createContext(ctx);
 window.RIKA_PUBLIC=process.env.RIKA_SMOKE_PUBLIC==='0'?false:/window\.RIKA_PUBLIC\s*=\s*true\s*;/.test(html);
-for(const file of ['data/kanji-grade.js','data/questions.js','data/calc.js','data/choices.js','data/quizlib.js','data/mathview.js','data/ngwords.js','data/cooplib.js','data/gen/core.js',...(window.RIKA_PUBLIC?['data/gen/rika.js']:[]),'data/gen/other.js','data/gen/sansu-12.js','data/gen/sansu-34.js','data/gen/sansu-56.js','data/gen/textbook-extra.js','data/units.js','data/tools-viz.js','data/collection.js']) {
+for(const file of ['data/kanji-grade.js','data/questions.js','data/calc.js','data/choices.js','data/quizlib.js','data/mathview.js','data/ngwords.js','data/cooplib.js','data/gen/core.js',...(window.RIKA_PUBLIC?['data/gen/rika.js']:[]),'data/gen/other.js','data/gen/sansu-12.js','data/gen/sansu-34.js','data/gen/sansu-56.js','data/gen/textbook-extra.js','data/gen/bunsho.js','data/units.js','data/tools-viz.js','data/collection.js']) {
   vm.runInContext(fs.readFileSync(path.join(root,file),'utf8'),ctx,{filename:file});
 }
 Object.assign(ctx,window);

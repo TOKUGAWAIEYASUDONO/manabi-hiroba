@@ -4,7 +4,7 @@ const fs = require('fs'), path = require('path'), vm = require('vm');
 const root = path.join(__dirname, '..'), ctx = { window: {} }; vm.createContext(ctx);
 for (const f of ['data/kanji-grade.js', 'data/questions.js', 'data/choices.js', 'data/gen/core.js', ...fs.readdirSync(path.join(root, 'data/gen')).filter(x => x !== 'core.js' && x.endsWith('.js')).sort().map(x => 'data/gen/' + x), 'data/units.js']) vm.runInContext(fs.readFileSync(path.join(root, f), 'utf8'), ctx, { filename: f });
 const U = ctx.window.MH_UNITS, C = require('../data/collection.js');
-const units = U.UNITS.filter(u => u.subj === 'sansu' && u.step >= 144 && u.step < 300);
+const units = U.UNITS.filter(u => u.subj === 'sansu' && u.step >= 144 && u.step < 200);   // step 200〜 は 文章題（tools/test-units-bunsho.js が検査）
 const gcd = (a, b) => { while (b) [a, b] = [b, a % b]; return a; };
 const dp = s => (String(s).split('.')[1] || '').length;
 const toInt = (s, p) => Math.round(Number(s) * 10 ** p);

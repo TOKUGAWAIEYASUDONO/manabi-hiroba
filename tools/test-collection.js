@@ -156,8 +156,8 @@ t("clean：壊れた保存を直す", () => {
 });
 
 /* ---- バックアップ ---- */
-const sem3 = () => {       // 3年 1学期ぶん：3年の算数17単元＋ほかの学年 15単元
-  const S = C.fresh(D), m3 = C.UNIT_IDS.filter(i => i[0] === "m" && i[1] === "3"), others = C.UNIT_IDS.filter(i => i[0] === "m" && i[1] === "2").concat(C.UNIT_IDS.filter(i => i[0] === "m" && i[1] === "1")).slice(0, 15);
+const sem3 = () => {       // 3年 1学期ぶん：3年の算数（数を 39単元に 固定。単元が ふえても 1学期に やる数は ふえない）＋ほかの学年 15単元
+  const S = C.fresh(D), m3 = C.UNIT_IDS.filter(i => i[0] === "m" && i[1] === "3").slice(0, 39), others = C.UNIT_IDS.filter(i => i[0] === "m" && i[1] === "2").concat(C.UNIT_IDS.filter(i => i[0] === "m" && i[1] === "1")).slice(0, 15);
   run(S, D, [...m3, ...others].map(U)); run(S, D + 1, m3.map(U)); run(S, D + 2, m3.slice(0, 5).map(U));
   S.ac.e = 120; S.ac.s = 35; S.own = ["tree", "flower", "bench"]; S.pl = { tree: 2, flower: 7 };
   S.mk = C.mkFresh();      // まなびっこ（v3.0）の前の記録として HR1 を くらべる（まなびっこは 下の v3.0 の テスト）
