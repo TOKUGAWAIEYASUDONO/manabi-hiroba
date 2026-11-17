@@ -106,7 +106,7 @@ function pub(room, host) {
     ...(room.co ? { co: room.co.pub(Date.now(), host) } : {}),
     players: room.co ? coPlayers(room, host) : [...room.players.values()].map(p => room.qz
       ? { pid: p.pid, name: nm(p), emoji: p.emoji, ...mkPub(p), v: p.v, ok: p.ok, ng: p.ng, st: p.st | 0, lp: p.lp | 0, lc: p.lc | 0, ...(host && room.qz.phase === "end" ? { rec: p.rec || "" } : {}), ...(host && room.qz.phase === "q" && room.qz.answeredBy(p.pid) ? { a: 1 } : {}) }
-      : { pid: p.pid, name: nm(p), emoji: p.emoji, ...mkPub(p), v: p.v, ok: p.ok, ng: p.ng, ...(host && p.m1 ? { m1: 1 } : {}) }),
+      : { pid: p.pid, name: nm(p), emoji: p.emoji, ...mkPub(p), v: p.v, ok: p.ok, ng: p.ng, ...(host && p.m1 ? { m1: p.m1at || 1 } : {}) }),
     ...(room.mode === "m100" && host ? { m1: M100.rank(m1Entries(room)) } : {}),      // 100マス はっぴょう：ランキングは 先生の画面だけ（児童には送らない）
     ...(room.status === "ended" && room.mode !== "m100" ? { awards: AW.awards(room.mode, room.rule, [...room.players.values()]).map(c => host ? c : { ...c, winners: c.winners.map(w => ({ ...w, name: "" })) }), ...(host ? { awardStats: [...room.players.values()].map(p=>({pid:p.pid,name:p.name,correct:p.ok,streak:p.maxStreak||0,averageMs:p.speedCount?Math.round(p.speedSum/p.speedCount):null,comeback:p.comeback||0,chest:p.chest||0,star:p.star||0,boost:p.boost||0})) } : {}) } : {}),
     ...(room.qz ? { quiz: room.qz.pub() } : {})

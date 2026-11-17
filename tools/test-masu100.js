@@ -215,7 +215,7 @@ t("server.js・index.html が この部品を読む（同じ決まり）", () =>
     const h = last(host), k = last(kid);
     assert(h.m1 && h.m1.add.n === 2 && h.m1.mul.n === 1, "先生には ランキング");
     assert.deepStrictEqual(h.m1.add.cats[0].l.map(x => x[0]), [a.pid], "ありえない 1秒は はやさに 出ない");
-    assert(h.players.find(p => p.pid === a.pid).m1 === 1);
+    assert(h.players.find(p => p.pid === a.pid).m1 > 1, "先生には 送った時刻（さいきん みせた子の 表示）");
     assert(!("m1" in k) && k.m1me === 1 && k.players.every(p => p.name === "" && !("m1" in p)), "児童には ランキング・ほかの子の 名前を 送らない（自分が みせたか だけ）");
     assert(!JSON.stringify(kid.msgs).includes("そら"));
     assert.strictEqual((await post("end", { code: r.code, hostKey: r.hostKey })).s, 200);

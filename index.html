@@ -1057,8 +1057,14 @@ body[data-v=host] .wrap{max-width:none;padding:0}
 .m1r b{font-size:20px;font-variant-numeric:tabular-nums;text-align:right}.m1r b small{display:block;font-size:13px;font-weight:600;color:var(--muted)}
 .m1rule{margin:10px 0 4px}
 .m1none{background:#fff3c4;border:2px solid #e0b030;border-radius:12px;padding:8px 12px;font-weight:700}
-.btn.m1go{position:sticky;bottom:10px;z-index:5;box-shadow:0 4px 12px rgba(0,0,0,.25);display:flex;align-items:center;justify-content:center;gap:8px;width:100%;margin:12px 0 4px;font-size:26px;min-height:72px;background:var(--go);color:#fff}
+.btn.m1go{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;margin:12px 0 4px;font-size:26px;min-height:72px;background:var(--go);color:#fff}
 .btn.m1go:disabled{background:#c4cdc8;color:#2a3a33}
+.m1new{margin-top:6px;width:100%;text-align:left;font-size:19px}
+.m1nl{font-size:17px;color:var(--chalk);font-weight:700}
+.m1ni{display:flex;align-items:center;gap:6px;min-height:34px;cursor:pointer;animation:m1fade 1.2s ease-out}
+.m1ni .fc,.m1ni .mkav{width:28px;height:28px;flex:none}
+@keyframes m1fade{from{background:rgba(255,224,102,.45)}to{background:transparent}}
+@media (prefers-reduced-motion:reduce){.m1ni{animation:none}}
 .m1msg{min-height:26px;text-align:center;font-weight:800;font-size:18px}
 .px.m1px{flex:none;padding:12px 22px 18px;height:100vh;height:100dvh;min-height:0;box-sizing:border-box}
 .m1pv{text-align:center}
@@ -4166,7 +4172,7 @@ function hrPub(r,host){
     ...(r.co?{co:r.co.pub(Date.now(),host)}:{}),
     players:r.co?hrCoPlayers(r,host):[...r.players.values()].map(p=>r.qz
       ?{pid:p.pid,name:nm(p),emoji:p.emoji,...mkPubOf(p),v:p.v,ok:p.ok,ng:p.ng,st:p.st|0,lp:p.lp|0,lc:p.lc|0,...(host&&r.qz.phase==="end"?{rec:p.rec||""}:{}),...(host&&r.qz.phase==="q"&&r.qz.answeredBy(p.pid)?{a:1}:{})}
-      :{pid:p.pid,name:nm(p),emoji:p.emoji,...mkPubOf(p),v:p.v,ok:p.ok,ng:p.ng,...(host&&p.m1?{m1:1}:{})}),
+      :{pid:p.pid,name:nm(p),emoji:p.emoji,...mkPubOf(p),v:p.v,ok:p.ok,ng:p.ng,...(host&&p.m1?{m1:p.m1at||1}:{})}),
     ...(r.qz?{quiz:r.qz.pub()}:{}),
     ...(r.mode==="m100"&&host?{m1:MASU.rank([...r.players.values()].filter(p=>p.m1).map(p=>({pid:p.pid,s:p.m1,t:p.m1t})))}:{})};      // 100マス はっぴょう：ランキングは 先生の画面だけ
 }
@@ -4899,7 +4905,7 @@ function renderHost(){
     if(s.mode==="m100"){      // 100マス はっぴょう：待合室のまま 受けとって、その場で 出す
       const k2=s.status==="lobby"?"m1":"m1end";
       if(k2!==kind){ kind=k2; prev=null; dockSet(k2); m1HostBuild(px,s,joinUrl,B); }
-      m1HostUpd(s,B); popStep(s); prev=s; return;
+      m1HostUpd(s,B); prev=s; return;      // 吹き出しは 出さない（表に かぶるため）。みせた子は 左の列に 出す
     }
     if(s.mode==="quiz"&&s.status!=="lobby"){ kind="quiz"; qzHostDraw(s,()=>""); popStep(s); return; }
     if(isCoB(s.mode)&&s.status!=="lobby"){      // ボスバトル・じんとりの大画面
@@ -5667,12 +5673,12 @@ function m1KidView(s){
     <div class="q"><div class="note">${T("l.room")} ${esc(s.code)}・${M1MODE.ico} ${M1MODE.t}</div>
       <div class="m1me">${me?`${fm(me)} ${esc(me.name)}`:""}</div>
       <div class="note">${end?T("m1.end"):T("m1.lead")}</div></div>
-    <h2 class="m1h2">${T("m1.mine")}</h2>
-    <div class="m1cs">${MASU.OPS.map(card).join("")}</div>
-    <p class="note m1rule">${T("m1.rule")}${other?`<br>${T("m1.other",other)}`:""}</p>
     ${any?"":`<p class="m1none" role="status">${T("m1.none")}</p>`}
     ${end?"":`<button type="button" class="btn m1go" id="m1go"${!any?" disabled":""}>${ic("users")}${T(s.m1me?"m1.again":"m1.show")}</button>`}
     <div class="m1msg" id="m1msg" role="status">${s.m1me?T("m1.sent"):""}</div>
+    <h2 class="m1h2">${T("m1.mine")}</h2>
+    <div class="m1cs">${MASU.OPS.map(card).join("")}</div>
+    <p class="note m1rule">${T("m1.rule")}${other?`<br>${T("m1.other",other)}`:""}</p>
     <p class="note m1pv">${ic("lock")} ${T("m1.pv")}</p>
   </div>${privacy()}`;
   const b=$("#m1go"); if(!b) return;      // おわった あとは ボタンを 出さない
@@ -5691,7 +5697,7 @@ const M1OPT={add:"たし算《ざん》",sub:"ひき算《ざん》",mul:"かけ
 function m1HostBuild(px,s,joinUrl,B){
   px.className="px m1px";
   px.innerHTML=`<div class="m1h"><aside class="m1side"><div class="lead">${T("px.code")}</div><div class="m1code">${esc(s.code)}</div>
-      <div class="qrbox m1qr" id="qrbox"></div><div class="m1cnt">さんか <b id="m1n">0</b>にん<br>みせた <b id="m1s">0</b>にん</div><div class="lockmsg hidden" id="pxlock" role="status">${ic("lock")} ${T("px.locked")}</div></aside>
+      <div class="qrbox m1qr" id="qrbox"></div><div class="m1cnt">さんか <b id="m1n">0</b>にん<br>みせた <b id="m1s">0</b>にん</div><div class="m1new" id="m1new" aria-live="polite"></div><div class="lockmsg hidden" id="pxlock" role="status">${ic("lock")} ${T("px.locked")}</div></aside>
     <div class="m1main"><h2 class="m1ttl">💯 100マス はっぴょう <small id="m1st"></small></h2>
       <div class="m1tabs" role="tablist" aria-label="けいさんの しゅるい">${MASU.OPS.map(op=>`<button type="button" role="tab" class="m1tab" data-op="${op}" aria-selected="false">${M1OPT[op]}<span class="m1tn"></span></button>`).join("")}</div>
       <div class="m1grid" id="m1grid"></div></div></div>`;
@@ -5720,8 +5726,10 @@ function m1HostUpd(s,B){
   const g=document.getElementById("m1grid"); if(g.dataset.h!==html){ g.dataset.h=html; g.innerHTML=html; }
   const chips=document.getElementById("pxchips");      // メニューの中：名前を押すと かえる／ニックネーム／へやから だす
   if(chips) chips.innerHTML=s.players.map(p=>`<button type="button" class="chip nmb" data-pid="${esc(p.pid)}">${fm(p)} ${esc(p.name)}${p.m1?" 💯":""}</button>`).join("")||`<span class="chip more">${T("px.none")}</span>`;
-  const prev=B.m1prev; B.m1prev=new Set(s.players.filter(p=>p.m1).map(p=>p.pid));      // 「みせた」子の 吹き出し（良いことだけ）
-  if(prev){ const evs=s.players.filter(p=>p.m1&&!prev.has(p.pid)).map(p=>({pid:p.pid,name:p.name,emoji:p.emoji,mk:p.mk,ms:p.ms,mh:p.mh,k:"m1"})); if(evs.length) popFeed(evs); }
+  const nw=document.getElementById("m1new");      // 「みせた」子：左の列に さいきんの 3人（表には かぶせない）
+  if(nw){ const rec=s.players.filter(p=>p.m1).sort((a,b)=>b.m1-a.m1).slice(0,3);
+    const h=rec.length?`<div class="m1nl">💯 みせたよ</div>`+rec.map(p=>`<div class="m1ni" data-pid="${esc(p.pid)}" role="button" tabindex="0">${fm(p)}<span class="m1nm">${esc(p.name)}</span></div>`).join(""):"";
+    if(nw.dataset.h!==h){ nw.dataset.h=h; nw.innerHTML=h; } }
 }
 /* --- どんぐり：ホームに もどったとき、前に しらべたあとの 100マスの「数える回」を 数える（1日3こまで・全体の 1日20こ以内） ---
    授業モード・先生の オフ・リンクの col=0 では 何もしない（数えるのも すすめない）。リンクで オフを オンには できない（colMode と同じ） */
