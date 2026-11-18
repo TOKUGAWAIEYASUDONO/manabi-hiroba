@@ -2265,7 +2265,7 @@ function showQr(box,url){
   if(!box||location.protocol==="file:") return;
   const big=!!box.closest(".px");      // 先生の大画面：ふだんは 小さく、おすと 画面いっぱい
   const put=()=>{
-    box.innerHTML=big?`<button type="button" class="qrzb" aria-label="QRコードを 大きく する">${qrCache[url]}<span class="qrzh">🔍 おすと 大きく なるよ</span></button>`:qrCache[url]+`<div class="note" style="text-align:center">${T("qr.t")}</div>`;
+    box.innerHTML=big?`<button type="button" class="qrzb" aria-label="QRコードを おおきく する">${qrCache[url]}<span class="qrzh">🔍 おすと おおきく なるよ</span></button>`:qrCache[url]+`<div class="note" style="text-align:center">${T("qr.t")}</div>`;
     if(big) box.querySelector(".qrzb").onclick=()=>qrZoom(url);
   };
   if(qrCache[url]) return put();
