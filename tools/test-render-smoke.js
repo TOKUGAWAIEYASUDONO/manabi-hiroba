@@ -44,8 +44,7 @@ for(let g=1;g<=6;g++) {
   vm.runInContext(`ui.grade=${g}; renderHome()`,ctx,{filename:`home-${g}`});
   if(vm.runInContext('app.innerHTML',ctx).includes('id="quick"')) throw Error(`quick play remains on home: ${g}`);
   if(!vm.runInContext('app.innerHTML',ctx).includes('class="zones"')) throw Error(`subject zones missing: ${g}`);
-  if(window.RIKA_PUBLIC&&g>=3&&!vm.runInContext('app.innerHTML',ctx).includes('運営者《うんえいしゃ》が 全問《ぜんもん》を 確認《かくにん》')) throw Error(`rika home warning missing: ${g}`);
-  if(!window.RIKA_PUBLIC&&vm.runInContext('app.innerHTML',ctx).includes('rika-warning')) throw Error(`rika home warning shown while private: ${g}`);
+  if(vm.runInContext('app.innerHTML',ctx).includes('rika-warning')) throw Error(`rika AI notice shown: ${g}`);      // 理科の「AI が作り」の注意は出さない（2026-11-18）
 }
 for(const [name,expr] of [['units','renderUnits(new URLSearchParams())'],['teacher','renderTeacher(new URLSearchParams())'],['practice',`renderUnitLink("#u=${window.RIKA_PUBLIC?'r3-living':'m3-amari'}&n=1")`]]) {
   vm.runInContext(expr,ctx,{filename:name});

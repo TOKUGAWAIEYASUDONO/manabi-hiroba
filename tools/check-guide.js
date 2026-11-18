@@ -20,7 +20,7 @@ for (const f of expected) { const s = read(path.join(gdir, f)); if (s === null) 
 if (rikaPublic) {
   for (let g = 3; g <= 6; g++) {
     const f = `g${g}-rika.html`;
-    if (!pageHtml[f] || !pageHtml[f].includes('運営者が全問を確認しました')) err(`公開中の理科ページが不正: ${f}`);
+    if (!pageHtml[f] || /AI ?が作り/.test(pageHtml[f])) err(`公開中の理科ページが不正: ${f}`);
     if (!pageHtml['index.html']?.includes(f)) err(`入口に理科がありません: ${f}`);
   }
 }

@@ -18,9 +18,9 @@ const documented = new Set([...about.matchAll(/<code>(mh_[\w]+)<\/code>/g)].map(
 let errors = 0;
 if (rikaPublic) {
   for (const [file, src] of [['README.md', readme], ['guide/about.html', about], ...[3,4,5,6].map(g => [`guide/g${g}-rika.html`, read(`guide/g${g}-rika.html`)])]) {
-    if (!src.includes('運営者が全問を確認しました') || !src.includes('先生（教員）の確認はまだです') || !src.includes('この もんだい、おかしい？')) { console.error(`${file}: 理科の確認状況の記載が一致しません`); errors++; }
+    if (/理科は ?AI ?が作/.test(src)) { console.error(`${file}: 理科の「AI が作り」の文言は出さない（2026-11-18）`); errors++; }
   }
-  if (!html.includes('運営者《うんえいしゃ》が 全問《ぜんもん》を 確認《かくにん》')) { console.error('index.html: 理科の児童向け注意がありません'); errors++; }
+  if (/AI ?が ?作《つく》り/.test(html)) { console.error('index.html: 理科の「AI が作り」の文言は出さない'); errors++; }
 }
 for (const key of keys) if (key.startsWith('mh_') && !documented.has(key)) { console.error(`保存キーの記載なし: ${key}`); errors++; }
 for (const key of documented) if (!keys.has(key)) { console.error(`未使用の保存キー記載: ${key}`); errors++; }
