@@ -1577,6 +1577,19 @@ body[data-v=host] .wrap{max-width:none;padding:0}
 @keyframes mtpop{0%{transform:translate(-50%,-50%) scale(.3) rotate(-8deg);opacity:0}70%{transform:translate(-50%,-50%) scale(1.15) rotate(-8deg);opacity:1}100%{transform:translate(-50%,-50%) scale(1) rotate(-8deg);opacity:1}}
 @media (prefers-reduced-motion:reduce){.mtneedle{transition:none}.mtwob>svg.mtdial,.mtstamp{animation:none}}
 .mtside .fb{min-height:28px;font-size:18px;margin-bottom:6px}
+.mthint:empty{display:none}
+.mthc{background:#fffdf3;border:3px solid #e0b030;border-radius:14px;padding:8px 10px 10px;margin:0 0 10px;color:var(--ink);text-align:left}
+.mthc h3{margin:0 0 4px;font-size:18px;color:#7a5200}
+.mths+.mths{border-top:2px dashed #ecd9a3;margin-top:6px;padding-top:6px}
+.mths h4{margin:0 0 2px;font-size:16px;color:#1f5fa0}
+.mths p{margin:2px 0;font-size:17px;font-weight:700;line-height:1.5}
+.mthf svg{display:block;width:100%;max-width:440px;height:auto;margin:0 auto}
+.mteq{display:flex;flex-wrap:wrap;align-items:baseline;gap:8px;font-size:22px!important;font-variant-numeric:tabular-nums}
+.mteq span{font-size:13px;font-weight:800;background:#1f5fa0;color:#fff;border-radius:6px;padding:1px 6px}
+.mtc{animation:mtcin .35s ease-out both;transform-box:fill-box;transform-origin:center}
+@keyframes mtcin{from{opacity:0;transform:scale(.3)}to{opacity:1;transform:scale(1)}}
+@media (prefers-reduced-motion:reduce){.mtc{animation:none}}
+.pill.mthb{border-color:#c48a00}.pill.mthb.on{background:#ffd84d;color:var(--ink)}
 .mtans{display:flex;align-items:flex-end;justify-content:center;gap:6px;margin-bottom:8px}
 .mtans .answer{margin:0;min-width:130px;text-align:center}
 .mtu{font-size:28px;font-weight:800}
@@ -7138,7 +7151,7 @@ function lessonEndButton(){
    ステージ1〜11：数直線 1めもり＝1 → ここは どこ → 1めもりは いくつ → 数直線を よむ → ここは どこ2 → はかりの さいだい → 1めもり → はりを よむ → kgと g → ぴったり おかいもの → テスト。
    時間は はからない（カウントダウンなし）。1回 5問（おかいものは 4問・テストは 6問）。1回目で せいかいした 数で ★1〜3。
    ★1つで つぎの ステージが ひらく（1 と はかりの 6 は はじめから）。前の ステージは いつでも もう一回 できる。
-   「ステップで よむ」：はりを よむ 問題を、さいだい → 1めもり → はり の 小問に わける。まちがえると 数字と めもりが 光り、かぞえる 数字が 出る。2回 まちがえたら 答えを 見せて「つぎへ」。
+   「ステップで よむ」：はりを よむ 問題を、さいだい → 1めもり → はり の 小問に わける。まちがえると、はりまでの めもりを 1つずつ かぞえて 見せ、ヒントカード（めもりを まっすぐに のばした 図・1めもりの 大きさ・しき）を 出す。「💡 ヒント」で いつでも 出せる（見たら 1回めの せいかいには 数えない）。2回 まちがえたら 答えを 見せて「つぎへ」。
    きろく：★は mh_meter（端末だけ）。どんぐり・まなびっこの なかよしは ほかの ゲームと 同じく colRun（単元の「できた」は ない＝units:[]）。
    授業モード（#meter?st=N&task=1）：その ステージだけ。まなびっこ・ほかの ステージへの 入口を 出さず、結果は 先生に おくる 文に する。 */
 const MTKEY="mh_meter", MT_N=11;
@@ -7167,7 +7180,7 @@ function mtBuddy(msg){
 function renderMeter(q){
   setLG(ui.grade);
   app.innerHTML=`<div class="play mt"><div class="q">…</div></div>`;
-  loadScript("data/meter.js?v=3ccb4f25",()=>!!window.MH_METER).then(()=>{
+  loadScript("data/meter.js?v=53d6d956",()=>!!window.MH_METER).then(()=>{
     if(params().path!=="meter") return;
     const st=+q.get("st"), task=q.get("task")==="1";
     if(st) mtStart(st,task); else if(LESSON) go("#home"); else mtMenu();
@@ -7200,7 +7213,7 @@ function mtStart(st,task){
     <div class="topbar"><button class="back" id="mtbk">${task?ic("x")+T("back.end"):BK()}</button><span class="mttl"><b>ステージ${st}</b> <span class="note">${S.t}</span></span><span class="mtdots" id="mtdots" aria-hidden="true"></span></div>
     <div class="mtgrid">
       <div class="q mtq"><div class="mtask" id="mtask" aria-live="polite"></div><div class="mtchips" id="mtchips"></div><div class="mtpic" id="mtpic"></div></div>
-      <div class="mtside"><div class="fb" id="fb" aria-live="polite"></div><div id="mtarea"></div><div class="mttools" id="mttools"></div></div>
+      <div class="mtside"><div class="fb" id="fb" aria-live="polite"></div><div class="mthint" id="mthint"></div><div id="mtarea"></div><div class="mttools" id="mttools"></div></div>
     </div></div>`;
   $("#mtbk").onclick=()=>{ if(task) mtEnd(); else go("#meter"); };
   mtQ();
@@ -7212,7 +7225,7 @@ function mtQ(){
   mtSub();
 }
 function mtSub(){
-  const m=MT; m.sub=MH_METER.sub(m.cur,m.steps[m.si]); m.tries=0; m.hl=null; m.inp=["",""]; m.box=0; m.lock=false; m.chs=null; m.reveal=false;
+  const m=MT; m.sub=MH_METER.sub(m.cur,m.steps[m.si]); m.tries=0; m.hl=null; m.inp=["",""]; m.box=0; m.lock=false; m.chs=null; m.reveal=false; m.hintOn=false;
   const fb=$("#fb"); if(fb){ fb.className="fb"; fb.textContent=""; }
   mtDraw();
 }
@@ -7229,7 +7242,15 @@ function mtDraw(){
   $("#mtdots").innerHTML=m.list.map((_,i)=>`<i class="${i<m.i?(m.res[i]?"ok":"ng"):i===m.i?"now":""}"></i>`).join("");
   $("#mtask").textContent=s.ask==="place"?`${q.v} は どこ？ めもりを タッチしよう`:s.q;
   $("#mtchips").innerHTML=m.steps.length>1?m.steps.map((a,i)=>`<span class="mtchip${i<m.si?" ok":i===m.si?" now":""}">${i<m.si?"✓ "+esc(m.chips[i]):["① ","② ","③ "][i]+(a==="max"?"さいだい":a==="tick"?"1めもり":"よむ")}</span>`).join(""):"";
-  mtPic(); mtArea(); mtTools();
+  mtPic(); mtArea(); mtTools(); mtHint();
+}
+/* ヒントカード：かわりに かぞえる 図（めもりを まっすぐに のばした 図）・1めもりの 大きさ・しき。
+   まちがえたとき と「💡 ヒント」で 出す。2回 まちがえたら しきの □ に こたえが 入る */
+function mtHint(){
+  const m=MT, el=$("#mthint"); if(!el) return;
+  if(!m.hintOn||m.lock&&!m.reveal){ el.innerHTML=""; return; }
+  const s=m.sub, q=m.cur, ex=MH_METER.explain(s,{tries:m.tries,reveal:m.reveal,known:m.steps.slice(0,m.si).includes("tick"),extra:q.ask==="shop"?mtSum():undefined});
+  el.innerHTML=`<section class="mthc" aria-label="ヒント"><h3>💡 ヒント</h3>${ex.steps.map(st=>`<div class="mths"><h4>${st.h}</h4>${st.fig?`<div class="mthf">${st.fig}</div>`:""}<p>${st.say}</p>${st.eq?`<p class="mteq"><span>しき</span>${esc(st.eq)}</p>`:""}</div>`).join("")}</section>`;
 }
 function mtPic(anim){
   const m=MT, q=m.cur, M=MH_METER, el=$("#mtpic");
@@ -7253,7 +7274,7 @@ function mtArea(){
   }
   if(s.ask==="shop"){
     area.innerHTML=`<p class="note mthelp">${mtSum()>q.sp.max?"おもすぎて はかれないよ。へらそう。":""}のせると はりが うごくよ。はりを よんで ${M.kgg(q.target)} に しよう</p><div class="mtitems">${q.items.map((it,i)=>`<button type="button" class="mtitem${m.shopOn.includes(i)?" on":""}" data-it="${i}" aria-pressed="${m.shopOn.includes(i)}"><span class="mte" aria-hidden="true">${it.e}</span><span>${it.nm}</span><small>${m.shopOn.includes(i)?"のせた":"？g"}</small></button>`).join("")}</div><div class="mtnext"><button type="button" class="btn" id="mtpt"${m.lock?" disabled":""}>ぴったり！</button></div>`;
-    area.querySelectorAll("[data-it]").forEach(b=>b.onclick=()=>{ if(m.lock) return; const i=+b.dataset.it, k=m.shopOn.indexOf(i); if(k>=0) m.shopOn.splice(k,1); else m.shopOn.push(i); sfx("click"); m.hl=null; mtPic(true); mtArea(); const n=area.querySelector(`[data-it="${i}"]`); if(n) n.focus(); });
+    area.querySelectorAll("[data-it]").forEach(b=>b.onclick=()=>{ if(m.lock) return; const i=+b.dataset.it, k=m.shopOn.indexOf(i); if(k>=0) m.shopOn.splice(k,1); else m.shopOn.push(i); sfx("click"); m.hl=null; mtPic(true); mtArea(); mtHint(); const n=area.querySelector(`[data-it="${i}"]`); if(n) n.focus(); });
     $("#mtpt").onclick=()=>mtJudge(mtSum()); return;
   }
   if(m.ch){
@@ -7269,14 +7290,17 @@ function mtArea(){
   area.querySelectorAll("[data-k]").forEach(b=>b.onclick=()=>mtKey(b.dataset.k));
   area.querySelectorAll("[data-b]").forEach(b=>b.onclick=()=>{ m.box=+b.dataset.b; mtArea(); });
 }
+const s0=m=>m.sub&&m.sub.ask!=="zero";      // ヒントを 出せる 問題
 function mtTools(){
   const m=MT, q=m.cur, el=$("#mttools"), b=[];
-  if(mtToolOk()) b.push(`<button type="button" class="pill small${m.tool?" on":""}" id="mttl" aria-pressed="${m.tool}">🧰 めもりを 光《ひか》らせる</button>`);
+  if(!m.lock&&s0(m)) b.push(`<button type="button" class="pill small mthb${m.hintOn?" on":""}" id="mthb" aria-pressed="${!!m.hintOn}">💡 ヒント</button>`);
+  if(mtToolOk()) b.push(`<button type="button" class="pill small${m.tool?" on":""}" id="mttl" aria-pressed="${m.tool}">🧰 めもりを かぞえる</button>`);
   if(q.kind==="dial") b.push(`<button type="button" class="pill small${m.zoomOn?" on":""}" id="mtzm" aria-pressed="${m.zoomOn}">🔍 ルーペ</button>`);
   if(q.steps) b.push(`<button type="button" class="pill small${m.guide?" on":""}" id="mtgd" aria-pressed="${m.guide}">ステップで よむ</button>`);
   if(q.ask!=="place"&&q.ask!=="shop") b.push(`<button type="button" class="pill small${m.ch?" on":""}" id="mtcs" aria-pressed="${m.ch}">4つから えらぶ</button>`);
   el.innerHTML=b.join("");
   const on=(id,f)=>{ const x=$("#"+id); if(x) x.onclick=()=>{ f(); const y=$("#"+id); if(y) y.focus(); }; };
+  on("mthb",()=>{ if(m.lock) return; m.hintOn=!m.hintOn; if(m.hintOn) m.firstOk=false; mtHint(); mtTools(); if(m.hintOn){ const c=$("#mthint"); if(c&&c.scrollIntoView) c.scrollIntoView({block:"nearest",behavior:"smooth"}); } });      // ヒントを 見たら「1回めで せいかい」には 数えない
   on("mttl",()=>{ m.tool=!m.tool; mtPic(); mtTools(); });
   on("mtzm",()=>{ m.zoomOn=!m.zoomOn; mtPic(); mtTools(); });
   on("mtgd",()=>{ if(m.lock) return; m.guide=!m.guide; mtSet(x=>{ x.guide=m.guide?1:0; }); m.steps=m.guide&&q.steps?q.steps:[q.ask]; m.si=0; m.chips=[]; mtSub(); });
@@ -7310,12 +7334,12 @@ function mtJudge(x){
   }
   sfx("ng"); m.firstOk=false; m.tries++;
   const h=M.hint(s,x,m.tries,q.ask==="shop"?mtSum():undefined);
-  m.hl=h.hl; if(q.kind==="dial") m.zoomOn=true;
+  m.hl=h.hl; m.hintOn=true; if(q.kind==="dial") m.zoomOn=true;
   if(s.ask==="place"&&m.tries>=3){ m.okK=q.v/q.sp.t; h.reveal=true; h.msg=`ここが ${q.v} だよ。`; }
   fb.className="fb ng"; fb.textContent="🤔 "+h.msg;
   if(h.reveal){ m.reveal=true; m.lock=true; }
   m.inp=["",""]; m.box=0;
-  mtPic(); mtArea(); mtTools();
+  mtPic(); mtArea(); mtTools(); mtHint();
 }
 function mtAfterReveal(){
   const m=MT; if(!m) return; m.reveal=false;

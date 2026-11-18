@@ -152,7 +152,7 @@ window.MH_METER = (function () {
       const L = sp.t * sp.b;
       if (q.ask === "tick") return { hl: { from: 0, to: sp.b }, msg: `0 から ${L} まで ${sp.b}めもり。${sp.b}めもりで ${L} だね。` };
       const kv = q.v / sp.t, kl = Math.floor(kv / sp.b) * sp.b;
-      if (q.ask === "place" && tries >= 2) return { hl: { from: kl, to: kv }, msg: `${kl * sp.t} から ${kv - kl}めもり。光《ひか》った ところだよ。`, show: true };
+      if (q.ask === "place" && tries >= 2) return { hl: { from: kl, to: kv }, msg: `${kl * sp.t} から ${kv - kl}めもり。かぞえた ところだよ。`, show: true };
       return { hl: { from: kl, to: kv }, msg: `${kl * sp.t} から ${kv - kl}めもり。1めもりは ${sp.t} だよ。` };
     }
     if (q.ask === "max") return { hl: { max: true }, msg: "0 から はじまって、ぐるっと 1しゅう まわった さいごの 数字《すうじ》を 見《み》よう。0 の 下《した》に あるよ。" };
@@ -177,6 +177,79 @@ window.MH_METER = (function () {
   /* 「ステップで よむ」で 小問の 答えが あたったときの しるし */
   const chip = s => s.ask === "max" ? `さいだい ${fmt(s)}` : s.ask === "tick" ? `1めもり ${fmt(s)}` : fmt(s);
 
+  /* ---------- ヒントカード（かわりに かぞえる・1めもりの 大きさ・しき） ----------
+     explain(q, o)：o = { tries, extra（おかいものの いまの 重さ）, known（1めもりを もう こたえた）, reveal（こたえを 見せる） }
+     かえす：{ steps:[{ h:見出し, fig:SVG, say:ことば, eq:しき }] }
+     絵は「めもりを まっすぐに のばした 図」（stripSVG）。数字の ある めもりから、めもりを 1つずつ かぞえて 見せる */
+  const unitOf = q => q.kind === "dial" ? "g" : "";
+  const numTxt = (q, v) => q.kind === "dial" ? kgg(v) : String(v);
+  function seg(q) {                                     // 数字の ある めもりの 間（めもりの 数 と その 大きさ）
+    const sp = q.sp;
+    return q.kind === "line" ? { n: sp.b, L: sp.t * sp.b, big: sp.b } : { n: sp.lab / sp.t, L: sp.lab, big: sp.lab / sp.t };
+  }
+  const stripLab = q => q.kind === "dial" ? (v => dialLab(q.sp, v)) : (v => String(v));
+  function tickStep(q, reveal) {
+    const { n, L } = seg(q), u = unitOf(q), t = q.sp.t;
+    return { h: "① 1めもりの 大《おお》きさ", fig: stripSVG({ from: 0, t, n, big: n, cnt: n, lab: stripLab(q), one: reveal ? `1めもり ${t}${u}` : "", label: `0 から ${L}${u} まで ${n}めもり` }),
+      say: `数字《すうじ》の 0 から ${L}${u} まで、めもりは ${n}こ。`, eq: `${L} ÷ ${n} ＝ ${reveal ? t : "□"}${reveal ? `（1めもり ${t}${u}。${t}${u}が ${n}こで ${L}${u}）` : ""}` };
+  }
+  function readSteps(q, v, o, title) {
+    const sp = q.sp, t = sp.t, u = unitOf(q), { n, L } = seg(q), vl = Math.floor(v / L) * L, k = (v - vl) / t, out = [];
+    if (o.known) out.push({ h: "① 1めもりの 大《おお》きさ", say: `1めもりは ${t}${u}。`, eq: "" });
+    else out.push({ h: "① 1めもりの 大《おお》きさ", fig: stripSVG({ from: vl, t, n, big: n, cnt: n, lab: stripLab(q), one: `1めもり ${t}${u}` }),
+      say: `${numTxt(q, vl)} から ${numTxt(q, vl + L)} までは ${L}${u}。そこに めもりが ${n}こ。`, eq: `${L} ÷ ${n} ＝ ${t}（1めもり ${t}${u}）` });
+    if (k === 0) { out.push({ h: title || "② はりを よむ", say: `はりは ちょうど 数字《すうじ》の ${numTxt(q, v)} の ところ。` }); return out; }
+    out.push({ h: title || "② はりまで かぞえる", fig: stripSVG({ from: vl, t, n, big: n, cnt: k, mark: k, vals: q.kind === "line" || v < 1000, lab: stripLab(q), label: `${numTxt(q, vl)} から ${k}めもり` }),
+      say: `近《ちか》くの 数字《すうじ》 ${numTxt(q, vl)} から、${k}めもり すすんだ ところ。` });
+    const ans = o.reveal ? (q.kind === "dial" && v >= 1000 ? `${v}（${kgg(v)}）` : `${v}${u}`) : "□";
+    out.push({ h: "③ しき", say: `${t}${u}が ${k}こで ${t * k}${u}。`, eq: `${vl} ＋ ${t} × ${k} ＝ ${ans}` });
+    return out;
+  }
+  function explain(q, o) {
+    o = o || {};
+    const sp = q.sp;
+    if (q.ask === "tick") return { steps: [tickStep(q, !!o.reveal)] };
+    if (q.ask === "max") return { steps: [{ h: "さいだいの 見《み》つけかた", fig: dialSVG(sp, { v: 0, hl: { max: true }, label: "はかりの さいだい" }),
+      say: "0 から はじまって、ぐるっと 1しゅう。さいごの 数字《すうじ》は 0 と 同《おな》じ ところ（0 の 下《した》）に あるよ。", eq: o.reveal ? `さいだい ${sp.max >= 1000 ? sp.max / 1000 + "kg" : sp.max + "g"}` : "" }] };
+    if (q.ask === "zero") return { steps: [{ h: "なにも のせないと", say: "はりは 0 を さすよ。", eq: "" }] };
+    if (q.ask === "shop") {
+      const cur = o.extra || 0, st = readSteps(q, cur, { known: true, reveal: true }, "② いまの はりを よむ");
+      if (cur > 0) st[0] = { h: "① 1めもりの 大《おお》きさ", say: `1めもりは ${sp.t}g。`, eq: "" };
+      else st.splice(1, 2);
+      const d = q.target - cur;
+      st.push({ h: `${"①②③④"[st.length]} めあてと くらべる`, say: `めあては ${kgg(q.target)}。` + (d > 0 ? "いまは かるい。もっと のせよう。" : d < 0 ? "いまは おもい。どれかを おろそう。" : ""),
+        eq: (o.tries || 0) >= 2 && cur > 0 && d ? (d > 0 ? `${q.target} − ${cur} ＝ ${d}（あと ${kgg(d)}）` : `${cur} − ${q.target} ＝ ${-d}（${kgg(-d)} おおい）`) : "" });
+      return { steps: st };
+    }
+    if (q.ask === "place") return { steps: readSteps(q, q.v, { known: false, reveal: true }, "② その 数《かず》まで かぞえる").slice(0, 2) };
+    return { steps: readSteps(q, q.v, o) };
+  }
+  /* まっすぐに のばした めもり：o = { from, t, n（めもりの 数）, big（数字の 間かく）, cnt（かぞえる 数）, mark（▼）, vals（かぞえた めもりの 数を 下に）, lab, one（1めもりの かっこ）, label } */
+  function stripSVG(o) {
+    const W = 360, x0 = 30, x1 = 330, y = 54, n = o.n, dx = (x1 - x0) / n, X = k => f1(x0 + k * dx), s = [], big = o.big || n;
+    const H = o.one ? 132 : 112;
+    s.push(`<svg class="mtsvg mtstrip" viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="${o.label || "めもりを まっすぐに した 図"}">`);
+    s.push(`<line x1="${x0 - 10}" y1="${y}" x2="${x1 + 10}" y2="${y}" stroke="#1b2a38" stroke-width="3"/>`);
+    for (let k = 0; k <= n; k++) {
+      const b = k % big === 0, mid = !b && big % 2 === 0 && k % (big / 2) === 0, top = b ? y - 20 : mid ? y - 15 : y - 10;
+      s.push(`<line x1="${X(k)}" y1="${top}" x2="${X(k)}" y2="${b ? y + 5 : y}" stroke="#1b2a38" stroke-width="${b ? 3 : mid ? 2 : 1.4}"/>`);
+      if (b) {
+        const t = o.lab(o.from + k * o.t), two = t.includes(" ");
+        if (two) { const [kg, g] = t.split(" "); s.push(`<text x="${X(k)}" y="${y + 19}" font-size="11" font-weight="700" text-anchor="middle" fill="#1f5fa0">${kg}</text><text x="${X(k)}" y="${y + 34}" font-size="16" font-weight="700" text-anchor="middle" fill="#13202b">${g}</text>`); }
+        else s.push(`<text x="${X(k)}" y="${y + 26}" font-size="17" font-weight="700" text-anchor="middle" fill="#13202b">${t}</text>`);
+      }
+    }
+    for (let i = 1; i <= (o.cnt || 0); i++) {                      // 1つずつ かぞえる（じゅんに 出る）
+      const x = X(i), d = `animation-delay:${f1(0.25 + i * 0.3)}s`;
+      s.push(`<g class="mtc" style="${d}"><circle cx="${x}" cy="${y - 31}" r="${dx < 22 ? 8 : 10}" fill="#ff8a3d"/><text x="${x}" y="${y - 27}" font-size="${dx < 22 ? 11 : 13}" font-weight="800" text-anchor="middle" fill="#fff">${i}</text><circle cx="${x}" cy="${y}" r="3.5" fill="#d35400"/></g>`);
+      if (o.vals && i % big && String(o.from + i * o.t).length <= 4 && dx >= 24) s.push(`<text class="mtc" style="${d}" x="${x}" y="${y + 20}" font-size="11" font-weight="700" text-anchor="middle" fill="#b44a00">${o.from + i * o.t}</text>`);
+    }
+    if (o.mark != null && o.mark > 0) s.push(`<path class="mtc" style="animation-delay:${f1(0.4 + o.mark * 0.3)}s" d="M${X(o.mark)} ${y - 42} l-8 -12 h16 z" fill="#d32f2f"/>`);
+    if (o.one) { const a = X(0), b = X(1), yy = y + 44; s.push(`<path d="M${a} ${yy - 6} v6 h${f1(b - a)} v-6" fill="none" stroke="#1f5fa0" stroke-width="2"/><text x="${f1(a - 4)}" y="${yy + 18}" font-size="14" font-weight="800" fill="#1f5fa0">${o.one}</text>`); }
+    s.push(`</svg>`);
+    return s.join("");
+  }
+
   /* ---------- 絵（SVG の 文字列） ---------- */
   const f1 = x => Math.round(x * 10) / 10;
   const CH = "#ffffff", CH2 = "#e3f1e8", YL = "#ffd84d", OR = "#ff8a3d";
@@ -187,7 +260,6 @@ window.MH_METER = (function () {
     s.push(`<svg class="mtsvg mtline" viewBox="0 0 ${W} 112" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="${o.label || "すうちょくせん"}" shape-rendering="geometricPrecision">`);
     s.push(`<rect class="mthit" x="0" y="0" width="${W}" height="112" fill="transparent"/>`);
     const hl = o.hl;
-    if (hl && hl.to != null) s.push(`<line x1="${X(hl.from)}" y1="${y}" x2="${X(hl.to)}" y2="${y}" stroke="${YL}" stroke-width="7" stroke-linecap="round" opacity=".9"/>`);
     s.push(`<line x1="${x0 - 8}" y1="${y}" x2="${x1 + 16}" y2="${y}" stroke="${CH}" stroke-width="3"/><path d="M${x1 + 20} ${y} l-10 -6 v12 z" fill="${CH}"/>`);
     for (let k = 0; k <= n; k++) {
       const big = k % sp.b === 0, mid = !big && sp.b % 2 === 0 && sp.b >= 4 && k % (sp.b / 2) === 0;
@@ -200,7 +272,10 @@ window.MH_METER = (function () {
       }
     }
     const cnt = (k, i, col) => s.push(`<text x="${X(k)}" y="${y - 25}" font-size="${dx < 18 ? 11 : 13}" font-weight="700" text-anchor="middle" fill="${col}">${i}</text>`);
-    if (hl && hl.to != null) for (let k = hl.from + 1, i = 1; k <= hl.to; k++, i++) cnt(k, i, YL);
+    if (hl && hl.to != null) for (let k = hl.from + 1, i = 1; k <= hl.to; k++, i++) {      // かわりに かぞえる：1つずつ じゅんに
+      const d = `animation-delay:${f1(0.2 + i * 0.3)}s`;
+      s.push(`<g class="mtc" style="${d}"><circle cx="${X(k)}" cy="${y}" r="4" fill="${OR}"/><text x="${X(k)}" y="${y - 25}" font-size="${dx < 18 ? 12 : 15}" font-weight="800" text-anchor="middle" fill="${YL}">${i}</text></g>`);
+    }
     else if (o.tool) for (let k = 1; k < n; k++) if (k % sp.b) cnt(k, k % sp.b, "#fff1b8");
     if (o.v != null) { const xv = X(o.v / sp.t); s.push(`<path d="M${xv} ${hl && hl.to != null ? 22 : 30} l-9 -15 h18 z" fill="${YL}" stroke="#7a5a00" stroke-width="1"/>`); }
     if (o.ok != null) s.push(`<path d="M${X(o.ok)} 30 l-9 -15 h18 z" fill="#7be08f" stroke="#1b5e20" stroke-width="1"/>`);
@@ -228,7 +303,6 @@ window.MH_METER = (function () {
     s.push(`<rect x="138" y="34" width="24" height="20" fill="#7d8b99"/><rect x="52" y="24" width="196" height="14" rx="7" fill="#d5dce3" stroke="#6b7988" stroke-width="2"/>`);
     if (o.items && o.items.length) { const w = 196 / o.items.length; o.items.forEach((e, i) => s.push(`<text x="${f1(52 + w * (i + .5))}" y="21" font-size="28" text-anchor="middle">${e}</text>`)); }
     s.push(`<circle cx="${CX}" cy="${CY}" r="${R}" fill="#fffbea" stroke="#13304d" stroke-width="4"/>`);
-    if (hl && hl.to != null && hl.to > hl.from) s.push(`<path d="${arc(sp, hl.from, hl.to, R - 9)}" fill="none" stroke="${OR}" stroke-width="14" opacity=".55"/>`);
     if (hl && hl.max) s.push(`<path d="${arc(sp, 0, sp.max, R - 9)}" fill="none" stroke="${OR}" stroke-width="5" opacity=".35"/>`);
     for (let i = 0; i < N; i++) {                                   // さいごの 数は 0 と 同じ めもり
       const v = i * sp.t, a = ang(sp, v), big = v % sp.lab === 0, mid = !big && v % sp.mid === 0;
@@ -249,7 +323,9 @@ window.MH_METER = (function () {
     }
     /* かぞえる 数字（めもりの 外がわ。大きく 見る ときに よめる 大きさ） */
     const num = (v, i) => { const p = pt(ang(sp, v), R + 7); s.push(`<text x="${p[0]}" y="${f1(p[1] + 2)}" font-size="5.6" font-weight="700" text-anchor="middle" fill="#ffe27a">${i}</text>`); };
-    if (hl && hl.to != null) { const n = (hl.to - hl.from) / sp.t; for (let i = 1; i <= n; i++) if (n <= 5 || i % 5 === 0 || i === n) num(hl.from + i * sp.t, i); }
+    if (hl && hl.to != null) { const n = (hl.to - hl.from) / sp.t; for (let i = 1; i <= n; i++) {      // かわりに かぞえる：めもりに 点を じゅんに
+      const p = pt(ang(sp, hl.from + i * sp.t), R - 6); s.push(`<circle class="mtc" style="animation-delay:${f1(0.2 + i * 0.3)}s" cx="${p[0]}" cy="${p[1]}" r="2.6" fill="${OR}"/>`);
+      if (n <= 5 || i % 5 === 0 || i === n) num(hl.from + i * sp.t, i); } }
     else if (o.tool) for (let i = 1; i < N; i++) { const v = i * sp.t, r = (v % sp.lab) / sp.t; if (r && (sp.lab / sp.t <= 5 || r % 5 === 0)) num(v, r); }
     if (sp.max <= 1000) s.push(`<text x="${CX}" y="${CY + 52}" font-size="18" font-weight="700" text-anchor="middle" fill="#13202b">g</text>`);
     const nv = o.v == null ? 0 : o.v;
@@ -258,5 +334,5 @@ window.MH_METER = (function () {
     return s.join("");
   }
   const needleDeg = (sp, v) => f1(nAng(sp, v));
-  return { STAGES, DIALS, LINES, ITEMS, round, sub, check, fmt, choices, hint, hlOf, chip, kgg, gTxt, dialLab, lineSVG, dialSVG, needleDeg };
+  return { STAGES, DIALS, LINES, ITEMS, round, sub, check, fmt, choices, hint, hlOf, chip, kgg, gTxt, dialLab, lineSVG, dialSVG, needleDeg, explain, stripSVG };
 })();

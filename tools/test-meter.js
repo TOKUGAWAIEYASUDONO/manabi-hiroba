@@ -83,6 +83,24 @@ for (const S of M.STAGES) {
         ok(h1 && typeof h1.msg === "string" && h1.msg.length > 4 && h1.hl, `${tag}/${a}: 手がかり`);
         ok(h2.reveal && h2.msg.includes(s.ask === "kgg" ? M.kgg(q.v) : M.fmt(s)), `${tag}/${a}: 2回目は 答えを 見せる`);
         ok(!/[<>]/.test(h1.msg + s.q), `${tag}: 文に タグが ない`);
+        /* ヒントカード：かわりに かぞえる 図・1めもり・しき（こたえは かくす／見せる） */
+        for (const rv of [false, true]) {
+          const ex = M.explain(s, { tries: rv ? 2 : 1, reveal: rv, known: n % 3 === 0 && s.ask !== "tick", extra: q.ask === "shop" ? q.items[0].w : undefined });
+          ok(ex && Array.isArray(ex.steps) && ex.steps.length >= 1, `${tag}/${a}: ヒントカード`);
+          for (const st of ex.steps) {
+            ok(typeof st.h === "string" && st.h && typeof st.say === "string", `${tag}/${a}: ヒントの 見出しと ことば`);
+            if (st.fig) ok(wellFormed(st.fig), `${tag}/${a}: ヒントの 図`);
+            ok(!/[<>]/.test(st.h + st.say + (st.eq || "")), `${tag}/${a}: ヒントの 文に タグが ない`);
+          }
+          if (s.ask === "read" || s.ask === "kgg") {
+            const eq = ex.steps[ex.steps.length - 1].eq, sp2 = s.sp, L = s.kind === "line" ? sp2.t * sp2.b : sp2.lab, vl = Math.floor(s.v / L) * L, k = (s.v - vl) / sp2.t;
+            ok(eq.startsWith(`${vl} ＋ ${sp2.t} × ${k} ＝ `) && vl + sp2.t * k === s.v, `${tag}/${a}: しき ${eq}`);
+            ok(rv ? eq.includes(String(s.v)) : eq.endsWith("□"), `${tag}/${a}: しきの こたえは ${rv ? "見せる" : "かくす"}`);
+            const fig = ex.steps.find(x => /かぞえる/.test(x.h)).fig;
+            ok((fig.match(/class="mtc"/g) || []).length >= k, `${tag}/${a}: ${k}めもり かぞえる`);
+          }
+          if (s.ask === "tick") ok(rv ? ex.steps[0].eq.includes(`＝ ${s.sp.t}`) : ex.steps[0].eq.endsWith("□"), `${tag}/${a}: 1めもりの しき`);
+        }
       }
       if (q.ask === "read" || q.ask === "tick" || q.ask === "kgg") vals.add(JSON.stringify(q.a));
     }
