@@ -834,6 +834,7 @@ body[data-v=host] .wrap{max-width:none;padding:0}
 .door .new{background:var(--sun);border:2px solid var(--edge);border-radius:999px;padding:2px 8px;font-size:12px;font-weight:800;color:var(--ink);white-space:nowrap}
 .home.easy .door{min-height:84px}.home.easy .door .dt{font-size:24px}
 .door:active{transform:translateY(3px);box-shadow:0 1px 0 var(--edge)}
+.door.soon{cursor:default;border-style:dashed;box-shadow:none;background:#fffaf0}.door.soon:active{transform:none}.door.soon .art{opacity:.75}
 .hb,.zk{width:100%;max-width:720px;margin:0 auto}
 .hb .acn{display:inline-flex;align-items:center;gap:4px;background:#fff;border:3px solid var(--edge);border-radius:999px;padding:2px 12px 2px 6px;font-size:18px}
 .hb .acn .art{width:28px;height:28px}
@@ -1724,6 +1725,7 @@ body[data-v=host] .wrap{max-width:none;padding:0}
 <!-- 単元ごとの問題の型（単元から出題） -->
 <script src="data/gen/core.js?v=96863689"></script>
 <script>window.RIKA_PUBLIC=true;</script>
+<script>window.HIROBA_PUBLIC=false;      // じぶんの ひろば：false の あいだは 公開ページで「もうすぐ くるよ」（入れない・どんぐりも ふえない）。手もとの確認（localhost・127.0.0.1）では ひらく</script>
 <script>if(window.RIKA_PUBLIC) document.write('<script src="data/gen/rika.js?v=852af32d"><\/script>');</script>
 <script src="data/gen/other.js?v=0a3ecac9"></script>
 <script src="data/gen/sansu-12.js?v=0f9a4f23"></script>
@@ -1982,6 +1984,7 @@ const TX={
  "tl.res.d":["ずで かんがえて せいかいした もんだいは、メダルや「できた」には かぞえないよ"],
  "tl.ta":["ずで かんがえた 回《かい》は、タイムが きろくに のこらないよ","ずで かんがえた かいは、タイムが きろくに のこらないよ"],
  /* コレクション（じぶんの ひろば・ずかん・どんぐり）。児童向けの文言は 全部《》つき。1〜2年（右）は ひらがな */
+ "col.soon":["もうすぐ くるよ！ たのしみに まっててね"],"col.soon.b":["じゅんびちゅう"],
  "col.name":["じぶんの ひろば"],
  "col.door.d":[n=>`どんぐり ${n}こ`],"col.door.new":["あたらしい！"],
  "col.shop":["おみせ"],"col.zukan":["ずかん"],"col.zukan.t":["たんげん ずかん"],
@@ -3239,6 +3242,8 @@ function renderRecord(msg){
 
 /* ================= コレクション（ひろば・ずかん・どんぐり）。中身は data/collection.js ================= */
 const COL=window.MH_COL, COLOK=!!COL;
+/* じぶんの ひろばを ひらくか：公開の 合図（HIROBA_PUBLIC）か、手もとの 確認だけ。ひらいていない あいだは ひろば・ずかん・たんけん・どんぐり・まなびっこを ぜんぶ 出さない */
+const HBOPEN=window.HIROBA_PUBLIC===true||/^(localhost|127\.0\.0\.1)$/.test((typeof location!=="undefined"&&location.hostname)||"");
 const COLK="mh_col", COLCFG="mh_colcfg";                  // COLCFG：先生が端末に保存するオン／オフ
 let COLS=null, COLH=false, LESSON=false, QKA=0, HS={sel:null,shop:false,gift:0,cap:0,done:0};
 const colToday=()=>COL.dayNum(new Date());
@@ -3252,13 +3257,14 @@ let TKH=null, EX=null, EXLAST=null;
 const colTkLimit=()=>{ const c=store.get(COLCFG,null); return COL.tkLimit(c&&typeof c.tk==="number"?c.tk:undefined,TKH); };
 const colTkOn=()=>colMode()==="on"&&UNITS_OK&&colTkLimit()>0;
 /* オフが勝つ：端末のオフ、またはリンクの col=0 のどちらかでオフ。リンクの col=1 では オンにならない */
-const colMode=()=>(!COLOK||!colCfgOn()||COLH)?"off":"on";
+const colMode=()=>(!COLOK||!HBOPEN||!colCfgOn()||COLH)?"off":"on";
 function colTouch(){ const S=colGet(); COL.sync(S,colToday()); colSave(); return S; }
 const acornSvg=c=>svgU("h-acorn",c);
 const colStageSum=S=>COL.UNIT_IDS.reduce((n,id)=>n+COL.stage(S,id),0);
 const colHave=S=>COL.parts(S).filter(p=>p.have).length;
 /* ホームの入口 */
 function colDoor(){
+  if(!HBOPEN&&!LESSON) return `<div class="door soon" role="note">${acornSvg()}<span class="dt">${T("col.name")}<small>${T("col.soon")}</small></span><span class="new">${T("col.soon.b")}</span></div>`;      // まだ 公開前：入口だけ 見せて 入れない
   if(colMode()!=="on") return "";
   const S=colTouch(), nw=colHave(S)>S.vp||colStageSum(S)>S.vz||COL.mkAvail(S)>0;
   return `<button class="door" id="colDoor">${acornSvg()}<span class="dt">${T("col.name")}<small>${T("col.door.d",COL.balance(S))}</small></span>${nw?`<span class="new">${T("col.door.new")}</span>`:""}</button>`;
@@ -3706,6 +3712,7 @@ function colBackupBind(){
 /*T-BEGIN*/
 function colTeacherHtml(){
   if(!COLOK) return "";
+  if(!HBOPEN) return `<div class="form"><h3 class="tc-h3">ひろば（どんぐり・ずかん）</h3><span class="note">「じぶんのひろば」は準備中です。いまは児童の画面に「もうすぐくるよ」と出るだけで、入ることはできません（どんぐりも増えません）。公開したら、ここでオン・オフを決められます。</span></div>`;
   const on=colCfgOn();
   return `<div class="form">
       <h3 class="tc-h3">ひろば（どんぐり・ずかん）</h3>
