@@ -12,14 +12,10 @@ window.MH_METER = (function () {
   "use strict";
   /* 数直線：1めもりの 大きさごとの [めもりの数, 数字の間かく] */
   const LINES = { 1: [[10, 5], [20, 5], [20, 10]], 2: [[10, 5], [20, 5]], 5: [[10, 2], [20, 4], [20, 2]], 10: [[10, 5], [20, 5], [20, 10]], 100: [[10, 5], [10, 2]] };
-  /* はかり：じっさいの はかりに 合わせた 目もり（1kg は 5g、2kg は 10g、4kg は 20g。台所の 200g・500g） */
-  const DIALS = {
-    g200: { key: "g200", max: 200, t: 2, lab: 20, mid: 10 },
-    g500: { key: "g500", max: 500, t: 5, lab: 50, mid: 25 },
-    kg1: { key: "kg1", max: 1000, t: 5, lab: 100, mid: 50 },
-    kg2: { key: "kg2", max: 2000, t: 10, lab: 200, mid: 100 },
-    kg4: { key: "kg4", max: 4000, t: 20, lab: 500, mid: 100 }
-  };
+  /* はかり：1めもりは じっさいの はかりと 同じ（1kg は 5g、2kg は 10g、4kg は 20g。台所の 200g・500g）。
+     どの はかりも 5めもりごとに 中くらいの めもり、10めもりごとに 大きい めもりと 数字（10めもりより 間を あけない） */
+  const DIAL = (key, max, t) => ({ key, max, t, lab: t * 10, mid: t * 5 });
+  const DIALS = { g200: DIAL("g200", 200, 2), g500: DIAL("g500", 500, 5), kg1: DIAL("kg1", 1000, 5), kg2: DIAL("kg2", 2000, 10), kg4: DIAL("kg4", 4000, 20) };
   const SPAN = 360;                                   // 目もりの ある 角度（0 は 上。ぐるっと 1しゅうして さいごの 数は 0 と 同じ ところ）
   const ITEMS = [["🍎", "りんご", 300], ["🍌", "バナナ", 180], ["🍊", "みかん", 100], ["🍇", "ぶどう", 400], ["🥕", "にんじん", 150],
     ["🍞", "パン", 250], ["🧀", "チーズ", 120], ["🍙", "おにぎり", 110], ["🥚", "たまご", 60], ["🍪", "クッキー", 40], ["🥛", "ぎゅうにゅう", 210], ["🍠", "さつまいも", 350]];
@@ -40,8 +36,8 @@ window.MH_METER = (function () {
 
   const pick = (r, a) => a[Math.floor(r() * a.length)];
   const range = (r, lo, hi) => lo + Math.floor(r() * (hi - lo + 1));
-  /* はかりの 数字（2kg・4kg の はかりは、1kg を こえると 200・400… と g だけ 書く。じっさいの はかりと 同じ） */
-  const dialLab = (sp, v) => v === 0 ? "0" : v % 1000 === 0 && sp.max >= 1000 ? `${v / 1000}kg` : String(sp.max > 1000 ? v % 1000 : v);
+  /* はかりの 数字。1kg を こえた ところは「1kg」と「200」を 2だんで 書く（g だけ だと 200g と まちがえるため） */
+  const dialLab = (sp, v) => v === 0 ? "0" : v % 1000 === 0 && sp.max >= 1000 ? `${v / 1000}kg` : v > 1000 ? `${Math.floor(v / 1000)}kg ${v % 1000}` : String(v);
   const kgg = v => v >= 1000 ? `${Math.floor(v / 1000)}kg${v % 1000 ? v % 1000 + "g" : ""}` : `${v}g`;
   const gTxt = v => `${v}g`;
 
@@ -161,22 +157,21 @@ window.MH_METER = (function () {
     }
     if (q.ask === "max") return { hl: { max: true }, msg: "0 から はじまって、ぐるっと 1しゅう まわった さいごの 数字《すうじ》を 見《み》よう。0 の 下《した》に あるよ。" };
     if (q.ask === "zero") return { hl: { zero: true }, msg: "なにも のせないと、はりは 0 の ところだよ。" };
-    if (q.ask === "tick") { const to = sp.max > 1000 ? sp.mid : sp.lab; return { hl: { from: 0, to, z: to / 2 }, msg: sp.max > 1000 ? `0 から 長《なが》めの めもり（${to}g）まで ${to / sp.t}めもり。` : `0 から ${to}g まで ${to / sp.t}めもり。` }; }
+    if (q.ask === "tick") return { hl: { from: 0, to: sp.lab, z: sp.lab / 2 }, msg: `0 から ${sp.lab}g まで 10めもり。10めもりで ${sp.lab}g だね。` };
     const v = q.ask === "shop" ? extra : q.v, vl = Math.floor(v / sp.lab) * sp.lab, n = (v - vl) / sp.t;
     if (q.ask === "shop") {
-      if (tries >= 2) return { hl: { from: vl, to: v, z: v }, msg: `いまは ${kgg(v)}。${v < q.target ? `あと ${q.target - v}g` : `${v - q.target}g おおいよ`}。` };
+      if (tries >= 2) return { hl: { from: vl, to: v, z: v }, msg: `いまは ${kgg(v)}。${v < q.target ? `あと ${kgg(q.target - v)}` : `${kgg(v - q.target)} おおいよ`}。` };
       return { hl: { from: vl, to: v, z: v }, msg: `はりは ${kgg(vl)} から ${n}めもり。1めもりは ${sp.t}g。` };
     }
     let msg = `${kgg(vl)} から ${n}めもり。1めもりは ${sp.t}g だよ。`;
     if (q.ask === "kgg" && x && x.kg === 0 && x.g >= 1000) msg = "1000g は 1kg。kg の ところにも 数《かず》を 入《い》れよう。";
-    else if (q.ask === "kgg" && vl >= 1000 && vl % 1000) msg = `「${vl % 1000}」は ${kgg(vl)} の こと。そこから ${n}めもり。`;
     return { hl: { from: vl, to: v, z: v }, msg };
   }
   function hlOf(q) {
     const sp = q.sp;
     if (q.kind === "line") { if (q.ask === "tick") return { from: 0, to: sp.b }; const kv = q.v / sp.t; return { from: Math.floor(kv / sp.b) * sp.b, to: kv }; }
     if (q.ask === "max") return { max: true }; if (q.ask === "zero") return { zero: true };
-    if (q.ask === "tick") { const to = sp.max > 1000 ? sp.mid : sp.lab; return { from: 0, to, z: to / 2 }; }
+    if (q.ask === "tick") return { from: 0, to: sp.lab, z: sp.lab / 2 };
     return { from: Math.floor(q.v / sp.lab) * sp.lab, to: q.v, z: q.v };
   }
   /* 「ステップで よむ」で 小問の 答えが あたったときの しるし */
@@ -225,7 +220,7 @@ window.MH_METER = (function () {
   }
   function dialSVG(sp, o) {
     o = o || {};
-    const s = [], hl = o.hl || null, N = sp.max / sp.t;
+    const s = [], hl = o.hl || null, N = sp.max / sp.t, dense = sp.max / sp.lab > 12;      // 数字が 多い はかり（20こ）は 小さめの 字
     let vb = o.items ? "0 -10 300 340" : "0 16 300 314";
     if (o.zoom != null) { const p = pt(ang(sp, o.zoom), R - 12); vb = `${f1(p[0] - 32)} ${f1(p[1] - 32)} 64 64`; }
     s.push(`<svg class="mtsvg mtdial${o.zoom != null ? " mtzoom" : ""}" viewBox="${vb}" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="${o.label || "はかり"}" shape-rendering="geometricPrecision">`);
@@ -244,9 +239,11 @@ window.MH_METER = (function () {
         const labs = v === 0 ? [[0, 0, (hl && hl.zero) || (hl && hl.from === 0 && hl.to != null)], [sp.max, 37, hl && hl.max]]
           : [[v, 0, hl && hl.from === v && hl.to != null]];
         for (const [lv, dy, ring] of labs) {
-          const t = dialLab(sp, lv), lp = pt(a, R - 38), cy = f1(lp[1] + dy);
-          if (ring || o.tool) s.push(`<circle cx="${lp[0]}" cy="${cy}" r="${t.length > 2 ? 19 : 15}" fill="${ring ? "#ffe0b2" : "none"}" stroke="${OR}" stroke-width="${ring ? 3 : 1.6}"/>`);
-          s.push(`<text x="${lp[0]}" y="${f1(cy + 5.5)}" font-size="${t.length > 3 ? 13.5 : 15.5}" font-weight="700" text-anchor="middle" fill="#13202b">${t}</text>`);
+          const t = dialLab(sp, lv), two = t.includes(" "), lp = pt(a, R - (two ? 40 : dense ? 36 : 38)), cy = f1(lp[1] + dy);
+          const fs = two ? 11 : dense ? (t.length > 2 ? 12 : 13) : t.length > 3 ? 13.5 : 15.5;
+          if (ring || o.tool) s.push(`<circle cx="${lp[0]}" cy="${cy}" r="${dense ? (two ? 15 : 13) : t.length > 2 ? 19 : 15}" fill="${ring ? "#ffe0b2" : "none"}" stroke="${OR}" stroke-width="${ring ? 3 : 1.4}"/>`);
+          if (two) { const [k, g] = t.split(" "); s.push(`<text x="${lp[0]}" y="${f1(cy - 1)}" font-size="8.5" font-weight="700" text-anchor="middle" fill="#1f5fa0">${k}</text><text x="${lp[0]}" y="${f1(cy + 9)}" font-size="${fs}" font-weight="700" text-anchor="middle" fill="#13202b">${g}</text>`); }
+          else s.push(`<text x="${lp[0]}" y="${f1(cy + fs * 0.36)}" font-size="${fs}" font-weight="700" text-anchor="middle" fill="#13202b">${t}</text>`);
         }
       }
     }

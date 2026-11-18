@@ -93,7 +93,7 @@ for (const a of ["read", "tick", "max", "zero", "place", "kgg", "shop"]) ok(seen
 /* kg と g の 手がかり：g の ところに 1000 いじょう 入れたら kg を 教える */
 { const q = M.round(9, rnd)[0]; ok(/1kg/.test(M.hint(q, { kg: 0, g: q.v }, 1).msg), "kgg: 1000g は 1kg の 手がかり"); }
 /* 2kg の はかりは 1kg を こえると g だけ 書く（じっさいの はかりと 同じ） */
-ok(M.dialLab(M.DIALS.kg2, 1200) === "200" && M.dialLab(M.DIALS.kg2, 1000) === "1kg" && M.dialLab(M.DIALS.kg1, 1000) === "1kg" && M.dialLab(M.DIALS.g500, 450) === "450", "はかりの 数字");
+ok(M.dialLab(M.DIALS.kg2, 1200) === "1kg 200" && M.dialLab(M.DIALS.kg2, 1000) === "1kg" && M.dialLab(M.DIALS.kg1, 1000) === "1kg" && M.dialLab(M.DIALS.g500, 450) === "450", "はかりの 数字");
 
 /* index.html の 入口 */
 const html = fs.readFileSync(path.join(root, "index.html"), "utf8");
@@ -106,3 +106,9 @@ ok(!/setInterval\([^)]*mt/i.test(html.slice(html.indexOf("const MTKEY"), html.in
 
 if (fails.length) { console.error(`めもり名人: ${fails.length}件 NG`); [...new Set(fails)].slice(0, 30).forEach(f => console.error(" - " + f)); process.exit(1); }
 console.log(`めもり名人: 11ステージ × 300回 OK（${Object.entries(seen).map(([k, v]) => k + v).join("・")}）`);
+/* どの はかりも 5めもりで 中、10めもりで 大と 数字。1kg を こえた 数字は kg も 書く */
+for (const sp of Object.values(M.DIALS)) {
+  ok(sp.mid === sp.t * 5 && sp.lab === sp.t * 10 && sp.max % sp.lab === 0, `${sp.key}: 5めもりで 中・10めもりで 大`);
+  for (let v = sp.lab; v < sp.max; v += sp.lab) { const l = M.dialLab(sp, v); ok(v < 1000 || /kg/.test(l), `${sp.key}: ${v} の 数字に kg（${l}）`); }
+}
+console.log("はかりの めもり：5・10 の きまり OK");
