@@ -254,6 +254,106 @@ h2{font-size:20px;margin:18px 0 8px}
 .tcols.rooms{grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:10px 14px}
 .gdlink.inl{display:inline;width:auto;padding:0;font-size:inherit}
 @media (max-width:430px){.t3{gap:6px}.t3b b{font-size:15px}.t3b small{display:none}}
+/* ===== 先生のページ（#teacher）。児童向けの 黒板・校庭の 見た目とは べつの、おとな向けの 落ちついた 画面。文字と背景は 4.5:1 以上 ===== */
+body[data-v=teacher]{--t-bg:#f3f5f8;--t-sf:#ffffff;--t-ln:#dbe1e8;--t-tx:#1c2630;--t-mu:#56616e;--t-pr:#2353b8;--t-prw:#e9effb;--t-p0:#0d7480;--t-p1:#2353b8;--t-p2:#a14a07;--t-p3:#6d3ad1;
+  background:var(--t-bg);background-image:none;color:var(--t-tx)}
+body[data-v=teacher]>header{display:none}
+body[data-v=teacher] #app.wrap{max-width:none;padding:0}
+body[data-v=teacher] .foot{background:transparent}
+.tc{display:flex;flex-direction:column;min-height:100dvh;font-size:15px;line-height:1.65;word-break:normal;line-break:normal}
+.tc a{color:var(--t-pr)}
+.tc .tc-brand,.tc .tc-toplinks a{color:var(--t-tx)}
+body[data-v=teacher] rt{display:none}
+.tc .ic{width:18px;height:18px;flex:none}
+.tc-top{position:sticky;top:0;z-index:5;display:flex;align-items:center;gap:16px;padding:10px 24px;background:var(--t-sf);border-bottom:1px solid var(--t-ln)}
+.tc-brand{display:flex;align-items:center;gap:10px;text-decoration:none;color:var(--t-tx)}
+.tc-brand b{display:block;font-size:16px;line-height:1.2}.tc-brand small{display:block;font-size:12px;color:var(--t-mu)}
+.tc-logo{width:36px;height:36px;border-radius:9px;background:var(--t-pr);color:#fff;display:flex;align-items:center;justify-content:center}.tc-logo .ic{width:22px;height:22px}
+.tc-toplinks{margin-left:auto;display:flex;gap:4px;flex-wrap:wrap}
+.tc-toplinks a{display:inline-flex;align-items:center;gap:6px;min-height:40px;padding:4px 12px;border-radius:8px;text-decoration:none;color:var(--t-tx);font-size:14px;font-weight:600}
+.tc-toplinks a:hover{background:var(--t-prw)}
+.tc-toplinks a.tc-kid{border:1px solid var(--t-ln)}
+.tc-body{flex:1;display:grid;grid-template-columns:232px minmax(0,1fr);align-items:start}
+.tc-nav{position:sticky;top:61px;display:flex;flex-direction:column;gap:2px;padding:16px 12px;border-right:1px solid var(--t-ln);min-height:calc(100dvh - 61px);background:var(--t-sf)}
+.tc-nb{display:flex;align-items:center;gap:10px;width:100%;text-align:left;background:none;border:0;border-radius:9px;padding:9px 10px;cursor:pointer;color:var(--t-tx);font-weight:400}
+.tc-nb:hover{background:var(--t-bg)}
+.tc-nb[aria-current=page]{background:var(--t-prw);color:var(--t-pr)}
+.tc-nb[aria-current=page] .tc-ni{background:var(--t-pr);color:#fff}
+.tc-ni{width:34px;height:34px;border-radius:8px;background:var(--t-bg);display:flex;align-items:center;justify-content:center;flex:none}
+.tc-nt b{display:block;font-size:14px;line-height:1.3}.tc-nt small{display:block;font-size:12px;color:var(--t-mu);line-height:1.3}
+.tc-nb[aria-current=page] .tc-nt small{color:var(--t-pr)}
+.tc-main{padding:24px 28px 40px;min-width:0;max-width:1180px;scroll-margin-top:70px}
+.tc-pane.hidden{display:none}
+.tc-ph{margin:0 0 16px}.tc-ph h2,.tc-hero h2{margin:0 0 4px;font-size:24px;line-height:1.3}.tc-ph p,.tc-hero p{margin:0;color:var(--t-mu);max-width:760px}
+/* ホーム：授業の流れ */
+.tc-hero{display:flex;gap:16px 32px;align-items:flex-end;justify-content:space-between;flex-wrap:wrap;margin-bottom:20px}
+.tc-steps{list-style:none;margin:0;padding:0;display:flex;gap:8px;flex-wrap:wrap}
+.tc-steps li{display:flex;align-items:center;gap:8px;background:var(--t-sf);border:1px solid var(--t-ln);border-radius:999px;padding:4px 14px 4px 4px;font-size:13px}
+.tc-steps li b{width:24px;height:24px;border-radius:50%;background:var(--t-tx);color:#fff;display:flex;align-items:center;justify-content:center;font-size:12px}
+.tc-flow{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px;align-items:start}
+.tc-phase{--pc:var(--t-p0);display:flex;flex-direction:column;gap:10px}
+.tc-phase.ph1{--pc:var(--t-p1)}.tc-phase.ph2{--pc:var(--t-p2)}.tc-phase.ph3{--pc:var(--t-p3)}
+.tc-phase h3{margin:0;display:flex;align-items:center;gap:8px;flex-wrap:wrap;font-size:17px;color:var(--pc);border-top:4px solid var(--pc);padding-top:10px}
+.tc-phase h3 small{font-size:12px;font-weight:400;color:var(--t-mu);flex-basis:100%;margin-left:34px;margin-top:-6px}
+.tc-pn{width:26px;height:26px;border-radius:50%;background:var(--pc);color:#fff;display:flex;align-items:center;justify-content:center;font-size:13px}
+.tc-act{display:flex;flex-direction:column;gap:6px;text-align:left;background:var(--t-sf);border:1px solid var(--t-ln);border-radius:12px;padding:14px;cursor:pointer;color:var(--t-tx);font-weight:400;transition:border-color .15s,box-shadow .15s}
+.tc-act:hover{border-color:var(--pc);box-shadow:0 4px 14px rgba(28,38,48,.08)}
+.tc-act b{font-size:15px;line-height:1.4}.tc-act>span{font-size:13px;color:var(--t-mu);line-height:1.6}
+.tc-meta{display:flex;flex-wrap:wrap;gap:4px}.tc-meta i{font-style:normal;font-size:12px;background:var(--t-bg);border-radius:6px;padding:1px 8px;color:var(--t-tx)}
+.tc-act .tc-more{display:inline-flex;align-items:center;gap:4px;color:var(--pc);font-weight:700;font-size:13px}.tc-more .ic{width:15px;height:15px}
+.tc-card,.tc .form{background:var(--t-sf);border:1px solid var(--t-ln);border-radius:12px;padding:20px 22px;display:grid;gap:12px;margin:0 0 16px}
+.tc-next{margin-top:22px}.tc-next ul{margin:0;padding-left:20px;color:var(--t-mu);font-size:14px}
+.tc-h3{margin:0;font-size:18px;line-height:1.4}
+/* フォーム（今の 中身を そのまま 新しい 見た目で） */
+.tc .form .note{font-size:14px;color:var(--t-mu);line-height:1.7}
+.tc .form .note b{color:var(--t-tx)}
+.tc .prep{font-size:13px;background:var(--t-bg);border:1px solid var(--t-ln);border-radius:8px;padding:6px 12px;color:var(--t-tx);justify-self:start}
+.tc .form label{display:grid;gap:4px;font-weight:600;font-size:13px;color:var(--t-mu);min-width:0}
+.tc .form select,.tc .form input[type=text]{font-size:15px;min-height:42px;padding:6px 10px;border:1px solid #b9c3ce;border-radius:8px;background:#fff;color:var(--t-tx)}
+.tc .form select:focus-visible,.tc button:focus-visible,.tc a:focus-visible{outline:3px solid #8fb0ef;outline-offset:2px}
+.tc .form label.chk{display:flex;gap:10px;align-items:center;font-size:14px;color:var(--t-tx);font-weight:400}.tc .form label.chk input{width:20px;height:20px;flex:none}
+.tc .tcols.rooms{grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:10px 14px}
+.tc-btn,.tc .btn{justify-self:start;display:inline-flex;align-items:center;justify-content:center;gap:6px;min-height:44px;padding:8px 22px;border-radius:9px;border:0;background:var(--t-pr);color:#fff;font-size:15px;font-weight:700;cursor:pointer;box-shadow:none;text-decoration:none}
+.tc-btn:hover,.tc .btn:hover{background:#1b4396}
+.tc-btn:disabled{background:#9aa6b3;cursor:default}
+.tc .btn.sub{background:#fff;color:var(--t-pr);border:1px solid var(--t-pr)}
+.tc .out{background:#f0f6ff;border:1px solid #b7cdf3;border-radius:9px;padding:12px;font-size:14px;word-break:break-all}
+.tc .err{color:#b3261e;font-size:14px}
+.tc details.tguide{background:var(--t-bg);border:1px solid var(--t-ln);border-radius:9px;padding:4px 14px;margin:0}
+.tc details.tguide summary{font-size:14px;min-height:40px}
+.tc details.tguide .note{display:block;margin:6px 0}
+.tc-guide ol{margin:0;padding-left:22px;font-size:14px;line-height:1.8}.tc-guide li{margin:6px 0}
+/* 部屋の あそびかた：カードで えらぶ */
+.tc-sr{position:absolute!important;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+.tc-modes{display:grid;grid-template-columns:repeat(auto-fill,minmax(176px,1fr));gap:8px}
+.tc-mode{position:relative;display:grid;grid-template-columns:auto 1fr;grid-template-areas:"i b" "i s" "i t";align-items:start;column-gap:10px;text-align:left;background:#fff;border:1px solid var(--t-ln);border-radius:10px;padding:10px 12px;cursor:pointer;color:var(--t-tx);font-weight:400}
+.tc-mode .tc-mi{grid-area:i;font-size:24px;line-height:1}.tc-mode b{grid-area:b;font-size:14px}.tc-mode small{grid-area:s;font-size:12px;color:var(--t-mu);line-height:1.5}
+.tc-mode .tc-tag{grid-area:t;justify-self:start;margin-top:4px;white-space:nowrap;font-size:11px;background:var(--t-bg);border-radius:5px;padding:0 6px;color:var(--t-mu)}
+.tc-mode:hover{border-color:var(--t-pr)}
+.tc-mode[aria-checked=true]{border:2px solid var(--t-pr);background:var(--t-prw);padding:9px 11px}
+/* 単元えらび（児童と同じ部品）が 中に入るとき */
+.tc #roomUnits{min-width:0;max-height:min(440px,60dvh);overflow:auto;border:1px solid var(--t-ln);border-radius:10px;padding:10px 12px;background:var(--t-bg);overscroll-behavior:contain}.tc #roomUnits.hidden{display:none}
+.tc #roomUnits h2{font-size:15px;margin:0 0 8px}
+.tc #roomUnits .upf .pills{display:flex;flex-wrap:wrap;gap:6px}
+.tc #roomUnits .upf .pills .pill,.tc #roomUnits .upsets .pill{width:auto;min-height:34px;padding:2px 14px;font-size:13px;line-height:1.3;border:1px solid var(--t-ln);border-radius:999px;box-shadow:none;background:#fff;color:var(--t-tx)}
+.tc #roomUnits .pill.on{background:var(--t-pr);border-color:var(--t-pr);color:#fff}
+.tc #roomUnits .note{font-size:13px;color:var(--t-mu);margin:6px 0}
+.tc #roomUnits .ugrid,.tc #roomUnits .ugrid.kidunits{grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:6px}
+.tc #roomUnits .ucard,.tc #roomUnits .kidunits .ucard{min-height:0;padding:7px 10px;border:1px solid var(--t-ln);border-radius:8px;box-shadow:none;justify-content:flex-start;text-align:left;font-size:14px;gap:8px}
+.tc #roomUnits .ucard:active{transform:none}
+.tc #roomUnits .ucard[aria-checked=true]{border-color:var(--t-pr);background:var(--t-prw);box-shadow:none}
+.tc #roomUnits .ubox{width:20px;height:20px;border:1px solid #8e9aa7;border-radius:5px;font-size:12px}
+.tc #roomUnits .ubody b{font-size:14px;font-weight:600}.tc #roomUnits .unote{font-size:12px;color:var(--t-mu)}
+@media (max-width:1100px){.tc-flow{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:820px){
+  .tc-top{padding:8px 14px;gap:8px}.tc-toplinks a span{display:none}.tc-toplinks a{padding:4px 10px}
+  .tc-body{grid-template-columns:minmax(0,1fr)}
+  .tc-nav{position:sticky;top:57px;z-index:4;flex-direction:row;overflow-x:auto;min-height:0;border-right:0;border-bottom:1px solid var(--t-ln);padding:8px 10px;gap:4px;scrollbar-width:thin}
+  .tc-nb{width:auto;flex:none;padding:6px 10px}.tc-nt small{display:none}.tc-ni{width:28px;height:28px}
+  .tc-main{padding:16px 16px 32px}
+  .tc-card,.tc .form{padding:16px}
+}
+@media (max-width:560px){.tc-flow{grid-template-columns:minmax(0,1fr)}.tc-hero{align-items:flex-start}}
 /* ===== 教室で映す ===== */
 .proj{position:fixed;inset:0;background:#10261c;color:#fff;display:flex;flex-direction:column;padding:24px;z-index:10}
 .proj .ptop{display:flex;justify-content:space-between;font-size:22px}
@@ -1232,11 +1332,6 @@ body[data-v=host] .wrap{max-width:none;padding:0}
   .res{display:grid;grid-template-columns:minmax(260px,1fr) minmax(0,1.5fr);gap:0 24px;align-items:start}
   .res>.medrow,.res>.num,.res>.nextm,.res>.actions,.res>.stats,.res>.umr,.res>.newbest{grid-column:1}
   .res>.miss{grid-column:2;grid-row:1/span 10;max-height:calc(100dvh - 120px);overflow:auto}
-  body[data-v=teacher] #app{display:grid;grid-template-columns:240px minmax(0,1fr);gap:8px 16px;align-items:start}
-  body[data-v=teacher] #app>.th2,body[data-v=teacher] #app>.note,body[data-v=teacher] #app>.tguide{grid-column:1/-1}
-  body[data-v=teacher] #app>.t3{grid-column:1;grid-row:4;grid-template-columns:1fr;position:sticky;top:8px}
-  body[data-v=teacher] #app>.tpane:not(.hidden){grid-column:2;grid-row:4}
-  body[data-v=teacher] .form{gap:8px;padding:10px}body[data-v=teacher] .form select{min-height:44px}
 }
 /* PC：先生の「単元から つくる」は、左に絞り込み・中央に単元カード・右に設定（カードが最初の画面に見える）。児童の開始ボタンは下に固定 */
 @media (min-width:1024px){
@@ -1437,6 +1532,10 @@ body[data-v=host] .wrap{max-width:none;padding:0}
 </head>
 <body>
 <svg xmlns="http://www.w3.org/2000/svg" style="position:absolute;width:0;height:0;overflow:hidden" aria-hidden="true" focusable="false"><defs>
+<symbol id="i-monitor" viewBox="0 0 24 24"><rect width="20" height="14" x="2" y="3" rx="2" /> <path d="M8 21h8" /> <path d="M12 17v4" /></symbol>
+<symbol id="i-link" viewBox="0 0 24 24"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71" /> <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71" /></symbol>
+<symbol id="i-sliders" viewBox="0 0 24 24"><path d="M21 4h-7M10 4H3M21 12h-9M8 12H3M21 20h-5M12 20H3M14 2v4M8 10v4M16 18v4" /></symbol>
+<symbol id="i-arrow-right" viewBox="0 0 24 24"><path d="M5 12h14" /> <path d="m12 5 7 7-7 7" /></symbol>
 <symbol id="i-arrow-left" viewBox="0 0 24 24"><path d="m12 19-7-7 7-7" /> <path d="M19 12H5" /></symbol>
 <symbol id="i-volume-2" viewBox="0 0 24 24"><path d="M11 4.702a.705.705 0 0 0-1.203-.498L6.413 7.587A1.4 1.4 0 0 1 5.416 8H3a1 1 0 0 0-1 1v6a1 1 0 0 0 1 1h2.416a1.4 1.4 0 0 1 .997.413l3.383 3.384A.705.705 0 0 0 11 19.298z" /> <path d="M16 9a5 5 0 0 1 0 6" /> <path d="M19.364 18.364a9 9 0 0 0 0-12.728" /></symbol>
 <symbol id="i-volume-x" viewBox="0 0 24 24"><path d="M11 4.702a.7.7 0 0 0-1.203-.498L6.413 7.587A1.4 1.4 0 0 1 5.416 8H3a1 1 0 0 0-1 1v6a1 1 0 0 0 1 1h2.416a1.4 1.4 0 0 1 .997.413l3.383 3.384A.7.7 0 0 0 11 19.298z" /> <path d="m16.5 14.5 5-5" /> <path d="m16.5 9.5 5 5" /></symbol>
@@ -3608,8 +3707,8 @@ function colBackupBind(){
 function colTeacherHtml(){
   if(!COLOK) return "";
   const on=colCfgOn();
-  return `<div class="form" style="margin-top:16px">
-      <b style="font-size:18px">その他の設定：ひろば（どんぐり・ずかん）</b>
+  return `<div class="form">
+      <h3 class="tc-h3">ひろば（どんぐり・ずかん）</h3>
       <span class="prep"><b>準備：なし</b>（この端末の中だけに保存されます）</span>
       <span class="note">勉強したあとが形になる「じぶんの ひろば」です。教科の なかま「まなびっこ」は、はじめての練習と、単元が「できた」になったときに 3つの候補から 1たい 選んで 迎えます（くじではありません。2学年以上 下の単元では増えません）。別の日に その教科を練習すると「なかよし」が3段階で育ち、休んでも下がりません。ランキング・くじ・課金・広告はありません。どんぐりは 1日 20こまでで、授業モード（課題リンク）では画面に出ません。</span>
       <label style="display:flex;gap:10px;align-items:center;font-size:16px"><input type="checkbox" id="colOn"${on?" checked":""} style="width:24px;height:24px"> この端末で ひろば・ずかん・どんぐりを つかう</label>
@@ -3622,8 +3721,8 @@ function colTeacherHtml(){
 }
 function toolTeacherHtml(){
   if(!window.MH_TOOLS) return "";
-  return `<div class="form" style="margin-top:16px">
-      <b style="font-size:18px">その他の設定：ずで かんがえる どうぐ（🧰）</b>
+  return `<div class="form">
+      <h3 class="tc-h3">ずで かんがえる どうぐ（🧰）</h3>
       <span class="prep"><b>準備：なし</b>（この端末の中だけに保存されます）</span>
       <span class="note">計算スプリント（1人で練習）と単元練習の算数で、問題に合う図（ブロック・さくらんぼ・アレイ・位取り表・分数バー）を出すボタンです。合う図が無い問題では出ません。図を開いた問題は「ヒントあり」として、答えた数には入りますが、単元の「できた」・メダル・自己ベストの正解には数えません（タイムアタックは記録に残しません）。課題リンクの結果の文には、図を使った問題の数が付きます。</span>
       <label style="display:flex;gap:10px;align-items:center;font-size:16px"><input type="checkbox" id="toolOn"${tlCfgOn()?" checked":""} style="width:24px;height:24px"> この端末で ずで かんがえる どうぐを つかう</label>
@@ -3644,118 +3743,172 @@ const TGUIDE=[
   "ひろば・どんぐり・ずかんは、この端末の記録だけで動き、名前・順位・外部送信はありません。授業で使わないときは「その他の設定」でオフにできます。リンクの col=0 でもオフにできます。",
   "記録は、その端末の遊びの記録で、成績の証明には使えません。どんぐり・ずかん・自己ベスト・バックアップの文字は、端末の中の記録で、本人が書きかえることもできます（端末の時計を変えても数字が変わります）。通知表・評価・順位づけには使わないでください。"
 ];
+/* 先生のページのメニュー：[パネル, アイコン, 名前, 説明] */
+const TCNAV=[["home","graduation-cap","ホーム","授業でどう使うか"],["room","users","クラスであそぶ","部屋・コード・QR"],["proj","monitor","教室で映す","児童端末なし"],["link","link","リンクを配る","課題・単元・QR"],["make","pencil","問題をつくる","単元から・オリジナル"],["set","sliders","この端末の設定","ひろば・どうぐ"],["guide","lock","児童の情報","名前・通信・保存"]];
+/* 部屋のあそびかた：[id, 絵, 名前, 先生向けの説明, 種類] */
+const TCMODES=[["chest","🎁","たからばこ","答えて宝箱をあける。運の要素で下位の子にもチャンス","対戦"],["race","🎲","すごろく","答えてすすむ。ゴールをめざす","対戦"],
+  ["rocket","🚀","ロケットはっしゃ","全員の正解で燃料をためる。ステージ制","協力"],["boss","👾","ボスバトル","全員でボスのげんきをへらす","協力"],["jin","🏁","じんとりバトル","2チームで盤のマスをぬる","チーム"],
+  ["quiz","📝","クイズ大会","先生のもんだいセットで 1問ずつ","クイズ"],["m100","💯","100マスはっぴょう","100マス計算の記録を大画面で発表","算数"]];
+/* ホーム：授業の流れと使える活動。go は「パネル:えらぶ物」 */
+const TCFLOW=[
+  {h:"導入",s:"5分・ふりかえり／興味",a:[
+    {t:"すきま時間クイズを映す",d:"大きな画面に 4択を映してクラス全員で答えます。前時のふりかえりや朝の会に。",m:["準備なし","児童端末なし","3〜10分"],go:"proj"},
+    {t:"めもり名人（数直線→はかり）",d:"3年「重さ」の前に、数直線の目もりを読む練習から。ステージをえらんで課題リンクに。",m:["3年","時間をはからない"],go:"link:tmst"}]},
+  {h:"練習",s:"ひとりで・自分のペース",a:[
+    {t:"単元をえらんで練習",d:"教科・学年・単元でしぼって、練習リンクと QR を作ります。授業中はほかの画面に行かせない設定も。",m:["全教科","リンク・QR"],go:"units",b:"単元をえらぶ"},
+    {t:"課題リンク（ゲーム）",d:"計算スプリント・九九・漢字・県庁所在地などを、時間や段を決めて配ります。",m:["課題","Classroom・Teams"],go:"link:tg"},
+    {t:"100マス計算",d:"たし算・ひき算・かけ算の 100マス。記録は児童の端末にのこります。",m:["算数","端末に記録"],go:"url:apps/100masu/index.html",b:"ひらく"}]},
+  {h:"みんなで",s:"端末をつないで",a:[
+    {t:"友だち対戦（たからばこ・すごろく）",d:"単元や先生の問題で対戦。名前は先生の端末だけに置きます。",m:["児童端末","3〜5分"],go:"room:chest"},
+    {t:"協力モード（ロケット・ボス・じんとり）",d:"クラス全員で 1つの目標に向かいます。勝ち負けがにがてなクラスにも。",m:["児童端末","協力"],go:"room:rocket"},
+    {t:"クイズ大会（先生のもんだい）",d:"自分で作った 4択・○× を 1問ずつ出します。",m:["先生の問題","大画面"],go:"room:quiz"}]},
+  {h:"ふりかえり",s:"まとめ・発表",a:[
+    {t:"100マスはっぴょう",d:"100マス計算の記録が自動でとどき、はやさ・のび・がんばりを大画面で発表します。",m:["算数","自動でとどく"],go:"room:m100"},
+    {t:"まとめの問題をつくる",d:"今日のまとめを 4択・○× で作って、次の時間の導入にも使えます。",m:["端末に保存","表から取りこみ"],go:"make"}]}];
 function renderTeacher(q){
   setLG(0); QSETS=null; const qsets=qsGet();
   const opt=GAMES.map(x=>`<option value="${x.id}">${x.ico} ${x.t}（${subjN(x.s)}）</option>`).join("");
   const choiceOpt=GAMES.filter(x=>x.type==="choice").map(x=>`<option value="${x.id}">${x.ico} ${x.t}</option>`).join("");
-  const setOpt=qsets.length?`<optgroup label="先生の もんだい">${qsets.map(s=>`<option value="set:${esc(s.id)}">📝 ${esc(s.title||"（なまえなし）")}（${s.qs.length}問）</option>`).join("")}</optgroup>`:"";
-  app.innerHTML=`
-    <h2 class="th2">${ic("graduation-cap")}先生の画面</h2>
-    <p class="note">ログインは不要です。友だち対戦で児童が入れた名前は、先生の端末のメモリにだけ置き、部屋を閉じると消えます。　<a href="#check">${ic("plug")} 接続テスト</a><br><a class="gdlink" href="guide/index.html">学年・単元から さがす（先生向け）</a>　<a href="#feedback">ご意見・ご要望</a></p>
-    <details class="tguide" id="tguide"><summary>${ic("lock")} つかう まえに（児童の情報の あつかい・先生向けの説明）</summary>
-      <ol>${TGUIDE.map(t=>`<li>${esc(t)}</li>`).join("")}</ol></details>
-    <div class="t3" role="group" aria-label="やりたいこと">
-      <button type="button" class="t3b" id="tab-play" data-tab="play" aria-pressed="true"><b>① クラスで遊ぶ</b><small>友だち対戦・教室で映すクイズ</small></button>
-      <button type="button" class="t3b" id="tab-link" data-tab="link" aria-pressed="false"><b>② リンクを配る</b><small>課題リンク・単元リンク・QR</small></button>
-      <button type="button" class="t3b" id="tab-make" data-tab="make" aria-pressed="false"><b>③ 問題をつくる</b><small>単元から・先生のもんだい</small></button>
+  const setOpt=qsets.length?`<optgroup label="先生のもんだい">${qsets.map(s=>`<option value="set:${esc(s.id)}">📝 ${esc(s.title||"（なまえなし）")}（${s.qs.length}問）</option>`).join("")}</optgroup>`:"";
+  app.innerHTML=`<div class="tc">
+    <div class="tc-top">
+      <a class="tc-brand" href="#teacher"><span class="tc-logo" aria-hidden="true">${ic("graduation-cap")}</span><span><b>まなびひろば</b><small>先生のページ</small></span></a>
+      <nav class="tc-toplinks" aria-label="ほかのページ"><a href="guide/index.html">${ic("book-open")}<span>学年・単元ガイド</span></a><a href="#check">${ic("plug")}<span>接続テスト</span></a><a href="#feedback">${ic("pencil")}<span>ご意見</span></a><a href="#home" class="tc-kid">${ic("arrow-left")}<span>児童の画面</span></a></nav>
     </div>
-    <section class="tpane" id="tp-play">
-    <div class="form" id="roomForm" style="border-color:var(--accent)">
-      <b style="font-size:18px">① クラスで友だち対戦（児童の端末を使う）</b>
+    <div class="tc-body">
+      <nav class="tc-nav" aria-label="先生のページのメニュー">${TCNAV.map(n=>`<button type="button" class="tc-nb" data-tab="${n[0]}"><span class="tc-ni">${ic(n[1])}</span><span class="tc-nt"><b>${n[2]}</b><small>${n[3]}</small></span></button>`).join("")}</nav>
+      <div class="tc-main">
+      <section class="tc-pane" id="tp-home" aria-labelledby="tch-home">
+        <div class="tc-hero"><div><h2 id="tch-home">授業でどう使うか</h2><p>授業の流れ（導入 → 練習 → みんなで → ふりかえり）に合わせて、使える活動をならべました。カードを押すと、その設定の画面がひらきます。ログインはいりません。</p></div>
+          <ol class="tc-steps"><li><b>1</b><span>はじめに <a href="#check">接続テスト</a></span></li><li><b>2</b><span>活動をえらんで設定</span></li><li><b>3</b><span>コード・QR・リンクを児童へ</span></li></ol></div>
+        <div class="tc-flow">${TCFLOW.map((p,i)=>`<section class="tc-phase ph${i}"><h3><span class="tc-pn">${i+1}</span>${p.h}<small>${p.s}</small></h3>${p.a.map(a=>`<button type="button" class="tc-act" data-go="${a.go}"><b>${a.t}</b><span>${a.d}</span><span class="tc-meta">${a.m.map(x=>`<i>${x}</i>`).join("")}</span><span class="tc-more">${a.b||"設定する"} ${ic("arrow-right")}</span></button>`).join("")}</section>`).join("")}</div>
+        <section class="tc-card tc-next"><h3 class="tc-h3">これから足す予定</h3><ul><li>単元をえらぶと、その単元の授業の流れ（導入・練習・まとめ）と使う活動が出る「授業プラン」</li><li>単元ごとのつまずきの見える化</li><li>クラスごとの記録（いまは保留）・学校のアカウントでのログイン</li></ul></section>
+      </section>
+      <section class="tc-pane hidden" id="tp-room" aria-label="クラスであそぶ（部屋）">
+        <div class="tc-ph"><h2>クラスであそぶ</h2><p>児童の端末をつないで、友だち対戦・協力モード・クイズ大会・100マスはっぴょうをします。部屋を作ると 4けたのコードと QR が出ます。</p></div>
+    <div class="form" id="roomForm">
+      <h3 class="tc-h3">クラスで友だち対戦（児童の端末を使う）</h3>
       <span class="note"><b>準備：児童の端末とネット接続。</b>部屋を作ると4桁のコードが出ます。先に <a href="#check">${ic("plug")} 接続テスト</a> をすると安心です。</span>
+      <div class="tc-modes" role="radiogroup" aria-label="あそびかた">${TCMODES.map(m=>`<button type="button" class="tc-mode" role="radio" aria-checked="false" data-m="${m[0]}"><span class="tc-mi" aria-hidden="true">${m[1]}</span><b>${m[2]}</b><small>${m[3]}</small><span class="tc-tag">${m[4]}</span></button>`).join("")}</div>
       <div class="tcols rooms">
-        <label>あそびかた<select id="nm">${[...MODES,RKMODE,BSMODE,JNMODE,QMODE,M1MODE].map(m=>`<option value="${m.id}">${m.ico} ${m.t}</option>`).join("")}</select></label>
+        <label class="tc-sr">あそびかた<select id="nm" tabindex="-1" aria-hidden="true">${[...MODES,RKMODE,BSMODE,JNMODE,QMODE,M1MODE].map(m=>`<option value="${m.id}">${m.ico} ${m.t}</option>`).join("")}</select></label>
         <label id="ngl">問題<select id="ng">${opt}${setOpt}</select></label>
         <label>学年<select id="ngr"></select></label>
         <label id="nsl" class="hidden">ステージの数<select id="nstg"><option value="5" selected>ふつう（5ステージ・約5分）</option><option value="3">みじかい（3ステージ・約3分）</option></select></label>
         <label id="ntl">時間<select id="nt"><option value="120">2分</option><option value="180" selected>3分</option><option value="300">5分</option></select></label>
         <label id="nrl">ルール<select id="nr">${RULES.map(r=>`<option value="${r.id}">${r.t}</option>`).join("")}</select></label>
-        <label>なまえの きめかた<select id="nmm"><option value="auto" selected>自動ニックネーム（動物）</option><option value="input">児童が入力する</option></select></label>
+        <label>なまえのきめかた<select id="nmm"><option value="auto" selected>自動ニックネーム（動物）</option><option value="input">児童が入力する</option></select></label>
       </div>
       <div id="roomUnits"></div>
-      <label class="chk"><input type="checkbox" id="nnh" checked> ひろばを出さない（児童の結果画面に、どんぐり・「ひろばを みる」を出しません）</label>
-      <button class="btn" id="mkroom">部屋を作る</button>
+      <label class="chk"><input type="checkbox" id="nnh" checked> ひろばを出さない（児童の結果画面に、どんぐり・「ひろばをみる」を出しません）</label>
+      <button class="tc-btn" id="mkroom">部屋を作る</button>
       <div class="err" id="roomErr"></div>
       <details class="tguide" id="roomHelp"><summary>くわしい説明（名前・ルール・ロケット・ボス・じんとり・100マス）</summary>
-      <span class="note">部屋を作ると4桁のコードが出ます。児童は「コードで参加」からコードを入れて、名前を入力します（名前は先生の画面に出ます。大画面に映すと、クラスの全員に見えます）。ふざけた名前は、先生の画面で名前を押すと変更・ニックネーム化・退出ができます。全員がそろったら「入室をしめきる」を押してください。ゲームが始まったあとは入れません。「なまえの きめかた」を自動ニックネームにすると、動物の名前になります。終わると全員の正解数・正答率が集まります。</span>
+      <span class="note">部屋を作ると4桁のコードが出ます。児童は「コードで参加」からコードを入れて、名前を入力します（名前は先生の画面に出ます。大画面に映すと、クラスの全員に見えます）。ふざけた名前は、先生の画面で名前を押すと変更・ニックネーム化・退出ができます。全員がそろったら「入室をしめきる」を押してください。ゲームが始まったあとは入れません。「なまえのきめかた」を自動ニックネームにすると、動物の名前になります。終わると全員の正解数・正答率が集まります。</span>
       <span class="note">「クイズ」は先生のもんだいだけで遊べます（③のタブでセットをつくります）。たからばこ・すごろくでも、先生のセットの4択を使えます。学年は、児童の画面の文字（1〜2年はやさしい文字）に使います。</span>
       <span class="note">やさしいルール：たからばこで「うばう・入れかえ・落とす」が出ず、すごろくに🌀（もどる）がありません。1〜2年を選ぶと、はじめは「やさしい」になります。</span>
-      <span class="note hidden" id="bsnote"><b>ボスバトル（協力モード）</b>：クラス全員で、いたずらモンスター（ボス）を「くすぐって」おいはらいます。だれかが正解するたびにボスの「げんき」がへり、0になるとボスは笑ってにげていき、少しだけ げんきの多い次のボスが来ます。時間の中で何ひき おいはらえるかをクラスでめざします（時間は「時間」でえらびます）。正解は 10（連続正解で最大 20）、まちがいでも答えれば 1。1人が出せる量には上限があります。20〜30秒ごとのボスの「いたずら」は見た目だけで、点数や問題には何も起きません。順位や個人の正誤は大画面にも児童の画面にも出ません。</span>
-      <span class="note hidden" id="jnnote"><b>じんとりバトル（2チーム）</b>：あか（ウサギ）と あお（ペンギン）に分かれ、正解で 7×7 の盤のマスをぬります。ぬるマスは自動で決まり（えらべません）、マスごとに必要な正解の数がちがいます（ふつう2・★4・まんなか6。相手のマスは+1、自分の陣地からはなれたマスは+1）。ぬったばかりのマスは15秒うばえません。のこり30秒はラストスパート（2倍）。人数がちがっても、チームの力が同じになるように調整します。チームは参加した順に交互に入り、大画面のメニューで「自動で分けなおす」や1人ずつの移動ができます（始まると変えられません）。「やさしい」ルールでは、相手のマスをうばえません（全部ぬれたら終わり）。</span>
-      <span class="note hidden" id="m1note"><b>100マス はっぴょう</b>：児童が「100マス計算」で練習した記録を、先生の大画面に計算（たし算・ひき算・かけ算）ごとに出します。児童が部屋に入ると、その画面の上で100マス計算がひらき、ボタンを押さなくても、入ったときと1回おわるたびに、その子の集計（数字だけ）が自動で届きます。生の記録は送りません。画面は2つを切りかえます。「この じかん」は部屋に入ってからの回で、はやさ・のびりつ（入る前の自己ベストより速くなった割合）・がんばり（やったセット数）・じこベスト こうしん（順位なし）。「これまで」は入ったときに届く記録で、じこベスト・るいけい（いままでの回数の合計）・コツコツ（今週の日数）。出す計算は先生が選べます（はじめは記録のある計算だけ）。それぞれ上位5人まで（計算を2つ以上ならべるときは一部3人まで）で、最下位は出しません。できるだけ多くの子が どこかに出るよう、1つめの欄以外は ほかの欄に出た子を あとまわしにします。数えるのは「100問・だんをしぼらない・最後まで・正答率9割以上・1マス0.4秒以上」の回だけです。記録は児童の端末にあるので、書きかえれば数字は変えられます（ほかの対戦と同じ）。成績には使わないでください。「スタート」はなく、入室をしめきる・終わるだけです。</span>
-      <span class="note hidden" id="rknote"><b>ロケット はっしゃ（協力モード）</b>：クラス全員で1つのロケットを飛ばします。問題（上の「問題」で選んだもの）に答えて燃料をため、目標に届くとミニゲーム（せーので はっしゃ／ほしを あつめよう）が全員同時に始まり、クリアで次のステージへ（ふつう5ステージ・約5分／みじかい3ステージ・約3分。「ステージの数」でえらびます）。失敗しても「もういちど」は1回だけで、2回目は条件がゆるくなり必ず進みます。燃料の目標は人数・学年から自動で決まり、「やさしい」ルールではもっと低くなります。1人が出せる燃料には上限があり、順位や個人の正誤は大画面にも児童の画面にも出ません（名前が出るのは、良いことをした瞬間の吹き出しだけ）。時間の設定は使いません。</span>
+      <span class="note hidden" id="bsnote"><b>ボスバトル（協力モード）</b>：クラス全員で、いたずらモンスター（ボス）を「くすぐって」おいはらいます。だれかが正解するたびにボスの「げんき」がへり、0になるとボスは笑ってにげていき、少しだけげんきの多い次のボスが来ます。時間の中で何ひきおいはらえるかをクラスでめざします（時間は「時間」でえらびます）。正解は 10（連続正解で最大 20）、まちがいでも答えれば 1。1人が出せる量には上限があります。20〜30秒ごとのボスの「いたずら」は見た目だけで、点数や問題には何も起きません。順位や個人の正誤は大画面にも児童の画面にも出ません。</span>
+      <span class="note hidden" id="jnnote"><b>じんとりバトル（2チーム）</b>：あか（ウサギ）とあお（ペンギン）に分かれ、正解で 7×7 の盤のマスをぬります。ぬるマスは自動で決まり（えらべません）、マスごとに必要な正解の数がちがいます（ふつう2・★4・まんなか6。相手のマスは+1、自分の陣地からはなれたマスは+1）。ぬったばかりのマスは15秒うばえません。のこり30秒はラストスパート（2倍）。人数がちがっても、チームの力が同じになるように調整します。チームは参加した順に交互に入り、大画面のメニューで「自動で分けなおす」や1人ずつの移動ができます（始まると変えられません）。「やさしい」ルールでは、相手のマスをうばえません（全部ぬれたら終わり）。</span>
+      <span class="note hidden" id="m1note"><b>100マスはっぴょう</b>：児童が「100マス計算」で練習した記録を、先生の大画面に計算（たし算・ひき算・かけ算）ごとに出します。児童が部屋に入ると、その画面の上で100マス計算がひらき、ボタンを押さなくても、入ったときと1回おわるたびに、その子の集計（数字だけ）が自動で届きます。生の記録は送りません。画面は2つを切りかえます。「このじかん」は部屋に入ってからの回で、はやさ・のびりつ（入る前の自己ベストより速くなった割合）・がんばり（やったセット数）・じこベストこうしん（順位なし）。「これまで」は入ったときに届く記録で、じこベスト・るいけい（いままでの回数の合計）・コツコツ（今週の日数）。出す計算は先生が選べます（はじめは記録のある計算だけ）。それぞれ上位5人まで（計算を2つ以上ならべるときは一部3人まで）で、最下位は出しません。できるだけ多くの子がどこかに出るよう、1つめの欄以外はほかの欄に出た子をあとまわしにします。数えるのは「100問・だんをしぼらない・最後まで・正答率9割以上・1マス0.4秒以上」の回だけです。記録は児童の端末にあるので、書きかえれば数字は変えられます（ほかの対戦と同じ）。成績には使わないでください。「スタート」はなく、入室をしめきる・終わるだけです。</span>
+      <span class="note hidden" id="rknote"><b>ロケットはっしゃ（協力モード）</b>：クラス全員で1つのロケットを飛ばします。問題（上の「問題」で選んだもの）に答えて燃料をため、目標に届くとミニゲーム（せーのではっしゃ／ほしをあつめよう）が全員同時に始まり、クリアで次のステージへ（ふつう5ステージ・約5分／みじかい3ステージ・約3分。「ステージの数」でえらびます）。失敗しても「もういちど」は1回だけで、2回目は条件がゆるくなり必ず進みます。燃料の目標は人数・学年から自動で決まり、「やさしい」ルールではもっと低くなります。1人が出せる燃料には上限があり、順位や個人の正誤は大画面にも児童の画面にも出ません（名前が出るのは、良いことをした瞬間の吹き出しだけ）。時間の設定は使いません。</span>
       </details>
     </div>
-    <div class="form" style="margin-top:16px">
-      <b style="font-size:18px">② すきま時間クイズ大会（教室で映す）</b>
+    </section>
+      <section class="tc-pane hidden" id="tp-proj" aria-label="教室で映す">
+        <div class="tc-ph"><h2>教室で映す</h2><p>児童の端末を使わずに、大きな画面に問題を映してクラス全員で答えます。</p></div>
+    <div class="form">
+      <h3 class="tc-h3">すきま時間クイズ大会（教室で映す）</h3>
       <span class="prep"><b>準備：なし</b>（児童の端末は使いません）</span>
       <span class="note">授業が早く終わったときや朝の会などに。大きな画面に問題を映し、クラス全員で答えます（児童の端末は不要）。準備はいりません。</span>
       <label>クイズ<select id="pg">${choiceOpt}</select></label>
       <label>学年<select id="pgr"></select></label>
       <label>使える時間<select id="pn"><option value="5">3分くらい（5問）</option><option value="8" selected>5分くらい（8問）</option><option value="15">10分くらい（15問）</option></select></label>
       <label>1問の時間<select id="ps"><option value="10">10秒</option><option value="15" selected>15秒</option><option value="20">20秒</option></select></label>
-      <button class="btn" id="pj">映して始める</button>
+      <button class="tc-btn" id="pj">映して始める</button>
     </div>
     </section>
-    <section class="tpane hidden" id="tp-link">
+      <section class="tc-pane hidden" id="tp-link" aria-label="課題リンク">
+        <div class="tc-ph"><h2>リンクを配る</h2><p>Google Classroom や Teams にはるリンク・QR を作ります。児童は 1人で練習します。</p></div>
+    
     <div class="form">
-      <b style="font-size:18px">① 課題リンクを作る</b>
+      <h3 class="tc-h3">課題リンクを作る</h3>
       <span class="prep"><b>準備：なし</b>（できたリンクを Google Classroom や Teams に貼ります）</span>
       <span class="note">児童はそのゲームをすぐに始められます。課題リンクで開いたページでは、「コードで参加」「先生の画面」「ほかのゲーム」は表示されません。</span>
-      <span class="note">授業リンクでは結果のあとも固定されます。終わったら結果画面の「先生：じゅぎょうを おわる」を2秒長押ししてください。先生が試すときは新しいタブで。</span>
+      <span class="note">授業リンクでは結果のあとも固定されます。終わったら結果画面の「先生：じゅぎょうをおわる」を2秒長押ししてください。先生が試すときは新しいタブで。</span>
       <label>ゲーム<select id="tg">${opt}</select></label>
       <label>学年<select id="tgr"></select></label>
-      <div id="tkuku" class="hidden"><span class="note"><b>九九の段</b>（えらばなければ ぜんぶ。いくつでも）</span>
+      <div id="tkuku" class="hidden"><span class="note"><b>九九の段</b>（えらばなければぜんぶ。いくつでも）</span>
         <div class="pills" style="margin-top:6px">${[1,2,3,4,5,6,7,8,9].map(n=>`<button type="button" class="pill small" data-td="${n}">${n}</button>`).join("")}</div>
         <label style="margin-top:6px">じゅんばん<select id="tko"><option value="up">上り</option><option value="down">下り</option><option value="rand">ばらばら</option></select></label></div>
       <label id="tkencho" class="hidden">県のえらびかた<select id="tkk"><option value="">ぜんぶの県</option><option value="diff">県名と市名がちがう県だけ</option></select></label>
       <label>あそびかた<select id="tm2"><option value="">ふつう（時間内に何問とけるか）</option>${MODES.map(m=>`<option value="${m.id}">${m.ico} ${m.t}（CPUとたいせん）</option>`).join("")}</select></label>
       <label id="trl" class="hidden">ルール（バトルモードのとき）<select id="tr">${RULES.map(r=>`<option value="${r.id}">${r.t}（${r.d}）</option>`).join("")}</select></label>
       <label>制限時間<select id="tt"><option value="30">30秒</option><option value="60" selected>60秒</option><option value="90">90秒</option><option value="120">120秒</option></select></label>
-      <label>ふりがな<select id="tfg"><option value="">児童の設定のまま</option><option value="1">いつも あり</option><option value="0">いつも なし</option></select></label>
+      <label>ふりがな<select id="tfg"><option value="">児童の設定のまま</option><option value="1">いつもあり</option><option value="0">いつもなし</option></select></label>
       <label class="chk"><input type="checkbox" id="tnh"> ひろばを出さない（リンクの末尾に <b>&amp;col=0</b> を付けます）</label>
-      <label class="chk"><input type="checkbox" id="tnt"> 計算スプリントで 🧰 ずで かんがえる どうぐを出さない（<b>&amp;tool=0</b>）</label>
-      <button class="btn" id="mk">リンクを作る</button>
+      <label class="chk"><input type="checkbox" id="tnt"> 計算スプリントで 🧰 ずでかんがえるどうぐを出さない（<b>&amp;tool=0</b>）</label>
+      <button class="tc-btn" id="mk">リンクを作る</button>
       <div class="out hidden" id="lo"></div>
     </div>
-    <div class="form" style="margin-top:16px">
-      <b style="font-size:18px">めもり名人（数直線・はかりの目もり）の 課題リンク</b>
-      <span class="note">3年「重さ」の はかりの読み取りと、その前の 数直線の練習です。時間は はかりません。ステージを えらぶと、児童は その ステージだけを くりかえせます（ほかのステージ・ひろばへの入口は 出ません）。</span>
-      <label>ステージ<select id="tmst"><option value="1">1 1めもり＝1（数直線）</option><option value="2">2 ここは どこ？（数直線にタッチ）</option><option value="3">3 1めもりは いくつ？（2・5・10・100）</option><option value="4">4 数直線を よむ</option><option value="5">5 ここは どこ？ 2</option><option value="6">6 はかりの さいだい・0</option><option value="7">7 はかりの 1めもり</option><option value="8">8 はりを よむ（g）</option><option value="9">9 kgと g（□kg□g）</option><option value="10">10 ぴったり おかいもの</option><option value="11">11 テスト（まぜて）</option></select></label>
+    <div class="form">
+      <h3 class="tc-h3">めもり名人（数直線・はかりの目もり）の課題リンク</h3>
+      <span class="note">3年「重さ」のはかりの読み取りと、その前の数直線の練習です。時間ははかりません。ステージをえらぶと、児童はそのステージだけをくりかえせます（ほかのステージ・ひろばへの入口は出ません）。</span>
+      <label>ステージ<select id="tmst"><option value="1">1 1めもり＝1（数直線）</option><option value="2">2 ここはどこ？（数直線にタッチ）</option><option value="3">3 1めもりはいくつ？（2・5・10・100）</option><option value="4">4 数直線をよむ</option><option value="5">5 ここはどこ？ 2</option><option value="6">6 はかりのさいだい・0</option><option value="7">7 はかりの 1めもり</option><option value="8">8 はりをよむ（g）</option><option value="9">9 kgと g（□kg□g）</option><option value="10">10 ぴったりおかいもの</option><option value="11">11 テスト（まぜて）</option></select></label>
       <label class="chk"><input type="checkbox" id="tmnh"> ひろばを出さない（<b>&amp;col=0</b>）</label>
-      <button class="btn" id="mkmt">リンクを作る</button>
+      <button class="tc-btn" id="mkmt">リンクを作る</button>
       <div class="out hidden" id="lomt"></div>
     </div>
-    <div class="form" style="margin-top:16px;border-color:var(--accent)">
-      <b style="font-size:18px">② 単元のリンクを作る</b>
-      <span class="note">単元をえらんで「リンクとQR」を押すと、短いリンクとQRができます。「授業で使う（ほかの画面に行かせない）」と「ひろばを出さない」をえらべます。授業リンクは開いてから90分、または日付が変わるまで固定されます。終わったら結果画面の「先生：じゅぎょうを おわる」を2秒長押ししてください。</span>
-      <div><button class="btn" id="mku2">単元をえらんで リンクをつくる</button></div>
+    <div class="form">
+      <h3 class="tc-h3">単元のリンクを作る</h3>
+      <span class="note">単元をえらんで「リンクとQR」を押すと、短いリンクとQRができます。「授業で使う（ほかの画面に行かせない）」と「ひろばを出さない」をえらべます。授業リンクは開いてから90分、または日付が変わるまで固定されます。終わったら結果画面の「先生：じゅぎょうをおわる」を2秒長押ししてください。</span>
+      <div><button class="tc-btn" id="mku2">単元をえらんでリンクをつくる</button></div>
     </div>
     </section>
-    <section class="tpane hidden" id="tp-make">
-    <div class="form" style="border-color:var(--accent)">
-      <b style="font-size:18px">① 単元から つくる（単元を組み合わせて出題）</b>
-      <span class="prep"><b>準備：なし</b>（問題は単元ごとの「型」から自動で作ります。正解はコードで計算し、自動の検査で確かめています。気になる問題は「この もんだい、おかしい？」から問題IDを確かめてください）</span>
+      <section class="tc-pane hidden" id="tp-make" aria-label="問題をつくる">
+        <div class="tc-ph"><h2>問題をつくる</h2><p>単元の型から自動で作るか、先生のオリジナルの問題セットを作ります。</p></div>
+    
+    <div class="form">
+      <h3 class="tc-h3">単元からつくる（単元を組み合わせて出題）</h3>
+      <span class="prep"><b>準備：なし</b>（問題は単元ごとの「型」から自動で作ります。正解はコードで計算し、自動の検査で確かめています。気になる問題は「このもんだい、おかしい？」から問題IDを確かめてください）</span>
       <span class="note">教科・学年・学習項目でしぼって、単元を何個でも組み合わせられます（学年をまたいでもOK）。そのままクイズ・たからばこ・すごろくで出題したり、先生のもんだいセットにして編集したり、短いリンク・QRにして児童に配ったりできます。</span>
-      <div><button class="btn" id="mku">単元をえらぶ</button></div>
+      <div><button class="tc-btn" id="mku">単元をえらぶ</button></div>
     </div>
-    <div class="form" style="margin-top:16px;border-color:var(--go)">
-      <b style="font-size:18px">② もんだいを つくる（先生のオリジナル）</b>
+    <div class="form">
+      <h3 class="tc-h3">もんだいをつくる（先生のオリジナル）</h3>
       <span class="prep"><b>準備：なし</b>（つくった問題は、この端末の中だけに保存されます）</span>
       <span class="note">4択・○×の問題を自分でつくって、教室のクイズ大会（Kahoot のような遊び方）や、たからばこ・すごろくで使えます。Excel やスプレッドシートの表を貼りつけて取り込んだり、ファイル・れんしゅう用リンクで書き出したりもできます。いま ${qsets.length} セットあります。</span>
-      <div><button class="btn" id="mkq">もんだいを つくる・えらぶ</button></div>
+      <div><button class="tc-btn" id="mkq">もんだいをつくる・えらぶ</button></div>
     </div>
     </section>
-    ${colTeacherHtml()}${toolTeacherHtml()}
-    <div class="banner" style="margin-top:16px"><b>次の段階で追加する予定：</b>単元ごとのつまずき分析、学校のアカウントでのログイン。</div>`;
+      <section class="tc-pane hidden" id="tp-set" aria-label="この端末の設定">
+        <div class="tc-ph"><h2>この端末の設定</h2><p>ここで変えた設定は、いま開いているこの端末だけに効きます。</p></div>
+        ${colTeacherHtml()}${toolTeacherHtml()}</section>
+      <section class="tc-pane hidden" id="tp-guide" aria-label="児童の情報と使い方">
+        <div class="tc-ph"><h2>児童の情報のあつかい</h2><p>友だち対戦で児童が入れた名前は、先生の端末のメモリにだけ置き、部屋を閉じると消えます。運営者は名前・成績を集めません。</p></div>
+        <div class="form tc-guide" id="tguide"><ol>${TGUIDE.map(t=>`<li>${esc(t)}</li>`).join("")}</ol></div>
+      </section>
+      </div>
+    </div></div>`;
   const fillG=(sel,gsel)=>{ const v=$(sel).value;
     if(v.startsWith("set:")){ $(gsel).innerHTML=[1,2,3,4,5,6].map(n=>`<option value="${n}">${n}年</option>`).join(""); const st=qsFind(v.slice(4)); $(gsel).value=String(st&&st.g?st.g:3); return; }
     const x=GAMES.find(y=>y.id===v); $(gsel).innerHTML=x.g.map(n=>`<option value="${n}">${n}年</option>`).join(""); };
   $("#mkq").onclick=()=>go("#make");
-  /* 3つのタブ（クラスで遊ぶ／リンクを配る／問題をつくる）。#teacher?tab=link|make で開く */
-  const showTab=k=>{ app.querySelectorAll(".tpane").forEach(e=>e.classList.toggle("hidden",e.id!=="tp-"+k)); app.querySelectorAll(".t3b").forEach(b=>b.setAttribute("aria-pressed",b.dataset.tab===k?"true":"false")); };
-  app.querySelectorAll(".t3b").forEach(b=>b.onclick=()=>showTab(b.dataset.tab));
-  { const tb=q&&q.get("tab"); showTab(tb==="link"||tb==="make"?tb:"play"); }
+  /* 左の メニュー（ホーム／部屋／映す／リンク／問題／設定／情報）。#teacher?tab=room|proj|link|make|set|guide で開く（前の tab=play は 部屋） */
+  const showTab=(k,focus)=>{ if(!TCNAV.some(n=>n[0]===k)) k="home";
+    app.querySelectorAll(".tc-pane").forEach(e=>e.classList.toggle("hidden",e.id!=="tp-"+k));
+    app.querySelectorAll(".tc-nb").forEach(b=>{ if(b.dataset.tab===k) b.setAttribute("aria-current","page"); else b.removeAttribute("aria-current"); });
+    if(focus){ const m=app.querySelector(".tc-main"); if(m) m.scrollIntoView({block:"start"}); } };
+  app.querySelectorAll(".tc-nb").forEach(b=>b.onclick=()=>showTab(b.dataset.tab,true));
+  { const tb=q&&q.get("tab"); showTab(tb==="play"?"room":tb||"home"); }
+  const markModes=()=>app.querySelectorAll(".tc-mode").forEach(b=>b.setAttribute("aria-checked",b.dataset.m===$("#nm").value?"true":"false"));
+  app.querySelectorAll(".tc-mode").forEach(b=>b.onclick=()=>{ if(b.disabled) return; $("#nm").value=b.dataset.m; $("#nm").onchange(); markModes(); });
+  app.querySelectorAll(".tc-act").forEach(b=>b.onclick=()=>{      // ホームの カード：パネルを ひらく（部屋は あそびかたも えらぶ）
+    const [k,v]=b.dataset.go.split(":");
+    if(k==="units") return go("#units");
+    if(k==="url"){ location.href=v; return; }
+    showTab(k,true);
+    if(k==="room"&&v){ $("#nm").value=v; $("#nm").onchange(); markModes(); }
+    if(k==="link"&&v){ const e=$("#"+v); if(e) e.closest(".form").scrollIntoView({block:"start"}); } });
   $("#mku2").onclick=()=>go("#units");
   const co=$("#colOn"); if(co) co.onchange=()=>colSetOn(co.checked);
   const to=$("#toolOn"); if(to) to.onchange=()=>store.set(TLCFG,{on:to.checked?1:0});
@@ -3781,6 +3934,7 @@ function renderTeacher(q){
     else $("#roomErr").textContent=""; };
   $("#nm").onchange=()=>{ syncMode(); remember(); };
   syncMode();
+  markModes();
   const roomFromForm=()=>{ const mode=$("#nm").value, gv=$("#ng").value, base={mode,g:+$("#ngr").value,t:+$("#nt").value,rule:ruleOf($("#nr").value),nm:$("#nmm").value==="input"?"input":"auto",nh:$("#nnh").checked?1:0,ns:$("#nm").value==="rocket"&&$("#nstg").value==="3"?3:5};
     if(mode==="m100") return {...base,rule:"normal",game:"calc"};      // 100マス はっぴょう：問題は使わない
     if((mode==="chest"||mode==="race"||mode==="boss"||mode==="jin")&&roomSelected().length){
@@ -3831,7 +3985,7 @@ function renderTeacher(q){
   $("#pj").onclick=()=>startProjector($("#pg").value,+$("#pgr").value,+$("#pn").value,+$("#ps").value);
   if(q&&q.get("nm")==="input") $("#nmm").value="input";      // 「なまえの きめかた」は、はじめから自動ニックネーム。#teacher?nm=input で「児童が入力」をえらんだ状態にできる（nm=auto もそのまま使える）
   const want=q&&q.get("set");      // 「出題する」から来たとき：クイズの設定をえらんだ状態にして、部屋の欄までスクロール
-  if(want&&qsFind(want)){ $("#nm").value="quiz"; $("#ng").value="set:"+want; fillG("#ng","#ngr"); setRule(); syncMode(); $("#mkroom").closest(".form").scrollIntoView(); }
+  if(want&&qsFind(want)){ $("#nm").value="quiz"; $("#ng").value="set:"+want; fillG("#ng","#ngr"); setRule(); syncMode(); markModes(); showTab("room"); $("#mkroom").closest(".form").scrollIntoView(); }
 }
 
 /*T-END*/
