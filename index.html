@@ -689,7 +689,15 @@ body[data-v=host] .wrap{max-width:none;padding:0}
 /* 待合室と発表は投影に必要な情報だけ。補足と名簿は右上のメニューへ。 */
 .px-lobby .lcol{min-width:0}.px-lobby .bigcode{font-size:clamp(90px,15vw,230px)}
 .px-lobby .cnt{font-size:clamp(36px,4vw,64px)}.px-lobby .cnt b{font-size:1.45em}
-.px-lobby .qrbox svg{width:min(62vh,46vw,540px)}
+.px-lobby .qrbox svg{width:min(34vh,26vw,300px)}
+.qrzb{display:block;margin:0 auto;padding:0;border:0;background:none;cursor:zoom-in;color:inherit;font:inherit}
+.qrzb .qrzh{display:block;text-align:center;font-size:18px;color:var(--chalk);margin-top:4px}
+.qrz{position:fixed;inset:0;z-index:80;background:rgba(10,25,20,.92);display:flex;align-items:center;justify-content:center;cursor:zoom-out}
+.qrz .qrzin{display:flex;align-items:center;gap:4vw;justify-content:center}
+.qrz svg{width:min(86vh,62vw);height:auto;background:#fff;border-radius:16px;padding:10px;display:block;box-sizing:border-box}
+@media (orientation:portrait){.qrz .qrzin{flex-direction:column}.qrz svg{width:min(90vw,70vh)}}
+.qrz .qrzc{font-size:clamp(60px,10vw,180px);font-weight:900;color:#fff;letter-spacing:.06em}
+.qrz .qrzx{position:absolute;left:0;right:0;bottom:10px;text-align:center;color:#cfe;font-size:18px}
 .px-end{width:min(100%,1100px);margin:auto;display:grid;gap:18px;align-content:center}
 .px-end .px-h2{font-size:clamp(52px,6vw,88px);justify-content:center;margin:0 0 16px}
 .px-end .hrank{font-size:clamp(32px,3.7vw,56px);padding:14px 22px;margin:0}
@@ -1057,6 +1065,12 @@ body[data-v=host] .wrap{max-width:none;padding:0}
 .m1r b{font-size:20px;font-variant-numeric:tabular-nums;text-align:right}.m1r b small{display:block;font-size:13px;font-weight:600;color:var(--muted)}
 .m1rule{margin:10px 0 4px}
 .m1none{background:#fff3c4;border:2px solid #e0b030;border-radius:12px;padding:8px 12px;font-weight:700}
+.m1ov{position:fixed;inset:0;z-index:60;background:#fff;display:flex;flex-direction:column}
+.m1ov .m1bar{display:flex;align-items:center;gap:10px;padding:6px 10px;background:var(--go);color:#fff;font-weight:700;font-size:15px;min-height:48px}
+.m1ov .m1bar .btn{min-height:40px;padding:4px 12px;font-size:16px;background:#fff;color:#13202b;flex:none}
+.m1ov .m1bar span{flex:1;line-height:1.3}
+.m1ov iframe{flex:1;border:0;width:100%}
+.btn.m1go2{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;margin:6px 0 4px;font-size:20px;min-height:56px}
 .btn.m1go{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;margin:12px 0 4px;font-size:26px;min-height:72px;background:var(--go);color:#fff}
 .btn.m1go:disabled{background:#c4cdc8;color:#2a3a33}
 .m1new{margin-top:6px;width:100%;text-align:left;font-size:19px}
@@ -1073,7 +1087,7 @@ body[data-v=host] .wrap{max-width:none;padding:0}
 .m1side .lead{font-size:24px;font-weight:800}
 .m1qr .note{color:var(--chalk);font-size:17px;line-height:1.3}
 .m1code{font-size:62px;font-weight:900;letter-spacing:2px;white-space:nowrap;line-height:1;color:#ffe066}
-.m1qr svg{width:190px;margin:6px auto;border-radius:10px;padding:5px}
+.m1qr svg{width:130px;margin:6px auto;border-radius:10px;padding:5px}
 .m1over{font-size:40px;font-weight:900;margin:30px 0}
 .m1cnt{font-size:24px;font-weight:700;line-height:1.5}.m1cnt b{font-size:34px;color:#ffe066;margin:0 4px}
 .m1main{display:flex;flex-direction:column;gap:8px;min-width:0;min-height:0}
@@ -2033,13 +2047,15 @@ const TX={
  "m1.tb":["きょうの ベスト"],"m1.pb":["まえの じこベスト"],"m1.nobi":["のびりつ"],"m1.sets":["きょうの セット"],
  "m1.acc":["正答率《せいとうりつ》","せいかいの わりあい"],"m1.days":["こんしゅう れんしゅうした 日《ひ》","こんしゅう れんしゅうした ひ"],
  "m1.sec":[ms=>{ const ds=Math.round(ms/100), m=Math.floor(ds/600), x=((ds%600)/10).toFixed(1); return m?`${m}ぷん${x}びょう`:`${x}びょう`; }],"m1.pct":[n=>`${n}% はやく なった`],
- "m1.pv":["「せんせいに みせる」を おした ときだけ、きょうの 100マスの まとめ（すうじ だけ）が 先生《せんせい》に とどくよ","「せんせいに みせる」を おした ときだけ、きょうの 100マスの まとめ（すうじ だけ）が せんせいに とどくよ"],"m1.kai":[n=>`${n}かい`],"m1.nichi":[n=>`${n}にち`],"m1.set":[n=>`${n}セット`],
+ "m1.pv":["この へやでは、100マスが おわるたびに、きょうの まとめ（すうじ だけ）が 先生《せんせい》に とどくよ。名前《なまえ》や こたえは とどかないよ","この へやでは、100マスが おわるたびに、きょうの まとめ（すうじ だけ）が せんせいに とどくよ。なまえや こたえは とどかないよ"],"m1.kai":[n=>`${n}かい`],"m1.nichi":[n=>`${n}にち`],"m1.set":[n=>`${n}セット`],
  "m1.perf":[n=>`（ぜんもん せいかい ${n}かい）`],
  "m1.pbnew":["じこベスト こうしん！"],
  "m1.none1":["まだ きろくが ないよ"],
  "m1.none":["まだ 100マスの きろくが ないよ。100マス けいさんで れんしゅうしてから みせてね"],
  "m1.rule":["かぞえるのは「100問《もん》・だんを えらばない・さいごまで・9わり いじょう せいかい」の 回《かい》だけだよ","かぞえるのは「100もん・だんを えらばない・さいごまで・9わり いじょう せいかい」の かい だけだよ"],
  "m1.other":[n=>`きょう かぞえない 回《かい》：${n}かい`,n=>`きょう かぞえない かい：${n}かい`],
+ "m1.play":["100マスを する"],"m1.back":["へやに もどる"],"m1.live":["おわるたびに 先生《せんせい》の 画面《がめん》に とどくよ","おわるたびに せんせいの がめんに とどくよ"],
+ "m1.livesent":["とどいたよ！ つぎも がんばろう","とどいたよ！ つぎも がんばろう"],"m1.liveend":["はっぴょうは おわりました","はっぴょうは おわったよ"],
  "m1.show":["せんせいに みせる"],"m1.again":["もう いちど みせる"],"m1.sentb":["みせたよ！"],
  "m1.sending":["おくっているよ…"],
  "m1.sent":["みせたよ！ あたらしい きろくが できたら、もう いちど おしてね"],
@@ -2237,9 +2253,21 @@ function party(){
 }
 /* ===== 参加用QRコード（file:// で開いているときは出さない） ===== */
 const qrCache={};
+function qrZoom(url){
+  if(!qrCache[url]||document.getElementById("qrz")) return;
+  const code=(/[?&]code=(\d+)/.exec(url)||[])[1]||"";
+  const ov=document.createElement("div"); ov.id="qrz"; ov.className="qrz"; ov.setAttribute("role","dialog"); ov.setAttribute("aria-label","QRコード");
+  ov.innerHTML=`<div class="qrzin">${qrCache[url]}${code?`<div class="qrzc">${esc(code)}</div>`:""}<div class="qrzx">タッチで とじる</div></div>`;
+  const close=()=>{ ov.remove(); document.removeEventListener("keydown",key); }, key=e=>{ if(e.key==="Escape") close(); };
+  ov.onclick=close; document.addEventListener("keydown",key); document.body.appendChild(ov);
+}
 function showQr(box,url){
   if(!box||location.protocol==="file:") return;
-  const put=()=>{ box.innerHTML=qrCache[url]+`<div class="note" style="text-align:center">${T("qr.t")}</div>`; };
+  const big=!!box.closest(".px");      // 先生の大画面：ふだんは 小さく、おすと 画面いっぱい
+  const put=()=>{
+    box.innerHTML=big?`<button type="button" class="qrzb" aria-label="QRコードを 大きく する">${qrCache[url]}<span class="qrzh">🔍 おすと 大きく なるよ</span></button>`:qrCache[url]+`<div class="note" style="text-align:center">${T("qr.t")}</div>`;
+    if(big) box.querySelector(".qrzb").onclick=()=>qrZoom(url);
+  };
   if(qrCache[url]) return put();
   loadScript("vendor/qrcode-generator-2.0.4.js?v=79ec86f8",()=>typeof qrcode==="function").then(()=>{
     const q=qrcode(0,"M"); q.addData(url); q.make();
@@ -3638,7 +3666,7 @@ function renderTeacher(q){
       <span class="note">やさしいルール：たからばこで「うばう・入れかえ・落とす」が出ず、すごろくに🌀（もどる）がありません。1〜2年を選ぶと、はじめは「やさしい」になります。</span>
       <span class="note hidden" id="bsnote"><b>ボスバトル（協力モード）</b>：クラス全員で、いたずらモンスター（ボス）を「くすぐって」おいはらいます。だれかが正解するたびにボスの「げんき」がへり、0になるとボスは笑ってにげていき、少しだけ げんきの多い次のボスが来ます。時間の中で何ひき おいはらえるかをクラスでめざします（時間は「時間」でえらびます）。正解は 10（連続正解で最大 20）、まちがいでも答えれば 1。1人が出せる量には上限があります。20〜30秒ごとのボスの「いたずら」は見た目だけで、点数や問題には何も起きません。順位や個人の正誤は大画面にも児童の画面にも出ません。</span>
       <span class="note hidden" id="jnnote"><b>じんとりバトル（2チーム）</b>：あか（ウサギ）と あお（ペンギン）に分かれ、正解で 7×7 の盤のマスをぬります。ぬるマスは自動で決まり（えらべません）、マスごとに必要な正解の数がちがいます（ふつう2・★4・まんなか6。相手のマスは+1、自分の陣地からはなれたマスは+1）。ぬったばかりのマスは15秒うばえません。のこり30秒はラストスパート（2倍）。人数がちがっても、チームの力が同じになるように調整します。チームは参加した順に交互に入り、大画面のメニューで「自動で分けなおす」や1人ずつの移動ができます（始まると変えられません）。「やさしい」ルールでは、相手のマスをうばえません（全部ぬれたら終わり）。</span>
-      <span class="note hidden" id="m1note"><b>100マス はっぴょう</b>：児童が「100マス計算」で練習した記録を、先生の大画面に計算（たし算・ひき算・かけ算）ごとに出します。児童が部屋に入って「せんせいに みせる」を押したときだけ、その子の集計（きょうのベスト・前の自己ベスト・きょうのセット数・正答率・今週の日数の数字だけ）が届きます。生の記録は送りません。はやさ・のびりつ（前の自己ベストより速くなった割合）・じこベスト こうしん（順位なし）・ていねい（全問正解の回数）・コツコツ（今週の日数）・がんばり（きょうのセット数、5まで）を、それぞれ上位5人まで出します（最下位は出しません。できるだけ多くの子が どこかに出るよう、はやさ以外は ほかの欄に出た子を あとまわしにします）。数えるのは「100問・だんをしぼらない・最後まで・正答率9割以上・1マス0.4秒以上」の回だけです。記録は児童の端末にあるので、書きかえれば数字は変えられます（ほかの対戦と同じ）。成績には使わないでください。「スタート」はなく、入室をしめきる・終わるだけです。</span>
+      <span class="note hidden" id="m1note"><b>100マス はっぴょう</b>：児童が「100マス計算」で練習した記録を、先生の大画面に計算（たし算・ひき算・かけ算）ごとに出します。児童が部屋に入ると、その画面の上で100マス計算がひらきます。1回おわるたびに（または「せんせいに みせる」を押したとき）、その子の集計（きょうのベスト・前の自己ベスト・きょうのセット数・正答率・今週の日数の数字だけ）が届きます。生の記録は送りません。はやさ・のびりつ（前の自己ベストより速くなった割合）・じこベスト こうしん（順位なし）・ていねい（全問正解の回数）・コツコツ（今週の日数）・がんばり（きょうのセット数、5まで）を、それぞれ上位5人まで出します（最下位は出しません。できるだけ多くの子が どこかに出るよう、はやさ以外は ほかの欄に出た子を あとまわしにします）。数えるのは「100問・だんをしぼらない・最後まで・正答率9割以上・1マス0.4秒以上」の回だけです。記録は児童の端末にあるので、書きかえれば数字は変えられます（ほかの対戦と同じ）。成績には使わないでください。「スタート」はなく、入室をしめきる・終わるだけです。</span>
       <span class="note hidden" id="rknote"><b>ロケット はっしゃ（協力モード）</b>：クラス全員で1つのロケットを飛ばします。問題（上の「問題」で選んだもの）に答えて燃料をため、目標に届くとミニゲーム（せーので はっしゃ／ほしを あつめよう）が全員同時に始まり、クリアで次のステージへ（ふつう5ステージ・約5分／みじかい3ステージ・約3分。「ステージの数」でえらびます）。失敗しても「もういちど」は1回だけで、2回目は条件がゆるくなり必ず進みます。燃料の目標は人数・学年から自動で決まり、「やさしい」ルールではもっと低くなります。1人が出せる燃料には上限があり、順位や個人の正誤は大画面にも児童の画面にも出ません（名前が出るのは、良いことをした瞬間の吹き出しだけ）。時間の設定は使いません。</span>
       </details>
     </div>
@@ -4599,6 +4627,7 @@ function renderLobby(){
     app.innerHTML=`<div class="play"><div class="q">${T("n.lost")}<br><button class="btn" onclick="go('#join')">${T("n.rejoin")}</button></div></div>`; });
 }
 function kickedView(){
+  if(typeof m1OvClose==="function") m1OvClose();
   if(ES){ ES.close(); ES=null; } stopTimer(); M=null; QK=null; RK=null; CB=null; NET=null; try{ sessionStorage.removeItem("mh_net"); }catch(e){}
   app.innerHTML=`<div class="play"><div class="q">${T("k.out")}<br><button class="btn" onclick="go('#join')">${T("n.rejoin")}</button></div></div>`;
 }
@@ -5731,7 +5760,7 @@ async function pairJoin(code){
 
 /* ================= 100マス はっぴょう（部屋のモード）と 100マスの どんぐり =================
    記録は 100マス計算（apps/100masu）が この端末に書いた物を 読むだけ（data/masu100.js）。書きかえない。
-   児童：自分の まとめ（計算ごと）を見て、「せんせいに みせる」を押したときだけ 数字の まとめを送る（生の記録は送らない）。
+   児童：部屋に 入ると 100マスが その上で ひらき、1回 おわるたびに（または「せんせいに みせる」で） 数字の まとめを送る（生の記録は送らない）。
    先生の大画面：計算ごとに はやさ／のびりつ／じこベスト こうしん／ていねい／コツコツ／がんばり。上位5まで・最下位は出さない・できるだけ多くの子が出る */
 const MASU=window.MH_M100;
 const M1MODE={id:"m100",ico:"💯"}; tget(M1MODE,"t","m.m100.t"); tget(M1MODE,"d","m.m100.d");
@@ -5760,13 +5789,15 @@ function m1KidView(s){
       <div class="m1me">${me?`${fm(me)} ${esc(me.name)}`:""}</div>
       <div class="note">${end?T("m1.end"):T("m1.lead")}</div></div>
     ${any?"":`<p class="m1none" role="status">${T("m1.none")}</p>`}
-    ${end?"":`<button type="button" class="btn m1go" id="m1go"${!any?" disabled":""}>${ic("users")}${T(s.m1me?"m1.again":"m1.show")}</button>`}
+    ${end?"":`<button type="button" class="btn m1go" id="m1play">💯 ${T("m1.play")}</button><button type="button" class="btn sub m1go2" id="m1go"${!any?" disabled":""}>${ic("users")}${T(s.m1me?"m1.again":"m1.show")}</button>`}
     <div class="m1msg" id="m1msg" role="status">${s.m1me?T("m1.sent"):""}</div>
     <h2 class="m1h2">${T("m1.mine")}</h2>
     <div class="m1cs">${MASU.OPS.map(card).join("")}</div>
     <p class="note m1rule">${T("m1.rule")}${other?`<br>${T("m1.other",other)}`:""}</p>
     <p class="note m1pv">${ic("lock")} ${T("m1.pv")}</p>
   </div>${privacy()}`;
+  m1Live(s, end);
+  const pb=$("#m1play"); if(pb) pb.onclick=()=>m1OvOpen();
   const b=$("#m1go"); if(!b) return;      // おわった あとは ボタンを 出さない
   b.onclick=async()=>{
     const now=m1Sum(); if(!MASU.hasAny(now)) return;
@@ -5776,6 +5807,35 @@ function m1KidView(s){
     setTimeout(()=>{ if(document.getElementById("m1go")===b&&!end) { b.disabled=false; b.innerHTML=ic("users")+T("m1.again"); } },2200);
   };
 }
+/* --- 児童：部屋に 入ったら 100マスを この画面の 上で ひらく（部屋の つながりは そのまま）。
+   100マスが 記録を 書くたびに（storage イベント＋ 4びょうごとの 見なおし）まとめ（数字だけ）を じどうで 送る --- */
+let M1A=null;
+function m1Live(s,end){
+  if(!M1A||M1A.code!==s.code){ m1OvClose(); M1A={code:s.code,last:"",busy:0,end:false,opened:false}; }
+  M1A.end=end; M1A.s=s;
+  if(end){ const t=document.getElementById("m1lt"); if(t) t.textContent=T("m1.liveend"); return; }
+  if(!M1A.opened){ M1A.opened=true; m1OvOpen(); }      // はじめて 入った とき：すぐ 100マスへ
+}
+async function m1AutoSend(){
+  const A=M1A; if(!A||A.end||A.busy||!NET||NET.code!==A.code) return;
+  const sum=m1Sum(); if(!MASU.hasAny(sum)) return;
+  const w=MASU.wire(sum), sig=JSON.stringify(w); if(sig===A.last) return;
+  A.busy=1;
+  try{ await api("act",{...NET,op:"m100",s:w}); A.last=sig; const t=document.getElementById("m1lt"); if(t){ t.textContent=T("m1.livesent"); setTimeout(()=>{ if(t.isConnected&&!A.end) t.textContent=T("m1.live"); },4000); } }
+  catch(e){ if(/まって/.test(e.message||"")) setTimeout(m1AutoSend,2500); }
+  finally{ A.busy=0; }
+}
+window.addEventListener("storage",()=>{ if(M1A&&document.getElementById("m1ov")) m1AutoSend(); });
+function m1OvOpen(){
+  if(document.getElementById("m1ov")) return;
+  const ov=document.createElement("div"); ov.id="m1ov"; ov.className="m1ov";
+  ov.innerHTML=`<div class="m1bar"><button type="button" class="btn" id="m1back">◀ ${T("m1.back")}</button><span id="m1lt" role="status">💯 ${T(M1A&&M1A.end?"m1.liveend":"m1.live")}</span></div><iframe src="apps/100masu/index.html" title="100マス けいさん"></iframe>`;
+  document.body.appendChild(ov); document.body.style.overflow="hidden";
+  ov.querySelector("#m1back").onclick=()=>{ m1OvClose(); m1AutoSend(); if(NET&&M1A&&M1A.s){ M1K=null; m1KidView(M1A.s); } };
+  if(M1A){ clearInterval(M1A.iv); M1A.iv=setInterval(m1AutoSend,4000); }
+  m1AutoSend();      // 入った とき：きょうの まとめが あれば すぐ 出す
+}
+function m1OvClose(){ const ov=document.getElementById("m1ov"); if(ov) ov.remove(); document.body.style.overflow=""; if(M1A) clearInterval(M1A.iv); }
 /* --- 先生の大画面：コードと QR（左）＋ 計算の タブと 6つの カード（右）。名前は 上位だけ。全員の表は出さない --- */
 const M1CAT={hayasa:["⚡","はやさ","きょうの いちばん はやい タイム"],nobi:["📈","のびりつ","まえの じこベストより はやく なった"],teinei:["🎯","ていねい","ぜんもん せいかい の 回《かい》"],
   kotsu:["🌱","コツコツ","こんしゅう れんしゅうした 日《ひ》"],ganbari:["💪","がんばり","きょうの セット（5まで）"],pb:["🎉","じこベスト こうしん","じぶんの きろくを こえた！"]};
@@ -5808,7 +5868,7 @@ function m1HostUpd(s,B){
   const pb=`<section class="m1card k-pb">${head("pb")}<div class="m1pbl">${pbIds.map(pid=>`<span class="m1chip" data-pid="${esc(pid)}" role="button" tabindex="0">${nm(pid)}</span>`).join("")||`<span class="m1e">まだ いないよ</span>`}${pbMore?`<span class="m1e">ほか ${pbMore}にん</span>`:""}</div></section>`;
   const C={}; (r.cats||[]).forEach(c=>{ C[c.k]=c; });
   const html=r.n?[cat(C.hayasa||{k:"hayasa",l:[]}),cat(C.nobi||{k:"nobi",l:[]}),pb,cat(C.teinei||{k:"teinei",l:[]}),cat(C.kotsu||{k:"kotsu",l:[]}),cat(C.ganbari||{k:"ganbari",l:[]})].join("")
-    :`<div class="m1wait">${s.status==="lobby"?"「せんせいに みせる」を おして、きょうの 100マスを みせてね":"この けいさんの きろくは ありませんでした"}</div>`;
+    :`<div class="m1wait">${s.status==="lobby"?"100マスを はじめると、おわるたびに ここに 出るよ":"この けいさんの きろくは ありませんでした"}</div>`;
   const g=document.getElementById("m1grid"); if(g.dataset.h!==html){ g.dataset.h=html; g.innerHTML=html; }
   const chips=document.getElementById("pxchips");      // メニューの中：名前を押すと かえる／ニックネーム／へやから だす
   if(chips) chips.innerHTML=s.players.map(p=>`<button type="button" class="chip nmb" data-pid="${esc(p.pid)}">${fm(p)} ${esc(p.name)}${p.m1?" 💯":""}</button>`).join("")||`<span class="chip more">${T("px.none")}</span>`;
@@ -7357,6 +7417,7 @@ function route(){
   if(!DATA_OK&&path!=="check"&&path!=="teacher"&&path!=="make"&&path!=="qlink"&&path!=="feedback"){
     app.innerHTML=`<div class="q">問題《もんだい》データ（data フォルダ）を読《よ》み込《こ》めませんでした。<br>index.html と同《おな》じ場所《ばしょ》に data フォルダがあるか確認《かくにん》してください。</div>`; return;
   }
+  if(path!=="lobby"&&typeof m1OvClose==="function"){ m1OvClose(); M1A=null; }
   if(path==="feedback") renderFeedback();
   else if(path==="check") renderCheck();
   else if(path==="play") renderPlay(q);
