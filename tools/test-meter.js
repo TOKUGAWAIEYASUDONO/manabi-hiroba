@@ -63,7 +63,7 @@ for (const S of M.STAGES) {
         const svg = M.dialSVG(sp, { v: q.ask === "shop" ? q.target : q.v, hl: M.hlOf(q), tool: n % 2 === 0, items: q.items ? q.items.map(x => x.e) : null });
         ok(wellFormed(svg), `${tag}: はかりの SVG`);
         const deg = +(/rotate\(([-\d.]+)deg\)/.exec(svg) || [])[1];
-        ok(deg >= 0 && deg <= 330 && Math.abs(deg - M.needleDeg(sp, q.ask === "shop" ? q.target : q.v)) < 0.06, `${tag}: はりの 角度`);
+        ok(deg >= 0 && deg < 360 && Math.abs(deg - M.needleDeg(sp, q.ask === "shop" ? q.target : q.v)) < 0.06, `${tag}: はりの 角度`);
         ok(wellFormed(M.dialSVG(sp, { v: q.v, hl: M.hlOf(q), zoom: q.v })), `${tag}: ルーペの SVG`);
         const labels = sp.max / sp.lab + 1; ok((svg.match(/font-weight="700" text-anchor="middle" fill="#13202b">/g) || []).length >= labels, `${tag}: はかりの 数字`);
       }

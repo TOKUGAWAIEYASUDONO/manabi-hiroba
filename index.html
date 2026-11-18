@@ -7071,7 +7071,7 @@ const mtStars=(c,id)=>Math.max(0,Math.min(3,c.s[id]|0));
 const mtOpen=(c,id)=>id===1||id===6||mtStars(c,id-1)>0;
 const mtStarH=(n,big)=>`<span class="mtst${big?" big":""}" role="img" aria-label="ほし ${n}">${[0,1,2].map(i=>`<i class="${i<n?"on":""}" aria-hidden="true">★</i>`).join("")}</span>`;
 const mtToolOk=()=>tlCfgOn()&&!TLH;
-const mtIco=()=>`<svg class="art" viewBox="0 0 56 56" aria-hidden="true"><rect x="5" y="10" width="46" height="43" rx="10" fill="#2f6db0"/><rect x="13" y="3" width="30" height="6" rx="3" fill="#aab6c2"/><circle cx="28" cy="32" r="18" fill="#fffbea" stroke="#13304d" stroke-width="2"/>${[0,1,2,3,4,5,6,7,8,9,10].map(i=>{ const a=(i*33-90)*Math.PI/180; return `<line x1="${(28+16*Math.cos(a)).toFixed(1)}" y1="${(32+16*Math.sin(a)).toFixed(1)}" x2="${(28+(i%5?13:11)*Math.cos(a)).toFixed(1)}" y2="${(32+(i%5?13:11)*Math.sin(a)).toFixed(1)}" stroke="#13202b" stroke-width="1.6"/>`; }).join("")}<line x1="28" y1="32" x2="38" y2="20" stroke="#d32f2f" stroke-width="2.6" stroke-linecap="round"/><circle cx="28" cy="32" r="2.8" fill="#d32f2f"/></svg>`;
+const mtIco=()=>`<svg class="art" viewBox="0 0 56 56" aria-hidden="true"><rect x="5" y="10" width="46" height="43" rx="10" fill="#2f6db0"/><rect x="13" y="3" width="30" height="6" rx="3" fill="#aab6c2"/><circle cx="28" cy="32" r="18" fill="#fffbea" stroke="#13304d" stroke-width="2"/>${[0,1,2,3,4,5,6,7,8,9].map(i=>{ const a=(i*36-90)*Math.PI/180; return `<line x1="${(28+16*Math.cos(a)).toFixed(1)}" y1="${(32+16*Math.sin(a)).toFixed(1)}" x2="${(28+(i%5?13:11)*Math.cos(a)).toFixed(1)}" y2="${(32+(i%5?13:11)*Math.sin(a)).toFixed(1)}" stroke="#13202b" stroke-width="1.6"/>`; }).join("")}<line x1="28" y1="32" x2="38" y2="20" stroke="#d32f2f" stroke-width="2.6" stroke-linecap="round"/><circle cx="28" cy="32" r="2.8" fill="#d32f2f"/></svg>`;
 /* ホームの 算数の タイル（2〜4年と「ぜんぶ」のとき） */
 function meterTile(){
   if(ui.grade&&![2,3,4].includes(ui.grade)) return "";
@@ -7089,7 +7089,7 @@ function mtBuddy(msg){
 function renderMeter(q){
   setLG(ui.grade);
   app.innerHTML=`<div class="play mt"><div class="q">…</div></div>`;
-  loadScript("data/meter.js?v=0d101672",()=>!!window.MH_METER).then(()=>{
+  loadScript("data/meter.js?v=25f7f7cd",()=>!!window.MH_METER).then(()=>{
     if(params().path!=="meter") return;
     const st=+q.get("st"), task=q.get("task")==="1";
     if(st) mtStart(st,task); else if(LESSON) go("#home"); else mtMenu();
@@ -7174,7 +7174,7 @@ function mtArea(){
     area.querySelectorAll("[data-d]").forEach(b=>b.onclick=()=>mtNudge(+b.dataset.d)); $("#mtpok").onclick=mtPlaceOk; return;
   }
   if(s.ask==="shop"){
-    area.innerHTML=`<p class="note mthelp">のせると はりが うごくよ。はりを よんで ${M.kgg(q.target)} に しよう</p><div class="mtitems">${q.items.map((it,i)=>`<button type="button" class="mtitem${m.shopOn.includes(i)?" on":""}" data-it="${i}" aria-pressed="${m.shopOn.includes(i)}"><span class="mte" aria-hidden="true">${it.e}</span><span>${it.nm}</span><small>${m.shopOn.includes(i)?"のせた":"？g"}</small></button>`).join("")}</div><div class="mtnext"><button type="button" class="btn" id="mtpt"${m.lock?" disabled":""}>ぴったり！</button></div>`;
+    area.innerHTML=`<p class="note mthelp">${mtSum()>q.sp.max?"おもすぎて はかれないよ。へらそう。":""}のせると はりが うごくよ。はりを よんで ${M.kgg(q.target)} に しよう</p><div class="mtitems">${q.items.map((it,i)=>`<button type="button" class="mtitem${m.shopOn.includes(i)?" on":""}" data-it="${i}" aria-pressed="${m.shopOn.includes(i)}"><span class="mte" aria-hidden="true">${it.e}</span><span>${it.nm}</span><small>${m.shopOn.includes(i)?"のせた":"？g"}</small></button>`).join("")}</div><div class="mtnext"><button type="button" class="btn" id="mtpt"${m.lock?" disabled":""}>ぴったり！</button></div>`;
     area.querySelectorAll("[data-it]").forEach(b=>b.onclick=()=>{ if(m.lock) return; const i=+b.dataset.it, k=m.shopOn.indexOf(i); if(k>=0) m.shopOn.splice(k,1); else m.shopOn.push(i); sfx("click"); m.hl=null; mtPic(true); mtArea(); const n=area.querySelector(`[data-it="${i}"]`); if(n) n.focus(); });
     $("#mtpt").onclick=()=>mtJudge(mtSum()); return;
   }
