@@ -1091,11 +1091,22 @@ body[data-v=host] .wrap{max-width:none;padding:0}
 .m1over{font-size:40px;font-weight:900;margin:30px 0}
 .m1cnt{font-size:24px;font-weight:700;line-height:1.5}.m1cnt b{font-size:34px;color:#ffe066;margin:0 4px}
 .m1main{display:flex;flex-direction:column;gap:8px;min-width:0;min-height:0}
-.m1ttl{margin:0;font-size:32px;padding-right:170px}.m1ttl small{font-size:24px;color:var(--chalk)}
+.m1ttl{margin:0 0 4px;font-size:22px;line-height:1.2}.m1ttl small{display:block;font-size:22px;color:#ffe066}
 .m1tabs{display:flex;gap:10px;flex-wrap:wrap}
 .m1tab{font:inherit;font-size:24px;font-weight:800;background:rgba(255,255,255,.12);color:#fff;border:3px solid #fff;border-radius:14px;padding:4px 18px;cursor:pointer;min-height:52px}
 .m1tab.on{background:#ffe066;color:var(--ink);border-color:#ffe066}.m1tn{font-size:18px}
-.m1grid{flex:1;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));grid-auto-rows:minmax(0,1fr);gap:10px;min-height:0}
+.m1ctl{display:flex;gap:8px 24px;flex-wrap:wrap;align-items:center;padding-right:170px}.m1ctl .m1tab{font-size:21px;min-height:46px;padding:2px 14px}
+.m1op.on{background:#8dffb8;border-color:#8dffb8}
+.m1grid{flex:1;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;min-height:0}
+.m1grid.m1g1{grid-template-columns:minmax(0,1fr)}.m1grid.m1g2{grid-template-columns:repeat(2,minmax(0,1fr))}
+.m1col{display:flex;flex-direction:column;gap:8px;min-width:0;min-height:0}
+.m1oh{margin:0;font-size:28px;line-height:1.1;display:flex;align-items:baseline;gap:10px;border-bottom:3px solid rgba(255,255,255,.5);padding-bottom:2px}.m1oh small{font-size:18px;color:var(--chalk)}
+.m1cards{flex:1;display:grid;grid-auto-rows:minmax(0,auto);gap:8px;min-height:0;align-content:start;overflow:hidden}
+.m1g1 .m1cards{grid-template-columns:repeat(2,minmax(0,1fr))}.m1g1.v-all .m1cards{grid-template-columns:repeat(3,minmax(0,1fr))}
+.m1g3 .m1card h3 small,.m1g2 .m1card h3 small{display:none}.m1g3 .m1card{padding:3px 8px}.m1g3 .m1l li{min-height:28px;font-size:18px}.m1g3 .m1card h3{font-size:19px;margin:0 0 2px}.m1g3 .m1i{font-size:19px}
+.m1g3 .m1f .fc,.m1g3 .m1f .mkav{width:26px;height:26px}.m1g3 .m1v{font-size:17px}.m1g3 .m1chip{font-size:17px}.m1g3 .m1oh{font-size:24px}.m1g3 .m1cards{gap:6px}
+.m1cw{padding:14px 4px;font-size:21px}
+.m1sub{font-size:14px;font-weight:800;color:var(--muted);margin:6px 0 0}
 .m1card{background:rgba(255,255,255,.1);border:3px solid rgba(255,255,255,.55);border-radius:14px;padding:6px 10px;min-width:0;overflow:hidden}
 .m1card.k-hayasa{border-color:#ffe066}.m1card.k-pb{border-color:#8dffb8}
 .m1card h3{margin:0 0 4px;font-size:24px;line-height:1.15;display:flex;align-items:baseline;gap:6px;flex-wrap:wrap}
@@ -1612,7 +1623,7 @@ body[data-v=host] .wrap{max-width:none;padding:0}
 <script src="data/units.js?v=03ebc862"></script>
 <script src="data/tools-viz.js?v=bfaebda6"></script>
 <script src="data/collection.js?v=afa8fd37"></script>
-<script src="data/masu100.js?v=41693738"></script>
+<script src="data/masu100.js?v=78a2bad3"></script>
 <script>
 /* ================= 画面の文言（1つの表） =================
    TX["キー"] = [ふつうの文言, 1〜2年の「やさしい文字」]（やさしい側がないものは同じ文言）。
@@ -2040,25 +2051,22 @@ const TX={
  "m.jin.t":["じんとりバトル（2チーム）"],
  "m.m100.t":["100マス はっぴょう"],
  "m.m100.d":["100マス計算《けいさん》の きょうの きろくを、先生《せんせい》の 画面《がめん》で はっぴょうしよう","100マスけいさんの きょうの きろくを、せんせいの がめんで はっぴょうしよう"],
- "m1.lead":["きょうの 100マスを 先生《せんせい》に みせよう！","きょうの 100マスを せんせいに みせよう！"],
+ "m1.lead":["100マスを おえるたびに、先生《せんせい》の 画面《がめん》に じどうで とどくよ","100マスを おえるたびに、せんせいの がめんに じどうで とどくよ"],
  "m1.end":["はっぴょうは おわりました。また 100マスで れんしゅうしようね","はっぴょうは おわったよ。また 100マスで れんしゅうしようね"],
  "m1.mine":["あなたの 100マス"],
  "m1.op.add":["たし算《ざん》","たしざん"],"m1.op.sub":["ひき算《ざん》","ひきざん"],"m1.op.mul":["かけ算《ざん》","かけざん"],
- "m1.tb":["きょうの ベスト"],"m1.pb":["まえの じこベスト"],"m1.nobi":["のびりつ"],"m1.sets":["きょうの セット"],
- "m1.acc":["正答率《せいとうりつ》","せいかいの わりあい"],"m1.days":["こんしゅう れんしゅうした 日《ひ》","こんしゅう れんしゅうした ひ"],
+ "m1.tb":["ベスト"],"m1.nobi":["のびりつ"],"m1.sets":["セット"],"m1.now":["この じかん（へやに 入《はい》ってから）","この じかん（へやに はいってから）"],"m1.all":["これまで"],"m1.best":["じこベスト"],"m1.total":["るいけい"],
+ "m1.days":["こんしゅう れんしゅうした 日《ひ》","こんしゅう れんしゅうした ひ"],
  "m1.sec":[ms=>{ const ds=Math.round(ms/100), m=Math.floor(ds/600), x=((ds%600)/10).toFixed(1); return m?`${m}ぷん${x}びょう`:`${x}びょう`; }],"m1.pct":[n=>`${n}% はやく なった`],
- "m1.pv":["この へやでは、100マスが おわるたびに、きょうの まとめ（すうじ だけ）が 先生《せんせい》に とどくよ。名前《なまえ》や こたえは とどかないよ","この へやでは、100マスが おわるたびに、きょうの まとめ（すうじ だけ）が せんせいに とどくよ。なまえや こたえは とどかないよ"],"m1.kai":[n=>`${n}かい`],"m1.nichi":[n=>`${n}にち`],"m1.set":[n=>`${n}セット`],
- "m1.perf":[n=>`（ぜんもん せいかい ${n}かい）`],
+ "m1.pv":["この へやでは、入《はい》ったときと 100マスが おわるたびに、まとめ（すうじ だけ）が 先生《せんせい》に とどくよ。名前《なまえ》や こたえは とどかないよ","この へやでは、はいったときと 100マスが おわるたびに、まとめ（すうじ だけ）が せんせいに とどくよ。なまえや こたえは とどかないよ"],"m1.kai":[n=>`${n}かい`],"m1.nichi":[n=>`${n}にち`],"m1.set":[n=>`${n}セット`],
  "m1.pbnew":["じこベスト こうしん！"],
  "m1.none1":["まだ きろくが ないよ"],
- "m1.none":["まだ 100マスの きろくが ないよ。100マス けいさんで れんしゅうしてから みせてね"],
+ "m1.none":["まだ 100マスの きろくが ないよ。100マスを すると ここに 出《で》るよ","まだ 100マスの きろくが ないよ。100マスを すると ここに でるよ"],
  "m1.rule":["かぞえるのは「100問《もん》・だんを えらばない・さいごまで・9わり いじょう せいかい」の 回《かい》だけだよ","かぞえるのは「100もん・だんを えらばない・さいごまで・9わり いじょう せいかい」の かい だけだよ"],
  "m1.other":[n=>`きょう かぞえない 回《かい》：${n}かい`,n=>`きょう かぞえない かい：${n}かい`],
  "m1.play":["100マスを する"],"m1.back":["へやに もどる"],"m1.live":["おわるたびに 先生《せんせい》の 画面《がめん》に とどくよ","おわるたびに せんせいの がめんに とどくよ"],
  "m1.livesent":["とどいたよ！ つぎも がんばろう","とどいたよ！ つぎも がんばろう"],"m1.liveend":["はっぴょうは おわりました","はっぴょうは おわったよ"],
- "m1.show":["せんせいに みせる"],"m1.again":["もう いちど みせる"],"m1.sentb":["みせたよ！"],
- "m1.sending":["おくっているよ…"],
- "m1.sent":["みせたよ！ あたらしい きろくが できたら、もう いちど おしてね"],
+ "m1.sent":["先生《せんせい》の 画面《がめん》に とどいたよ","せんせいの がめんに とどいたよ"],
  "m1.toast":[n=>`100マスで どんぐり +${n}`],
  "m.jin.d":["あかと あおの チームに わかれて、正解《せいかい》で 7×7の マスを ぬろう！ 点《てん》の 多《おお》い チームの かち","あかと あおの チームに わかれて、せいかいで マスを ぬろう！ てんの おおい チームの かち"],
  "rk.right0":["⭕ せいかい！"],
@@ -3666,7 +3674,7 @@ function renderTeacher(q){
       <span class="note">やさしいルール：たからばこで「うばう・入れかえ・落とす」が出ず、すごろくに🌀（もどる）がありません。1〜2年を選ぶと、はじめは「やさしい」になります。</span>
       <span class="note hidden" id="bsnote"><b>ボスバトル（協力モード）</b>：クラス全員で、いたずらモンスター（ボス）を「くすぐって」おいはらいます。だれかが正解するたびにボスの「げんき」がへり、0になるとボスは笑ってにげていき、少しだけ げんきの多い次のボスが来ます。時間の中で何ひき おいはらえるかをクラスでめざします（時間は「時間」でえらびます）。正解は 10（連続正解で最大 20）、まちがいでも答えれば 1。1人が出せる量には上限があります。20〜30秒ごとのボスの「いたずら」は見た目だけで、点数や問題には何も起きません。順位や個人の正誤は大画面にも児童の画面にも出ません。</span>
       <span class="note hidden" id="jnnote"><b>じんとりバトル（2チーム）</b>：あか（ウサギ）と あお（ペンギン）に分かれ、正解で 7×7 の盤のマスをぬります。ぬるマスは自動で決まり（えらべません）、マスごとに必要な正解の数がちがいます（ふつう2・★4・まんなか6。相手のマスは+1、自分の陣地からはなれたマスは+1）。ぬったばかりのマスは15秒うばえません。のこり30秒はラストスパート（2倍）。人数がちがっても、チームの力が同じになるように調整します。チームは参加した順に交互に入り、大画面のメニューで「自動で分けなおす」や1人ずつの移動ができます（始まると変えられません）。「やさしい」ルールでは、相手のマスをうばえません（全部ぬれたら終わり）。</span>
-      <span class="note hidden" id="m1note"><b>100マス はっぴょう</b>：児童が「100マス計算」で練習した記録を、先生の大画面に計算（たし算・ひき算・かけ算）ごとに出します。児童が部屋に入ると、その画面の上で100マス計算がひらきます。1回おわるたびに（または「せんせいに みせる」を押したとき）、その子の集計（きょうのベスト・前の自己ベスト・きょうのセット数・正答率・今週の日数の数字だけ）が届きます。生の記録は送りません。はやさ・のびりつ（前の自己ベストより速くなった割合）・じこベスト こうしん（順位なし）・ていねい（全問正解の回数）・コツコツ（今週の日数）・がんばり（きょうのセット数、5まで）を、それぞれ上位5人まで出します（最下位は出しません。できるだけ多くの子が どこかに出るよう、はやさ以外は ほかの欄に出た子を あとまわしにします）。数えるのは「100問・だんをしぼらない・最後まで・正答率9割以上・1マス0.4秒以上」の回だけです。記録は児童の端末にあるので、書きかえれば数字は変えられます（ほかの対戦と同じ）。成績には使わないでください。「スタート」はなく、入室をしめきる・終わるだけです。</span>
+      <span class="note hidden" id="m1note"><b>100マス はっぴょう</b>：児童が「100マス計算」で練習した記録を、先生の大画面に計算（たし算・ひき算・かけ算）ごとに出します。児童が部屋に入ると、その画面の上で100マス計算がひらき、ボタンを押さなくても、入ったときと1回おわるたびに、その子の集計（数字だけ）が自動で届きます。生の記録は送りません。画面は2つを切りかえます。「この じかん」は部屋に入ってからの回で、はやさ・のびりつ（入る前の自己ベストより速くなった割合）・がんばり（やったセット数）・じこベスト こうしん（順位なし）。「これまで」は入ったときに届く記録で、じこベスト・るいけい（いままでの回数の合計）・コツコツ（今週の日数）。出す計算は先生が選べます（はじめは記録のある計算だけ）。それぞれ上位5人まで（計算を2つ以上ならべるときは一部3人まで）で、最下位は出しません。できるだけ多くの子が どこかに出るよう、1つめの欄以外は ほかの欄に出た子を あとまわしにします。数えるのは「100問・だんをしぼらない・最後まで・正答率9割以上・1マス0.4秒以上」の回だけです。記録は児童の端末にあるので、書きかえれば数字は変えられます（ほかの対戦と同じ）。成績には使わないでください。「スタート」はなく、入室をしめきる・終わるだけです。</span>
       <span class="note hidden" id="rknote"><b>ロケット はっしゃ（協力モード）</b>：クラス全員で1つのロケットを飛ばします。問題（上の「問題」で選んだもの）に答えて燃料をため、目標に届くとミニゲーム（せーので はっしゃ／ほしを あつめよう）が全員同時に始まり、クリアで次のステージへ（ふつう5ステージ・約5分／みじかい3ステージ・約3分。「ステージの数」でえらびます）。失敗しても「もういちど」は1回だけで、2回目は条件がゆるくなり必ず進みます。燃料の目標は人数・学年から自動で決まり、「やさしい」ルールではもっと低くなります。1人が出せる燃料には上限があり、順位や個人の正誤は大画面にも児童の画面にも出ません（名前が出るのは、良いことをした瞬間の吹き出しだけ）。時間の設定は使いません。</span>
       </details>
     </div>
@@ -4384,7 +4392,7 @@ function hrApi(r,name,b){
     hrBroadcast(r,true); return [200,{ok:true}]; }     // たからばこ・すごろくで使う先生のもんだい
   if(name!=="act") return [400,{error:"不明な操作です"}];
   const p=pl(); if(!p) return [403,{error:"参加情報が正しくありません"}];
-  if(r.mode==="m100"){      // 100マス はっぴょう：「せんせいに みせる」の 集計（数字だけ）。形と はんいを しらべてから使う（server.js と同じ）
+  if(r.mode==="m100"){      // 100マス はっぴょう：じどうで とどく 集計（数字だけ）。形と はんいを しらべてから使う（server.js と同じ）
     if(b.op!=="m100") return [403,{error:"この遊び方では使えない操作です"}];
     if(r.status==="ended") return [409,{error:"もう おわりました"}];
     const now=Date.now(); if(p.m1at&&now-p.m1at<2000) return [429,{error:"すこし まってから おしてね"}];
@@ -4618,7 +4626,7 @@ function renderLobby(){
     if(s.mode==="rocket"&&s.status!=="lobby"){ if(typeof s.me!=="string") return kickedView(); return rkKidState(s); }
     if(isCoB(s.mode)&&s.status!=="lobby"){ if(typeof s.me!=="string") return kickedView(); return ckKidState(s); }      // ボスバトル・じんとり：同じく対戦中は一覧が来ない      // 協力モード：対戦中は人の一覧が来ない。自分の名前（me）が無ければ、へやから出された
     if(!s.players.some(p=>p.pid===NET.pid)) return kickedView();       // 先生が へやから だした
-    if(s.mode==="m100") return m1KidView(s);                            // 100マス はっぴょう：自分の まとめ と「せんせいに みせる」
+    if(s.mode==="m100") return m1KidView(s);                            // 100マス はっぴょう：自分の まとめ（送るのは じどう）
     if(s.mode==="quiz") return qzKidState(s);
     if(s.status==="lobby") lobbyView(s);
     else if(s.status==="playing"){ if(!M||!M.net){ if(s.game==="mine"&&!MINE){ NETLAST=s; if(!NETSET_P) ensureMine(s); } else startNetGame(s); } else { M.state=s; drawSide(); } }
@@ -4627,7 +4635,7 @@ function renderLobby(){
     app.innerHTML=`<div class="play"><div class="q">${T("n.lost")}<br><button class="btn" onclick="go('#join')">${T("n.rejoin")}</button></div></div>`; });
 }
 function kickedView(){
-  if(typeof m1OvClose==="function") m1OvClose();
+  if(typeof m1Stop==="function") m1Stop();
   if(ES){ ES.close(); ES=null; } stopTimer(); M=null; QK=null; RK=null; CB=null; NET=null; try{ sessionStorage.removeItem("mh_net"); }catch(e){}
   app.innerHTML=`<div class="play"><div class="q">${T("k.out")}<br><button class="btn" onclick="go('#join')">${T("n.rejoin")}</button></div></div>`;
 }
@@ -5760,123 +5768,141 @@ async function pairJoin(code){
 
 /* ================= 100マス はっぴょう（部屋のモード）と 100マスの どんぐり =================
    記録は 100マス計算（apps/100masu）が この端末に書いた物を 読むだけ（data/masu100.js）。書きかえない。
-   児童：部屋に 入ると 100マスが その上で ひらき、1回 おわるたびに（または「せんせいに みせる」で） 数字の まとめを送る（生の記録は送らない）。
-   先生の大画面：計算ごとに はやさ／のびりつ／じこベスト こうしん／ていねい／コツコツ／がんばり。上位5まで・最下位は出さない・できるだけ多くの子が出る */
+   児童：部屋に 入ると 100マスが その上で ひらき、入ったときと 1回 おわるたびに じどうで 数字の まとめを送る（生の記録は送らない。ボタンは ない）。
+   先生の大画面：「この じかん」（はやさ／のびりつ／がんばり／じこベスト こうしん）と「これまで」（じこベスト／るいけい／コツコツ）を きりかえ、出す計算を えらぶ。上位5まで・最下位は出さない・できるだけ多くの子が出る */
 const MASU=window.MH_M100;
 const M1MODE={id:"m100",ico:"💯"}; tget(M1MODE,"t","m.m100.t"); tget(M1MODE,"d","m.m100.d");
-const m1Sum=()=>{ const now=Date.now(); let ls={getItem:()=>null}; try{ ls=localStorage; }catch(e){} const r=MASU.readStore(ls,now); return MASU.summarize(r.runs,now,r.giga); };
-const m1Val=(k,v)=>k==="hayasa"?MASU.fmtTime(v):k==="nobi"?v+"%":k==="teinei"?T("m1.kai",v):k==="kotsu"?T("m1.nichi",v):T("m1.set",v);
-/* --- 児童：自分の まとめ と「せんせいに みせる」 --- */
+const m1Sum=j=>{ const now=Date.now(); let ls={getItem:()=>null}; try{ ls=localStorage; }catch(e){} const r=MASU.readStore(ls,now); return MASU.summarize(r.runs,now,r.giga,j); };
+const m1Val=(k,v)=>k==="hayasa"||k==="best"?MASU.fmtTime(v):k==="nobi"?v+"%":k==="kotsu"?T("m1.nichi",v):k==="total"?T("m1.kai",v):T("m1.set",v);
+/* 部屋に はじめて 入った時刻（「この じかん」の はじまり）。同じ部屋に 入りなおしても かわらない。端末に 1つだけ（部屋の コードと 時刻だけ） */
+const M1J="mh_m1j";
+function m1JoinAt(code){
+  const now=Date.now(); let o=null; try{ o=JSON.parse(localStorage.getItem(M1J)||"null"); }catch(e){}
+  if(o&&o.c===code&&typeof o.t==="number"&&o.t<=now&&now-o.t<12*36e5) return o.t;
+  try{ localStorage.setItem(M1J,JSON.stringify({c:code,t:now})); }catch(e){}
+  return now;
+}
+/* --- 児童：自分の まとめ（この じかん／これまで）。送るのは じどう（ボタンは ない） --- */
 let M1K=null;
 function m1KidView(s){
   setLG(s.g);
   const me=s.players.find(p=>p.pid===NET.pid), key=s.status+"|"+(s.m1me?1:0)+"|"+(me?me.name+me.emoji:"");
+  m1Live(s, s.status!=="lobby");
   if(M1K&&M1K.key===key&&document.querySelector(".m1k")) return;      // 同じ ようすなら 作りなおさない（ボタンが ちらつかない）
   M1K={key};
-  const sum=m1Sum(), any=MASU.hasAny(sum), end=s.status!=="lobby";
+  const sum=m1Sum(M1A&&M1A.j), any=MASU.hasAny(sum), end=s.status!=="lobby";
   const other=MASU.OPS.reduce((n,op)=>n+sum[op].other,0);
   const card=op=>{ const x=sum[op];
-    const has=x.sets||x.pb||x.days;
+    const has=x.sets||x.total||x.pb||x.days;
     const row=(l,v)=>`<div class="m1r"><span>${l}</span><b>${v}</b></div>`;
     return `<section class="m1c"><h3>${T("m1.op."+op)}${x.pbNew?`<span class="m1pb">${T("m1.pbnew")}</span>`:""}</h3>${has?
-      row(T("m1.tb"),x.tb?T("m1.sec",x.tb):"—")+row(T("m1.pb"),x.pb?T("m1.sec",x.pb):"—")
+      `<div class="m1sub">🏫 ${T("m1.now")}</div>`+row(T("m1.tb"),x.tb?T("m1.sec",x.tb):"—")+row(T("m1.sets"),T("m1.set",x.sets))
       +(x.tb&&x.pb&&x.tb<x.pb?row(T("m1.nobi"),T("m1.pct",Math.round((x.pb-x.tb)/x.pb*100))):"")
-      +row(T("m1.sets"),T("m1.set",x.sets)+(x.perfect?`<small>${T("m1.perf",x.perfect)}</small>`:""))
-      +(x.sets?row(T("m1.acc"),x.acc+"%"):"")+row(T("m1.days"),T("m1.nichi",x.days))
+      +`<div class="m1sub">📚 ${T("m1.all")}</div>`+row(T("m1.best"),x.best?T("m1.sec",x.best):"—")+row(T("m1.total"),T("m1.kai",x.total))+row(T("m1.days"),T("m1.nichi",x.days))
       :`<p class="note">${T("m1.none1")}</p>`}</section>`; };
   app.innerHTML=`<div class="play m1k">
     <div class="q"><div class="note">${T("l.room")} ${esc(s.code)}・${M1MODE.ico} ${M1MODE.t}</div>
       <div class="m1me">${me?`${fm(me)} ${esc(me.name)}`:""}</div>
       <div class="note">${end?T("m1.end"):T("m1.lead")}</div></div>
     ${any?"":`<p class="m1none" role="status">${T("m1.none")}</p>`}
-    ${end?"":`<button type="button" class="btn m1go" id="m1play">💯 ${T("m1.play")}</button><button type="button" class="btn sub m1go2" id="m1go"${!any?" disabled":""}>${ic("users")}${T(s.m1me?"m1.again":"m1.show")}</button>`}
-    <div class="m1msg" id="m1msg" role="status">${s.m1me?T("m1.sent"):""}</div>
+    ${end?"":`<button type="button" class="btn m1go" id="m1play">💯 ${T("m1.play")}</button>`}
+    <div class="m1msg" id="m1msg" role="status">${s.m1me&&!end?"✅ "+T("m1.sent"):""}</div>
     <h2 class="m1h2">${T("m1.mine")}</h2>
     <div class="m1cs">${MASU.OPS.map(card).join("")}</div>
     <p class="note m1rule">${T("m1.rule")}${other?`<br>${T("m1.other",other)}`:""}</p>
     <p class="note m1pv">${ic("lock")} ${T("m1.pv")}</p>
   </div>${privacy()}`;
-  m1Live(s, end);
   const pb=$("#m1play"); if(pb) pb.onclick=()=>m1OvOpen();
-  const b=$("#m1go"); if(!b) return;      // おわった あとは ボタンを 出さない
-  b.onclick=async()=>{
-    const now=m1Sum(); if(!MASU.hasAny(now)) return;
-    b.disabled=true; $("#m1msg").textContent=T("m1.sending");
-    try{ await api("act",{...NET,op:"m100",s:MASU.wire(now)}); $("#m1msg").textContent=T("m1.sent"); b.innerHTML=ic("check")+T("m1.sentb"); sfx("ok"); }
-    catch(e){ $("#m1msg").textContent=errMsg(e.message); }
-    setTimeout(()=>{ if(document.getElementById("m1go")===b&&!end) { b.disabled=false; b.innerHTML=ic("users")+T("m1.again"); } },2200);
-  };
 }
-/* --- 児童：部屋に 入ったら 100マスを この画面の 上で ひらく（部屋の つながりは そのまま）。
-   100マスが 記録を 書くたびに（storage イベント＋ 4びょうごとの 見なおし）まとめ（数字だけ）を じどうで 送る --- */
+/* --- 児童：部屋に 入ったら すぐ、これまでの まとめ（数字だけ）を じどうで 送る。100マスを この画面の 上で ひらく（部屋の つながりは そのまま）。
+   100マスが 記録を 書くたびに（storage イベント＋ 4びょうごとの 見なおし）また 送る。部屋を 出たら やめる --- */
 let M1A=null;
 function m1Live(s,end){
-  if(!M1A||M1A.code!==s.code){ m1OvClose(); M1A={code:s.code,last:"",busy:0,end:false,opened:false}; }
+  if(!M1A||M1A.code!==s.code){ m1Stop(); M1A={code:s.code,j:m1JoinAt(s.code),last:"",busy:0,end:false,opened:false,iv:0}; }
   M1A.end=end; M1A.s=s;
-  if(end){ const t=document.getElementById("m1lt"); if(t) t.textContent=T("m1.liveend"); return; }
+  if(end){ clearInterval(M1A.iv); M1A.iv=0; const t=document.getElementById("m1lt"); if(t) t.textContent=T("m1.liveend"); return; }
+  if(!M1A.iv){ M1A.iv=setInterval(m1AutoSend,4000); m1AutoSend(); }      // 入った とき：記録が なくても すぐ 送る（先生の 画面で「とどいた」に なる）
   if(!M1A.opened){ M1A.opened=true; m1OvOpen(); }      // はじめて 入った とき：すぐ 100マスへ
 }
 async function m1AutoSend(){
   const A=M1A; if(!A||A.end||A.busy||!NET||NET.code!==A.code) return;
-  const sum=m1Sum(); if(!MASU.hasAny(sum)) return;
-  const w=MASU.wire(sum), sig=JSON.stringify(w); if(sig===A.last) return;
+  const w=MASU.wire(m1Sum(A.j)), sig=JSON.stringify(w); if(sig===A.last) return;
   A.busy=1;
-  try{ await api("act",{...NET,op:"m100",s:w}); A.last=sig; const t=document.getElementById("m1lt"); if(t){ t.textContent=T("m1.livesent"); setTimeout(()=>{ if(t.isConnected&&!A.end) t.textContent=T("m1.live"); },4000); } }
+  try{ await api("act",{...NET,op:"m100",s:w}); const first=!A.last; A.last=sig; const t=document.getElementById("m1lt");
+    if(t&&!first){ t.textContent=T("m1.livesent"); setTimeout(()=>{ if(t.isConnected&&!A.end) t.textContent=T("m1.live"); },4000); } }
   catch(e){ if(/まって/.test(e.message||"")) setTimeout(m1AutoSend,2500); }
   finally{ A.busy=0; }
 }
-window.addEventListener("storage",()=>{ if(M1A&&document.getElementById("m1ov")) m1AutoSend(); });
+window.addEventListener("storage",()=>{ if(M1A&&!M1A.end) m1AutoSend(); });
 function m1OvOpen(){
   if(document.getElementById("m1ov")) return;
   const ov=document.createElement("div"); ov.id="m1ov"; ov.className="m1ov";
   ov.innerHTML=`<div class="m1bar"><button type="button" class="btn" id="m1back">◀ ${T("m1.back")}</button><span id="m1lt" role="status">💯 ${T(M1A&&M1A.end?"m1.liveend":"m1.live")}</span></div><iframe src="apps/100masu/index.html" title="100マス けいさん"></iframe>`;
   document.body.appendChild(ov); document.body.style.overflow="hidden";
   ov.querySelector("#m1back").onclick=()=>{ m1OvClose(); m1AutoSend(); if(NET&&M1A&&M1A.s){ M1K=null; m1KidView(M1A.s); } };
-  if(M1A){ clearInterval(M1A.iv); M1A.iv=setInterval(m1AutoSend,4000); }
-  m1AutoSend();      // 入った とき：きょうの まとめが あれば すぐ 出す
 }
-function m1OvClose(){ const ov=document.getElementById("m1ov"); if(ov) ov.remove(); document.body.style.overflow=""; if(M1A) clearInterval(M1A.iv); }
-/* --- 先生の大画面：コードと QR（左）＋ 計算の タブと 6つの カード（右）。名前は 上位だけ。全員の表は出さない --- */
-const M1CAT={hayasa:["⚡","はやさ","きょうの いちばん はやい タイム"],nobi:["📈","のびりつ","まえの じこベストより はやく なった"],teinei:["🎯","ていねい","ぜんもん せいかい の 回《かい》"],
-  kotsu:["🌱","コツコツ","こんしゅう れんしゅうした 日《ひ》"],ganbari:["💪","がんばり","きょうの セット（5まで）"],pb:["🎉","じこベスト こうしん","じぶんの きろくを こえた！"]};
+function m1OvClose(){ const ov=document.getElementById("m1ov"); if(ov) ov.remove(); document.body.style.overflow=""; }
+function m1Stop(){ m1OvClose(); if(M1A){ clearInterval(M1A.iv); M1A.iv=0; M1A.end=true; } }
+/* --- 先生の大画面：コードと QR（左）＋「この じかん／これまで」と 計算の えらび（上）＋ 計算ごとの 列（右）。名前は 上位だけ。全員の表は出さない --- */
+const M1CAT={hayasa:["⚡","はやさ","へやに 入《はい》ってからの いちばん はやい タイム"],nobi:["📈","のびりつ","へやに 入《はい》る まえの じこベストより はやく なった"],ganbari:["💪","がんばり","へやに 入《はい》ってから やった セット"],
+  pb:["🎉","じこベスト こうしん","じぶんの きろくを こえた！"],best:["🏆","じこベスト","いままでの いちばん はやい タイム"],total:["📚","るいけい","いままでに やった 回《かい》の ごうけい"],kotsu:["🌱","コツコツ","こんしゅう れんしゅうした 日《ひ》"]};
 const M1OPT={add:"たし算《ざん》",sub:"ひき算《ざん》",mul:"かけ算《ざん》"};
+const M1VIEW={now:["🏫","この じかん"],all:["📚","これまで"]};
 function m1HostBuild(px,s,joinUrl,B){
   px.className="px m1px";
-  px.innerHTML=`<div class="m1h"><aside class="m1side"><div class="lead">${T("px.code")}</div><div class="m1code">${esc(s.code)}</div>
-      <div class="qrbox m1qr" id="qrbox"></div><div class="m1cnt">さんか <b id="m1n">0</b>にん<br>みせた <b id="m1s">0</b>にん</div><div class="m1new" id="m1new" aria-live="polite"></div><div class="lockmsg hidden" id="pxlock" role="status">${ic("lock")} ${T("px.locked")}</div></aside>
-    <div class="m1main"><h2 class="m1ttl">💯 100マス はっぴょう <small id="m1st"></small></h2>
-      <div class="m1tabs" role="tablist" aria-label="けいさんの しゅるい">${MASU.OPS.map(op=>`<button type="button" role="tab" class="m1tab" data-op="${op}" aria-selected="false">${M1OPT[op]}<span class="m1tn"></span></button>`).join("")}</div>
+  px.innerHTML=`<div class="m1h"><aside class="m1side"><h2 class="m1ttl">💯 100マス はっぴょう<small id="m1st"></small></h2><div class="lead">${T("px.code")}</div><div class="m1code">${esc(s.code)}</div>
+      <div class="qrbox m1qr" id="qrbox"></div><div class="m1cnt">さんか <b id="m1n">0</b>にん<br>とどいた <b id="m1s">0</b>にん</div><div class="m1new" id="m1new" aria-live="polite"></div><div class="lockmsg hidden" id="pxlock" role="status">${ic("lock")} ${T("px.locked")}</div></aside>
+    <div class="m1main">
+      <div class="m1ctl"><div class="m1tabs" role="tablist" aria-label="ランキングの しゅるい">${Object.keys(M1VIEW).map(v=>`<button type="button" role="tab" class="m1tab m1vw" data-v="${v}" aria-selected="false">${M1VIEW[v][0]} ${M1VIEW[v][1]}<span class="m1tn"></span></button>`).join("")}</div>
+        <div class="m1tabs m1ops" role="group" aria-label="出《だ》す けいさん（いくつでも）">${MASU.OPS.map(op=>`<button type="button" class="m1tab m1op" data-op="${op}" aria-pressed="false">${M1OPT[op]}</button>`).join("")}</div></div>
       <div class="m1grid" id="m1grid"></div></div></div>`;
   if(s.status==="lobby") showQr(document.getElementById("qrbox"),joinUrl); else document.getElementById("qrbox").innerHTML=`<div class="m1over">おわり</div>`;
   const ex=document.getElementById("pxextra"); if(ex) ex.innerHTML=`<div class="chips" id="pxchips"></div>`;
-  px.querySelectorAll(".m1tab").forEach(b=>b.onclick=()=>{ B.m1op=b.dataset.op; B.m1pick=1; if(B.m1last) m1HostUpd(B.m1last,B); });
+  px.querySelectorAll(".m1vw").forEach(b=>b.onclick=()=>{ B.m1view=b.dataset.v; B.m1vpick=1; if(B.m1last) m1HostUpd(B.m1last,B); });
+  px.querySelectorAll(".m1op").forEach(b=>b.onclick=()=>{      // 先生が えらぶ：おすたびに 出す／出さない（1つは のこす）
+    const cur=new Set(B.m1ops||MASU.OPS), op=b.dataset.op;
+    if(cur.has(op)){ if(cur.size>1) cur.delete(op); } else cur.add(op);
+    B.m1ops=MASU.OPS.filter(o=>cur.has(o)); B.m1pick=1; if(B.m1last) m1HostUpd(B.m1last,B); });
 }
 function m1HostUpd(s,B){
   B.m1last=s;
   const R=s.m1||{}, byPid=new Map(s.players.map(p=>[p.pid,p])), sent=s.players.filter(p=>p.m1).length;
   document.getElementById("m1n").textContent=s.players.length; document.getElementById("m1s").textContent=sent;
-  const st=document.getElementById("m1st"); if(st) st.textContent=s.status==="lobby"?"":"（おわり）";
+  const st=document.getElementById("m1st"); if(st) st.textContent=s.status==="lobby"?"":"おわり";
   const lk=document.getElementById("pxlock"); if(lk) lk.classList.toggle("hidden",!s.closed||s.status!=="lobby");
   const cl=document.getElementById("hcl"); if(cl){ document.getElementById("hclt").textContent=T(s.closed?"px.open":"px.close"); cl.setAttribute("aria-pressed",s.closed?"true":"false"); }
-  if(!B.m1pick){ let best="add", bn=-1; for(const op of MASU.OPS){ const n=R[op]?R[op].n:0; if(n>bn){ bn=n; best=op; } } B.m1op=best; }      // 先生が えらぶまでは、送った子の 多い計算
-  const op=B.m1op||"add", r=R[op]||{cats:[],pb:[],pbN:0,n:0};
-  document.querySelectorAll(".m1tab").forEach(b=>{ const on=b.dataset.op===op; b.classList.toggle("on",on); b.setAttribute("aria-selected",on?"true":"false"); const n=R[b.dataset.op]?R[b.dataset.op].n:0; b.querySelector(".m1tn").textContent=n?` ${n}にん`:""; });
+  const nn=op=>R[op]?R[op].nn:0, na=op=>R[op]?R[op].n:0;
+  const anyNow=MASU.OPS.some(op=>nn(op)>0);
+  if(!B.m1vpick) B.m1view=anyNow||!MASU.OPS.some(op=>na(op)>0)?"now":"all";      // 先生が えらぶまでは、この じかんの きろくが あれば「この じかん」
+  const view=B.m1view||"now", cnt=view==="now"?nn:na;
+  if(!B.m1pick){ const has=MASU.OPS.filter(op=>cnt(op)>0); B.m1ops=has.length?has:MASU.OPS.slice(); }      // 先生が えらぶまでは、きろくの ある 計算だけ（かけ算だけの 日は かけ算だけ）
+  const ops=B.m1ops&&B.m1ops.length?B.m1ops:MASU.OPS;
+  document.querySelectorAll(".m1vw").forEach(b=>{ const on=b.dataset.v===view; b.classList.toggle("on",on); b.setAttribute("aria-selected",on?"true":"false");
+    const n=MASU.OPS.reduce((m,op)=>Math.max(m,(b.dataset.v==="now"?nn:na)(op)),0); b.querySelector(".m1tn").textContent=n?` ${n}にん`:""; });
+  document.querySelectorAll(".m1op").forEach(b=>{ const on=ops.includes(b.dataset.op); b.classList.toggle("on",on); b.setAttribute("aria-pressed",on?"true":"false"); });
+  const one=ops.length===1, lim=k=>one?5:k==="hayasa"||k==="best"||k==="total"?5:3;      // 2つ以上 ならべる ときは、のびりつ・がんばり・コツコツを 3人に
   const nm=pid=>{ const p=byPid.get(pid); return p?`<span class="m1f">${fm(p)}</span><span class="m1nm">${esc(p.name)}</span>`:""; };
   const head=k=>`<h3><span class="m1i" aria-hidden="true">${M1CAT[k][0]}</span>${M1CAT[k][1]}<small>${M1CAT[k][2]}</small></h3>`;
-  const cat=c=>`<section class="m1card k-${c.k}">${head(c.k)}<ol class="m1l">${c.l.filter(x=>byPid.has(x[0])).map(x=>`<li data-pid="${esc(x[0])}" role="button" tabindex="0"><span class="m1rk">${c.k==="hayasa"?x[2]:"★"}</span>${nm(x[0])}<b class="m1v">${m1Val(c.k,x[1])}</b></li>`).join("")||`<li class="m1e">まだ いないよ</li>`}</ol></section>`;
-  const pbAll=(r.pb||[]).filter(pid=>byPid.has(pid)), pbIds=pbAll.slice(0,8), pbMore=Math.max(0,r.pbN-pbAll.length)+pbAll.length-pbIds.length;      // 大画面に 入る 8人まで（のこりは「ほか n にん」）
-  const pb=`<section class="m1card k-pb">${head("pb")}<div class="m1pbl">${pbIds.map(pid=>`<span class="m1chip" data-pid="${esc(pid)}" role="button" tabindex="0">${nm(pid)}</span>`).join("")||`<span class="m1e">まだ いないよ</span>`}${pbMore?`<span class="m1e">ほか ${pbMore}にん</span>`:""}</div></section>`;
-  const C={}; (r.cats||[]).forEach(c=>{ C[c.k]=c; });
-  const html=r.n?[cat(C.hayasa||{k:"hayasa",l:[]}),cat(C.nobi||{k:"nobi",l:[]}),pb,cat(C.teinei||{k:"teinei",l:[]}),cat(C.kotsu||{k:"kotsu",l:[]}),cat(C.ganbari||{k:"ganbari",l:[]})].join("")
-    :`<div class="m1wait">${s.status==="lobby"?"100マスを はじめると、おわるたびに ここに 出るよ":"この けいさんの きろくは ありませんでした"}</div>`;
-  const g=document.getElementById("m1grid"); if(g.dataset.h!==html){ g.dataset.h=html; g.innerHTML=html; }
+  const rk1=k=>k==="hayasa"||k==="best";
+  const cat=c=>`<section class="m1card k-${c.k}">${head(c.k)}<ol class="m1l">${c.l.filter(x=>byPid.has(x[0])).slice(0,lim(c.k)).map(x=>`<li data-pid="${esc(x[0])}" role="button" tabindex="0"><span class="m1rk">${rk1(c.k)?x[2]:"★"}</span>${nm(x[0])}<b class="m1v">${m1Val(c.k,x[1])}</b></li>`).join("")||`<li class="m1e">まだ いないよ</li>`}</ol></section>`;
+  const pbCard=r=>{ const all=(r.pb||[]).filter(pid=>byPid.has(pid)), cap=one?10:ops.length===2?5:3, ids=all.slice(0,cap), more=Math.max(0,r.pbN-all.length)+all.length-ids.length;      // 大画面に 入る 人数まで（のこりは「ほか n にん」）
+    return `<section class="m1card k-pb">${head("pb")}<div class="m1pbl">${ids.map(pid=>`<span class="m1chip" data-pid="${esc(pid)}" role="button" tabindex="0">${nm(pid)}</span>`).join("")||`<span class="m1e">まだ いないよ</span>`}${more?`<span class="m1e">ほか ${more}にん</span>`:""}</div></section>`; };
+  const col=op=>{ const r=R[op]||{cats:[],pb:[],pbN:0,n:0,nn:0}, C={}; (r.cats||[]).forEach(c=>{ C[c.k]=c; });
+    const g=k=>cat(C[k]||{k,l:[]});
+    const body=!cnt(op)?`<div class="m1e m1cw">${view==="now"?(s.status==="lobby"?"100マスを おえると ここに 出《で》るよ":"この じかんの きろくは ありませんでした"):"まだ とどいて いないよ"}</div>`
+      :view==="now"?g("hayasa")+g("nobi")+g("ganbari")+pbCard(r):g("best")+g("total")+g("kotsu");
+    return `<div class="m1col"><h3 class="m1oh">${M1OPT[op]}${cnt(op)?`<small>${cnt(op)}にん</small>`:""}</h3><div class="m1cards">${body}</div></div>`; };
+  const html=sent?ops.map(col).join("")
+    :`<div class="m1wait"><div>${s.status==="lobby"?"へやに 入《はい》ると、これまでの きろくが とどくよ。<br>100マスを おえるたびに「この じかん」に 出《で》るよ":"きろくは ありませんでした"}</div></div>`;
+  const g=document.getElementById("m1grid"); g.className="m1grid m1g"+ops.length+" v-"+view; if(g.dataset.h!==html){ g.dataset.h=html; g.innerHTML=html; }
   const chips=document.getElementById("pxchips");      // メニューの中：名前を押すと かえる／ニックネーム／へやから だす
   if(chips) chips.innerHTML=s.players.map(p=>`<button type="button" class="chip nmb" data-pid="${esc(p.pid)}">${fm(p)} ${esc(p.name)}${p.m1?" 💯":""}</button>`).join("")||`<span class="chip more">${T("px.none")}</span>`;
-  const nw=document.getElementById("m1new");      // 「みせた」子：左の列に さいきんの 3人（表には かぶせない）
+  const nw=document.getElementById("m1new");      // とどいた子：左の列に さいきんの 3人（表には かぶせない）
   if(nw){ const rec=s.players.filter(p=>p.m1).sort((a,b)=>b.m1-a.m1).slice(0,3);
-    const h=rec.length?`<div class="m1nl">💯 みせたよ</div>`+rec.map(p=>`<div class="m1ni" data-pid="${esc(p.pid)}" role="button" tabindex="0">${fm(p)}<span class="m1nm">${esc(p.name)}</span></div>`).join(""):"";
+    const h=rec.length?`<div class="m1nl">💯 とどいたよ</div>`+rec.map(p=>`<div class="m1ni" data-pid="${esc(p.pid)}" role="button" tabindex="0">${fm(p)}<span class="m1nm">${esc(p.name)}</span></div>`).join(""):"";
     if(nw.dataset.h!==h){ nw.dataset.h=h; nw.innerHTML=h; } }
 }
+
 /* --- どんぐり：ホームに もどったとき、前に しらべたあとの 100マスの「数える回」を 数える（1日3こまで・全体の 1日20こ以内） ---
    授業モード・先生の オフ・リンクの col=0 では 何もしない（数えるのも すすめない）。リンクで オフを オンには できない（colMode と同じ） */
 const M1R="mh_m100";
@@ -7417,7 +7443,7 @@ function route(){
   if(!DATA_OK&&path!=="check"&&path!=="teacher"&&path!=="make"&&path!=="qlink"&&path!=="feedback"){
     app.innerHTML=`<div class="q">問題《もんだい》データ（data フォルダ）を読《よ》み込《こ》めませんでした。<br>index.html と同《おな》じ場所《ばしょ》に data フォルダがあるか確認《かくにん》してください。</div>`; return;
   }
-  if(path!=="lobby"&&typeof m1OvClose==="function"){ m1OvClose(); M1A=null; }
+  if(path!=="lobby"&&typeof m1Stop==="function"){ m1Stop(); M1A=null; }
   if(path==="feedback") renderFeedback();
   else if(path==="check") renderCheck();
   else if(path==="play") renderPlay(q);

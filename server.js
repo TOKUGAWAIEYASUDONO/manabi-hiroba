@@ -112,7 +112,7 @@ function pub(room, host) {
     ...(room.qz ? { quiz: room.qz.pub() } : {})
   };
 }
-// 100マス はっぴょう：「せんせいに みせる」を押した子の集計（部屋の側で しらべた物）
+// 100マス はっぴょう：じどうで とどいた子の集計（部屋の側で しらべた物）
 const m1Entries = room => [...room.players.values()].filter(p => p.m1).map(p => ({ pid: p.pid, s: p.m1, t: p.m1t }));
 // 協力モード：対戦中は人の一覧を送らない（小さく保つ）。先生の画面だけは、名前の吹き出しのために一覧を受け取る
 function coPlayers(room, host) {
@@ -357,7 +357,7 @@ const API = {
   act(b) {
     const room = rooms.get(String(b.code)), p = player(room, b);
     if (!p) return [403, { error: "参加情報が正しくありません" }];
-    if (room.mode === "m100") {      // 100マス はっぴょう：「せんせいに みせる」で 集計（数字だけ）を受けとる。形と はんいを しらべてから使う
+    if (room.mode === "m100") {      // 100マス はっぴょう：じどうで とどく 集計（数字だけ）を受けとる。形と はんいを しらべてから使う
       if (b.op !== "m100") return [403, { error: "この遊び方では使えない操作です" }];
       if (room.status === "ended") return [409, { error: "もう おわりました" }];
       const now = Date.now(); if (p.m1at && now - p.m1at < 2000) return [429, { error: "すこし まってから おしてね" }];

@@ -44,24 +44,34 @@ t("こわれた・ほかのアプリの記録は 読まない（落ちない）"
   const ls = { getItem: k => { if (k === M.LOG_KEY) throw new Error("blocked"); return null; } };
   assert.deepStrictEqual(M.readStore(ls, NOW).runs, []);
 });
-t("まとめ：きょうのベスト・前の自己ベスト・セット・全問正解・正答率・今週の日数・自己ベスト更新", () => {
+t("まとめ：この じかん（入ってから）と これまで（入る前の自己ベスト・いままでの いちばん・合計・今週の日数）", () => {
   const list = [rec({ ms: 120000, ago: 2 * DAY }), rec({ ms: 100000, ago: DAY }), rec({ ms: 95000, ago: 3 * H }), rec({ ms: 99000, ago: 2 * H, correct: 95 }),
     rec({ ms: 50000, ago: H, count: 50 }), rec({ ms: 60000, ago: H, mode: "mul", dan: [2] }), rec({ ms: 80000, ago: 9 * DAY })];
-  const s = M.summarize(runs(list), NOW).add;
+  const s = M.summarize(runs(list), NOW).add;                              // 入った時刻が ない → きょうの まとめ
   assert.strictEqual(s.tb, 95000); assert.strictEqual(s.pb, 80000);       // 9日前の 80秒が 前の自己ベスト
+  assert.strictEqual(s.best, 80000); assert.strictEqual(s.total, 5);      // いままでの 数える回（50問の回は 入らない）
   assert.strictEqual(s.sets, 2); assert.strictEqual(s.perfect, 1); assert.strictEqual(s.acc, 97);
   assert.strictEqual(s.days, 3);                                           // 月・火・水（9日前は 先週）
   assert.strictEqual(s.pbNew, false); assert.strictEqual(s.other, 1);
+  const j = M.summarize(runs(list), NOW, null, NOW - 2.5 * H).add;         // 2時間半 前に 入った：3時間前の回は「入る前」
+  assert.strictEqual(j.sets, 1); assert.strictEqual(j.tb, 99000); assert.strictEqual(j.pb, 80000); assert.strictEqual(j.total, 5);
+  const j2 = M.summarize(runs([rec({ ms: 100000, ago: 3 * H }), rec({ ms: 90000, ago: H })]), NOW, null, NOW - 2 * H).add;
+  assert.strictEqual(j2.pb, 100000); assert.strictEqual(j2.tb, 90000); assert.strictEqual(j2.pbNew, true); assert.strictEqual(j2.best, 90000);
+  const none = M.summarize(runs([rec({ ms: 100000, ago: 3 * H })]), NOW, null, NOW - H).add;   // 入ってから まだ していない
+  assert.strictEqual(none.sets, 0); assert.strictEqual(none.tb, 0); assert.strictEqual(none.best, 100000); assert.strictEqual(none.total, 1);
+  const lots = []; for (let i = 0; i < 12; i++) lots.push(rec({ ms: 90000 + i * 1000, ago: (20 - i) * 600e3 }));
+  assert.strictEqual(M.summarize(runs(lots), NOW, null, NOW - 4 * H).add.sets, 12, "がんばりは 頭打ちしない");
   const s2 = M.summarize(runs([rec({ ms: 100000, ago: DAY }), rec({ ms: 90000 })]), NOW).add;
   assert.strictEqual(s2.pbNew, true);
   const s3 = M.summarize(runs([rec({ ms: 90000 })]), NOW).add;           // はじめての記録も 「こうしん」
   assert.strictEqual(s3.pbNew, true); assert.strictEqual(s3.pb, 0);
-  const mul = M.summarize(runs(list), NOW).mul; assert.strictEqual(mul.sets, 0); assert.strictEqual(mul.other, 1);
+  const mul = M.summarize(runs(list), NOW).mul; assert.strictEqual(mul.sets, 0); assert.strictEqual(mul.other, 1); assert.strictEqual(mul.total, 0);
+  assert.strictEqual(M.hasAny(M.summarize([], NOW)), false); assert.strictEqual(M.hasAny(none ? { add: none } : {}), true);
   assert.strictEqual(M.weekStart(M.dayNum(new Date(NOW))), M.dayNum(new Date(2026, 10, 16)));
   assert.strictEqual(M.weekStart(M.dayNum(new Date(2026, 10, 16))), M.dayNum(new Date(2026, 10, 16)));   // 月曜は その日から
   assert.strictEqual(M.weekStart(M.dayNum(new Date(2026, 10, 22))), M.dayNum(new Date(2026, 10, 16)));   // 日曜は 前の月曜から
 });
-t("前の自己ベストは giga_calc_records_v4 の 最近の記録でも おぎなう（だん・制限時間・きょうの回は 使わない）", () => {
+t("前の自己ベストは giga_calc_records_v4 の 最近の記録でも おぎなう（だん・制限時間・入ってからの回は 使わない）", () => {
   const g = { "たし算": { best: { 100: 70 }, history: [{ at: new Date(NOW - 3 * DAY).toISOString(), time: 85.2, count: 100 }, { at: new Date(NOW - 3 * DAY).toISOString(), time: 60, count: 100, dan: [1] },
     { at: new Date(NOW - 3 * DAY).toISOString(), time: 61, count: 100, limit: 60, solved: 100 }, { at: new Date(NOW - H).toISOString(), time: 62, count: 100 }, { at: "x", time: 50, count: 100 }, { at: new Date(NOW - DAY).toISOString(), time: 30, count: 100 }] } };
   const s = M.summarize(runs([rec({ ms: 90000, ago: DAY }), rec({ ms: 80000 })]), NOW, JSON.stringify(g)).add;
@@ -71,78 +81,88 @@ t("前の自己ベストは giga_calc_records_v4 の 最近の記録でも お�
 t("送る形：数字だけ（生の記録・日時・式は入らない）→ 受けとる側で もどせる", () => {
   const sum = M.summarize(runs([rec({ ms: 100000, ago: DAY }), rec({ ms: 91234 }), rec({ ms: 95000, correct: 92 })]), NOW);
   const w = M.wire(sum), js = JSON.stringify(w);
-  assert(js.length < 120, js); assert.deepStrictEqual(Object.keys(w), ["v", "o"]); assert(Object.values(w.o).every(a => a.length === 6 && a.every(Number.isInteger)), js);
+  assert(js.length < 100, js); assert.deepStrictEqual(Object.keys(w), ["v", "o"]); assert.strictEqual(w.v, 2); assert(Object.values(w.o).every(a => a.length === 5 && a.every(Number.isInteger)), js);
   assert.deepStrictEqual(Object.keys(w.o), ["add"]);
   const c = M.clampWire(JSON.parse(js)).add;
-  assert.strictEqual(c.tb, 91200); assert.strictEqual(c.pb, 100000); assert.strictEqual(c.sets, 2); assert.strictEqual(c.perfect, 1); assert.strictEqual(c.acc, 96); assert.strictEqual(c.pbNew, true);
+  assert.strictEqual(c.tb, 91200); assert.strictEqual(c.pb, 100000); assert.strictEqual(c.sets, 2); assert.strictEqual(c.total, 3); assert.strictEqual(c.best, 91200); assert.strictEqual(c.pbNew, true);
+  const old = M.summarize(runs([rec({ ms: 100000, ago: DAY })]), NOW, null, NOW - H), w2 = M.wire(old);   // 入ってから まだ：これまで だけ とどく
+  assert.deepStrictEqual(w2.o.add, [0, 1000, 0, 1, 1]);
+  const c2 = M.clampWire(w2).add; assert.strictEqual(c2.tb, 0); assert.strictEqual(c2.best, 100000); assert.strictEqual(c2.total, 1);
+  assert.deepStrictEqual(M.wire(M.summarize([], NOW)), { v: 2, o: {} }); assert.deepStrictEqual(M.clampWire({ v: 2, o: {} }), {});   // 記録が なくても 入ったことは とどく
 });
-t("受けとる側：形の ちがう物は null・ありえない数字は おさめる", () => {
-  for (const b of [null, 1, "x", [], {}, { v: 2, o: {} }, { v: 1, o: [] }, { v: 1, o: { div: [1, 1, 1, 1, 1, 1] } }, { v: 1, o: { add: [1, 2, 3] } },
-    { v: 1, o: { add: ["900", 0, 1, 1, 100, 1] } }, { v: 1, o: { add: [900, 0, 1, 1, 100, Infinity] } }, JSON.parse('{"v":1,"o":{"__proto__":[900,0,1,1,100,1]}}'),
-    { v: 1, o: { add: [900, 0, 1, 1, 100, 1], sub: [900, 0, 1, 1, 100, 1], mul: [900, 0, 1, 1, 100, 1], x: 1 } }]) assert.strictEqual(M.clampWire(b), null, JSON.stringify(b));
-  const c = M.clampWire({ v: 1, o: { add: [10, 0, 999, 999, 5, 99], sub: [900, 99999999, -5, 3, 100, -1], mul: [900, 800, 3, 9, 100, 0] } });
-  assert.strictEqual(c.add.tb, 0); assert.strictEqual(c.add.sets, 0); assert.strictEqual(c.add.perfect, 0); assert.strictEqual(c.add.acc, 0); assert.strictEqual(c.add.days, 7);   // 1秒は ありえない → きょうは なし
-  assert.strictEqual(c.sub.tb, 90000); assert.strictEqual(c.sub.pb, 0); assert.strictEqual(c.sub.sets, 1); assert.strictEqual(c.sub.perfect, 1); assert.strictEqual(c.sub.acc, 100); assert.strictEqual(c.sub.days, 1);
-  assert.strictEqual(c.mul.perfect, 3); assert.strictEqual(c.mul.acc, 100); assert.strictEqual(c.mul.pbNew, false);
-  const d = M.clampWire({ v: 1, o: { add: [900, 0, 4, 1, 100, 2] } }).add; assert.strictEqual(d.acc, 99);    // 全問正解でない回が あるなら 99%まで
-  const e = M.clampWire({ v: 1, o: { add: [900, 0, 2, 0, 10, 2] } }).add; assert.strictEqual(e.acc, 90);     // 9割より下は 来ないはず → 90
+t("受けとる側：形の ちがう物は null・ありえない数字は おさめる（まえの形 v1 も 受けとる）", () => {
+  for (const b of [null, 1, "x", [], {}, { v: 3, o: {} }, { v: 2, o: [] }, { v: 2, o: { div: [1, 1, 1, 1, 1] } }, { v: 2, o: { add: [1, 2, 3] } }, { v: 2, o: { add: [900, 0, 1, 1, 100, 1] } },
+    { v: 1, o: { add: [900, 0, 1, 1, 1] } }, { v: 2, o: { add: ["900", 0, 1, 1, 1] } }, { v: 2, o: { add: [900, 0, 1, 1, Infinity] } }, JSON.parse('{"v":2,"o":{"__proto__":[900,0,1,1,1]}}'),
+    { v: 2, o: { add: [900, 0, 1, 1, 1], sub: [900, 0, 1, 1, 1], mul: [900, 0, 1, 1, 1], x: 1 } }]) assert.strictEqual(M.clampWire(b), null, JSON.stringify(b));
+  const c = M.clampWire({ v: 2, o: { add: [10, 0, 999, 5, 99], sub: [900, 99999999, -5, 0, -1], mul: [900, 800, 3000, 1e9, 3] } });
+  assert.strictEqual(c.add.tb, 0); assert.strictEqual(c.add.sets, 0); assert.strictEqual(c.add.total, 5); assert.strictEqual(c.add.days, 7);   // 1秒は ありえない → この じかんは なし
+  assert.strictEqual(c.sub.tb, 90000); assert.strictEqual(c.sub.pb, 0); assert.strictEqual(c.sub.sets, 1); assert.strictEqual(c.sub.total, 1); assert.strictEqual(c.sub.days, 1);
+  assert.strictEqual(c.mul.sets, M.MAX_SETS); assert.strictEqual(c.mul.total, M.MAX_TOTAL); assert.strictEqual(c.mul.pbNew, false); assert.strictEqual(c.mul.best, 80000);
+  const d = M.clampWire({ v: 2, o: { add: [0, 900, 0, 0, 0] } }).add; assert.strictEqual(d.total, 1);   // 自己ベストが あるなら 1回は した
+  const v1 = M.clampWire({ v: 1, o: { add: [900, 1000, 4, 1, 100, 2] } }).add;
+  assert.strictEqual(v1.tb, 90000); assert.strictEqual(v1.sets, 4); assert.strictEqual(v1.total, 4); assert.strictEqual(v1.days, 2); assert.strictEqual(v1.pbNew, true);
 });
 
 /* ランキング */
-const kid = (pid, a, t) => ({ pid, t: t || 0, s: M.clampWire({ v: 1, o: { add: a } }) });
-t("はやさ：本当の上位5人・同じタイムは同じ順位・最下位は出さない", () => {
-  const E = [kid("a", [700, 0, 1, 1, 100, 1]), kid("b", [650, 0, 1, 1, 100, 1]), kid("c", [800, 0, 1, 1, 100, 1]), kid("d", [650, 0, 1, 1, 100, 1], 5), kid("e", [900, 0, 1, 1, 100, 1]),
-    kid("f", [1000, 0, 1, 1, 100, 1]), kid("g", [1200, 0, 1, 1, 100, 1])];
-  const r = M.rankOp(E, "add"), h = r.cats[0];
-  assert.strictEqual(h.k, "hayasa");
-  assert.deepStrictEqual(h.l.map(x => x[0]), ["b", "d", "a", "c", "e"]);
-  assert.deepStrictEqual(h.l.map(x => x[2]), [1, 1, 3, 4, 5]);
-  assert.strictEqual(h.l[0][1], 65000);
-  const two = M.rankOp([kid("a", [700, 0, 1, 1, 100, 1]), kid("b", [800, 0, 1, 1, 100, 1])], "add").cats[0].l;
+const kid = (pid, a, t) => ({ pid, t: t || 0, s: M.clampWire({ v: 2, o: { add: a } }) });     // a = [tb, pb, sets, total, days]
+const cat = (r, k) => r.cats.find(c => c.k === k).l;
+t("この じかん：はやさは 本当の上位5人・同じタイムは同じ順位・最下位は出さない・入ってから していない子は 出ない", () => {
+  const E = [kid("a", [700, 0, 1, 1, 1]), kid("b", [650, 0, 1, 1, 1]), kid("c", [800, 0, 1, 1, 1]), kid("d", [650, 0, 1, 1, 1], 5), kid("e", [900, 0, 1, 1, 1]),
+    kid("f", [1000, 0, 1, 1, 1]), kid("g", [1200, 0, 1, 1, 1]), kid("z", [0, 500, 0, 40, 5])];
+  const r = M.rankOp(E, "add"), h = cat(r, "hayasa");
+  assert.deepStrictEqual(r.cats.map(c => c.k), M.CATS); assert.strictEqual(r.n, 8); assert.strictEqual(r.nn, 7);
+  assert.deepStrictEqual(h.map(x => x[0]), ["b", "d", "a", "c", "e"]);
+  assert.deepStrictEqual(h.map(x => x[2]), [1, 1, 3, 4, 5]);
+  assert.strictEqual(h[0][1], 65000);
+  assert(!r.cats.slice(0, 3).some(c => c.l.some(x => x[0] === "z")), "入ってから していない子は この じかんに 出ない");
+  const two = cat(M.rankOp([kid("a", [700, 0, 1, 1, 1]), kid("b", [800, 0, 1, 1, 1])], "add"), "hayasa");
   assert.deepStrictEqual(two.map(x => x[0]), ["a"]);                      // 2人なら 1人だけ（おそいほうは出さない）
-  const one = M.rankOp([kid("a", [700, 0, 1, 1, 100, 1])], "add").cats[0].l; assert.strictEqual(one.length, 1);
+  const one = cat(M.rankOp([kid("a", [700, 0, 1, 1, 1])], "add"), "hayasa"); assert.strictEqual(one.length, 1);
 });
-t("のびりつ：前より はやくなった子だけ・% で 小さい順", () => {
-  const E = [kid("a", [900, 1000, 1, 1, 100, 1]), kid("b", [800, 1000, 1, 1, 100, 1]), kid("c", [1100, 1000, 1, 1, 100, 1]), kid("d", [500, 0, 1, 1, 100, 1]), kid("e", [950, 1000, 1, 1, 100, 1])];
-  const nb = M.rankOp(E, "add").cats.find(c => c.k === "nobi").l;
+t("のびりつ：入る前より はやくなった子だけ・% で 大きい順", () => {
+  const E = [kid("a", [900, 1000, 1, 2, 1]), kid("b", [800, 1000, 1, 2, 1]), kid("c", [1100, 1000, 1, 2, 1]), kid("d", [500, 0, 1, 1, 1]), kid("e", [950, 1000, 1, 2, 1])];
+  const nb = cat(M.rankOp(E, "add"), "nobi");
   assert.deepStrictEqual(nb.map(x => x[0]), ["b", "a"]);                  // c（おそくなった）・d（前が ない）は 対象外、e（いちばん下）は出さない
   assert.deepStrictEqual(nb.map(x => x[1]), [20, 10]);
 });
-t("がんばり・ていねいは 5回で頭打ち（多くやっても上にならない）", () => {
-  const E = [kid("a", [900, 0, 30, 30, 100, 1]), kid("b", [900, 0, 5, 5, 100, 1], 1), kid("c", [900, 0, 2, 1, 99, 1]), kid("d", [900, 0, 1, 0, 95, 1])];
-  const r = M.rankOp(E, "add"), g = r.cats.find(c => c.k === "ganbari").l, te = r.cats.find(c => c.k === "teinei").l;
-  assert.strictEqual(g.find(x => x[0] === "a") ? g.find(x => x[0] === "a")[1] : 5, 5);
-  for (const x of g.concat(te)) assert(x[1] <= 5);
+t("がんばり・るいけいは 頭打ちしない（やった数を そのまま 出す）", () => {
+  const E = [kid("a", [900, 0, 30, 300, 7]), kid("b", [900, 0, 12, 50, 3], 1), kid("c", [900, 0, 2, 9, 2]), kid("d", [900, 0, 1, 1, 1])];
+  const r = M.rankOp(E, "add"), g = cat(r, "ganbari"), tt = cat(r, "total");
+  assert.deepStrictEqual(g.map(x => x[1]).slice(0, 2).sort((p, q) => q - p)[0] >= 12, true);
+  assert(g.some(x => x[1] === 30) || tt.some(x => x[1] === 300), "30セット・300回が そのまま出る");
+  assert(tt.every(x => x[1] > 5 || x[0] === "c" || x[0] === "d"));
 });
-t("ちらばり：同じ計算で 1人が いくつもの上位を とらないよう、まだ出ていない子を先に えらぶ", () => {
-  // a は 何でも いちばん。b〜k は いろいろ
-  const E = [kid("a", [600, 700, 5, 5, 100, 7])];
-  "bcdefghijk".split("").forEach((p, i) => E.push(kid(p, [700 + i * 30, 760 + i * 25, 1 + (i % 4), i % 3, 99, 1 + (i % 5)], i + 1)));
-  const r = M.rankOp(E, "add"), counts = {};
-  for (const c of r.cats) for (const x of c.l) counts[x[0]] = (counts[x[0]] || 0) + 1;
-  for (const c of r.cats) assert(c.l.length <= 5);
-  const shownKids = Object.keys(counts).length;
-  assert(shownKids >= 10, "多くの子が出る：" + shownKids);
-  assert(counts.a <= 2, "いちばんの子も 2つまで：" + JSON.stringify(counts));
-  assert(Object.values(counts).every(v => v <= 2), "10人以上なら 1人 2つまで：" + JSON.stringify(counts));
-  assert.strictEqual(r.cats[0].l[0][0], "a");                             // はやさは そのまま上位
-  assert.strictEqual(shownKids, E.length, "11人 ぜんいんが どこかに出る：" + JSON.stringify(counts));
-  const one = M.rankOp(E.slice(0, 6), "add"), c1 = {}; for (const c of one.cats) for (const x of c.l) c1[x[0]] = (c1[x[0]] || 0) + 1;
-  assert.strictEqual(Object.keys(c1).length, 6, "6人でも ぜんいん：" + JSON.stringify(c1));
+t("これまで：じこベストは 本当の上位・入ったときに とどいた子（この じかん なし）も 出る", () => {
+  const E = [kid("a", [0, 700, 0, 20, 3]), kid("b", [650, 900, 1, 9, 2]), kid("c", [0, 800, 0, 50, 5]), kid("d", [0, 1200, 0, 2, 1])];
+  const r = M.rankOp(E, "add"), b = cat(r, "best");
+  assert.deepStrictEqual(b.map(x => x[0]), ["b", "a", "c"]); assert.deepStrictEqual(b.map(x => x[2]), [1, 2, 3]); assert.strictEqual(b[0][1], 65000);
+  assert.strictEqual(cat(r, "hayasa").length, 1);
+});
+t("ちらばり：同じ表で 1人が いくつもの上位を とらないよう、まだ出ていない子を先に えらぶ", () => {
+  const E = [kid("a", [600, 700, 5, 90, 7])];
+  "bcdefghijk".split("").forEach((p, i) => E.push(kid(p, [700 + i * 30, 760 + i * 25, 1 + (i % 4), 5 + (i % 6) * 3, 1 + (i % 5)], i + 1)));
+  const r = M.rankOp(E, "add");
+  for (const grp of [M.GROUPS.now, M.GROUPS.all]) {
+    const counts = {};
+    for (const c of r.cats.filter(c => grp.includes(c.k))) { assert(c.l.length <= 5); for (const x of c.l) counts[x[0]] = (counts[x[0]] || 0) + 1; }
+    assert(Object.keys(counts).length >= 9, "多くの子が出る：" + JSON.stringify(counts));
+    assert(Object.values(counts).every(v => v <= 2), "10人以上なら 1人 2つまで：" + JSON.stringify(counts));
+  }
+  assert.strictEqual(cat(r, "hayasa")[0][0], "a"); assert.strictEqual(cat(r, "best")[0][0], "a");   // 1つめは そのまま上位
 });
 t("ちらばり：人が少ないときは 同じ子が いくつかに出てもよい（表を空にしない）", () => {
-  const E = [kid("a", [600, 700, 5, 5, 100, 7]), kid("b", [700, 720, 2, 1, 99, 2]), kid("c", [800, 0, 1, 0, 95, 1])];
+  const E = [kid("a", [600, 700, 5, 30, 7]), kid("b", [700, 720, 2, 10, 2]), kid("c", [800, 0, 1, 1, 1])];
   const r = M.rankOp(E, "add");
-  for (const c of r.cats) if (c.k !== "nobi") assert(c.l.length >= 1, c.k);
-  const g = r.cats.find(c => c.k === "ganbari").l.map(x => x[0]); assert.deepStrictEqual(g, ["a", "b"]);   // 値の順に ならぶ
+  for (const c of r.cats) assert(c.l.length >= 1, c.k);
+  assert.deepStrictEqual(cat(r, "ganbari").map(x => x[0]), ["a", "b"]);   // 値の順に ならぶ
 });
 t("じこベスト こうしん：順位なし・送った順・上限あり", () => {
-  const E = [kid("a", [900, 1000, 1, 1, 100, 1], 3), kid("b", [900, 0, 1, 1, 100, 1], 1), kid("c", [1100, 1000, 1, 1, 100, 1], 2)];
+  const E = [kid("a", [900, 1000, 1, 2, 1], 3), kid("b", [900, 0, 1, 1, 1], 1), kid("c", [1100, 1000, 1, 2, 1], 2), kid("d", [0, 800, 0, 3, 1], 0)];
   const r = M.rankOp(E, "add"); assert.deepStrictEqual(r.pb, ["b", "a"]); assert.strictEqual(r.pbN, 2);
-  const many = []; for (let i = 0; i < 60; i++) many.push(kid("k" + i, [900, 0, 1, 1, 100, 1], i));
+  const many = []; for (let i = 0; i < 60; i++) many.push(kid("k" + i, [900, 0, 1, 1, 1], i));
   const r2 = M.rankOp(many, "add"); assert.strictEqual(r2.pb.length, M.PB_MAX); assert.strictEqual(r2.pbN, 60);
   const all = M.rank(many); assert.deepStrictEqual(Object.keys(all), ["add", "sub", "mul"]); assert.strictEqual(all.sub.n, 0);
-  assert(JSON.stringify(all).length < 6000, "60人でも 小さく " + JSON.stringify(all).length);
+  assert(JSON.stringify(all).length < 8000, "60人でも 小さく " + JSON.stringify(all).length);
 });
 
 /* どんぐり */
