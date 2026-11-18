@@ -7149,7 +7149,7 @@ function mtBuddy(msg){
 function renderMeter(q){
   setLG(ui.grade);
   app.innerHTML=`<div class="play mt"><div class="q">…</div></div>`;
-  loadScript("data/meter.js?v=25f7f7cd",()=>!!window.MH_METER).then(()=>{
+  loadScript("data/meter.js?v=689550ea",()=>!!window.MH_METER).then(()=>{
     if(params().path!=="meter") return;
     const st=+q.get("st"), task=q.get("task")==="1";
     if(st) mtStart(st,task); else if(LESSON) go("#home"); else mtMenu();

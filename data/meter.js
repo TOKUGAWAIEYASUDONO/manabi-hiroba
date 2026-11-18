@@ -159,7 +159,7 @@ window.MH_METER = (function () {
       if (q.ask === "place" && tries >= 2) return { hl: { from: kl, to: kv }, msg: `${kl * sp.t} から ${kv - kl}めもり。光《ひか》った ところだよ。`, show: true };
       return { hl: { from: kl, to: kv }, msg: `${kl * sp.t} から ${kv - kl}めもり。1めもりは ${sp.t} だよ。` };
     }
-    if (q.ask === "max") return { hl: { max: true }, msg: "0 から はじまって、ぐるっと 1しゅう まわった さいごの 数字《すうじ》を 見《み》よう。0 の となりに あるよ。" };
+    if (q.ask === "max") return { hl: { max: true }, msg: "0 から はじまって、ぐるっと 1しゅう まわった さいごの 数字《すうじ》を 見《み》よう。0 の 下《した》に あるよ。" };
     if (q.ask === "zero") return { hl: { zero: true }, msg: "なにも のせないと、はりは 0 の ところだよ。" };
     if (q.ask === "tick") { const to = sp.max > 1000 ? sp.mid : sp.lab; return { hl: { from: 0, to, z: to / 2 }, msg: sp.max > 1000 ? `0 から 長《なが》めの めもり（${to}g）まで ${to / sp.t}めもり。` : `0 から ${to}g まで ${to / sp.t}めもり。` }; }
     const v = q.ask === "shop" ? extra : q.v, vl = Math.floor(v / sp.lab) * sp.lab, n = (v - vl) / sp.t;
@@ -240,14 +240,13 @@ window.MH_METER = (function () {
       const len = big ? 18 : mid ? 12 : 7, p0 = pt(a, R - 4), p1 = pt(a, R - 4 - len);
       s.push(`<line x1="${p0[0]}" y1="${p0[1]}" x2="${p1[0]}" y2="${p1[1]}" stroke="${o.tool && big ? "#d35400" : "#1b2a38"}" stroke-width="${big ? 2.6 : mid ? 1.6 : 0.9}" stroke-linecap="round"/>`);
       if (big) {
-        /* 上（0）は 右に「0」、左に さいごの 数を ならべる（どちらも 同じ めもり） */
-        const labs = v === 0 ? [[0, 16, (hl && hl.zero) || (hl && hl.from === 0 && hl.to != null)], [sp.max, -1, hl && hl.max]]
+        /* 上（0）は はりの 下に「0」、その下に さいごの 数を たてに ならべる（どちらも 同じ めもり） */
+        const labs = v === 0 ? [[0, 0, (hl && hl.zero) || (hl && hl.from === 0 && hl.to != null)], [sp.max, 37, hl && hl.max]]
           : [[v, 0, hl && hl.from === v && hl.to != null]];
-        for (const [lv, side, ring] of labs) {
-          const t = dialLab(sp, lv), w = t.length > 3 ? 36 : t.length > 2 ? 30 : t.length > 1 ? 22 : 14, lp = pt(a, R - 38);
-          const cx = side > 0 ? CX + side : side < 0 ? f1(CX - w / 2 - 6) : lp[0];
-          if (ring || o.tool) s.push(`<circle cx="${cx}" cy="${lp[1]}" r="${t.length > 2 ? 19 : 15}" fill="${ring ? "#ffe0b2" : "none"}" stroke="${OR}" stroke-width="${ring ? 3 : 1.6}"/>`);
-          s.push(`<text x="${cx}" y="${f1(lp[1] + 5.5)}" font-size="${t.length > 3 ? 13.5 : 15.5}" font-weight="700" text-anchor="middle" fill="#13202b">${t}</text>`);
+        for (const [lv, dy, ring] of labs) {
+          const t = dialLab(sp, lv), lp = pt(a, R - 38), cy = f1(lp[1] + dy);
+          if (ring || o.tool) s.push(`<circle cx="${lp[0]}" cy="${cy}" r="${t.length > 2 ? 19 : 15}" fill="${ring ? "#ffe0b2" : "none"}" stroke="${OR}" stroke-width="${ring ? 3 : 1.6}"/>`);
+          s.push(`<text x="${lp[0]}" y="${f1(cy + 5.5)}" font-size="${t.length > 3 ? 13.5 : 15.5}" font-weight="700" text-anchor="middle" fill="#13202b">${t}</text>`);
         }
       }
     }
