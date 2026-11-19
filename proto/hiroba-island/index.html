@@ -1,0 +1,258 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>じぶんのひろば 2D・3D</title>
+<meta name="robots" content="noindex">
+<script>window.__T0 = performance.now();</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@500;700;900&family=Fredoka:wght@600;700&display=swap">
+<style>
+/* 見本（じぶんのひろば）の 色・枠を そのまま つかう。ちがうのは しまの ぶぶん だけ */
+:root{
+  --sky:#cfe9f3; --sky2:#eaf6f2; --sea:#8fcbdc; --sea2:#b7e0ea;
+  --paper:#fffaf0; --paper2:#f6ecd8; --ink:#3a2f28; --ink2:#6b5a4c;
+  --leaf:#86b85f; --leaf2:#a9d17e; --soil:#b98656; --soil2:#9a6a40;
+  --acorn:#b8743a; --sun:#f2b544; --berry:#e07a6a; --mint:#5aa98e; --lake:#3f7fc4;
+  --f-ui:"Zen Maru Gothic","Hiragino Maru Gothic ProN","BIZ UDPGothic",system-ui,sans-serif;
+  --f-num:"Fredoka","Zen Maru Gothic",system-ui,sans-serif;
+  color-scheme:light;
+}
+*{box-sizing:border-box}
+html,body{height:100%}
+body{margin:0;background:var(--sky);color:var(--ink);font-family:var(--f-ui);overflow:hidden;-webkit-tap-highlight-color:transparent}
+button{font-family:inherit;color:inherit}
+.app{position:relative;height:100%;overflow:hidden;background:linear-gradient(180deg,var(--sky) 0%,var(--sky2) 74%,var(--sea2) 74.1%,var(--sea) 100%)}
+.cloud{position:absolute;height:34px;border-radius:40px;background:#fff;opacity:.9;animation:drift linear infinite;z-index:3;pointer-events:none}
+.cloud::before,.cloud::after{content:"";position:absolute;background:#fff;border-radius:50%}
+.cloud::before{width:46px;height:46px;left:18px;top:-22px}.cloud::after{width:34px;height:34px;left:54px;top:-14px}
+@keyframes drift{from{transform:translateX(-160px)}to{transform:translateX(110vw)}}
+.sun{position:absolute;right:16%;top:9%;width:84px;height:84px;border-radius:50%;background:radial-gradient(circle,#fff6d6 0 40%,#ffe7a3 41% 60%,rgba(255,231,163,0) 61%)}
+/* しま：がめん ぜんたいに しく。あいている ところ（padding）に あわせて さいしょの 見え方を きめる */
+.stage{position:absolute;inset:0;padding:78px 286px 104px 304px;z-index:1}
+.vp2d,.vp3d{position:absolute;inset:0;overflow:hidden;touch-action:none;cursor:grab}
+.vp2d:active,.vp3d:active{cursor:grabbing}
+.vp2d svg{position:absolute;left:0;top:0;transform-origin:0 0;overflow:visible}
+.vp3d canvas{display:block}
+.tap{cursor:pointer}
+.tap:focus-visible{outline:none}
+.tap:focus-visible .hl,.tap:hover .hl{opacity:1}
+.hl{opacity:0;transition:opacity .15s}
+.bob{animation:bob 2.4s ease-in-out infinite;transform-box:fill-box;transform-origin:50% 100%}
+@keyframes bob{0%,100%{transform:translateY(0) scale(1,1)}50%{transform:translateY(-4px) scale(.985,1.02)}}
+.hop{animation:hop .55s cubic-bezier(.3,1.6,.5,1)}
+@keyframes hop{0%{transform:translateY(0)}35%{transform:translateY(-26px) scale(1.04,.96)}70%{transform:translateY(0) scale(1.06,.94)}100%{transform:none}}
+.wave{animation:wave 3.6s ease-in-out infinite}
+@keyframes wave{0%,100%{transform:translateX(0);opacity:.55}50%{transform:translateX(12px);opacity:.9}}
+.slotpulse{animation:slotp 1.6s ease-in-out infinite;transform-box:fill-box;transform-origin:center}
+@keyframes slotp{0%,100%{opacity:.55}50%{opacity:1}}
+.pop{animation:popin .5s cubic-bezier(.3,1.7,.5,1);transform-box:fill-box;transform-origin:50% 100%}
+@keyframes popin{0%{transform:scale(.2);opacity:0}100%{transform:scale(1);opacity:1}}
+/* しまの なまえ */
+.labels{position:absolute;inset:0;pointer-events:none;z-index:2}
+.ilabel{position:absolute;transform:translate(-50%,0);white-space:nowrap;background:rgba(255,250,240,.92);border:2px solid var(--ink);border-radius:999px;padding:2px 12px;font-size:14px;font-weight:900;box-shadow:0 3px 0 var(--ink)}
+.ilabel small{font-size:12px;font-weight:700;color:var(--ink2);margin-left:6px}
+.ilabel.lock{border-style:dashed;box-shadow:none;color:var(--ink2)}
+/* うえの ステータス */
+.hud{position:absolute;left:0;right:0;top:0;display:flex;align-items:flex-start;gap:12px;padding:14px max(16px,env(safe-area-inset-right,0px)) 0 max(16px,env(safe-area-inset-left,0px));pointer-events:none;z-index:5}
+.hud>*{pointer-events:auto}
+.plate{display:flex;align-items:center;gap:10px;background:var(--paper);border:2.5px solid var(--ink);border-radius:20px;padding:6px 14px 6px 6px;box-shadow:0 4px 0 var(--ink)}
+.plate .face{width:52px;height:52px;border-radius:16px;background:#e6f2e9;border:2px solid var(--ink);overflow:hidden;display:flex;align-items:flex-end;justify-content:center}
+.plate .face img{width:60px;height:60px;margin-bottom:-6px}
+.plate b{display:block;font-size:17px;font-weight:900;line-height:1.2}
+.plate small{font-size:12px;font-weight:700;color:var(--ink2)}
+.xp{width:150px;height:9px;border-radius:9px;background:var(--paper2);border:1.5px solid var(--ink);overflow:hidden;margin-top:3px}
+.xp i{display:block;height:100%;width:75%;background:var(--leaf)}
+.sp{flex:1}
+.pill{display:flex;align-items:center;gap:8px;height:48px;background:var(--paper);border:2.5px solid var(--ink);border-radius:999px;padding:0 16px 0 6px;box-shadow:0 4px 0 var(--ink);font-family:var(--f-num);font-weight:700;font-size:22px;font-variant-numeric:tabular-nums}
+.pill small{font-size:14px;color:var(--ink2)}
+.pill svg{flex:none}
+.pill.bump{animation:bump .4s ease}
+@keyframes bump{40%{transform:scale(1.12)}}
+.tk{display:flex;gap:3px}.tk i{width:14px;height:20px;border-radius:4px;background:var(--berry);border:2px solid var(--ink)}.tk i.off{background:var(--paper2)}
+/* ひだり：きょうの もくひょう */
+.quest{position:absolute;left:max(16px,env(safe-area-inset-left,0px));top:92px;width:268px;background:var(--paper);border:2.5px solid var(--ink);border-radius:22px;box-shadow:0 5px 0 var(--ink);padding:14px 14px 12px;display:flex;flex-direction:column;gap:9px;z-index:4}
+.quest h2{margin:0;font-size:17px;font-weight:900;display:flex;align-items:center;justify-content:space-between}
+.quest h2 span{font-family:var(--f-num);font-size:13px;background:var(--ink);color:var(--paper);border-radius:999px;padding:1px 10px}
+.q{display:grid;grid-template-columns:28px 1fr auto;align-items:center;gap:8px;border-radius:14px;padding:7px 8px;background:#f1f6ea;font-size:14px;font-weight:700}
+.q .ck{width:26px;height:26px;border-radius:50%;border:2.5px solid var(--ink);background:#fff;display:flex;align-items:center;justify-content:center}
+.q.done .ck{background:var(--mint)}
+.q .rw{font-family:var(--f-num);font-size:13px;color:#7a4a1e;display:flex;align-items:center;gap:2px}
+.q.now{background:#fff1da}
+.q .bar{grid-column:2/4;height:8px;border-radius:8px;background:#f4dcb6;overflow:hidden}.q .bar i{display:block;height:100%;width:60%;background:var(--sun)}
+.claim{height:46px;border:2.5px solid var(--ink);border-radius:14px;background:var(--sun);font-size:16px;font-weight:900;box-shadow:0 4px 0 var(--ink);cursor:pointer;transition:transform .08s}
+.claim:active{transform:translateY(3px);box-shadow:0 1px 0 var(--ink)}
+.claim:disabled{background:var(--paper2);color:var(--ink2);box-shadow:0 4px 0 #b9a990;border-color:#b9a990;cursor:default}
+.cap{font-size:12px;font-weight:700;color:var(--ink2);display:flex;justify-content:space-between}
+/* みぎ：うごく ボタン */
+.acts{position:absolute;right:max(16px,env(safe-area-inset-right,0px));top:92px;width:250px;display:flex;flex-direction:column;gap:12px;z-index:4}
+.gbtn{position:relative;display:flex;align-items:center;gap:12px;min-height:64px;border:2.5px solid var(--ink);border-radius:20px;background:var(--paper);box-shadow:0 5px 0 var(--ink);padding:6px 14px;font-size:19px;font-weight:900;cursor:pointer;text-align:left;transition:transform .08s}
+.gbtn:active{transform:translateY(4px);box-shadow:0 1px 0 var(--ink)}
+.gbtn:focus-visible,.claim:focus-visible,.nav a:focus-visible,.item:focus-visible,.vbtn:focus-visible{outline:3px solid var(--lake);outline-offset:3px}
+.gbtn .ico{width:42px;height:42px;border-radius:13px;display:flex;align-items:center;justify-content:center;border:2px solid var(--ink);flex:none}
+.gbtn small{display:block;font-size:12px;font-weight:700;color:var(--ink2)}
+.gbtn.big{min-height:100px;background:var(--berry);color:#fff;font-size:20px;white-space:nowrap}
+.gbtn.big small{color:#fff2ee}
+.gbtn.big .ico{width:52px;height:52px;background:#fff3e2}
+.badge{position:absolute;top:-10px;right:-8px;min-width:28px;height:28px;border-radius:14px;background:var(--sun);color:var(--ink);border:2.5px solid var(--ink);font-family:var(--f-num);font-size:15px;font-weight:700;display:flex;align-items:center;justify-content:center;padding:0 6px}
+.gbtn.big .shine{position:absolute;inset:0;border-radius:18px;overflow:hidden;pointer-events:none}
+.gbtn.big .shine::after{content:"";position:absolute;top:-20%;bottom:-20%;width:40px;left:-60px;background:rgba(255,255,255,.35);transform:skewX(-20deg);animation:shine 3.2s ease-in-out infinite}
+@keyframes shine{0%,60%{left:-60px}100%{left:110%}}
+/* しまを うごかす ボタン（ちいさい 子でも まよわない ように 大きく・ことばつき） */
+.viewctl{position:absolute;right:max(16px,env(safe-area-inset-right,0px));bottom:calc(16px + env(safe-area-inset-bottom,0px));display:flex;gap:8px;z-index:5}
+.vbtn{min-width:64px;height:62px;border:2.5px solid var(--ink);border-radius:18px;background:var(--paper);box-shadow:0 4px 0 var(--ink);font-size:12px;font-weight:900;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:0;cursor:pointer;padding:0 6px}
+.vbtn b{font-family:var(--f-num);font-size:24px;line-height:1}
+.vbtn:active{transform:translateY(3px);box-shadow:0 1px 0 var(--ink)}
+.vbtn[hidden]{display:none!important}
+/* したの メニュー */
+.nav{position:absolute;left:50%;bottom:calc(14px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);display:flex;gap:6px;background:var(--ink);border-radius:26px;padding:6px;z-index:5;box-shadow:0 6px 20px rgba(58,47,40,.25)}
+.nav a{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;width:84px;height:62px;border-radius:20px;color:#f6ecd8;text-decoration:none;font-size:13px;font-weight:700}
+.nav a[aria-current=page]{background:var(--paper);color:var(--ink)}
+/* たてものの カード */
+.pop-card{position:absolute;z-index:8;width:250px;background:var(--paper);border:2.5px solid var(--ink);border-radius:20px;box-shadow:0 6px 0 var(--ink),0 14px 30px rgba(58,47,40,.18);padding:14px;transform-origin:50% 100%;animation:popin .3s cubic-bezier(.3,1.6,.5,1)}
+.pop-card h3{margin:0 0 2px;font-size:18px;font-weight:900}
+.pop-card .lv{font-family:var(--f-num);font-size:13px;font-weight:700;border-radius:999px;padding:1px 9px;color:#fff}
+.pop-card p{margin:6px 0 10px;font-size:13px;font-weight:700;color:var(--ink2);line-height:1.6}
+.pop-card .xp{width:auto}
+.pop-card .row{display:flex;gap:8px;margin-top:10px}
+.pop-card .row button{flex:1;height:42px;border:2.5px solid var(--ink);border-radius:13px;font-size:15px;font-weight:900;cursor:pointer;background:var(--leaf2);box-shadow:0 3px 0 var(--ink)}
+.pop-card .row button.sub{background:var(--paper)}
+.bubble{position:absolute;z-index:7;max-width:240px;background:#fff;border:2.5px solid var(--ink);border-radius:18px;padding:8px 14px;font-size:16px;font-weight:900;box-shadow:0 4px 0 var(--ink);animation:popin .3s cubic-bezier(.3,1.6,.5,1);pointer-events:none}
+.bubble::after{content:"";position:absolute;left:50%;bottom:-12px;width:16px;height:16px;background:#fff;border-right:2.5px solid var(--ink);border-bottom:2.5px solid var(--ink);transform:translateX(-50%) rotate(45deg)}
+/* もようがえの ひきだし */
+.drawer{position:absolute;left:50%;bottom:calc(92px + env(safe-area-inset-bottom,0px));transform:translate(-50%,0);z-index:6;display:flex;gap:10px;align-items:stretch;background:var(--paper);border:2.5px solid var(--ink);border-radius:22px;box-shadow:0 6px 0 var(--ink);padding:10px 12px;transition:transform .3s cubic-bezier(.3,1.4,.5,1),opacity .2s;max-width:calc(100% - 32px);overflow-x:auto}
+.drawer[hidden]{display:flex!important;transform:translate(-50%,40px);opacity:0;pointer-events:none}
+.drawer .lead{display:flex;flex-direction:column;justify-content:center;width:92px;flex:none;font-size:15px;font-weight:900;line-height:1.3}
+.drawer .lead small{font-size:11px;font-weight:700;color:var(--ink2)}
+.drawer .sep{width:2px;flex:none;background:var(--paper2);border-radius:2px}
+.item{width:74px;flex:none;border:2.5px solid var(--ink);border-radius:16px;background:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;padding:6px 0;cursor:pointer;font-size:13px;font-weight:900;box-shadow:0 3px 0 var(--ink)}
+.item[aria-pressed=true]{background:#fff1da;outline:3px solid var(--sun);outline-offset:0}
+.item .pr{font-family:var(--f-num);font-size:13px;color:#7a4a1e;display:flex;align-items:center;gap:2px}
+.item .sw{width:34px;height:22px;border:2px solid var(--ink);border-radius:6px;transform:skewX(-20deg)}
+.fly{position:fixed;z-index:20;pointer-events:none;width:30px;height:30px;transition:transform .75s cubic-bezier(.5,-.3,.6,1),opacity .2s .65s}
+.spark{position:absolute;z-index:9;pointer-events:none;width:12px;height:12px;border-radius:50%;animation:spark .8s ease-out forwards}
+@keyframes spark{to{transform:translate(var(--dx),var(--dy)) scale(.2);opacity:0}}
+.toast{position:absolute;left:50%;top:84px;transform:translateX(-50%);z-index:9;background:var(--ink);color:var(--paper);border-radius:999px;padding:8px 18px;font-size:15px;font-weight:700;animation:popin .3s cubic-bezier(.3,1.6,.5,1);white-space:nowrap}
+/* ためし用パネル（おとな むけ）：がめんの すみ */
+.lab{position:absolute;left:max(12px,env(safe-area-inset-left,0px));bottom:calc(12px + env(safe-area-inset-bottom,0px));z-index:4;width:272px;background:rgba(58,47,40,.92);color:#fffaf0;border-radius:16px;padding:9px 11px;font-size:12px;font-weight:700;line-height:1.5;font-family:system-ui,sans-serif}
+.lab .r{display:flex;align-items:center;gap:4px;flex-wrap:wrap}
+.lab .r+.r{margin-top:5px}
+.lab button{font:inherit;font-size:12px;height:28px;min-width:30px;border:0;border-radius:8px;background:#6b5a4c;color:#fffaf0;cursor:pointer;padding:0 7px}
+.lab button[aria-pressed=true]{background:var(--sun);color:var(--ink)}
+.lab .fps{font-family:var(--f-num);font-size:22px;line-height:1}
+.lab .ok{color:#9be3a5}.lab .mid{color:#ffd77a}.lab .bad{color:#ff9d8a}
+.lab .dim{opacity:.75;font-weight:500}
+.lab .seg{display:flex;background:#6b5a4c;border-radius:9px;padding:2px}
+.lab .seg button{background:none;height:26px;min-width:44px}
+.lab .seg button[aria-pressed=true]{background:#fffaf0;color:var(--ink)}
+.lab details summary{cursor:pointer}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}}
+/* PC・Chromebook の ひくい がめん：パネルを すこし ちいさく */
+@media (max-height:800px) and (min-width:901px){
+  .quest{top:84px;gap:6px;padding:10px 12px}.q{padding:5px 8px}.gbtn{min-height:56px}.gbtn.big{min-height:84px}.acts{top:84px;gap:10px}
+  .stage{padding-top:70px}
+}
+/* タブレット たて・スマホ：しまを うえ、パネルを したに ならべる */
+@media (max-width:900px),(max-height:560px){
+  body{overflow:auto}
+  .app{height:auto;min-height:100%;padding-bottom:110px;display:flex;flex-direction:column}
+  .hud{position:relative;flex-wrap:wrap;padding-bottom:4px}
+  .plate{flex:1 1 100%}.sp{display:none}.pill{height:42px;font-size:19px}
+  .stage{position:relative;inset:auto;height:min(78vw,620px);padding:8px;order:1;margin-top:8px}
+  .viewctl{position:absolute;bottom:8px;right:12px}
+  .acts{order:2}.quest{order:3}
+  .quest,.acts{position:relative;left:auto;right:auto;top:auto;width:auto;margin:10px max(16px,env(safe-area-inset-left,0px)) 0 max(16px,env(safe-area-inset-right,0px))}
+  .acts{display:grid;grid-template-columns:repeat(2,minmax(0,1fr))}
+  .gbtn.big{grid-column:1/-1}
+  .nav{position:fixed}
+  .nav a{width:64px}
+  .drawer{position:fixed}
+  .lab{position:relative;left:auto;bottom:auto;order:4;width:auto;margin:12px 16px 0}
+}
+</style>
+</head>
+<body>
+<div class="app" id="app">
+  <div class="sun" aria-hidden="true"></div>
+  <div class="cloud" style="top:11%;width:120px;animation-duration:70s;animation-delay:-20s" aria-hidden="true"></div>
+  <div class="cloud" style="top:20%;width:90px;animation-duration:95s;animation-delay:-60s;opacity:.75" aria-hidden="true"></div>
+  <div class="cloud" style="top:6%;width:70px;animation-duration:120s;animation-delay:-5s;opacity:.6" aria-hidden="true"></div>
+
+  <header class="hud">
+    <div class="plate">
+      <div class="face"><img src="img/math-base-v3-256.webp" alt=""></div>
+      <div><b>さんかくると ひろば</b><small id="plateTxt">ひろば Lv 4 ・ できた 18</small><div class="xp" aria-hidden="true"><i id="plateXp"></i></div></div>
+    </div>
+    <div class="sp"></div>
+    <div class="pill" id="acornPill" aria-label="どんぐり">
+      <svg width="36" height="36" viewBox="0 0 40 40" aria-hidden="true"><ellipse cx="20" cy="25" rx="11" ry="12" fill="#c98a3d" stroke="#3a2f28" stroke-width="2.5"/><ellipse cx="16" cy="23" rx="3" ry="5" fill="#e6b277" opacity=".8"/><path d="M7 18 q13 -14 26 0 q-13 -4 -26 0z" fill="#7a4a1e" stroke="#3a2f28" stroke-width="2.5" stroke-linejoin="round"/><path d="M20 8 q1 -4 4 -5" fill="none" stroke="#3a2f28" stroke-width="2.5" stroke-linecap="round"/></svg>
+      <span id="acorn">128</span>
+    </div>
+    <div class="pill" aria-label="たんけんチケット 2まい">
+      <span class="tk" aria-hidden="true"><i></i><i></i><i class="off"></i></span><span>2<small> / 3</small></span>
+    </div>
+    <div class="pill" aria-label="ずかん 34パーセント">
+      <svg width="30" height="30" viewBox="0 0 40 40" aria-hidden="true"><rect x="7" y="5" width="26" height="30" rx="4" fill="#9fd0f0" stroke="#3a2f28" stroke-width="2.5"/><path d="M13 14h14M13 21h14M13 28h9" stroke="#3a2f28" stroke-width="2.5" stroke-linecap="round"/></svg>
+      <span>34<small>%</small></span>
+    </div>
+  </header>
+
+  <div class="stage" id="stage"><div class="labels" id="labels" aria-hidden="true"></div>
+    <div class="viewctl" aria-label="しまの 見かた">
+      <button class="vbtn" type="button" id="rotL" hidden><b>↺</b>まわす</button>
+      <button class="vbtn" type="button" id="rotR" hidden><b>↻</b>まわす</button>
+      <button class="vbtn" type="button" id="zIn"><b>＋</b>ちかく</button>
+      <button class="vbtn" type="button" id="zOut"><b>−</b>とおく</button>
+      <button class="vbtn" type="button" id="zHome"><b>⌂</b>もどす</button>
+    </div>
+  </div>
+
+  <section class="quest" aria-labelledby="qh">
+    <h2 id="qh">きょうの もくひょう <span id="qn">2 / 3</span></h2>
+    <div class="q done"><span class="ck"><svg width="15" height="15" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12l5 5 9-10" fill="none" stroke="#fff" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span>1かい れんしゅうする</span><span class="rw">+1</span></div>
+    <div class="q done"><span class="ck"><svg width="15" height="15" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12l5 5 9-10" fill="none" stroke="#fff" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span>なかまに あいに いく</span><span class="rw">♥</span></div>
+    <div class="q now" id="q3"><span class="ck"></span><span>たんげんを 1つ「できた」に</span><span class="rw">+2</span><span class="bar" aria-hidden="true"><i></i></span></div>
+    <button class="claim" id="claim" type="button">どんぐりを うけとる</button>
+    <div class="cap"><span>きょうの どんぐり</span><span id="capn">14 / 20</span></div>
+  </section>
+
+  <nav class="acts" aria-label="ひろばで できること">
+    <button class="gbtn big" type="button" id="goEx"><span class="shine" aria-hidden="true"></span>
+      <span class="ico" aria-hidden="true"><svg width="38" height="38" viewBox="0 0 40 40"><path d="M5 33 L15 13 L21 23 L26 16 L36 33 Z" fill="#9ad86f" stroke="#3a2f28" stroke-width="2.5" stroke-linejoin="round"/><path d="M26 16 l0 -9 l7 3 l-7 3" fill="#e07a6a" stroke="#3a2f28" stroke-width="2.5" stroke-linejoin="round"/></svg></span>
+      <span>たんけんに いく<small>チケット 1まい・2〜3ぷん</small></span><span class="badge">2</span></button>
+    <button class="gbtn" type="button" id="goDeco" aria-pressed="false"><span class="ico" style="background:#fff1da" aria-hidden="true"><svg width="28" height="28" viewBox="0 0 24 24"><path d="M4 20l3-1 11-11-2-2L5 17z" fill="#f2b544" stroke="#3a2f28" stroke-width="2" stroke-linejoin="round"/><path d="M14 6l4 4" stroke="#3a2f28" stroke-width="2"/></svg></span><span>もようがえ<small>おく・ぬる</small></span></button>
+    <button class="gbtn" type="button"><span class="ico" style="background:#fde3ec" aria-hidden="true"><svg width="28" height="28" viewBox="0 0 24 24"><path d="M8 4l4 3 4-3 4 4-3 3v9H7v-9L4 8z" fill="#f5a9c0" stroke="#3a2f28" stroke-width="2" stroke-linejoin="round"/></svg></span><span>きせかえ<small>ぼうし・もちもの</small></span></button>
+    <button class="gbtn" type="button"><span class="ico" style="background:#e3f1fb" aria-hidden="true"><svg width="28" height="28" viewBox="0 0 24 24"><rect x="5" y="3" width="14" height="18" rx="2" fill="#9fd0f0" stroke="#3a2f28" stroke-width="2"/><path d="M9 8h6M9 12h6M9 16h4" stroke="#3a2f28" stroke-width="2" stroke-linecap="round"/></svg></span><span>ずかん<small>シール 41 / 120</small></span></button>
+  </nav>
+
+  <div class="drawer" id="drawer" hidden aria-label="おく もの・ぬる もの">
+    <div class="lead">えらんで しまを タップ<small>＋ に おく・マスを ぬる</small></div>
+    <button class="item" type="button" data-k="tree" data-p="5" aria-pressed="false"><svg width="36" height="36" viewBox="0 0 40 40" aria-hidden="true"><rect x="17" y="22" width="6" height="13" rx="2" fill="#9a6a40" stroke="#3a2f28" stroke-width="2"/><circle cx="20" cy="16" r="12" fill="#86b85f" stroke="#3a2f28" stroke-width="2"/></svg>き<span class="pr">5</span></button>
+    <button class="item" type="button" data-k="flower" data-p="8" aria-pressed="false"><svg width="36" height="36" viewBox="0 0 40 40" aria-hidden="true"><rect x="6" y="24" width="28" height="10" rx="3" fill="#b98656" stroke="#3a2f28" stroke-width="2"/><circle cx="13" cy="20" r="5" fill="#f5a9c0" stroke="#3a2f28" stroke-width="1.5"/><circle cx="20" cy="18" r="5" fill="#f2b544" stroke="#3a2f28" stroke-width="1.5"/><circle cx="27" cy="20" r="5" fill="#f5a9c0" stroke="#3a2f28" stroke-width="1.5"/></svg>はなだん<span class="pr">8</span></button>
+    <button class="item" type="button" data-k="bench" data-p="6" aria-pressed="false"><svg width="36" height="36" viewBox="0 0 40 40" aria-hidden="true"><rect x="6" y="15" width="28" height="7" rx="2" fill="#c98a3d" stroke="#3a2f28" stroke-width="2"/><path d="M10 22v10M30 22v10" stroke="#3a2f28" stroke-width="3" stroke-linecap="round"/></svg>ベンチ<span class="pr">6</span></button>
+    <button class="item" type="button" data-k="fountain" data-p="12" aria-pressed="false"><svg width="36" height="36" viewBox="0 0 40 40" aria-hidden="true"><ellipse cx="20" cy="30" rx="15" ry="5" fill="#9fd0f0" stroke="#3a2f28" stroke-width="2"/><path d="M20 28V14M20 14q-6 2-8 8M20 14q6 2 8 8" fill="none" stroke="#3f7fc4" stroke-width="2.5" stroke-linecap="round"/></svg>ふんすい<span class="pr">12</span></button>
+    <span class="sep" aria-hidden="true"></span>
+    <button class="item" type="button" data-paint="path" data-p="1" aria-pressed="false"><span class="sw" style="background:#f3e2bd"></span>みちを ぬる<span class="pr">1</span></button>
+    <button class="item" type="button" data-paint="pond" data-p="2" aria-pressed="false"><span class="sw" style="background:#6fc0dc"></span>いけを ぬる<span class="pr">2</span></button>
+    <button class="item" type="button" data-paint="grass" data-p="0" aria-pressed="false"><span class="sw" style="background:#9fcb74"></span>くさに もどす<span class="pr">0</span></button>
+  </div>
+
+  <nav class="nav" aria-label="メニュー">
+    <a href="#hiroba" aria-current="page"><svg width="26" height="26" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 18l9 4 9-4-9-4z" fill="#86b85f" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><path d="M12 14V5l5 2-5 2" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg>ひろば</a>
+    <a href="#nakama"><svg width="26" height="26" viewBox="0 0 24 24" aria-hidden="true"><circle cx="9" cy="9" r="4" fill="none" stroke="currentColor" stroke-width="2"/><path d="M2 20c1-5 13-5 14 0M16 5a4 4 0 0 1 0 8M18 15c2 1 4 3 4 5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>なかま</a>
+    <a href="#zukan"><svg width="26" height="26" viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="3" width="14" height="18" rx="2" fill="none" stroke="currentColor" stroke-width="2"/><path d="M9 8h6M9 12h6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>ずかん</a>
+    <a href="#shop"><svg width="26" height="26" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9h16l-1 11H5zM8 9a4 4 0 0 1 8 0" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg>おみせ</a>
+  </nav>
+
+  <aside class="lab" id="lab" aria-label="ためし用（おとな むけ）">
+    <div class="r"><span>しま：</span><span class="seg"><button type="button" data-v="2d" aria-pressed="true">2D</button><button type="button" data-v="3d" aria-pressed="false">3D</button></span><span class="dim" id="labNote"></span></div>
+    <div class="r"><span>なめらかさ</span><span class="fps" id="fps">--</span><span>fps</span><span class="dim" id="fpsMin"></span></div>
+    <div class="r dim" id="load">よみこみ --</div>
+    <div class="r dim" id="extra"></div>
+    <div class="r"><span>できた</span><b id="doneN" style="font-size:15px;min-width:26px;text-align:right">18</b><button type="button" data-d="-5">−5</button><button type="button" data-d="1">＋1</button><button type="button" data-d="5">＋5</button><button type="button" data-set="0">0</button><button type="button" data-set="18">18</button><button type="button" data-set="60">60</button><button type="button" data-set="150">150</button></div>
+  </aside>
+</div>
+<script type="module" src="app.js"></script>
+</body>
+</html>
