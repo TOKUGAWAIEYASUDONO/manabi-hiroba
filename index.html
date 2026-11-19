@@ -7358,6 +7358,7 @@ function mtMenu(){
     ${mtBuddy("さいだい → 1めもり → はり の じゅんに よむと、めもり名人《めいじん》に なれるよ！")}
     <p class="note mtcalm">じかんは はからないよ。ゆっくり かぞえてね。</p>
     <div class="mtopts"><span class="mtog"><span class="mtol">ステップで よむ</span>${pill("guide",1,"する")}${pill("guide",0,"しない")}</span><span class="mtog"><span class="mtol">こたえかた</span>${pill("ch",0,"すうじを 入《い》れる")}${pill("ch",1,"4つから えらぶ")}</span></div>
+    <p class="note mtcalm">すうじを 入《い》れると ★3つまで、4つから えらぶと ★2つまで もらえるよ。</p>
     ${grp("すうちょくせん","line")}${grp("はかり","dial")}${grp("めいじん","all")}
   </div>`;
   $("#mtbk").onclick=()=>go("#home");
@@ -7442,7 +7443,7 @@ function mtArea(){
     if(!m.chs) m.chs=M.choices(s);
     const cls=["ca","cb","cc","cd"];
     area.innerHTML=`<div class="choices mtch">${m.chs.map((c,i)=>`<button type="button" class="choice ${cls[i]}" data-c="${i}"${m.lock?" disabled":""}><span class="kh" aria-hidden="true">${i+1}</span>${esc(c.label)}</button>`).join("")}</div>`;
-    area.querySelectorAll("[data-c]").forEach(b=>b.onclick=()=>{ const c=m.chs[+b.dataset.c]; if(m.lock) return; if(!M.check(s,c.v)) b.disabled=true; mtJudge(c.v); }); return;
+    area.querySelectorAll("[data-c]").forEach(b=>b.onclick=()=>{ const c=m.chs[+b.dataset.c]; if(m.lock) return; m.chUsed=true; /* 4つから えらんで こたえたら ★は 2つまで */ if(!M.check(s,c.v)) b.disabled=true; mtJudge(c.v); }); return;
   }
   const keys=["7","8","9","⌫","4","5","6","0","1","2","3"];
   const box=(i,u)=>`<button type="button" class="mtbox${m.box===i?" on":""}" data-b="${i}" aria-label="${u}の ところ">${m.inp[i]?esc(m.inp[i]):"&nbsp;"}</button><span class="mtu">${u}</span>`;
@@ -7458,7 +7459,7 @@ function mtTools(){
   if(mtToolOk()) b.push(`<button type="button" class="pill small${m.tool?" on":""}" id="mttl" aria-pressed="${m.tool}">🧰 めもりを かぞえる</button>`);
   if(q.kind==="dial") b.push(`<button type="button" class="pill small${m.zoomOn?" on":""}" id="mtzm" aria-pressed="${m.zoomOn}">🔍 ルーペ</button>`);
   if(q.steps) b.push(`<button type="button" class="pill small${m.guide?" on":""}" id="mtgd" aria-pressed="${m.guide}">ステップで よむ</button>`);
-  if(q.ask!=="place"&&q.ask!=="shop") b.push(`<button type="button" class="pill small${m.ch?" on":""}" id="mtcs" aria-pressed="${m.ch}">4つから えらぶ</button>`);
+  if(q.ask!=="place"&&q.ask!=="shop") b.push(`<button type="button" class="pill small${m.ch?" on":""}" id="mtcs" aria-pressed="${m.ch}">4つから えらぶ（★2まで）</button>`);
   el.innerHTML=b.join("");
   const on=(id,f)=>{ const x=$("#"+id); if(x) x.onclick=()=>{ f(); const y=$("#"+id); if(y) y.focus(); }; };
   on("mthb",()=>{ if(m.lock) return; m.hintOn=!m.hintOn; if(m.hintOn) m.firstOk=false; mtHint(); mtTools(); if(m.hintOn){ const c=$("#mthint"); if(c&&c.scrollIntoView) c.scrollIntoView({block:"nearest",behavior:"smooth"}); } });      // ヒントを 見たら「1回めで せいかい」には 数えない
@@ -7516,17 +7517,18 @@ function mtNext(){ const m=MT; if(!m||m.done) return; m.i++; if(m.i>=m.list.leng
 function mtEnd(){
   const m=MT; if(!m||m.done) return; m.done=true; m.lock=true; clearTimeout(m.tm);
   const N=m.list.length, ans=m.res.filter(x=>x!=null).length, f=m.first;
-  const stars=ans<N?(ans?1:0):f===N?3:f>=Math.ceil(N*.6)?2:1;
+  const st0=ans<N?(ans?1:0):f===N?3:f>=Math.ceil(N*.6)?2:1, stars=m.chUsed?Math.min(2,st0):st0;      // 4つから えらぶと ★2つまで（すうじを 入れると ★3つまで）
   const c0=mtCfg(), isNew=stars>mtStars(c0,m.st);
   if(isNew) mtSet(c=>{ c.s[m.st]=stars; });
   if(stars===3) party(); if(stars>0) sfx("medal");
   const colHtml=COLOK&&ans?colRun({units:[],answered:ans,correct:f,quiet:!!m.task}):"";
   const nx=MH_METER.STAGES.find(s=>s.id===m.st+1), nxOpen=nx&&mtOpen(mtCfg(),nx.id);
-  const say=stars===3?"めもり名人《めいじん》だね！ すごい！":stars===2?"いい ちょうし！ もう少《すこ》しで ★3つ":stars===1?"かぞえかたが わかってきたね。":"また やってみよう。";
-  const rep=`【めもり名人】ステージ${m.st}「${rbp(m.S.t)}」｜1回目で正解 ${f}問／${N}問（答えた ${ans}問）`;   //T
+  const say=stars===3?"めもり名人《めいじん》だね！ すごい！":stars===2&&st0===3?"ぜんぶ せいかい！ つぎは すうじを 入《い》れて ★3つに ちょうせんしよう":stars===2?"いい ちょうし！ もう少《すこ》しで ★3つ":stars===1?"かぞえかたが わかってきたね。":"また やってみよう。";
+  const rep=`【めもり名人】ステージ${m.st}「${rbp(m.S.t)}」｜1回目で正解 ${f}問／${N}問（答えた ${ans}問）${m.chUsed?"｜4つから選ぶ（★2まで）":""}`;   //T
   app.innerHTML=`<div class="play mt"><div class="res mtres">
     <div class="mtbigst">${mtStarH(stars,true)}</div>
     <div class="mtrl">1回目《かいめ》で せいかい</div><div class="num">${f} / ${N}</div>
+    ${m.chUsed?`<p class="note mtchn">4つから えらぶと ★は 2つまで。すうじを 入《い》れると ★3つまで もらえるよ</p>`:""}
     ${isNew&&!m.task?`<div class="newbest">ほしが ふえた！</div>`:""}
     ${m.task?"":mtBuddy(say)}
     ${colHtml}

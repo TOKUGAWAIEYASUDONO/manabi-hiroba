@@ -119,6 +119,7 @@ ok(/data\/meter\.js\?v=[0-9a-f]{8}/.test(html), "meter.js を 版つきで 読�
 ok(/else if\(path==="meter"\) renderMeter\(q\)/.test(html), "#meter の 画面");
 ok(/#\(\?:play\|mode\|meter\)\\\?/.test(html), "課題リンク（授業モード）に #meter");
 ok(/meterTile\(\)\+extTiles\(\)/.test(html), "ホームの 算数に タイル");
+ok(/stars=m\.chUsed\?Math\.min\(2,st0\):st0/.test(html) && /m\.chUsed=true/.test(html), "4つから えらぶと ★2つまで（すうじを 入れると ★3つまで）");
 ok(/colRun\(\{units:\[\],answered:ans,correct:f,quiet:!!m\.task\}\)/.test(html), "どんぐりは colRun（授業モードは 記録だけ）");
 ok(!/setInterval\([^)]*mt/i.test(html.slice(html.indexOf("const MTKEY"), html.indexOf("function shouldBlockLessonNavigation"))), "めもり名人に タイマーが ない");
 
