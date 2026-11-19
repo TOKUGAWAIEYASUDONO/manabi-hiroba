@@ -12,11 +12,11 @@
 
 ## 作業中（セッションあり）
 <!-- - タスク名 — セッション: session_xxx -->
-- 🧱 **画面の作り直し（A案「教科のへや」）④：ホームを教科のとびらに（＋JS なしで読める紹介文）** — セッション: session_01DeDokyMyR5CFgv736bYbaY（ブランチ claude/sansu-room から）
+- 🧱 **画面の作り直し（A案「教科のへや」）⑤：古い入口の整理と検査（古いURLは新しい画面へつなぐ・結果画面の「もどる」先）** — セッション: session_01DeDokyd9xxnoFdDn9FGHpj（ブランチ claude/home-doors から）
   - 案と順番は ブランチ `claude/screen-split-proposal` の `docs/screen-split.md`（ラフ `docs/screen-split/mock.html`）
 
 ## 次やる（3つまで）
-0. 🧱 画面の作り直し ⑤（④が終わったら）：⑤古い入口の整理と検査。⑥（あとで）単元↔道具のつながり
+0. 🚀 **画面の作り直し ②〜⑤ をまとめて公開**（⑤が終わったら・あなたの OK をもらってから）。⑥（あとで）単元↔道具のつながり
 1. 🛟 **100マス計算を変えて build したときの元のコード（`src/App.jsx` など）を探して避難させる** — PC の「子どものアプリ」セッションで。避難のときに見つかったか、まだわからない
 2. 💾 **バックアップの文字（HR1〜3／MH2）に、のこりの記録を入れる**：やりこみ（y）・もらった物（mh_col の kp：シールのランク・学びでもらう きせかえ/しょうごう・遊具）・めもり名人の★。入っていないと、別の端末へうつしたときに減る（data/collection.js の hrMake・hrParse・hrMerge、kpClean・keepUp）
 3. 🎨 **アイコンを画像生成で作る**（算数のへやのタイル＝まとまり11こ＋とっくん、教科のとびら＝段階④）（画面の作り直し③のセッションから・あなたの希望）
@@ -65,7 +65,6 @@
 - **ことばの まほう** — `plan/idea-jev-kotoba-mahou.md`
 
 ### サイト全体
-- **トップに JavaScript なしで読める紹介文（noscript など）を入れる**（Google 検索のセッションから）→ 画面の作り直し④「ホーム」のときに いっしょに
 - **100マスのページの共有用の情報（og:url・og:site_name・og:image）が元サイト（giga-school.com）のまま** → 直したら `apps/README.md` の「作り直したあとも」の注意に足す
 - **`tools/check-layout.js` が、ローカルに main ブランチがないと止まる**（`git branch main origin/main` で通る）。検査が自分で main を見つけられるようにするとよい
 - **感想フォームのリンク（FEEDBACK_FORM_URL）を入れる**
@@ -101,3 +100,4 @@
 - ✅ 先生なしで つながる機能の検討 → A・B の形を決めた。学校への確認が残り（ブランチ claude/friend-battle-class-ranking-study）
 - ✅ 画面の作り直し③ → 算数のへや（単元で練習のタイル＋とっくん＋ぜんぶの単元）。算数だけ先に・1・2年は今のまま（ブランチ claude/sansu-room・まだ main に入れない）
 - ✅ 島の 2D版・3D版の試作 → クラウドでの測定：2D はいつも60fps。3D は できた18で約50fps・150で約29fps（CPU 4倍おそいと 36／13fps）。読みこみ 2D 0.1秒・3D 0.4秒
+- ✅ 画面の作り直し④ → ホームを教科のとびらに。5年スマホのホームが 2.7→1.4画面、タブレット・PC は1画面。noscript の紹介文も（ブランチ claude/home-doors・まだ main に入れない）
