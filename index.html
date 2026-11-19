@@ -850,7 +850,7 @@ body[data-v=host] .wrap{max-width:none;padding:0}
 .door .new{background:var(--sun);border:2px solid var(--edge);border-radius:999px;padding:2px 8px;font-size:12px;font-weight:800;color:var(--ink);white-space:nowrap}
 .home.easy .door{min-height:84px}.home.easy .door .dt{font-size:24px}
 .door:active{transform:translateY(3px);box-shadow:0 1px 0 var(--edge)}
-.door.soon{cursor:default;border-style:dashed;box-shadow:none;background:#fffaf0}.door.soon:active{transform:none}.door.soon .art{opacity:.75}
+.door.soon{cursor:default;border-style:dashed;box-shadow:none;background:#fffaf0}.door.soon .dt{min-width:0}.door.soon .dt small{white-space:normal;word-break:keep-all;overflow-wrap:anywhere}.door.soon:active{transform:none}.door.soon .art{opacity:.75}
 .hb,.zk{width:100%;max-width:720px;margin:0 auto}
 .hb .acn{display:inline-flex;align-items:center;gap:4px;background:#fff;border:3px solid var(--edge);border-radius:999px;padding:2px 12px 2px 6px;font-size:18px}
 .hb .acn .art{width:28px;height:28px}
@@ -6825,6 +6825,8 @@ let UPK=(()=>{ const v=store.get("mh_upick",null)||{};
   return {sel:Array.isArray(v.sel)?[...new Set(v.sel)].filter(i=>UBY[i]).slice(0,UMAX):[],n:UNS.includes(v.n)?v.n:20,t:USECS.includes(v.t)?v.t:20,mix:v.mix!==false,choice:v.choice===true||v.choice===false?v.choice:null}; })();
 const uSave=()=>store.set("mh_upick",UPK);
 const uChoice=(ids,c)=>c===true||c===false?c:uEasyDefault(ids);
+/* 「すうじを いれる」は 算数だけ。国語・社会・理科・英語は ぜんぶ 4つから えらぶので、答え方は 出さない（えらんでいない ときは いまの 教科で きめる） */
+const uTypeOk=(ids,subj)=>ids.length?ids.some(id=>UBY[id]&&UBY[id].subj==="sansu"):subj==="sansu";
 /* リンク */
 function uHash(c){ return "#u="+c.ids.join(",")+"&n="+c.n+"&t="+c.t+"&s="+c.seed+(c.mix===false?"&m=0":"")+(c.choice===true?"&c=1":c.choice===false?"&c=0":"")+(c.task?"&task=1":"")+(c.col0?"&col=0":"")+(c.tool0?"&tool=0":""); }
 function uParse(hash){
@@ -7139,7 +7141,7 @@ function renderUnits(q){
       h("span",{class:"ucg",text:UBY[id].g+"年《ねん》"}),h("span",{text:UBY[id].title}),h("span",{class:"ucp",text:per+"%"}),h("span",{class:"ucx","aria-hidden":"true",text:"✕"})))):h("div",{class:"note",text:T("u.none")});
     const cho=uChoice(ids,UPK.choice);
     if(kc){      // 下のバー：えらんだ数（ひらくと一覧）・答え方・スタート
-      const howOk=!ids.length||!ids.every(id=>UBY[id].subj==="rika");
+      const howOk=uTypeOk(ids,subj);
       const how=cls=>howOk?h("div",{class:"pills uhow "+cls,role:"group","aria-label":T("u.how")},cls==="pop"?h("b",{class:"pl",text:T("u.how")}):null,upill(T("u.type"),!cho,()=>{ UPK.choice=false; uSave(); drawPanel(); }),upill(T("u.c4"),cho,()=>{ UPK.choice=true; uSave(); drawPanel(); })):null;
       const wasOpen=!!panel.querySelector(".uselbox[open]");
       const list=h("details",{class:"uselbox",open:wasOpen},h("summary",{class:"usum"+(k?" on":""),text:T("u.sel",k)+" ▴"}),h("div",{class:"uselpop"},chips,k?h("div",{class:"note",text:T("u.ratio.k",Math.min(UPK.n,20),k)}):null,how("pop"),k?h("button",{type:"button",class:"btn sub s",text:T("u.clear"),onclick:()=>{ UPK.sel=[]; uSave(); paint(); drawPanel(); }}):null));
@@ -7153,7 +7155,7 @@ function renderUnits(q){
         h("label",{class:"inl"},"クイズの制限《せいげん》時間《じかん》（1問《もん》）",h("select",{onchange:e=>{ UPK.t=+e.target.value; uSave(); }},...USECS.map(s=>h("option",{value:s,selected:s===UPK.t,text:s+"秒《びょう》"})))),
         h("div",{class:"pills"},h("b",{class:"pl",text:"混《ま》ぜ方《かた》"}),upill("まぜる",UPK.mix,()=>{ UPK.mix=true; uSave(); drawPanel(); }),upill("単元《たんげん》の順番《じゅんばん》どおり",!UPK.mix,()=>{ UPK.mix=false; uSave(); drawPanel(); })));
     }
-    if(!ids.length || !ids.every(id=>UBY[id].subj==="rika")) rows.push(h("div",{class:"pills"},h("b",{class:"pl",text:T("u.how")}),upill(T("u.type"),!cho,()=>{ UPK.choice=false; uSave(); drawPanel(); }),upill(T("u.c4"),cho,()=>{ UPK.choice=true; uSave(); drawPanel(); })));
+    if(uTypeOk(ids,subj)) rows.push(h("div",{class:"pills"},h("b",{class:"pl",text:T("u.how")}),upill(T("u.type"),!cho,()=>{ UPK.choice=false; uSave(); drawPanel(); }),upill(T("u.c4"),cho,()=>{ UPK.choice=true; uSave(); drawPanel(); })));
     if(!kid){
       const run=(fn)=>()=>{ if(!need()) return; try{ fn(); }catch(e){ msg.textContent=e.message; } };
       rows.push(h("div",{class:"uacts"},
@@ -7192,7 +7194,7 @@ function renderUnitLink(hash){
   const g=uMaxG(c.ids); setLG(g);
   let choice=uChoice(c.ids,c.choice);
   const how=h("div",{class:"pills",style:"justify-content:center"}), draw=()=>how.replaceChildren(upill(T("u.type"),!choice,()=>{ choice=false; draw(); }),upill(T("u.c4"),choice,()=>{ choice=true; draw(); }));
-  if(!c.ids.every(id=>UBY[id].subj==="rika")) draw();
+  if(uTypeOk(c.ids,"")) draw();
   app.replaceChildren(h("div",{class:"play up"},
     h("div",{class:"topbar"},c.task?h("span"):h("button",{type:"button",class:"back",innerHTML:BK(),onclick:()=>go("#home")}),h("b"),h("span")),
     h("div",{class:"q"},h("div",{class:"big",text:T("u.intro")}),spOn(c.task)?null:h("div",{class:"small",text:T("u.1min")})),
