@@ -48,8 +48,11 @@ export function mount(host, ctx) {
   }
 
   // ---- たてもの ----
-  const edges = (mesh) => { const l = new THREE.LineSegments(new THREE.EdgesGeometry(mesh.geometry, 20), new THREE.LineBasicMaterial({ color: INK })); l.position.copy(mesh.position); l.rotation.copy(mesh.rotation); l.scale.copy(mesh.scale); return l; };
-  function boxM(g, w, h, d, c, x = 0, y = 0, z = 0, line = true) { const m = new THREE.Mesh(new THREE.BoxGeometry(w, h, d), M(c)); m.position.set(x, y + h / 2, z); g.add(m); if (line) g.add(edges(m)); return m; }
+  // おなじ かたちは つかいまわす（よみこみと メモリを へらす）
+  const geoCache = new Map(), G = (key, make) => { if (!geoCache.has(key)) geoCache.set(key, make()); return geoCache.get(key); };
+  const lineMat = new THREE.LineBasicMaterial({ color: INK });
+  const edges = (mesh) => { const l = new THREE.LineSegments(G("e" + mesh.geometry.uuid, () => new THREE.EdgesGeometry(mesh.geometry, 20)), lineMat); l.userData.keep = true; l.position.copy(mesh.position); l.rotation.copy(mesh.rotation); l.scale.copy(mesh.scale); return l; };
+  function boxM(g, w, h, d, c, x = 0, y = 0, z = 0, line = true) { const m = new THREE.Mesh(G(`b${w},${h},${d}`, () => new THREE.BoxGeometry(w, h, d)), M(c)); m.position.set(x, y + h / 2, z); g.add(m); if (line) g.add(edges(m)); return m; }
   function roofM(g, w, d, h, y, c) {
     const s = new THREE.Shape(); s.moveTo(-w / 2, 0); s.lineTo(w / 2, 0); s.lineTo(0, h); s.lineTo(-w / 2, 0);
     const geo = new THREE.ExtrudeGeometry(s, { depth: d, bevelEnabled: false }); geo.translate(0, 0, -d / 2);
@@ -66,7 +69,7 @@ export function mount(host, ctx) {
     flag(g) { boxM(g, .06, 1.25, .06, 0x9a6a40, 0, 0, 0); const f = new THREE.Group(); boxM(f, .03, .34, .52, 0xffffff, 0, 0, .27);
       const dot = new THREE.Mesh(new THREE.CylinderGeometry(.09, .09, .04, 12), M(0xe07a6a)); dot.rotation.z = Math.PI / 2; dot.position.set(0, .17, .27); f.add(dot);
       f.position.y = .88; g.add(f); g.userData.wave = f; },
-    tree(g) { boxM(g, .12, .4, .12, 0x9a6a40, 0, 0, 0, false); const c = new THREE.Mesh(new THREE.IcosahedronGeometry(.34, 0), M(0x86b85f)); c.position.y = .66; g.add(c); g.add(edges(c)); },
+    tree(g) { boxM(g, .12, .4, .12, 0x9a6a40, 0, 0, 0, false); const c = new THREE.Mesh(G("crown", () => new THREE.IcosahedronGeometry(.34, 0)), M(0x86b85f)); c.position.y = .66; g.add(c); g.add(edges(c)); },
     flower(g) { boxM(g, .7, .1, .4, 0xb98656); [[0xf5a9c0, -.2], [0xf2b544, 0], [0xf5a9c0, .2]].forEach(([c, x]) => { const m = new THREE.Mesh(new THREE.IcosahedronGeometry(.09, 0), M(c)); m.position.set(x, .18, 0); m.rotation.y = 0; g.add(m); }); g.rotation.y = Math.PI / 4; },
     bench(g) { boxM(g, .6, .06, .2, 0xc98a3d, 0, .22, 0); boxM(g, .05, .22, .05, INK, -.24, 0, 0, false); boxM(g, .05, .22, .05, INK, .24, 0, 0, false); g.rotation.y = -Math.PI / 4; },
     fountain(g) { const b = new THREE.Mesh(new THREE.CylinderGeometry(.42, .46, .14, 10), M(0xcfe9f3)); b.position.y = .07; g.add(b); g.add(edges(b));
@@ -86,7 +89,7 @@ export function mount(host, ctx) {
 
   // ---- しまを くみたてる ----
   function build() {
-    scene.remove(root); root.traverse(o => { if (o.geometry) o.geometry.dispose(); }); root = new THREE.Group(); scene.add(root);
+    scene.remove(root); root.traverse(o => { if (o.geometry && ![...geoCache.values()].includes(o.geometry)) o.geometry.dispose(); }); root = new THREE.Group(); scene.add(root);
     pickables.length = 0;
     tileList = [...world.tiles.values()];
     const land = tileList.filter(t => t.t !== "bridge");
@@ -122,8 +125,11 @@ export function mount(host, ctx) {
     for (const s of world.slots) {
       const ring = new THREE.Mesh(new THREE.RingGeometry(.3, .46, 4, 1), clear(new THREE.MeshBasicMaterial({ color: 0xe0942a, transparent: true, opacity: .9 })));
       ring.rotation.x = -Math.PI / 2; ring.rotation.z = Math.PI / 4; ring.position.set(s.i, world.hAt(s.i, s.j) * LIFT + .02, s.j);
-      const plus = new THREE.Group(); boxM(plus, .36, .04, .08, 0xe0942a, 0, 0, 0, false); boxM(plus, .08, .04, .36, 0xe0942a, 0, 0, 0, false); plus.position.copy(ring.position);
-      slotG.add(ring, plus); pickables.push({ obj: ring, ref: s }); ring.userData.pulse = true;
+      const plus = new THREE.Group(); boxM(plus, .36, .04, .08, 0xe0942a, 0, 0, 0, false); boxM(plus, .08, .04, .36, 0xe0942a, 0, 0, 0, false); plus.position.copy(ring.position); plus.rotation.y = Math.PI / 4;
+      // タップを うける ところ（まんなかの あなも ふくめた マス ぜんたい）
+      const hit = new THREE.Mesh(new THREE.PlaneGeometry(.9, .9), clear(new THREE.MeshBasicMaterial({ transparent: true, opacity: 0, depthWrite: false })));
+      hit.rotation.x = -Math.PI / 2; hit.position.copy(ring.position);
+      slotG.add(ring, plus, hit); pickables.push({ obj: hit, ref: s }); ring.userData.pulse = true;
     }
   }
   function buildMates() {
@@ -132,7 +138,7 @@ export function mount(host, ctx) {
   }
 
   // ---- かきなおしの きまり ----
-  let dirty = true, alive = true, anims = 0, lastIdle = 0, renders = 0, renderMs = 0;
+  let camKey = "", dirty = true, alive = true, anims = 0, lastIdle = 0, renders = 0, renderMs = 0;
   const reduce = matchMedia("(prefers-reduced-motion: reduce)");
   const need = () => { dirty = true; };
   const hops = new Map(); // m -> t0
@@ -156,11 +162,13 @@ export function mount(host, ctx) {
       dirty = true;
     }
     if (active) { dirty = true; anims++; }
-    if (dirty) { const t0 = performance.now(); placeCam(); renderer.render(scene, cam); renderMs += performance.now() - t0; renders++; dirty = false; if (active || anims) ctx.onView(); anims = 0; }
+    if (dirty) { const t0 = performance.now(); placeCam(); renderer.render(scene, cam); renderMs += performance.now() - t0; renders++; dirty = false; anims = 0;
+      const key = `${view.tx.toFixed(3)},${view.tz.toFixed(3)},${view.az.toFixed(4)},${view.zoom.toFixed(4)}`; if (key !== camKey) { camKey = key; ctx.onView(); } }
   }
 
   // ---- うごかす・つまむ・タップ ----
-  const ray = new THREE.Raycaster(), ndc = new THREE.Vector2();
+  const ray = new THREE.Raycaster(); ray.params.Line.threshold = 0; ray.params.Points.threshold = 0;
+  const ndc = new THREE.Vector2();
   const ptrs = new Map(); let moved = 0, pinch = null;
   const el = renderer.domElement; el.style.touchAction = "none";
   function panBy(dx, dy) {
@@ -168,7 +176,7 @@ export function mount(host, ctx) {
     const s = 1 / view.zoom, ca = Math.cos(view.az), sa = Math.sin(view.az), sy = 1 / Math.sin(view.el);
     view.tx += -dx * s * ca - dy * s * sy * sa;
     view.tz += dx * s * sa - dy * s * sy * ca;
-    need(); ctx.onView();
+    need();
   }
   el.addEventListener("pointerdown", e => { el.setPointerCapture(e.pointerId); ptrs.set(e.pointerId, { x: e.clientX, y: e.clientY }); if (ptrs.size === 1) moved = 0; else moved = 99; pinch = null; });
   el.addEventListener("pointermove", e => {
@@ -182,12 +190,13 @@ export function mount(host, ctx) {
   const up = e => { if (!ptrs.has(e.pointerId)) return; ptrs.delete(e.pointerId); if (!ptrs.size && moved <= 8 && e.type === "pointerup") tapAt(e); pinch = null; };
   el.addEventListener("pointerup", up); el.addEventListener("pointercancel", up);
   el.addEventListener("wheel", e => { e.preventDefault(); zoomBy(Math.exp(-e.deltaY * 0.0015)); }, { passive: false });
-  function zoomBy(f) { view.zoom = Math.max(view.fitZoom * .7, Math.min(view.fitZoom * 4, view.zoom * f)); need(); ctx.onView(); }
-  function tapAt(e) {
+  function zoomBy(f) { view.zoom = Math.max(view.fitZoom * .7, Math.min(view.fitZoom * 4, view.zoom * f)); need(); }
+  function tapAt(e) { window.__lastPick = null;
     const r = el.getBoundingClientRect(); ndc.set(((e.clientX - r.left) / r.width) * 2 - 1, -((e.clientY - r.top) / r.height) * 2 + 1);
     placeCam(); ray.setFromCamera(ndc, cam);
     const objs = pickables.map(p => p.obj); const hits = ray.intersectObjects(objs, true);
-    if (hits.length) { let o = hits[0].object; while (o && !objs.includes(o)) o = o.parent; const p = pickables.find(p => p.obj === o); if (p) return ctx.onTap(p.ref); }
+    window.__lastPick = hits.map(h => h.object.type + (h.object.isSprite ? ":sprite" : ""));
+    for (const h of hits) { if (h.object.isLineSegments) continue; let o = h.object; while (o && !objs.includes(o)) o = o.parent; const p = o && pickables.find(p => p.obj === o); if (p) return ctx.onTap(p.ref); }
     const th = ray.intersectObject(tileMesh, false);
     if (th.length) { const t = tileList[th[0].instanceId]; if (t) return ctx.onTile(t.i, t.j); }
     ctx.onTap(null);

@@ -9,7 +9,7 @@ const store = { get(k) { try { return localStorage.getItem(k); } catch { return 
 let total = 18, edits = {}, placed = [], acorn = 128, today = 14;
 let world = null, island = null, kind = null, deco = false, pick = null;
 const mates = [
-  { mate: true, name: "さんかくる", art: "math", st: "grown", i: 0, j: 1, sz: 190, d: 0, lines: ["きょうも いっしょに がんばろう！", "はしを わたって あそびに いこう！", "たんけんに いきたいな〜"] },
+  { mate: true, name: "さんかくる", art: "math", st: "grown", i: 1, j: 2, sz: 190, d: 0, lines: ["きょうも いっしょに がんばろう！", "はしを わたって あそびに いこう！", "たんけんに いきたいな〜"] },
   { mate: true, name: "ことはね", art: "japanese", st: "base", i: 2, j: 0, sz: 128, d: -.8, lines: ["こくごじまの としょかんに いこう", "あたらしい かんじ、おぼえたよ"] },
   { mate: true, name: "ちずぽん", art: "social", st: "base", i: -2, j: 1, sz: 128, d: -1.5, lines: ["しまの ちずを かいたよ！", "しまが ひろく なってきたね！"] }
 ];
