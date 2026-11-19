@@ -1,0 +1,157 @@
+<!doctype html>
+<html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>画面の分け方 ラフ</title>
+<style>
+:root{--bg:#e8f1e4;--ink:#1d2b22;--mu:#5b6a60;--line:#1f3d2b;--math:#d2452f;--jp:#2f6fd6;--soc:#e8b92c;--rika:#1b6b5c;--eng:#7d4fc4;--btl:#8a5a2b;--card:#fff;--soft:#fff7e0;--accent:#1e7a4c}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--bg:#17201a;--ink:#e6efe8;--mu:#a8b8ad;--line:#9fc3ab;--card:#24302a;--soft:#3a3420}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:"Hiragino Maru Gothic ProN","BIZ UDPGothic",system-ui,sans-serif;line-height:1.5}
+main{max-width:1280px;margin:0 auto;padding:16px}
+h1{font-size:22px;margin:4px 0 4px}
+.lead{color:var(--mu);margin:0 0 18px;font-size:14px}
+section.plan{margin:0 0 34px}
+section.plan>h2{font-size:19px;margin:0 0 2px}
+section.plan>p{margin:0 0 10px;color:var(--mu);font-size:14px}
+.flow{display:flex;gap:14px;overflow-x:auto;padding:4px 2px 12px;align-items:flex-start}
+.step{flex:0 0 220px}
+.cap{font-size:12px;font-weight:700;margin:0 0 4px}
+.cap b{display:inline-block;background:var(--line);color:var(--bg);border-radius:10px;padding:0 7px;margin-right:4px}
+.phone{border:3px solid var(--line);border-radius:18px;background:var(--bg);height:400px;overflow:hidden;padding:8px;font-size:12px}
+.bar{display:flex;justify-content:space-between;align-items:center;background:var(--line);color:var(--bg);margin:-8px -8px 8px;padding:6px 8px;font-weight:700;font-size:12px}
+.bar i{font-style:normal;background:var(--bg);color:var(--ink);border-radius:8px;padding:0 6px;font-size:11px}
+.back{display:inline-block;border:2px solid var(--line);border-radius:8px;padding:1px 6px;font-size:11px;margin-bottom:6px;background:var(--card)}
+.ttl{font-weight:800;font-size:14px;margin:0 0 6px}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.door{border-radius:10px;color:#fff;font-weight:800;padding:14px 6px;text-align:center;font-size:14px;border:2px solid var(--line)}
+.d-math{background:var(--math)}.d-jp{background:var(--jp)}.d-soc{background:var(--soc);color:#1d2b22}.d-rika{background:var(--rika)}.d-eng{background:var(--eng)}.d-btl{background:var(--btl)}
+.wide{grid-column:span 2}
+.card{background:var(--card);border:2px solid var(--line);border-radius:9px;padding:6px 7px;font-weight:700;margin-bottom:5px}
+.card small{display:block;font-weight:400;color:var(--mu);font-size:10.5px}
+.card.soft{background:var(--soft)}
+.card.hl{outline:3px solid #f0a020}
+.sub{font-size:11px;font-weight:800;color:var(--mu);margin:8px 0 4px;border-left:4px solid var(--accent);padding-left:5px}
+.pill{display:inline-block;border:2px solid var(--line);border-radius:12px;padding:1px 7px;margin:0 3px 4px 0;font-size:11px;background:var(--card)}
+.pill.on{background:var(--accent);color:#fff}
+.big{background:var(--accent);color:#fff;text-align:center;border-radius:10px;padding:9px;font-weight:800;margin-top:6px;font-size:13px}
+.note{font-size:10.5px;color:var(--mu)}
+.arrow{align-self:center;font-size:22px;color:var(--mu);flex:0 0 auto}
+.facts{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:8px;font-size:13px}
+.facts div{background:var(--card);border:2px solid var(--line);border-radius:10px;padding:8px 10px}
+.facts b{display:block;font-size:12px;color:var(--mu)}
+.now .phone{opacity:.95}
+@media (max-width:600px){main{padding:12px 16px}.step{flex-basis:200px}}
+</style></head><body><main>
+<h1>画面の分け方 ラフ（3つの案）</h1>
+<p class="lead">ほんものの ページでは ありません。3年生が「かけ算の ひっ算」を はじめるまでの 画面を ならべています。<b style="color:#c07000">オレンジの わく</b>＝つぎに タップする ところ。</p>
+
+<section class="plan now">
+<h2>いま</h2>
+<p>ホームに 教科・ゲーム・単元・バトル・先生むけリンクが ぜんぶ。「計算スプリント」を おすと 算数の 単元 46こ（3年）が 1まいに。</p>
+<div class="flow">
+ <div class="step"><p class="cap"><b>1</b>ホーム（ボタン 19こ）</p><div class="phone"><div class="bar">まなびひろば <i>3年</i></div>
+  <div class="card soft">じぶんの ひろば</div>
+  <div class="sub">算数</div>
+  <div class="card hl">計算スプリント<small>単元をえらんで 1分で とこう</small></div>
+  <div class="card">九九チャレンジ</div><div class="card">めもり名人</div><div class="card">100マス けいさん</div>
+  <div class="sub">国語</div><div class="card">漢字よみクイズ</div><div class="card soft">単元をえらぶ</div>
+  <div class="sub">理科</div><div class="card soft">単元をえらぶ</div>
+ </div></div>
+ <div class="arrow">→</div>
+ <div class="step"><p class="cap"><b>2</b>単元えらび（ボタン 121こ）</p><div class="phone"><div class="bar">算数 単元をえらぶ</div>
+  <span class="pill">ぜんぶ</span><span class="pill">1年</span><span class="pill">2年</span><span class="pill on">3年</span><span class="pill">4年</span><span class="pill">★おすすめ</span>
+  <div class="card hl">かけ算 8こ ▾<small>何十・何百・2・3けた×1けた…</small></div>
+  <div class="card">わり算 6こ ▾</div><div class="card">たし算 6こ ▾</div><div class="card">ひき算 5こ ▾</div><div class="card">単位 4こ ▾</div>
+  <div class="card">□ 大きい数（万）　💡</div><div class="card">文章題 7こ ▾</div><div class="card">□ 円と球　💡</div><div class="card">…あと 6つ</div>
+ </div></div>
+ <div class="arrow">→</div>
+ <div class="step"><p class="cap"><b>3</b>ひらいて ✅ → はじめる</p><div class="phone"><div class="bar">算数 単元をえらぶ</div>
+  <div class="card">かけ算 8こ ▴</div>
+  <div class="card hl">☐ かけ算の ひっ算(1)　💡</div><div class="card">☐ かけ算の ひっ算(2)　💡</div><div class="card">☐ 2けた×1けた　💡</div>
+  <div class="card" style="margin-top:20px">えらんだ単元:1 ▴ <span class="pill on">数字を入れる</span><span class="pill">4つから</span></div>
+  <div class="big">れんしゅうを はじめる</div>
+ </div></div>
+</div>
+<div class="facts"><div><b>タップ数（ホームから）</b>4（スプリント → かけ算 → ✅ → はじめる）</div><div><b>こまりそうな ところ</b>「計算」なのに 図形・グラフも ある／めもり名人は 単元と つながらない／1・2年と 3年からで 画面の しくみが ちがう</div></div>
+</section>
+
+<section class="plan">
+<h2>A案　教科の へや（1画面で えらぶのは 1つ）</h2>
+<p>ホーム＝教科の とびらだけ。算数の へやで「単元で れんしゅう」か「とっくん（九九・100マス・めもり名人）」を えらぶ。単元は 項目 → カード1タップで スタート。</p>
+<div class="flow">
+ <div class="step"><p class="cap"><b>1</b>ホーム（ボタン 約8こ）</p><div class="phone"><div class="bar">まなびひろば <i>3年</i></div>
+  <div class="card soft">じぶんの ひろば</div>
+  <div class="grid"><div class="door d-math" style="outline:3px solid #f0a020">算数</div><div class="door d-jp">国語</div><div class="door d-rika">理科</div><div class="door d-eng" style="opacity:.35">英語<br><small>5年から</small></div><div class="door d-btl wide">バトル（みんなで）</div></div>
+  <div class="note" style="margin-top:8px">コードで さんか／先生の 画面 は 下に 小さく</div>
+ </div></div>
+ <div class="arrow">→</div>
+ <div class="step"><p class="cap"><b>2</b>算数の へや</p><div class="phone"><div class="bar">算数 <i>3年</i></div><span class="back">← もどる</span>
+  <div class="sub">単元で れんしゅう</div>
+  <div class="grid"><div class="card hl">かけ算<small>8こ</small></div><div class="card">わり算<small>6こ</small></div><div class="card">たし算・ひき算<small>11こ</small></div><div class="card">大きい数<small>1こ</small></div><div class="card">単位・はかり<small>4こ＋めもり名人</small></div><div class="card">図形<small>1こ</small></div><div class="card">分数・小数<small>6こ</small></div><div class="card">文章題<small>7こ</small></div></div>
+  <div class="sub">とっくん</div>
+  <div class="grid"><div class="card">九九</div><div class="card">100マス</div><div class="card wide">めもり名人</div></div>
+ </div></div>
+ <div class="arrow">→</div>
+ <div class="step"><p class="cap"><b>3</b>かけ算（1タップで スタート）</p><div class="phone"><div class="bar">算数 › かけ算</div><span class="back">← もどる</span>
+  <span class="pill on">いつもの</span><span class="pill">タイムアタック</span><span class="pill">サドンデス</span>
+  <div class="card">何十・何百の かけ算　💡</div><div class="card hl">かけ算の ひっ算(1)<small>2〜3けた × 1けた</small></div><div class="card">かけ算の ひっ算(2)</div><div class="card">2けた×1けた（くり上がりなし）</div><div class="card">…</div>
+  <div class="note">「いくつか まぜて やる」は 下の ボタンで（えらぶ モードに）</div>
+ </div></div>
+ <div class="arrow">→</div>
+ <div class="step"><p class="cap"><b>※</b>単位・はかり の 中</p><div class="phone"><div class="bar">算数 › 単位・はかり</div><span class="back">← もどる</span>
+  <div class="card">長いものの 長さ（km）</div><div class="card">重さの たんい</div><div class="card">時こくと 時間</div>
+  <div class="sub">どうぐで れんしゅう</div>
+  <div class="card soft">めもり名人<small>数直線と はかりを よもう ★0/33</small></div>
+ </div></div>
+</div>
+<div class="facts"><div><b>タップ数</b>3（算数 → かけ算 → カード）。いまより 1つ 少ない</div><div><b>ふえたとき</b>教科・項目の タイルが ふえるだけ。1画面は 10こ前後のまま</div><div><b>めもり名人</b>「とっくん」と「単位・はかり」の 2か所から</div><div><b>授業モード・課題リンク</b>影響なし（#u= #play #meter はそのまま）。先生の「まとめて えらぶ」画面は 今の 単元えらびを のこす</div></div>
+</section>
+
+<section class="plan">
+<h2>B案　単元が まんなか（教科 → 項目 → 単元 → あそびかた）</h2>
+<p>どの あそびも「単元」に ぶらさげる。単元を えらぶと、その単元で できる あそびかた（スプリント・めもり名人・100マス・ずで かんがえる…）が ならぶ。</p>
+<div class="flow">
+ <div class="step"><p class="cap"><b>1</b>ホーム</p><div class="phone"><div class="bar">まなびひろば <i>3年</i></div>
+  <div class="card soft">じぶんの ひろば</div>
+  <div class="grid"><div class="door d-math" style="outline:3px solid #f0a020">算数</div><div class="door d-jp">国語</div><div class="door d-rika">理科</div><div class="door d-btl">バトル</div></div>
+ </div></div>
+ <div class="arrow">→</div>
+ <div class="step"><p class="cap"><b>2</b>算数：項目</p><div class="phone"><div class="bar">算数 <i>3年</i></div><span class="back">← もどる</span>
+  <div class="grid"><div class="card hl">かけ算</div><div class="card">わり算</div><div class="card">たし算・ひき算</div><div class="card">大きい数</div><div class="card">単位・はかり</div><div class="card">図形</div><div class="card">分数・小数</div><div class="card">文章題</div></div>
+ </div></div>
+ <div class="arrow">→</div>
+ <div class="step"><p class="cap"><b>3</b>かけ算：単元</p><div class="phone"><div class="bar">算数 › かけ算</div><span class="back">← もどる</span>
+  <div class="card">何十・何百の かけ算</div><div class="card hl">かけ算の ひっ算(1)</div><div class="card">かけ算の ひっ算(2)</div><div class="card">…</div>
+ </div></div>
+ <div class="arrow">→</div>
+ <div class="step"><p class="cap"><b>4</b>あそびかた</p><div class="phone"><div class="bar">かけ算の ひっ算(1)</div><span class="back">← もどる</span>
+  <div class="card soft">💡 れいだいを 見る</div>
+  <div class="card hl">1分 スプリント</div><div class="card">タイムアタック</div><div class="card">サドンデス</div><div class="card">🧰 ずで かんがえる</div>
+  <div class="note">単元が「はかり」なら ここに めもり名人、「たし算」なら 100マスが 出る</div>
+ </div></div>
+</div>
+<div class="facts"><div><b>タップ数</b>4（算数 → かけ算 → 単元 → あそびかた）。いまと 同じ</div><div><b>ふえたとき</b>いちばん 入れやすい。新しい あそびは「どの単元で つかうか」を 書くだけ</div><div><b>めもり名人</b>単元「はかり」「数直線」の あそびかたの 1つに なる（ホームからは 消える）</div><div><b>授業モード・課題リンク</b>リンクは そのまま。先生の 授業プラン（単元から えらぶ）と しくみを 共有できる。ただし 単元と あそびの つながりの データを 作る 手間が いちばん 大きい</div></div>
+</section>
+
+<section class="plan">
+<h2>C案　いまの形を 軽くする（いちばん 小さい 作り直し）</h2>
+<p>ホームの ならびは そのまま。名前を「計算スプリント」→「算数の 単元れんしゅう」に。単元えらびだけ 2まいに 分ける（項目 → 単元）。</p>
+<div class="flow">
+ <div class="step"><p class="cap"><b>1</b>ホーム（いまと ほぼ 同じ）</p><div class="phone"><div class="bar">まなびひろば <i>3年</i></div>
+  <div class="sub">算数</div>
+  <div class="card hl">単元れんしゅう<small>かけ算・わり算・図形…</small></div>
+  <div class="grid"><div class="card">九九</div><div class="card">100マス</div><div class="card wide">めもり名人</div></div>
+  <div class="sub">国語</div><div class="card">漢字よみクイズ</div><div class="card soft">単元をえらぶ</div>
+  <div class="sub">理科</div><div class="card soft">単元をえらぶ</div>
+ </div></div>
+ <div class="arrow">→</div>
+ <div class="step"><p class="cap"><b>2</b>項目えらび</p><div class="phone"><div class="bar">算数 <i>3年</i></div><span class="back">← もどる</span>
+  <div class="grid"><div class="card hl">かけ算 8</div><div class="card">わり算 6</div><div class="card">たし算 6</div><div class="card">ひき算 5</div><div class="card">単位 4</div><div class="card">文章題 7</div><div class="card">小数 4</div><div class="card">ほか 6</div></div>
+ </div></div>
+ <div class="arrow">→</div>
+ <div class="step"><p class="cap"><b>3</b>単元（1タップで スタート）</p><div class="phone"><div class="bar">算数 › かけ算</div><span class="back">← もどる</span>
+  <div class="card">何十・何百の かけ算</div><div class="card hl">かけ算の ひっ算(1)</div><div class="card">かけ算の ひっ算(2)</div><div class="card">…</div>
+ </div></div>
+</div>
+<div class="facts"><div><b>タップ数</b>3（単元れんしゅう → かけ算 → カード）</div><div><b>ふえたとき</b>ホームは 教科ごとに 長く なりつづける（5年で スマホ 2.7画面ぶん）</div><div><b>めもり名人</b>ホームの まま（単元とは つながらない）</div><div><b>授業モード・課題リンク</b>影響なし。作る 量が いちばん 少ない</div></div>
+</section>
+</main></body></html>
