@@ -1095,7 +1095,7 @@ body[data-v=host] .wrap{max-width:none;padding:0}
 .m1tabs{display:flex;gap:10px;flex-wrap:wrap}
 .m1tab{font:inherit;font-size:24px;font-weight:800;background:rgba(255,255,255,.12);color:#fff;border:3px solid #fff;border-radius:14px;padding:4px 18px;cursor:pointer;min-height:52px}
 .m1tab.on{background:#ffe066;color:var(--ink);border-color:#ffe066}.m1tn{font-size:18px}
-.m1ctl{display:flex;gap:8px 24px;flex-wrap:wrap;align-items:center;padding-right:170px}.m1ctl .m1tab{font-size:21px;min-height:46px;padding:2px 14px}
+.m1ctl{display:flex;gap:6px 18px;flex-wrap:wrap;align-items:center;padding-right:170px}.m1ctl .m1tab{font-size:19px;min-height:44px;padding:2px 10px}.m1ctl .m1tabs{gap:6px}
 .m1op.on{background:#8dffb8;border-color:#8dffb8}
 .m1grid{flex:1;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;min-height:0}
 .m1grid.m1g1{grid-template-columns:minmax(0,1fr)}.m1grid.m1g2{grid-template-columns:repeat(2,minmax(0,1fr))}
@@ -1103,6 +1103,7 @@ body[data-v=host] .wrap{max-width:none;padding:0}
 .m1oh{margin:0;font-size:28px;line-height:1.1;display:flex;align-items:baseline;gap:10px;border-bottom:3px solid rgba(255,255,255,.5);padding-bottom:2px}.m1oh small{font-size:18px;color:var(--chalk)}
 .m1cards{flex:1;display:grid;grid-auto-rows:minmax(0,auto);gap:8px;min-height:0;align-content:start;overflow:hidden}
 .m1g1 .m1cards{grid-template-columns:repeat(2,minmax(0,1fr))}.m1g1.v-all .m1cards{grid-template-columns:repeat(3,minmax(0,1fr))}
+.m1grid.v-both .m1cards{grid-auto-rows:auto}.m1g3.v-both .m1l li{min-height:34px;font-size:20px}.m1g3.v-both .m1card h3{font-size:21px}.m1g3.v-both .m1card h3 small{display:block;font-size:13px;font-weight:600;color:var(--chalk);flex-basis:100%}
 .m1g3 .m1card h3 small,.m1g2 .m1card h3 small{display:none}.m1g3 .m1card{padding:3px 8px}.m1g3 .m1l li{min-height:28px;font-size:18px}.m1g3 .m1card h3{font-size:19px;margin:0 0 2px}.m1g3 .m1i{font-size:19px}
 .m1g3 .m1f .fc,.m1g3 .m1f .mkav{width:26px;height:26px}.m1g3 .m1v{font-size:17px}.m1g3 .m1chip{font-size:17px}.m1g3 .m1oh{font-size:24px}.m1g3 .m1cards{gap:6px}
 .m1cw{padding:14px 4px;font-size:21px}
@@ -3674,7 +3675,7 @@ function renderTeacher(q){
       <span class="note">やさしいルール：たからばこで「うばう・入れかえ・落とす」が出ず、すごろくに🌀（もどる）がありません。1〜2年を選ぶと、はじめは「やさしい」になります。</span>
       <span class="note hidden" id="bsnote"><b>ボスバトル（協力モード）</b>：クラス全員で、いたずらモンスター（ボス）を「くすぐって」おいはらいます。だれかが正解するたびにボスの「げんき」がへり、0になるとボスは笑ってにげていき、少しだけ げんきの多い次のボスが来ます。時間の中で何ひき おいはらえるかをクラスでめざします（時間は「時間」でえらびます）。正解は 10（連続正解で最大 20）、まちがいでも答えれば 1。1人が出せる量には上限があります。20〜30秒ごとのボスの「いたずら」は見た目だけで、点数や問題には何も起きません。順位や個人の正誤は大画面にも児童の画面にも出ません。</span>
       <span class="note hidden" id="jnnote"><b>じんとりバトル（2チーム）</b>：あか（ウサギ）と あお（ペンギン）に分かれ、正解で 7×7 の盤のマスをぬります。ぬるマスは自動で決まり（えらべません）、マスごとに必要な正解の数がちがいます（ふつう2・★4・まんなか6。相手のマスは+1、自分の陣地からはなれたマスは+1）。ぬったばかりのマスは15秒うばえません。のこり30秒はラストスパート（2倍）。人数がちがっても、チームの力が同じになるように調整します。チームは参加した順に交互に入り、大画面のメニューで「自動で分けなおす」や1人ずつの移動ができます（始まると変えられません）。「やさしい」ルールでは、相手のマスをうばえません（全部ぬれたら終わり）。</span>
-      <span class="note hidden" id="m1note"><b>100マス はっぴょう</b>：児童が「100マス計算」で練習した記録を、先生の大画面に計算（たし算・ひき算・かけ算）ごとに出します。児童が部屋に入ると、その画面の上で100マス計算がひらき、ボタンを押さなくても、入ったときと1回おわるたびに、その子の集計（数字だけ）が自動で届きます。生の記録は送りません。画面は2つを切りかえます。「この じかん」は部屋に入ってからの回で、はやさ・のびりつ（入る前の自己ベストより速くなった割合）・がんばり（やったセット数）・じこベスト こうしん（順位なし）。「これまで」は入ったときに届く記録で、じこベスト・るいけい（いままでの回数の合計）・コツコツ（今週の日数）。出す計算は先生が選べます（はじめは記録のある計算だけ）。それぞれ上位5人まで（計算を2つ以上ならべるときは一部3人まで）で、最下位は出しません。できるだけ多くの子が どこかに出るよう、1つめの欄以外は ほかの欄に出た子を あとまわしにします。数えるのは「100問・だんをしぼらない・最後まで・正答率9割以上・1マス0.4秒以上」の回だけです。記録は児童の端末にあるので、書きかえれば数字は変えられます（ほかの対戦と同じ）。成績には使わないでください。「スタート」はなく、入室をしめきる・終わるだけです。</span>
+      <span class="note hidden" id="m1note"><b>100マス はっぴょう</b>：児童が「100マス計算」で練習した記録を、先生の大画面に計算（たし算・ひき算・かけ算）ごとに出します。児童が部屋に入ると、その画面の上で100マス計算がひらき、ボタンを押さなくても、入ったときと1回おわるたびに、その子の集計（数字だけ）が自動で届きます。生の記録は送りません。画面は2つを切りかえます。「この じかん」は部屋に入ってからの回で、はやさ・のびりつ（入る前の自己ベストより速くなった割合）・がんばり（やったセット数）・じこベスト こうしん（順位なし）。「これまで」は入ったときに届く記録で、じこベスト・るいけい（いままでの回数の合計）・コツコツ（今週の日数）。「すべて」は計算ごとに「この じかん」の最速と「これまで」の最速だけを1画面に出します。出す計算は先生が選べます（はじめは記録のある計算だけ）。それぞれ上位5人まで（計算を2つ以上ならべるときは一部3人まで）で、最下位は出しません。できるだけ多くの子が どこかに出るよう、1つめの欄以外は ほかの欄に出た子を あとまわしにします。数えるのは「100問・だんをしぼらない・最後まで・正答率9割以上・1マス0.4秒以上」の回だけです。記録は児童の端末にあるので、書きかえれば数字は変えられます（ほかの対戦と同じ）。成績には使わないでください。「スタート」はなく、入室をしめきる・終わるだけです。</span>
       <span class="note hidden" id="rknote"><b>ロケット はっしゃ（協力モード）</b>：クラス全員で1つのロケットを飛ばします。問題（上の「問題」で選んだもの）に答えて燃料をため、目標に届くとミニゲーム（せーので はっしゃ／ほしを あつめよう）が全員同時に始まり、クリアで次のステージへ（ふつう5ステージ・約5分／みじかい3ステージ・約3分。「ステージの数」でえらびます）。失敗しても「もういちど」は1回だけで、2回目は条件がゆるくなり必ず進みます。燃料の目標は人数・学年から自動で決まり、「やさしい」ルールではもっと低くなります。1人が出せる燃料には上限があり、順位や個人の正誤は大画面にも児童の画面にも出ません（名前が出るのは、良いことをした瞬間の吹き出しだけ）。時間の設定は使いません。</span>
       </details>
     </div>
@@ -5847,13 +5848,14 @@ function m1Stop(){ m1OvClose(); if(M1A){ clearInterval(M1A.iv); M1A.iv=0; M1A.en
 const M1CAT={hayasa:["⚡","はやさ","へやに 入《はい》ってからの いちばん はやい タイム"],nobi:["📈","のびりつ","へやに 入《はい》る まえの じこベストより はやく なった"],ganbari:["💪","がんばり","へやに 入《はい》ってから やった セット"],
   pb:["🎉","じこベスト こうしん","じぶんの きろくを こえた！"],best:["🏆","じこベスト","いままでの いちばん はやい タイム"],total:["📚","るいけい","いままでに やった 回《かい》の ごうけい"],kotsu:["🌱","コツコツ","こんしゅう れんしゅうした 日《ひ》"]};
 const M1OPT={add:"たし算《ざん》",sub:"ひき算《ざん》",mul:"かけ算《ざん》"};
-const M1VIEW={now:["🏫","この じかん"],all:["📚","これまで"]};
+const M1VIEW={now:["🏫","この じかん"],all:["📚","これまで"],both:["⭐","すべて"]};      // すべて：計算ごとに この じかんの さいそく と これまでの さいそく だけを 1画面に
+const M1BOTH={hayasa:"この じかんの さいそく",best:"これまでの さいそく"};
 function m1HostBuild(px,s,joinUrl,B){
   px.className="px m1px";
   px.innerHTML=`<div class="m1h"><aside class="m1side"><h2 class="m1ttl">💯 100マス はっぴょう<small id="m1st"></small></h2><div class="lead">${T("px.code")}</div><div class="m1code">${esc(s.code)}</div>
       <div class="qrbox m1qr" id="qrbox"></div><div class="m1cnt">さんか <b id="m1n">0</b>にん<br>とどいた <b id="m1s">0</b>にん</div><div class="m1new" id="m1new" aria-live="polite"></div><div class="lockmsg hidden" id="pxlock" role="status">${ic("lock")} ${T("px.locked")}</div></aside>
     <div class="m1main">
-      <div class="m1ctl"><div class="m1tabs" role="tablist" aria-label="ランキングの しゅるい">${Object.keys(M1VIEW).map(v=>`<button type="button" role="tab" class="m1tab m1vw" data-v="${v}" aria-selected="false">${M1VIEW[v][0]} ${M1VIEW[v][1]}<span class="m1tn"></span></button>`).join("")}</div>
+      <div class="m1ctl"><div class="m1tabs" role="tablist" aria-label="ランキングの しゅるい">${Object.keys(M1VIEW).map(v=>`<button type="button" role="tab" class="m1tab m1vw" data-v="${v}" aria-selected="false">${M1VIEW[v][0]} ${M1VIEW[v][1]}</button>`).join("")}</div>
         <div class="m1tabs m1ops" role="group" aria-label="出《だ》す けいさん（いくつでも）">${MASU.OPS.map(op=>`<button type="button" class="m1tab m1op" data-op="${op}" aria-pressed="false">${M1OPT[op]}</button>`).join("")}</div></div>
       <div class="m1grid" id="m1grid"></div></div></div>`;
   if(s.status==="lobby") showQr(document.getElementById("qrbox"),joinUrl); else document.getElementById("qrbox").innerHTML=`<div class="m1over">おわり</div>`;
@@ -5874,15 +5876,15 @@ function m1HostUpd(s,B){
   const nn=op=>R[op]?R[op].nn:0, na=op=>R[op]?R[op].n:0;
   const anyNow=MASU.OPS.some(op=>nn(op)>0);
   if(!B.m1vpick) B.m1view=anyNow||!MASU.OPS.some(op=>na(op)>0)?"now":"all";      // 先生が えらぶまでは、この じかんの きろくが あれば「この じかん」
-  const view=B.m1view||"now", cnt=view==="now"?nn:na;
+  const view=B.m1view||"now", cnt=view==="now"?nn:na;      // すべて：これまでが とどいた 子の 数（この じかんの 子も ふくむ）
   if(!B.m1pick){ const has=MASU.OPS.filter(op=>cnt(op)>0); B.m1ops=has.length?has:MASU.OPS.slice(); }      // 先生が えらぶまでは、きろくの ある 計算だけ（かけ算だけの 日は かけ算だけ）
   const ops=B.m1ops&&B.m1ops.length?B.m1ops:MASU.OPS;
   document.querySelectorAll(".m1vw").forEach(b=>{ const on=b.dataset.v===view; b.classList.toggle("on",on); b.setAttribute("aria-selected",on?"true":"false");
-    const n=MASU.OPS.reduce((m,op)=>Math.max(m,(b.dataset.v==="now"?nn:na)(op)),0); b.querySelector(".m1tn").textContent=n?` ${n}にん`:""; });
+    });
   document.querySelectorAll(".m1op").forEach(b=>{ const on=ops.includes(b.dataset.op); b.classList.toggle("on",on); b.setAttribute("aria-pressed",on?"true":"false"); });
   const one=ops.length===1, lim=k=>one?5:k==="hayasa"||k==="best"||k==="total"?5:3;      // 2つ以上 ならべる ときは、のびりつ・がんばり・コツコツを 3人に
   const nm=pid=>{ const p=byPid.get(pid); return p?`<span class="m1f">${fm(p)}</span><span class="m1nm">${esc(p.name)}</span>`:""; };
-  const head=k=>`<h3><span class="m1i" aria-hidden="true">${M1CAT[k][0]}</span>${M1CAT[k][1]}<small>${M1CAT[k][2]}</small></h3>`;
+  const head=k=>`<h3><span class="m1i" aria-hidden="true">${M1CAT[k][0]}</span>${view==="both"&&M1BOTH[k]?M1BOTH[k]:M1CAT[k][1]}<small>${M1CAT[k][2]}</small></h3>`;
   const rk1=k=>k==="hayasa"||k==="best";
   const cat=c=>`<section class="m1card k-${c.k}">${head(c.k)}<ol class="m1l">${c.l.filter(x=>byPid.has(x[0])).slice(0,lim(c.k)).map(x=>`<li data-pid="${esc(x[0])}" role="button" tabindex="0"><span class="m1rk">${rk1(c.k)?x[2]:"★"}</span>${nm(x[0])}<b class="m1v">${m1Val(c.k,x[1])}</b></li>`).join("")||`<li class="m1e">まだ いないよ</li>`}</ol></section>`;
   const pbCard=r=>{ const all=(r.pb||[]).filter(pid=>byPid.has(pid)), cap=one?10:ops.length===2?5:3, ids=all.slice(0,cap), more=Math.max(0,r.pbN-all.length)+all.length-ids.length;      // 大画面に 入る 人数まで（のこりは「ほか n にん」）
@@ -5890,7 +5892,7 @@ function m1HostUpd(s,B){
   const col=op=>{ const r=R[op]||{cats:[],pb:[],pbN:0,n:0,nn:0}, C={}; (r.cats||[]).forEach(c=>{ C[c.k]=c; });
     const g=k=>cat(C[k]||{k,l:[]});
     const body=!cnt(op)?`<div class="m1e m1cw">${view==="now"?(s.status==="lobby"?"100マスを おえると ここに 出《で》るよ":"この じかんの きろくは ありませんでした"):"まだ とどいて いないよ"}</div>`
-      :view==="now"?g("hayasa")+g("nobi")+g("ganbari")+pbCard(r):g("best")+g("total")+g("kotsu");
+      :view==="now"?g("hayasa")+g("nobi")+g("ganbari")+pbCard(r):view==="both"?g("hayasa")+g("best"):g("best")+g("total")+g("kotsu");
     return `<div class="m1col"><h3 class="m1oh">${M1OPT[op]}${cnt(op)?`<small>${cnt(op)}にん</small>`:""}</h3><div class="m1cards">${body}</div></div>`; };
   const html=sent?ops.map(col).join("")
     :`<div class="m1wait"><div>${s.status==="lobby"?"へやに 入《はい》ると、これまでの きろくが とどくよ。<br>100マスを おえるたびに「この じかん」に 出《で》るよ":"きろくは ありませんでした"}</div></div>`;
