@@ -14,6 +14,12 @@
 <!-- - タスク名 — セッション: session_xxx -->
 - 🧱 **画面の作り直し（A案「教科のへや」）①：算数の項目を8こ前後にまとめる表（データだけ）** — セッション: session_01DeDokxsA4RvVWUhNoW79Uw
   - 案と順番は ブランチ `claude/screen-split-proposal` の `docs/screen-split.md`（ラフ `docs/screen-split/mock.html`）
+- 🏝 **じぶんのひろば：島の 2D版と 3D版を くらべる試作**（サイトのコードは変えない）— セッション: session_01DeDokzrxxBm6BviYLtmJZp
+  - できたら、学校の Chromebook で fps（なめらかさ）・熱・電池を見て決める
+  - もとの見本と前の考え（コレクションデザイン セッションより）：
+    - 今の動く見本（ホームA＋はこにわの島C）：https://claude.ai/artifact/JNSuaWdaaz1gvCWyKUmAky
+    - 3D：Three.js 約170KB・ひろばを開いたときだけ読む。安い Chromebook の熱・電池が心配、WebGL がない端末は2Dの逃げ道が要る。回す操作は低学年にむずかしい
+    - 2D でも「広い地図を指で動かす・できたで陸地が広がる・教科の島を橋でつなぐ」はできる
 - 🚀 **公開：星・メダル ＋ 表示のバグ2つ**— セッション: session_01DeDoky2KibWt1uDHHmZKFh
 
 ## 次やる（3つまで）
@@ -24,10 +30,6 @@
 
 ## あなたの返事待ち
 - **どんぐりの配り方・基準**：今考え中（星・メダルのセッションでは どんぐりは さわらない）
-- **コレクションデザイン**（PC のセッション）：じぶんのひろばの島を「2D と 3D の試作を両方作って、学校の Chromebook でくらべる」か「3D だけ先に試す」か
-  - 今の動く見本（ホームA＋はこにわの島C）：https://claude.ai/artifact/JNSuaWdaaz1gvCWyKUmAky
-  - 3D：Three.js 約170KB・ひろばを開いたときだけ読む。安い Chromebook の熱・電池が心配、WebGL がない端末は2Dの逃げ道が要る。回す操作は低学年にむずかしい
-  - 2D でも「広い地図を指で動かす・できたで陸地が広がる・教科の島を橋でつなぐ」はできる
 - **めもり名人の進度が消えた件**：どの端末・ブラウザで起きたか
 
 ## いつか（何個でもOK）
