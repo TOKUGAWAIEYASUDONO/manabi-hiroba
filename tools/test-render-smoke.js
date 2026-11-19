@@ -43,12 +43,13 @@ else if (!window.MH_UNITS.UNITS.some(u=>u.subj==='rika')) throw Error('rika unit
 for(let g=1;g<=6;g++) {
   vm.runInContext(`ui.grade=${g}; renderHome()`,ctx,{filename:`home-${g}`});
   if(vm.runInContext('app.innerHTML',ctx).includes('id="quick"')) throw Error(`quick play remains on home: ${g}`);
-  if(!vm.runInContext('app.innerHTML',ctx).includes('class="zones"')) throw Error(`subject zones missing: ${g}`);
+  if(!vm.runInContext('app.innerHTML',ctx).includes(g<=2?'class="zones"':'class="sdoors"')) throw Error(`subject zones missing: ${g}`);      // 3〜6年は 教科の とびら（段階④）
   if(vm.runInContext('app.innerHTML',ctx).includes('rika-warning')) throw Error(`rika AI notice shown: ${g}`);      // 理科の「AI が作り」の注意は出さない（2026-11-18）
 }
 for(const [name,expr] of [['units','renderUnits(new URLSearchParams())'],['teacher','renderTeacher(new URLSearchParams())'],['practice',`renderUnitLink("#u=${window.RIKA_PUBLIC?'r3-living':'m3-amari'}&n=1")`]]) {
   vm.runInContext(expr,ctx,{filename:name});
 }
+for(const s of ['sansu','kokugo','shakai','eigo']) vm.runInContext(`ui.grade=5; renderSubjRoom(new URLSearchParams('s=${s}'))`,ctx,{filename:'subj-room-'+s});      // 教科の へや（国語・社会・英語は 小さい へや）
 for(const g of [2,4,6]) vm.runInContext(`ui.grade=${g}; renderUnits(new URLSearchParams('kid=1&subj=sansu'))`,ctx,{filename:'kid-units-'+g});      // 児童の単元えらび（3〜6年はコンパクト版）
 vm.runInContext('renderFeedback()',ctx,{filename:'feedback'});
 if(!vm.runInContext('app.innerHTML',ctx).includes('id="fbBody"')) throw Error('feedback form missing');

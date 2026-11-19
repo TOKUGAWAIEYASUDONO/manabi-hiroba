@@ -148,6 +148,25 @@ h2{font-size:20px;margin:18px 0 8px}
 .home.easy .tile .tstat,.home.easy .tile .tnext{font-size:16px}
 .home.easy .zone h2{font-size:24px}
 .bottom{display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:center;margin-top:auto;padding-top:4px}
+/* 教科の とびら（3〜6年のホーム） */
+.hdh{margin:2px 0 -4px;font-size:20px;letter-spacing:.06em}
+.sdoors{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.sdoors[data-n="1"],.sdoors[data-n="3"] .sdoor:first-child,.sdoors[data-n="5"] .sdoor:first-child{grid-column:1/-1}
+.sdoor{--zc:var(--math);background:var(--zc);color:var(--zt,#fff);border:3px solid var(--edge);border-radius:18px;box-shadow:0 4px 0 var(--edge);padding:10px 12px;min-height:96px;display:flex;align-items:center;gap:12px;text-align:left;font:inherit;cursor:pointer;word-break:keep-all;overflow-wrap:anywhere}
+.sdoor.s-jp{--zc:var(--jp)}.sdoor.s-soc{--zc:var(--soc);--zt:var(--ink)}.sdoor.s-rika{--zc:var(--rika)}.sdoor.s-eng{--zc:var(--eng)}
+.sdoor .dico{flex:none;width:60px;height:60px;border-radius:14px;background:#fff;display:grid;place-items:center;border:3px solid var(--edge)}
+.sdoor .dico .art{width:48px;height:48px}
+.sdoor .dbody{display:flex;flex-direction:column;gap:2px;min-width:0}
+.sdoor .dt{font-size:24px;font-weight:900;letter-spacing:.06em;line-height:1.35}
+.sdoor .dd{font-size:14px;font-weight:700;opacity:.92;line-height:1.4}
+.sdoor:focus-visible{outline:4px solid var(--sun);outline-offset:2px}
+.home:not(.easy) .s-btl .tiles{grid-template-columns:repeat(2,minmax(0,1fr))}
+@media (max-width:599px){.sdoor{flex-direction:column;justify-content:center;text-align:center;gap:6px;min-height:118px;padding:10px 6px}.sdoor .dbody{align-items:center}.sdoor .dt{font-size:21px}.sdoor .dd{font-size:13px}
+  .sdoors[data-n="3"] .sdoor:first-child,.sdoors[data-n="5"] .sdoor:first-child{flex-direction:row;text-align:left;min-height:96px}.sdoors[data-n="3"] .sdoor:first-child .dbody,.sdoors[data-n="5"] .sdoor:first-child .dbody{align-items:flex-start}
+  .home:not(.easy) .s-btl .tile{flex-direction:column;text-align:center;gap:4px;padding:8px 4px}.home:not(.easy) .s-btl .tile .tbody{align-items:center}.home:not(.easy) .s-btl .tile .tico,.home:not(.easy) .s-btl .tile .tico .art{width:44px;height:44px}.home:not(.easy) .s-btl .tile .tt{font-size:15px;white-space:nowrap}}
+@media (min-width:1024px){.sdoors{grid-template-columns:repeat(var(--dn,5),minmax(0,1fr))}.sdoors[data-n] .sdoor:first-child{grid-column:auto}.sdoors[data-n="1"]{--dn:1}.sdoors[data-n="2"]{--dn:2}.sdoors[data-n="3"]{--dn:3}.sdoors[data-n="4"]{--dn:4}
+  .sdoor{flex-direction:column;justify-content:center;text-align:center;min-height:150px}.sdoor .dbody{align-items:center}.sdoor .dico{width:72px;height:72px}.sdoor .dico .art{width:58px;height:58px}}
+.up.si.smini .srz{padding:12px}
 .bottom .hbtn{font-size:15px}
 .gdlink{display:block;width:100%;text-align:center;font-size:14px;color:var(--ink);text-decoration:underline;padding:8px 0}
 .more{width:100%;text-align:center}
@@ -1691,7 +1710,12 @@ body[data-v=host] .wrap{max-width:none;padding:0}
   <button class="hbtn snd" id="hSound" onclick="toggleSound()"></button>
 </header>
 
-<main class="wrap" id="app"></main>
+<main class="wrap" id="app"><noscript><section class="nsintro">
+  <h1>まなびひろば</h1>
+  <p>まなびひろばは、無料・登録不要の小学生向け学習ゲームです。ホームで 算数・国語・社会・理科・英語 の「教科のとびら」をえらび、学年の単元から練習します。</p>
+  <p>算数のへやでは、かけ算・わり算・分数・図形・単位などの単元を1タップで始められ、九九・100マス計算・めもり名人の「とっくん」もあります。友だちとのバトル、先生向けの課題リンク・授業モードもあります。</p>
+  <p>このサイトを使うには JavaScript をオンにしてください。くわしくは <a href="guide/index.html">使い方ガイド</a> と <a href="guide/about.html">このサイトについて</a> をごらんください。</p>
+</section></noscript></main>
 <footer class="foot"><a id="licLink" href="vendor/THIRD-PARTY-LICENSES.txt" target="_blank" rel="noopener"></a></footer>
 
 <!-- 問題データ（file:// でも読めるよう script タグで読む） -->
@@ -1850,6 +1874,7 @@ const TX={
  "home.guide.l":["学年《がくねん》・単元《たんげん》から さがす（先生《せんせい》向《む》け）","がくねん・たんげんから さがす（せんせいむけ）"],
  "home.guide":["いっしょに あそぼう！"],
  "home.all":["ぜんぶ"],
+ "hd.title":["どの 教科《きょうか》に する？","どの きょうかに する？"],"hd.math.d":["単元《たんげん》・とっくん","たんげん・とっくん"],"hd.quiz.d":["クイズ・単元《たんげん》","クイズ・たんげん"],"hd.unit.d":["単元《たんげん》","たんげん"],"hd.room":[k=>`${k}の へや`,k=>`${k}の へや`],
  "home.empty":["この学年《がくねん》のゲームはじゅんび中《ちゅう》です","この ゲームは じゅんびちゅう です"],
  "home.battle":["バトル（2〜3分《ぷん》）","たいせん（2〜3ふん）"],
  "h.gradepick":["学年《がくねん》をえらぶ","がくねんを えらぶ"],"h.gradeq":["何《なん》年生《ねんせい》？","なんねんせい？"],
@@ -2776,17 +2801,28 @@ function unitTile(k){
   const g=ui.grade, has=UREADY.some(u=>(easyG(g)?u.g===g:u.subj===SJR[k])&&(g===0||(easyG(g)?u.g===g:true)));
   return has?`<button class="tile unitgo" data-un="${SJR[k]}"><span class="tico">${ic("clipboard")}</span><span class="tbody"><span class="tt">${T("u.pick")}</span><span class="td">${T("u.pick.d")}</span></span></button>`:"";
 }
+/* ホームに出す 教科（ゲームが ある 教科と、3年からの 理科） */
+function homeZones(){
+  const games=GAMES.filter(x=>ui.grade===0||x.g.includes(ui.grade));
+  return SUBJ_ORDER.map(k=>[k,games.filter(x=>x.s===k)]).filter(z=>z[1].length || (z[0]==="rika" && (ui.grade===0 || ui.grade>=3) && UREADY.some(u=>u.subj==="rika")));
+}
+const DOOR_ART={math:"a-soroban",jp:"a-kanji",soc:"a-japan",rika:"a-rika",eng:"a-abc"};
+/* 教科の とびら（3〜6年・「ぜんぶ」）。docs/screen-split.md 3章の 段階④ */
+function doorTile(k,l){
+  const d=k==="math"?T("hd.math.d"):l.length?T("hd.quiz.d"):T("hd.unit.d");
+  return `<button type="button" class="sdoor s-${k}" data-door="${k}"><span class="dico">${svgU(DOOR_ART[k])}</span><span class="dbody"><span class="dt">${subjN(k)}</span><span class="dd">${d}</span></span></button>`;
+}
 function renderHome(){
   setLG(ui.grade);
   if(COLOK) m1HomeCheck();      // 100マス計算から もどったとき：どんぐり（授業モード・オフでは 何もしない）
-  const b=bests(), easy=easyG(LG);
-  const games=GAMES.filter(x=>ui.grade===0||x.g.includes(ui.grade));
-  const zones=SUBJ_ORDER.map(k=>[k,games.filter(x=>x.s===k)]).filter(z=>z[1].length || (z[0]==="rika" && (ui.grade===0 || ui.grade>=3) && UREADY.some(u=>u.subj==="rika")));
+  const b=bests(), easy=easyG(LG), zones=homeZones();
+  const btl=`<section class="zone s-btl"><h2>${ic("swords")}${T("home.battle")}</h2><div class="tiles">${MODES.map(m=>modeTile(m,b)).join("")}</div></section>`;
   app.innerHTML=`<div class="home${easy?" easy":""}">
     ${easy?`<div class="guide">${mbs("n")}<span class="say">${T("home.guide")}</span></div>`:""}
     ${COLOK?colDoor():""}
-    <div class="zones" data-n="${zones.length+1}">${zones.map(([k,l])=>`<section class="zone s-${k}"><h2>${subjN(k)}</h2><div class="tiles">${l.map(x=>gameTile(x,b)).join("")}${k==="math"?meterTile()+extTiles():""}${k==="rika"?`<button class="tile unitgo" data-un="rika"><span class="tico">${svgU("a-rika")}</span><span class="tbody"><span class="tt">${T("u.pick")}</span></span></button>`:easy||k==="math"?"":unitTile(k)}</div></section>`).join("")}${easy?`<section class="zone s-math"><div class="tiles">${unitTile("math")}</div></section>`:""}
-      <section class="zone s-btl"><h2>${ic("swords")}${T("home.battle")}</h2><div class="tiles">${MODES.map(m=>modeTile(m,b)).join("")}</div></section></div>
+    ${easy?`<div class="zones" data-n="${zones.length+1}">${zones.map(([k,l])=>`<section class="zone s-${k}"><h2>${subjN(k)}</h2><div class="tiles">${l.map(x=>gameTile(x,b)).join("")}${k==="math"?meterTile()+extTiles():""}${k==="rika"?`<button class="tile unitgo" data-un="rika"><span class="tico">${svgU("a-rika")}</span><span class="tbody"><span class="tt">${T("u.pick")}</span></span></button>`:easy||k==="math"?"":unitTile(k)}</div></section>`).join("")}${easy?`<section class="zone s-math"><div class="tiles">${unitTile("math")}</div></section>`:""}
+${btl}</div>`
+      :`<h2 class="hdh">${T("hd.title")}</h2><div class="sdoors" data-n="${zones.length}">${zones.map(([k,l])=>doorTile(k,l)).join("")}</div>${btl}`}
     ${zones.length?"":`<div class="empty">${T("home.empty")}</div>`}
     <div class="bottom">
       <button class="hbtn" id="hJoin2">${ic("key-round")}${T("h.join")}</button>
@@ -2804,7 +2840,12 @@ function renderHome(){
   const mtt=$("#mtTile"); if(mtt) mtt.onclick=()=>go("#meter");
   app.querySelectorAll("[data-id]").forEach(e=>e.onclick=()=>{
     const x=GAMES.find(y=>y.id===e.dataset.id);
-    withGrade(g0=>x.id==="calc"?go(g0>=3&&SI?"#subj?s=sansu":"#units?kid=1&subj=sansu"):openGame(x,g0));      // 3〜6年は 算数の へや（段階③）
+    withGrade(g0=>x.id==="calc"?go(g0>=3&&SI?"#subj?s=sansu":"#units?kid=1&subj=sansu"):openGame(x,g0));
+  });
+  app.querySelectorAll("[data-door]").forEach(e=>e.onclick=()=>{
+    const k=e.dataset.door;
+    if(k==="math") withGrade(g0=>go(g0>=3&&SI?"#subj?s=sansu":"#units?kid=1&subj=sansu"));      // 3〜6年は 算数の へや（段階③）
+    else go(`#subj?s=${SJR[k]}`);
   });
   app.querySelectorAll("[data-m]").forEach(e=>e.onclick=()=>go(`#modesetup?m=${e.dataset.m}`));
   app.querySelectorAll("[data-un]").forEach(e=>e.onclick=()=>go(easy?"#units?kid=1":`#units?kid=1&subj=${e.dataset.un}`));
@@ -7269,8 +7310,23 @@ function renderSubjItem(q){
    学年は 右上の 学年（ui.grade）だけで きりかえる。0（えらんで いない）の ときは ぜんぶの 学年。記録には なにも 書かない。
    アイコンは 今は 文字の しるし（あとで 画像に かえる よてい）。 ---- */
 const SI_MARK={kazu:"123",tashihiki:"+−",kake:"×",wari:"÷",shosu:"0.1",bunsu:"½",zukei:"△",tani:"cm",graph:"▥",wariai:"%",bunsho:"□"};
+/* ---- 国語・社会・理科・英語の 小さい へや（#subj?s=kokugo など）。docs/screen-split.md 3章の 段階④
+   今の ホームの その 教科の タイル（クイズ・「単元を えらぶ」）を そのまま ならべる。あとで 算数の へやと 同じ形に そだてる ---- */
+function renderSubjMini(k){
+  setLG(ui.grade);
+  const z=homeZones().find(y=>y[0]===k); if(!z) return go("#home");
+  const b=bests(), l=z[1];
+  const ut=k==="rika"?`<button class="tile unitgo" data-un="rika"><span class="tico">${svgU("a-rika")}</span><span class="tbody"><span class="tt">${T("u.pick")}</span></span></button>`:unitTile(k);
+  app.innerHTML=`<div class="up kid si sroom smini">
+    <div class="topbar"><button type="button" class="back" id="smb">${BK()}</button><h2 class="th2 uttl">${T("hd.room",subjN(k))}</h2><span></span></div>
+    <section class="zone s-${k} srz"><div class="tiles srgrid">${l.map(x=>gameTile(x,b)).join("")}${ut}</div></section></div>`;
+  $("#smb").onclick=()=>go("#home");
+  app.querySelectorAll("[data-id]").forEach(e=>e.onclick=()=>{ const x=GAMES.find(y=>y.id===e.dataset.id); withGrade(g0=>openGame(x,g0)); });
+  app.querySelectorAll("[data-un]").forEach(e=>e.onclick=()=>go(`#units?kid=1&subj=${e.dataset.un}`));
+}
 function renderSubjRoom(q){
   stopTimer();
+  const sk=SJ[q.get("s")]; if(sk&&sk!=="math") return renderSubjMini(sk);
   if(q.get("s")!=="sansu"||!SI||!UNITS_OK) return go("#home");
   const g=ui.grade||0; setLG(g);
   const gs=siGroups(g), tk=SI.tokkunFor(g||null);
