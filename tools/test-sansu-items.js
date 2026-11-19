@@ -109,9 +109,10 @@ t("算数で ない 単元・こわれた 入力は null／空（落ちない）
   assert.deepEqual([...SI.unitsOf(null, "kazu", 1)], []); assert.deepEqual([...SI.groupsFor([], 3)], []);
   assert.ok(P(SI.GROUPS[0].t[0]) === "数", "よみを とると 漢字だけ");
 });
-t("画面は まだ この データを 読まない（段階①は データだけ）", () => {
+t("画面が この データを 読む（段階②：まとまり → 単元カード）", () => {
   const html = fs.readFileSync(path.join(root, "index.html"), "utf8");
-  assert.ok(!html.includes("sansu-items.js") && !html.includes("MH_SANSU_ITEMS"), "index.html が もう 読んでいる（段階②で 外す 検査）");
+  assert.ok(/<script src="data\/sansu-items\.js\?v=[0-9a-f]{8}"><\/script>/.test(html), "index.html が data/sansu-items.js を 読んでいない");
+  assert.ok(html.includes("MH_SANSU_ITEMS") && html.includes('path==="subj"'), "#subj の 画面が ない");
 });
 
 console.log(`\nsansu-items: ${n}件 合格${process.exitCode ? "（NG あり）" : ""}`);

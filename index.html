@@ -1504,6 +1504,25 @@ body[data-v=host] .wrap{max-width:none;padding:0}
 #modeUnits :is(.grade-pills,.subject-pills) .pill,#roomUnits :is(.grade-pills,.subject-pills) .pill{width:auto;min-width:0;min-height:38px;padding:2px 12px;font-size:15px;flex:none;margin:0}
 #modeUnits .usetd summary,#roomUnits .usetd summary{cursor:pointer;font-weight:700;display:inline-flex;align-items:center;min-height:38px;padding:2px 12px;border-radius:999px;background:#fff3d6;border:2px solid var(--edge);list-style:none;font-size:15px}
 #modeUnits .usetd .set-grid,#roomUnits .usetd .set-grid{margin-top:6px}
+/* 算数の まとまり → 単元カード（#subj?s=sansu&item=…）と、今の 単元えらびの 上の まとまりボタン */
+.siitems{grid-column:1/-1;margin:0 0 8px}
+.siitems .sih,.sitools .sih{display:block;margin:4px 0 6px;font-size:15px;color:var(--muted);border-left:5px solid var(--go);padding-left:6px;line-height:1.6}
+.sirow{display:flex;flex-wrap:wrap;gap:6px}
+.sirow .sibtn{margin:0;min-height:48px;padding:4px 14px;font-size:16px;display:inline-flex;align-items:center;gap:6px;word-break:keep-all}
+.sirow .sibtn small{font-size:12px;color:var(--muted);font-weight:700}
+.up.si{display:block!important;max-width:1100px;margin:0 auto}
+.up.si .pills.spm .pill{min-height:44px}
+.up.si .sihint{text-align:center;margin:6px 0 10px}
+.up.si .sicards{grid-template-columns:repeat(auto-fill,minmax(min(100%,300px),1fr));gap:8px}
+.up.si .ucard{min-height:72px}
+.up.si .ubody b{font-size:19px;line-height:1.45}.up.si .unote{font-size:14px;line-height:1.5}
+.up.si .uexb{min-width:52px;font-size:20px}
+.up.si .siplay{margin-left:auto;flex:none;font-size:18px;color:var(--go)}
+.up.si .simode{display:flex;justify-content:center;gap:6px;margin:14px 0 6px}.up.si .simode .pill{min-height:44px;margin:0}
+.up.si .sifoot[hidden]{display:none}
+.up.si .sifoot .err:empty{display:none}
+.up.si .sitools{margin-top:16px}.up.si .sitool{width:100%;max-width:520px}
+@media (max-width:599px){.up.si .uttl{font-size:17px}.up.si .ubody b{font-size:17px}}
 /* 計算スプリントの あそびかた（いつもの／タイムアタック／サドンデス）と にがて ボックス */
 .spwrap{margin:10px auto 0;max-width:520px;text-align:center}
 .pills.spm{display:inline-flex;flex-wrap:nowrap;gap:0;margin:0;border:3px solid var(--edge);border-radius:999px;background:#fff;overflow:hidden;box-shadow:0 2px 0 var(--edge);max-width:100%}
@@ -1774,6 +1793,7 @@ body[data-v=host] .wrap{max-width:none;padding:0}
 <script src="data/gen/textbook-extra.js?v=a71e349b"></script>
 <script src="data/gen/bunsho.js?v=8a761a98"></script>
 <script src="data/units.js?v=515a9d37"></script>
+<script src="data/sansu-items.js?v=27498846"></script>
 <script src="data/tools-viz.js?v=1fd513f4"></script>
 <script src="data/collection.js?v=5fcda18e"></script>
 <script src="data/masu100.js?v=78a2bad3"></script>
@@ -1988,6 +2008,7 @@ const TX={
  /* 単元から出題・単元練習 */
  "g.unit.t":["単元《たんげん》練習《れんしゅう》","たんげん れんしゅう"],
  "u.pick":["単元《たんげん》をえらぶ","たんげんを えらぶ"],"u.pick.d":["カードを1回《かい》タップすると、すぐに練習《れんしゅう》が始《はじ》まるよ","カードを 1かい タップすると、すぐに はじまるよ"],
+ "si.one":["カードを タップすると すぐ はじまるよ","カードを タップすると すぐ はじまるよ"],"si.mix":["いくつか まぜる","いくつか まぜる"],"si.one.b":["1つずつ","1つずつ"],"si.mix.d":[n=>`カードを えらんで「はじめる」（${n}こまで）`,n=>`カードを えらんで「はじめる」（${n}こまで）`],"si.tool":["どうぐで 練習《れんしゅう》","どうぐで れんしゅう"],"si.none":["この学年《がくねん》には ないよ","この がくねんには ないよ"],"si.top":["1タップで はじめる","1タップで はじめる"],
  "u.ex":["例題《れいだい》","れいだい"],"u.close":["とじる"],"u.grade":["学年《がくねん》","がくねん"],"u.all":["ぜんぶ"],
  "u.sets":["おすすめの組《く》み合《あ》わせ","おすすめ"],
  "u.sel":[n=>`えらんだ単元《たんげん》：${n}`,n=>`えらんだ たんげん：${n}`],"u.clear":["ぜんぶはずす","ぜんぶ はずす"],
@@ -7175,7 +7196,7 @@ function renderUnits(q){
   const startBtn=h("button",{type:"button",class:"btn again ustart",text:T("u.go"),onclick:()=>{ if(!need()) return; uSave(); go(uHash({...cfg(),n:Math.min(UPK.n,20)})); }});
   if(kc) root.append(
     h("div",{class:"topbar"},h("button",{type:"button",class:"back",innerHTML:BK(),onclick:()=>go("#home")}),h("h2",{class:"th2 uttl",text:`${SUBJ_JA[subj]}　${T("u.pick")}`}),h("span")),
-    ...[boxDoor(SJ[subj]?subj:"",`#units?kid=1&subj=${subj}`)].filter(Boolean),
+    ...[boxDoor(SJ[subj]?subj:"",`#units?kid=1&subj=${subj}`),subj==="sansu"?siItemRow(kg):null].filter(Boolean),
     h("div",{class:"ufilters"},filt,sets),cards,h("div",{class:"ufoot kbar"},panel,startBtn));
   if(kc&&window.ResizeObserver){ const uf=root.querySelector(".ufilters"); new ResizeObserver(()=>root.style.setProperty("--ufh",uf.offsetHeight+"px")).observe(uf); }      // 学年の見出しを しぼりこみの すぐ下に とめる
   else root.append(...[
@@ -7185,6 +7206,59 @@ function renderUnits(q){
     h("div",{class:"ufilters"},filt,sets),h("div",{class:"uwrap"},panel,cards),kid?h("div",{class:"ufoot"},startBtn):null].filter(Boolean));
   app.replaceChildren(root);
   drawFilter(); drawSets(); drawCards(); drawPanel();
+}
+
+/* ---- 算数の まとまり → 単元カード（1タップで はじまる）。docs/screen-split.md 3章の 段階②
+   #subj?s=sansu&item=まとまりの id（data/sansu-items.js）。学年は 右上の 学年（ui.grade）。
+   カードを おすと すぐ 1分スプリント（あそびかたは 上の いつもの／タイムアタック／サドンデス）。
+   「いくつか まぜる」に すると チェックして「はじめる」（#u= の リンクと 同じ 形で 始める）。記録には なにも 書かない ---- */
+const SI=window.MH_SANSU_ITEMS||null;
+const siName=x=>easyG(LG)?x[1]:x[0];
+function siGroups(g){ return SI&&UNITS_OK?SI.groupsFor(UREADY,g||null):[]; }
+function siItemRow(g){      // 今の 単元えらび（3〜6年の 算数）の 上に 出す まとまりボタン（段階③の 算数の へや が できるまで の 入口）
+  const gs=siGroups(g); if(!gs.length) return null;
+  return h("nav",{class:"siitems","aria-label":T("si.top")},h("b",{class:"sih",text:T("si.top")}),
+    h("div",{class:"sirow"},...gs.map(x=>h("button",{type:"button",class:"pill sibtn",onclick:()=>go(`#subj?s=sansu&item=${x.id}`)},h("span",{text:siName(x.t)}),h("small",{text:x.units.length+"こ"})))));
+}
+function renderSubjItem(q){
+  stopTimer();
+  const back="#units?kid=1&subj=sansu", g=ui.grade||0; setLG(g);
+  const grp=q.get("s")==="sansu"&&SI?SI.GROUPS.find(x=>x.id===q.get("item")):null;
+  if(!UNITS_OK||!grp){ app.replaceChildren(h("div",{class:"q"},T("si.none"),h("br"),h("button",{type:"button",class:"btn",text:T("n.home"),onclick:()=>go("#home")}))); return; }
+  const full=siGroups(g).find(x=>x.id===grp.id), us=full?full.units:[], tools=full?full.tools:[];
+  const stepOf=u=>u.series&&u.step!=null?u.step:1e9;
+  const list=us.map((u,i)=>({u,i})).sort((a,b)=>a.u.g-b.u.g||(a.u.item===b.u.item?stepOf(a.u)-stepOf(b.u):0)||a.i-b.i).map(x=>x.u);
+  let mix=false; const sel=[];
+  const msg=h("div",{class:"err",role:"alert"}), cards=h("div",{class:"ugrid sicards"}), foot=h("div",{class:"ufoot kbar sifoot",hidden:true});
+  const startBtn=h("button",{type:"button",class:"btn again ustart",text:T("u.go"),onclick:()=>{ if(!sel.length){ msg.textContent=T("u.none"); return; } go(uHash({ids:sel.slice(),n:20,t:20,seed:uSeed(),mix:true,choice:null})); }});
+  const cnt=h("span",{class:"usum"});
+  foot.append(cnt,msg,startBtn);
+  const one=u=>startUnitRun({ids:[u.id],n:20,t:20,seed:uSeed(),mix:true,choice:null});
+  function drawCards(){
+    cards.replaceChildren(...(list.length?list.map(u=>{ const on=sel.includes(u.id);
+      return h("div",{class:"ucardw"},
+        h("button",{type:"button",class:"ucard","data-id":u.id,...(mix?{role:"checkbox","aria-checked":on?"true":"false"}:{}),onclick:()=>mix?toggle(u.id):one(u)},
+          mix?h("span",{class:"ubox","aria-hidden":"true",text:on?"✅":""}):null,
+          h("span",{class:"ubody"},h("b",{text:u.title}),h("span",{class:"unote",text:(g?"":u.g+"年《ねん》　")+(u.note&&u.note!==u.title?u.note:"")})),
+          mix?null:h("span",{class:"siplay","aria-hidden":"true",text:"▶"})),
+        h("button",{type:"button",class:"btn sub s uexb",text:"💡","aria-label":T("u.ex")+"："+u.title,title:T("u.ex"),onclick:()=>uEx(u)})); }):[h("div",{class:"empty",text:T("si.none")})]));
+    foot.hidden=!mix; cnt.textContent=T("u.sel",sel.length); startBtn.disabled=!sel.length;
+  }
+  function toggle(id){
+    const i=sel.indexOf(id);
+    if(i>=0) sel.splice(i,1); else if(sel.length>=UMAX){ msg.textContent=`単元《たんげん》は${UMAX}個《こ》までです`; return; } else sel.push(id);
+    msg.textContent=""; drawCards();
+  }
+  const modeRow=h("div",{class:"pills simode",role:"group","aria-label":T("si.mix")});
+  const drawMode=()=>modeRow.replaceChildren(upill(T("si.one.b"),!mix,()=>{ mix=false; sel.length=0; msg.textContent=""; drawMode(); drawCards(); hint.textContent=T("si.one"); }),upill(T("si.mix"),mix,()=>{ mix=true; drawMode(); drawCards(); hint.textContent=T("si.mix.d",UMAX); }));
+  const hint=h("p",{class:"note sihint",text:T("si.one")});
+  drawMode();
+  const toolBox=tools.length?h("section",{class:"sitools"},h("h3",{class:"sih",text:T("si.tool")}),
+    ...tools.map(t=>h("button",{type:"button",class:"ucard sitool",onclick:()=>t.go.startsWith("url:")?(location.href=t.go.slice(4)):go(t.go)},h("span",{class:"ubody"},h("b",{text:siName(t.t)}),h("span",{class:"unote",text:siName(t.d)})),h("span",{class:"siplay","aria-hidden":"true",text:"▶"})))):null;
+  app.replaceChildren(h("div",{class:"up kid si"},
+    h("div",{class:"topbar"},h("button",{type:"button",class:"back",innerHTML:BK(),onclick:()=>go(back)}),h("h2",{class:"th2 uttl",text:`${SUBJ_JA.sansu} › ${siName(grp.t)}`}),h("span")),
+    list.length?spChips():null,hint,cards,list.length>1?modeRow:null,foot,toolBox));
+  drawCards();
 }
 
 /* ---- リンクで開いたとき：紹介 → 1分スプリント ---- */
@@ -7771,7 +7845,7 @@ function route(){
   if(ES){ ES.close(); ES=null; }
   const {path:path0,q}=params(), path=location.hash.startsWith("#q=")?"qlink":location.hash.startsWith("#u=")?"ulink":path0;
   setLG(path==="home"||path==="modesetup"||path==="join"||path==="record"?ui.grade:0);
-  document.body.dataset.v=["check","play","setup","modesetup","mode","join","lobby","host","teacher","record","make","qlink","units","ulink","hiroba","zukan","tanken","feedback","meter"].includes(path)?path:"home";
+  document.body.dataset.v=["check","play","setup","modesetup","mode","join","lobby","host","teacher","record","make","qlink","units","subj","ulink","hiroba","zukan","tanken","feedback","meter"].includes(path)?path:"home";
   // 課題リンク（task=1）で開いたゲームでは、ほかの画面への入口を隠す（授業モード）
   const lesson=!!lockedHash||((path==="play"||path==="mode"||path==="meter")&&q.get("task")==="1")||((path==="qlink"||path==="ulink")&&/[&?]task=1(?![0-9])/.test(location.hash));
   LESSON=lesson; document.body.classList.toggle("lesson",lesson); const lic=document.getElementById("licLink"); if(lic) lic.hidden=lesson;
@@ -7794,6 +7868,7 @@ function route(){
   else if(path==="make") renderMake(q);
   else if(path==="qlink") renderQuizLink(location.hash.slice(3).split(/[&?]/)[0]);
   else if(path==="units") renderUnits(q);
+  else if(path==="subj") renderSubjItem(q);
   else if(path==="meter") renderMeter(q);
   else if(path==="ulink") renderUnitLink(location.hash);
   else if(path==="record") renderRecord();
