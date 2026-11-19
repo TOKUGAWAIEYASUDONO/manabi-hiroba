@@ -14,12 +14,6 @@
 <!-- - タスク名 — セッション: session_xxx -->
 - 🧱 **画面の作り直し（A案「教科のへや」）④：ホームを教科のとびらに（＋JS なしで読める紹介文）** — セッション: session_01DeDokyMyR5CFgv736bYbaY（ブランチ claude/sansu-room から）
   - 案と順番は ブランチ `claude/screen-split-proposal` の `docs/screen-split.md`（ラフ `docs/screen-split/mock.html`）
-- 🏝 **じぶんのひろば：島の 2D版と 3D版を くらべる試作**（サイトのコードは変えない）— セッション: session_01DeDokzrxxBm6BviYLtmJZp
-  - できたら、学校の Chromebook で fps（なめらかさ）・熱・電池を見て決める
-  - もとの見本と前の考え（コレクションデザイン セッションより）：
-    - 今の動く見本（ホームA＋はこにわの島C）：https://claude.ai/artifact/JNSuaWdaaz1gvCWyKUmAky
-    - 3D：Three.js 約170KB・ひろばを開いたときだけ読む。安い Chromebook の熱・電池が心配、WebGL がない端末は2Dの逃げ道が要る。回す操作は低学年にむずかしい
-    - 2D でも「広い地図を指で動かす・できたで陸地が広がる・教科の島を橋でつなぐ」はできる
 
 ## 次やる（3つまで）
 0. 🧱 画面の作り直し ⑤（④が終わったら）：⑤古い入口の整理と検査。⑥（あとで）単元↔道具のつながり
@@ -31,6 +25,7 @@
    - 作る道具：PC の image2（まなびっこの絵と同じ）→ PC のセッションでやる。クラウドは、できた画像の組みこみ（サイズ・webp・data/sansu-items.js へのアイコン名）を担当できる
 
 ## あなたの返事待ち
+- 🏝 **島の 2D版・3D版を 学校の Chromebook で ためす**：https://claude.ai/artifact/VU9s8nzpR6jqBKpsJ7TkpX（左下のボタンで切りかえ・右すみに fps）。できたを150にしても 30fps 以上・熱くならないなら 3D も候補。ためしたら どっちにするか決める（ブランチ claude/hiroba-island-proto）
 - **学校・自治体に確認すること**（友だち対戦・クラスランキングを作る前に）：海外の仲介サーバーを先生がいない時間・家でも使ってよいか／持ち帰り端末の決まり／先生を通さず端末どうしがつながってよいか など → ブランチ `claude/friend-battle-class-ranking-study` の `docs/friend-battle-and-class-ranking-study.md` 5章
 - **公開してよいか**：`claude/keep-rewards`（基準が変わっても もらった物が へらない）→ どんぐりの基準を見直す前に入れたい
 - **Google Search Console の登録**：手順は「Google 検索」セッション（session_01DeDokvgQrED7ysW6abAG2L）にある。確認用のコードが出たら、そのセッションか ここに伝える → 入れたら `seo-google` といっしょに公開
@@ -105,3 +100,4 @@
 - ✅ 画面の作り直し② → 単元カード画面。3年かけ算・5年小数とも ホームから3タップ（前は4）（ブランチ claude/sansu-unit-cards・まだ main に入れない）
 - ✅ 先生なしで つながる機能の検討 → A・B の形を決めた。学校への確認が残り（ブランチ claude/friend-battle-class-ranking-study）
 - ✅ 画面の作り直し③ → 算数のへや（単元で練習のタイル＋とっくん＋ぜんぶの単元）。算数だけ先に・1・2年は今のまま（ブランチ claude/sansu-room・まだ main に入れない）
+- ✅ 島の 2D版・3D版の試作 → クラウドでの測定：2D はいつも60fps。3D は できた18で約50fps・150で約29fps（CPU 4倍おそいと 36／13fps）。読みこみ 2D 0.1秒・3D 0.4秒
