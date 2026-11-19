@@ -465,16 +465,16 @@ t("アバター：自分の 子は もっている子だけ。きめていなけ
 });
 /* ---------- v3.3：きせかえ（Qalc 合体 段階4。どんぐりで 買う・学びで もらう） ---------- */
 const kzState = () => { const S = mkState(); S.ac.e = 200; S.ac.s = 0; return S; };
-t("きせかえ：品の表（ぼうし12・もちもの8・はいけい8・しょうごう12）。ID は ちがう・値段は 1〜20（1日の上限より 高くない）・絵文字は Unicode 12 まで", () => {
+t("きせかえ：品の表（ぼうし12・もちもの8・はいけい8・しょうごう18：うち6つは やりこみの じっせきで もらう）。ID は ちがう・値段は 1〜20（1日の上限より 高くない）・絵文字は Unicode 12 まで", () => {
   const by = sl => C.KZ.filter(k => k.s === sl).length;
-  assert.deepStrictEqual([by("h"), by("p"), by("b"), by("t")], [12, 8, 8, 12]);
+  assert.deepStrictEqual([by("h"), by("p"), by("b"), by("t")], [12, 8, 8, 18]);
   assert.strictEqual(new Set(C.KZ_IDS).size, C.KZ_IDS.length);
   assert(C.KZ_IDS.length <= 1294, "番号＋1 が 2字に 入る");
   for (const k of C.KZ) {
     assert(/^[hpbt]-[a-z0-9]+$/.test(k.id) && k.id.length <= 16 && k.id[0] === k.s, k.id);
     assert(!!k.price !== !!k.un, k.id + "：買う物か もらう物の どちらか");
     if (k.price) assert(Number.isInteger(k.price) && k.price >= 1 && k.price <= C.CAP, k.id);
-    if (k.un) assert(["can", "mst", "nk"].includes(k.un[0]) && Number.isInteger(k.un[1]), k.id);
+    if (k.un) assert((["can", "mst", "nk"].includes(k.un[0]) && Number.isInteger(k.un[1])) || (k.un[0] === "ach" && C.YA_ACH.some(a => a.id === k.un[1])), k.id);
     if (k.s === "b") assert(Array.isArray(k.bg) && k.bg.length >= 2 && k.bg.every(c => /^#[0-9a-f]{6}$/.test(c)), k.id);
     for (const ch of k.ch) { const cp = ch.codePointAt(0); assert(cp < 0x1FA70 || cp === 0xFE0F, k.id + " " + cp.toString(16)); }   // 1FA70〜（Unicode 12 の後半〜）は つかわない
   }
@@ -568,5 +568,69 @@ t("きせかえ：値段の すじみち（はじめの 5こ＋1日1〜3こで�
   const week = C.GIFT + 7 * 2; let n = 0, m = week; for (const p of prices) if (p <= m) { m -= p; n++; }
   assert(n >= 3 && n <= 7, "1日 2こなら 1週間で 3〜7こ（" + n + "）");
   assert(C.KZ_PRICE_TOTAL >= 150 && C.KZ_PRICE_TOTAL <= 300, "ぜんぶで " + C.KZ_PRICE_TOTAL);
+});
+/* やりこみ（v3.4）：日を またがない。やれば やるほど その日の うちに 進む */
+t("やりこみ：シールは その日の うちに どう→ぎん→きん→にじ（日を またがなくてよい）", () => {
+  const S = C.fresh(D), id = "m3-amari";
+  assert.strictEqual(C.yaRank(S, id), 0);
+  run(S, D, [{ id, n: 10, o: 7 }]); assert.strictEqual(C.yaRank(S, id), 1, "7割で どう");
+  run(S, D, [{ id, n: 10, o: 9 }]); run(S, D, [{ id, n: 10, o: 8 }]); assert.strictEqual(C.yaRank(S, id), 1, "正解 24 では まだ どう");
+  const r = run(S, D, [{ id, n: 10, o: 9 }]); assert.strictEqual(C.yaRank(S, id), 2, "正解 33・9割の回で ぎん");
+  assert.deepStrictEqual(r.ya.rank, [{ id, r: 2 }], "結果に ランクが 上がった ことが 出る");
+  run(S, D, [{ id, n: 10, o: 10 }]); assert.strictEqual(C.yaRank(S, id), 3, "ノーミスで きん");
+  for (let i = 0; i < 6; i++) run(S, D, [{ id, n: 10, o: 10 }]);
+  assert.strictEqual(C.yaRank(S, id), 4, "正解 100・ノーミス 3回で にじ（同じ日）");
+  assert.deepStrictEqual(C.yaNeed(S, id), { r: 4 });
+});
+t("やりこみ：ランクは じゅんばん どおり（ノーミスだけでは きんに ならない）・9問の ぜんもん正解は ノーミスでない", () => {
+  const S = C.fresh(D), id = "m3-amari";
+  run(S, D, [{ id, n: 9, o: 9 }]); assert.strictEqual(S.y.u[id][1], 0, "10問より 少ない");
+  run(S, D, [{ id, n: 10, o: 10 }]); assert.strictEqual(C.yaRank(S, id), 1, "正解 19 なので ぎんの 前で とまる");
+  assert.deepStrictEqual(C.yaNeed(S, id), { r: 1, c: 11, nine: 0 });
+  run(S, D, [{ id, n: 4, o: 4 }]); assert.strictEqual(C.yaRank(S, id), 1);
+});
+t("やりこみ：2学年いじょう 下の 単元は 合計に 数えない（シールは 進む）・単元の ない ゲームは 正解の 合計だけ", () => {
+  const S = C.fresh(D);
+  run(S, D, [{ id: "m1-add10", n: 10, o: 10 }], { grade: 3 });
+  assert.strictEqual(S.y.c, 0); assert.strictEqual(S.y.nm, 0); assert.strictEqual(C.yaRank(S, "m1-add10"), 1);
+  run(S, D, [{ id: "m2-kuku-low", n: 10, o: 10 }], { grade: 3 });
+  assert.strictEqual(S.y.c, 10); assert.strictEqual(S.y.s.m, 10); assert.strictEqual(S.y.nm, 1);
+  C.recordRun(S, { today: D, grade: 3, units: [], answered: 20, correct: 18 }); assert.strictEqual(S.y.c, 28);
+  C.recordRun(S, { today: D, grade: 3, units: [], answered: 5, correct: 99 }); assert.strictEqual(S.y.c, 33, "正解は 答えた数まで");
+  run(S, D, [{ id: "m3-amari", n: 5, o: 5 }, { id: "j3-kanji-yomi", n: 5, o: 4 }, { id: "s4-kencho-th", n: 5, o: 3 }], { grade: 3 });
+  assert.strictEqual(S.y.mx, 1, "1回で 3教科");
+});
+t("やりこみ：じっせきは 数が たまると その場で たっせい（下がらない）・かくしは たっせいまで 名前を 出さない", () => {
+  const S = C.fresh(D);
+  assert.deepStrictEqual(C.yaCheck(S, {}), []);
+  for (let i = 0; i < 10; i++) run(S, D, [{ id: "m3-amari", n: 10, o: 10 }]);
+  const got = C.yaCheck(S, {});
+  assert(got.includes("c100") && got.includes("nm1") && got.includes("nm10"), JSON.stringify(got));
+  assert.deepStrictEqual(C.yaCheck(S, {}), [], "二度は 出ない");
+  const L = C.yaList(S, {}), c3 = L.find(a => a.id === "c300"), cx = L.find(a => a.id === "c10000");
+  assert.strictEqual(c3.v, 100); assert.strictEqual(c3.done, false); assert.strictEqual(cx.hide, true);
+  const x = { m100n: 12, m100best: 58000, mtStars: 33, mtMax: 33 };
+  const g2 = C.yaCheck(S, x); for (const id of ["m100n1", "m100n10", "m100t120", "m100t60", "mt10", "mtall"]) assert(g2.includes(id), id);
+  assert.strictEqual(new Set(C.YA_ACH.map(a => a.id)).size, C.YA_ACH.length); assert(C.YA_ACH.length >= 30);
+});
+t("やりこみ：じっせきで もらう しょうごうは たっせいしたら つけられる・こわれた 記録は 作りなおす・古い 記録には y が なくても 読める", () => {
+  const S = C.fresh(D); S.mk.own.sankakuru = { d: D, p: 0, ld: D, k: 0, v: 0 };
+  assert.strictEqual(C.kzHas(S, "t-yac1000"), false);
+  S.y.c = 1000; C.yaCheck(S, {}); assert.strictEqual(C.kzHas(S, "t-yac1000"), true);
+  assert(C.kzWear(S, "sankakuru", "t", "t-yac1000"));
+  const S2 = C.clean(JSON.parse(JSON.stringify(S)), D); assert.strictEqual(S2.y.c, 1000); assert(S2.y.a.includes("c1000"));
+  const bad = C.clean({ ...JSON.parse(JSON.stringify(S)), y: { c: -5, s: { m: "x", zz: 4 }, u: { nope: [1], "m3-amari": [1e12, "a", 1, 0] }, a: ["c1000", "nope", "c1000"] } }, D);
+  assert.strictEqual(bad.y.c, 0); assert.deepStrictEqual(bad.y.s, { m: 0 }); assert.deepStrictEqual(Object.keys(bad.y.u), ["m3-amari"]); assert.deepStrictEqual(bad.y.a, ["c1000"]);
+  const old = JSON.parse(JSON.stringify(S)); delete old.y; assert.deepStrictEqual(C.clean(old, D).y, C.yaFresh());
+});
+t("やりこみ：まなびっこの きらきらは その教科の 正解 500・きんいじょう 5まいで（同じ日でも）", () => {
+  const S = C.fresh(D); S.mk.own.sankakuru = { d: D, p: 0, ld: D, k: 0, v: 0 };
+  const ids = ["m3-amari", "m3-wari99", "m3-add-hissan", "m3-sub-hissan", "m3-man"];
+  for (const id of ids) { run(S, D, [{ id, n: 10, o: 7 }]); run(S, D, [{ id, n: 30, o: 28 }]); run(S, D, [{ id, n: 10, o: 10 }]); }
+  assert.strictEqual(C.yaRankCount(S, 3, "m"), 5);
+  assert(!S.mk.own.sankakuru.k, "正解が まだ 500 に たりない");
+  let r = null; for (let i = 0; i < 40 && !S.mk.own.sankakuru.k; i++) r = run(S, D, [{ id: "m3-amari", n: 10, o: 10 }]);
+  assert.strictEqual(S.mk.own.sankakuru.k, 1); assert.deepStrictEqual(r.ya.kira, ["sankakuru"]); assert(S.y.s.m >= 500);
+  assert(C.yaCheck(S, {}).includes("kira1"));
 });
 console.log(`\n${n} 件のテストを実行${process.exitCode ? "（失敗あり）" : "：すべて成功"}`);

@@ -922,6 +922,30 @@ body[data-v=host] .wrap{max-width:none;padding:0}
 .sk.s2{background:var(--sb);border:3px solid var(--edge);box-shadow:0 3px 0 var(--edge);color:var(--ink);font-weight:700}
 .sk.s3{background:var(--sb);border:3px solid var(--edge);box-shadow:0 0 0 3px var(--gold),0 5px 0 3px var(--edge);color:var(--ink);font-weight:700;margin-bottom:3px}
 .sk .skm{flex:none;width:20px;height:20px;display:inline-flex;align-items:center;justify-content:center}
+/* やりこみ：シールの ランク（どう・ぎん・きん・にじ）。文字は 濃い色で 4.5:1 いじょう */
+.sk{position:relative}
+.skr{margin-left:auto;flex:none;align-self:flex-start;font-size:11px;font-weight:800;border-radius:999px;padding:0 7px;line-height:1.6;border:1.5px solid var(--edge);color:var(--ink);background:#fff}
+.skr.r0{background:#fff;color:var(--muted)}
+.sk.yr1 .skr,.skr.r1{background:#f2d3b8;color:#5a2e0c}
+.sk.yr2 .skr,.skr.r2{background:#e3e8ec;color:#2f3a42}
+.sk.yr3 .skr,.skr.r3{background:#ffe08a;color:#5b4300}
+.sk.yr4 .skr,.skr.r4{background:linear-gradient(90deg,#ffd6d6,#fff2b8,#d4f5d0,#d3e8ff,#e8d9ff);color:var(--ink)}
+.sk.yr4{box-shadow:0 0 0 3px #fff,0 0 0 6px #c9b8ff,0 5px 12px rgba(120,90,200,.35)}
+.yanx{display:flex;flex-wrap:wrap;gap:6px;align-items:center;font-size:14px;margin:4px 0}
+.hops .btn{font-size:18px}
+.yaw{background:#fff;border:3px solid var(--edge);border-radius:14px;padding:10px 14px;margin:10px 0}
+.yaw h3{margin:0 0 4px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}.yat{font-size:14px;background:var(--board);color:#fff;border-radius:999px;padding:1px 10px}
+.yal{list-style:none;margin:6px 0;padding:0;display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:6px}
+.yar{display:grid;grid-template-columns:24px 1fr auto;grid-template-areas:"c n s" "c p p";align-items:center;column-gap:8px;background:#f4f8f2;border:2px solid var(--line);border-radius:10px;padding:6px 8px;font-size:15px;font-weight:700}
+.yar .yac{grid-area:c;width:22px;height:22px;border-radius:50%;border:2px solid var(--muted);display:flex;align-items:center;justify-content:center}
+.yar.on{background:#fff7d6;border-color:#e0b030}.yar.on .yac{background:var(--go);border-color:var(--go);color:#fff}.yar.on .yac .ic{width:14px;height:14px}
+.yar .yan{grid-area:n}.yar small{grid-area:s;font-size:12px;color:var(--muted);font-variant-numeric:tabular-nums}.yar .yad{grid-area:s;font-size:13px;color:#7a5600}
+.yap{grid-area:p;height:8px;border-radius:8px;background:#e1e8de;overflow:hidden;margin-top:4px}.yap i{display:block;height:100%;background:var(--go)}
+/* まなびっこの きらきら：ひかりの わ と ほし（絵は いまの「よろこび」の すがたを つかう） */
+.mkw.kira{position:relative;display:inline-block;border-radius:50%;box-shadow:0 0 0 3px #fff3b0,0 0 18px 6px rgba(255,214,90,.65)}
+.mkw.kira::after{content:"✦ ✧ ✦";position:absolute;left:0;right:0;top:-6px;text-align:center;color:#e0a800;font-size:14px;letter-spacing:6px;animation:kira 1.6s ease-in-out infinite;pointer-events:none}
+@keyframes kira{0%,100%{opacity:.4}50%{opacity:1}}
+@media (prefers-reduced-motion:reduce){.mkw.kira::after{animation:none}}
 .sk .skm .ic{width:20px;height:20px}
 .sk .skm .art{width:22px;height:22px}
 .sk.pend .skm .ic{color:var(--sc)}
@@ -1735,7 +1759,7 @@ body[data-v=host] .wrap{max-width:none;padding:0}
 <script src="data/gen/bunsho.js?v=8a761a98"></script>
 <script src="data/units.js?v=515a9d37"></script>
 <script src="data/tools-viz.js?v=1fd513f4"></script>
-<script src="data/collection.js?v=afa8fd37"></script>
+<script src="data/collection.js?v=5fcda18e"></script>
 <script src="data/masu100.js?v=78a2bad3"></script>
 <script>
 /* ================= 画面の文言（1つの表） =================
@@ -2060,6 +2084,25 @@ const TX={
  "col.kz.need":["まなびっこが なかまに なると かえるよ。"],
  "col.kz.have":["もっているよ"],"col.kz.got":["もらえたよ！"],
  "col.kz.un.can0":["なかまが いれば もらえるよ"],
+ "col.kz.un.ach":[s=>`じっせき「${s}」で もらえるよ`],
+ "col.kz.i.t-yac1000":["せいかい マイスター"],"col.kz.i.t-yanm30":["ノーミス 名人《めいじん》","ノーミス めいじん"],"col.kz.i.t-yaniji":["にじの コレクター"],
+ "col.kz.i.t-yam100":["100マス はやわざ"],"col.kz.i.t-yameter":["めもりの たつじん"],"col.kz.i.t-yakira":["きらきら なかま"],
+ "col.ya.t":["じっせき"],"col.ya.n":[(a,b)=>`たっせい ${a} / ${b}`],
+ "col.ya.d":["その日《ひ》の うちに、やれば やるほど すすむよ。シールの ランクも ここで たしかめよう","そのひの うちに、やれば やるほど すすむよ。シールの ランクも ここで たしかめよう"],
+ "col.ya.hide":["？？？ かくし じっせき"],"col.ya.done":["たっせい！"],
+ "col.ya.local":["やりこみの きろくは この 端末《たんまつ》だけに あるよ（バックアップの 文字《もじ》には まだ 入《はい》らない）","やりこみの きろくは この たんまつだけに あるよ（バックアップの もじには まだ はいらない）"],
+ "col.ya.rk.0":["まだ"],"col.ya.rk.1":["どう"],"col.ya.rk.2":["ぎん"],"col.ya.rk.3":["きん"],"col.ya.rk.4":["にじ"],
+ "col.ya.r.up":[(u,r)=>`「${u}」の シールが ${r}に なったよ！`],
+ "col.ya.r.ach":[s=>`じっせき「${s}」たっせい！`],
+ "col.ya.r.kira":[n=>`${n}が きらきらの すがたに なったよ！`],
+ "col.ya.zk":[r=>`シール：${r}`],
+ "col.ya.nx.0":["5問《もん》いじょうを 7わり せいかいで「どう」","5もん いじょうを 7わり せいかいで「どう」"],
+ "col.ya.nx.1":[(c,n9)=>`つぎの「ぎん」まで：${c?`せいかい あと ${c}もん`:""}${c&&n9?"・":""}${n9?"9わり いじょうの かい":""}`],
+ "col.ya.nx.2":["つぎの「きん」まで：ノーミス（10もん いじょう ぜんぶ せいかい）1かい"],
+ "col.ya.nx.3":[(c,nm)=>`つぎの「にじ」まで：${c?`せいかい あと ${c}もん`:""}${c&&nm?"・":""}${nm?`ノーミス あと ${nm}かい`:""}`],
+ "col.ya.nx.4":["さいこうの「にじ」シール！"],
+ "col.ya.kira":[(c,k)=>`きらきらまで：この きょうかで せいかい あと ${c}もん・きん いじょうの シール あと ${k}まい`],
+ "col.ya.kira.on":["きらきらの すがた"],
  "col.kz.un.can":[n=>`単元《たんげん》を ${n}つ「できた」に すると もらえるよ`,n=>`たんげんを ${n}つ「できた」に すると もらえるよ`],
  "col.kz.un.mst":[n=>`「マスター」が ${n}つで もらえるよ`],
  "col.kz.un.nk.1":["まなびっこと「なかよし」に なると もらえるよ"],"col.kz.un.nk.2":["まなびっこが「いっしょに まなぶ なかま」に なると もらえるよ"],
@@ -3288,6 +3331,8 @@ function colRun(info){
   if(r.tickets>0&&colTkOn()) L.push(T("col.tk.got"));
   if(r.mk&&r.mk.add>0&&COL.mkAvail(S)>0) L.push(T("col.mk.r.new"));            // まなびっこ：えらべる分が ふえた（えらぶのは ひろばで。学習の流れは 止めない）
   if(r.mk) r.mk.grow.slice(0,1).forEach(id=>L.push(T("col.mk.r.grow",mkNm(id))));
+  if(r.ya){ r.ya.rank.slice(0,2).forEach(e=>L.push(T("col.ya.r.up",ttl(e.id),T("col.ya.rk."+e.r)))); r.ya.kira.slice(0,1).forEach(id=>L.push(T("col.ya.r.kira",mkNm(id))));
+    COL.yaCheck(S,yaExt()).slice(0,2).forEach(id=>L.push(T("col.ya.r.ach",yaName(id)))); colSave(); }
   if(r.capFirst){ L.push(T("col.cap")); S.day.shown=1; colSave(); }
   if(!L.length&&!r.paid&&S.d0===today) L.push(T("col.r.day1"));
   if(!L.length&&!r.paid) return "";
@@ -3301,7 +3346,8 @@ function colRunPlay(p){      // finish() から：単元ごとの正解数と、
 /* ----- じぶんの ひろば ----- */
 function renderHiroba(){
   if(colMode()!=="on") return go("#home");
-  setLG(ui.grade); HS={sel:null,shop:false,gift:0,cap:0,done:0,mkSel:null,mkGot:null,mkLater:false,mkInfo:null,mkGrow:[],tab:"d",kzMsg:null};
+  setLG(ui.grade); HS={sel:null,shop:false,gift:0,cap:0,done:0,mkSel:null,mkGot:null,mkLater:false,mkInfo:null,mkGrow:[],tab:"d",kzMsg:null,ya:false};
+  { const S0=colGet(); if(COL.yaCheck(S0,yaExt()).length) colSave(); }
   app.innerHTML=`<div class="hb"></div>`;
   loadScript("data/hiroba-art.js?v=e89b7885",()=>!!document.getElementById("hiroba-art")).then(()=>{ if(params().path==="hiroba") hbDraw(true); },()=>{ app.innerHTML=`<div class="q">${T("col.err")}</div>`; });
 }
@@ -3352,7 +3398,8 @@ function hbDraw(first){
       <div class="gridh" role="group" aria-label="${esc(T("col.grid"))}">${cells.join("")}</div>
     </div>
     ${bar}
-    <div class="hops"><button type="button" class="btn" id="hbShop" aria-expanded="${HS.shop}">${acornSvg("ac")}${T("col.shop")}</button><button type="button" class="btn" id="hbZk">${ic("book-open")}${T("col.zukan")}</button></div>
+    <div class="hops"><button type="button" class="btn" id="hbShop" aria-expanded="${HS.shop}">${acornSvg("ac")}${T("col.shop")}</button><button type="button" class="btn" id="hbZk">${ic("book-open")}${T("col.zukan")}</button><button type="button" class="btn" id="hbYa" aria-expanded="${!!HS.ya}" aria-controls="yaBox">🏆 ${T("col.ya.t")}</button></div>
+    ${HS.ya?yaHtml(S):""}
     ${mkZkHtml(S)}
     ${tkBox()}
     <section class="shop${HS.shop?"":" hidden"}" id="shopBox"><h3>${T("col.shop")}</h3>
@@ -3369,6 +3416,7 @@ function hbDraw(first){
   const q=id=>root.querySelector(id);
   q("#hbShop").onclick=()=>{ HS.shop=!HS.shop; hbDraw(false); };
   q("#hbZk").onclick=()=>go("#zukan");
+  q("#hbYa").onclick=()=>{ HS.ya=!HS.ya; hbDraw(false); const b=app.querySelector("#yaBox"); if(b) b.scrollIntoView({block:"nearest"}); };
   if(q("#hbTk")) q("#hbTk").onclick=()=>go("#tanken");
   if(q("#hbStore")) q("#hbStore").onclick=()=>{ COL.unplace(S,HS.sel); HS.sel=null; colSave(); hbDraw(false); };
   if(q("#hbCancel")) q("#hbCancel").onclick=()=>{ HS.sel=null; hbDraw(false); };
@@ -3390,7 +3438,8 @@ const kzNm=id=>T("col.kz.i."+id);
 const kzBgCss=k=>k&&k.bg?`background:linear-gradient(180deg,${k.bg.join(",")})`:"";
 const kzIcon=k=>k.s==="b"?`<span class="kzi bg" style="${kzBgCss(k)}" aria-hidden="true">${k.ch}</span>`:`<span class="kzi" aria-hidden="true">${k.ch}</span>`;
 const kzHatSvg=(k,y,fs)=>`<text x="50" y="${y}" font-size="${fs}" text-anchor="middle" transform="rotate(-8 50 ${y-10})">${k.ch}</text>`;
-function mkDress(c,st,px,eq,cls){          // まなびっこの絵＋きせかえ。eq＝COL.kzOf の { h, p, b, t }
+function mkDress(c,st,px,eq,cls,kira){          // まなびっこの絵＋きせかえ。eq＝COL.kzOf の { h, p, b, t }。kira＝きらきらの すがた（やりこみ）
+  if(kira&&c&&c.art) return mkDress(c,2,px,eq,cls).replace('<span class="mkw','<span class="mkw kira');
   const img=mkImg(c,st,px,cls); if(!c||!c.art) return img;
   const e=eq||{}, b=e.b&&kzC(e.b), h=e.h&&kzC(e.h), p=e.p&&kzC(e.p);
   const ov=h||p?`<svg class="kzo" viewBox="0 0 100 100" aria-hidden="true">${h?kzHatSvg(h,26,30):""}${p?`<text x="83" y="94" font-size="26" text-anchor="middle">${p.ch}</text>`:""}</svg>`:"";
@@ -3398,7 +3447,39 @@ function mkDress(c,st,px,eq,cls){          // まなびっこの絵＋きせか�
   return `<span class="mkw${b?" kzbg":""}"${b?` style="${kzBgCss(b)}"`:""}>${bm}${img}${ov}</span>`;
 }
 const kzTitle=eq=>{ const k=eq&&eq.t&&kzC(eq.t); return k?`<span class="kzt">${k.ch} ${kzNm(k.id)}</span>`:""; };
-function kzUnTxt(k){ const [c,n]=k.un; return c==="can"?(n?T("col.kz.un.can",n):T("col.kz.un.can0")):c==="mst"?T("col.kz.un.mst",n):T("col.kz.un.nk."+n); }
+const YA_SJN={m:"さんすう",j:"こくご",s:"しゃかい",r:"りか",e:"えいご"};
+function yaName(id){
+  let m;
+  if((m=/^c(\d+)$/.exec(id))) return `せいかい ${m[1]}もん`;
+  if((m=/^nm(\d+)$/.exec(id))) return `ノーミス ${m[1]}かい`;
+  if((m=/^r([1-4])_(\d+)$/.exec(id))) return `${T("col.ya.rk."+m[1])}シール ${m[2]}まい`;
+  if((m=/^s([mjsre])300$/.exec(id))) return `${YA_SJN[m[1]]} せいかい 300もん`;
+  if(id==="mx1") return "1かいで 3きょうか"; if(id==="mx10") return "3きょうか ミックス 10かい";
+  if((m=/^mk(\d)$/.exec(id))) return `なかま ${m[1]}たい`;
+  if(id==="kira1") return "きらきらの なかま";
+  if((m=/^m100n(\d+)$/.exec(id))) return `100マス ${m[1]}かい`;
+  if(id==="m100t120") return "100マス 2ふん きり"; if(id==="m100t60") return "100マス 1ぷん きり";
+  if(id==="mt10") return "めもり名人《めいじん》 ★10"; if(id==="mtall") return "めもり名人《めいじん》 ★ぜんぶ";
+  if(id==="kuku") return "九九《くく》 きんシール 3まい";
+  return id;
+}
+/* 100マス・めもり名人の 数（じっせきに つかう。読むだけ） */
+function yaExt(){
+  const x={m100n:0,m100best:0,mtStars:0,mtMax:MT_N*3};
+  try{ const M=window.MH_M100; if(M){ const r=M.readStore(localStorage,Date.now()), v=r.runs.filter(z=>z.valid); x.m100n=v.length; x.m100best=v.length?Math.min(...v.map(z=>z.ms)):0; } }catch(e){}
+  try{ const c=mtCfg(); for(let i=1;i<=MT_N;i++) x.mtStars+=mtStars(c,i); }catch(e){}
+  return x;
+}
+function yaKiraTxt(S,c){ if(S.mk.own[c.id].k) return `<p class="note yakr">✨ ${T("col.ya.kira.on")}</p>`; return `<p class="note yakr">${T("col.ya.kira",Math.max(0,COL.YA_KIRA_C-(S.y.s[c.subj]||0)),Math.max(0,COL.YA_KIRA_K-COL.yaRankCount(S,3,c.subj)))}</p>`; }
+function yaNextTxt(S,id){ const n=COL.yaNeed(S,id); return n.r===1?T("col.ya.nx.1",n.c,n.nine):n.r===3?T("col.ya.nx.3",n.c,n.nm):T("col.ya.nx."+n.r); }
+/* ひろばの「じっせき」：なかまごとに。かくしは たっせいまで ？？？ */
+function yaHtml(S){
+  const L=COL.yaList(S,yaExt()), done=L.filter(a=>a.done).length;
+  const row=a=>{ const pct=Math.round(a.v/a.need*100), nm=a.hide?T("col.ya.hide"):yaName(a.id);
+    return `<li class="yar${a.done?" on":""}"><span class="yac" aria-hidden="true">${a.done?ic("check"):""}</span><span class="yan">${nm}</span>${a.done?`<b class="yad">${T("col.ya.done")}</b>`:a.need>1&&!a.hide?`<span class="yap"><i style="width:${pct}%"></i></span><small>${a.v} / ${a.need}</small>`:""}</li>`; };
+  return `<section class="yaw" id="yaBox"><h3>🏆 ${T("col.ya.t")} <span class="yat">${T("col.ya.n",done,L.length)}</span></h3><p class="note">${T("col.ya.d")}</p><ul class="yal">${L.map(row).join("")}</ul><p class="note">${T("col.ya.local")}</p></section>`;
+}
+function kzUnTxt(k){ const [c,n]=k.un; if(c==="ach") return T("col.kz.un.ach",yaName(n)); return c==="can"?(n?T("col.kz.un.can",n):T("col.kz.un.can0")):c==="mst"?T("col.kz.un.mst",n):T("col.kz.un.nk."+n); }
 function kzShopHtml(S,bal){        // おみせの「きせかえ」：ぜんぶの 品と 値段・もらえる 条件を 見せる（抽選・期間限定は ない）
   const has=Object.keys(S.mk.own).length>0;
   const card=k=>{ const own=COL.kzHas(S,k.id);
@@ -3461,7 +3542,7 @@ function mkPickHtml(S){
 function mkRowHtml(S){
   if(!Object.keys(S.mk.own).length) return "";
   const slots=[0,1,2].map(i=>{ const id=S.mk.sh[i];
-    return id?`<button type="button" class="mkr" data-mkr="${id}" aria-label="${esc(rbp(mkNm(id)))}">${mkDress(mkC(id),COL.mkStage(S,id),128,COL.kzOf(S,id))}<span class="cap">${mkNm(id)}</span>${kzTitle(COL.kzOf(S,id))}</button>`
+    return id?`<button type="button" class="mkr" data-mkr="${id}" aria-label="${esc(rbp(mkNm(id)))}">${mkDress(mkC(id),COL.mkStage(S,id),128,COL.kzOf(S,id),"",!!S.mk.own[id].k)}<span class="cap">${mkNm(id)}</span>${kzTitle(COL.kzOf(S,id))}</button>`
       :`<div class="mkr off"><span class="cap">${T("col.mk.slot")}</span></div>`; }).join("");
   return `<div class="mkrow" role="group" aria-label="${esc(rbp(T("col.mk.row")))}">${slots}</div><p class="mksay" id="mkSay" role="status" aria-live="polite"></p>`;
 }
@@ -3469,14 +3550,14 @@ function mkZkHtml(S){
   const have=COL.MK.filter(c=>S.mk.own[c.id]).length, n=COL.mkAvail(S);
   const nx=n?`<button type="button" class="btn" id="mkOpen">${T("col.mk.open",n)}</button>`:!S.mk.w?T("col.mk.next0"):COL.mkFree(S).length?T("col.mk.next"):T("col.mk.next.all");
   const cards=COL.MK.map(c=>{ const o=S.mk.own[c.id];
-    if(o){ const st=COL.mkStage(S,c.id), eq=COL.kzOf(S,c.id); return `<button type="button" class="mkz on${HS.mkInfo===c.id?" sel":""}" data-mki="${c.id}" aria-expanded="${HS.mkInfo===c.id}" aria-controls="mkInfo">${mkDress(c,st,256,eq)}<b>${mkNm(c.id)}</b>${kzTitle(eq)}${mkHearts(st)}</button>`; }
+    if(o){ const st=COL.mkStage(S,c.id), eq=COL.kzOf(S,c.id); return `<button type="button" class="mkz on${HS.mkInfo===c.id?" sel":""}" data-mki="${c.id}" aria-expanded="${HS.mkInfo===c.id}" aria-controls="mkInfo">${mkDress(c,st,256,eq,"",!!o.k)}<b>${mkNm(c.id)}</b>${kzTitle(eq)}${mkHearts(st)}</button>`; }
     return `<div class="mkz off">${mkImg(c,0,128)}<b>${mkNm(c.id)}</b><small>${T("col.mk.where",T("col.mk.s."+c.subj))}</small></div>`; }).join("")
     +COL.MK_SOON.map(sj=>`<div class="mkz soon">${mkImg(null)}<b>${T(sj==="r"&&window.RIKA_PUBLIC?"col.mk.soon.r":"col.mk.soon.x")}</b><small>${T("col.mk.soon")}</small></div>`).join("");
   let info="";
   if(HS.mkInfo&&S.mk.own[HS.mkInfo]){ const c=mkC(HS.mkInfo), x=COL.mkNext(S,c.id), on=S.mk.sh.includes(c.id), full=!on&&S.mk.sh.length>=COL.MK_SHOW;
     const forms=COL.MK_ART.map((a,i)=>`<span class="mkf">${mkImg(c,i,128,i<=x.st?"":"sil")}${i<=x.st?T("col.mk.st."+i):"？"}</span>`).join("");
     const eq=COL.kzOf(S,c.id);
-    info=`<div class="mkd" id="mkInfo"><div class="mkdi">${mkDress(c,x.st,256,eq)}<h3>${mkNm(c.id)}</h3>${kzTitle(eq)}</div>
+    info=`<div class="mkd" id="mkInfo"><div class="mkdi">${mkDress(c,x.st,256,eq,"",!!S.mk.own[c.id].k)}<h3>${mkNm(c.id)}</h3>${kzTitle(eq)}${yaKiraTxt(S,c)}</div>
       <dl><dt>${T("col.mk.l.kind")}</dt><dd>${T("col.mk.c."+c.id+".kind")}</dd><dt>${T("col.mk.l.like")}</dt><dd>${T("col.mk.c."+c.id+".like")}</dd><dt>${T("col.mk.st.1")}</dt><dd>${mkHearts(x.st)} ${T("col.mk.st."+x.st)}</dd></dl>
       <p>「${T("col.mk.c."+c.id+".say")}」</p>
       <div><b>${T("col.mk.forms")}</b><div class="mkfs">${forms}</div></div>
@@ -3649,7 +3730,8 @@ function renderZukan(){
   S.vz=colStageSum(S); colSave();
   const stk=u=>{ const st=COL.stage(S,u.id), pend=COL.pending(S,u.id), k=SJ[u.subj];
     const mark=st===3?svgU("d-star","skstar"):st===2?ic("check"):pend?ic("moon"):"";
-    return `<button type="button" class="sk s${st}${pend?" pend":""}" data-id="${u.id}" style="--sc:var(--${k});--sb:${SUBJ[k].bg}" aria-label="${esc(rbp(u.title))}：${T("col.s."+st)}"><span class="skm">${mark}</span><span class="skt">${esc(u.title)}</span></button>`; };
+    const yr=COL.yaRank(S,u.id);
+    return `<button type="button" class="sk s${st}${pend?" pend":""}${yr?" yr"+yr:""}" data-id="${u.id}" style="--sc:var(--${k});--sb:${SUBJ[k].bg}" aria-label="${esc(rbp(u.title))}：${T("col.s."+st)}${yr?"・"+T("col.ya.zk",T("col.ya.rk."+yr)):""}"><span class="skm">${mark}</span><span class="skt">${esc(u.title)}</span>${yr?`<span class="skr" aria-hidden="true">${T("col.ya.rk."+yr)}</span>`:""}</button>`; };
   const sec=[["sansu","math"],["kokugo","jp"],["shakai","soc"],...(window.RIKA_PUBLIC?[["rika","rika"]]:[]),["eigo","eng"]].map(([sj,k])=>{
     const us=UREADY.filter(u=>u.subj===sj); if(!us.length) return "";
     const gs=[...new Set(us.map(u=>u.g))].sort((a,b)=>a-b), has=g&&gs.includes(g);
@@ -3666,7 +3748,7 @@ function renderZukan(){
   app.querySelectorAll(".sk").forEach(b=>b.onclick=()=>{
     const u=UBY[b.dataset.id], st=COL.stage(S,u.id), pend=COL.pending(S,u.id);
     const t=st===0?T("col.zk.hint0",u.title):st===1?T(pend?"col.zk.hint1":"col.zk.hint1b"):st===2?T("col.zk.hint2"):T("col.zk.hint3");
-    const box=$("#zkmsg"); box.innerHTML=`<b>${esc(u.title)}</b><span>${esc(T("col.s."+st))}</span><p>${esc(t)}</p><button type="button" class="btn s" id="zkgo">${T("col.zk.go")}</button>`;
+    const yr=COL.yaRank(S,u.id), box=$("#zkmsg"); box.innerHTML=`<b>${esc(u.title)}</b><span>${esc(T("col.s."+st))}</span><p>${esc(t)}</p><p class="yanx"><span class="skr r${yr}">${T("col.ya.zk",T("col.ya.rk."+yr))}</span> ${esc(yaNextTxt(S,u.id))}</p><button type="button" class="btn s" id="zkgo">${T("col.zk.go")}</button>`;
     $("#zkgo").onclick=()=>go(uHash({ids:[u.id],n:20,t:20,seed:uSeed(),mix:true,choice:null}));
     box.scrollIntoView({block:"nearest"});
   });
