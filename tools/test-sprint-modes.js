@@ -61,7 +61,8 @@ assert.deepEqual(J(S.spBestClean({a:{ta:-1,sd:1.5},b:{ta:'3'},c:{sd:4,at:9}})),{
 assert.match(html,/const spModeOf=task=>spOn\(task\)\?SPM:"n";/);
 assert.match(html,/const spOn=task=>!task&&!LESSON;/);
 assert.match(html,/plain=!sp&&!bx;/);
-assert.match(html,/if\(plain\)\{ all\[key\]=/,'メダル・自己ベストは いつもの だけ');
+assert.match(html,/if\(plain&&!p\.u\)\{ all\[key\]=/,'メダル・自己ベストは いつもの だけ');
+assert.match(html,/if\(plain&&p\.u\)\{ ures=uRecord\(p\);/,'単元の メダルも いつもの だけ');
 assert.match(html,/const units=p\.u&&p\.uSt&&p\.sm!=="sd"&&!p\.u\.box\?/,'サドンデス・ボックスは 単元の できた に入れない');
 assert.match(html,/const again=c\.tries<2&&p\.sm!=="sd";/,'サドンデスは やりなおしなし');
 console.log('sprint modes: タイムアタック・サドンデス・にがて ボックスの きまり OK');
