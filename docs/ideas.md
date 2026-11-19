@@ -12,6 +12,9 @@
 
 ## 作業中（セッションあり）
 <!-- - タスク名 — セッション: session_xxx -->
+- 🛡 **基準が変わっても メダル・★・シール・じっせき・どんぐりが へらない しくみ＋検査**（2026-11-19・高）— セッション: session_01DeDokwmi7r86gWKxLeeMH6
+  - 考え方：もらったものは保存して下がらない。基準がきびしくなっても今あるものはそのまま、ゆるくなったら新しくもらえる
+  - ⚠ どんぐりの基準を見直す前に終わらせたい
 - 🧱 **画面の作り直し（A案「教科のへや」）②：3〜6年も1タップで始まる単元カード画面** — セッション: session_01DeDokzVWsEyTKqtrr4u3jM（ブランチ claude/sansu-items-data から）
   - 案と順番は ブランチ `claude/screen-split-proposal` の `docs/screen-split.md`（ラフ `docs/screen-split/mock.html`）
 - 🏝 **じぶんのひろば：島の 2D版と 3D版を くらべる試作**（サイトのコードは変えない）— セッション: session_01DeDokzrxxBm6BviYLtmJZp
