@@ -16,7 +16,6 @@
 
 ## 作業中（セッションあり）
 <!-- - タスク名 — セッション: session_xxx -->
-- 🔥 **バトルの選び方を「① 問題（教科）→ ② 単元」の順番に**（今は①に理科がなくて子どもが迷う）— セッション: session_01DeDokyAS8EHp7pMguF9xZp（ボスバトルのセッションとは「流れ」と「タイル」で分担）
 
 ## 次やる（3つまで）
 1. 🛟 **100マス計算を変えて build したときの元のコード（`src/App.jsx` など）を探して避難させる** — PC の「子どものアプリ」セッションで。避難のときに見つかったか、まだわからない
@@ -26,7 +25,7 @@
    - 作る道具：PC の image2（まなびっこの絵と同じ）→ PC のセッションでやる。クラウドは、できた画像の組みこみ（サイズ・webp・data/sansu-items.js へのアイコン名）を担当できる
 
 ## あなたの返事待ち
-- 🚀 **ふりがなの直し（claude/fix-konchu-furigana）と1年のはみ出し（claude/fix-g1-tablet-overflow）を、公開の日を待たずに先に公開していい？**
+- 🚀 **子どもが困っている直しを、公開の日を待たずに先に公開していい？**：ふりがな（claude/fix-konchu-furigana）・1年のはみ出し（claude/fix-g1-tablet-overflow）・バトルの選び方（claude/battle-subject-first）。ボスバトル（claude/solo-boss-battle）は、あなたが遊んで強さをたしかめてから
 - ❓ 「こんむし」はどの画面・どの端末で出た？（今の main では「こんちゅう」と出た。古いファイルが残っていた可能性）
 - 🌐 **公開の日の準備：Cloudflare Pages をつなぐ**（手順はブランチ claude/hirametto-move の docs/cloudflare-pages.md の1〜4。プレビュー ブランチは「なし」・www→ルートのリダイレクト）→ できたら `https://hirametto.com/` が出るか見て知らせる
 - 🚀 **1年のはみ出しの直し（claude/fix-g1-tablet-overflow）を公開していい？**
@@ -131,3 +130,4 @@
 - ✅ 引っ越しの準備 → data/move.js（ON:false）・move.html・バックアップ HR4/MH3・住所の書きかえを設定1か所から・検査 test-move.js・手順 docs/cloudflare-pages.md。「前の ばしょから きろくを もってくる」で決定（ブランチ claude/hirametto-move）
 - ✅ ふりがなの直し → よう虫(ようむし)・成虫(むし)・動物(もの)・液体(えきからだ)・風車(かぜくるま)・水道水(みずみちみず)など理科で約40語、算数で「がい数」「小数第」。検査 check-rika-reading.js・check-furigana.js を強化（ブランチ claude/fix-konchu-furigana）
 - ✅ 1人でできるボスバトル → 何びきおいはらえるか（まけなし）・まちがえるとボスが8%回復・強さは学年とルールで自動・2分か3分・メダルや記録には数えない・授業モードでは出さない（ブランチ claude/solo-boss-battle・まだ公開しない）
+- ✅ バトルの選び方 → ① 教科（とびらと同じ色・その学年でできる教科だけ・理科もある）→ ② その教科のゲームと単元（自分の学年だけ。3年から「ほかの学年も見る」）（ブランチ claude/battle-subject-first）
