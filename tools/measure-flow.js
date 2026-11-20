@@ -1,0 +1,114 @@
+#!/usr/bin/env node
+// 教科の へや の 流れを 実ブラウザーで たどる検査（docs/screen-split.md 3章の 段階⑤）。
+//   ホーム → 算数の とびら → まとまり → 単元カード → 問題 → 結果 → もどる（はじめた カードに もどる）
+//   1年は ホーム → 計算スプリント → 単元カード（1タップ）→ 結果 → もどる（単元えらびに もどる）
+// スマホ 375×812・タブレット 768×1024・PC 1366×768 × 1年・3年・5年。どの 画面でも 横はみ出し・44px 未満の ボタンが ないこと。
+// 古い URL（#units?kid=1 など）と 課題リンク（#u= #play #meter の task=1）から 入っても こわれないことも しらべる。
+// Playwright（require('playwright')）が いる。prepublish には 入れていない（measure-layout.js と おなじ あつかい）。
+//   node tools/measure-flow.js            … しらべるだけ
+//   node tools/measure-flow.js --shots DIR … 画面の 写真も DIR に のこす
+const fs = require('fs'), path = require('path'), http = require('http');
+let chromium; try { ({ chromium } = require('playwright')); } catch (e) { console.error('playwright が ありません（npm i -D playwright などで 入れてください）'); process.exit(2); }
+const root = path.resolve(__dirname, '..');
+const shotArg = process.argv.indexOf('--shots'), shotDir = shotArg > 0 ? path.resolve(process.argv[shotArg + 1]) : null;
+if (shotDir) fs.mkdirSync(shotDir, { recursive: true });
+const TYPES = { '.html': 'text/html', '.js': 'text/javascript', '.css': 'text/css', '.json': 'application/json', '.svg': 'image/svg+xml', '.png': 'image/png', '.woff2': 'font/woff2', '.webmanifest': 'application/manifest+json' };
+const server = http.createServer((req, res) => {
+  const p = path.join(root, decodeURIComponent(req.url.split('?')[0]).replace(/^\/+/, '') || 'index.html');
+  if (!p.startsWith(root) || !fs.existsSync(p) || fs.statSync(p).isDirectory()) { res.writeHead(404); return res.end(); }
+  res.writeHead(200, { 'content-type': TYPES[path.extname(p)] || 'application/octet-stream' }); fs.createReadStream(p).pipe(res);
+});
+const errors = [];
+const bad = (where, msg) => { errors.push(`${where}: ${msg}`); console.error(`× ${where}: ${msg}`); };
+// 画面の しらべ：横はみ出し・小さい ボタン（下の 先生・保護者向けの 文字リンク .gdlink と、あそびかたの 切りかえ .spm は のぞく。
+//   .spm は 高さ 40px で 前から この 大きさ。べつの 作業で なおす よてい）
+const LOOK = `(()=>{const e=document.documentElement, o=e.scrollWidth>innerWidth+1?e.scrollWidth-innerWidth:0;
+  const small=[...document.querySelectorAll('#app button,#app a.btn,#app .tile,#app .sdoor')].filter(b=>{const r=b.getBoundingClientRect(),s=getComputedStyle(b);
+    return r.width>0&&r.height>0&&s.visibility!=='hidden'&&!b.closest('.gdlink,.more,.links,.bottom,.spm')&&(r.height<44||r.width<44);}).map(b=>(b.className||b.tagName)+':'+(b.innerText||b.getAttribute('aria-label')||'').trim().slice(0,12)+' '+Math.round(b.getBoundingClientRect().width)+'×'+Math.round(b.getBoundingClientRect().height));
+  return {overflow:o,small,hash:location.hash,h:e.scrollHeight};})()`;
+async function main() {
+  await new Promise(r => server.listen(0, '127.0.0.1', r));
+  const base = `http://127.0.0.1:${server.address().port}/index.html`;
+  const browser = await chromium.launch();
+  try {
+    for (const [w, h] of [[375, 812], [768, 1024], [1366, 768]]) {
+      for (const g of [1, 3, 5]) {
+        const where = `${w}×${h} ${g}年`;
+        const ctx = await browser.newContext({ viewport: { width: w, height: h }, deviceScaleFactor: 1 });
+        const page = await ctx.newPage();
+        page.on('pageerror', e => bad(where, 'スクリプトの エラー ' + e.message));
+        await page.clock.install();
+        await page.goto(base + '#home');
+        await page.evaluate(gr => { localStorage.clear(); localStorage.setItem('mh_ui', JSON.stringify({ grade: gr, subj: 'all' })); }, g);
+        await page.goto(base + '#home'); await page.reload(); await page.waitForSelector('.home');
+        let n = 0;
+        const look = async name => {
+          await page.waitForTimeout(150);
+          const v = await page.evaluate(LOOK);
+          if (v.overflow) bad(`${where} ${name}`, `横に ${v.overflow}px はみ出し`);
+          if (v.small.length) bad(`${where} ${name}`, '44px 未満の ボタン ' + v.small.join('、'));
+          if (shotDir) await page.screenshot({ path: path.join(shotDir, `${w}-g${g}-${String(++n).padStart(2, '0')}-${name}.png`), fullPage: true });
+          return v;
+        };
+        await look('ホーム');
+        let card;
+        if (g <= 2) {
+          await page.click('.tile[data-id="calc"]');
+          await page.waitForSelector('.up.kid .kidunits .ucard'); await look('単元えらび');
+          card = await page.evaluate(() => location.hash);
+          await page.click('.kidunits .ucard');
+        } else {
+          await page.click('.sdoor[data-door="math"]');
+          await page.waitForSelector('.sroom .sritem'); await look('算数のへや');
+          if (!(await page.evaluate(() => location.hash)).startsWith('#subj?s=sansu')) bad(where, '算数の とびらが へやに いかない');
+          await page.click('.sroom .sritem');
+          await page.waitForSelector('.sicards .ucard'); card = await page.evaluate(() => location.hash); await look('単元カード');
+          await page.click('.sicards .ucard[data-id]');
+        }
+        await page.waitForSelector('#qq'); await look('問題');
+        await page.clock.runFor(61000);
+        await page.waitForSelector('.res'); await look('結果');
+        const back = page.locator('.res .subs button', { hasText: 'もどる' });
+        if (!(await back.count())) bad(where, '結果に「もどる」が ない');
+        else {
+          await back.first().click(); await page.waitForTimeout(300);
+          const now = await page.evaluate(() => location.hash);
+          const shown = await page.evaluate(() => !!document.querySelector('.sicards,.kidunits'));
+          if (now !== card || !shown) bad(where, `もどる先が ちがう：${now}（よてい ${card}）`);
+        }
+        await ctx.close();
+      }
+    }
+    // 古い URL・課題リンクから 入る（スマホ・3年）
+    const ctx = await browser.newContext({ viewport: { width: 375, height: 812 } });
+    const page = await ctx.newPage();
+    page.on('pageerror', e => bad('古いURL', 'スクリプトの エラー ' + e.message));
+    await page.goto(base + '#home');
+    for (const [hash, g, want, sel] of [
+      ['#units?kid=1&subj=sansu', 3, '#subj?s=sansu', '.sroom'],
+      ['#units?kid=1', 5, '#subj?s=sansu', '.sroom'],
+      ['#units?kid=1&subj=sansu&all=1', 5, null, '.up.kid.kc'],
+      ['#units?kid=1&subj=kokugo', 4, null, '.up.kid'],
+      ['#units?kid=1', 1, null, '.kidunits'],
+      ['#units', 3, null, '.up:not(.kid)'],
+      ['#units?pick=m3-amari', 3, null, '.up:not(.kid)'],
+      ['#subj?s=kokugo', 3, null, '.smini'],
+      ['#u=m3-amari&n=10&s=1', 3, null, '#ugo'],
+      ['#u=m3-amari&n=10&s=1&task=1', 3, null, '#ugo'],
+      ['#play?game=calc&g=3&t=60&task=1', 3, null, '#qq'],
+      ['#meter?st=1&task=1', 3, null, '.mtplay'],
+    ]) {
+      await page.evaluate(gr => { sessionStorage.clear(); localStorage.setItem('mh_ui', JSON.stringify({ grade: gr, subj: 'all' })); }, g);
+      await page.goto('about:blank'); await page.goto(base + hash);
+      try { await page.waitForSelector(sel, { timeout: 5000 }); } catch (e) { bad(hash, `${sel} が 出ない（${await page.evaluate(() => location.hash)}）`); continue; }
+      const now = await page.evaluate(() => location.hash);
+      if (want && now !== want) bad(hash, `つなぎ先が ${now}（よてい ${want}）`);
+      const v = await page.evaluate(LOOK); if (v.overflow) bad(hash, `横に ${v.overflow}px はみ出し`);
+      console.log(`○ ${hash}（${g}年）→ ${now}`);
+    }
+    await ctx.close();
+  } finally { await browser.close(); server.close(); }
+  if (errors.length) { console.error(`\n流れの 検査：${errors.length} 件`); process.exit(1); }
+  console.log('流れの 検査：3つの はば × 1・3・5年で ホーム → へや → カード → 問題 → 結果 → もどる OK。古い URL・課題リンク OK');
+}
+main().catch(e => { console.error(e); server.close(); process.exit(1); });

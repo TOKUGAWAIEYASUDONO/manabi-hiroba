@@ -28,7 +28,7 @@ const ctx={window,document,location:window.location,localStorage:storage,session
   fetch(){return Promise.resolve({ok:false})},MutationObserver:class{observe(){} disconnect(){}}};
 vm.createContext(ctx);
 window.RIKA_PUBLIC=process.env.RIKA_SMOKE_PUBLIC==='0'?false:/window\.RIKA_PUBLIC\s*=\s*true\s*;/.test(html);
-for(const file of ['data/kanji-grade.js','data/questions.js','data/calc.js','data/choices.js','data/quizlib.js','data/mathview.js','data/ngwords.js','data/cooplib.js','data/gen/core.js',...(window.RIKA_PUBLIC?['data/gen/rika.js']:[]),'data/gen/other.js','data/gen/sansu-12.js','data/gen/sansu-34.js','data/gen/sansu-56.js','data/gen/textbook-extra.js','data/gen/bunsho.js','data/units.js','data/tools-viz.js','data/collection.js']) {
+for(const file of ['data/kanji-grade.js','data/questions.js','data/calc.js','data/choices.js','data/quizlib.js','data/mathview.js','data/ngwords.js','data/cooplib.js','data/gen/core.js',...(window.RIKA_PUBLIC?['data/gen/rika.js']:[]),'data/gen/other.js','data/gen/sansu-12.js','data/gen/sansu-34.js','data/gen/sansu-56.js','data/gen/textbook-extra.js','data/gen/bunsho.js','data/units.js','data/sansu-items.js','data/tools-viz.js','data/collection.js']) {
   vm.runInContext(fs.readFileSync(path.join(root,file),'utf8'),ctx,{filename:file});
 }
 Object.assign(ctx,window);
@@ -43,13 +43,25 @@ else if (!window.MH_UNITS.UNITS.some(u=>u.subj==='rika')) throw Error('rika unit
 for(let g=1;g<=6;g++) {
   vm.runInContext(`ui.grade=${g}; renderHome()`,ctx,{filename:`home-${g}`});
   if(vm.runInContext('app.innerHTML',ctx).includes('id="quick"')) throw Error(`quick play remains on home: ${g}`);
-  if(!vm.runInContext('app.innerHTML',ctx).includes('class="zones"')) throw Error(`subject zones missing: ${g}`);
+  if(!vm.runInContext('app.innerHTML',ctx).includes(g<=2?'class="zones"':'class="sdoors"')) throw Error(`subject zones missing: ${g}`);      // 3〜6年は 教科の とびら（段階④）
   if(vm.runInContext('app.innerHTML',ctx).includes('rika-warning')) throw Error(`rika AI notice shown: ${g}`);      // 理科の「AI が作り」の注意は出さない（2026-11-18）
 }
 for(const [name,expr] of [['units','renderUnits(new URLSearchParams())'],['teacher','renderTeacher(new URLSearchParams())'],['practice',`renderUnitLink("#u=${window.RIKA_PUBLIC?'r3-living':'m3-amari'}&n=1")`]]) {
   vm.runInContext(expr,ctx,{filename:name});
 }
-for(const g of [2,4,6]) vm.runInContext(`ui.grade=${g}; renderUnits(new URLSearchParams('kid=1&subj=sansu'))`,ctx,{filename:'kid-units-'+g});      // 児童の単元えらび（3〜6年はコンパクト版）
+for(const s of ['sansu','kokugo','shakai','eigo']) vm.runInContext(`ui.grade=5; renderSubjRoom(new URLSearchParams('s=${s}'))`,ctx,{filename:'subj-room-'+s});      // 教科の へや（国語・社会・英語は 小さい へや）
+for(const g of [2,4,6]) vm.runInContext(`ui.grade=${g}; renderUnits(new URLSearchParams('kid=1&subj=sansu${g>2?'&all=1':''}'))`,ctx,{filename:'kid-units-'+g});      // 児童の単元えらび（3〜6年はコンパクト版。算数の へやの「ぜんぶの 単元から」）
+// 古い 入口 #units?kid=1&subj=sansu（3〜6年）は 算数の へやへ つなぐ。1・2年は 今の 画面（段階⑤）
+for(const [g,q,to] of [[4,'kid=1&subj=sansu','#subj?s=sansu'],[0,'kid=1','#subj?s=sansu'],[4,'kid=1&subj=kokugo',null],[2,'kid=1&subj=sansu',null],[4,'pick=m3-amari',null]]){
+  let moved=null; window.location.replace=u=>{ moved=u.slice(u.indexOf('#')); };
+  vm.runInContext(`ui.grade=${g}; renderUnits(new URLSearchParams('${q}'))`,ctx,{filename:'units-redirect-'+q});
+  if(moved!==to) throw Error(`#units?${q}（${g}年）の つなぎ先: ${moved} （よてい ${to}）`);
+}
+for(const [g,id] of [[3,'kake'],[5,'shosu']]) vm.runInContext(`ui.grade=${g}; renderSubjItem(new URLSearchParams('s=sansu&item=${id}'))`,ctx,{filename:'subj-item-'+id});      // 単元カード
+// 単元カードから はじめた 練習の 結果：「もどる」は はじめた 画面へ（段階⑤）
+vm.runInContext(`RUNBACK='#subj?s=sansu&item=kake'; startUnitRun({ids:['m3-amari'],n:1,seed:1,mix:true,choice:false}); try{ finish(); }catch(e){ if(!/NodeFilter/.test(e.message)) throw e; }`,ctx,{filename:'runback'});      // 結果の 文字を かいた あとの 数式の 仕上げ（mathIn）は、にせの DOM では うごかない
+if(!vm.runInContext('app.innerHTML',ctx).includes('go(runBack())')||vm.runInContext('runBack()',ctx)!=='#subj?s=sansu&item=kake') throw Error('結果の もどる先が はじめた 画面に なっていない');
+vm.runInContext(`RUNBACK=null`,ctx);
 vm.runInContext('renderFeedback()',ctx,{filename:'feedback'});
 if(!vm.runInContext('app.innerHTML',ctx).includes('id="fbBody"')) throw Error('feedback form missing');
 for(const grade of [1,2,3]){

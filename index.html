@@ -113,7 +113,7 @@ h2{font-size:20px;margin:18px 0 8px}
   .zones[data-n="3"] .s-btl{grid-column:span 2} .zones[data-n="3"] .s-btl .tiles{grid-template-columns:1fr} .zones[data-n="4"] .s-btl{grid-column:1/-1} .zones[data-n="5"] .s-btl{grid-column:span 4}
   .zones[data-n="4"] .s-btl .tiles,.zones[data-n="5"] .s-btl .tiles{grid-template-columns:repeat(2,1fr)}}
 .zone{background:var(--zc);color:var(--zt,#fff);padding:10px 12px 14px;border-radius:6px 6px 18px 18px;border-top:8px solid var(--edge)}
-@media (min-width:900px) and (max-height:800px){.home:not(.easy) .zones{align-items:start;gap:8px}.home:not(.easy) .zone{padding:5px 8px 8px;border-top-width:5px}.home:not(.easy) .zone h2{font-size:17px;margin-bottom:4px}.home:not(.easy) .tile{min-height:56px;padding:2px 8px;gap:6px}.home:not(.easy) .tile .tico,.home:not(.easy) .tile .tico .art{width:40px;height:40px}.home:not(.easy) .tile .tt{font-size:16px}.home:not(.easy) .tile .tstat,.home:not(.easy) .tile .tnext{font-size:12px}.home:not(.easy) .tile .tstat .st{width:17px;height:17px}.home:not(.easy) .s-btl .tiles{grid-template-columns:repeat(2,minmax(0,1fr))!important}}
+@media (min-width:900px) and (max-height:800px){.home:not(.easy) .zone{padding:5px 8px 8px;border-top-width:5px}.home:not(.easy) .zone h2{font-size:17px;margin-bottom:4px}.home:not(.easy) .tile{min-height:56px;padding:2px 8px;gap:6px}.home:not(.easy) .tile .tico,.home:not(.easy) .tile .tico .art{width:40px;height:40px}.home:not(.easy) .tile .tt{font-size:16px}.home:not(.easy) .tile .tstat,.home:not(.easy) .tile .tnext{font-size:12px}.home:not(.easy) .tile .tstat .st{width:17px;height:17px}.home:not(.easy) .s-btl .tiles{grid-template-columns:repeat(2,minmax(0,1fr))!important}}
 /* PC（1366×768など）の1・2年：4列にして、スクロールなしで1画面に収める。下のリンクも1行に */
 @media (min-width:900px) and (max-height:800px){.home.easy .zones{grid-template-columns:repeat(4,minmax(0,1fr));align-items:start;gap:8px}.home.easy .zones .zone,.home.easy .zones[data-n] .s-btl{grid-column:auto}.home.easy .zones[data-n] .s-btl .tiles{grid-template-columns:1fr}.home.easy .tile{min-height:84px;padding:6px 10px}.home.easy .tile .tico,.home.easy .tile .tico .art{width:44px;height:44px}.home.easy .tile .tt{font-size:19px}.home.easy .tile .td{font-size:11px}.home.easy .zone{padding:6px 8px 10px}.home.easy .zone h2{font-size:20px;margin-bottom:4px}.home{gap:8px}.bottom{gap:6px;padding-top:0}.bottom .gdlink{width:auto;padding:2px 10px;font-size:13px}.bottom .more summary{min-height:24px;padding:2px 8px}}
 .zone h2{margin:0 0 8px;font-size:20px;letter-spacing:.08em;display:flex;align-items:center;gap:8px}
@@ -148,6 +148,25 @@ h2{font-size:20px;margin:18px 0 8px}
 .home.easy .tile .tstat,.home.easy .tile .tnext{font-size:16px}
 .home.easy .zone h2{font-size:24px}
 .bottom{display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:center;margin-top:auto;padding-top:4px}
+/* 教科の とびら（3〜6年のホーム） */
+.hdh{margin:2px 0 -4px;font-size:20px;letter-spacing:.06em}
+.sdoors{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.sdoors[data-n="1"],.sdoors[data-n="3"] .sdoor:first-child,.sdoors[data-n="5"] .sdoor:first-child{grid-column:1/-1}
+.sdoor{--zc:var(--math);background:var(--zc);color:var(--zt,#fff);border:3px solid var(--edge);border-radius:18px;box-shadow:0 4px 0 var(--edge);padding:10px 12px;min-height:96px;display:flex;align-items:center;gap:12px;text-align:left;font:inherit;cursor:pointer;word-break:keep-all;overflow-wrap:anywhere}
+.sdoor.s-jp{--zc:var(--jp)}.sdoor.s-soc{--zc:var(--soc);--zt:var(--ink)}.sdoor.s-rika{--zc:var(--rika)}.sdoor.s-eng{--zc:var(--eng)}
+.sdoor .dico{flex:none;width:60px;height:60px;border-radius:14px;background:#fff;display:grid;place-items:center;border:3px solid var(--edge)}
+.sdoor .dico .art{width:48px;height:48px}
+.sdoor .dbody{display:flex;flex-direction:column;gap:2px;min-width:0}
+.sdoor .dt{font-size:24px;font-weight:900;letter-spacing:.06em;line-height:1.35}
+.sdoor .dd{font-size:14px;font-weight:700;opacity:.92;line-height:1.4}
+.sdoor:focus-visible{outline:4px solid var(--sun);outline-offset:2px}
+.home:not(.easy) .s-btl .tiles{grid-template-columns:repeat(2,minmax(0,1fr))}
+@media (max-width:599px){.sdoor{flex-direction:column;justify-content:center;text-align:center;gap:6px;min-height:118px;padding:10px 6px}.sdoor .dbody{align-items:center}.sdoor .dt{font-size:21px}.sdoor .dd{font-size:13px}
+  .sdoors[data-n="3"] .sdoor:first-child,.sdoors[data-n="5"] .sdoor:first-child{flex-direction:row;text-align:left;min-height:96px}.sdoors[data-n="3"] .sdoor:first-child .dbody,.sdoors[data-n="5"] .sdoor:first-child .dbody{align-items:flex-start}
+  .home:not(.easy) .s-btl .tile{flex-direction:column;text-align:center;gap:4px;padding:8px 4px}.home:not(.easy) .s-btl .tile .tbody{align-items:center}.home:not(.easy) .s-btl .tile .tico,.home:not(.easy) .s-btl .tile .tico .art{width:44px;height:44px}.home:not(.easy) .s-btl .tile .tt{font-size:15px;white-space:nowrap}}
+@media (min-width:1024px){.sdoors{grid-template-columns:repeat(var(--dn,5),minmax(0,1fr))}.sdoors[data-n] .sdoor:first-child{grid-column:auto}.sdoors[data-n="1"]{--dn:1}.sdoors[data-n="2"]{--dn:2}.sdoors[data-n="3"]{--dn:3}.sdoors[data-n="4"]{--dn:4}
+  .sdoor{flex-direction:column;justify-content:center;text-align:center;min-height:150px}.sdoor .dbody{align-items:center}.sdoor .dico{width:72px;height:72px}.sdoor .dico .art{width:58px;height:58px}}
+.up.si.smini .srz{padding:12px}
 .bottom .hbtn{font-size:15px}
 .gdlink{display:block;width:100%;text-align:center;font-size:14px;color:var(--ink);text-decoration:underline;padding:8px 0}
 .more{width:100%;text-align:center}
@@ -1394,10 +1413,10 @@ body[data-v=host] .wrap{max-width:none;padding:0}
 .upsets .nw{white-space:nowrap}
 #modeUnits .upsets .pill,#roomUnits .upsets .pill{flex-direction:column;gap:0}#modeUnits .upsets .nw,#roomUnits .upsets .nw{display:inline-block;white-space:nowrap;font-size:.9em}
 .form select,.upanel select,#app select{min-height:44px}
- .ugrade-jump{display:flex;align-items:center;flex-wrap:wrap;gap:6px;margin:8px 0}.ugrade-jump a{font-size:13px;padding:3px 7px;border-radius:6px;background:#e1f0e3;color:var(--ink)}.ugrp{scroll-margin-top:12px}@media (min-width:1400px){.up:not(.play):not(.kid) .ugrid{grid-template-columns:repeat(3,minmax(0,1fr))}}@media (min-width:900px) and (max-height:740px){.home:not(.easy){gap:4px}.home:not(.easy) .zones{gap:5px}.home:not(.easy) .zone{padding-bottom:5px}.home:not(.easy) .tiles{gap:5px}.home:not(.easy) .tile{min-height:50px}.home:not(.easy) .bottom{gap:2px}.home:not(.easy) .bottom .gdlink{padding:0}}</style>
-<style id="mathview-style"> .ugrade-jump{display:flex;align-items:center;flex-wrap:wrap;gap:6px;margin:8px 0}.ugrade-jump a{font-size:13px;padding:3px 7px;border-radius:6px;background:#e1f0e3;color:var(--ink)}.ugrp{scroll-margin-top:12px}@media (min-width:1400px){.up:not(.play):not(.kid) .ugrid{grid-template-columns:repeat(3,minmax(0,1fr))}}@media (min-width:900px) and (max-height:740px){.home:not(.easy){gap:4px}.home:not(.easy) .zones{gap:5px}.home:not(.easy) .zone{padding-bottom:5px}.home:not(.easy) .tiles{gap:5px}.home:not(.easy) .tile{min-height:50px}.home:not(.easy) .bottom{gap:2px}.home:not(.easy) .bottom .gdlink{padding:0}}</style>
+ .ugrade-jump{display:flex;align-items:center;flex-wrap:wrap;gap:6px;margin:8px 0}.ugrade-jump a{font-size:13px;padding:3px 7px;border-radius:6px;background:#e1f0e3;color:var(--ink)}.ugrp{scroll-margin-top:12px}@media (min-width:1400px){.up:not(.play):not(.kid) .ugrid{grid-template-columns:repeat(3,minmax(0,1fr))}}@media (min-width:900px) and (max-height:740px){.home:not(.easy){gap:4px}.home:not(.easy) .zone{padding-bottom:5px}.home:not(.easy) .tiles{gap:5px}.home:not(.easy) .tile{min-height:50px}.home:not(.easy) .bottom{gap:2px}.home:not(.easy) .bottom .gdlink{padding:0}}</style>
+<style id="mathview-style"> .ugrade-jump{display:flex;align-items:center;flex-wrap:wrap;gap:6px;margin:8px 0}.ugrade-jump a{font-size:13px;padding:3px 7px;border-radius:6px;background:#e1f0e3;color:var(--ink)}.ugrp{scroll-margin-top:12px}@media (min-width:1400px){.up:not(.play):not(.kid) .ugrid{grid-template-columns:repeat(3,minmax(0,1fr))}}@media (min-width:900px) and (max-height:740px){.home:not(.easy){gap:4px}.home:not(.easy) .zone{padding-bottom:5px}.home:not(.easy) .tiles{gap:5px}.home:not(.easy) .tile{min-height:50px}.home:not(.easy) .bottom{gap:2px}.home:not(.easy) .bottom .gdlink{padding:0}}</style>
 <style>.qclock{margin:0 auto 4px}.kidunits{grid-template-columns:1fr}.kidunits .ucard{min-height:76px;justify-content:center;text-align:center;font-size:1.25rem}.lesson-end{display:block;margin:16px auto 8px;padding:10px 16px;min-height:48px;border:1px solid var(--line);border-radius:10px;background:linear-gradient(to right,var(--go) var(--hold-progress,0%),var(--paper) var(--hold-progress,0%));color:var(--ink);font-size:14px;font-weight:700;touch-action:none;-webkit-touch-callout:none;-webkit-user-select:none;user-select:none}.colorpick{grid-template-columns:repeat(2,minmax(0,1fr))}.colorpick .choice[data-c="あお"]{background:#3979e5;color:#fff}.colorpick .choice[data-c="あか"]{background:#e35a56;color:#fff}.colorpick .choice[data-c="きいろ"]{background:#f5cd49;color:#243447}@media(max-width:375px){.play.pg .q:has(#qpic){padding:5px 6px;margin-bottom:3px}.play.pg .q:has(#qpic) .big{font-size:20px;line-height:1.25}.play.pg .q:has(#qpic) .big:not(.long){white-space:nowrap}.play.pg .q:has(#qpic) svg{max-height:90px}.play.pg .q:has(#qpic)~.umarks{margin:2px auto}.play.pg:has(#qpic) .choices .choice{min-height:44px;padding:5px}.play.pg:has(#qpic) .fb{min-height:20px;font-size:18px;margin-bottom:3px}.play.pg:has(#qpic) .choices{gap:6px}.play.pg:has(#qpic) .topbar{margin-bottom:3px}.play.pg:has(#qpic) .tbar{margin-bottom:4px}}
- .ugrade-jump{display:flex;align-items:center;flex-wrap:wrap;gap:6px;margin:8px 0}.ugrade-jump a{font-size:13px;padding:3px 7px;border-radius:6px;background:#e1f0e3;color:var(--ink)}.ugrp{scroll-margin-top:12px}@media (min-width:1400px){.up:not(.play):not(.kid) .ugrid{grid-template-columns:repeat(3,minmax(0,1fr))}}@media (min-width:900px) and (max-height:740px){.home:not(.easy){gap:4px}.home:not(.easy) .zones{gap:5px}.home:not(.easy) .zone{padding-bottom:5px}.home:not(.easy) .tiles{gap:5px}.home:not(.easy) .tile{min-height:50px}.home:not(.easy) .bottom{gap:2px}.home:not(.easy) .bottom .gdlink{padding:0}}</style>
+ .ugrade-jump{display:flex;align-items:center;flex-wrap:wrap;gap:6px;margin:8px 0}.ugrade-jump a{font-size:13px;padding:3px 7px;border-radius:6px;background:#e1f0e3;color:var(--ink)}.ugrp{scroll-margin-top:12px}@media (min-width:1400px){.up:not(.play):not(.kid) .ugrid{grid-template-columns:repeat(3,minmax(0,1fr))}}@media (min-width:900px) and (max-height:740px){.home:not(.easy){gap:4px}.home:not(.easy) .zone{padding-bottom:5px}.home:not(.easy) .tiles{gap:5px}.home:not(.easy) .tile{min-height:50px}.home:not(.easy) .bottom{gap:2px}.home:not(.easy) .bottom .gdlink{padding:0}}</style>
 <style id="hissan-style">
 .hissan{display:inline-grid;grid-template-columns:1.15em auto;max-width:100%;font-family:ui-monospace,SFMono-Regular,Consolas,monospace;font-variant-numeric:tabular-nums;font-size:clamp(24px,7vw,44px);line-height:1.15;text-align:right;vertical-align:middle;white-space:pre;color:inherit}
 .hissan .hs-num{grid-column:2;justify-self:end}.hissan .hs-op{grid-column:1;grid-row:2;text-align:center}.hissan .hs-rule{grid-column:1/-1;border-top:2px solid currentColor;min-height:1.15em}.hissan .hs-divisor{grid-column:1;align-self:end}.hissan .hs-dividend{grid-column:2;border-top:2px solid currentColor;border-left:2px solid currentColor;border-top-left-radius:.45em;padding:0 .12em}.hissan .hs-quotient{grid-column:2;min-height:1.15em}.hissan .hs-rem{font-size:.48em;grid-column:1/-1;text-align:right}.q .big:has(.hissan){white-space:normal!important;overflow:visible}.q .hissan{font-size:clamp(24px,7vw,44px)}@media print{.hissan{color:#000;break-inside:avoid}.hissan .hs-rule,.hissan .hs-dividend{border-color:#000}}
@@ -1504,6 +1523,32 @@ body[data-v=host] .wrap{max-width:none;padding:0}
 #modeUnits :is(.grade-pills,.subject-pills) .pill,#roomUnits :is(.grade-pills,.subject-pills) .pill{width:auto;min-width:0;min-height:38px;padding:2px 12px;font-size:15px;flex:none;margin:0}
 #modeUnits .usetd summary,#roomUnits .usetd summary{cursor:pointer;font-weight:700;display:inline-flex;align-items:center;min-height:38px;padding:2px 12px;border-radius:999px;background:#fff3d6;border:2px solid var(--edge);list-style:none;font-size:15px}
 #modeUnits .usetd .set-grid,#roomUnits .usetd .set-grid{margin-top:6px}
+/* 算数の まとまり → 単元カード（#subj?s=sansu&item=…）と、今の 単元えらびの 上の まとまりボタン */
+.sitools .sih{display:block;margin:4px 0 6px;font-size:15px;color:var(--muted);border-left:5px solid var(--go);padding-left:6px;line-height:1.6}
+.up.si{display:block!important;max-width:1100px;margin:0 auto}
+.up.si .pills.spm .pill{min-height:44px}
+.up.si .sihint{text-align:center;margin:6px 0 10px}
+.up.si .sicards{grid-template-columns:repeat(auto-fill,minmax(min(100%,300px),1fr));gap:8px}
+.up.si .ucard{min-height:72px}
+.up.si .ubody b{font-size:19px;line-height:1.45}.up.si .unote{font-size:14px;line-height:1.5}
+.up.si .uexb{min-width:52px;font-size:20px}
+.up.si .siplay{margin-left:auto;flex:none;font-size:18px;color:var(--go)}
+.up.si .simode{display:flex;justify-content:center;gap:6px;margin:14px 0 6px}.up.si .simode .pill{min-height:44px;margin:0}
+.up.si .sifoot[hidden]{display:none}
+.up.si .sifoot .err:empty{display:none}
+.up.si .sitools{margin-top:16px}.up.si .sitool{width:100%;max-width:520px}
+@media (max-width:599px){.up.si .uttl{font-size:17px}.up.si .ubody b{font-size:17px}}
+/* 算数の へや（#subj?s=sansu） */
+.up.si.sroom .srz{margin:0 0 12px}
+.up.si.sroom .srh{margin:0 0 8px;font-size:20px;letter-spacing:.06em}
+.up.si.sroom .srgrid{grid-template-columns:repeat(auto-fill,minmax(min(100%,230px),1fr))}
+.up.si.sroom .tile{min-height:72px;word-break:keep-all;overflow-wrap:anywhere}
+.up.si.sroom .tile .td{font-size:14px;color:var(--muted);line-height:1.4}
+.srmark{display:grid;place-items:center;border-radius:12px;background:#fde4df;color:var(--math);font-weight:900;font-size:24px;line-height:1;border:3px solid var(--edge)}
+.srmark{white-space:nowrap}.srmark.l3{font-size:18px}
+.up.si.sroom .srtools{grid-template-columns:repeat(auto-fill,minmax(min(100%,320px),1fr))}
+.up.si.sroom .srall{display:flex;justify-content:center;margin:8px 0 16px}.up.si.sroom .srall a{width:auto;display:inline-flex;align-items:center;min-height:44px;padding:0 12px}
+@media (max-width:599px){.up.si.sroom .sritems{grid-template-columns:repeat(2,minmax(0,1fr));gap:6px}.up.si.sroom .sritem{flex-direction:column;justify-content:center;text-align:center;gap:4px;padding:8px 4px;min-height:96px}.up.si.sroom .sritem .tico{width:44px;height:44px}.up.si.sroom .sritem .srmark{font-size:20px}.up.si.sroom .sritem .srmark.l3{font-size:15px}.up.si.sroom .sritem .tbody{align-items:center}.up.si.sroom .sritem .tt{font-size:17px;line-height:1.35}}
 /* 計算スプリントの あそびかた（いつもの／タイムアタック／サドンデス）と にがて ボックス */
 .spwrap{margin:10px auto 0;max-width:520px;text-align:center}
 .pills.spm{display:inline-flex;flex-wrap:nowrap;gap:0;margin:0;border:3px solid var(--edge);border-radius:999px;background:#fff;overflow:hidden;box-shadow:0 2px 0 var(--edge);max-width:100%}
@@ -1665,7 +1710,12 @@ body[data-v=host] .wrap{max-width:none;padding:0}
   <button class="hbtn snd" id="hSound" onclick="toggleSound()"></button>
 </header>
 
-<main class="wrap" id="app"></main>
+<main class="wrap" id="app"><noscript><section class="nsintro">
+  <h1>まなびひろば</h1>
+  <p>まなびひろばは、無料・登録不要の小学生向け学習ゲームです。ホームで 算数・国語・社会・理科・英語 の「教科のとびら」をえらび、学年の単元から練習します。</p>
+  <p>算数のへやでは、かけ算・わり算・分数・図形・単位などの単元を1タップで始められ、九九・100マス計算・めもり名人の「とっくん」もあります。友だちとのバトル、先生向けの課題リンク・授業モードもあります。</p>
+  <p>このサイトを使うには JavaScript をオンにしてください。くわしくは <a href="guide/index.html">使い方ガイド</a> と <a href="guide/about.html">このサイトについて</a> をごらんください。</p>
+</section></noscript></main>
 <footer class="foot"><a id="licLink" href="vendor/THIRD-PARTY-LICENSES.txt" target="_blank" rel="noopener"></a></footer>
 
 <!-- 問題データ（file:// でも読めるよう script タグで読む） -->
@@ -1749,7 +1799,6 @@ body[data-v=host] .wrap{max-width:none;padding:0}
 .mtnext{text-align:center}
 .mtnext .btn{min-width:200px;min-height:56px;font-size:22px}
 .mtch{max-width:460px;margin:0 auto}
-@media (min-width:900px) and (max-height:800px){.home:not(.easy) #mtTile .td{display:none}}
 .mtres .mtbigst{text-align:center}.mtrl{font-size:18px;font-weight:700;color:var(--muted)}
 .mtres .mtbud{margin-top:10px}
 @media(min-width:760px){.play.mtmenu{max-width:1040px}.mtcards{grid-template-columns:repeat(auto-fill,minmax(220px,1fr))}.mtres.res{display:block;max-width:560px;margin:0 auto}.mtres .mtsay{max-width:400px}.mtgrid{display:grid;grid-template-columns:minmax(0,1.55fr) minmax(300px,1fr);gap:16px;align-items:start}.play.mtplay{max-width:1100px}.mtq{margin-bottom:0}.mtdw{width:min(100%,62dvh*1.5,640px);display:grid;grid-template-columns:minmax(0,1fr) 34%;gap:8px;align-items:end}.mtdw:not(:has(.mtlens)){grid-template-columns:minmax(0,1fr);width:min(100%,62dvh,460px)}.mtpic .mtlens{position:static;width:100%}}
@@ -1774,6 +1823,7 @@ body[data-v=host] .wrap{max-width:none;padding:0}
 <script src="data/gen/textbook-extra.js?v=a71e349b"></script>
 <script src="data/gen/bunsho.js?v=8a761a98"></script>
 <script src="data/units.js?v=515a9d37"></script>
+<script src="data/sansu-items.js?v=27498846"></script>
 <script src="data/tools-viz.js?v=1fd513f4"></script>
 <script src="data/collection.js?v=5fcda18e"></script>
 <script src="data/masu100.js?v=78a2bad3"></script>
@@ -1823,6 +1873,7 @@ const TX={
  "home.guide.l":["学年《がくねん》・単元《たんげん》から さがす（先生《せんせい》向《む》け）","がくねん・たんげんから さがす（せんせいむけ）"],
  "home.guide":["いっしょに あそぼう！"],
  "home.all":["ぜんぶ"],
+ "hd.title":["どの 教科《きょうか》に する？","どの きょうかに する？"],"hd.math.d":["単元《たんげん》・とっくん","たんげん・とっくん"],"hd.quiz.d":["クイズ・単元《たんげん》","クイズ・たんげん"],"hd.unit.d":["単元《たんげん》","たんげん"],"hd.room":[k=>`${k}の へや`,k=>`${k}の へや`],
  "home.empty":["この学年《がくねん》のゲームはじゅんび中《ちゅう》です","この ゲームは じゅんびちゅう です"],
  "home.battle":["バトル（2〜3分《ぷん》）","たいせん（2〜3ふん）"],
  "h.gradepick":["学年《がくねん》をえらぶ","がくねんを えらぶ"],"h.gradeq":["何《なん》年生《ねんせい》？","なんねんせい？"],
@@ -1988,6 +2039,8 @@ const TX={
  /* 単元から出題・単元練習 */
  "g.unit.t":["単元《たんげん》練習《れんしゅう》","たんげん れんしゅう"],
  "u.pick":["単元《たんげん》をえらぶ","たんげんを えらぶ"],"u.pick.d":["カードを1回《かい》タップすると、すぐに練習《れんしゅう》が始《はじ》まるよ","カードを 1かい タップすると、すぐに はじまるよ"],
+ "sr.title":["算数《さんすう》の へや","さんすうの へや"],"sr.units":["単元《たんげん》で 練習《れんしゅう》","たんげんで れんしゅう"],"sr.tokkun":["とっくん","とっくん"],"sr.n":[n=>`${n}こ`,n=>`${n}こ`],"sr.all":["ぜんぶの 単元《たんげん》から えらぶ","ぜんぶの たんげんから えらぶ"],
+ "si.one":["カードを タップすると すぐ はじまるよ","カードを タップすると すぐ はじまるよ"],"si.mix":["いくつか まぜる","いくつか まぜる"],"si.one.b":["1つずつ","1つずつ"],"si.mix.d":[n=>`カードを えらんで「はじめる」（${n}こまで）`,n=>`カードを えらんで「はじめる」（${n}こまで）`],"si.tool":["どうぐで 練習《れんしゅう》","どうぐで れんしゅう"],"si.none":["この学年《がくねん》には ないよ","この がくねんには ないよ"],
  "u.ex":["例題《れいだい》","れいだい"],"u.close":["とじる"],"u.grade":["学年《がくねん》","がくねん"],"u.all":["ぜんぶ"],
  "u.sets":["おすすめの組《く》み合《あ》わせ","おすすめ"],
  "u.sel":[n=>`えらんだ単元《たんげん》：${n}`,n=>`えらんだ たんげん：${n}`],"u.clear":["ぜんぶはずす","ぜんぶ はずす"],
@@ -2595,6 +2648,10 @@ function fgFromHash(){      // 課題リンクの fg=0/1。あれば児童は変
   const m=/[?&#]fg=([01])(?![0-9])/.exec(location.hash); FGFIX=m?m[1]==="1":null; fgApply(); drawHeader();
 }
 function go(h){ if(location.hash===h) route(); else location.hash=h; }
+/* 練習を はじめた 画面（教科の へや・単元カード・児童の 単元えらび）。とちゅう・結果の「もどる」は ここへ（ないときは ホーム）。
+   route() が きめる：その 画面を ひらくと おぼえ、練習の 画面（play・setup・#u=・meter）では そのまま、ほかの 画面では わすれる。docs/screen-split.md 3章の 段階⑤ */
+let RUNBACK=null;
+const runBack=()=>RUNBACK||"#home";
 function params(){ const [p,q]=location.hash.slice(1).split("?"); return {path:p||"home",q:new URLSearchParams(q||"")}; }
 let ui=store.get("mh_ui",{grade:0,subj:"all"});
 let timerId=0;
@@ -2747,17 +2804,28 @@ function unitTile(k){
   const g=ui.grade, has=UREADY.some(u=>(easyG(g)?u.g===g:u.subj===SJR[k])&&(g===0||(easyG(g)?u.g===g:true)));
   return has?`<button class="tile unitgo" data-un="${SJR[k]}"><span class="tico">${ic("clipboard")}</span><span class="tbody"><span class="tt">${T("u.pick")}</span><span class="td">${T("u.pick.d")}</span></span></button>`:"";
 }
+/* ホームに出す 教科（ゲームが ある 教科と、3年からの 理科） */
+function homeZones(){
+  const games=GAMES.filter(x=>ui.grade===0||x.g.includes(ui.grade));
+  return SUBJ_ORDER.map(k=>[k,games.filter(x=>x.s===k)]).filter(z=>z[1].length || (z[0]==="rika" && (ui.grade===0 || ui.grade>=3) && UREADY.some(u=>u.subj==="rika")));
+}
+const DOOR_ART={math:"a-soroban",jp:"a-kanji",soc:"a-japan",rika:"a-rika",eng:"a-abc"};
+/* 教科の とびら（3〜6年・「ぜんぶ」）。docs/screen-split.md 3章の 段階④ */
+function doorTile(k,l){
+  const d=k==="math"?T("hd.math.d"):l.length?T("hd.quiz.d"):T("hd.unit.d");
+  return `<button type="button" class="sdoor s-${k}" data-door="${k}"><span class="dico">${svgU(DOOR_ART[k])}</span><span class="dbody"><span class="dt">${subjN(k)}</span><span class="dd">${d}</span></span></button>`;
+}
 function renderHome(){
   setLG(ui.grade);
   if(COLOK) m1HomeCheck();      // 100マス計算から もどったとき：どんぐり（授業モード・オフでは 何もしない）
-  const b=bests(), easy=easyG(LG);
-  const games=GAMES.filter(x=>ui.grade===0||x.g.includes(ui.grade));
-  const zones=SUBJ_ORDER.map(k=>[k,games.filter(x=>x.s===k)]).filter(z=>z[1].length || (z[0]==="rika" && (ui.grade===0 || ui.grade>=3) && UREADY.some(u=>u.subj==="rika")));
+  const b=bests(), easy=easyG(LG), zones=homeZones();
+  const btl=`<section class="zone s-btl"><h2>${ic("swords")}${T("home.battle")}</h2><div class="tiles">${MODES.map(m=>modeTile(m,b)).join("")}</div></section>`;
   app.innerHTML=`<div class="home${easy?" easy":""}">
     ${easy?`<div class="guide">${mbs("n")}<span class="say">${T("home.guide")}</span></div>`:""}
     ${COLOK?colDoor():""}
-    <div class="zones" data-n="${zones.length+1}">${zones.map(([k,l])=>`<section class="zone s-${k}"><h2>${subjN(k)}</h2><div class="tiles">${l.map(x=>gameTile(x,b)).join("")}${k==="math"?meterTile()+extTiles():""}${k==="rika"?`<button class="tile unitgo" data-un="rika"><span class="tico">${svgU("a-rika")}</span><span class="tbody"><span class="tt">${T("u.pick")}</span></span></button>`:easy||k==="math"?"":unitTile(k)}</div></section>`).join("")}${easy?`<section class="zone s-math"><div class="tiles">${unitTile("math")}</div></section>`:""}
-      <section class="zone s-btl"><h2>${ic("swords")}${T("home.battle")}</h2><div class="tiles">${MODES.map(m=>modeTile(m,b)).join("")}</div></section></div>
+    ${easy?`<div class="zones" data-n="${zones.length+1}">${zones.map(([k,l])=>`<section class="zone s-${k}"><h2>${subjN(k)}</h2><div class="tiles">${l.map(x=>gameTile(x,b)).join("")}${k==="math"?meterTile()+extTiles():""}${k==="rika"?`<button class="tile unitgo" data-un="rika"><span class="tico">${svgU("a-rika")}</span><span class="tbody"><span class="tt">${T("u.pick")}</span></span></button>`:""}</div></section>`).join("")}<section class="zone s-math"><div class="tiles">${unitTile("math")}</div></section>
+${btl}</div>`
+      :`<h2 class="hdh">${T("hd.title")}</h2><div class="sdoors" data-n="${zones.length}">${zones.map(([k,l])=>doorTile(k,l)).join("")}</div>${btl}`}
     ${zones.length?"":`<div class="empty">${T("home.empty")}</div>`}
     <div class="bottom">
       <button class="hbtn" id="hJoin2">${ic("key-round")}${T("h.join")}</button>
@@ -2775,10 +2843,15 @@ function renderHome(){
   const mtt=$("#mtTile"); if(mtt) mtt.onclick=()=>go("#meter");
   app.querySelectorAll("[data-id]").forEach(e=>e.onclick=()=>{
     const x=GAMES.find(y=>y.id===e.dataset.id);
-    withGrade(g0=>x.id==="calc"?go("#units?kid=1&subj=sansu"):openGame(x,g0));
+    withGrade(g0=>x.id==="calc"?go("#units?kid=1&subj=sansu"):openGame(x,g0));      // タイルは 1・2年の ホームだけ（3〜6年は とびら）
+  });
+  app.querySelectorAll("[data-door]").forEach(e=>e.onclick=()=>{
+    const k=e.dataset.door;
+    if(k==="math") withGrade(g0=>go(g0>=3&&SI?"#subj?s=sansu":"#units?kid=1&subj=sansu"));      // 3〜6年は 算数の へや（段階③）
+    else go(`#subj?s=${SJR[k]}`);
   });
   app.querySelectorAll("[data-m]").forEach(e=>e.onclick=()=>go(`#modesetup?m=${e.dataset.m}`));
-  app.querySelectorAll("[data-un]").forEach(e=>e.onclick=()=>go(easy?"#units?kid=1":`#units?kid=1&subj=${e.dataset.un}`));
+  app.querySelectorAll("[data-un]").forEach(e=>e.onclick=()=>go("#units?kid=1"));      // 1・2年の ホームだけ
 }
 /* 右上の学年：押すと選び直し */
 function openGradeSheet(){
@@ -2808,7 +2881,7 @@ function renderSetup(q){
     :`<h2>${T("st.kencho")}</h2>
       <div class="pills" style="justify-content:center">${[["","kc.all"],["diff","kc.diff"]].map(([v,k])=>`<button class="pill" data-k="${v}">${T(k)}</button>`).join("")}</div>`;
   app.innerHTML=`<div class="play">
-    <div class="topbar"><button class="back" onclick="go('#home')">${BK()}</button><b>${tico(x)} ${x.t}</b><span></span></div>
+    <div class="topbar"><button class="back" onclick="go(runBack())">${BK()}</button><b>${tico(x)} ${x.t}</b><span></span></div>
     ${body}
     <button class="btn" id="go" style="width:100%;margin:18px 0 0;font-size:22px;padding:18px">${T("st.start")}</button></div>`;
   const paint=()=>{
@@ -2849,7 +2922,7 @@ function renderPlay(q){
   app.innerHTML=`<div class="play pg">
      ${task?`<div class="banner">${ic("pencil")} ${T("p.task",`${x.t}（${g<=2?"":g+"年《ねん》・"}${t}${T("sec")}）`)}</div>`:""}
     <div class="topbar">
-      ${task?`<button class="back" id="bk">${ic("x")}${T("back.end")}</button>`:`<button class="back" onclick="stopTimer();go('#home')">${BK()}</button>`}
+      ${task?`<button class="back" id="bk">${ic("x")}${T("back.end")}</button>`:`<button class="back" onclick="stopTimer();go(runBack())">${BK()}</button>`}
        <span><b>${tico(x)} ${x.t}</b> ${sm==="n"?"":`<span class="spbadge">${T("sp."+sm)}</span>`}<span class="note">${g<=2?"":g+"年《ねん》"}${info?(g<=2?"":"・")+esc(info):""}</span></span>
       <span class="timer${sm==="n"?"":" sp"}" id="tm" aria-hidden="true">${sm==="n"?t:sm==="ta"?"0.0":""}</span>
     </div>
@@ -2986,7 +3059,7 @@ function finish(){
     ${showNew?`<div class="newbest">${T("r.new")}</div>`:spr&&spr.isNew?`<div class="newbest">${T("sp.newbest")}</div>`:""}
     ${(p.x.id==="calc"||p.u)&&spOn(p.task)?`<div id="spres"></div>`:""}
     <div class="actions"><button class="btn again" id="again">${ic("rotate-ccw")}${bx&&!boxLeft?T("sp.box.back"):T("r.again")}</button>
-      <div class="subs">${p.missObjs.length?`<button class="btn sub" id="redo">${T("r.redo")}</button>`:""}${p.task?"":`<button class="btn sub" onclick="go('#home')">${T("r.other")}</button>`}</div></div>
+      <div class="subs">${p.missObjs.length?`<button class="btn sub" id="redo">${T("r.redo")}</button>`:""}${p.task?"":`<button class="btn sub" onclick="go(runBack())">${RUNBACK?T("back"):T("r.other")}</button>`}</div></div>
     <div class="stats"><span>${T("r.answered")} <b>${T("r.n",total)}</b></span><span>${T("r.acc")} <b>${acc}%</b></span>${bestHtml}</div>
     ${p.tlN?`<div class="note tlres">🧰 ${T("tl.res",p.tlN)}${plain&&p.hok?`<br>${T("tl.res.d")}`:""}</div>`:""}
     ${p.u?`<div class="umr"><b>${T("u.marks.t")}</b><div class="umarks big">${uMarksHtml(p.marks,0,p.mtl)}</div><div class="note">${esc(T("u.marks"))}</div>${ures&&ures.length?`<div class="ubk">${ures.map(r=>`<div class="stamp"><span class="sn">${esc(UBY[r.id].title)}<small>${T("u.best",r.o)}</small></span><span class="slots" aria-hidden="true">${MEDAL_ICO.map((em,i)=>`<span class="slot${r.medal>i?" on":""}">${msvg(r.medal>i?i+1:0)}</span>`).join("")}</span></div>`).join("")}</div>`:""}</div>`:""}
@@ -3009,7 +3082,7 @@ function startReview(items,x,g,task){
   P={x,g,t:0,left:1,ok:0,ng:0,cur:null,inp:"",misses:[],missObjs:[],task:!!task,lock:false,over:false,review:true,queue,chN:0,inN:0};
   app.innerHTML=`<div class="play pg">
     <div class="topbar">
-      ${task?`<button class="back" onclick="reviewDone()">${ic("x")}${T("back.end")}</button>`:`<button class="back" onclick="go('#home')">${BK()}</button>`}
+      ${task?`<button class="back" onclick="reviewDone()">${ic("x")}${T("back.end")}</button>`:`<button class="back" onclick="go(runBack())">${BK()}</button>`}
       <span><b>${tico(x)} ${T("p.review")}</b> <span class="note">${x.t}・${g}年《ねん》</span></span>      <span class="timer" id="tm" aria-hidden="true"></span>    </div>    <div class="q"><div class="big" id="qq"></div><div class="small" id="qs"></div></div>    <div class="fb" id="fb" aria-live="polite"></div>    <div id="area"></div>    <div class="score" id="scw">${T("p.left",queue.length)}</div>
     <p class="note">${T("p.reviewnote")}</p>
   </div>`;
@@ -3019,7 +3092,7 @@ function startReview(items,x,g,task){
 function reviewDone(){
   const p=P; p.lock=true;
   app.innerHTML=`<div class="play"><div class="res">${medRow(3)}<div class="num">${T("p.reviewclear")}</div>
-    <div>${p.task?`<button class="btn" onclick="route()">${T("r.again")}</button>`:`<button class="btn" onclick="go('#home')">${T("n.home")}</button>`}</div></div></div>`;
+    <div>${p.task?`<button class="btn" onclick="route()">${T("r.again")}</button>`:`<button class="btn" onclick="go(runBack())">${RUNBACK?T("back"):T("n.home")}</button>`}</div></div></div>`;
 }
 /* ================= 計算スプリントの あそびかた・にがて ボックス =================
    Qalc（MIT・GIGAyama。apps/README.md）の「タイムアタック」「サドンデス」「にがて克服ボックス」を もとに作りなおした。
@@ -7016,6 +7089,8 @@ function renderUnits(q){
   const kid=q.get("kid")==="1";
   if(!UNITS_OK){ setLG(0); app.replaceChildren(h("div",{class:"q"},"単元《たんげん》のデータ（data/units.js）を読《よ》み込《こ》めませんでした。",h("br"),h("button",{type:"button",class:"btn",text:T("n.home"),onclick:()=>go("#home")}))); return; }
   const kg=kid?ui.grade:0; setLG(kg);
+  /* 古い 入口（3〜6年の 算数の 単元えらび）：算数の へやへ。へやの「ぜんぶの 単元から えらぶ」は &all=1 で この画面。docs/screen-split.md 3章の 段階⑤ */
+  if(kid&&!easyG(kg)&&SI&&(q.get("subj")||"sansu")==="sansu"&&q.get("all")!=="1"){ location.replace(location.href.split("#")[0]+"#subj?s=sansu"); return; }
   if(kid&&easyG(kg)){
     const units=UREADY.filter(u=>u.g===kg);
     app.replaceChildren(h("div",{class:"up kid"},
@@ -7174,8 +7249,8 @@ function renderUnits(q){
   }
   const startBtn=h("button",{type:"button",class:"btn again ustart",text:T("u.go"),onclick:()=>{ if(!need()) return; uSave(); go(uHash({...cfg(),n:Math.min(UPK.n,20)})); }});
   if(kc) root.append(
-    h("div",{class:"topbar"},h("button",{type:"button",class:"back",innerHTML:BK(),onclick:()=>go("#home")}),h("h2",{class:"th2 uttl",text:`${SUBJ_JA[subj]}　${T("u.pick")}`}),h("span")),
-    ...[boxDoor(SJ[subj]?subj:"",`#units?kid=1&subj=${subj}`)].filter(Boolean),
+    h("div",{class:"topbar"},h("button",{type:"button",class:"back",innerHTML:BK(),onclick:()=>go(`#subj?s=${subj}`)}),h("h2",{class:"th2 uttl",text:`${SUBJ_JA[subj]}　${T("u.pick")}`}),h("span")),
+    ...[boxDoor(SJ[subj]?subj:"",location.hash)].filter(Boolean),
     h("div",{class:"ufilters"},filt,sets),cards,h("div",{class:"ufoot kbar"},panel,startBtn));
   if(kc&&window.ResizeObserver){ const uf=root.querySelector(".ufilters"); new ResizeObserver(()=>root.style.setProperty("--ufh",uf.offsetHeight+"px")).observe(uf); }      // 学年の見出しを しぼりこみの すぐ下に とめる
   else root.append(...[
@@ -7187,6 +7262,92 @@ function renderUnits(q){
   drawFilter(); drawSets(); drawCards(); drawPanel();
 }
 
+/* ---- 算数の まとまり → 単元カード（1タップで はじまる）。docs/screen-split.md 3章の 段階②
+   #subj?s=sansu&item=まとまりの id（data/sansu-items.js）。学年は 右上の 学年（ui.grade）。
+   カードを おすと すぐ 1分スプリント（あそびかたは 上の いつもの／タイムアタック／サドンデス）。
+   「いくつか まぜる」に すると チェックして「はじめる」（#u= の リンクと 同じ 形で 始める）。記録には なにも 書かない ---- */
+const SI=window.MH_SANSU_ITEMS||null;
+const siName=x=>easyG(LG)?x[1]:x[0];
+function siGroups(g){ return SI&&UNITS_OK?SI.groupsFor(UREADY,g||null):[]; }
+function renderSubjItem(q){
+  stopTimer();
+  const back="#subj?s=sansu", g=ui.grade||0; setLG(g);
+  const grp=q.get("s")==="sansu"&&SI?SI.GROUPS.find(x=>x.id===q.get("item")):null;
+  if(!UNITS_OK||!grp){ app.replaceChildren(h("div",{class:"q"},T("si.none"),h("br"),h("button",{type:"button",class:"btn",text:T("n.home"),onclick:()=>go("#home")}))); return; }
+  const full=siGroups(g).find(x=>x.id===grp.id), us=full?full.units:[], tools=full?full.tools:[];
+  const stepOf=u=>u.series&&u.step!=null?u.step:1e9;
+  const list=us.map((u,i)=>({u,i})).sort((a,b)=>a.u.g-b.u.g||(a.u.item===b.u.item?stepOf(a.u)-stepOf(b.u):0)||a.i-b.i).map(x=>x.u);
+  let mix=false; const sel=[];
+  const msg=h("div",{class:"err",role:"alert"}), cards=h("div",{class:"ugrid sicards"}), foot=h("div",{class:"ufoot kbar sifoot",hidden:true});
+  const startBtn=h("button",{type:"button",class:"btn again ustart",text:T("u.go"),onclick:()=>{ if(!sel.length){ msg.textContent=T("u.none"); return; } go(uHash({ids:sel.slice(),n:20,t:20,seed:uSeed(),mix:true,choice:null})); }});
+  const cnt=h("span",{class:"usum"});
+  foot.append(cnt,msg,startBtn);
+  const one=u=>startUnitRun({ids:[u.id],n:20,t:20,seed:uSeed(),mix:true,choice:null});
+  function drawCards(){
+    cards.replaceChildren(...(list.length?list.map(u=>{ const on=sel.includes(u.id);
+      return h("div",{class:"ucardw"},
+        h("button",{type:"button",class:"ucard","data-id":u.id,...(mix?{role:"checkbox","aria-checked":on?"true":"false"}:{}),onclick:()=>mix?toggle(u.id):one(u)},
+          mix?h("span",{class:"ubox","aria-hidden":"true",text:on?"✅":""}):null,
+          h("span",{class:"ubody"},h("b",{text:u.title}),h("span",{class:"unote",text:(g?"":u.g+"年《ねん》　")+(u.note&&u.note!==u.title?u.note:"")})),
+          mix?null:h("span",{class:"siplay","aria-hidden":"true",text:"▶"})),
+        h("button",{type:"button",class:"btn sub s uexb",text:"💡","aria-label":T("u.ex")+"："+u.title,title:T("u.ex"),onclick:()=>uEx(u)})); }):[h("div",{class:"empty",text:T("si.none")})]));
+    foot.hidden=!mix; cnt.textContent=T("u.sel",sel.length); startBtn.disabled=!sel.length;
+  }
+  function toggle(id){
+    const i=sel.indexOf(id);
+    if(i>=0) sel.splice(i,1); else if(sel.length>=UMAX){ msg.textContent=`単元《たんげん》は${UMAX}個《こ》までです`; return; } else sel.push(id);
+    msg.textContent=""; drawCards();
+  }
+  const modeRow=h("div",{class:"pills simode",role:"group","aria-label":T("si.mix")});
+  const drawMode=()=>modeRow.replaceChildren(upill(T("si.one.b"),!mix,()=>{ mix=false; sel.length=0; msg.textContent=""; drawMode(); drawCards(); hint.textContent=T("si.one"); }),upill(T("si.mix"),mix,()=>{ mix=true; drawMode(); drawCards(); hint.textContent=T("si.mix.d",UMAX); }));
+  const hint=h("p",{class:"note sihint",text:T("si.one")});
+  drawMode();
+  const toolBox=tools.length?h("section",{class:"sitools"},h("h3",{class:"sih",text:T("si.tool")}),
+    ...tools.map(t=>h("button",{type:"button",class:"ucard sitool",onclick:()=>t.go.startsWith("url:")?(location.href=t.go.slice(4)):go(t.go)},h("span",{class:"ubody"},h("b",{text:siName(t.t)}),h("span",{class:"unote",text:siName(t.d)})),h("span",{class:"siplay","aria-hidden":"true",text:"▶"})))):null;
+  app.replaceChildren(h("div",{class:"up kid si"},
+    h("div",{class:"topbar"},h("button",{type:"button",class:"back",innerHTML:BK(),onclick:()=>go(back)}),h("h2",{class:"th2 uttl",text:`${SUBJ_JA.sansu} › ${siName(grp.t)}`}),h("span")),
+    list.length?spChips():null,hint,cards,list.length>1?modeRow:null,foot,toolBox));
+  drawCards();
+}
+
+/* ---- 算数の へや（#subj?s=sansu）。docs/screen-split.md 3章の 段階③
+   上に「単元で 練習」（まとまりの タイル → #subj?s=sansu&item=…）、下に「とっくん」（九九・100マス・めもり名人）。
+   学年は 右上の 学年（ui.grade）だけで きりかえる。0（えらんで いない）の ときは ぜんぶの 学年。記録には なにも 書かない。
+   アイコンは 今は 文字の しるし（あとで 画像に かえる よてい）。 ---- */
+const SI_MARK={kazu:"123",tashihiki:"+−",kake:"×",wari:"÷",shosu:"0.1",bunsu:"½",zukei:"△",tani:"cm",graph:"▥",wariai:"%",bunsho:"□"};
+/* ---- 国語・社会・理科・英語の 小さい へや（#subj?s=kokugo など）。docs/screen-split.md 3章の 段階④
+   今の ホームの その 教科の タイル（クイズ・「単元を えらぶ」）を そのまま ならべる。あとで 算数の へやと 同じ形に そだてる ---- */
+function renderSubjMini(k){
+  setLG(ui.grade);
+  const z=homeZones().find(y=>y[0]===k); if(!z) return go("#home");
+  const b=bests(), l=z[1];
+  const ut=k==="rika"?`<button class="tile unitgo" data-un="rika"><span class="tico">${svgU("a-rika")}</span><span class="tbody"><span class="tt">${T("u.pick")}</span></span></button>`:unitTile(k);
+  app.innerHTML=`<div class="up kid si sroom smini">
+    <div class="topbar"><button type="button" class="back" id="smb">${BK()}</button><h2 class="th2 uttl">${T("hd.room",subjN(k))}</h2><span></span></div>
+    <section class="zone s-${k} srz"><div class="tiles srgrid">${l.map(x=>gameTile(x,b)).join("")}${ut}</div></section></div>`;
+  $("#smb").onclick=()=>go("#home");
+  app.querySelectorAll("[data-id]").forEach(e=>e.onclick=()=>{ const x=GAMES.find(y=>y.id===e.dataset.id); withGrade(g0=>openGame(x,g0)); });
+  app.querySelectorAll("[data-un]").forEach(e=>e.onclick=()=>go(`#units?kid=1&subj=${e.dataset.un}`));
+}
+function renderSubjRoom(q){
+  stopTimer();
+  const sk=SJ[q.get("s")]; if(sk&&sk!=="math") return renderSubjMini(sk);
+  if(q.get("s")!=="sansu"||!SI||!UNITS_OK) return go("#home");
+  const g=ui.grade||0; setLG(g);
+  const gs=siGroups(g), tk=SI.tokkunFor(g||null);
+  const tile=(cls,ico,tt,td,on)=>h("button",{type:"button",class:"tile "+cls,onclick:on},ico,h("span",{class:"tbody"},h("span",{class:"tt",text:tt}),td?h("span",{class:"td",text:td}):null));
+  const mark=id=>{ const m=SI_MARK[id]||"・"; return h("span",{class:"tico srmark"+(m.length>=3?" l3":""),"aria-hidden":"true",text:m}); };
+  const raw=html=>{ const s=h("span",{class:"tico","aria-hidden":"true"}); s.innerHTML=html; return s; };
+  const tkIco={kuku:()=>raw(svgU("a-kuku")),meter:()=>raw(mtIco()),masu100:()=>h("span",{class:"tico","aria-hidden":"true"},h("span",{class:"extico",text:"100"}))};
+  const items=gs.map(x=>tile("sritem",mark(x.id),siName(x.t),T("sr.n",x.units.length)+(x.tools.length?"＋"+x.tools.map(t=>siName(t.t)).join("・"):""),()=>go(`#subj?s=sansu&item=${x.id}`)));
+  const tools=tk.map(t=>tile("srtool",(tkIco[t.id]||(()=>mark("")))(),siName(t.t),siName(t.d),()=>t.go.startsWith("url:")?(location.href=t.go.slice(4)):go(t.go)));
+  app.replaceChildren(h("div",{class:"up kid si sroom"},
+    h("div",{class:"topbar"},h("button",{type:"button",class:"back",innerHTML:BK(),onclick:()=>go("#home")}),h("h2",{class:"th2 uttl",text:T("sr.title")}),h("span")),
+    h("section",{class:"zone s-math srz"},h("h3",{class:"srh",text:T("sr.units")}),items.length?h("div",{class:"tiles srgrid sritems"},...items):h("div",{class:"empty",text:T("si.none")})),
+    tools.length?h("section",{class:"zone s-math srz"},h("h3",{class:"srh",text:T("sr.tokkun")}),h("div",{class:"tiles srgrid srtools"},...tools)):null,
+    h("p",{class:"srall"},h("a",{href:"#units?kid=1&subj=sansu&all=1",class:"gdlink",text:T("sr.all")}))));
+}
+
 /* ---- リンクで開いたとき：紹介 → 1分スプリント ---- */
 function renderUnitLink(hash){
   stopTimer(); const c=uParse(hash);
@@ -7196,7 +7357,7 @@ function renderUnitLink(hash){
   const how=h("div",{class:"pills",style:"justify-content:center"}), draw=()=>how.replaceChildren(upill(T("u.type"),!choice,()=>{ choice=false; draw(); }),upill(T("u.c4"),choice,()=>{ choice=true; draw(); }));
   if(uTypeOk(c.ids,"")) draw();
   app.replaceChildren(h("div",{class:"play up"},
-    h("div",{class:"topbar"},c.task?h("span"):h("button",{type:"button",class:"back",innerHTML:BK(),onclick:()=>go("#home")}),h("b"),h("span")),
+    h("div",{class:"topbar"},c.task?h("span"):h("button",{type:"button",class:"back",innerHTML:BK(),onclick:()=>go(runBack())}),h("b"),h("span")),
     h("div",{class:"q"},h("div",{class:"big",text:T("u.intro")}),spOn(c.task)?null:h("div",{class:"small",text:T("u.1min")})),
     h("div",{class:"uchips cen"},...c.ids.map(id=>h("span",{class:"uchipw"},h("span",{class:"uchip static"},c.task&&UBY[id].g<=2?null:h("span",{class:"ucg",text:UBY[id].g+"年《ねん》"}),h("span",{text:UBY[id].title})),
       h("button",{type:"button",class:"btn sub s uexb",text:T("u.ex"),"aria-label":T("u.ex")+"："+UBY[id].title,onclick:()=>uEx(UBY[id])})))),
@@ -7215,7 +7376,7 @@ function startUnitRun(c){
         again:()=>bx?startBoxRun(bx.subj,bx.back):startUnitRun({...c,seed:uSeed()})}};
   const names=bx?T("sp.box.t"):ids.map(i=>UBY[i].title).join("・");
   app.innerHTML=`<div class="play pg">
-    <div class="topbar">${c.task?`<button class="back" id="bk">${ic("x")}${T("back.end")}</button>`:`<button class="back" onclick="stopTimer();go('#home')">${BK()}</button>`}
+    <div class="topbar">${c.task?`<button class="back" id="bk">${ic("x")}${T("back.end")}</button>`:`<button class="back" onclick="stopTimer();go(runBack())">${BK()}</button>`}
       <span><b>${tico(UNITX)} ${T("g.unit.t")}</b> ${sm==="n"?"":`<span class="spbadge">${T("sp."+sm)}</span>`}<span class="note" id="unm"></span></span><span class="timer${sm==="n"?"":" sp"}" id="tm" aria-hidden="true">${sm==="n"?t:sm==="ta"?"0.0":""}</span></div>
     <div class="tbar${sm==="n"?"":" up"}" id="tbar"><i id="tb"${sm==="n"?"":' style="width:0%"'}></i></div>
     <div class="q"><div id="qpic"></div><div class="big" id="qq"></div><div class="small" id="qs"></div>${TLP}</div>
@@ -7518,7 +7679,7 @@ function mtMenu(){
     ${howMeter()}
     ${grp("すうちょくせん","line")}${grp("はかり","dial")}${grp("めいじん","all")}
   </div>`;
-  $("#mtbk").onclick=()=>go("#home");
+  $("#mtbk").onclick=()=>go(runBack());
   app.querySelectorAll("[data-st]").forEach(b=>b.onclick=()=>go(`#meter?st=${b.dataset.st}`));
   app.querySelectorAll("[data-o]").forEach(b=>b.onclick=()=>{ mtSet(x=>{ x[b.dataset.o]=+b.dataset.v; }); mtMenu(); const n=app.querySelector(`[data-o="${b.dataset.o}"][data-v="${b.dataset.v}"]`); if(n) n.focus(); });
 }
@@ -7770,8 +7931,9 @@ function route(){
   stopTimer(); P=null; M=null; QK=null; QS=null; QH=null; if(RKH) clearInterval(RKH.iv); RK=null; RKH=null; ckStop(); prStop(); wakeOff();
   if(ES){ ES.close(); ES=null; }
   const {path:path0,q}=params(), path=location.hash.startsWith("#q=")?"qlink":location.hash.startsWith("#u=")?"ulink":path0;
+  if(path==="subj"||(path==="units"&&q.get("kid")==="1")) RUNBACK=location.hash; else if(!["play","setup","ulink","meter"].includes(path)) RUNBACK=null;
   setLG(path==="home"||path==="modesetup"||path==="join"||path==="record"?ui.grade:0);
-  document.body.dataset.v=["check","play","setup","modesetup","mode","join","lobby","host","teacher","record","make","qlink","units","ulink","hiroba","zukan","tanken","feedback","meter"].includes(path)?path:"home";
+  document.body.dataset.v=["check","play","setup","modesetup","mode","join","lobby","host","teacher","record","make","qlink","units","subj","ulink","hiroba","zukan","tanken","feedback","meter"].includes(path)?path:"home";
   // 課題リンク（task=1）で開いたゲームでは、ほかの画面への入口を隠す（授業モード）
   const lesson=!!lockedHash||((path==="play"||path==="mode"||path==="meter")&&q.get("task")==="1")||((path==="qlink"||path==="ulink")&&/[&?]task=1(?![0-9])/.test(location.hash));
   LESSON=lesson; document.body.classList.toggle("lesson",lesson); const lic=document.getElementById("licLink"); if(lic) lic.hidden=lesson;
@@ -7794,6 +7956,7 @@ function route(){
   else if(path==="make") renderMake(q);
   else if(path==="qlink") renderQuizLink(location.hash.slice(3).split(/[&?]/)[0]);
   else if(path==="units") renderUnits(q);
+  else if(path==="subj") q.get("item")?renderSubjItem(q):renderSubjRoom(q);
   else if(path==="meter") renderMeter(q);
   else if(path==="ulink") renderUnitLink(location.hash);
   else if(path==="record") renderRecord();
