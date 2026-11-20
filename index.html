@@ -113,7 +113,7 @@ h2{font-size:20px;margin:18px 0 8px}
   .zones[data-n="3"] .s-btl{grid-column:span 2} .zones[data-n="3"] .s-btl .tiles{grid-template-columns:1fr} .zones[data-n="4"] .s-btl{grid-column:1/-1} .zones[data-n="5"] .s-btl{grid-column:span 4}
   .zones[data-n="4"] .s-btl .tiles,.zones[data-n="5"] .s-btl .tiles{grid-template-columns:repeat(2,1fr)}}
 .zone{background:var(--zc);color:var(--zt,#fff);padding:10px 12px 14px;border-radius:6px 6px 18px 18px;border-top:8px solid var(--edge)}
-@media (min-width:900px) and (max-height:800px){.home:not(.easy) .zones{align-items:start;gap:8px}.home:not(.easy) .zone{padding:5px 8px 8px;border-top-width:5px}.home:not(.easy) .zone h2{font-size:17px;margin-bottom:4px}.home:not(.easy) .tile{min-height:56px;padding:2px 8px;gap:6px}.home:not(.easy) .tile .tico,.home:not(.easy) .tile .tico .art{width:40px;height:40px}.home:not(.easy) .tile .tt{font-size:16px}.home:not(.easy) .tile .tstat,.home:not(.easy) .tile .tnext{font-size:12px}.home:not(.easy) .tile .tstat .st{width:17px;height:17px}.home:not(.easy) .s-btl .tiles{grid-template-columns:repeat(2,minmax(0,1fr))!important}}
+@media (min-width:900px) and (max-height:800px){.home:not(.easy) .zone{padding:5px 8px 8px;border-top-width:5px}.home:not(.easy) .zone h2{font-size:17px;margin-bottom:4px}.home:not(.easy) .tile{min-height:56px;padding:2px 8px;gap:6px}.home:not(.easy) .tile .tico,.home:not(.easy) .tile .tico .art{width:40px;height:40px}.home:not(.easy) .tile .tt{font-size:16px}.home:not(.easy) .tile .tstat,.home:not(.easy) .tile .tnext{font-size:12px}.home:not(.easy) .tile .tstat .st{width:17px;height:17px}.home:not(.easy) .s-btl .tiles{grid-template-columns:repeat(2,minmax(0,1fr))!important}}
 /* PC（1366×768など）の1・2年：4列にして、スクロールなしで1画面に収める。下のリンクも1行に */
 @media (min-width:900px) and (max-height:800px){.home.easy .zones{grid-template-columns:repeat(4,minmax(0,1fr));align-items:start;gap:8px}.home.easy .zones .zone,.home.easy .zones[data-n] .s-btl{grid-column:auto}.home.easy .zones[data-n] .s-btl .tiles{grid-template-columns:1fr}.home.easy .tile{min-height:84px;padding:6px 10px}.home.easy .tile .tico,.home.easy .tile .tico .art{width:44px;height:44px}.home.easy .tile .tt{font-size:19px}.home.easy .tile .td{font-size:11px}.home.easy .zone{padding:6px 8px 10px}.home.easy .zone h2{font-size:20px;margin-bottom:4px}.home{gap:8px}.bottom{gap:6px;padding-top:0}.bottom .gdlink{width:auto;padding:2px 10px;font-size:13px}.bottom .more summary{min-height:24px;padding:2px 8px}}
 .zone h2{margin:0 0 8px;font-size:20px;letter-spacing:.08em;display:flex;align-items:center;gap:8px}
@@ -1413,10 +1413,10 @@ body[data-v=host] .wrap{max-width:none;padding:0}
 .upsets .nw{white-space:nowrap}
 #modeUnits .upsets .pill,#roomUnits .upsets .pill{flex-direction:column;gap:0}#modeUnits .upsets .nw,#roomUnits .upsets .nw{display:inline-block;white-space:nowrap;font-size:.9em}
 .form select,.upanel select,#app select{min-height:44px}
- .ugrade-jump{display:flex;align-items:center;flex-wrap:wrap;gap:6px;margin:8px 0}.ugrade-jump a{font-size:13px;padding:3px 7px;border-radius:6px;background:#e1f0e3;color:var(--ink)}.ugrp{scroll-margin-top:12px}@media (min-width:1400px){.up:not(.play):not(.kid) .ugrid{grid-template-columns:repeat(3,minmax(0,1fr))}}@media (min-width:900px) and (max-height:740px){.home:not(.easy){gap:4px}.home:not(.easy) .zones{gap:5px}.home:not(.easy) .zone{padding-bottom:5px}.home:not(.easy) .tiles{gap:5px}.home:not(.easy) .tile{min-height:50px}.home:not(.easy) .bottom{gap:2px}.home:not(.easy) .bottom .gdlink{padding:0}}</style>
-<style id="mathview-style"> .ugrade-jump{display:flex;align-items:center;flex-wrap:wrap;gap:6px;margin:8px 0}.ugrade-jump a{font-size:13px;padding:3px 7px;border-radius:6px;background:#e1f0e3;color:var(--ink)}.ugrp{scroll-margin-top:12px}@media (min-width:1400px){.up:not(.play):not(.kid) .ugrid{grid-template-columns:repeat(3,minmax(0,1fr))}}@media (min-width:900px) and (max-height:740px){.home:not(.easy){gap:4px}.home:not(.easy) .zones{gap:5px}.home:not(.easy) .zone{padding-bottom:5px}.home:not(.easy) .tiles{gap:5px}.home:not(.easy) .tile{min-height:50px}.home:not(.easy) .bottom{gap:2px}.home:not(.easy) .bottom .gdlink{padding:0}}</style>
+ .ugrade-jump{display:flex;align-items:center;flex-wrap:wrap;gap:6px;margin:8px 0}.ugrade-jump a{font-size:13px;padding:3px 7px;border-radius:6px;background:#e1f0e3;color:var(--ink)}.ugrp{scroll-margin-top:12px}@media (min-width:1400px){.up:not(.play):not(.kid) .ugrid{grid-template-columns:repeat(3,minmax(0,1fr))}}@media (min-width:900px) and (max-height:740px){.home:not(.easy){gap:4px}.home:not(.easy) .zone{padding-bottom:5px}.home:not(.easy) .tiles{gap:5px}.home:not(.easy) .tile{min-height:50px}.home:not(.easy) .bottom{gap:2px}.home:not(.easy) .bottom .gdlink{padding:0}}</style>
+<style id="mathview-style"> .ugrade-jump{display:flex;align-items:center;flex-wrap:wrap;gap:6px;margin:8px 0}.ugrade-jump a{font-size:13px;padding:3px 7px;border-radius:6px;background:#e1f0e3;color:var(--ink)}.ugrp{scroll-margin-top:12px}@media (min-width:1400px){.up:not(.play):not(.kid) .ugrid{grid-template-columns:repeat(3,minmax(0,1fr))}}@media (min-width:900px) and (max-height:740px){.home:not(.easy){gap:4px}.home:not(.easy) .zone{padding-bottom:5px}.home:not(.easy) .tiles{gap:5px}.home:not(.easy) .tile{min-height:50px}.home:not(.easy) .bottom{gap:2px}.home:not(.easy) .bottom .gdlink{padding:0}}</style>
 <style>.qclock{margin:0 auto 4px}.kidunits{grid-template-columns:1fr}.kidunits .ucard{min-height:76px;justify-content:center;text-align:center;font-size:1.25rem}.lesson-end{display:block;margin:16px auto 8px;padding:10px 16px;min-height:48px;border:1px solid var(--line);border-radius:10px;background:linear-gradient(to right,var(--go) var(--hold-progress,0%),var(--paper) var(--hold-progress,0%));color:var(--ink);font-size:14px;font-weight:700;touch-action:none;-webkit-touch-callout:none;-webkit-user-select:none;user-select:none}.colorpick{grid-template-columns:repeat(2,minmax(0,1fr))}.colorpick .choice[data-c="あお"]{background:#3979e5;color:#fff}.colorpick .choice[data-c="あか"]{background:#e35a56;color:#fff}.colorpick .choice[data-c="きいろ"]{background:#f5cd49;color:#243447}@media(max-width:375px){.play.pg .q:has(#qpic){padding:5px 6px;margin-bottom:3px}.play.pg .q:has(#qpic) .big{font-size:20px;line-height:1.25}.play.pg .q:has(#qpic) .big:not(.long){white-space:nowrap}.play.pg .q:has(#qpic) svg{max-height:90px}.play.pg .q:has(#qpic)~.umarks{margin:2px auto}.play.pg:has(#qpic) .choices .choice{min-height:44px;padding:5px}.play.pg:has(#qpic) .fb{min-height:20px;font-size:18px;margin-bottom:3px}.play.pg:has(#qpic) .choices{gap:6px}.play.pg:has(#qpic) .topbar{margin-bottom:3px}.play.pg:has(#qpic) .tbar{margin-bottom:4px}}
- .ugrade-jump{display:flex;align-items:center;flex-wrap:wrap;gap:6px;margin:8px 0}.ugrade-jump a{font-size:13px;padding:3px 7px;border-radius:6px;background:#e1f0e3;color:var(--ink)}.ugrp{scroll-margin-top:12px}@media (min-width:1400px){.up:not(.play):not(.kid) .ugrid{grid-template-columns:repeat(3,minmax(0,1fr))}}@media (min-width:900px) and (max-height:740px){.home:not(.easy){gap:4px}.home:not(.easy) .zones{gap:5px}.home:not(.easy) .zone{padding-bottom:5px}.home:not(.easy) .tiles{gap:5px}.home:not(.easy) .tile{min-height:50px}.home:not(.easy) .bottom{gap:2px}.home:not(.easy) .bottom .gdlink{padding:0}}</style>
+ .ugrade-jump{display:flex;align-items:center;flex-wrap:wrap;gap:6px;margin:8px 0}.ugrade-jump a{font-size:13px;padding:3px 7px;border-radius:6px;background:#e1f0e3;color:var(--ink)}.ugrp{scroll-margin-top:12px}@media (min-width:1400px){.up:not(.play):not(.kid) .ugrid{grid-template-columns:repeat(3,minmax(0,1fr))}}@media (min-width:900px) and (max-height:740px){.home:not(.easy){gap:4px}.home:not(.easy) .zone{padding-bottom:5px}.home:not(.easy) .tiles{gap:5px}.home:not(.easy) .tile{min-height:50px}.home:not(.easy) .bottom{gap:2px}.home:not(.easy) .bottom .gdlink{padding:0}}</style>
 <style id="hissan-style">
 .hissan{display:inline-grid;grid-template-columns:1.15em auto;max-width:100%;font-family:ui-monospace,SFMono-Regular,Consolas,monospace;font-variant-numeric:tabular-nums;font-size:clamp(24px,7vw,44px);line-height:1.15;text-align:right;vertical-align:middle;white-space:pre;color:inherit}
 .hissan .hs-num{grid-column:2;justify-self:end}.hissan .hs-op{grid-column:1;grid-row:2;text-align:center}.hissan .hs-rule{grid-column:1/-1;border-top:2px solid currentColor;min-height:1.15em}.hissan .hs-divisor{grid-column:1;align-self:end}.hissan .hs-dividend{grid-column:2;border-top:2px solid currentColor;border-left:2px solid currentColor;border-top-left-radius:.45em;padding:0 .12em}.hissan .hs-quotient{grid-column:2;min-height:1.15em}.hissan .hs-rem{font-size:.48em;grid-column:1/-1;text-align:right}.q .big:has(.hissan){white-space:normal!important;overflow:visible}.q .hissan{font-size:clamp(24px,7vw,44px)}@media print{.hissan{color:#000;break-inside:avoid}.hissan .hs-rule,.hissan .hs-dividend{border-color:#000}}
@@ -1799,7 +1799,6 @@ body[data-v=host] .wrap{max-width:none;padding:0}
 .mtnext{text-align:center}
 .mtnext .btn{min-width:200px;min-height:56px;font-size:22px}
 .mtch{max-width:460px;margin:0 auto}
-@media (min-width:900px) and (max-height:800px){.home:not(.easy) #mtTile .td{display:none}}
 .mtres .mtbigst{text-align:center}.mtrl{font-size:18px;font-weight:700;color:var(--muted)}
 .mtres .mtbud{margin-top:10px}
 @media(min-width:760px){.play.mtmenu{max-width:1040px}.mtcards{grid-template-columns:repeat(auto-fill,minmax(220px,1fr))}.mtres.res{display:block;max-width:560px;margin:0 auto}.mtres .mtsay{max-width:400px}.mtgrid{display:grid;grid-template-columns:minmax(0,1.55fr) minmax(300px,1fr);gap:16px;align-items:start}.play.mtplay{max-width:1100px}.mtq{margin-bottom:0}.mtdw{width:min(100%,62dvh*1.5,640px);display:grid;grid-template-columns:minmax(0,1fr) 34%;gap:8px;align-items:end}.mtdw:not(:has(.mtlens)){grid-template-columns:minmax(0,1fr);width:min(100%,62dvh,460px)}.mtpic .mtlens{position:static;width:100%}}
@@ -2649,6 +2648,10 @@ function fgFromHash(){      // 課題リンクの fg=0/1。あれば児童は変
   const m=/[?&#]fg=([01])(?![0-9])/.exec(location.hash); FGFIX=m?m[1]==="1":null; fgApply(); drawHeader();
 }
 function go(h){ if(location.hash===h) route(); else location.hash=h; }
+/* 練習を はじめた 画面（教科の へや・単元カード・児童の 単元えらび）。とちゅう・結果の「もどる」は ここへ（ないときは ホーム）。
+   route() が きめる：その 画面を ひらくと おぼえ、練習の 画面（play・setup・#u=・meter）では そのまま、ほかの 画面では わすれる。docs/screen-split.md 3章の 段階⑤ */
+let RUNBACK=null;
+const runBack=()=>RUNBACK||"#home";
 function params(){ const [p,q]=location.hash.slice(1).split("?"); return {path:p||"home",q:new URLSearchParams(q||"")}; }
 let ui=store.get("mh_ui",{grade:0,subj:"all"});
 let timerId=0;
@@ -2820,7 +2823,7 @@ function renderHome(){
   app.innerHTML=`<div class="home${easy?" easy":""}">
     ${easy?`<div class="guide">${mbs("n")}<span class="say">${T("home.guide")}</span></div>`:""}
     ${COLOK?colDoor():""}
-    ${easy?`<div class="zones" data-n="${zones.length+1}">${zones.map(([k,l])=>`<section class="zone s-${k}"><h2>${subjN(k)}</h2><div class="tiles">${l.map(x=>gameTile(x,b)).join("")}${k==="math"?meterTile()+extTiles():""}${k==="rika"?`<button class="tile unitgo" data-un="rika"><span class="tico">${svgU("a-rika")}</span><span class="tbody"><span class="tt">${T("u.pick")}</span></span></button>`:easy||k==="math"?"":unitTile(k)}</div></section>`).join("")}${easy?`<section class="zone s-math"><div class="tiles">${unitTile("math")}</div></section>`:""}
+    ${easy?`<div class="zones" data-n="${zones.length+1}">${zones.map(([k,l])=>`<section class="zone s-${k}"><h2>${subjN(k)}</h2><div class="tiles">${l.map(x=>gameTile(x,b)).join("")}${k==="math"?meterTile()+extTiles():""}${k==="rika"?`<button class="tile unitgo" data-un="rika"><span class="tico">${svgU("a-rika")}</span><span class="tbody"><span class="tt">${T("u.pick")}</span></span></button>`:""}</div></section>`).join("")}<section class="zone s-math"><div class="tiles">${unitTile("math")}</div></section>
 ${btl}</div>`
       :`<h2 class="hdh">${T("hd.title")}</h2><div class="sdoors" data-n="${zones.length}">${zones.map(([k,l])=>doorTile(k,l)).join("")}</div>${btl}`}
     ${zones.length?"":`<div class="empty">${T("home.empty")}</div>`}
@@ -2840,7 +2843,7 @@ ${btl}</div>`
   const mtt=$("#mtTile"); if(mtt) mtt.onclick=()=>go("#meter");
   app.querySelectorAll("[data-id]").forEach(e=>e.onclick=()=>{
     const x=GAMES.find(y=>y.id===e.dataset.id);
-    withGrade(g0=>x.id==="calc"?go(g0>=3&&SI?"#subj?s=sansu":"#units?kid=1&subj=sansu"):openGame(x,g0));
+    withGrade(g0=>x.id==="calc"?go("#units?kid=1&subj=sansu"):openGame(x,g0));      // タイルは 1・2年の ホームだけ（3〜6年は とびら）
   });
   app.querySelectorAll("[data-door]").forEach(e=>e.onclick=()=>{
     const k=e.dataset.door;
@@ -2848,7 +2851,7 @@ ${btl}</div>`
     else go(`#subj?s=${SJR[k]}`);
   });
   app.querySelectorAll("[data-m]").forEach(e=>e.onclick=()=>go(`#modesetup?m=${e.dataset.m}`));
-  app.querySelectorAll("[data-un]").forEach(e=>e.onclick=()=>go(easy?"#units?kid=1":`#units?kid=1&subj=${e.dataset.un}`));
+  app.querySelectorAll("[data-un]").forEach(e=>e.onclick=()=>go("#units?kid=1"));      // 1・2年の ホームだけ
 }
 /* 右上の学年：押すと選び直し */
 function openGradeSheet(){
@@ -2878,7 +2881,7 @@ function renderSetup(q){
     :`<h2>${T("st.kencho")}</h2>
       <div class="pills" style="justify-content:center">${[["","kc.all"],["diff","kc.diff"]].map(([v,k])=>`<button class="pill" data-k="${v}">${T(k)}</button>`).join("")}</div>`;
   app.innerHTML=`<div class="play">
-    <div class="topbar"><button class="back" onclick="go('#home')">${BK()}</button><b>${tico(x)} ${x.t}</b><span></span></div>
+    <div class="topbar"><button class="back" onclick="go(runBack())">${BK()}</button><b>${tico(x)} ${x.t}</b><span></span></div>
     ${body}
     <button class="btn" id="go" style="width:100%;margin:18px 0 0;font-size:22px;padding:18px">${T("st.start")}</button></div>`;
   const paint=()=>{
@@ -2919,7 +2922,7 @@ function renderPlay(q){
   app.innerHTML=`<div class="play pg">
      ${task?`<div class="banner">${ic("pencil")} ${T("p.task",`${x.t}（${g<=2?"":g+"年《ねん》・"}${t}${T("sec")}）`)}</div>`:""}
     <div class="topbar">
-      ${task?`<button class="back" id="bk">${ic("x")}${T("back.end")}</button>`:`<button class="back" onclick="stopTimer();go('#home')">${BK()}</button>`}
+      ${task?`<button class="back" id="bk">${ic("x")}${T("back.end")}</button>`:`<button class="back" onclick="stopTimer();go(runBack())">${BK()}</button>`}
        <span><b>${tico(x)} ${x.t}</b> ${sm==="n"?"":`<span class="spbadge">${T("sp."+sm)}</span>`}<span class="note">${g<=2?"":g+"年《ねん》"}${info?(g<=2?"":"・")+esc(info):""}</span></span>
       <span class="timer${sm==="n"?"":" sp"}" id="tm" aria-hidden="true">${sm==="n"?t:sm==="ta"?"0.0":""}</span>
     </div>
@@ -3056,7 +3059,7 @@ function finish(){
     ${showNew?`<div class="newbest">${T("r.new")}</div>`:spr&&spr.isNew?`<div class="newbest">${T("sp.newbest")}</div>`:""}
     ${(p.x.id==="calc"||p.u)&&spOn(p.task)?`<div id="spres"></div>`:""}
     <div class="actions"><button class="btn again" id="again">${ic("rotate-ccw")}${bx&&!boxLeft?T("sp.box.back"):T("r.again")}</button>
-      <div class="subs">${p.missObjs.length?`<button class="btn sub" id="redo">${T("r.redo")}</button>`:""}${p.task?"":`<button class="btn sub" onclick="go('#home')">${T("r.other")}</button>`}</div></div>
+      <div class="subs">${p.missObjs.length?`<button class="btn sub" id="redo">${T("r.redo")}</button>`:""}${p.task?"":`<button class="btn sub" onclick="go(runBack())">${RUNBACK?T("back"):T("r.other")}</button>`}</div></div>
     <div class="stats"><span>${T("r.answered")} <b>${T("r.n",total)}</b></span><span>${T("r.acc")} <b>${acc}%</b></span>${bestHtml}</div>
     ${p.tlN?`<div class="note tlres">🧰 ${T("tl.res",p.tlN)}${plain&&p.hok?`<br>${T("tl.res.d")}`:""}</div>`:""}
     ${p.u?`<div class="umr"><b>${T("u.marks.t")}</b><div class="umarks big">${uMarksHtml(p.marks,0,p.mtl)}</div><div class="note">${esc(T("u.marks"))}</div>${ures&&ures.length?`<div class="ubk">${ures.map(r=>`<div class="stamp"><span class="sn">${esc(UBY[r.id].title)}<small>${T("u.best",r.o)}</small></span><span class="slots" aria-hidden="true">${MEDAL_ICO.map((em,i)=>`<span class="slot${r.medal>i?" on":""}">${msvg(r.medal>i?i+1:0)}</span>`).join("")}</span></div>`).join("")}</div>`:""}</div>`:""}
@@ -3079,7 +3082,7 @@ function startReview(items,x,g,task){
   P={x,g,t:0,left:1,ok:0,ng:0,cur:null,inp:"",misses:[],missObjs:[],task:!!task,lock:false,over:false,review:true,queue,chN:0,inN:0};
   app.innerHTML=`<div class="play pg">
     <div class="topbar">
-      ${task?`<button class="back" onclick="reviewDone()">${ic("x")}${T("back.end")}</button>`:`<button class="back" onclick="go('#home')">${BK()}</button>`}
+      ${task?`<button class="back" onclick="reviewDone()">${ic("x")}${T("back.end")}</button>`:`<button class="back" onclick="go(runBack())">${BK()}</button>`}
       <span><b>${tico(x)} ${T("p.review")}</b> <span class="note">${x.t}・${g}年《ねん》</span></span>      <span class="timer" id="tm" aria-hidden="true"></span>    </div>    <div class="q"><div class="big" id="qq"></div><div class="small" id="qs"></div></div>    <div class="fb" id="fb" aria-live="polite"></div>    <div id="area"></div>    <div class="score" id="scw">${T("p.left",queue.length)}</div>
     <p class="note">${T("p.reviewnote")}</p>
   </div>`;
@@ -3089,7 +3092,7 @@ function startReview(items,x,g,task){
 function reviewDone(){
   const p=P; p.lock=true;
   app.innerHTML=`<div class="play"><div class="res">${medRow(3)}<div class="num">${T("p.reviewclear")}</div>
-    <div>${p.task?`<button class="btn" onclick="route()">${T("r.again")}</button>`:`<button class="btn" onclick="go('#home')">${T("n.home")}</button>`}</div></div></div>`;
+    <div>${p.task?`<button class="btn" onclick="route()">${T("r.again")}</button>`:`<button class="btn" onclick="go(runBack())">${RUNBACK?T("back"):T("n.home")}</button>`}</div></div></div>`;
 }
 /* ================= 計算スプリントの あそびかた・にがて ボックス =================
    Qalc（MIT・GIGAyama。apps/README.md）の「タイムアタック」「サドンデス」「にがて克服ボックス」を もとに作りなおした。
@@ -7086,6 +7089,8 @@ function renderUnits(q){
   const kid=q.get("kid")==="1";
   if(!UNITS_OK){ setLG(0); app.replaceChildren(h("div",{class:"q"},"単元《たんげん》のデータ（data/units.js）を読《よ》み込《こ》めませんでした。",h("br"),h("button",{type:"button",class:"btn",text:T("n.home"),onclick:()=>go("#home")}))); return; }
   const kg=kid?ui.grade:0; setLG(kg);
+  /* 古い 入口（3〜6年の 算数の 単元えらび）：算数の へやへ。へやの「ぜんぶの 単元から えらぶ」は &all=1 で この画面。docs/screen-split.md 3章の 段階⑤ */
+  if(kid&&!easyG(kg)&&SI&&(q.get("subj")||"sansu")==="sansu"&&q.get("all")!=="1"){ location.replace(location.href.split("#")[0]+"#subj?s=sansu"); return; }
   if(kid&&easyG(kg)){
     const units=UREADY.filter(u=>u.g===kg);
     app.replaceChildren(h("div",{class:"up kid"},
@@ -7244,8 +7249,8 @@ function renderUnits(q){
   }
   const startBtn=h("button",{type:"button",class:"btn again ustart",text:T("u.go"),onclick:()=>{ if(!need()) return; uSave(); go(uHash({...cfg(),n:Math.min(UPK.n,20)})); }});
   if(kc) root.append(
-    h("div",{class:"topbar"},h("button",{type:"button",class:"back",innerHTML:BK(),onclick:()=>go("#home")}),h("h2",{class:"th2 uttl",text:`${SUBJ_JA[subj]}　${T("u.pick")}`}),h("span")),
-    ...[boxDoor(SJ[subj]?subj:"",`#units?kid=1&subj=${subj}`)].filter(Boolean),
+    h("div",{class:"topbar"},h("button",{type:"button",class:"back",innerHTML:BK(),onclick:()=>go(`#subj?s=${subj}`)}),h("h2",{class:"th2 uttl",text:`${SUBJ_JA[subj]}　${T("u.pick")}`}),h("span")),
+    ...[boxDoor(SJ[subj]?subj:"",location.hash)].filter(Boolean),
     h("div",{class:"ufilters"},filt,sets),cards,h("div",{class:"ufoot kbar"},panel,startBtn));
   if(kc&&window.ResizeObserver){ const uf=root.querySelector(".ufilters"); new ResizeObserver(()=>root.style.setProperty("--ufh",uf.offsetHeight+"px")).observe(uf); }      // 学年の見出しを しぼりこみの すぐ下に とめる
   else root.append(...[
@@ -7340,7 +7345,7 @@ function renderSubjRoom(q){
     h("div",{class:"topbar"},h("button",{type:"button",class:"back",innerHTML:BK(),onclick:()=>go("#home")}),h("h2",{class:"th2 uttl",text:T("sr.title")}),h("span")),
     h("section",{class:"zone s-math srz"},h("h3",{class:"srh",text:T("sr.units")}),items.length?h("div",{class:"tiles srgrid sritems"},...items):h("div",{class:"empty",text:T("si.none")})),
     tools.length?h("section",{class:"zone s-math srz"},h("h3",{class:"srh",text:T("sr.tokkun")}),h("div",{class:"tiles srgrid srtools"},...tools)):null,
-    h("p",{class:"srall"},h("a",{href:"#units?kid=1&subj=sansu",class:"gdlink",text:T("sr.all")}))));
+    h("p",{class:"srall"},h("a",{href:"#units?kid=1&subj=sansu&all=1",class:"gdlink",text:T("sr.all")}))));
 }
 
 /* ---- リンクで開いたとき：紹介 → 1分スプリント ---- */
@@ -7352,7 +7357,7 @@ function renderUnitLink(hash){
   const how=h("div",{class:"pills",style:"justify-content:center"}), draw=()=>how.replaceChildren(upill(T("u.type"),!choice,()=>{ choice=false; draw(); }),upill(T("u.c4"),choice,()=>{ choice=true; draw(); }));
   if(uTypeOk(c.ids,"")) draw();
   app.replaceChildren(h("div",{class:"play up"},
-    h("div",{class:"topbar"},c.task?h("span"):h("button",{type:"button",class:"back",innerHTML:BK(),onclick:()=>go("#home")}),h("b"),h("span")),
+    h("div",{class:"topbar"},c.task?h("span"):h("button",{type:"button",class:"back",innerHTML:BK(),onclick:()=>go(runBack())}),h("b"),h("span")),
     h("div",{class:"q"},h("div",{class:"big",text:T("u.intro")}),spOn(c.task)?null:h("div",{class:"small",text:T("u.1min")})),
     h("div",{class:"uchips cen"},...c.ids.map(id=>h("span",{class:"uchipw"},h("span",{class:"uchip static"},c.task&&UBY[id].g<=2?null:h("span",{class:"ucg",text:UBY[id].g+"年《ねん》"}),h("span",{text:UBY[id].title})),
       h("button",{type:"button",class:"btn sub s uexb",text:T("u.ex"),"aria-label":T("u.ex")+"："+UBY[id].title,onclick:()=>uEx(UBY[id])})))),
@@ -7371,7 +7376,7 @@ function startUnitRun(c){
         again:()=>bx?startBoxRun(bx.subj,bx.back):startUnitRun({...c,seed:uSeed()})}};
   const names=bx?T("sp.box.t"):ids.map(i=>UBY[i].title).join("・");
   app.innerHTML=`<div class="play pg">
-    <div class="topbar">${c.task?`<button class="back" id="bk">${ic("x")}${T("back.end")}</button>`:`<button class="back" onclick="stopTimer();go('#home')">${BK()}</button>`}
+    <div class="topbar">${c.task?`<button class="back" id="bk">${ic("x")}${T("back.end")}</button>`:`<button class="back" onclick="stopTimer();go(runBack())">${BK()}</button>`}
       <span><b>${tico(UNITX)} ${T("g.unit.t")}</b> ${sm==="n"?"":`<span class="spbadge">${T("sp."+sm)}</span>`}<span class="note" id="unm"></span></span><span class="timer${sm==="n"?"":" sp"}" id="tm" aria-hidden="true">${sm==="n"?t:sm==="ta"?"0.0":""}</span></div>
     <div class="tbar${sm==="n"?"":" up"}" id="tbar"><i id="tb"${sm==="n"?"":' style="width:0%"'}></i></div>
     <div class="q"><div id="qpic"></div><div class="big" id="qq"></div><div class="small" id="qs"></div>${TLP}</div>
@@ -7674,7 +7679,7 @@ function mtMenu(){
     ${howMeter()}
     ${grp("すうちょくせん","line")}${grp("はかり","dial")}${grp("めいじん","all")}
   </div>`;
-  $("#mtbk").onclick=()=>go("#home");
+  $("#mtbk").onclick=()=>go(runBack());
   app.querySelectorAll("[data-st]").forEach(b=>b.onclick=()=>go(`#meter?st=${b.dataset.st}`));
   app.querySelectorAll("[data-o]").forEach(b=>b.onclick=()=>{ mtSet(x=>{ x[b.dataset.o]=+b.dataset.v; }); mtMenu(); const n=app.querySelector(`[data-o="${b.dataset.o}"][data-v="${b.dataset.v}"]`); if(n) n.focus(); });
 }
@@ -7926,6 +7931,7 @@ function route(){
   stopTimer(); P=null; M=null; QK=null; QS=null; QH=null; if(RKH) clearInterval(RKH.iv); RK=null; RKH=null; ckStop(); prStop(); wakeOff();
   if(ES){ ES.close(); ES=null; }
   const {path:path0,q}=params(), path=location.hash.startsWith("#q=")?"qlink":location.hash.startsWith("#u=")?"ulink":path0;
+  if(path==="subj"||(path==="units"&&q.get("kid")==="1")) RUNBACK=location.hash; else if(!["play","setup","ulink","meter"].includes(path)) RUNBACK=null;
   setLG(path==="home"||path==="modesetup"||path==="join"||path==="record"?ui.grade:0);
   document.body.dataset.v=["check","play","setup","modesetup","mode","join","lobby","host","teacher","record","make","qlink","units","subj","ulink","hiroba","zukan","tanken","feedback","meter"].includes(path)?path:"home";
   // 課題リンク（task=1）で開いたゲームでは、ほかの画面への入口を隠す（授業モード）

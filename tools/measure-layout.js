@@ -3,7 +3,7 @@
 const fs=require('fs'),path=require('path'),cp=require('child_process'),net=require('net'),crypto=require('crypto');
 const root=path.resolve(__dirname,'..'), baseline=path.join(__dirname,'layout-baseline.json');
 const browsers=['C:/Program Files/Google/Chrome/Application/chrome.exe','C:/Program Files (x86)/Google/Chrome/Application/chrome.exe','C:/Program Files (x86)/Microsoft/Edge/Application/msedge.exe','C:/Program Files/Microsoft/Edge/Application/msedge.exe'];
-const browser=browsers.find(fs.existsSync);
+const browser=[process.env.MH_BROWSER,...browsers].filter(Boolean).find(fs.existsSync);      // MH_BROWSER：ほかの 場所の Chrome（基準は Windows の Chrome/Edge で 作る）
 if(!browser){console.error('Chrome / Edge が見つかりません');process.exit(2)}
 const sleep=ms=>new Promise(r=>setTimeout(r,ms));
 const port=()=>new Promise((resolve,reject)=>{const s=net.createServer();s.once('error',reject);s.listen(0,'127.0.0.1',()=>{const p=s.address().port;s.close(()=>resolve(p))})});
@@ -12,7 +12,7 @@ async function main(){
  const httpPort=await port(),cdpPort=await port();
  console.log(`layout: Chrome/Edge ${path.basename(browser)}、一時ポート ${httpPort}/${cdpPort}`);
  server=cp.spawn('python',['-m','http.server',String(httpPort),'--bind','127.0.0.1'],{cwd:root,stdio:'ignore',windowsHide:true});
- chrome=cp.spawn(browser,['--headless=new','--disable-gpu','--no-first-run','--no-default-browser-check','--remote-allow-origins=*',`--remote-debugging-port=${cdpPort}`,'--user-data-dir='+path.join(require('os').tmpdir(),`mh-layout-${process.pid}`),'about:blank'],{stdio:'ignore',windowsHide:true});
+ chrome=cp.spawn(browser,['--headless=new',...(process.platform==='win32'?[]:['--no-sandbox']),'--disable-gpu','--no-first-run','--no-default-browser-check','--remote-allow-origins=*',`--remote-debugging-port=${cdpPort}`,'--user-data-dir='+path.join(require('os').tmpdir(),`mh-layout-${process.pid}`),'about:blank'],{stdio:'ignore',windowsHide:true});
  let pages;for(let i=0;i<80;i++){try{pages=await (await fetch(`http://127.0.0.1:${cdpPort}/json`)).json();if(pages[0]?.webSocketDebuggerUrl)break}catch{}await sleep(150)}
  if(!pages?.[0]?.webSocketDebuggerUrl)throw Error('CDP を起動できません');
  console.log('layout: CDP に接続');
@@ -37,8 +37,11 @@ async function main(){
    if(value.choicesBottom>height){console.error(`${width}x${height}/${name}: 回答欄の下端 ${value.choicesBottom} が画面の高さ ${height} を超えています`);process.exitCode=1;overflow++}
   }
  }
- // ホームと単元えらび：ページの高さと横はみ出しを測る（PC 1366×768 のホームは、スクロールなしで1画面に収める）
- const pageCases=[...[1,3,6].flatMap(g=>[[`ホーム ${g}年`,'#home',g],[`単元えらび（児童） ${g}年`,'#units?kid=1',g]]),['単元えらび（先生）','#units',0]];
+ // ホーム・教科の へや・単元カード・単元えらび：ページの高さと横はみ出しを測る（PC 1366×768 のホームは、スクロールなしで1画面に収める）
+ // 3〜6年の #units?kid=1 は 算数の へやへ つながるので、3・6年は へや・単元カード・「ぜんぶの 単元から」（&all=1）を 測る（docs/screen-split.md 3章の 段階⑤）
+ const pageCases=[...[1,3,6].map(g=>[`ホーム ${g}年`,'#home',g]),['単元えらび（児童） 1年','#units?kid=1',1],
+  ...[3,6].flatMap(g=>[[`算数のへや ${g}年`,'#subj?s=sansu',g],[`単元カード わり算 ${g}年`,'#subj?s=sansu&item=wari',g],[`単元えらび（児童・ぜんぶ） ${g}年`,'#units?kid=1&subj=sansu&all=1',g]]),
+  ['国語のへや 3年','#subj?s=kokugo',3],['単元えらび（先生）','#units',0]];
  for(const [width,height] of [[375,667],[768,1024],[1366,768]]){
   await send('Emulation.setDeviceMetricsOverride',{width,height,deviceScaleFactor:1,mobile:width<500});
   for(const [name,hash,g] of pageCases){
