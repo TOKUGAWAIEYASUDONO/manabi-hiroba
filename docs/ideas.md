@@ -65,6 +65,8 @@
 - **ことばの まほう** — `plan/idea-jev-kotoba-mahou.md`
 
 ### サイト全体
+- **あそびかたの切りかえボタン（いつもの／タイムアタック／サドンデス）が高さ40pxで、44pxより小さい**（1年の単元えらび・結果画面。index.html の spChips・`.pills.spm .pill.small`）→ 直したら tools/measure-flow.js の `.spm` のぞきを外す。画面の作り直しの公開のあとに（作り直し⑤のセッションから）
+- **index.html の 1416〜1419行あたりに、同じ CSS が style タグ3つで3回くりかえし**（`.ugrade-jump…` と `@media` の `.home:not(.easy)…`）→ 1つにまとめる（作り直し⑤のセッションから）
 - **100マスのページの共有用の情報（og:url・og:site_name・og:image）が元サイト（giga-school.com）のまま** → 直したら `apps/README.md` の「作り直したあとも」の注意に足す
 - **`tools/check-layout.js` が、ローカルに main ブランチがないと止まる**（`git branch main origin/main` で通る）。検査が自分で main を見つけられるようにするとよい
 - **感想フォームのリンク（FEEDBACK_FORM_URL）を入れる**
