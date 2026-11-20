@@ -23,6 +23,9 @@
    - 作る道具：PC の image2（まなびっこの絵と同じ）→ PC のセッションでやる。クラウドは、できた画像の組みこみ（サイズ・webp・data/sansu-items.js へのアイコン名）を担当できる
 
 ## あなたの返事待ち
+- 🌐 **独自ドメイン**：ドメインはもう持っている？（名前・買ったところ）→ 答えを聞いてから計画のセッションを作る
+  - ⚠ 住所が変わると localStorage の記録が新しい住所で読めない → 古い住所から自動で引っ越し＋バックアップの文字で手動の引っ越し（「バックアップに残りの記録を入れる」を先に）
+  - Search Console は新しいドメインで登録する（それまで待つ）。sitemap・robots・canonical・JSON-LD・QR・課題リンクの住所も直す。古い住所のブックマークは新しい住所へ
 - 🏝 **島の 2D版・3D版を 学校の Chromebook で ためす**：https://claude.ai/artifact/VU9s8nzpR6jqBKpsJ7TkpX（左下のボタンで切りかえ・右すみに fps）。できたを150にしても 30fps 以上・熱くならないなら 3D も候補。ためしたら どっちにするか決める（ブランチ claude/hiroba-island-proto）
 - **学校・自治体に確認すること**（友だち対戦・クラスランキングを作る前に）：海外の仲介サーバーを先生がいない時間・家でも使ってよいか／持ち帰り端末の決まり／先生を通さず端末どうしがつながってよいか など → ブランチ `claude/friend-battle-class-ranking-study` の `docs/friend-battle-and-class-ranking-study.md` 5章
 - **Google Search Console の登録**：手順は「Google 検索」セッション（session_01DeDokvgQrED7ysW6abAG2L）にある。確認用のコードが出たら、そのセッションか ここに伝える → 入れたら `seo-google` といっしょに公開
