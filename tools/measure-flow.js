@@ -82,7 +82,7 @@ async function main() {
     // バトル（たからばこ・すごろく）：ホームの 入口 → 設定 → 単元を えらぶ → 「はじめる」が 画面の 中に 見えて 押せる → バトルが はじまる
     //   単元が 40こ 以上 ならぶと、ボタンが 一番下に かくれて「スタートボタンが ない」ように 見えた（2026-11）
     for (const [w, h] of [[375, 812], [768, 1024], [1366, 768]]) {
-      for (const g of [0, 1, 3, 5]) for (const m of ['chest', 'race']) {
+      for (const g of [0, 1, 3, 5]) for (const m of ['chest', 'race', 'sboss']) {
         const where = `${w}×${h} ${g ? g + '年' : 'ぜんぶ'} バトル ${m}`;
         const ctx = await browser.newContext({ viewport: { width: w, height: h }, deviceScaleFactor: 1 });
         const page = await ctx.newPage();
@@ -114,6 +114,52 @@ async function main() {
       }
     }
     console.log('○ バトルの 設定：単元を えらぶと「はじめる」が 画面に 見えて、押すと はじまる');
+    // ひとりで ボスバトル：はじまる → 正解で ボスの げんきが へる → おいはらう → つぎの ボス → 時間で 結果（おいはらえた／0ぴきでも はげます）。
+    //   メダル・きろく（mh_best）には 書かない。課題リンク（task=1）では 遊べない（ホームへ）
+    for (const [w, h] of [[375, 812], [768, 1024], [1366, 768]]) {
+      for (const win of [true, false]) {
+        const where = `${w}×${h} ひとりで ボス（${win ? 'おいはらう' : '0ぴき'}）`;
+        const ctx = await browser.newContext({ viewport: { width: w, height: h }, deviceScaleFactor: 1 });
+        const page = await ctx.newPage();
+        page.on('pageerror', e => bad(where, 'スクリプトの エラー ' + e.message));
+        await page.clock.install();
+        await page.goto(base + '#home');
+        await page.evaluate(() => { localStorage.clear(); localStorage.setItem('mh_ui', JSON.stringify({ grade: 3, subj: 'all' })); });
+        await page.reload(); await page.waitForSelector('.home');
+        await page.click('.home [data-m="sboss"]'); await page.waitForSelector('#modeUnits .ucard');
+        await page.locator('#modeUnits .ucard').first().click(); await page.click('#ugo');
+        await page.waitForSelector('.mplay #sbst');
+        const lk = async what => { const r = await page.evaluate(LOOK); if (r.overflow) bad(where, `${what}：横に ${r.overflow}px はみ出し`); if (r.small.length) bad(where, `${what}：44px 未満の ボタン ${r.small.join(' / ')}`); if (shotDir) await page.screenshot({ path: path.join(shotDir, `sboss-${w}-${win ? 'w' : 'z'}-${what}.png`) }); };
+        await lk('はじめ');
+        if (win) {
+          const pick = ok => page.evaluate(ok => { const b = [...document.querySelectorAll('#mmain .choice')].find(e => mineRight(e.dataset.c) === ok); if (b) b.click(); return !!b; }, ok);
+          const hp0 = await page.evaluate(() => M.sb.hp);
+          await pick(true); await page.clock.runFor(900);
+          if (!(await page.evaluate(h0 => M.sb.hp < h0 && parseFloat(document.getElementById('sbhp').style.width) < 100, hp0))) bad(where, '正解でも ボスの げんきが へらない');
+          await pick(false); await page.clock.runFor(300);
+          if (!(await page.evaluate(() => /げんき/.test(document.getElementById('sbtr').textContent)))) bad(where, 'まちがえても「げんきを とりもどした」が 出ない');
+          await lk('まちがい'); await page.clock.runFor(1700);
+          for (let k = 0; k < 12 && (await page.evaluate(() => M.sb.dn)) < 1; k++) { await pick(true); await page.clock.runFor(900); }
+          if (!(await page.evaluate(() => M.sb.dn === 1 && !!document.querySelector('.bs-runq')))) bad(where, 'げんき 0 で にげていかない');
+          else { await lk('にげる'); await page.clock.runFor(2600); if (!(await page.evaluate(() => M.sb.lv === 1 && !!document.querySelector('#mmain .choice')))) bad(where, 'つぎの ボスが 来ない・問題に もどらない'); }
+        }
+        await page.clock.runFor(125000);
+        try { await page.waitForSelector('.res.sbres', { timeout: 3000 }); } catch (e) { bad(where, '時間で 結果に ならない'); await ctx.close(); continue; }
+        await lk('結果');
+        const res = await page.evaluate(() => ({ num: document.querySelector('.sbres .num').textContent, again: !!document.querySelector('#again'), best: localStorage.getItem('mh_best') }));
+        if (win ? !/1ひき/.test(res.num) : !/すこし/.test(res.num)) bad(where, `結果の ことばが ちがう：${res.num}`);
+        if (!res.again) bad(where, '結果に「もう一回」が ない');
+        if (res.best) bad(where, 'メダル・きろく（mh_best）に 書いている');
+        await ctx.close();
+      }
+    }
+    {
+      const ctx = await browser.newContext({ viewport: { width: 375, height: 812 } }), page = await ctx.newPage();
+      await page.goto(base + '#mode?m=sboss&game=calc&g=3&t=120&task=1'); await page.waitForTimeout(400);
+      if (await page.locator('.mplay').count()) bad('ひとりで ボス 課題リンク', 'task=1 でも 遊べてしまう');
+      await ctx.close();
+    }
+    console.log('○ ひとりで ボスバトル：はじまって、げんきが へって、にげて、つぎの ボス、時間で 結果（0ぴきでも はげます）・課題リンクでは 出ない');
     // 古い URL・課題リンクから 入る（スマホ・3年）
     const ctx = await browser.newContext({ viewport: { width: 375, height: 812 } });
     const page = await ctx.newPage();
