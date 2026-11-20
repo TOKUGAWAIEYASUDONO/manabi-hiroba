@@ -12,9 +12,10 @@
 
 ## 作業中（セッションあり）
 <!-- - タスク名 — セッション: session_xxx -->
+- 🚀 **公開③：画面の作り直し（claude/screen-cleanup）＋ へらない しくみ（claude/keep-rewards）**（✅ 公開OKもらった）— セッション: session_01DeDokxHvoFn1oWnVphVsi5
 
 ## 次やる（3つまで）
-0. 🚀 **画面の作り直し ②〜⑤ をまとめて公開**：ブランチ `claude/screen-cleanup` 1つに全部入っている。あなたの OK 待ち。公開前に PC で layout-baseline を作り直すとよい（`git switch claude/screen-cleanup` → `node tools/measure-layout.js` → 回答欄がはみ出していないのを見て → `node tools/measure-layout.js --write` → コミット）。⑥（あとで）単元↔道具のつながり
+0. 🖥 **公開のあと：PC で layout-baseline を作り直す**（`git switch main` → `git pull` → `node tools/measure-layout.js` → 回答欄がはみ出していないのを見て → `node tools/measure-layout.js --write` → コミット）。⑥（あとで）単元↔道具のつながり
 1. 🛟 **100マス計算を変えて build したときの元のコード（`src/App.jsx` など）を探して避難させる** — PC の「子どものアプリ」セッションで。避難のときに見つかったか、まだわからない
 2. 💾 **バックアップの文字（HR1〜3／MH2）に、のこりの記録を入れる**：やりこみ（y）・もらった物（mh_col の kp：シールのランク・学びでもらう きせかえ/しょうごう・遊具）・めもり名人の★。入っていないと、別の端末へうつしたときに減る（data/collection.js の hrMake・hrParse・hrMerge、kpClean・keepUp）
 3. 🎨 **アイコンを画像生成で作る**（算数のへやのタイル＝まとまり11こ＋とっくん、教科のとびら＝段階④）（画面の作り直し③のセッションから・あなたの希望）
@@ -25,7 +26,6 @@
 ## あなたの返事待ち
 - 🏝 **島の 2D版・3D版を 学校の Chromebook で ためす**：https://claude.ai/artifact/VU9s8nzpR6jqBKpsJ7TkpX（左下のボタンで切りかえ・右すみに fps）。できたを150にしても 30fps 以上・熱くならないなら 3D も候補。ためしたら どっちにするか決める（ブランチ claude/hiroba-island-proto）
 - **学校・自治体に確認すること**（友だち対戦・クラスランキングを作る前に）：海外の仲介サーバーを先生がいない時間・家でも使ってよいか／持ち帰り端末の決まり／先生を通さず端末どうしがつながってよいか など → ブランチ `claude/friend-battle-class-ranking-study` の `docs/friend-battle-and-class-ranking-study.md` 5章
-- **公開してよいか**：`claude/keep-rewards`（基準が変わっても もらった物が へらない）→ どんぐりの基準を見直す前に入れたい
 - **Google Search Console の登録**：手順は「Google 検索」セッション（session_01DeDokvgQrED7ysW6abAG2L）にある。確認用のコードが出たら、そのセッションか ここに伝える → 入れたら `seo-google` といっしょに公開
 - **どんぐりの配り方・基準**：今考え中（星・メダルのセッションでは どんぐりは さわらない）
 - **めもり名人の進度が消えた件**：どの端末・ブラウザで起きたか
