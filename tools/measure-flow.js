@@ -26,6 +26,11 @@ const LOOK = `(()=>{const e=document.documentElement, o=e.scrollWidth>innerWidth
   const small=[...document.querySelectorAll('#app button,#app a.btn,#app .tile,#app .sdoor')].filter(b=>{const r=b.getBoundingClientRect(),s=getComputedStyle(b);
     return r.width>0&&r.height>0&&s.visibility!=='hidden'&&!b.closest('.gdlink,.more,.links,.bottom,.spm')&&(r.height<44||r.width<44);}).map(b=>(b.className||b.tagName)+':'+(b.innerText||b.getAttribute('aria-label')||'').trim().slice(0,12)+' '+Math.round(b.getBoundingClientRect().width)+'×'+Math.round(b.getBoundingClientRect().height));
   return {overflow:o,small,hash:location.hash,h:e.scrollHeight};})()`;
+// 乱数を 固定する（出る 問題を 毎回 おなじに して、たまにしか 出ない はみ出しも 毎回 しらべられるように）
+const SEEDED = () => { let x = 5 * 2654435761 >>> 0; Math.random = () => { x ^= x << 13; x >>>= 0; x ^= x >>> 17; x ^= x << 5; x >>>= 0; return x / 4294967296; }; };
+// 1年「いくつ ある？」で つかう 絵文字（data/gen/sansu-12.js の kazoeru から よむ）。⭐ は 字と おなじ あつかいで、ならぶと 改行されず はみ出した（2026-11）
+const KAZOERU = (() => { const m = fs.readFileSync(path.join(root, 'data/gen/sansu-12.js'), 'utf8').match(/g\.kazoeru[\s\S]*?r\.pick\(\[([^\]]+)\]/); return m ? JSON.parse('[' + m[1] + ']') : []; })();
+if (!KAZOERU.length) { console.error('× kazoeru の 絵文字が よめない'); process.exit(1); }
 async function main() {
   await new Promise(r => server.listen(0, '127.0.0.1', r));
   const base = `http://127.0.0.1:${server.address().port}/index.html`;
@@ -38,6 +43,7 @@ async function main() {
         const page = await ctx.newPage();
         page.on('pageerror', e => bad(where, 'スクリプトの エラー ' + e.message));
         await page.clock.install();
+        await page.addInitScript(SEEDED);
         await page.goto(base + '#home');
         await page.evaluate(gr => { localStorage.clear(); localStorage.setItem('mh_ui', JSON.stringify({ grade: gr, subj: 'all' })); }, g);
         await page.goto(base + '#home'); await page.reload(); await page.waitForSelector('.home');
@@ -66,6 +72,13 @@ async function main() {
           await page.click('.sicards .ucard[data-id]');
         }
         await page.waitForSelector('#qq'); await look('問題');
+        if (g <= 2) {   // 「いくつ ある？」の 絵文字が 20こ ならぶ 問題（いちばん 長い とき）を 1つずつ 入れて しらべる
+          for (const e of KAZOERU) {
+            await page.evaluate(t => { document.querySelector('#qq').textContent = t; }, `${e}は いくつ ある？ ${e.repeat(20)}`);
+            const o = await page.evaluate(LOOK);
+            if (o.overflow) bad(`${where} 問題（${e}×20）`, `横に ${o.overflow}px はみ出し`);
+          }
+        }
         await page.clock.runFor(61000);
         await page.waitForSelector('.res'); await look('結果');
         const back = page.locator('.res .subs button', { hasText: 'もどる' });
