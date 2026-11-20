@@ -14,7 +14,9 @@
 <meta property="og:image" content="https://tokugawaieyasudono.github.io/manabi-hiroba/vendor/img/og-home.png">
 <meta property="og:image:width" content="1200"><meta property="og:image:height" content="630">
 <meta name="twitter:image" content="https://tokugawaieyasudono.github.io/manabi-hiroba/vendor/img/og-home.png">
-<link rel="icon" href="data:,">
+<link rel="icon" href="vendor/img/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="vendor/img/favicon-32.png" sizes="32x32" type="image/png">
+<link rel="apple-touch-icon" href="vendor/img/apple-touch-icon.png">
 <link rel="stylesheet" href="vendor/fonts/biz-udpgothic.css?v=ecfc8846">
 <style>
 :root{
@@ -71,6 +73,7 @@ button:disabled{opacity:.55;cursor:default;box-shadow:none;transform:translateY(
 header{background:var(--board);color:#fff;padding:6px 14px;display:flex;align-items:center;gap:10px;border-bottom:4px solid var(--edge)}
 header h1{margin:0;font-size:inherit}
 header .logo{font:inherit;font-size:24px;font-weight:800;cursor:pointer;letter-spacing:.06em;background:none;border:0;color:#fff;min-height:44px;padding:0 4px;text-shadow:2px 2px 0 var(--edge)}
+header .logo{display:flex;align-items:center}header .logo img{display:block;height:36px;width:auto}header .logo .logo-mark{display:none}
 header .logo:disabled{color:#fff;cursor:default;opacity:1;box-shadow:none;transform:none}
 header .sp{flex:1}
 .hbtn{background:#fff;color:var(--ink);border-radius:12px;padding:0 12px;min-height:44px;min-width:44px;font-size:16px;display:inline-flex;align-items:center;justify-content:center;gap:6px;box-shadow:0 3px 0 var(--edge)}
@@ -303,6 +306,8 @@ body[data-v=teacher] rt{display:none}
 .tc-top{position:sticky;top:0;z-index:5;display:flex;align-items:center;gap:16px;padding:10px 24px;background:var(--t-sf);border-bottom:1px solid var(--t-ln)}
 .tc-brand{display:flex;align-items:center;gap:10px;text-decoration:none;color:var(--t-tx)}
 .tc-brand b{display:block;font-size:16px;line-height:1.2}.tc-brand small{display:block;font-size:12px;color:var(--t-mu)}
+.tc-logo-img{display:block;height:32px;width:auto}.tc-brand small{white-space:nowrap}
+@media (max-width:430px){.tc-brand small{display:none}}
 .tc-logo{width:36px;height:36px;border-radius:9px;background:var(--t-pr);color:#fff;display:flex;align-items:center;justify-content:center}.tc-logo .ic{width:22px;height:22px}
 .tc-toplinks{margin-left:auto;display:flex;gap:4px;flex-wrap:wrap}
 .tc-toplinks a{display:inline-flex;align-items:center;gap:6px;min-height:40px;padding:4px 12px;border-radius:8px;text-decoration:none;color:var(--t-tx);font-size:14px;font-weight:600}
@@ -718,7 +723,7 @@ body:not(.nofg) :is(p,div,span,b,button,h1,h2,h3,td,th,label,summary,li):has(>ru
 .ubk h4{margin:8px 0 2px}
 .hbtn.fgb{font-size:14px;gap:4px;flex-direction:column;line-height:1.05;padding:0 8px}
 .hbtn.fgb b{font-size:15px}
-@media (max-width:430px){header{gap:3px;padding:6px 6px} header .logo{font-size:13px;letter-spacing:0;padding:0 1px;min-width:0;flex:0 1 auto;overflow:hidden} header .hbtn{flex:none} .hbtn#hGrade{font-size:13px;padding:0 4px;gap:2px} .hbtn#hGrade .ic{display:none} #hRec{font-size:11px;padding:0 3px;gap:2px} #hRec .ic,#hRec svg{width:20px;height:20px} #hRec .art{width:20px;height:20px} .hbtn.fgb{font-size:10px;padding:0 3px;min-width:44px}.hbtn.fgb b{font-size:12px} #hRec b{font-size:14px}}
+@media (max-width:430px){header .logo .logo-full{display:none} header .logo .logo-mark{display:block;width:36px} header{gap:3px;padding:6px 6px} header .logo{padding:0;min-width:44px;flex:none;justify-content:center} header .hbtn{flex:none} .hbtn#hGrade{font-size:13px;padding:0 4px;gap:2px} .hbtn#hGrade .ic{display:none} #hRec{font-size:11px;padding:0 3px;gap:2px} #hRec .ic,#hRec svg{width:20px;height:20px} #hRec .art{width:20px;height:20px} .hbtn.fgb{font-size:10px;padding:0 3px;min-width:44px}.hbtn.fgb b{font-size:12px} #hRec b{font-size:14px}}
 /* ===== 前に映す大画面（先生の端末）：2〜3m 離れても読める。最小 28px ===== */
 body[data-v=host] header,body[data-v=host] .foot{display:none}
 .px-menu{position:fixed;right:14px;top:12px;z-index:60;color:var(--ink)}
@@ -1708,7 +1713,7 @@ body[data-v=host] .wrap{max-width:none;padding:0}
 </defs></svg>
 <!--ART-END-->
 <header>
-  <h1><button class="logo" id="logo" onclick="go('#home')">まなびひろば</button></h1>
+  <h1><button class="logo" id="logo" onclick="go('#home')"><img class="logo-full" src="vendor/img/logo-hirametto-dark.svg" width="143" height="36" alt="ひらめっと"><img class="logo-mark" src="vendor/img/logo-hirametto-mark-dark.svg" width="36" height="36" alt="ひらめっと"></button></h1>
   <span class="sp"></span>
   <button class="hbtn hx" id="hGrade" onclick="openGradeSheet()"></button>
   <button class="hbtn hx" id="hRec" onclick="go('#record')"></button>
@@ -4003,7 +4008,7 @@ function renderTeacher(q){
   const setOpt=qsets.length?`<optgroup label="先生のもんだい">${qsets.map(s=>`<option value="set:${esc(s.id)}">📝 ${esc(s.title||"（なまえなし）")}（${s.qs.length}問）</option>`).join("")}</optgroup>`:"";
   app.innerHTML=`<div class="tc">
     <div class="tc-top">
-      <a class="tc-brand" href="#teacher"><span class="tc-logo" aria-hidden="true">${ic("graduation-cap")}</span><span><b>まなびひろば</b><small>先生のページ</small></span></a>
+      <a class="tc-brand" href="#teacher"><img class="tc-logo-img" src="vendor/img/logo-hirametto.svg" width="127" height="32" alt="ひらめっと"><small>先生のページ</small></a>
       <nav class="tc-toplinks" aria-label="ほかのページ"><a href="guide/index.html">${ic("book-open")}<span>学年・単元ガイド</span></a><a href="#check">${ic("plug")}<span>接続テスト</span></a><a href="#feedback">${ic("pencil")}<span>ご意見</span></a><a href="#home" class="tc-kid">${ic("arrow-left")}<span>児童の画面</span></a></nav>
     </div>
     <div class="tc-body">

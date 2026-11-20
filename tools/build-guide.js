@@ -69,6 +69,9 @@ function head({ title, desc, canonical, ld }) {
 <meta name="twitter:card" content="summary_large_image">
 <meta property="og:image" content="${BASE}vendor/img/og-home.png">
 <meta property="og:image:width" content="1200"><meta property="og:image:height" content="630">
+<link rel="icon" href="../vendor/img/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="../vendor/img/favicon-32.png" sizes="32x32" type="image/png">
+<link rel="apple-touch-icon" href="../vendor/img/apple-touch-icon.png">
 <link rel="stylesheet" href="../vendor/fonts/biz-udpgothic.css">
 <link rel="stylesheet" href="guide.css">
 ${ld.map(jsonld).join("\n")}

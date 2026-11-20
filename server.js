@@ -449,11 +449,11 @@ http.createServer(async (req, res) => {
       return fs.createReadStream(f).pipe(res);
     }
     if (req.method === "GET" && url.pathname === "/favicon.ico") { res.writeHead(204, { "Cache-Control": "public, max-age=86400" }); return res.end(); }
-    const am = url.pathname.match(/^\/vendor\/(audio\/[\w-]+\.mp3|img\/[\w-]+\.png|img\/space\/[\w-]+\.webp)$/);   // 効果音・BGM・絵（CC0 の素材。vendor/THIRD-PARTY-LICENSES.txt）
+    const am = url.pathname.match(/^\/vendor\/(audio\/[\w-]+\.mp3|img\/[\w-]+\.(?:png|svg)|img\/space\/[\w-]+\.webp)$/);   // 効果音・BGM・絵（CC0 の素材。vendor/THIRD-PARTY-LICENSES.txt）
     if (req.method === "GET" && am) {
       const f = path.join(__dirname, "vendor", am[1]);
       if (!fs.existsSync(f)) return json(res, 404, { error: "not found" });
-      res.writeHead(200, { "Content-Type": am[1].endsWith(".mp3") ? "audio/mpeg" : am[1].endsWith(".webp") ? "image/webp" : "image/png", "Cache-Control": "public, max-age=86400" });
+      res.writeHead(200, { "Content-Type": am[1].endsWith(".mp3") ? "audio/mpeg" : am[1].endsWith(".webp") ? "image/webp" : am[1].endsWith(".svg") ? "image/svg+xml" : "image/png", "Cache-Control": "public, max-age=86400" });
       return fs.createReadStream(f).pipe(res);
     }
     // 状態の配信（SSE 形式）。鍵（hostKey）や参加の token は URL に載せず、POST の本文で受け取る。GET は鍵なし（名前が見えない）の接続だけ
