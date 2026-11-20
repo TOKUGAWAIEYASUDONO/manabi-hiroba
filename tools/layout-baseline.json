@@ -1,10 +1,10 @@
 {
-  "indexSha256": "cc21fb326306a4ad05008353b816758445268ab0a32be1bb09b8f108766700ea",
+  "indexSha256": "c2465ccc34e60b0205a8aba1f71b2734d89daa05fd05dfc765131215d24a3d44",
   "browser": "chrome.exe",
   "measurements": {
     "375x667/計算スプリント": {
       "fontSize": 41.25,
-      "choicesBottom": 636.8
+      "choicesBottom": 663
     },
     "375x667/漢字よみ": {
       "fontSize": 41.25,
@@ -12,7 +12,7 @@
     },
     "375x667/単元の練習 m3-amari": {
       "fontSize": 20,
-      "choicesBottom": 594
+      "choicesBottom": 523
     },
     "375x667/1年の絵つき m1-nanbanme": {
       "fontSize": 20,
@@ -52,7 +52,7 @@
     },
     "1366x768/計算スプリント": {
       "fontSize": 68.3,
-      "choicesBottom": 726.8
+      "choicesBottom": 620.8
     },
     "1366x768/漢字よみ": {
       "fontSize": 68.3,
@@ -60,7 +60,7 @@
     },
     "1366x768/単元の練習 m3-amari": {
       "fontSize": 34,
-      "choicesBottom": 689
+      "choicesBottom": 651
     },
     "1366x768/1年の絵つき m1-nanbanme": {
       "fontSize": 34,
@@ -75,67 +75,112 @@
       "choicesBottom": 735
     },
     "375x667/ホーム 1年": {
-      "pageHeight": 1188
-    },
-    "375x667/単元えらび（児童） 1年": {
-      "pageHeight": 1948
+      "pageHeight": 1348
     },
     "375x667/ホーム 3年": {
-      "pageHeight": 1564
-    },
-    "375x667/単元えらび（児童） 3年": {
-      "pageHeight": 3452
+      "pageHeight": 917
     },
     "375x667/ホーム 6年": {
-      "pageHeight": 2065
+      "pageHeight": 1080
     },
-    "375x667/単元えらび（児童） 6年": {
-      "pageHeight": 2969
+    "375x667/単元えらび（児童） 1年": {
+      "pageHeight": 3927
+    },
+    "375x667/算数のへや 3年": {
+      "pageHeight": 1253
+    },
+    "375x667/単元カード わり算 3年": {
+      "pageHeight": 822
+    },
+    "375x667/単元えらび（児童・ぜんぶ） 3年": {
+      "pageHeight": 1809
+    },
+    "375x667/算数のへや 6年": {
+      "pageHeight": 844
+    },
+    "375x667/単元カード わり算 6年": {
+      "pageHeight": 667
+    },
+    "375x667/単元えらび（児童・ぜんぶ） 6年": {
+      "pageHeight": 1285
+    },
+    "375x667/国語のへや 3年": {
+      "pageHeight": 667
     },
     "375x667/単元えらび（先生）": {
-      "pageHeight": 14646
+      "pageHeight": 28090
     },
     "768x1024/ホーム 1年": {
+      "pageHeight": 1052
+    },
+    "768x1024/ホーム 3年": {
+      "pageHeight": 1024
+    },
+    "768x1024/ホーム 6年": {
       "pageHeight": 1024
     },
     "768x1024/単元えらび（児童） 1年": {
-      "pageHeight": 1140
+      "pageHeight": 2201
     },
-    "768x1024/ホーム 3年": {
-      "pageHeight": 1269
+    "768x1024/算数のへや 3年": {
+      "pageHeight": 1024
     },
-    "768x1024/単元えらび（児童） 3年": {
-      "pageHeight": 2219
+    "768x1024/単元カード わり算 3年": {
+      "pageHeight": 1024
     },
-    "768x1024/ホーム 6年": {
-      "pageHeight": 1547
+    "768x1024/単元えらび（児童・ぜんぶ） 3年": {
+      "pageHeight": 1271
     },
-    "768x1024/単元えらび（児童） 6年": {
-      "pageHeight": 2026
+    "768x1024/算数のへや 6年": {
+      "pageHeight": 1024
+    },
+    "768x1024/単元カード わり算 6年": {
+      "pageHeight": 1024
+    },
+    "768x1024/単元えらび（児童・ぜんぶ） 6年": {
+      "pageHeight": 1024
+    },
+    "768x1024/国語のへや 3年": {
+      "pageHeight": 1024
     },
     "768x1024/単元えらび（先生）": {
-      "pageHeight": 8538
+      "pageHeight": 15545
     },
     "1366x768/ホーム 1年": {
       "pageHeight": 768
     },
-    "1366x768/単元えらび（児童） 1年": {
-      "pageHeight": 1344
-    },
     "1366x768/ホーム 3年": {
       "pageHeight": 768
-    },
-    "1366x768/単元えらび（児童） 3年": {
-      "pageHeight": 1823
     },
     "1366x768/ホーム 6年": {
       "pageHeight": 768
     },
-    "1366x768/単元えらび（児童） 6年": {
-      "pageHeight": 1466
+    "1366x768/単元えらび（児童） 1年": {
+      "pageHeight": 1138
+    },
+    "1366x768/算数のへや 3年": {
+      "pageHeight": 768
+    },
+    "1366x768/単元カード わり算 3年": {
+      "pageHeight": 768
+    },
+    "1366x768/単元えらび（児童・ぜんぶ） 3年": {
+      "pageHeight": 1274
+    },
+    "1366x768/算数のへや 6年": {
+      "pageHeight": 768
+    },
+    "1366x768/単元カード わり算 6年": {
+      "pageHeight": 768
+    },
+    "1366x768/単元えらび（児童・ぜんぶ） 6年": {
+      "pageHeight": 1060
+    },
+    "1366x768/国語のへや 3年": {
+      "pageHeight": 768
     },
     "1366x768/単元えらび（先生）": {
-      "pageHeight": 7431
+      "pageHeight": 15143
     }
   }
 }
