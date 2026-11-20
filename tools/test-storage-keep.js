@@ -11,7 +11,7 @@ const errors = [];
 
 /* ---- 1. 保存名 ---- */
 const KEEP = ['mh_best', 'mh_col', 'mh_colcfg', 'mh_fg', 'mh_hsc', 'mh_m100', 'mh_m1j', 'mh_meter', 'mh_mkav', 'mh_name', 'mh_nigate',
-  'mh_quiz_sets', 'mh_setup', 'mh_sound', 'mh_spbest', 'mh_toolcfg', 'mh_troom', 'mh_ui', 'mh_upick'];
+  'mh_quiz_sets', 'mh_setup', 'mh_sound', 'mh_spbest', 'mh_toolcfg', 'mh_troom', 'mh_ui', 'mh_upick', 'mh_moved'];      // mh_moved：おひっこしの しるし（data/move.js。古い住所に のこす）
 const KEEP_100 = ['giga_calc_records_v4', 'giga_calc_settings_v4', 'study.records.v1'];    // 100マス計算（apps/100masu）。名前の v4 は もとの アプリの 名前の 一部
 const html = read('index.html');
 const dataSrc = fs.readdirSync(path.join(root, 'data')).filter(f => f.endsWith('.js')).map(f => read(`data/${f}`)).join('\n');

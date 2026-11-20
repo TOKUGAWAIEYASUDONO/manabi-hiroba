@@ -6,7 +6,7 @@
    - ページ内リンク（#id）と他ページへのリンクの先が実在する
    - TEXTBOOK_ORDER（あれば）の単元IDが実在する */
 const fs = require("fs"), path = require("path");
-const { root, load, BASE, SUBJ_ORDER, pageName } = require("./guide-lib");
+const { root, load, BASE, SUBJ_ORDER, pageName, MOVE_TAG } = require("./guide-lib");
 const W = load(), UN = W.MH_UNITS, TB = W.TEXTBOOK_ORDER;
 const rikaPublic = /window\.RIKA_PUBLIC\s*=\s*true\s*;/.test(fs.readFileSync(path.join(root, "index.html"), "utf8"));
 const errors = [], err = m => errors.push(m);
@@ -45,8 +45,9 @@ for (const f in pageHtml) {
   const lds = [...h.matchAll(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/g)];
   if (!lds.length) err(`${f}: JSON-LD がありません`);
   for (const m of lds) { try { JSON.parse(m[1]); } catch (e) { err(`${f}: JSON-LD が読めません`); } }
-  const scripts = [...h.matchAll(/<script\b([^>]*)>/g)].filter(m => !/application\/ld\+json/.test(m[1]));
-  if (scripts.length) err(`${f}: JSON-LD 以外の script があります`);
+  const scripts = [...h.matchAll(/<script\b([^>]*)>/g)].filter(m => !/application\/ld\+json/.test(m[1]) && !/^ src="\.\.\/data\/move\.js\?v=[0-9a-f]{8}"$/.test(m[1]));
+  if (scripts.length) err(`${f}: JSON-LD・おひっこし（data/move.js）以外の script があります`);
+  if (!h.includes(MOVE_TAG)) err(`${f}: おひっこしの script（${MOVE_TAG}）が ない・版が 古い（node tools/build-guide.js）`);
   if (/<(?:link|img|iframe|script)[^>]+(?:href|src)="https?:/.test(h.replace(/<link rel="canonical"[^>]*>/, ""))) err(`${f}: 外部読み込みがあります`);
   if (/google-analytics|gtag|googletagmanager/.test(h)) err(`${f}: 解析タグがあります`);
   if (/《|》/.test(h)) err(`${f}: ふりがな記法《》が残っています`);

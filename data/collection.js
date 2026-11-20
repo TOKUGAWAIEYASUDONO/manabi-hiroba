@@ -645,8 +645,13 @@
      まなびっこの部分：しるし(1：はじめの1たい)・数(1)・［番号(2)・なかよし(2)・きらきら(1)］×数・えらべる分（QCODE の字ごとの数(1)×6）・ひろばの数(1)・［番号(2)］×数
      HR3（v3.3）＝「HR3」＋ きせかえの部分 ＋ まなびっこの部分（何もなくても 入れる）＋ HR1 と同じ中身 ＋ 確認(3)。きせかえを 買っても つけても いなければ 今まで通り HR2／HR1。
      きせかえの部分：かたまりの数(1)・［買った物 20ビット(4)］×数（KZ_IDS の順）・つけている子の数(1)・［子の番号(2)・ぼうし・もちもの・はいけい・しょうごう（KZ_IDS の番号＋1、なしは 0）(2)×4］×数。
-     古い版のサイトは HR3 を こわれた文字として 断る（だまって 消えない） */
-  const EPOCH = 18262, RE = /^HR[123][0-9A-Z]+$/;
+     古い版のサイトは HR3 を こわれた文字として 断る（だまって 消えない）
+     HR4（2026-11-20。新しい住所への おひっこしの 予備）＝「HR4」＋ やりこみの部分 ＋ もらった物の部分 ＋ きせかえの部分（何もなくても 入れる）＋ まなびっこの部分（何もなくても 入れる）＋ HR1 と同じ中身 ＋ 確認(3)。
+     やりこみ（y）も もらった物（kp）も 何もなければ 今まで通り HR3／HR2／HR1。数は「長さ(1)＋数字」の 形（0 は「0」の 1字）。
+     やりこみの部分：正解の数・ノーミスの回・3教科の回・教科ごとの 正解の数（YA_SUBJ の順）・単元の数・［単元の番号(2)・正解・ノーミス・しるし(1：7割の回＋9割の回×2)］×数・じっせき（YA_BK の順の ビット。かたまりの数(1)・［20ビット(4)］×数）
+     もらった物の部分：遊具（PARTS の順の 8ビット(2)）・学びで もらった きせかえ（KZ_IDS の順の ビット。かたまりの数(1)・［20ビット(4)］×数）・シールの ランクの 数・［単元の番号(2)・ランク(1)］×数
+     古い版のサイトは HR4 を こわれた文字として 断る（だまって 消えない） */
+  const EPOCH = 18262, RE = /^HR[1234][0-9A-Z]+$/;
   const b36 = (n, w) => Math.min(Math.pow(36, w) - 1, Math.max(0, n | 0)).toString(36).toUpperCase().padStart(w, "0");
   const sum3 = t => { let h = 7; for (const c of t) h = (h * 31 + c.charCodeAt(0)) % 46656; return h.toString(36).toUpperCase().padStart(3, "0"); };
   const HEAD = 3 + 3 + 3 + 3 + 2 + DECOR.length + 2;
@@ -679,9 +684,9 @@
       return { mk: { w, own, q, sh }, len: p };
     } catch (e) { return null; }
   }
-  function kzStr(S) {
+  function kzStr(S, force) {
     const K = S.kz, o = K.o.filter(id => KZ_BY.has(id)), eq = MK_IDS.filter(id => S.mk.own[id] && K.e[id] && Object.keys(K.e[id]).length);
-    if (!o.length && !eq.length) return "";
+    if (!force && !o.length && !eq.length) return "";
     const nc = Math.max(1, Math.ceil(KZ_IDS.reduce((m, id, i) => (KZ_BY.get(id).price ? i + 1 : m), 0) / 20)); let out = b36(nc, 1);      // 買える物の ところまで（もらう物を 末尾に 足しても 文字は ふえない）
     for (let c = 0; c < nc; c++) { let v = 0; for (let i = 0; i < 20; i++) { const id = KZ_IDS[c * 20 + i]; if (id && o.includes(id)) v |= 1 << i; } out += b36(v, 4); }
     out += b36(eq.length, 1);
@@ -707,25 +712,89 @@
       return { kz: { o, e }, len: p };
     } catch (err) { return null; }
   }
+  /* じっせきの 順（バックアップの 文字の ビットの 番号）。id は かえない・消さない。新しい じっせきは 末尾に 足すだけ（tools/test-collection.js が YA_ACH と くらべる） */
+  const YA_BK = ["c100", "c300", "c1000", "c3000", "c10000", "nm1", "nm10", "nm30", "nm100", "r1_5", "r1_20", "r1_50", "r2_5", "r2_20", "r2_50", "r3_5", "r3_20", "r4_1", "r4_10",
+    "sm300", "sj300", "ss300", "sr300", "se300", "mx1", "mx10", "mk2", "mk4", "kira1", "m100n1", "m100n10", "m100n50", "m100t120", "m100t60", "mt10", "mtall", "kuku"];
+  const vn = n => { n = Math.max(0, Math.floor(+n) || 0); if (!n) return "0"; const t = n.toString(36).toUpperCase(); return t.length.toString(36).toUpperCase() + t; };
+  const bits = (list, has) => { const nc = Math.max(1, Math.ceil(list.length / 20)); let out = b36(nc, 1);
+    for (let c = 0; c < nc; c++) { let v = 0; for (let i = 0; i < 20; i++) { const id = list[c * 20 + i]; if (id && has(id)) v |= 1 << i; } out += b36(v, 4); }
+    return out; };
+  function yaStr(S) {
+    const Y = S.y, ids = UNIT_IDS.filter(id => Y.u[id]);
+    return vn(Y.c) + vn(Y.nm) + vn(Y.mx) + YA_SUBJ.map(k => vn(Y.s[k] || 0)).join("") + vn(ids.length)
+      + ids.map(id => { const u = Y.u[id]; return b36(IDX[id], 2) + vn(u[0]) + vn(u[1]) + b36((u[2] ? 1 : 0) + (u[3] ? 2 : 0), 1); }).join("")
+      + bits(YA_BK, id => Y.a.includes(id));
+  }
+  /* もらった物は、いまの 記録から 計算できない 物（前の 基準で もらった物）だけ 入れる。読んだ あとの keepUp が のこりを 計算する */
+  function kpOnly(S) {
+    const K = S.kp, P = new Map(PARTS.map(p => [p.id, p])), N = { ...S, kp: kpFresh() };      // N：もらった物を わすれた ときの 計算
+    return { p: K.p.filter(id => !partHave(N, P.get(id))), z: K.z.filter(id => !kzUnlocked(N, KZ_BY.get(id))), r: UNIT_IDS.filter(id => K.r[id] > yaRankNow(S, id)) };
+  }
+  function kpStr(S) {
+    const K = kpOnly(S);
+    let p = 0; PARTS.forEach((x, i) => { if (K.p.includes(x.id)) p |= 1 << i; });
+    return b36(p, 2) + bits(KZ_IDS, id => K.z.includes(id)) + vn(K.r.length) + K.r.map(id => b36(IDX[id], 2) + b36(S.kp.r[id], 1)).join("");
+  }
+  const yaAny = S => S.y.c || S.y.nm || S.y.mx || Object.keys(S.y.u).length || S.y.a.length || Object.keys(S.y.s).some(k => S.y.s[k]);
+  const kpAny = S => { const K = kpOnly(S); return K.p.length || K.z.length || K.r.length; };
+  /* 読む道具：rd(w) 決まった けた／rv() 長さ つきの 数／rb(list) ビットの かたまり（list の 外の ビットは だめ） */
+  function reader(body) {
+    let p = 0;
+    const rd = w => { if (p + w > body.length) throw new Error("short"); const t = body.slice(p, p + w); if (!/^[0-9A-Z]+$/.test(t)) throw new Error("bad"); p += w; return parseInt(t, 36); };
+    const rv = () => { const n = rd(1); if (!n) return 0; if (n > 6) throw new Error("bad"); return rd(n); };
+    const rb = list => { const nc = rd(1), out = []; if (!(nc >= 1 && nc <= Math.ceil(list.length / 20) + 4)) throw new Error("bad");
+      for (let c = 0; c < nc; c++) { const v = rd(4); if (v >= (1 << 20)) throw new Error("bad");
+        for (let i = 0; i < 20; i++) if (v & (1 << i)) { const id = list[c * 20 + i]; if (!id) throw new Error("bad"); out.push(id); } }
+      return out; };
+    return { rd, rv, rb, pos: () => p };
+  }
+  function yaParse(body) {
+    try {
+      const R = reader(body), { rd, rv, rb } = R, Y = yaFresh();
+      Y.c = Math.min(9e7, rv()); Y.nm = Math.min(9e6, rv()); Y.mx = Math.min(9e6, rv());
+      for (const k of YA_SUBJ) { const v = rv(); if (v) Y.s[k] = Math.min(9e7, v); }
+      const n = rv(); if (n > UNIT_IDS.length) return null;
+      for (let i = 0; i < n; i++) { const id = UNIT_IDS[rd(2)], a = Math.min(9e6, rv()), b = Math.min(9e6, rv()), f = rd(1); if (!id || Y.u[id] || f > 3) return null; Y.u[id] = [a, b, f & 1 ? 1 : 0, f & 2 ? 1 : 0]; }
+      Y.a = rb(YA_BK).filter(id => YA_BY.has(id));
+      return { y: Y, len: R.pos() };
+    } catch (e) { return null; }
+  }
+  function kpParse(body) {
+    try {
+      const R = reader(body), { rd, rv, rb } = R, K = kpFresh();
+      const pm = rd(2); if (pm >= (1 << PARTS.length)) return null;
+      PARTS.forEach((x, i) => { if (pm & (1 << i)) K.p.push(x.id); });
+      K.z = rb(KZ_IDS);
+      const n = rv(); if (n > UNIT_IDS.length) return null;
+      for (let i = 0; i < n; i++) { const id = UNIT_IDS[rd(2)], r = rd(1); if (!id || K.r[id] || !(r >= 1 && r <= 4)) return null; K.r[id] = r; }
+      return { kp: K, len: R.pos() };
+    } catch (e) { return null; }
+  }
   function hrMake(S) {
-    const kzs = kzStr(S), ids = UNIT_IDS.filter(id => stage(S, id) >= 1), mks = kzs ? kzs + mkStr(S, true) : mkStr(S), tag = kzs ? "HR3" : mks ? "HR2" : "HR1";
+    const v4 = yaAny(S) || kpAny(S), kzs = kzStr(S, v4), ids = UNIT_IDS.filter(id => stage(S, id) >= 1), mks = kzs ? kzs + mkStr(S, true) : mkStr(S);
+    const tag = v4 ? "HR4" : kzs ? "HR3" : mks ? "HR2" : "HR1";
     let own = 0; DECOR.forEach((d, i) => { if (S.own.includes(d.id)) own |= 1 << i; });
     const body = mks + b36(S.d0 - EPOCH, 3) + b36(S.ac.e, 3) + b36(S.ac.s, 3) + b36(S.done ? S.done - EPOCH : 0, 3) + b36(own, 2)
       + DECOR.map(d => (S.pl[d.id] || 0).toString(36).toUpperCase()).join("") + b36(ids.length, 2)
       + ids.map(id => b36(IDX[id] * 4 + stage(S, id), 2)).join("") + memoStr(S);
-    return (tag + body + sum3(tag + body)).match(/.{1,8}/g).join("-");
+    const head = v4 ? yaStr(S) + kpStr(S) : "";
+    return (tag + head + body + sum3(tag + head + body)).match(/.{1,8}/g).join("-");
   }
   function hrParse(str) {
     const t = String(str || "").toUpperCase().replace(/[^0-9A-Z]/g, "");
     if (!RE.test(t) || t.length < 3 + HEAD + 3) return null;
     const tag = t.slice(0, 3); let body = t.slice(3, -3); if (sum3(tag + body) !== t.slice(-3)) return null;
-    let mk = null, kz = null;
-    if (tag === "HR3") { const k = kzParse(body); if (!k) return null; kz = k.kz; body = body.slice(k.len); }
-    if (tag === "HR2" || tag === "HR3") {
+    let mk = null, kz = null, y = null, kp = null;
+    if (tag === "HR4") {
+      const a = yaParse(body); if (!a) return null; y = a.y; body = body.slice(a.len);
+      const b = kpParse(body); if (!b) return null; kp = b.kp; body = body.slice(b.len);
+    }
+    if (tag === "HR3" || tag === "HR4") { const k = kzParse(body); if (!k) return null; kz = k.kz; body = body.slice(k.len); }
+    if (tag !== "HR1") {
       const m = mkParse(body); if (!m) return null; mk = m.mk; body = body.slice(m.len); if (body.length < HEAD) return null;
       if (kz) for (const id in kz.e) if (!mk.own[id]) return null;           // もっていない子の きせかえ
     }
-    const r = coreParse(body); if (r) { r.mk = mk; r.kz = kz; }
+    const r = coreParse(body); if (r) { r.mk = mk; r.kz = kz; r.y = y; r.kp = kp; }
     return r;
   }
   function coreParse(body) {
@@ -782,8 +851,22 @@
     for (const id of r.mo || []) if (!S.mo.includes(id)) S.mo.push(id);       // メモは足すだけ（チケットは読みこまない）
     for (const id of r.mu || []) if (!S.mu.includes(id)) S.mu.push(id);
     if (r.e > 0 || r.own.length) S.gift = 1;
+    if (r.y) yaMerge(S.y, r.y);
+    if (r.kp) {                    // もらった物：両方（ランクは 大きいほう）
+      for (const id of r.kp.p) if (!S.kp.p.includes(id)) S.kp.p.push(id);
+      for (const id of r.kp.z) if (!S.kp.z.includes(id)) S.kp.z.push(id);
+      for (const id in r.kp.r) if (r.kp.r[id] > (S.kp.r[id] || 0)) S.kp.r[id] = r.kp.r[id];
+    }
     checkDone(S, S.done || today);
     return keepUp(S);
+  }
+  /* やりこみの合成。くり返し読みこんでも ふえない：数は 大きいほう・しるしは どちらかに あれば・じっせきは 両方 */
+  function yaMerge(Y, x) {
+    Y.c = Math.max(Y.c, x.c); Y.nm = Math.max(Y.nm, x.nm); Y.mx = Math.max(Y.mx, x.mx);
+    for (const k in x.s) Y.s[k] = Math.max(Y.s[k] || 0, x.s[k]);
+    for (const id in x.u) { const a = Y.u[id], b = x.u[id];
+      if (!a) Y.u[id] = b.slice(); else { a[0] = Math.max(a[0], b[0]); a[1] = Math.max(a[1], b[1]); a[2] = a[2] || b[2] ? 1 : 0; a[3] = a[3] || b[3] ? 1 : 0; } }
+    for (const id of x.a) if (!Y.a.includes(id)) Y.a.push(id);
   }
   /* まなびっこの合成。くり返し読みこんでも ふえない：なかまは 両方・なかよしは 大きいほう・えらべる分は 字ごとに 多いほう。
      読みこんだ記録が はじめの1たいを もらっていれば、この端末の まだ えらんでいない はじめの1たいは 消す（二重に もらわない） */
@@ -811,5 +894,5 @@
     MK, MK_IDS, MK_SOON, MK_STAGE, MK_CAND, MK_SHOW, MK_ART, mkFresh,
     KZ, KZ_IDS, KZ_SLOT, KZ_PRICE_TOTAL, kzFresh, kzUnlocked, kzHas, kzLeft, kzBuy, kzWear, kzOf, kzHatOk, mkStage, mkFree, mkAvail, mkCands, mkPick, mkShow, mkNext, mkWire, mkAvatar,
     YA_ACH, YA_SUBJ, YA_KIRA_C, YA_KIRA_K, yaFresh, yaRank, yaRankNow, yaNeed, kpFresh, keepUp, yaRankCount, yaCheck, yaList,
-    count, parts, stage, pending, recordRun, claimGift, buy, cellOf, place, unplace, checkDone, summary, hrMake, hrParse, hrMerge };
+    count, parts, stage, pending, recordRun, claimGift, buy, cellOf, place, unplace, checkDone, summary, hrMake, hrParse, hrMerge, YA_BK };
 });

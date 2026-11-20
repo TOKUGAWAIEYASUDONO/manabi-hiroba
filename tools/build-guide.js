@@ -5,7 +5,7 @@
    guide/（学年×教科ごとのページ・入口・custom.html）、guide/guide.css、sitemap.xml、robots.txt を書き出す。
    同じデータなら同じ出力（日付や乱数を入れない）。データを変えたら再生成して、生成物も commit する。 */
 const fs = require("fs"), path = require("path"), crypto = require("crypto");
-const { root, load, BASE, SUBJ, SUBJ_ORDER, pageName } = require("./guide-lib");
+const { root, load, BASE, SUBJ, SUBJ_ORDER, pageName, MOVE_TAG } = require("./guide-lib");
 if (/window\.RIKA_PUBLIC\s*=\s*true\s*;/.test(fs.readFileSync(path.join(root, "index.html"), "utf8"))) { SUBJ.rika = "理科"; SUBJ_ORDER.splice(3, 0, "rika"); }
 const W = load(), UN = W.MH_UNITS, plain = UN.plain, TB = W.TEXTBOOK_ORDER;
 const UNITS = UN.UNITS, SEED = 1;
@@ -57,6 +57,7 @@ function head({ title, desc, canonical, ld }) {
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+${MOVE_TAG}
 <title>${esc(title)}</title>
 <meta name="description" content="${esc(desc)}">
 <link rel="canonical" href="${canonical}">
