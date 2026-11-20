@@ -79,6 +79,41 @@ async function main() {
         await ctx.close();
       }
     }
+    // バトル（たからばこ・すごろく）：ホームの 入口 → 設定 → 単元を えらぶ → 「はじめる」が 画面の 中に 見えて 押せる → バトルが はじまる
+    //   単元が 40こ 以上 ならぶと、ボタンが 一番下に かくれて「スタートボタンが ない」ように 見えた（2026-11）
+    for (const [w, h] of [[375, 812], [768, 1024], [1366, 768]]) {
+      for (const g of [0, 1, 3, 5]) for (const m of ['chest', 'race']) {
+        const where = `${w}×${h} ${g ? g + '年' : 'ぜんぶ'} バトル ${m}`;
+        const ctx = await browser.newContext({ viewport: { width: w, height: h }, deviceScaleFactor: 1 });
+        const page = await ctx.newPage();
+        page.on('pageerror', e => bad(where, 'スクリプトの エラー ' + e.message));
+        await page.goto(base + '#home');
+        await page.evaluate(gr => { localStorage.clear(); localStorage.setItem('mh_ui', JSON.stringify({ grade: gr, subj: 'all' })); }, g);
+        await page.reload(); await page.waitForSelector('.home');
+        const door = page.locator(`.home [data-m="${m}"]`);
+        if (!(await door.count())) { bad(where, 'ホームに バトルの 入口が ない'); await ctx.close(); continue; }
+        await door.click(); await page.waitForSelector('#modeUnits .ucard');
+        if (!(await page.locator('#app .tile[data-id]').count())) bad(where, 'えらべる ゲームが ない');
+        await page.locator('#modeUnits .ucard').first().click(); await page.waitForTimeout(150);
+        const v = await page.evaluate(() => {
+          const b = document.querySelector('#ugo'); if (!b) return { none: true };
+          const r = b.getBoundingClientRect(), x = r.left + r.width / 2, y = r.top + r.height / 2, hit = document.elementFromPoint(x, y);
+          return { w: r.width, h: r.height, inView: r.top >= 0 && r.bottom <= innerHeight, hit: !!hit && b.contains(hit) };
+        });
+        if (v.none) bad(where, '「はじめる」ボタンが ない');
+        else if (!v.w || !v.h) bad(where, '単元を えらんでも「はじめる」が 出ない');
+        else if (!v.inView) bad(where, '「はじめる」が 画面の 外（スクロールしないと 見えない）');
+        else if (!v.hit) bad(where, '「はじめる」の 上に ほかの ものが かぶさって 押せない');
+        else if (v.h < 44) bad(where, `「はじめる」が 小さい（高さ ${Math.round(v.h)}px）`);
+        else {
+          await page.click('#ugo');
+          if (!g) { await page.waitForSelector('.gradegrid [data-g="3"]', { timeout: 3000 }).catch(() => {}); if (await page.locator('.gradegrid [data-g="3"]').count()) await page.click('.gradegrid [data-g="3"]'); }      // 「ぜんぶ」は 学年を きいてから はじまる
+          try { await page.waitForSelector('.mplay', { timeout: 3000 }); } catch (e) { bad(where, `「はじめる」で バトルが はじまらない（${await page.evaluate(() => location.hash)}）`); }
+        }
+        await ctx.close();
+      }
+    }
+    console.log('○ バトルの 設定：単元を えらぶと「はじめる」が 画面に 見えて、押すと はじまる');
     // 古い URL・課題リンクから 入る（スマホ・3年）
     const ctx = await browser.newContext({ viewport: { width: 375, height: 812 } });
     const page = await ctx.newPage();

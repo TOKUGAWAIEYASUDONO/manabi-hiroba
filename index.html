@@ -183,6 +183,8 @@ h2{font-size:20px;margin:18px 0 8px}
 .sheet .gbtn{min-height:60px;font-size:26px}
 /* ===== プレイ画面：上＝時間の帯、中央＝問題（最大）、下＝4択 ===== */
 .play{width:100%;max-width:640px;margin:0 auto;text-align:center}
+/* バトルの 設定：単元を えらんだら「はじめる」を 画面の 下に いつも 見せる（単元が 40こ 以上 ならぶと 一番下で 見えなかった） */
+.ugobar{position:sticky;bottom:0;z-index:3;margin:10px -8px 0;padding:10px 8px calc(10px + env(safe-area-inset-bottom));background:var(--field);box-shadow:0 -6px 12px -8px rgba(0,0,0,.35);text-align:center}
 .play.pg,.mplay{flex:1;display:flex;flex-direction:column}
 .mplay{width:100%;max-width:980px;margin:0 auto}
 .topbar{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;gap:8px}
@@ -4287,7 +4289,7 @@ function renderModeSetup(q){
     <div class="tiles">${list.map(x=>`<button class="tile" data-id="${x.id}"><span class="tico">${svgU(x.art)}</span><span class="tbody"><span class="tt">${x.t}</span>
       <span class="tstat">${tagHtml(x.s)}</span></span></button>`).join("")}</div>
     <div id="modeUnits"></div>
-    <div id="modeUgo" class="hidden" style="text-align:center;margin:10px 0"><button class="btn" id="ugo">${ic("play")}${T("ms.ustart")}</button></div>
+    <div id="modeUgo" class="ugobar hidden"><button class="btn" id="ugo">${ic("play")}${T("ms.ustart")}</button></div>
     <h2>${T("ms.time")}</h2>
     <div class="pills" style="justify-content:center"><button class="pill on" data-t="120">${T("ms.2")}</button><button class="pill" data-t="180">${T("ms.3")}</button></div>
     <h2>${T("ms.rule")}</h2>
