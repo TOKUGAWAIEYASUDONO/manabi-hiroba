@@ -12,7 +12,6 @@
 
 ## 作業中（セッションあり）
 <!-- - タスク名 — セッション: session_xxx -->
-- 🚀 **公開③：画面の作り直し（claude/screen-cleanup）＋ へらない しくみ（claude/keep-rewards）**（✅ 公開OKもらった）— セッション: session_01DeDokxHvoFn1oWnVphVsi5
 
 ## 次やる（3つまで）
 0. 🖥 **公開のあと：PC で layout-baseline を作り直す**（`git switch main` → `git pull` → `node tools/measure-layout.js` → 回答欄がはみ出していないのを見て → `node tools/measure-layout.js --write` → コミット）。⑥（あとで）単元↔道具のつながり
@@ -102,3 +101,4 @@
 - ✅ 島の 2D版・3D版の試作 → クラウドでの測定：2D はいつも60fps。3D は できた18で約50fps・150で約29fps（CPU 4倍おそいと 36／13fps）。読みこみ 2D 0.1秒・3D 0.4秒
 - ✅ 画面の作り直し④ → ホームを教科のとびらに。5年スマホのホームが 2.7→1.4画面、タブレット・PC は1画面。noscript の紹介文も（ブランチ claude/home-doors・まだ main に入れない）
 - ✅ 画面の作り直し⑤ → 古いURL（#units?kid=1 など）は算数のへやへつなぐ・結果の「もどる」は始めた画面へ・使わない分岐とCSSを消した・新しい検査 tools/measure-flow.js（ブランチ claude/screen-cleanup）
+- ✅ 公開③：画面の作り直し（教科のとびら・算数のへや・単元カード）＋ へらない しくみ を main へ（30fd6bb・GitHub Pages success）
