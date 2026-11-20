@@ -46,6 +46,57 @@ for (const u of units.UNITS.filter(u => u.subj === 'rika' && selected.includes(u
   }
 }
 for (const s of units.UNIT_SETS || []) if (selected.includes(s.g) && s.subj === 'rika') check(`${s.id}.title`, s.title);
+/* かなと漢字のまざった語・漢字の熟語は、語全体の読みになっているかを調べる。
+   一字ずつの読み（虫《むし》など）に落ちたり、表にない漢字が となりの読みに まきこまれたり（成虫《むし》）しないように。 */
+const W = G.rikaWords;
+const MIX = /[ぁ-ゖァ-ヶー]/u;
+const bases = new Set();
+for (const w of Object.keys(W)) {
+  bases.add(w);
+  const m = w.match(/^([㐀-䶿一-鿿々〆〇ヶ]+)(.*)$/u);
+  if (m && MIX.test(w) && W[w].endsWith(m[2])) bases.add(m[1]);
+}
+for (const id of seen) {
+  const [where, s] = id.split('\0');
+  for (const p of QZ.rubyParts(s)) if (p.b != null && !bases.has(p.b)) errors.add(`${where}: ${s}（読みの表にない まとまり: ${p.b}《${p.r}》）`);
+}
+const mustRead = {
+  'こん虫':'こんちゅう','よう虫':'ようちゅう','成虫':'せいちゅう','幼虫':'ようちゅう','昆虫':'こんちゅう',
+  '日なた':'ひなた','日かげ':'ひかげ','一しゅうかん':'いっしゅうかん','1週間':'いっしゅうかん',
+  '液体':'えきたい','動物':'どうぶつ','風車':'かざぐるま','石けん水':'せっけんすい','回す':'まわす','手回し':'てまわし',
+  '落葉':'らくよう','紅葉':'こうよう','赤色':'あかいろ','青色':'あおいろ','黄色':'きいろ','内側':'うちがわ','片側':'かたがわ',
+  '一度':'いちど','小石':'こいし','大石':'おおいし','砂糖水':'さとうすい','炭酸水':'たんさんすい','草食動物':'そうしょくどうぶつ',
+  '肉食動物':'にくしょくどうぶつ','水道水':'すいどうすい','左右':'さゆう','つなぎ方':'つなぎかた','伝わり方':'つたわりかた',
+  '回らない':'まわらない','上がる':'あがる','上げた':'あげた','光る':'ひかる','熱する':'ねっする','皮ふ':'ひふ',
+  '水よう液':'すいようえき','何と':'なんと','何目もり':'なんめもり','38週間':'さんじゅうはっしゅうかん'
+};
+for (const w of Object.keys(W)) if (MIX.test(w) && HAN.test(w) && !(w in mustRead)) mustRead[w] = W[w];
+// 本文の中の w の場所に重なる読みをつなげ、w の読みがふくまれるかを見る（取り出す《とりだす》の中の 出す は OK）
+function readAt(parts, from, to) {
+  let pos = 0, base = '', read = '';
+  for (const p of parts) {
+    const b = p.b != null ? p.b : p.t, end = pos + b.length;
+    if (end > from && pos < to) {
+      if (p.b != null) { base += p.b; read += p.r; }
+      else { const t = p.t.slice(Math.max(0, from - pos), to - pos); base += t; read += t; }
+    }
+    pos = end;
+  }
+  return { base, read };
+}
+const strs = [...seen].map(id => id.split('\0')[1]);
+for (const [w, r] of Object.entries(mustRead)) {
+  if (W[w] !== r) { errors.add(`語の読み ${w}: 表は ${W[w] || 'なし'}（正: ${r}）`); continue; }
+  const got = readAt(QZ.rubyParts(G.rikaRuby(w)), 0, w.length).read;
+  if (got !== r) errors.add(`語の読み ${w}: ${G.rikaRuby(w)}（正: ${r}）`);
+  for (const s of strs) {
+    const t = QZ.plain(s), parts = QZ.rubyParts(s);
+    for (let i = t.indexOf(w); i >= 0; i = t.indexOf(w, i + 1)) {
+      const x = readAt(parts, i, i + w.length);
+      if (!x.read.includes(r)) errors.add(`語の読み ${w}: ${s}（${x.base} が ${x.read} になっている。正: ${r}）`);
+    }
+  }
+}
 for (const e of errors) console.error(e);
 console.log(`理科 ${selected.join(',')}年: ${seen.size}文字列、エラー ${errors.size}件`);
 if (errors.size) process.exitCode = 1;
