@@ -19,6 +19,9 @@
      ⑥ きせかえ（v3.3。Qalc 合体 段階4）：まなびっこに ぼうし・もちもの・はいけい・しょうごうを つける。どんぐりで 買うか、学びで もらう。
         ガチャ・期間限定・セール・順位はない。買った物は なくならず、いつでも つけかえられる。友だち対戦で 送るのは ぼうしの ID だけ（mkWire で 調べる）
    ・ひろばが 完成した あとも、まだ 買っていない きせかえが あるあいだは どんぐりが ふえる
+   ・もらった物は 下がらない（2026-11-19）：シールの ランク・学びで もらう きせかえ（しょうごう）・ひろばの 遊具は、その時の 記録から 計算するだけでなく、
+     もらったら kp に のこす（keepUp）。基準を きびしくしても もう もっている物は そのまま。ゆるくすれば その分は 新しく もらえる。
+     kp の ない 前の版の 記録は、はじめに 読んだとき いまの 基準で もらえている物を のこす。じっせきの id は 基準の 数と べつ（数を かえても id は かえない）
    ・名前・順位・やりとりはない。保存は端末の localStorage（キー mh_col）だけ */
 (function (root, factory) {
   const M = factory();
@@ -121,7 +124,7 @@
 
   function fresh(today) {
     return { v: 1, d0: today, last: today, u: {}, ac: { e: 0, s: 0 }, day: { n: today, got: 0, carry: 0, first: 0, quiz: 0, cap: 0, shown: 0 },
-      own: [], pl: {}, gift: 0, done: 0, theme: 0, vp: 0, vz: 0, tk: { n: 0, star: 0, d: today, got: 0, used: 0 }, mo: [], mu: [], mk: mkFresh(), kz: kzFresh(), y: yaFresh() };
+      own: [], pl: {}, gift: 0, done: 0, theme: 0, vp: 0, vz: 0, tk: { n: 0, star: 0, d: today, got: 0, used: 0 }, mo: [], mu: [], mk: mkFresh(), kz: kzFresh(), y: yaFresh(), kp: kpFresh() };
   }
   /* mk：w はじめの1たいを もらった／q えらべる分（QCODE の字）／own { id: { d もらった日, p なかよし, ld なかよしが ふえた日, k きらきら(のちの段階), v 見せた段階 } }
      sh ひろばに だしている子／mg 古い記録から 計算した（はじめの 案内を出す） */
@@ -130,7 +133,7 @@
   function kzFresh() { return { o: [], e: {} }; }
   function kzClean(raw, M) {
     const K = kzFresh(); if (!raw || typeof raw !== "object") return K;
-    K.o = uniq(raw.o, id => KZ_BY.has(id) && KZ_BY.get(id).price > 0);
+    K.o = uniq(raw.o, id => KZ_BY.has(id));            // 買った物（あとで 学びで もらう物に かわった物は clean で kp.z へ うつす）
     if (raw.e && typeof raw.e === "object") for (const mk of Object.keys(raw.e)) {
       const x = raw.e[mk]; if (!MK_IDS.includes(mk) || !M.own[mk] || !x || typeof x !== "object") continue;
       const o = {}; for (const sl of KZ_SLOT) { const id = x[sl]; if (typeof id === "string" && KZ_BY.has(id) && KZ_BY.get(id).s === sl) o[sl] = id; }
@@ -185,6 +188,10 @@
     S.mk = mkClean(raw.mk, S, today);                                       // v3.0：古い記録には無い（そのときは 学びから 計算）
     S.kz = kzClean(raw.kz, S.mk);                                           // v3.3：古い記録には無い（そのときは 空）
     S.y = yaClean(raw.y);                                                  // v3.4：古い記録には無い（そのときは 0 から）
+    S.kp = kpClean(raw.kp);                                                // もらった物（2026-11-19）：古い記録には無い（そのときは 下の keepUp で いまの 分を のこす）
+    for (const id of S.kz.o) if (!KZ_BY.get(id).price && !S.kp.z.includes(id)) S.kp.z.push(id);
+    S.kz.o = S.kz.o.filter(id => KZ_BY.get(id).price > 0);
+    keepUp(S);
     return S;
   }
   const balance = S => S.ac.e - S.ac.s;
@@ -210,7 +217,7 @@
   const gapFull = (grade, ug) => !grade || grade - ug <= 1;      // 自分の学年と1つ下までは満額
 
   function count(S, subj, min) { let n = 0; for (const id in S.u) if (id[0] === subj && S.u[id][0] >= (min || 2)) n++; return n; }
-  const partHave = (S, p) => count(S, TRACK_SUBJ[p.track]) >= p.need;
+  const partHave = (S, p) => count(S, TRACK_SUBJ[p.track]) >= p.need || !!(S.kp && S.kp.p.includes(p.id));     // 一度 来た 遊具は のこす（kp.p）
   function parts(S) {         // 固定ゾーンの8つ。have：来ている／next：その教科の次の1つ（シルエットに出す）
     const out = PARTS.map(p => ({ ...p, have: partHave(S, p), next: false })), seen = {};
     for (const o of out) if (!o.have && !seen[o.track]) { o.next = true; seen[o.track] = 1; }
@@ -414,6 +421,7 @@
   /* 学びで もらう物の 条件を 満たしているか。can／mst は 全部の教科の 単元の数、nk は まなびっこの いちばん 進んだ すがた。どれも 下がらない */
   function kzUnlocked(S, k) {
     if (!k || !k.un || !Object.keys(S.mk.own).length) return false;     // まなびっこが いないと つける子が いない
+    if (S.kp && S.kp.z.includes(k.id)) return true;                      // 一度 もらった物は のこす（kp.z）
     const [c, n] = k.un;
     if (c === "ach") return !!(S.y && S.y.a.includes(n));
     if (c === "nk") return Object.keys(S.mk.own).some(id => mkStageP(S.mk.own[id].p) >= n);
@@ -466,8 +474,27 @@
     Y.a = uniq(raw.a, id => YA_BY.has(id));
     return Y;
   }
-  /* シールの ランク 0〜4（0：まだ／1 どう／2 ぎん／3 きん／4 にじ）と、つぎの ランクまでに 足りない物 */
-  function yaRank(S, id) {
+  /* kp（2026-11-19）：もらった物。p ひろばの 遊具の id／z 学びで もらった きせかえの id／r { 単元id: シールの ランク 1〜4 }。どれも 足すだけ（下がらない） */
+  function kpFresh() { return { p: [], z: [], r: {} }; }
+  function kpClean(raw) {
+    const K = kpFresh(); if (!raw || typeof raw !== "object") return K;
+    K.p = uniq(raw.p, id => PARTS.some(p => p.id === id));
+    K.z = uniq(raw.z, id => KZ_BY.has(id));
+    if (raw.r && typeof raw.r === "object") for (const id of Object.keys(raw.r)) { const r = int(raw.r[id], 0, 4, 0); if (id in IDX && r) K.r[id] = r; }
+    return K;
+  }
+  /* いま もらえている物を kp に のこす（clean・recordRun・hrMerge の さいご）。ランク → 遊具 → きせかえ の 順（きせかえは ランクや じっせきで きまる物が ある） */
+  function keepUp(S) {
+    const K = S.kp || (S.kp = kpFresh());
+    for (const id of Object.keys(S.y.u)) { const r = yaRankNow(S, id); if (r > (K.r[id] || 0)) K.r[id] = r; }
+    for (const p of PARTS) if (!K.p.includes(p.id) && partHave(S, p)) K.p.push(p.id);
+    for (const k of KZ) if (k.un && !K.z.includes(k.id) && kzUnlocked(S, k)) K.z.push(k.id);
+    return S;
+  }
+  /* シールの ランク 0〜4（0：まだ／1 どう／2 ぎん／3 きん／4 にじ）と、つぎの ランクまでに 足りない物。
+     yaRank は 一度 もらった ランク（kp.r）より 下がらない。yaRankNow は いまの 基準で 記録から 計算した ランク */
+  const yaRank = (S, id) => Math.max(yaRankNow(S, id), (S.kp && S.kp.r[id]) || 0);
+  function yaRankNow(S, id) {
     const u = S.y && S.y.u[id]; if (!u) return 0;
     if (!u[2]) return 0;
     if (!(u[0] >= 30 && u[3])) return 1;
@@ -508,18 +535,22 @@
   }
   /* じっせき：{ id, g なかま, need, h かくし（たっせいまで 名前を 出さない） }。val(S, ext) が need いじょうで たっせい */
   const YA_ACH = [];
-  const yaAdd = (g, list, val, h) => list.forEach((need, i) => YA_ACH.push({ id: g + need, g, need, val, h: h ? h(i, need) : false }));
-  yaAdd("c", [100, 300, 1000, 3000, 10000], S => S.y.c, i => i === 4);
-  yaAdd("nm", [1, 10, 30, 100], S => S.y.nm);
-  for (const [k, list] of [[1, [5, 20, 50]], [2, [5, 20, 50]], [3, [5, 20]], [4, [1, 10]]]) yaAdd("r" + k + "_", list, S => yaRankCount(S, k));
-  for (const sj of YA_SUBJ) yaAdd("s" + sj, [300], S => S.y.s[sj] || 0);
-  yaAdd("mx", [1, 10], S => S.y.mx, i => i === 1);
-  yaAdd("mk", [2, 4], S => Object.keys(S.mk.own).length);
-  yaAdd("kira", [1], S => Object.values(S.mk.own).filter(o => o.k).length, () => true);
-  yaAdd("m100n", [1, 10, 50], (S, x) => x.m100n | 0);
+  /* id は 保存する 名前なので かえない。基準の 数（need）を かえるときは id は そのまま、数だけ かえる（id に 数が 入っているのは はじめの 名残り） */
+  const yaAdd = (g, list, val, h) => list.forEach(([id, need], i) => YA_ACH.push({ id, g, need, val, h: h ? h(i, need) : false }));
+  yaAdd("c", [["c100", 100], ["c300", 300], ["c1000", 1000], ["c3000", 3000], ["c10000", 10000]], S => S.y.c, i => i === 4);
+  yaAdd("nm", [["nm1", 1], ["nm10", 10], ["nm30", 30], ["nm100", 100]], S => S.y.nm);
+  yaAdd("r1_", [["r1_5", 5], ["r1_20", 20], ["r1_50", 50]], S => yaRankCount(S, 1));
+  yaAdd("r2_", [["r2_5", 5], ["r2_20", 20], ["r2_50", 50]], S => yaRankCount(S, 2));
+  yaAdd("r3_", [["r3_5", 5], ["r3_20", 20]], S => yaRankCount(S, 3));
+  yaAdd("r4_", [["r4_1", 1], ["r4_10", 10]], S => yaRankCount(S, 4));
+  for (const sj of YA_SUBJ) yaAdd("s" + sj, [["s" + sj + "300", 300]], S => S.y.s[sj] || 0);
+  yaAdd("mx", [["mx1", 1], ["mx10", 10]], S => S.y.mx, i => i === 1);
+  yaAdd("mk", [["mk2", 2], ["mk4", 4]], S => Object.keys(S.mk.own).length);
+  yaAdd("kira", [["kira1", 1]], S => Object.values(S.mk.own).filter(o => o.k).length, () => true);
+  yaAdd("m100n", [["m100n1", 1], ["m100n10", 10], ["m100n50", 50]], (S, x) => x.m100n | 0);
   YA_ACH.push({ id: "m100t120", g: "m100t", need: 1, val: (S, x) => (x.m100best > 0 && x.m100best <= 120000 ? 1 : 0), h: false });
   YA_ACH.push({ id: "m100t60", g: "m100t", need: 1, val: (S, x) => (x.m100best > 0 && x.m100best <= 60000 ? 1 : 0), h: true });
-  yaAdd("mt", [10], (S, x) => x.mtStars | 0);
+  yaAdd("mt", [["mt10", 10]], (S, x) => x.mtStars | 0);
   YA_ACH.push({ id: "mtall", g: "mt", need: 1, val: (S, x) => (x.mtMax > 0 && x.mtStars >= x.mtMax ? 1 : 0), h: false });
   YA_ACH.push({ id: "kuku", g: "kuku", need: 3, val: S => ["m2-kuku-low", "m2-kuku-high", "m2-kuku-hole"].filter(id => yaRank(S, id) >= 3).length, h: false });
   const YA_BY = new Map(YA_ACH.map(a => [a.id, a]));
@@ -574,6 +605,7 @@
       if (mkStageP(o.p) > st0) ctx.mk.grow.push(id);
     }
     yaRun(S, run, ctx);
+    keepUp(S);
     return ctx;
   }
   /* ひろばをはじめて開いたとき、はじめの どんぐり5こ（1回だけ。1日の上限には入れない） */
@@ -751,7 +783,7 @@
     for (const id of r.mu || []) if (!S.mu.includes(id)) S.mu.push(id);
     if (r.e > 0 || r.own.length) S.gift = 1;
     checkDone(S, S.done || today);
-    return S;
+    return keepUp(S);
   }
   /* まなびっこの合成。くり返し読みこんでも ふえない：なかまは 両方・なかよしは 大きいほう・えらべる分は 字ごとに 多いほう。
      読みこんだ記録が はじめの1たいを もらっていれば、この端末の まだ えらんでいない はじめの1たいは 消す（二重に もらわない） */
@@ -778,6 +810,6 @@
   return { TK_MAX, TK_GET, TK_STARS, TK_USE, MEMO_O, tkRoll, tkLimit, tkState, tkUse, memoCount, memoTotal, memoAdd, memoPick, explorerMap, CAP, GIFT, CELLS, UNIT_IDS, IDX, PARTS, DECOR, PRICE_TOTAL, TRACK_SUBJ, uGrade, dayNum, dayDate, fresh, clean, balance, sync, give, gapFull,
     MK, MK_IDS, MK_SOON, MK_STAGE, MK_CAND, MK_SHOW, MK_ART, mkFresh,
     KZ, KZ_IDS, KZ_SLOT, KZ_PRICE_TOTAL, kzFresh, kzUnlocked, kzHas, kzLeft, kzBuy, kzWear, kzOf, kzHatOk, mkStage, mkFree, mkAvail, mkCands, mkPick, mkShow, mkNext, mkWire, mkAvatar,
-    YA_ACH, YA_SUBJ, YA_KIRA_C, YA_KIRA_K, yaFresh, yaRank, yaNeed, yaRankCount, yaCheck, yaList,
+    YA_ACH, YA_SUBJ, YA_KIRA_C, YA_KIRA_K, yaFresh, yaRank, yaRankNow, yaNeed, kpFresh, keepUp, yaRankCount, yaCheck, yaList,
     count, parts, stage, pending, recordRun, claimGift, buy, cellOf, place, unplace, checkDone, summary, hrMake, hrParse, hrMerge };
 });
