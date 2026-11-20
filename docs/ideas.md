@@ -73,6 +73,7 @@
 - **ことばの まほう** — `plan/idea-jev-kotoba-mahou.md`
 
 ### サイト全体
+- **教室用の server.js（`node server.js`）が、まなびっこの絵 `vendor/img/manabikko/*.webp` を出していない（404）** → 452行目あたりの読みこみの決まりが `img/*.png` と `img/space/*.webp` だけ。GitHub Pages では見える。新しいロゴの SVG も出せるか、いっしょに確かめる（ロゴのセッションから）
 - **ふりがなのある文で、語の途中で切れる3か所**：「た｜しざん」「なんじなん｜ぷんか」「も｜どして」（PC係の見た目の検査で見つかった・まだ直していない）
 - **あそびかたの切りかえボタンが40px**だった件 → PC係が「押す場所を44pxにそろえる直し」を公開（982eb01）。直ったか、tools/measure-flow.js の `.spm` のぞきを外せるかを確かめる
 - **index.html の 1416〜1419行あたりに、同じ CSS が style タグ3つで3回くりかえし**（`.ugrade-jump…` と `@media` の `.home:not(.easy)…`）→ 1つにまとめる（作り直し⑤のセッションから）
