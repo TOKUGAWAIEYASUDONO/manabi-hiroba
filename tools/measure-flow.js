@@ -26,6 +26,14 @@ const LOOK = `(()=>{const e=document.documentElement, o=e.scrollWidth>innerWidth
   const small=[...document.querySelectorAll('#app button,#app a.btn,#app .tile,#app .sdoor')].filter(b=>{const r=b.getBoundingClientRect(),s=getComputedStyle(b);
     return r.width>0&&r.height>0&&s.visibility!=='hidden'&&!b.closest('.gdlink,.more,.links,.bottom,.spm')&&(r.height<44||r.width<44);}).map(b=>(b.className||b.tagName)+':'+(b.innerText||b.getAttribute('aria-label')||'').trim().slice(0,12)+' '+Math.round(b.getBoundingClientRect().width)+'×'+Math.round(b.getBoundingClientRect().height));
   return {overflow:o,small,hash:location.hash,h:e.scrollHeight};})()`;
+// バトルの 設定画面の 横はみ出し・小さい ボタン
+async function look2(page, where, name) {
+  const v = await page.evaluate(LOOK);
+  if (v.overflow) bad(`${where} ${name}`, `横に ${v.overflow}px はみ出し`);
+  if (v.small.length) bad(`${where} ${name}`, '44px 未満の ボタン ' + v.small.join('、'));
+  if (shotDir) await page.screenshot({ path: path.join(shotDir, `btl-${where.replace(/[^\w年]+/g, '_')}-${name}.png`), fullPage: true });
+  return !v.overflow;
+}
 async function main() {
   await new Promise(r => server.listen(0, '127.0.0.1', r));
   const base = `http://127.0.0.1:${server.address().port}/index.html`;
@@ -79,8 +87,10 @@ async function main() {
         await ctx.close();
       }
     }
-    // バトル（たからばこ・すごろく）：ホームの 入口 → 設定 → 単元を えらぶ → 「はじめる」が 画面の 中に 見えて 押せる → バトルが はじまる
+    // バトル（たからばこ・すごろく）：ホームの 入口 → ① 教科（3年から 理科）→ ② その 教科の 単元を えらぶ → 「はじめる」が 画面の 中に 見えて 押せる → バトルが はじまる
     //   単元が 40こ 以上 ならぶと、ボタンが 一番下に かくれて「スタートボタンが ない」ように 見えた（2026-11）
+    //   「問題を えらんで」に 理科が なくて まよう 子が いた（2026-11）。① に 理科が あり、② に 理科の 単元だけが 出ることも しらべる
+    //   1年は 理科が ないので、① に 理科が 出ないこと・算数で おなじ 流れが できることを しらべる
     for (const [w, h] of [[375, 812], [768, 1024], [1366, 768]]) {
       for (const g of [0, 1, 3, 5]) for (const m of ['chest', 'race']) {
         const where = `${w}×${h} ${g ? g + '年' : 'ぜんぶ'} バトル ${m}`;
@@ -92,8 +102,19 @@ async function main() {
         await page.reload(); await page.waitForSelector('.home');
         const door = page.locator(`.home [data-m="${m}"]`);
         if (!(await door.count())) { bad(where, 'ホームに バトルの 入口が ない'); await ctx.close(); continue; }
-        await door.click(); await page.waitForSelector('#modeUnits .ucard');
-        if (!(await page.locator('#app .tile[data-id]').count())) bad(where, 'えらべる ゲームが ない');
+        await door.click(); await page.waitForSelector('#app .bsj[data-sj]');
+        const sjs = await page.$$eval('#app .bsj[data-sj]', l => l.map(e => e.dataset.sj));
+        if (await page.locator('#modeUnits .ucard,#app .tile[data-id]').count()) bad(where, '教科を えらぶ 前から 問題が ならんでいる');
+        const want = g === 1 ? 'math' : 'rika';
+        if (g === 1 && sjs.includes('rika')) bad(where, '1年なのに 理科が ある');
+        if (!sjs.includes(want)) { bad(where, `① に ${want} が ない（${sjs.join('・')}）`); await ctx.close(); continue; }
+        if (!(await look2(page, where, '①教科'))) { await ctx.close(); continue; }
+        await page.click(`#app .bsj[data-sj="${want}"]`); await page.waitForSelector('#modeUnits .ucard');
+        if (want === 'math' && !(await page.locator('#app .tile[data-id]').count())) bad(where, '算数に えらべる ゲームが ない');
+        const subj = await page.evaluate(() => [...new Set([...document.querySelectorAll('#modeUnits .ucard')].map(b => { const u = window.MH_UNITS.byId ? window.MH_UNITS.UNITS.find(x => x.id === b.dataset.uid) : null; return u ? u.subj : '?'; }))]);
+        if (subj.join() !== (want === 'math' ? 'sansu' : 'rika')) bad(where, `② に ほかの 教科の 単元が まざる（${subj.join('・')}）`);
+        if (g && want === 'rika' && !(await page.evaluate(gr => [...document.querySelectorAll('#modeUnits .ucard')].every(b => { const u = window.MH_UNITS.UNITS.find(x => x.id === b.dataset.uid); return u && u.g === gr; }), g))) bad(where, '② に ほかの 学年の 単元が まざる');
+        await look2(page, where, '②単元');
         await page.locator('#modeUnits .ucard').first().click(); await page.waitForTimeout(150);
         const v = await page.evaluate(() => {
           const b = document.querySelector('#ugo'); if (!b) return { none: true };
@@ -113,7 +134,7 @@ async function main() {
         await ctx.close();
       }
     }
-    console.log('○ バトルの 設定：単元を えらぶと「はじめる」が 画面に 見えて、押すと はじまる');
+    console.log('○ バトルの 設定：① 教科（理科も）→ ② その 教科の 単元 → 「はじめる」が 画面に 見えて、押すと はじまる');
     // 古い URL・課題リンクから 入る（スマホ・3年）
     const ctx = await browser.newContext({ viewport: { width: 375, height: 812 } });
     const page = await ctx.newPage();
@@ -132,6 +153,10 @@ async function main() {
       ['#u=m3-amari&n=10&s=1&task=1', 3, null, '#ugo'],
       ['#play?game=calc&g=3&t=60&task=1', 3, null, '#qq'],
       ['#meter?st=1&task=1', 3, null, '.mtplay'],
+      ['#modesetup?m=chest', 3, null, '.bsj[data-sj="rika"]'],
+      ['#modesetup?m=race&s=rika', 5, null, '#modeUnits .ucard'],
+      ['#mode?m=chest&game=unit&g=3&t=120&r=normal&units=r3-living', 3, null, '.mplay'],
+      ['#mode?m=race&game=calc&g=3&t=120', 3, null, '.mplay'],
     ]) {
       await page.evaluate(gr => { sessionStorage.clear(); localStorage.setItem('mh_ui', JSON.stringify({ grade: gr, subj: 'all' })); }, g);
       await page.goto('about:blank'); await page.goto(base + hash);
