@@ -20,7 +20,7 @@ def txt(xy, value, size, color, bold=False):
 # 黒板（index.html の --board / --wood / --chalk）
 box((66,65,1134,565), '#1f4d3a', '#c9a066', 18, 18)
 box((82,81,1118,549), None, '#16372a', 2, 7)
-txt((129,114), 'まなびひろば', 104, '#ffffff', True)
+txt((129,114), 'ひらめっと', 104, '#ffffff', True)
 line([(130,271),(805,271)], '#d6ebdd', 3)
 txt((132,308), '小学生の 学習ゲーム', 50, '#ffffff', True)
 txt((132,392), '無料・登録不要', 48, '#d6ebdd', True)

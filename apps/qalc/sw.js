@@ -1,4 +1,4 @@
-/* Qalc は まなびひろば の けいさん スプリントに合体しました。前のサービスワーカーを止めるための版。 */
+/* Qalc は ひらめっと の けいさん スプリントに合体しました。前のサービスワーカーを止めるための版。 */
 self.addEventListener("install",()=>self.skipWaiting());
 self.addEventListener("activate",e=>{e.waitUntil((async()=>{
   try{const ks=await caches.keys();await Promise.all(ks.filter(k=>k.indexOf("qalc-cache-")===0).map(k=>caches.delete(k)));}catch(_){}

@@ -1,4 +1,4 @@
-/* まなびひろば 問題の型（ジェネレーター）の共通部品
+/* ひらめっと 問題の型（ジェネレーター）の共通部品
    - window.MH_GEN.gens[名前] = function (rng, params) → { q, a, choices, tag?, ans?, hissan?, ruby?, stem? }
    - rng はシード付き乱数：rng.int(n)=0〜n-1／rng.range(a,b)=a〜b／rng.pick(配列)／rng.shuffle(配列)／rng.chance(0〜1)
      同じシードなら同じ問題（別タブやリンクで同じ問題を出せる）

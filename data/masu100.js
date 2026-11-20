@@ -1,4 +1,4 @@
-/* まなびひろば：100マス計算の記録を読む部品（画面は持たない。plan/100masu-class-plan.md）
+/* ひらめっと：100マス計算の記録を読む部品（画面は持たない。plan/100masu-class-plan.md）
    ブラウザでは window.MH_M100、Node では require("./masu100.js")。tools/test-masu100.js が単体テストする。
 
    読むだけ：100マス計算（apps/100masu、同じオリジン）が端末の localStorage に書く記録を読む。書きかえない。

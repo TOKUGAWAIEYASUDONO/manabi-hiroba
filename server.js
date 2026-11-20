@@ -1,4 +1,4 @@
-// まなびひろば 友だち対戦サーバー（Node.js 標準機能のみ・追加インストール不要）
+// ひらめっと 友だち対戦サーバー（Node.js 標準機能のみ・追加インストール不要）
 // 起動: node server.js   → http://localhost:8787 を開く
 const http = require("http");
 const fs = require("fs");
@@ -493,4 +493,4 @@ http.createServer(async (req, res) => {
   } catch (e) {
     json(res, 400, { error: "リクエストが正しくありません" });
   }
-}).listen(PORT, () => console.log(`まなびひろば サーバー起動: http://localhost:${PORT}`));
+}).listen(PORT, () => console.log(`ひらめっと サーバー起動: http://localhost:${PORT}`));

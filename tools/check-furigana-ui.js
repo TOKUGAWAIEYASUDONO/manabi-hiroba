@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-/* まなびひろば 画面の文言のふりがな検査（Node.js 標準機能のみ）
+/* ひらめっと 画面の文言のふりがな検査（Node.js 標準機能のみ）
    使い方：node tools/check-furigana-ui.js [--list]
    index.html の中の「児童が見る文言」に、読みの付いていない漢字が残っていないかを数える。
    （問題データ側は tools/check-furigana.js が別に検査する）

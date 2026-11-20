@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-/* まなびひろば 問題データの自動検査（Node.js 標準機能のみ）
+/* ひらめっと 問題データの自動検査（Node.js 標準機能のみ）
    使い方：node tools/check-questions.js
    検査すること
    - ID の重複・形式、学年（1〜6）、問題・答えの空欄

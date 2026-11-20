@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-/* まなびひろば 先生向け「学年・単元から さがす」ページの自動生成（Node.js 標準機能のみ）
+/* ひらめっと 先生向け「学年・単元から さがす」ページの自動生成（Node.js 標準機能のみ）
    使い方：node tools/build-guide.js
    data/units.js・data/gen/*.js・data/calc.js（・あれば data/textbook-order.js）を元に、
    guide/（学年×教科ごとのページ・入口・custom.html）、guide/guide.css、sitemap.xml、robots.txt を書き出す。
@@ -61,13 +61,13 @@ function head({ title, desc, canonical, ld }) {
 <meta name="description" content="${esc(desc)}">
 <link rel="canonical" href="${canonical}">
 <meta property="og:type" content="website">
-<meta property="og:site_name" content="まなびひろば">
+<meta property="og:site_name" content="ひらめっと">
 <meta property="og:title" content="${esc(title)}">
 <meta property="og:description" content="${esc(desc)}">
 <meta property="og:url" content="${canonical}">
 <meta property="og:locale" content="ja_JP">
 <meta name="twitter:card" content="summary_large_image">
-<meta property="og:image" content="${BASE}vendor/img/og-home.png">
+<meta property="og:image" content="${BASE}vendor/img/og-hirametto.png">
 <meta property="og:image:width" content="1200"><meta property="og:image:height" content="630">
 <link rel="icon" href="../vendor/img/favicon.svg" type="image/svg+xml">
 <link rel="icon" href="../vendor/img/favicon-32.png" sizes="32x32" type="image/png">
@@ -79,13 +79,13 @@ ${ld.map(jsonld).join("\n")}
 <body>
 `;
 }
-const header = crumbs => `<header class="top"><div class="wrap"><a class="brand" href="../index.html">まなびひろば</a><span class="tag">先生向けガイド</span></div></header>
+const header = crumbs => `<header class="top"><div class="wrap"><a class="brand" href="../index.html">ひらめっと</a><span class="tag">先生向けガイド</span></div></header>
 <nav class="crumb wrap" aria-label="パンくず">${crumbs.map(([t, h]) => h ? `<a href="${h}">${esc(t)}</a>` : `<span aria-current="page">${esc(t)}</span>`).join(" › ")}</nav>
 `;
 const footer = () => `<footer class="foot"><div class="wrap">
-<p>まなびひろば：学校の端末で使える、小学生向けの無料の学習ゲーム（登録不要・広告なし。ひとりで遊ぶときは外部への通信なし。友だち対戦のときだけ、端末どうしをつなぐ仲介サーバーに接続）。</p>
+<p>ひらめっと：学校の端末で使える、小学生向けの無料の学習ゲーム（登録不要・広告なし。ひとりで遊ぶときは外部への通信なし。友だち対戦のときだけ、端末どうしをつなぐ仲介サーバーに接続）。</p>
 <p>学習指導要領の項目番号（base）はAIが作成したもので、人の確認待ちです。教科書の単元名・順は出版社により異なります。</p>
-<p><a href="../index.html">まなびひろば ホーム</a> ／ <a href="index.html">学年・単元から さがす</a> ／ <a href="custom.html">先生の問題で遊ぶ</a></p>
+<p><a href="../index.html">ひらめっと ホーム</a> ／ <a href="index.html">学年・単元から さがす</a> ／ <a href="custom.html">先生の問題で遊ぶ</a></p>
 </div></footer>
 <a class="totop" href="#" aria-label="ページの先頭へ">▲ 先頭へ</a>
 </body>
@@ -100,14 +100,14 @@ function tbCompanies(subj, g) {
 }
 function textbookSection(p) {
   const cos = tbCompanies(p.subj, p.g); if (!cos.length) return "";
-  let h = `<section aria-labelledby="tb"><h2 id="tb" class="sect">教科書の順で見る</h2><p class="note">教科書会社ごとの単元の並び（年間指導計画の目安）です。まなびひろばの単元名が教科書の名前と ちがうときは、両方を出しています。時期は学校により前後します。</p>`;
+  let h = `<section aria-labelledby="tb"><h2 id="tb" class="sect">教科書の順で見る</h2><p class="note">教科書会社ごとの単元の並び（年間指導計画の目安）です。ひらめっとの単元名が教科書の名前と ちがうときは、両方を出しています。時期は学校により前後します。</p>`;
   h += `<nav class="tbnav" aria-label="教科書会社"><span>教科書：</span><a href="#top-units" aria-current="true">標準（このページの並び）</a>${cos.map(c => `<a href="#tb-${c.key}">${esc(c.name)}</a>`).join("")}</nav>`;
   for (const c of cos) {
-    h += `<div class="tbblock" id="tb-${c.key}"><h3>${esc(c.name)}　${GJ(p.g)} ${SUBJ[p.subj]}</h3><div class="tablewrap"><table class="grid tbt"><thead><tr><th scope="col">教科書の単元名</th><th scope="col">時期</th><th scope="col">まなびひろばの単元</th></tr></thead><tbody>`;
+    h += `<div class="tbblock" id="tb-${c.key}"><h3>${esc(c.name)}　${GJ(p.g)} ${SUBJ[p.subj]}</h3><div class="tablewrap"><table class="grid tbt"><thead><tr><th scope="col">教科書の単元名</th><th scope="col">時期</th><th scope="col">ひらめっとの単元</th></tr></thead><tbody>`;
     for (const r of c.rows) {
       const us = (r.u || []).map(id => UN.byId[id]).filter(Boolean);
       const same = us.length === 1 && T(us[0]) === plain(r.t);
-      h += `<tr><td>${esc(plain(r.t))}</td><td>${esc(r.term == null ? "" : r.term)}</td><td class="ul">${us.length ? us.map(u => `<a href="${pageName(u.g, u.subj)}#${u.id}">${same ? "ひろばの単元へ" : esc(T(u))}</a>${u.g !== p.g ? `<small>（${GJ(u.g)}）</small>` : ""}`).join("<br>") : '<span class="none">まだありません</span>'}</td></tr>`;
+      h += `<tr><td>${esc(plain(r.t))}</td><td>${esc(r.term == null ? "" : r.term)}</td><td class="ul">${us.length ? us.map(u => `<a href="${pageName(u.g, u.subj)}#${u.id}">${same ? "この単元へ" : esc(T(u))}</a>${u.g !== p.g ? `<small>（${GJ(u.g)}）</small>` : ""}`).join("<br>") : '<span class="none">まだありません</span>'}</td></tr>`;
     }
     h += `</tbody></table></div><p class="backtop"><a href="#tb">↑ 教科書会社の切りかえにもどる</a></p></div>`;
   }
@@ -146,7 +146,7 @@ function gradePage(p) {
   let lead = names.slice(0, 3); if (lead.join("・").length > 36) lead = names.slice(0, 2);
   const rest = rd.length - lead.length;
   const leadTxt = `${lead.join("・")}${rest > 0 ? ` ほか${rest}単元` : ""}`;
-  const title = `${leadTxt}｜${GJ(g)} ${SUBJ[subj]}の学習ゲーム｜まなびひろば（無料・登録不要）`;
+  const title = `${leadTxt}｜${GJ(g)} ${SUBJ[subj]}の学習ゲーム｜ひらめっと（無料・登録不要）`;
   let desc = `${leadTxt}など、${GJ(g)} ${SUBJ[subj]}の単元から探せる学習ゲーム。単元一覧：${names.join("、")}`;
   if (desc.length > 120) desc = desc.slice(0, 119) + "…";
   desc += `。問題の例・答え方・課題リンクつき。無料・登録不要。`;
@@ -154,7 +154,7 @@ function gradePage(p) {
   const sets = UN.UNIT_SETS.filter(s => s.units.some(id => { const u = UN.byId[id]; return u && u.g === g && u.subj === subj; }));
   const ld = [{
     "@context": "https://schema.org", "@type": "CollectionPage", name: title, description: desc, url: canonical, inLanguage: "ja",
-    isPartOf: { "@type": "WebSite", name: "まなびひろば", url: BASE },
+    isPartOf: { "@type": "WebSite", name: "ひらめっと", url: BASE },
     mainEntity: {
       "@type": "ItemList", numberOfItems: units.length,
       itemListElement: units.map((u, i) => ({
@@ -164,17 +164,17 @@ function gradePage(p) {
           description: `${GJ(u.g)} ${SUBJ[u.subj]}「${T(u)}」の学習ゲーム` + (u.status === "ready" ? "（問題の自動出題・無料）" : "（準備中）"),
           educationalLevel: `小学${u.g}年`, teaches: T(u), learningResourceType: "ゲーム・ドリル", inLanguage: "ja", isAccessibleForFree: true,
           interactivityType: "active", audience: { "@type": "EducationalAudience", educationalRole: "student" }, about: SUBJ[u.subj],
-          provider: { "@type": "Organization", name: "まなびひろば", url: BASE }
+          provider: { "@type": "Organization", name: "ひらめっと", url: BASE }
         }
       }))
     }
   }, {
     "@context": "https://schema.org", "@type": "BreadcrumbList", itemListElement: [
-      { "@type": "ListItem", position: 1, name: "まなびひろば", item: BASE }, { "@type": "ListItem", position: 2, name: "学年・単元から さがす", item: BASE + "guide/" },
+      { "@type": "ListItem", position: 1, name: "ひらめっと", item: BASE }, { "@type": "ListItem", position: 2, name: "学年・単元から さがす", item: BASE + "guide/" },
       { "@type": "ListItem", position: 3, name: `${GJ(g)} ${SUBJ[subj]}`, item: canonical }]
   }];
   let h = head({ title, desc, canonical, ld });
-  h += header([["まなびひろば", "../index.html"], ["学年・単元から さがす", "index.html"], [`${GJ(g)} ${SUBJ[subj]}`]]);
+  h += header([["ひらめっと", "../index.html"], ["学年・単元から さがす", "index.html"], [`${GJ(g)} ${SUBJ[subj]}`]]);
   h += `<main class="wrap" id="top-units">\n<h1>${esc(leadTxt)}<span class="h1sub">${GJ(g)} ${SUBJ[subj]}の単元から さがす学習ゲーム</span></h1>\n`;
   h += `<p class="lead">${GJ(g)} ${SUBJ[subj]}の単元は全${units.length}単元（ゲームで使えるもの${rd.length}${units.length > rd.length ? `、準備中${units.length - rd.length}` : ""}）。単元名は教科書の並びに合わせています。</p>\n`;
   h += gradeNav(g) + "\n";
@@ -195,17 +195,17 @@ function gradePage(p) {
 /* ---------- 入口 ---------- */
 function indexPage() {
   const total = UNITS.length, rdn = ready(UNITS).length;
-  const title = `小1〜小6 単元から さがす学習ゲーム｜算数 あまりのあるわり算・分数・小数ほか${rdn}単元｜まなびひろば（無料・登録不要）`;
+  const title = `小1〜小6 単元から さがす学習ゲーム｜算数 あまりのあるわり算・分数・小数ほか${rdn}単元｜ひらめっと（無料・登録不要）`;
   const desc = `小1〜小6の学年・教科・単元から、使える学習ゲームを探せる先生向けの一覧。算数の九九・あまりのあるわり算・分数・小数、国語の漢字、社会、英語など全${rdn}単元。問題の例と課題リンク・QRつき。無料・登録不要。`;
   const canonical = BASE + "guide/";
   const ld = [{
     "@context": "https://schema.org", "@type": "CollectionPage", name: "学年・単元から さがす（先生向け）", description: desc, url: canonical, inLanguage: "ja",
-    isPartOf: { "@type": "WebSite", name: "まなびひろば", url: BASE },
+    isPartOf: { "@type": "WebSite", name: "ひらめっと", url: BASE },
     mainEntity: { "@type": "ItemList", numberOfItems: pages.length, itemListElement: pages.map((p, i) => ({ "@type": "ListItem", position: i + 1, name: `${GJ(p.g)} ${SUBJ[p.subj]}の単元と学習ゲーム`, url: BASE + "guide/" + p.file })) },
     audience: { "@type": "EducationalAudience", educationalRole: "teacher" }, educationalLevel: "小学校", teaches: "算数・国語・社会・英語"
-  }, { "@context": "https://schema.org", "@type": "BreadcrumbList", itemListElement: [{ "@type": "ListItem", position: 1, name: "まなびひろば", item: BASE }, { "@type": "ListItem", position: 2, name: "学年・単元から さがす", item: canonical }] }];
+  }, { "@context": "https://schema.org", "@type": "BreadcrumbList", itemListElement: [{ "@type": "ListItem", position: 1, name: "ひらめっと", item: BASE }, { "@type": "ListItem", position: 2, name: "学年・単元から さがす", item: canonical }] }];
   let h = head({ title, desc, canonical, ld });
-  h += header([["まなびひろば", "../index.html"], ["学年・単元から さがす"]]);
+  h += header([["ひらめっと", "../index.html"], ["学年・単元から さがす"]]);
   h += `<main class="wrap">\n<h1>学年・単元から さがす<span class="h1sub">小学校 算数・国語・社会・英語の学習ゲーム（先生向け）</span></h1>\n`;
   h += `<p class="lead">授業で使いたい単元から、使えるゲームと 使い方（ひとりで・クラスで・課題リンク）を見つけられます。全${total}単元（ゲームで使えるもの${rdn}、準備中${total - rdn}）。無料・登録不要。</p>\n`;
   h += `<section aria-labelledby="grid"><h2 id="grid" class="sect">1. 学年と教科をえらぶ</h2>\n<div class="tablewrap"><table class="grid"><caption>学年×教科の単元数（数字を押すと その単元の一覧）</caption><thead><tr><th scope="col">学年</th>${SUBJ_ORDER.map(s => `<th scope="col">${SUBJ[s]}</th>`).join("")}</tr></thead><tbody>`;
@@ -226,25 +226,25 @@ function indexPage() {
   h += `<section aria-labelledby="use"><h2 id="use" class="sect">3. 使い方（どの単元でも同じです）</h2><ol class="how3"><li><b>ひとりで</b>：「この単元で ためす」を押すと、すぐ始まります。児童にもこのリンクを配れます。</li><li><b>課題として配る</b>：先生の画面の「単元からつくる」で単元を選ぶと、課題リンクと QR コードを作れます。</li><li><b>クラスで</b>：同じ画面から クイズ・たからばこ・すごろくの問題セットにできます。</li></ol></section>\n`;
   h += `<section aria-labelledby="cus" class="aside"><h2 id="cus" class="sect">どの教科でも使える：先生の問題で遊ぶ</h2><p>単元に合う問題が見つからないときは、先生が自分で問題を作って、クイズ・たからばこ・すごろく・ロケットはっしゃで遊べます。表（Excel など）からの取り込みもできます。<br><a class="btn sub" href="custom.html">先生の問題で遊ぶ 使い方を見る</a></p></section>\n`;
   const sh = [["計算スプリント", "小1〜小6", "たし算・ひき算・九九・わり算・かけ算・小数・分数（学年ごと）"], ["九九チャレンジ", "小2〜小3", "九九"], ["漢字よみクイズ", "小1〜小6", "学年配当の漢字の読み"], ["県庁所在地クイズ", "小4〜小6", "社会 都道府県"], ["英単語クイズ", "小5〜小6", "英語 単語の意味"], ["100マス はっぴょう（クラス）", "小1〜小6", "100マス計算（たし算・ひき算・かけ算）の記録を、先生の大画面で計算ごとに発表。「この じかん」（はやさ・のびりつ・がんばり・自己ベスト更新）と「これまで」（自己ベスト・るいけい・コツコツ）を切りかえ、出す計算も選べます。児童が部屋に入ったときと1回おえるたびに、数字の集計が自動で届きます"]];
-  h += `<section aria-labelledby="games"><h2 id="games" class="sect">ゲーム名から さがす（ひろば本体のゲーム）</h2><p class="note">単元に関係なく遊べる、はじめからあるゲームです。</p>\n<div class="tablewrap"><table class="grid games"><thead><tr><th scope="col">ゲーム</th><th scope="col">対象学年</th><th scope="col">内容・単元</th></tr></thead><tbody>${sh.map(r => `<tr><th scope="row">${r[0]}</th><td>${r[1]}</td><td>${r[2]}</td></tr>`).join("")}</tbody></table></div>\n`;
+  h += `<section aria-labelledby="games"><h2 id="games" class="sect">ゲーム名から さがす（ひらめっと本体のゲーム）</h2><p class="note">単元に関係なく遊べる、はじめからあるゲームです。</p>\n<div class="tablewrap"><table class="grid games"><thead><tr><th scope="col">ゲーム</th><th scope="col">対象学年</th><th scope="col">内容・単元</th></tr></thead><tbody>${sh.map(r => `<tr><th scope="row">${r[0]}</th><td>${r[1]}</td><td>${r[2]}</td></tr>`).join("")}</tbody></table></div>\n`;
   h += `<h3 class="sub3">計算スプリントの学年ごとの単元</h3><ul class="calc">${Object.keys(W.MH_CALC.UNITS).map(g => `<li><b>${GJ(g)}</b>：${Object.values(W.MH_CALC.UNITS[g]).map(x => esc(plain(x))).join("、")}</li>`).join("")}</ul></section>\n`;
-  h += `<section class="aside"><h2 class="sect">この一覧について</h2><p class="note">単元の名前・学年は まなびひろばのデータ（data/units.js）から自動で作っています。学習指導要領の項目番号はAIが作成したもので、人の確認待ちです。教科書の会社によって単元の名前や順番が ちがうことがあります。</p></section>\n`;
+  h += `<section class="aside"><h2 class="sect">この一覧について</h2><p class="note">単元の名前・学年は ひらめっとのデータ（data/units.js）から自動で作っています。学習指導要領の項目番号はAIが作成したもので、人の確認待ちです。教科書の会社によって単元の名前や順番が ちがうことがあります。</p></section>\n`;
   h += `</main>\n` + footer();
   return { title, desc, html: h };
 }
 
 /* ---------- 先生の問題で遊ぶ（custom.html） ---------- */
 function customPage() {
-  const title = "先生がつくる問題で遊ぶ｜クイズ・たからばこ・すごろく・ロケットはっしゃ・Excel取り込み｜まなびひろば（無料・登録不要）";
+  const title = "先生がつくる問題で遊ぶ｜クイズ・たからばこ・すごろく・ロケットはっしゃ・Excel取り込み｜ひらめっと（無料・登録不要）";
   const desc = "どの教科でも使える、先生が自分で問題を作るクラス用ゲーム。クイズ・たからばこ・すごろく・ロケットはっしゃで遊べて、練習用リンクの配布や Excel（表）からの取り込みもできます。無料・登録不要。";
   const canonical = BASE + "guide/custom.html";
   const ld = [{
     "@context": "https://schema.org", "@type": "WebPage", name: title, description: desc, url: canonical, inLanguage: "ja",
-    isPartOf: { "@type": "WebSite", name: "まなびひろば", url: BASE }, audience: { "@type": "EducationalAudience", educationalRole: "teacher" },
-    about: "先生が作る問題を使った学習ゲーム", mainEntity: { "@type": "LearningResource", name: "先生がつくる もんだい", learningResourceType: "クイズ作成・ゲーム", teaches: "すべての教科", educationalLevel: "小学校", inLanguage: "ja", isAccessibleForFree: true, provider: { "@type": "Organization", name: "まなびひろば", url: BASE } }
-  }, { "@context": "https://schema.org", "@type": "BreadcrumbList", itemListElement: [{ "@type": "ListItem", position: 1, name: "まなびひろば", item: BASE }, { "@type": "ListItem", position: 2, name: "学年・単元から さがす", item: BASE + "guide/" }, { "@type": "ListItem", position: 3, name: "先生の問題で遊ぶ", item: canonical }] }];
+    isPartOf: { "@type": "WebSite", name: "ひらめっと", url: BASE }, audience: { "@type": "EducationalAudience", educationalRole: "teacher" },
+    about: "先生が作る問題を使った学習ゲーム", mainEntity: { "@type": "LearningResource", name: "先生がつくる もんだい", learningResourceType: "クイズ作成・ゲーム", teaches: "すべての教科", educationalLevel: "小学校", inLanguage: "ja", isAccessibleForFree: true, provider: { "@type": "Organization", name: "ひらめっと", url: BASE } }
+  }, { "@context": "https://schema.org", "@type": "BreadcrumbList", itemListElement: [{ "@type": "ListItem", position: 1, name: "ひらめっと", item: BASE }, { "@type": "ListItem", position: 2, name: "学年・単元から さがす", item: BASE + "guide/" }, { "@type": "ListItem", position: 3, name: "先生の問題で遊ぶ", item: canonical }] }];
   let h = head({ title, desc, canonical, ld });
-  h += header([["まなびひろば", "../index.html"], ["学年・単元から さがす", "index.html"], ["先生の問題で遊ぶ"]]);
+  h += header([["ひらめっと", "../index.html"], ["学年・単元から さがす", "index.html"], ["先生の問題で遊ぶ"]]);
   h += `<main class="wrap">\n<h1>先生がつくる問題で遊ぶ<span class="h1sub">どの教科でも使える（単元の一覧にない内容にも）</span></h1>
 <p class="lead">単元の一覧にない内容や、学級オリジナルの問題は、先生が自分で問題を作って遊べます。学年や教科は問いません。</p>
 <section aria-labelledby="c1"><h2 id="c1" class="sect">できること</h2><ul class="modes big">
@@ -282,7 +282,7 @@ function aboutPage() {
   return { title, desc, html: h };
 }
 
-const CSS = `/* まなびひろば 先生向けガイド（本体の色・文字と同じ。外部読み込みなし） */
+const CSS = `/* ひらめっと 先生向けガイド（本体の色・文字と同じ。外部読み込みなし） */
 :root{--board:#1f4d3a;--field:#e9f4e4;--ink:#1b2a22;--muted:#46564d;--edge:#16372a;--paper:#fff;--line:#c9d8c8;--chalk:#d6ebdd;--math:#cf3d2c;--jp:#2f6fd8;--soc:#f2c230;--eng:#7a4cc8;--go:#1b7a4b;--sun:#ff9422;--bad:#b3261e}
 *{box-sizing:border-box}
 html{-webkit-text-size-adjust:100%}

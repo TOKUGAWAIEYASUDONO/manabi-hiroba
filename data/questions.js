@@ -1,4 +1,4 @@
-/* まなびひろば 問題データ
+/* ひらめっと 問題データ
    - index.html から <script src="data/questions.js"> で読み込む（file:// でも動くよう fetch は使わない）
    - 1問 = { id: 一意のID, g: 学年, q: 問題, a: 正解 }
    - 漢字よみ：q の漢字はすべて g 年以下で習う字にする（data/kanji-grade.js で自動検査）
