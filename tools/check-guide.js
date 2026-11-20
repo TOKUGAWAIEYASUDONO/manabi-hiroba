@@ -13,7 +13,7 @@ const errors = [], err = m => errors.push(m);
 const gdir = path.join(root, "guide");
 const read = f => (fs.existsSync(f) ? fs.readFileSync(f, "utf8") : null);
 
-const expected = new Set(["index.html", "custom.html", "about.html"]);
+const expected = new Set(["index.html", "custom.html"]);  // about.html は非公開中（hold/guide-about に保管）
 for (const u of UN.UNITS) expected.add(pageName(u.g, u.subj));
 const pageHtml = {};
 for (const f of expected) { const s = read(path.join(gdir, f)); if (s === null) err(`ページがありません: guide/${f}`); else pageHtml[f] = s; }
@@ -74,6 +74,7 @@ if (!sm) err("sitemap.xml がありません");
 else {
   const must = [BASE, BASE + "guide/", ...[...expected].filter(f => f !== "index.html").map(f => BASE + "guide/" + f)];
   for (const u of must) if (!sm.includes(`<loc>${u}</loc>`)) err(`sitemap.xml にありません: ${u}`);
+  if (/about\.html/.test(sm + Object.values(pageHtml).join(""))) err("非公開の 保護者・学校向けページ（about.html）への入口が残っています");
   if (!rikaPublic && /g[3-6]-rika\.html|#u=r[3-6]-|pick=r[3-6]-/.test(sm + Object.values(pageHtml).join(""))) err("非公開の理科への入口が残っています");
 }
 if (!rb || !rb.includes(`Sitemap: ${BASE}sitemap.xml`)) err("robots.txt から sitemap を指していません");

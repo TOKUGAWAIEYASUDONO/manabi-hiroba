@@ -1720,7 +1720,7 @@ body[data-v=host] .wrap{max-width:none;padding:0}
   <h1>まなびひろば</h1>
   <p>まなびひろばは、無料・登録不要の小学生向け学習ゲームです。ホームで 算数・国語・社会・理科・英語 の「教科のとびら」をえらび、学年の単元から練習します。</p>
   <p>算数のへやでは、かけ算・わり算・分数・図形・単位などの単元を1タップで始められ、九九・100マス計算・めもり名人の「とっくん」もあります。友だちとのバトル、先生向けの課題リンク・授業モードもあります。</p>
-  <p>このサイトを使うには JavaScript をオンにしてください。くわしくは <a href="guide/index.html">使い方ガイド</a> と <a href="guide/about.html">このサイトについて</a> をごらんください。</p>
+  <p>このサイトを使うには JavaScript をオンにしてください。くわしくは <a href="guide/index.html">使い方ガイド</a> をごらんください。</p>
 </section></noscript></main>
 <footer class="foot"><a id="licLink" href="vendor/THIRD-PARTY-LICENSES.txt" target="_blank" rel="noopener"></a></footer>
 
@@ -1829,9 +1829,9 @@ body[data-v=host] .wrap{max-width:none;padding:0}
 <script src="data/gen/textbook-extra.js?v=a71e349b"></script>
 <script src="data/gen/bunsho.js?v=8a761a98"></script>
 <script src="data/units.js?v=515a9d37"></script>
-<script src="data/sansu-items.js?v=632d65f4"></script>
+<script src="data/sansu-items.js?v=27498846"></script>
 <script src="data/tools-viz.js?v=1fd513f4"></script>
-<script src="data/collection.js?v=8a88f1bc"></script>
+<script src="data/collection.js?v=e067996b"></script>
 <script src="data/masu100.js?v=78a2bad3"></script>
 <script>
 /* ================= 画面の文言（1つの表） =================
@@ -1875,7 +1875,6 @@ const TX={
  "ru.easy.d":["コインがへらない・もどらない","コインが へらない・もどらない"],
  "ru.auto":["おまかせ"],"ru.auto.d":["1〜2年《ねん》の問題《もんだい》ならやさしい","1〜2ねんの もんだいなら やさしい"],
 /* ホーム */
- "home.about.l":["保護者《ほごしゃ》・学校《がっこう》向《む》け"],
  "home.guide.l":["学年《がくねん》・単元《たんげん》から さがす（先生《せんせい》向《む》け）","がくねん・たんげんから さがす（せんせいむけ）"],
  "home.guide":["いっしょに あそぼう！"],
  "home.all":["ぜんぶ"],
@@ -2840,8 +2839,7 @@ ${btl}</div>`
         <div class="links">${LINKS.map(l=>`<a class="link" href="${l.u}" target="_blank" rel="noopener"><b>${esc(l.t)} ↗</b><span>${esc(l.d)}</span></a>`).join("")}</div>
         <p class="note">${T("home.links.n")}</p>
         <p class="note"><a href="#check">${ic("plug")} ${T("home.check")}</a></p></details>
-      <a class="gdlink" href="guide/index.html">${T("home.guide.l")}</a>
-      <a class="gdlink" href="guide/about.html">${T("home.about.l")}</a>`}
+      <a class="gdlink" href="guide/index.html">${T("home.guide.l")}</a>`}
       <a class="gdlink" href="#feedback">こまったこと・こうしてほしいこと</a>
     </div></div>`;     // 先生・ICT向けのリンクは、1〜2年には出さない
   const dr=$("#colDoor"); if(dr) dr.onclick=()=>go("#hiroba");

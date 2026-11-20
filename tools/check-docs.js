@@ -3,7 +3,9 @@
 const fs = require('fs'), path = require('path');
 const root = path.join(__dirname, '..');
 const read = p => fs.readFileSync(path.join(root, p), 'utf8');
-const html = read('index.html'), about = read('guide/about.html'), readme = read('README.md');
+// 保護者・学校向けページは非公開中（guide/about.html は置かない）。生成スクリプトの本文で照合する。
+const about = require('child_process').execFileSync(process.execPath, [path.join(__dirname, 'build-guide.js'), '--about'], { encoding: 'utf8' });
+const html = read('index.html'), readme = read('README.md');
 const rikaPublic = /window\.RIKA_PUBLIC\s*=\s*true\s*;/.test(html);
 const sources = ['index.html', ...fs.readdirSync(path.join(root, 'data')).filter(f => f.endsWith('.js')).map(f => `data/${f}`), ...fs.readdirSync(path.join(root, 'guide')).filter(f => f.endsWith('.html')).map(f => `guide/${f}`)];
 const keys = new Set();
@@ -17,7 +19,7 @@ for (const file of sources) {
 const documented = new Set([...about.matchAll(/<code>(mh_[\w]+)<\/code>/g)].map(m => m[1]));
 let errors = 0;
 if (rikaPublic) {
-  for (const [file, src] of [['README.md', readme], ['guide/about.html', about], ...[3,4,5,6].map(g => [`guide/g${g}-rika.html`, read(`guide/g${g}-rika.html`)])]) {
+  for (const [file, src] of [['README.md', readme], ['tools/build-guide.js（about）', about], ...[3,4,5,6].map(g => [`guide/g${g}-rika.html`, read(`guide/g${g}-rika.html`)])]) {
     if (/理科は ?AI ?が作/.test(src)) { console.error(`${file}: 理科の「AI が作り」の文言は出さない（2026-11-18）`); errors++; }
   }
   if (/AI ?が ?作《つく》り/.test(html)) { console.error('index.html: 理科の「AI が作り」の文言は出さない'); errors++; }
@@ -32,7 +34,7 @@ for (const file of images) {
   if (Number(!!cc0) + Number(!!own) !== 1) { console.error(`画像の分類が不正: ${name}`); errors++; }
 }
 for (const m of readme.matchAll(/vendor\/img\/([\w.-]+\.png)/g)) if (!images.includes(m[1])) { console.error(`存在しない画像の説明: ${m[1]}`); errors++; }
-for (const [label, re] of [['90分', /90分/], ['2秒', /2秒/]]) for (const [file, src] of [['README.md', readme], ['guide/about.html', about], ['index.html', html]]) if (!re.test(src)) { console.error(`${file}: ${label} の記載なし`); errors++; }
+for (const [label, re] of [['90分', /90分/], ['2秒', /2秒/]]) for (const [file, src] of [['README.md', readme], ['tools/build-guide.js（about）', about], ['index.html', html]]) if (!re.test(src)) { console.error(`${file}: ${label} の記載なし`); errors++; }
 if (!/90\s*\*\s*60\s*\*\s*1000|90\s*\*\s*60000|5400000/.test(html)) { console.error('コードの90分設定が見つかりません'); errors++; }
 if (errors) process.exit(1);
 console.log(`文書照合: 保存キー ${keys.size} 件、画像 ${images.length} 件が一致`);

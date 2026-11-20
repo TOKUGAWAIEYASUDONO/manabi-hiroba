@@ -82,7 +82,7 @@ const header = crumbs => `<header class="top"><div class="wrap"><a class="brand"
 const footer = () => `<footer class="foot"><div class="wrap">
 <p>まなびひろば：学校の端末で使える、小学生向けの無料の学習ゲーム（登録不要・広告なし。ひとりで遊ぶときは外部への通信なし。友だち対戦のときだけ、端末どうしをつなぐ仲介サーバーに接続）。</p>
 <p>学習指導要領の項目番号（base）はAIが作成したもので、人の確認待ちです。教科書の単元名・順は出版社により異なります。</p>
-<p><a href="../index.html">まなびひろば ホーム</a> ／ <a href="index.html">学年・単元から さがす</a> ／ <a href="custom.html">先生の問題で遊ぶ</a> ／ <a href="about.html">保護者・学校向け</a></p>
+<p><a href="../index.html">まなびひろば ホーム</a> ／ <a href="index.html">学年・単元から さがす</a> ／ <a href="custom.html">先生の問題で遊ぶ</a></p>
 </div></footer>
 <a class="totop" href="#" aria-label="ページの先頭へ">▲ 先頭へ</a>
 </body>
@@ -226,7 +226,7 @@ function indexPage() {
   h += `<section aria-labelledby="games"><h2 id="games" class="sect">ゲーム名から さがす（ひろば本体のゲーム）</h2><p class="note">単元に関係なく遊べる、はじめからあるゲームです。</p>\n<div class="tablewrap"><table class="grid games"><thead><tr><th scope="col">ゲーム</th><th scope="col">対象学年</th><th scope="col">内容・単元</th></tr></thead><tbody>${sh.map(r => `<tr><th scope="row">${r[0]}</th><td>${r[1]}</td><td>${r[2]}</td></tr>`).join("")}</tbody></table></div>\n`;
   h += `<h3 class="sub3">計算スプリントの学年ごとの単元</h3><ul class="calc">${Object.keys(W.MH_CALC.UNITS).map(g => `<li><b>${GJ(g)}</b>：${Object.values(W.MH_CALC.UNITS[g]).map(x => esc(plain(x))).join("、")}</li>`).join("")}</ul></section>\n`;
   h += `<section class="aside"><h2 class="sect">この一覧について</h2><p class="note">単元の名前・学年は まなびひろばのデータ（data/units.js）から自動で作っています。学習指導要領の項目番号はAIが作成したもので、人の確認待ちです。教科書の会社によって単元の名前や順番が ちがうことがあります。</p></section>\n`;
-  h += `<p><a href="about.html">保護者・学校向け：運営とデータの扱い</a></p>\n</main>\n` + footer();
+  h += `</main>\n` + footer();
   return { title, desc, html: h };
 }
 
@@ -364,8 +364,9 @@ const names = [];
 for (const p of pages) { out.set("guide/" + p.file, gradePage(p).html); names.push(p.file); }
 out.set("guide/index.html", indexPage().html);
 out.set("guide/custom.html", customPage().html);
-out.set("guide/about.html", aboutPage().html);
-const urls = [BASE, BASE + "guide/", ...pages.map(p => BASE + "guide/" + p.file), BASE + "guide/custom.html", BASE + "guide/about.html"];
+// 保護者・学校向け（about）は、ユーザーの OK が出るまで公開しない。文書照合（check-docs）のため --about で標準出力にだけ出す。
+if (process.argv.includes("--about")) { process.stdout.write(aboutPage().html); process.exit(0); }
+const urls = [BASE, BASE + "guide/", ...pages.map(p => BASE + "guide/" + p.file), BASE + "guide/custom.html"];
 out.set("sitemap.xml", `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${urls.map((u, i) => `  <url><loc>${u}</loc><priority>${i === 0 ? "1.0" : i === 1 ? "0.9" : "0.7"}</priority></url>`).join("\n")}\n</urlset>\n`);
 out.set("robots.txt", `User-agent: *\nAllow: /\n\nSitemap: ${BASE}sitemap.xml\n`);
 fs.mkdirSync(path.join(root, "guide"), { recursive: true });
