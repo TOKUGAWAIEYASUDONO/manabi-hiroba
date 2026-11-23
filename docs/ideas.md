@@ -16,7 +16,6 @@
 
 ## 作業中（セッションあり）
 <!-- - タスク名 — セッション: session_xxx -->
-- 🚀 **公開の日**：rename（ロゴふくむ）＋move を main へ・canonical を .html なしに・404.html・引っ越し ON（✅ 公開OK）— セッション: session_01DeDoky2SA8w7HrCDPEEbTS
 
 ## 次やる（3つまで）
 1. 🛟 **100マス計算を変えて build したときの元のコード（`src/App.jsx` など）を探して避難させる** — PC の「子どものアプリ」セッションで。避難のときに見つかったか、まだわからない
@@ -26,6 +25,8 @@
    - 作る道具：PC の image2（まなびっこの絵と同じ）→ PC のセッションでやる。クラウドは、できた画像の組みこみ（サイズ・webp・data/sansu-items.js へのアイコン名）を担当できる
 
 ## あなたの返事待ち
+- 🖥 **公開の日のあと：PC の Claude に「本物のブラウザで確かめる・見た目の検査の基準・Search Console 登録」を頼む**（貼る文は司令塔が出した）
+- 📣 **先生たちに知らせる**：名前が「ひらめっと」・住所が https://hirametto.com/ に。前の住所を開いても記録を持って移る。子どもの端末は読みこみ直し
 - 🔐 **GitHub の Cloudflare Pages の許可を manabi-hiroba だけにしぼる**（今は非公開の manabi-hiroba-plan なども見える）：GitHub「Settings → Applications → Cloudflare Pages → Configure」→「Only select repositories」
 - 🏝 **島の 2D版・3D版を 学校の Chromebook で ためす**：https://claude.ai/artifact/VU9s8nzpR6jqBKpsJ7TkpX（左下のボタンで切りかえ・右すみに fps）。できたを150にしても 30fps 以上・熱くならないなら 3D も候補（ブランチ claude/hiroba-island-proto）
   - 💡 **C案：スプライト・スタッキング**（2Dの絵を輪切りにして1pxずつずらして重ね、3Dっぽく見せる・回せる・軽い）（Hermes が X の投稿から調べた・2026-11-23）
@@ -149,3 +150,4 @@
 - ✅ 3年「小数と 単位（cm・mm／L・dL）」の単元 m3-shosu-tani → 新しい単元・□が2つは4択・文章題なし。検査 test-shosu-tani.js（3000問）（ブランチ claude/shosu-tani-3・まだ公開していない）
 - ✅ 公開⑥：3年「小数と 単位」を main へ（f0f3d79・GitHub Pages success）
 - ✅ Cloudflare Pages の設定（PC の Claude）→ プロジェクト hirametto・プレビューなし・hirametto.com と www（www→ルート 301）。`.html` は外した住所へ 308・ないページも 200 → 公開の日に直す
+- ✅ 🎉 公開の日：ひらめっと・ロゴ・hirametto.com への引っ越し（ON）・.html なしの住所・404.html を main へ（2dc1311・GitHub Pages success）
