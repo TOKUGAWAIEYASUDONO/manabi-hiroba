@@ -161,6 +161,7 @@ const sem3 = () => {       // 3年 1学期ぶん：3年の算数（数を 39単�
   run(S, D, [...m3, ...others].map(U)); run(S, D + 1, m3.map(U)); run(S, D + 2, m3.slice(0, 5).map(U));
   S.ac.e = 120; S.ac.s = 35; S.own = ["tree", "flower", "bench"]; S.pl = { tree: 2, flower: 7 };
   S.mk = C.mkFresh();      // まなびっこ（v3.0）の前の記録として HR1 を くらべる（まなびっこは 下の v3.0 の テスト）
+  S.y = C.yaFresh(); S.kp = C.kpFresh();      // やりこみ（v3.4）・もらった物 の 前の記録（やりこみが あると HR4。下の HR4 の テスト）
   return S;
 };
 t("バックアップ：往復で同じ（変わった分だけ）", () => {
@@ -632,5 +633,51 @@ t("やりこみ：まなびっこの きらきらは その教科の 正解 500�
   let r = null; for (let i = 0; i < 40 && !S.mk.own.sankakuru.k; i++) r = run(S, D, [{ id: "m3-amari", n: 10, o: 10 }]);
   assert.strictEqual(S.mk.own.sankakuru.k, 1); assert.deepStrictEqual(r.ya.kira, ["sankakuru"]); assert(S.y.s.m >= 500);
   assert(C.yaCheck(S, {}).includes("kira1"));
+});
+/* ---- HR4（やりこみ・もらった物も 入る。新しい住所への おひっこしの 予備） ---- */
+const yaState = () => {      // 3年 1学期ぶん ＋ やりこみ（シール・じっせき）＋ 前の 基準で もらった物
+  const S = C.fresh(D), m3 = C.UNIT_IDS.filter(i => i[0] === "m" && i[1] === "3").slice(0, 39);
+  run(S, D, m3.map(U)); run(S, D + 1, m3.map(U)); run(S, D + 2, m3.slice(0, 5).map(id => ({ id, n: 10, o: 10 })));
+  S.ac.e = 90; S.ac.s = 10; S.y.a.push("mt10", "m100n1");
+  S.kp.r["m3-amari"] = 4; S.kp.z.push("t-yam100"); S.kp.p.push(C.PARTS[C.PARTS.length - 1].id);      // いまの 記録からは 計算できない（前の 基準で もらった）物
+  C.keepUp(S); return S;
+};
+t("バックアップ HR4：やりこみ（正解・ノーミス・シールの しるし・じっせき）と もらった物（ランク・きせかえ・遊具）が 往復する", () => {
+  const S = yaState(), s = C.hrMake(S), r = C.hrParse(s);
+  assert(/^HR4/.test(s), s.slice(0, 4)); assert(r && r.y && r.kp && r.mk && r.kz);
+  assert.deepStrictEqual(r.y, { ...S.y, a: C.YA_BK.filter(id => S.y.a.includes(id)) });
+  const B = C.hrMerge(C.fresh(D + 9), r, D + 9);
+  assert.deepStrictEqual(B.y.u, S.y.u); assert.strictEqual(B.y.c, S.y.c); assert.strictEqual(B.y.nm, S.y.nm);
+  for (const id of S.y.a) assert(B.y.a.includes(id), id);
+  for (const id in S.kp.r) assert(B.kp.r[id] >= S.kp.r[id], id);
+  for (const id of S.kp.z) assert(B.kp.z.includes(id), id);
+  for (const id of S.kp.p) assert(B.kp.p.includes(id), id);
+  for (const id of C.UNIT_IDS) assert.strictEqual(C.stage(B, id), C.stage(S, id), id);
+  assert.strictEqual(C.hrMake(C.hrMerge(B, C.hrParse(s), D + 9)), C.hrMake(B), "くり返し 読んでも ふえない");
+  assert(s.length <= 700, "長さ " + s.length);
+});
+t("バックアップ HR4：合わせても 減らない（両方の 大きいほう）・やりこみが なければ 今まで通り HR1〜3", () => {
+  const A = yaState(), B = C.fresh(D); run(B, D, [{ id: "m3-amari", n: 30, o: 30 }, { id: "j3-kanji", n: 10, o: 10 }].filter(x => x.id in C.IDX));
+  B.y.a.push("kuku"); B.y.c = Math.max(B.y.c, 5000);
+  const M = C.hrMerge(C.clean(JSON.parse(JSON.stringify(A)), D + 3), C.hrParse(C.hrMake(B)), D + 3);
+  assert(M.y.c >= A.y.c && M.y.c >= B.y.c);
+  for (const id of new Set([...Object.keys(A.y.u), ...Object.keys(B.y.u)])) for (let i = 0; i < 4; i++) assert(M.y.u[id][i] >= Math.max((A.y.u[id] || [0, 0, 0, 0])[i], (B.y.u[id] || [0, 0, 0, 0])[i]), id + i);
+  for (const id of [...A.y.a, ...B.y.a]) assert(M.y.a.includes(id), id);
+  for (const id in A.kp.r) assert(M.kp.r[id] >= A.kp.r[id], id);
+  assert(/^HR1/.test(C.hrMake(C.fresh(D))));
+});
+t("バックアップ HR4：1字 かえると 断る・表に ない じっせき／単元の 番号は 断る。古い HR1〜3 も 読める。YA_BK は YA_ACH を ぜんぶ ふくむ", () => {
+  const s = C.hrMake(yaState()).replace(/-/g, "");
+  for (let i = 3; i < 40; i++) { const c = s[i] === "A" ? "B" : "A"; assert.strictEqual(C.hrParse(s.slice(0, i) + c + s.slice(i + 1)), null, "位置 " + i); }
+  for (const a of C.YA_ACH) assert(C.YA_BK.includes(a.id), "YA_BK に ない じっせき（末尾に 足す）: " + a.id);
+  assert.strictEqual(new Set(C.YA_BK).size, C.YA_BK.length);
+  const sum3 = tx => { let h = 7; for (const c of tx) h = (h * 31 + c.charCodeAt(0)) % 46656; return h.toString(36).toUpperCase().padStart(3, "0"); };
+  const hr3 = C.hrMake(kzState()).replace(/-/g, ""); assert(C.hrParse(hr3), "HR2/HR3 も 読める");
+  const rest = hr3.slice(3, -3), z = "0".repeat(9) + "1" + "0000", mk4 = b => "HR4" + b + sum3("HR4" + b);
+  const kp0 = "00" + "1" + "0000" + "0", kzf = "1" + "0000" + "0";
+  const core = /^HR2/.test(hr3) ? kzf + rest : rest.slice(0);
+  assert(C.hrParse(mk4(z + kp0 + core)), "正しい 形");
+  assert.strictEqual(C.hrParse(mk4("0".repeat(9) + "1" + "ZZZZ" + kp0 + core)), null, "20ビットを こえる");
+  assert.strictEqual(C.hrParse(mk4("0".repeat(8) + "11" + "ZZ" + "000" + "1" + "0000" + kp0 + core)), null, "表に ない 単元");
 });
 console.log(`\n${n} 件のテストを実行${process.exitCode ? "（失敗あり）" : "：すべて成功"}`);

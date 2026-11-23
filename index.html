@@ -17,6 +17,7 @@
 <link rel="icon" href="vendor/img/favicon.svg" type="image/svg+xml">
 <link rel="icon" href="vendor/img/favicon-32.png" sizes="32x32" type="image/png">
 <link rel="apple-touch-icon" href="vendor/img/apple-touch-icon.png">
+<script src="data/move.js?v=66ea4efb"></script><!-- おひっこし（新しい住所へ）。設定は data/move.js の SITE だけ。いちばん先に 読む -->
 <link rel="stylesheet" href="vendor/fonts/biz-udpgothic.css?v=ecfc8846">
 <style>
 :root{
@@ -1855,7 +1856,7 @@ body[data-v=host] .wrap{max-width:none;padding:0}
 <script src="data/units.js?v=74dad08a"></script>
 <script src="data/sansu-items.js?v=c9fca7b3"></script>
 <script src="data/tools-viz.js?v=0582ba52"></script>
-<script src="data/collection.js?v=612ff78e"></script>
+<script src="data/collection.js?v=54bd1139"></script>
 <script src="data/masu100.js?v=a19d68e5"></script>
 <script>
 /* ================= 画面の文言（1つの表） =================
@@ -1931,6 +1932,9 @@ const TX={
  "rec.bk.go":["読《よ》みこむ","よみこむ"],
  "rec.bk.ok":["読《よ》みこみました。メダル・ベスト・学年《がくねん》が入《はい》りました。","よみこんだよ！"],
  "rec.bk.ng":["この文字《もじ》は使《つか》えません。写《うつ》しまちがいがないか見《み》てね。","この もじは つかえないよ。うつしまちがいが ないか みてね。"],
+ "mv.t":["前《まえ》の ばしょの きろく","まえの ばしょの きろく"],
+ "mv.d":["前《まえ》の ばしょで あそんだ きろくが 見《み》つからない ときは、ここを おしてね。前《まえ》の ばしょから もう一度《いちど》 はこぶよ（いまの きろくは へらないよ）。","まえの ばしょで あそんだ きろくが ない ときは、ここを おしてね。まえの ばしょから もういちど はこぶよ（いまの きろくは へらないよ）。"],
+ "mv.go":["前《まえ》の ばしょから きろくを もってくる","まえの ばしょから きろくを もってくる"],
  "rec.bk.empty":["文字《もじ》を入《い》れてね","もじを いれてね"],
  "gr.title":["なんねんせい？"],"gr.note":["えらんだ学年《がくねん》はおぼえておきます（あとで変《か》えられます）","えらんだ がくねんは おぼえておくよ（あとで かえられるよ）"],
  /* 九九・県庁所在地の選びかた */
@@ -2204,7 +2208,7 @@ const TX={
  "col.ya.t":["じっせき"],"col.ya.n":[(a,b)=>`たっせい ${a} / ${b}`],
  "col.ya.d":["その日《ひ》の うちに、やれば やるほど すすむよ。シールの ランクも ここで たしかめよう","そのひの うちに、やれば やるほど すすむよ。シールの ランクも ここで たしかめよう"],
  "col.ya.hide":["？？？ かくし じっせき"],"col.ya.done":["たっせい！"],
- "col.ya.local":["やりこみの きろくは この 端末《たんまつ》だけに あるよ（バックアップの 文字《もじ》には まだ 入《はい》らない）","やりこみの きろくは この たんまつだけに あるよ（バックアップの もじには まだ はいらない）"],
+ "col.ya.local":["やりこみの きろくは この 端末《たんまつ》だけに あるよ（「きろく」の ひろばの 文字《もじ》にも 入《はい》るよ）","やりこみの きろくは この たんまつだけに あるよ（「きろく」の ひろばの もじにも はいるよ）"],
  "col.ya.rk.0":["まだ"],"col.ya.rk.1":["どう"],"col.ya.rk.2":["ぎん"],"col.ya.rk.3":["きん"],"col.ya.rk.4":["にじ"],
  "col.ya.r.up":[(u,r)=>`「${u}」の シールが ${r}に なったよ！`],
  "col.ya.r.ach":[s=>`じっせき「${s}」たっせい！`],
@@ -3352,6 +3356,8 @@ document.addEventListener("keydown",e=>{
 
 /* ================= じぶんの きろく（ログインなし。端末の中だけ） ================= */
 /* バックアップの文字：「MH1」＋学年1けた＋（ゲームごと：ベスト2けた＋メダル1けた）＋確認3けた。英数字だけ。
+   MH2＝MH1 ＋ 単元の数(2)＋（単元ごと：番号の しるし4けた＋ベスト2けた＋メダル1けた）。
+   MH3（2026-11-20。新しい住所への おひっこしの 予備）＝MH2 ＋ めもり名人の ステージの数(1)＋（ステージごと：★ 1けた 0〜3）。★が 1つも なければ 今まで通り MH2（古い版のサイトは MH3 を こわれた文字として 断る）。
    入れるのは学年・ベスト・メダルだけ（名前・IDは入らない）。読みこむときは、長さ・文字・確認の数字・範囲を調べ、
    正しいときだけ、いまの きろくより大きい数字を残す形で反映する（きろくは減らない） */
 const bkeys=()=>[...GAMES.map(x=>x.id),...MODES.flatMap(m=>GAMES.map(x=>m.id+"_"+x.id))];
@@ -3363,11 +3369,13 @@ function bkMake(){      // v2：v1 に「単元ごとのベスト・メダル」
   for(const k of bkeys()){ const e=b[k]||{}; body+=b36(e.score,2)+Math.min(3,Math.max(0,e.medal|0)); }
   const us=(typeof UREADY!=="undefined"?UREADY:[]).filter(u=>b["u:"+u.id]&&(b["u:"+u.id].score||b["u:"+u.id].medal)).slice(0,300);
   body+=b36(us.length,2)+us.map(u=>{ const e=b["u:"+u.id]; return uHash4(u.id)+b36(e.score,2)+Math.min(3,Math.max(0,e.medal|0)); }).join("");
-  return ("MH2"+body+bkSum("MH2"+body)).match(/.{1,6}/g).join("-");        // 読みやすいよう6文字ごとに区切る
+  let mt=""; try{ const c=mtCfg(); for(let i=1;i<=MT_N;i++) mt+=mtStars(c,i); }catch(e){ mt=""; }
+  const v=/[1-3]/.test(mt)?"MH3":"MH2"; if(v==="MH3") body+=b36(mt.length,1)+mt;
+  return (v+body+bkSum(v+body)).match(/.{1,6}/g).join("-");        // 読みやすいよう6文字ごとに区切る
 }
 function bkRead(str){
   const t=String(str||"").toUpperCase().replace(/[^0-9A-Z]/g,""), ks=bkeys();       // 区切りや空白は無視
-  const v=t.slice(0,3); if(v!=="MH1"&&v!=="MH2") return null;
+  const v=t.slice(0,3); if(v!=="MH1"&&v!=="MH2"&&v!=="MH3") return null;
   const base=1+ks.length*3;
   if(t.length<3+base+3||(v==="MH1"&&t.length!==3+base+3)) return null;
   const body=t.slice(3,-3); if(bkSum(v+body)!==t.slice(-3)||!/^[0-6]$/.test(body[0])) return null;
@@ -3377,15 +3385,20 @@ function bkRead(str){
     if(!/^[0-9A-Z]{2}$/.test(sc)||!/^[0-3]$/.test(m)) return null;
     out[k]={score:parseInt(sc,36),medal:+m};
   }
-  const u={};
-  if(v==="MH2"){
+  const u={}, mt=[];
+  if(v!=="MH1"){
     const n=parseInt(body.slice(p,p+2),36); p+=2;
-    if(!(n>=0)||body.length!==p+n*7) return null;
+    if(!(n>=0)||(v==="MH2"&&body.length!==p+n*7)||(v==="MH3"&&body.length<p+n*7+1)) return null;
     for(let i=0;i<n;i++,p+=7){ const h=body.slice(p,p+4), sc=body.slice(p+4,p+6), m=body[p+6];
       if(!/^[0-9A-Z]{4}$/.test(h)||!/^[0-9A-Z]{2}$/.test(sc)||!/^[0-3]$/.test(m)) return null;
       u[h]={score:parseInt(sc,36),medal:+m}; }
   }
-  return {g:+body[0],b:out,u};
+  if(v==="MH3"){
+    const k=parseInt(body[p],36); p+=1;
+    if(!(k>=1)||body.length!==p+k||!/^[0-3]*$/.test(body.slice(p))) return null;
+    for(let i=0;i<k;i++) mt.push(+body[p+i]);
+  }
+  return {g:+body[0],b:out,u,mt};
 }
 function bkApply(r){
   const all=bests();
@@ -3394,6 +3407,7 @@ function bkApply(r){
   for(const u of (typeof UREADY!=="undefined"?UREADY:[])){ const n=r.u&&r.u[uHash4(u.id)]; if(!n) continue;
     const c=all["u:"+u.id]||{score:0,medal:0}; all["u:"+u.id]={score:Math.max(c.score||0,n.score),medal:Math.max(c.medal||0,n.medal)}; }
   store.set("mh_best",all);
+  if(r.mt&&r.mt.some(n=>n>0)) mtSet(c=>{ r.mt.forEach((n,i)=>{ if(i<MT_N&&n>mtStars(c,i+1)) c.s[i+1]=n; }); });      // めもり名人の ★：大きいほう
   if(r.g){ ui.grade=r.g; store.set("mh_ui",ui); }
 }
 /* 単元練習の記録：教科ごとに、挑戦した単元とメダル */
@@ -3446,10 +3460,11 @@ function renderRecord(msg){
       <div><button class="btn" id="bkMake">${T("rec.bk.make")}</button></div>
       <div id="bkOut" class="hidden"><div class="code" id="bkCode"></div><p class="note">${T("rec.bk.hint")}</p><button class="btn sub" id="bkCopy">${ic("copy")}${T("r.copy")}</button></div>
       <label for="bkIn"><b>${T("rec.bk.read")}</b></label>
-      <input id="bkIn" type="text" maxlength="240" autocomplete="off" autocapitalize="characters" spellcheck="false" aria-describedby="bkMsg">
+      <input id="bkIn" type="text" maxlength="4000" autocomplete="off" autocapitalize="characters" spellcheck="false" aria-describedby="bkMsg">
       <div><button class="btn" id="bkGo">${ic("upload")}${T("rec.bk.go")}</button></div>
       <div id="bkMsg" role="status" class="${msg?"okmsg":""}">${msg||""}</div></div>
     ${COLOK?colBackupHtml():""}
+    ${moveAgainHtml()}
   </div>`;
   colBackupBind();
   $("#bkMake").onclick=()=>{ $("#bkCode").textContent=bkMake(); $("#bkOut").classList.remove("hidden"); };
@@ -3457,10 +3472,16 @@ function renderRecord(msg){
   $("#bkGo").onclick=()=>{
     const m=$("#bkMsg"), v=$("#bkIn").value.trim();
     if(!v){ m.className="err"; m.textContent=T("rec.bk.empty"); return; }
-    if(/^HR[123]/i.test(v.replace(/[^0-9A-Za-z]/g,""))){ if(!colImport(v)){ m.className="err"; m.textContent=T("rec.bk.ng"); return; } renderRecord(T("col.bk.ok")); return; }      // ひろばの文字（HR1）も、ここに入れてよい
+    if(/^HR[1-4]/i.test(v.replace(/[^0-9A-Za-z]/g,""))){ if(!colImport(v)){ m.className="err"; m.textContent=T("rec.bk.ng"); return; } renderRecord(T("col.bk.ok")); return; }      // ひろばの文字（HR1）も、ここに入れてよい
     const r=bkRead(v); if(!r){ m.className="err"; m.textContent=T("rec.bk.ng"); return; }
     bkApply(r); refreshMedals(); renderRecord(T("rec.bk.ok"));
   };
+}
+
+/* 新しい住所の「きろく」だけ：前の 住所（GitHub Pages）から 記録を もう一度 はこぶ 入口（data/move.js。オフの あいだは 出さない） */
+function moveAgainHtml(){
+  const M=window.MH_MOVE; if(!M||!M.showAgain()) return "";
+  return `<div class="bak" id="mvAgain"><h3>${ic("upload")} ${T("mv.t")}</h3><p class="note" style="margin:0">${T("mv.d")}</p><div><a class="btn sub" href="${esc(M.againHref())}">${T("mv.go")}</a></div></div>`;
 }
 
 /* ================= コレクション（ひろば・ずかん・どんぐり）。中身は data/collection.js ================= */
@@ -3947,7 +3968,7 @@ function colBackupHtml(){
     <div><button class="btn" id="hrMake">${T("col.bk.make")}</button></div>
     <div id="hrOut" class="hidden"><div class="code" id="hrCode"></div><div id="hrQr" class="hqr"></div><p class="note">${T("col.bk.hint")}</p><button class="btn sub" id="hrCopy">${ic("copy")}${T("r.copy")}</button></div>
     <label for="hrIn"><b>${T("col.bk.read")}</b></label>
-    <input id="hrIn" type="text" maxlength="1200" autocomplete="off" autocapitalize="characters" spellcheck="false" aria-describedby="hrMsg">
+    <input id="hrIn" type="text" maxlength="4000" autocomplete="off" autocapitalize="characters" spellcheck="false" aria-describedby="hrMsg">
     <div><button class="btn" id="hrGo">${ic("upload")}${T("rec.bk.go")}</button></div>
     <div id="hrMsg" role="status"></div></div>`;
 }

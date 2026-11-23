@@ -15,6 +15,7 @@
 - `data/collection.js` … コレクション v1（じぶんの ひろば・たんげん ずかん・どんぐり）の中身。画面は持たず、`tools/test-collection.js` で単体テストする
 - `data/masu100.js` … 100マス計算（`apps/100masu`）の記録を読む部品（数える回・計算ごとのまとめ・先生へ送る数字の形と検査・「100マス はっぴょう」のランキング・100マスの どんぐり）。画面は持たず、`tools/test-masu100.js` が単体テストする。ブラウザと `server.js` で同じ部品
 - `data/hiroba-art.js` … ひろばの絵（SVG の symbol）。ひろばを開くときだけ読みこむ
+- `data/move.js` … 新しい住所（hirametto.com）への おひっこし。住所の 設定（`SITE`。`ON` で オン）・古い住所の「引っ越し係」・記録の 合わせ方。`move.html` は 新しい住所の「受けとり」。手順は `docs/cloudflare-pages.md`、検査は `node tools/test-move.js`
 - `tools/test-collection.js` … どんぐり・ずかん・バックアップの単体テスト。`node tools/test-collection.js`
 - `data/tools-viz.js` … 算数の「🧰 ずで かんがえる」どうぐ（ブロック・さくらんぼ・アレイ・くらい・ぶんすう）の判定と図。Qalc（MIT）の かんがえるどうぐ を作り直したもの。判定は `tools/test-tools-viz.js` で検査
 - `tools/test-quiz.js` … 「先生がつくる もんだい」の部品の単体テスト。`node tools/test-quiz.js`

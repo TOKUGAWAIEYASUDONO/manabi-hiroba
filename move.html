@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<meta name="referrer" content="no-referrer">
+<title>おひっこし</title>
+<link rel="icon" href="data:,">
+<!-- 新しい住所の「受けとり」。古い住所の 引っ越し係（data/move.js）から「#」の 後ろに 記録が とどく。
+     いまの 記録と 合わせて（減らさない）書き、「#」の 後ろを URL から 消して、もとの ページへ もどる。中身は data/move.js -->
+<script src="data/collection.js?v=54bd1139"></script>
+<script src="data/move.js?v=66ea4efb"></script>
+<style>
+:root{--ink:#1b2a22;--muted:#46564d;--field:#e9f4e4;--board:#1f4d3a;--paper:#fff;--edge:#16372a}
+body{margin:0;background:var(--field);color:var(--ink);font:18px/1.8 "BIZ UDPGothic",sans-serif}
+main{max-width:560px;margin:0 auto;padding:40px 16px;text-align:center}
+.card{background:var(--paper);border:3px solid var(--edge);border-radius:16px;padding:20px 16px}
+h1{font-size:22px;margin:0 0 8px}
+p{margin:8px 0}
+.note{color:var(--muted);font-size:16px}
+a.btn{display:inline-block;min-height:48px;line-height:48px;padding:0 18px;margin:8px 6px 0;border-radius:12px;background:var(--board);color:#fff;font-weight:bold;text-decoration:none}
+a.btn.sub{background:none;color:var(--board);border:2px solid var(--board)}
+</style>
+</head>
+<body>
+<main><div class="card" role="status" aria-live="polite">
+<h1 id="mvT">きろくを はこんでいるよ…</h1>
+<p id="mvD" class="note">すこし まってね。</p>
+<div id="mvB"></div>
+<noscript><p>JavaScript を オンに してね。</p></noscript>
+</div></main>
+<script>
+(async () => {
+  const M = window.MH_MOVE, C = window.MH_COL, $ = id => document.getElementById(id);
+  const say = (t, d, btns) => {
+    $("mvT").textContent = t; $("mvD").textContent = d || "";
+    $("mvB").replaceChildren(...(btns || []).map(([text, href, sub]) => { const a = document.createElement("a"); a.className = "btn" + (sub ? " sub" : ""); a.href = href; a.textContent = text; return a; }));
+  };
+  if (!M) { say("ひらけなかったよ", "", [["ホームへ", "./"]]); return; }
+  let ls = null; try { ls = window.localStorage; void ls.length; } catch (e) { ls = null; }
+  const today = C ? C.dayNum(new Date()) : 0;
+  let r; try { r = await M.receive(location, ls, C, today); } catch (e) { r = { state: "bad", to: "/" }; }
+  if (r.state === "none") { location.replace("/"); return; }
+  if (r.state === "ok" && !r.m) { location.replace(r.to); return; }         // ふつうの おひっこし：だまって もとの ページへ
+  if (r.state === "ok") { say("きろくを はこんだよ！", r.n ? "まえの ばしょの きろくを、いまの きろくと あわせたよ。" : "まえの ばしょには、はこぶ きろくが なかったよ。", [["つづける", r.to]]); return; }
+  if (r.state === "full") { say("きろくを かけなかったよ", "この たんまつに きろくを ほぞんできなかったよ（いっぱい か、ほぞんが とめられているよ）。まえの ばしょの きろくは のこっているよ。", [["もういちど", M.againHref()], ["ホームへ", r.to, 1]]); return; }
+  say("きろくを よみとれなかったよ", "まえの ばしょの きろくは のこっているよ。もういちど ためしてね。", [["もういちど", M.againHref()], ["ホームへ", "/", 1]]);
+})();
+</script>
+</body>
+</html>
