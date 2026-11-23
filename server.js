@@ -100,7 +100,7 @@ function newCode() {
 function pub(room, host) {
   const nm = p => host ? p.name : "";
   return {
-    code: room.code, mode: room.mode, game: room.game, g: room.g, t: room.t, rule: room.rule, nm: room.nm, nh: room.nh,
+    code: room.code, rd: room.rd | 0, mode: room.mode, game: room.game, g: room.g, t: room.t, rule: room.rule, nm: room.nm, nh: room.nh,
     status: room.status, closed: !!room.closed, endAt: room.endAt, now: Date.now(),
     gt: room.gt || "",
     ...(room.co ? { co: room.co.pub(Date.now(), host) } : {}),
@@ -192,6 +192,27 @@ function leader(room, me) {
   return [...room.players.values()].filter(p => p !== me).sort((a, b) => b.v - a.v)[0];
 }
 
+// あそびの中身（あそびかた・問題・学年・時間・ルール）を、送られた値を調べてから作る。部屋を作るときと「つぎの あそび」で同じ部品を使う
+function buildGame(b) {
+  const own = b.mode !== "m100" && (b.mode === "quiz" || b.game === "mine");       // 先生のもんだいを使う部屋（100マス はっぴょうは 問題を使わない）
+  if (!MODES.includes(b.mode) || !(own || GAMES.includes(b.game) || b.mode === "m100")) return [400, { error: "設定が正しくありません" }];
+  const g = Math.min(6, Math.max(1, b.g | 0)), t = b.mode === "rocket" ? 300 : Math.min(300, Math.max(60, b.t | 0));
+  const rule = RULES.includes(b.rule) ? b.rule : "normal";
+  const o = { mode: b.mode, game: b.mode === "quiz" ? "quiz" : b.mode === "m100" ? "calc" : b.game, g, t, rule, gt: "", set: null, qz: null, co: null, nh: b.nh === 0 ? 0 : 1 };      // nh：1＝児童の結果画面にひろば（どんぐり）を出さない（初期値）／0＝出す
+  if (own) {
+    const r = QZ.cleanSet({ title: b.gt, qs: b.qs });         // 型・文字数・個数・時間の値を調べてから使う
+    if (!r.ok) return [400, { error: "もんだいが正しくありません：" + r.why }];
+    const qs = b.mode === "quiz" ? r.set.qs : r.set.qs.filter(q => q.t === "mc");   // たからばこ・すごろくは4択だけ
+    if (!qs.length) return [400, { error: "4択の問題がありません" }];
+    o.gt = r.set.title; if (b.mode !== "quiz") o.set = { title: r.set.title, qs };   // クイズでは、答えつきの問題を児童に渡さない
+    if (b.mode === "quiz") o.qz = QZ.engine(qs, { easy: rule === "easy" });
+  }
+  if (b.mode === "rocket") o.co = COOP.engine({ easy: rule === "easy", g, scale: COOP_SCALE, stages: b.ns === 3 ? 3 : 5 });
+  if (b.mode === "boss") o.co = COOP.bossEngine({ easy: rule === "easy", g, t, scale: COOP_SCALE });
+  if (b.mode === "jin") o.co = COOP.jinEngine({ easy: rule === "easy", g, t, scale: COOP_SCALE });
+  return [200, o];
+}
+
 const API = {
   create(b, ip) {
     const nowC = Date.now(), tlist = (createLog.get(ip) || []).filter(t => nowC - t < 3600e3);
@@ -200,23 +221,9 @@ const API = {
       return [429, { error: "部屋をつくりすぎです。しばらくしてから、もう一度ためしてね" }];
     if (rooms.size >= LIM.roomsTotal) return [503, { error: "いま部屋がいっぱいです。しばらくしてから、もう一度ためしてね" }];
     if ([...rooms.values()].filter(r => r.ip === ip).length >= LIM.roomsPerIp * RATE_SCALE) return [429, { error: "同時につくれる部屋の数をこえました。使い終わった部屋を「ここで終わる」で閉じてね" }];
-    const own = b.mode !== "m100" && (b.mode === "quiz" || b.game === "mine");       // 先生のもんだいを使う部屋（100マス はっぴょうは 問題を使わない）
-    if (!MODES.includes(b.mode) || !(own || GAMES.includes(b.game) || b.mode === "m100")) return [400, { error: "設定が正しくありません" }];
-    const g = Math.min(6, Math.max(1, b.g | 0)), t = b.mode === "rocket" ? 300 : Math.min(300, Math.max(60, b.t | 0));
-    const rule = RULES.includes(b.rule) ? b.rule : "normal";
-    const room = { code: newCode(), hostKey: id(), mode: b.mode, game: b.mode === "quiz" ? "quiz" : b.mode === "m100" ? "calc" : b.game, g, t, rule, status: "lobby", endAt: 0,
-      players: new Map(), clients: new Set(), created: Date.now(), last: Date.now(), ip, timer: null, gt: "", nm: b.nm === "auto" ? "auto" : "input", nh: b.nh === 0 ? 0 : 1 };      // nh：1＝児童の結果画面にひろば（どんぐり）を出さない（初期値）／0＝出す
-    if (own) {
-      const r = QZ.cleanSet({ title: b.gt, qs: b.qs });         // 型・文字数・個数・時間の値を調べてから使う
-      if (!r.ok) return [400, { error: "もんだいが正しくありません：" + r.why }];
-      const qs = b.mode === "quiz" ? r.set.qs : r.set.qs.filter(q => q.t === "mc");   // たからばこ・すごろくは4択だけ
-      if (!qs.length) return [400, { error: "4択の問題がありません" }];
-      room.gt = r.set.title; if (b.mode !== "quiz") room.set = { title: r.set.title, qs };   // クイズでは、答えつきの問題を児童に渡さない
-      if (b.mode === "quiz") room.qz = QZ.engine(qs, { easy: rule === "easy" });
-    }
-    if (b.mode === "rocket") room.co = COOP.engine({ easy: rule === "easy", g, scale: COOP_SCALE, stages: b.ns === 3 ? 3 : 5 });
-    if (b.mode === "boss") room.co = COOP.bossEngine({ easy: rule === "easy", g, t, scale: COOP_SCALE });
-    if (b.mode === "jin") room.co = COOP.jinEngine({ easy: rule === "easy", g, t, scale: COOP_SCALE });
+    const gm = buildGame(b); if (gm[0] !== 200) return gm;
+    const room = { code: newCode(), hostKey: id(), status: "lobby", endAt: 0, rd: 0,
+      players: new Map(), clients: new Set(), created: Date.now(), last: Date.now(), ip, timer: null, nm: b.nm === "auto" ? "auto" : "input", ...gm[1] };
     tlist.push(nowC); rooms.set(room.code, room);
     return [200, { code: room.code, hostKey: room.hostKey, nm: room.nm }];
   },
@@ -312,6 +319,21 @@ const API = {
     if (!room || room.hostKey !== b.hostKey || !room.co || !room.co.split) return [403, { error: "先生の画面からのみ操作できます" }];
     if (room.status !== "lobby" || !room.co.split()) return [409, { error: "今は変えられません" }];
     broadcast(room, true); return [200, { ok: true }];
+  },
+  // 先生：同じ部屋・同じコードのまま、つぎの あそびを えらびなおす（児童は入りなおさない。入室のしめきり・なまえのきめかたは そのまま）
+  next(b) {
+    const room = rooms.get(String(b.code));
+    if (!room || room.hostKey !== b.hostKey) return [403, { error: "先生の画面からのみ操作できます" }];
+    if (room.status === "playing") return [409, { error: "あそんでいる とちゅうは かえられません。「ここで終わる」を おしてから えらんでください" }];
+    const gm = buildGame(b); if (gm[0] !== 200) return gm;
+    Object.assign(room, gm[1], { status: "lobby", endAt: 0, rd: (room.rd | 0) + 1, last: Date.now(), m1n: 0 });
+    const keep = ["pid", "token", "name", "emoji", "mk", "ms", "mh"];      // 名前・アイコンだけ引きつぐ。点数・記録は 0 から
+    for (const [pid, p] of room.players) {
+      const q = { v: 0, ok: 0, ng: 0 }; for (const k of keep) if (k in p) q[k] = p[k];
+      room.players.set(pid, q); if (room.qz) room.qz.add(pid); if (room.co) room.co.add(pid);
+    }
+    broadcast(room, true);
+    return [200, { ok: true, rd: room.rd }];
   },
   start(b) {
     const room = rooms.get(String(b.code));
