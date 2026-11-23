@@ -16,7 +16,6 @@
 
 ## 作業中（セッションあり）
 <!-- - タスク名 — セッション: session_xxx -->
-- 🔥 **友だち対戦：部屋はそのままで次のあそび・単元を選べる＋つなぎ直しを減らす＋接続テストに×の理由**（0円でできる対策・仲介サーバーは今の 0.peerjs.com のまま）— セッション: session_01DeDokyyDThgadq2jquPmET
 
 ## 次やる（3つまで）
 - 🔥 **友だち対戦の仲介サーバーを、自分たち専用にする（Cloudflare）**（2026-11-23：学校の Chromebook で、たからばこのあとロケットを開こうとしたら部屋が開けなくなった。接続テストの②〔0.peerjs.com への接続〕が×。家の PC ではつながる）
@@ -31,6 +30,7 @@
    - 作る道具：PC の image2（まなびっこの絵と同じ）→ PC のセッションでやる。クラウドは、できた画像の組みこみ（サイズ・webp・data/sansu-items.js へのアイコン名）を担当できる
 
 ## あなたの返事待ち
+- 🚀 **友だち対戦「部屋はそのまま つぎの あそび」（claude/room-next-game-2）を公開していい？**（授業のない時間に。公開後に学校の Chromebook で一度ためす）。古い claude/room-next-game は使わない
 - 🖥 **公開の日のあと：PC の Claude に「本物のブラウザで確かめる・見た目の検査の基準・Search Console 登録」を頼む**（貼る文は司令塔が出した）
 - 📣 **先生たちに知らせる**：名前が「ひらめっと」・住所が https://hirametto.com/ に。前の住所を開いても記録を持って移る。子どもの端末は読みこみ直し
 - 🔐 **GitHub の Cloudflare Pages の許可を manabi-hiroba だけにしぼる**（今は非公開の manabi-hiroba-plan なども見える）：GitHub「Settings → Applications → Cloudflare Pages → Configure」→「Only select repositories」
@@ -158,3 +158,4 @@
 - ✅ 公開⑥：3年「小数と 単位」を main へ（f0f3d79・GitHub Pages success）
 - ✅ Cloudflare Pages の設定（PC の Claude）→ プロジェクト hirametto・プレビューなし・hirametto.com と www（www→ルート 301）。`.html` は外した住所へ 308・ないページも 200 → 公開の日に直す
 - ✅ 🎉 公開の日：ひらめっと・ロゴ・hirametto.com への引っ越し（ON）・.html なしの住所・404.html を main へ（2dc1311・GitHub Pages success）
+- ✅ 友だち対戦：部屋はそのまま つぎの あそび・もういちど・つなぎ直しを減らす（だんだん間をあける）・接続テストに×の理由（ブランチ claude/room-next-game-2・今の main から）
