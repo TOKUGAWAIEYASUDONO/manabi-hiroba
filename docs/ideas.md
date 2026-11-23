@@ -16,6 +16,7 @@
 
 ## 作業中（セッションあり）
 <!-- - タスク名 — セッション: session_xxx -->
+- 🚀 **公開⑤：ふりがな・1年のはみ出し・バトルの選び方・1人ボスバトル**（✅ 公開OK）— セッション: session_01DeDokvqBwHXHvQWtEeKsiP
 - 📏 **3年 小数に単位の問題を足す**（1mm=0.1cm・1dL=0.1L。プリントのサイトは形だけ参考にして写さない・公開しない）— セッション: session_01DeDokxLN9dRMDYABYshrpT
 
 ## 次やる（3つまで）
@@ -26,7 +27,6 @@
    - 作る道具：PC の image2（まなびっこの絵と同じ）→ PC のセッションでやる。クラウドは、できた画像の組みこみ（サイズ・webp・data/sansu-items.js へのアイコン名）を担当できる
 
 ## あなたの返事待ち
-- 🚀 **子どもが困っている直しを、公開の日を待たずに先に公開していい？**：ふりがな（claude/fix-konchu-furigana）・1年のはみ出し（claude/fix-g1-tablet-overflow）・バトルの選び方（claude/battle-subject-first）。ボスバトル（claude/solo-boss-battle）は、あなたが遊んで強さをたしかめてから
 - ❓ 「こんむし」はどの画面・どの端末で出た？（今の main では「こんちゅう」と出た。古いファイルが残っていた可能性）
 - 🌐 **公開の日の準備：Cloudflare Pages をつなぐ**（手順はブランチ claude/hirametto-move の docs/cloudflare-pages.md の1〜4。プレビュー ブランチは「なし」・www→ルートのリダイレクト）→ できたら `https://hirametto.com/` が出るか見て知らせる
 - 🚀 **1年のはみ出しの直し（claude/fix-g1-tablet-overflow）を公開していい？**
