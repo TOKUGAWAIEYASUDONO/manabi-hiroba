@@ -115,6 +115,7 @@ const bun = U.UNITS.filter(u => u.item === '文章題');
 for (const u of bun) { if (u.series !== '文章題' || !Number.isInteger(u.step) || u.step < 200 || Math.floor((u.step - 200) / 10) + 1 !== u.g) bad.push(`${u.id}: 文章題の step（${u.step}）が 学年（${u.g}年）の 範囲でない`); }
 if (new Set(bun.map(u => u.step)).size !== bun.length) bad.push('文章題の step が 重なっている');
 for (const id of ids) if (!C.UNIT_IDS.includes(id)) bad.push(`${id}: UNIT_IDS に ない`);
-const last = C.UNIT_IDS.slice(-ids.length); if (ids.some(id => !last.includes(id))) bad.push('新しい単元は UNIT_IDS の 末尾に 足す');
+// 文章題・段階5の単元は 1つの かたまりで 足した（あとから 足す 単元は その うしろ に つづく）
+const at = ids.map(id => C.UNIT_IDS.indexOf(id)); if (Math.max(...at) - Math.min(...at) + 1 !== ids.length) bad.push('新しい単元は UNIT_IDS の 末尾に 足す（文章題の かたまりの 間に 入れない）');
 if (bad.length) { console.log([...new Set(bad)].slice(0, 30).join('\n')); console.log(`NG ${bad.length} 件`); process.exit(1); }
 console.log(`文章題・段階5の単元 ${ids.length} 件・各${N}問：答え・テンキーの形・ばらつき・ブロックの図 OK（文章題の まとまり ${bun.length} 単元）`);

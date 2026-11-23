@@ -164,6 +164,36 @@
     const a = r.range(1, 9), b = r.range(1, 9) * 100, n = a * 1000 + b, A = `${a}km${b}m`;
     return { q: `${n}mは 何km何m？`, a: A, ans: "choice4", choices: ch(r, A, [`${a}km${b / 100}m`, `${a * 10}km${b}m`, `${b / 100}km${a}00m`, `${a}km${b + 100}m`, `${a + 1}km${b}m`, `${a}km${b - 100 || 50}m`], [`${a}km${b + 200}m`, `${a + 2}km${b}m`], { loose: true }) };
   };
+  /* 3年 小数と 単位（1mm = 0.1cm、1dL = 0.1L）。小数は 1/10の位まで。
+     k: 0 「3cm 5mm = □cm」 1 「2.7cm = □mm」 2 「45mm = □cm」 3 「2.7cmは 何cm何mm？」（4択）
+     数は 10倍した 整数 v（mm・dL の数）で 作って、dec(v, 1) で 小数にする（誤差なし）。
+     テンキーで 答える 問題は ans:"dec"（答えが 整数でも 小数点の キーが 出る＝答えの形の ヒントに ならない） */
+  const TANI3 = [["cm", "mm"], ["L", "dL"]];
+  g.shosuTani3 = (r, p) => {
+    const [B, s] = p.kind === "kasa" ? TANI3[1] : p.kind === "nagasa" ? TANI3[0] : r.pick(TANI3);  // B=大きい単位、s=小さい単位
+    const k = p.k != null ? p.k : r.int(4);
+    let v = r.range(1, 99);                                // 小さい単位で 1〜99（0.1〜9.9）
+    if (v % 10 === 0) v += r.range(1, 9);                 // 小数点の 下が 0 に ならない
+    const a = Math.floor(v / 10), b = v % 10, D = dec(v, 1), pos = x => x >= 1 && x <= 99 && x % 10 !== 0;
+    const fd = x => dec(x, 1), fi = x => String(x);
+    if (k === 0) {                                         // a大 b小 = □大
+      const q = a ? `${a}${B} ${b}${s} = □${B}` : `${b}${s} = □${B}`;
+      const w = [b * 10 + a, a * 10 + b + 10, v + 1, v - 1, v + 10, v - 10].filter(pos).map(fd);
+      return { q, a: D, ans: "dec", choices: ch(r, D, w, nf(r, v, { min: 1, max: 99, ok: pos, fmt: fd })) };
+    }
+    if (k === 1) {                                         // a.b大 = □小
+      const w = [v * 10, a + b, b * 10 + a, v + 1, v - 1, v + 10, v - 10].filter(x => x >= 1 && x !== v);
+      return { q: `${D}${B} = □${s}`, a: fi(v), ans: "dec", choices: ch(r, fi(v), S(w), nf(r, v, { min: 1, max: 99, fmt: fi })) };
+    }
+    if (k === 2) {                                         // v小 = □大
+      const w = [b * 10 + a, v + 1, v - 1, v + 10, v - 10, v + 11].filter(pos).map(fd);
+      return { q: `${v}${s} = □${B}`, a: D, ans: "dec", choices: ch(r, D, w, nf(r, v, { min: 1, max: 99, ok: pos, fmt: fd })) };
+    }
+    if (!a) return g.shosuTani3(r, Object.assign({}, p, { k }));   // 0.7cm は 何cm何mm に しない
+    const A = `${a}${B}${b}${s}`, two = (x, y) => `${x}${B}${y}${s}`;
+    return { q: `${D}${B}は 何${B}何${s}？`, a: A, ans: "choice4",
+      choices: ch(r, A, [two(b, a), two(a, b * 10), two(v, b), two(a + 1, b), two(a, b + 1), two(a, Math.max(1, b - 1)), two(Math.max(1, a - 1), b)].filter(x => x !== A), [two(a + 2, b), two(a, b + 2), two(a + 1, b + 1)], { loose: true }) };
+  };
   g.tanWeight3 = (r, p) => {                               // 重さのたんい（g・kg・t）
     const k = r.int(3);
     if (k === 0) { const a = r.range(1, 9), b = r.range(1, 9) * 100, v = a * 1000 + b;
