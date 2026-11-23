@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-/* まなびひろば ふりがな（読み《》）の自動検査（Node.js 標準機能のみ）
+/* ひらめっと ふりがな（読み《》）の自動検査（Node.js 標準機能のみ）
    使い方：node tools/check-furigana.js          （各型を1,000回ずつ作る）
           node tools/check-furigana.js 200      （回数を変える）
           node tools/check-furigana.js --all    （まちがいを全部表示）

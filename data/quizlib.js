@@ -1,4 +1,4 @@
-/* まなびひろば「先生がつくる もんだい」の部品（画面には触らない）
+/* ひらめっと「先生がつくる もんだい」の部品（画面には触らない）
    ブラウザでは window.MH_QUIZ、Node.js（server.js・tools/）では require で使う。外部には通信しない。
    中身：形式チェック／ルビ／表の取り込み（TSV・CSV）／書き出し（CSV・JSON）／れんしゅう用リンク／ライブ出題の進行（engine） */
 (function(root){
@@ -68,7 +68,7 @@ function cleanQ(r,o){
 function cleanSet(raw,o){
   o=o||{};
   if(!raw||typeof raw!=="object"||Array.isArray(raw)) return bad("形式が正しくありません");
-  if(raw.format!==undefined&&raw.format!=="manabi-quiz") return bad("まなびひろばの もんだいファイルではありません");
+  if(raw.format!==undefined&&raw.format!=="manabi-quiz") return bad("ひらめっとの もんだいファイルではありません");
   if(raw.v!==undefined&&raw.v!==1) return bad("新しい形式のファイルです（このページでは読めません）");
   if(!Array.isArray(raw.qs)) return bad("問題の一覧がありません");
   if(raw.qs.length>LIM.maxQ) return bad(`問題が${LIM.maxQ}問をこえています`);
@@ -205,7 +205,7 @@ function analyzeText(text,o){
   if(!text.trim()) return {rows:[],kind:"empty"};
   if(text.trim()[0]==="{"){
     let j; try{ j=JSON.parse(text); }catch(e){ return {rows:[],kind:"json",error:"JSONとして読めませんでした"}; }
-    if(!j||typeof j!=="object"||j.format!=="manabi-quiz"||j.v!==1||!Array.isArray(j.qs)) return {rows:[],kind:"json",error:"まなびひろばの もんだいファイル（manabi-quiz v1）ではありません"};
+    if(!j||typeof j!=="object"||j.format!=="manabi-quiz"||j.v!==1||!Array.isArray(j.qs)) return {rows:[],kind:"json",error:"ひらめっとの もんだいファイル（manabi-quiz v1）ではありません"};
     const cap=LIM.maxQ-((o&&o.existing)|0);
     const rows=j.qs.slice(0,LIM.maxQ+1).map((x,i)=>{ const r=cleanQ(x);
       if(!r.ok) return {line:i+1,status:"ng",reasons:[r.why],q:null,view:{q:x&&typeof x.q==="string"?clean(x.q):"",ch:[],sec:"",ok:""}};

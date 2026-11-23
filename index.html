@@ -3,18 +3,20 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>まなびひろば</title>
-<meta name="description" content="まなびひろばは無料・登録不要の小学生向け学習ゲーム。学年・単元から選べ、ひとりでもクラスでも遊べます。">
+<title>ひらめっと</title>
+<meta name="description" content="ひらめっとは無料・登録不要の小学生向け学習ゲーム。学年・単元から選べ、ひとりでもクラスでも遊べます。">
 <link rel="canonical" href="https://tokugawaieyasudono.github.io/manabi-hiroba/">
 <meta property="og:type" content="website">
-<meta property="og:title" content="まなびひろば｜小学生向け無料学習ゲーム">
+<meta property="og:title" content="ひらめっと｜小学生向け無料学習ゲーム">
 <meta property="og:description" content="算数・国語などを学年や単元から選んで遊べる、登録不要の学習ゲーム。ひとり練習もクラス対戦もできます。">
 <meta property="og:url" content="https://tokugawaieyasudono.github.io/manabi-hiroba/">
 <meta name="twitter:card" content="summary_large_image">
-<meta property="og:image" content="https://tokugawaieyasudono.github.io/manabi-hiroba/vendor/img/og-home.png">
+<meta property="og:image" content="https://tokugawaieyasudono.github.io/manabi-hiroba/vendor/img/og-hirametto.png">
 <meta property="og:image:width" content="1200"><meta property="og:image:height" content="630">
-<meta name="twitter:image" content="https://tokugawaieyasudono.github.io/manabi-hiroba/vendor/img/og-home.png">
-<link rel="icon" href="data:,">
+<meta name="twitter:image" content="https://tokugawaieyasudono.github.io/manabi-hiroba/vendor/img/og-hirametto.png">
+<link rel="icon" href="vendor/img/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="vendor/img/favicon-32.png" sizes="32x32" type="image/png">
+<link rel="apple-touch-icon" href="vendor/img/apple-touch-icon.png">
 <link rel="stylesheet" href="vendor/fonts/biz-udpgothic.css?v=ecfc8846">
 <style>
 :root{
@@ -71,6 +73,7 @@ button:disabled{opacity:.55;cursor:default;box-shadow:none;transform:translateY(
 header{background:var(--board);color:#fff;padding:6px 14px;display:flex;align-items:center;gap:10px;border-bottom:4px solid var(--edge)}
 header h1{margin:0;font-size:inherit}
 header .logo{font:inherit;font-size:24px;font-weight:800;cursor:pointer;letter-spacing:.06em;background:none;border:0;color:#fff;min-height:44px;padding:0 4px;text-shadow:2px 2px 0 var(--edge)}
+header .logo{display:flex;align-items:center}header .logo img{display:block;height:36px;width:auto}header .logo .logo-mark{display:none}
 header .logo:disabled{color:#fff;cursor:default;opacity:1;box-shadow:none;transform:none}
 header .sp{flex:1}
 .hbtn{background:#fff;color:var(--ink);border-radius:12px;padding:0 12px;min-height:44px;min-width:44px;font-size:16px;display:inline-flex;align-items:center;justify-content:center;gap:6px;box-shadow:0 3px 0 var(--edge)}
@@ -317,6 +320,8 @@ body[data-v=teacher] rt{display:none}
 .tc-top{position:sticky;top:0;z-index:5;display:flex;align-items:center;gap:16px;padding:10px 24px;background:var(--t-sf);border-bottom:1px solid var(--t-ln)}
 .tc-brand{display:flex;align-items:center;gap:10px;text-decoration:none;color:var(--t-tx)}
 .tc-brand b{display:block;font-size:16px;line-height:1.2}.tc-brand small{display:block;font-size:12px;color:var(--t-mu)}
+.tc-logo-img{display:block;height:32px;width:auto}.tc-brand small{white-space:nowrap}
+@media (max-width:430px){.tc-brand small{display:none}}
 .tc-logo{width:36px;height:36px;border-radius:9px;background:var(--t-pr);color:#fff;display:flex;align-items:center;justify-content:center}.tc-logo .ic{width:22px;height:22px}
 .tc-toplinks{margin-left:auto;display:flex;gap:4px;flex-wrap:wrap}
 .tc-toplinks a{display:inline-flex;align-items:center;gap:6px;min-height:40px;padding:4px 12px;border-radius:8px;text-decoration:none;color:var(--t-tx);font-size:14px;font-weight:600}
@@ -732,7 +737,7 @@ body:not(.nofg) :is(p,div,span,b,button,h1,h2,h3,td,th,label,summary,li):has(>ru
 .ubk h4{margin:8px 0 2px}
 .hbtn.fgb{font-size:14px;gap:4px;flex-direction:column;line-height:1.05;padding:0 8px}
 .hbtn.fgb b{font-size:15px}
-@media (max-width:430px){header{gap:3px;padding:6px 6px} header .logo{font-size:13px;letter-spacing:0;padding:0 1px;min-width:0;flex:0 1 auto;overflow:hidden} header .hbtn{flex:none} .hbtn#hGrade{font-size:13px;padding:0 4px;gap:2px} .hbtn#hGrade .ic{display:none} #hRec{font-size:11px;padding:0 3px;gap:2px} #hRec .ic,#hRec svg{width:20px;height:20px} #hRec .art{width:20px;height:20px} .hbtn.fgb{font-size:10px;padding:0 3px;min-width:44px}.hbtn.fgb b{font-size:12px} #hRec b{font-size:14px}}
+@media (max-width:430px){header .logo .logo-full{display:none} header .logo .logo-mark{display:block;width:36px} header{gap:3px;padding:6px 6px} header .logo{padding:0;min-width:44px;flex:none;justify-content:center} header .hbtn{flex:none} .hbtn#hGrade{font-size:13px;padding:0 4px;gap:2px} .hbtn#hGrade .ic{display:none} #hRec{font-size:11px;padding:0 3px;gap:2px} #hRec .ic,#hRec svg{width:20px;height:20px} #hRec .art{width:20px;height:20px} .hbtn.fgb{font-size:10px;padding:0 3px;min-width:44px}.hbtn.fgb b{font-size:12px} #hRec b{font-size:14px}}
 /* ===== 前に映す大画面（先生の端末）：2〜3m 離れても読める。最小 28px ===== */
 body[data-v=host] header,body[data-v=host] .foot{display:none}
 .px-menu{position:fixed;right:14px;top:12px;z-index:60;color:var(--ink)}
@@ -1727,7 +1732,7 @@ body[data-v=host] .wrap{max-width:none;padding:0}
 </defs></svg>
 <!--ART-END-->
 <header>
-  <h1><button class="logo" id="logo" onclick="go('#home')">まなびひろば</button></h1>
+  <h1><button class="logo" id="logo" onclick="go('#home')"><img class="logo-full" src="vendor/img/logo-hirametto-dark.svg" width="143" height="36" alt="ひらめっと"><img class="logo-mark" src="vendor/img/logo-hirametto-mark-dark.svg" width="36" height="36" alt="ひらめっと"></button></h1>
   <span class="sp"></span>
   <button class="hbtn hx" id="hGrade" onclick="openGradeSheet()"></button>
   <button class="hbtn hx" id="hRec" onclick="go('#record')"></button>
@@ -1736,8 +1741,8 @@ body[data-v=host] .wrap{max-width:none;padding:0}
 </header>
 
 <main class="wrap" id="app"><noscript><section class="nsintro">
-  <h1>まなびひろば</h1>
-  <p>まなびひろばは、無料・登録不要の小学生向け学習ゲームです。ホームで 算数・国語・社会・理科・英語 の「教科のとびら」をえらび、学年の単元から練習します。</p>
+  <h1>ひらめっと</h1>
+  <p>ひらめっとは、無料・登録不要の小学生向け学習ゲームです。ホームで 算数・国語・社会・理科・英語 の「教科のとびら」をえらび、学年の単元から練習します。</p>
   <p>算数のへやでは、かけ算・わり算・分数・図形・単位などの単元を1タップで始められ、九九・100マス計算・めもり名人の「とっくん」もあります。友だちとのバトル、先生向けの課題リンク・授業モードもあります。</p>
   <p>このサイトを使うには JavaScript をオンにしてください。くわしくは <a href="guide/index.html">使い方ガイド</a> をごらんください。</p>
 </section></noscript></main>
@@ -1828,16 +1833,16 @@ body[data-v=host] .wrap{max-width:none;padding:0}
 .mtres .mtbud{margin-top:10px}
 @media(min-width:760px){.play.mtmenu{max-width:1040px}.mtcards{grid-template-columns:repeat(auto-fill,minmax(220px,1fr))}.mtres.res{display:block;max-width:560px;margin:0 auto}.mtres .mtsay{max-width:400px}.mtgrid{display:grid;grid-template-columns:minmax(0,1.55fr) minmax(300px,1fr);gap:16px;align-items:start}.play.mtplay{max-width:1100px}.mtq{margin-bottom:0}.mtdw{width:min(100%,62dvh*1.5,640px);display:grid;grid-template-columns:minmax(0,1fr) 34%;gap:8px;align-items:end}.mtdw:not(:has(.mtlens)){grid-template-columns:minmax(0,1fr);width:min(100%,62dvh,460px)}.mtpic .mtlens{position:static;width:100%}}
 </style>
-<script src="data/questions.js?v=641bec0b"></script>
+<script src="data/questions.js?v=4b6cb4e6"></script>
 <script src="data/config.js?v=493aa644"></script>
-<script src="data/calc.js?v=8e74f9f2"></script>
-<script src="data/choices.js?v=37fbbe3c"></script>
-<script src="data/quizlib.js?v=3979195b"></script>
+<script src="data/calc.js?v=68d3ad60"></script>
+<script src="data/choices.js?v=6181c790"></script>
+<script src="data/quizlib.js?v=b43d5f5f"></script>
 <script src="data/mathview.js?v=cdf1f036"></script>
-<script src="data/ngwords.js?v=77368b92"></script>
-<script src="data/cooplib.js?v=e2921c65"></script>
+<script src="data/ngwords.js?v=8e481828"></script>
+<script src="data/cooplib.js?v=44e53bd8"></script>
 <!-- 単元ごとの問題の型（単元から出題） -->
-<script src="data/gen/core.js?v=799f2c5e"></script>
+<script src="data/gen/core.js?v=7681dc71"></script>
 <script>window.RIKA_PUBLIC=true;</script>
 <script>window.HIROBA_PUBLIC=false;      // じぶんの ひろば：false の あいだは 公開ページで「もうすぐ くるよ」（入れない・どんぐりも ふえない）。手もとの確認（localhost・127.0.0.1）では ひらく</script>
 <script>if(window.RIKA_PUBLIC) document.write('<script src="data/gen/rika.js?v=4f58fe09"><\/script>');</script>
@@ -1846,12 +1851,12 @@ body[data-v=host] .wrap{max-width:none;padding:0}
 <script src="data/gen/sansu-34.js?v=d1659d93"></script>
 <script src="data/gen/sansu-56.js?v=ce8228c8"></script>
 <script src="data/gen/textbook-extra.js?v=a71e349b"></script>
-<script src="data/gen/bunsho.js?v=8a761a98"></script>
-<script src="data/units.js?v=5516ca80"></script>
-<script src="data/sansu-items.js?v=27498846"></script>
-<script src="data/tools-viz.js?v=1fd513f4"></script>
-<script src="data/collection.js?v=b84a6acc"></script>
-<script src="data/masu100.js?v=78a2bad3"></script>
+<script src="data/gen/bunsho.js?v=816e2a4c"></script>
+<script src="data/units.js?v=74dad08a"></script>
+<script src="data/sansu-items.js?v=c9fca7b3"></script>
+<script src="data/tools-viz.js?v=0582ba52"></script>
+<script src="data/collection.js?v=612ff78e"></script>
+<script src="data/masu100.js?v=a19d68e5"></script>
 <script>
 /* ================= 画面の文言（1つの表） =================
    TX["キー"] = [ふつうの文言, 1〜2年の「やさしい文字」]（やさしい側がないものは同じ文言）。
@@ -3524,7 +3529,7 @@ function renderHiroba(){
   setLG(ui.grade); HS={sel:null,shop:false,gift:0,cap:0,done:0,mkSel:null,mkGot:null,mkLater:false,mkInfo:null,mkGrow:[],tab:"d",kzMsg:null,ya:false};
   { const S0=colGet(); if(COL.yaCheck(S0,yaExt()).length) colSave(); }
   app.innerHTML=`<div class="hb"></div>`;
-  loadScript("data/hiroba-art.js?v=e89b7885",()=>!!document.getElementById("hiroba-art")).then(()=>{ if(params().path==="hiroba") hbDraw(true); },()=>{ app.innerHTML=`<div class="q">${T("col.err")}</div>`; });
+  loadScript("data/hiroba-art.js?v=eddf43ff",()=>!!document.getElementById("hiroba-art")).then(()=>{ if(params().path==="hiroba") hbDraw(true); },()=>{ app.innerHTML=`<div class="q">${T("col.err")}</div>`; });
 }
 function hbDraw(first){
   const S=colTouch(), today=colToday(), P=COL.parts(S), pm={}; P.forEach(p=>{ pm[p.id]=p; });
@@ -3789,7 +3794,7 @@ function exItems(S){ return ["h-school"].concat(COL.parts(S).filter(p=>p.have).m
 function renderTanken(){
   if(!colTkOn()) return go("#hiroba");
   setLG(ui.grade); app.innerHTML=`<div class="ex"></div>`;
-  loadScript("data/hiroba-art.js?v=e89b7885",()=>!!document.getElementById("hiroba-art")).then(()=>{ if(params().path==="tanken") exIntro(); },()=>{ app.innerHTML=`<div class="q">${T("col.err")}</div>`; });
+  loadScript("data/hiroba-art.js?v=eddf43ff",()=>!!document.getElementById("hiroba-art")).then(()=>{ if(params().path==="tanken") exIntro(); },()=>{ app.innerHTML=`<div class="q">${T("col.err")}</div>`; });
 }
 function exIntro(){
   const S=colTouch(), st=COL.tkState(S,colToday(),colTkLimit()); if(!st.ok) return go("#hiroba");
@@ -4036,7 +4041,7 @@ function renderTeacher(q){
   const setOpt=qsets.length?`<optgroup label="先生のもんだい">${qsets.map(s=>`<option value="set:${esc(s.id)}">📝 ${esc(s.title||"（なまえなし）")}（${s.qs.length}問）</option>`).join("")}</optgroup>`:"";
   app.innerHTML=`<div class="tc">
     <div class="tc-top">
-      <a class="tc-brand" href="#teacher"><span class="tc-logo" aria-hidden="true">${ic("graduation-cap")}</span><span><b>まなびひろば</b><small>先生のページ</small></span></a>
+      <a class="tc-brand" href="#teacher"><img class="tc-logo-img" src="vendor/img/logo-hirametto.svg" width="127" height="32" alt="ひらめっと"><small>先生のページ</small></a>
       <nav class="tc-toplinks" aria-label="ほかのページ"><a href="guide/index.html">${ic("book-open")}<span>学年・単元ガイド</span></a><a href="#check">${ic("plug")}<span>接続テスト</span></a><a href="#feedback">${ic("pencil")}<span>ご意見</span></a><a href="#home" class="tc-kid">${ic("arrow-left")}<span>児童の画面</span></a></nav>
     </div>
     <div class="tc-body">
@@ -5566,7 +5571,7 @@ function renderHost(){
 const COOP=window.MH_COOP;
 const RKMODE={id:"rocket",ico:"🚀"}; tget(RKMODE,"t","m.rocket.t"); tget(RKMODE,"d","m.rocket.d");
 let RK=null, RKH=null;
-const rkArt=()=>loadScript("data/rocket-art.js?v=c18dca3a",()=>!!document.getElementById("rocket-art"));
+const rkArt=()=>loadScript("data/rocket-art.js?v=652f36a6",()=>!!document.getElementById("rocket-art"));
 const rkSvg=(id,vb,c)=>`<svg class="${c||"rks"}" viewBox="${vb}" aria-hidden="true" focusable="false"><use href="#${id}"/></svg>`;
 const RK_SCENES=["bg-launch-norocket.webp","bg-clouds-norocket.webp","bg-upper-sky-norocket.webp","bg-space-norocket.webp","bg-moon-norocket.webp","bg-star-sea-norocket-v2.webp"];
 const rkSceneUrl=i=>`url("vendor/img/space/${RK_SCENES[Math.max(0,Math.min(5,i))]}")`;
@@ -6066,7 +6071,7 @@ const PAIR_WHY="校内のネットワークで、端末どうしの直接の通�
 function ictMsg(results,detail){
   return `ICT担当の方へ
 
-学習ゲーム「まなびひろば」の「友だち対戦」を授業で使いたいのですが、接続テストで失敗しました。
+学習ゲーム「ひらめっと」の「友だち対戦」を授業で使いたいのですが、接続テストで失敗しました。
 次の通信が学校のネットワークで許可されているか、確認をお願いできますか。
 
 【テストの結果】
@@ -7767,7 +7772,7 @@ function mtBuddy(msg){
 function renderMeter(q){
   setLG(ui.grade);
   app.innerHTML=`<div class="play mt"><div class="q">…</div></div>`;
-  loadScript("data/meter.js?v=53d6d956",()=>!!window.MH_METER).then(()=>{
+  loadScript("data/meter.js?v=be469ae5",()=>!!window.MH_METER).then(()=>{
     if(params().path!=="meter") return;
     const st=+q.get("st"), task=q.get("task")==="1";
     if(st) mtStart(st,task); else if(LESSON) go("#home"); else mtMenu();

@@ -1,4 +1,4 @@
-/* まなびひろば 単元の一覧（教科 › 学年 › 単元）と、単元から問題を作る入口
+/* ひらめっと 単元の一覧（教科 › 学年 › 単元）と、単元から問題を作る入口
    読み込み順：data/kanji-grade.js・data/questions.js・data/choices.js → data/gen/core.js → data/gen/*.js → data/units.js
    （index.html への組み込みは別担当。file:// で動くよう、グローバル変数 MH_UNITS に置く）
 

@@ -1,4 +1,4 @@
-/* まなびひろば「じぶんの ひろば」の絵（SVG の symbol）。ひろば・ずかんを開くときだけ読みこむ（index.html の loadScript）。
+/* ひらめっと「じぶんの ひろば」の絵（SVG の symbol）。ひろば・ずかんを開くときだけ読みこむ（index.html の loadScript）。
    描き方（plan/collection-v1-wire.md）：viewBox 0 0 64 64／線 3.5・丸い角／色は CSS 変数だけ／影は画面側の drop-shadow／形は基本図形3つ前後・文字なし・顔なし。
    すべりだい d-slide・ブランコ d-swing・木 d-tree は index.html にある既存の絵を使う。どんぐり h-acorn も index.html。 */
 (function () {

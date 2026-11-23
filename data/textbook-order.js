@@ -1,11 +1,11 @@
-/* まなびひろば 教科書会社ごとの単元の並び（算数）
-   各社公開の年間指導計画・単元配当表（令和6年度版）をもとに、まなびひろばの単元ID（data/units.js）と対応づけたもの。
+/* ひらめっと 教科書会社ごとの単元の並び（算数）
+   各社公開の年間指導計画・単元配当表（令和6年度版）をもとに、ひらめっとの単元ID（data/units.js）と対応づけたもの。
    AI作成・要確認（単元名の転記と対応づけにはAIの判断が入る）。調査メモ・出典：plan/textbook-research.md
-   使い方：TEXTBOOK_ORDER.sansu[社].g[学年] が教科書の並び順の配列。t=教科書の単元名、u=まなびひろばの単元ID（[]は対応する単元なし）、term=学期または月（社により記載なし）。
+   使い方：TEXTBOOK_ORDER.sansu[社].g[学年] が教科書の並び順の配列。t=教科書の単元名、u=ひらめっとの単元ID（[]は対応する単元なし）、term=学期または月（社により記載なし）。
    file:// で動くブラウザ用グローバル（ES modules ではない）。 */
 var TEXTBOOK_ORDER = {
   version: "2026-11", note: "各社公開の年間指導計画（令和6年度版）をもとに作成。AI作成・要確認",
-  kokugo: "国語の漢字の学年配当は全社共通（単元の並びはなく、まなびひろばも学年単位）",
+  kokugo: "国語の漢字の学年配当は全社共通（単元の並びはなく、ひらめっとも学年単位）",
   sansu: {
     tosho: { name: "東京書籍", book: "新編 新しい算数", src: "https://ten.tokyo-shoseki.co.jp/text/shou/sansu/keikaku/ （略案PDF https://ten.tokyo-shoseki.co.jp/text/shou/sansu/data/sansu_keikaku_ryakuan_N_20240131.pdf のNに学年）", note: "1〜6年を確認。学期は3学期制の区分（略案）。", g: {
       1: [

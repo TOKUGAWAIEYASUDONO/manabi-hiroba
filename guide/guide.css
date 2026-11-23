@@ -1,4 +1,4 @@
-/* まなびひろば 先生向けガイド（本体の色・文字と同じ。外部読み込みなし） */
+/* ひらめっと 先生向けガイド（本体の色・文字と同じ。外部読み込みなし） */
 :root{--board:#1f4d3a;--field:#e9f4e4;--ink:#1b2a22;--muted:#46564d;--edge:#16372a;--paper:#fff;--line:#c9d8c8;--chalk:#d6ebdd;--math:#cf3d2c;--jp:#2f6fd8;--soc:#f2c230;--eng:#7a4cc8;--go:#1b7a4b;--sun:#ff9422;--bad:#b3261e}
 *{box-sizing:border-box}
 html{-webkit-text-size-adjust:100%}

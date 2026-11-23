@@ -1,4 +1,4 @@
-/* まなびひろば 「めもり名人《めいじん》」：数直線《すうちょくせん》と はかりの めもりを よむ ゲームの 問題と 絵
+/* ひらめっと 「めもり名人《めいじん》」：数直線《すうちょくせん》と はかりの めもりを よむ ゲームの 問題と 絵
    index.html の #meter が loadScript で読みこむ。画面（DOM）には 依存しない（tools/test-meter.js で検査）
    ■ 問題 q = { st, kind:"line"|"dial", ask, sp, v, a, unit, q, steps? , items?, target? }
      ask   read（▼・はりを よむ）／tick（1めもりは いくつ）／max（いちばん おもくて）／zero（なにも のせないとき）

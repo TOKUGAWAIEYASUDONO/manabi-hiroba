@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-/* まなびひろば 単元ごとの問題の型（data/units.js・data/gen/*.js）の自動検査（Node.js 標準機能のみ）
+/* ひらめっと 単元ごとの問題の型（data/units.js・data/gen/*.js）の自動検査（Node.js 標準機能のみ）
    使い方：node tools/check-units.js          （各型を1,000回ずつ作る）
           node tools/check-units.js 200      （回数を変える）
    検査すること（1問ずつ）

@@ -1,4 +1,4 @@
-# まなびひろば（試作品）
+# ひらめっと（試作品）
 
 学校の端末で、すきま時間に遊べる学習ゲームのひろば。
 
@@ -59,7 +59,7 @@ index.html は data フォルダと一緒に置くこと（ダブルクリック
 外部（CDN）からは読み込まない。ライセンス全文は `vendor/THIRD-PARTY-LICENSES.txt`。 各ファイルの SHA-256 は `vendor/SHA256SUMS.txt`（`node tools/check-vendor-hashes.js` で現物と照合、部品を入れかえたら `--write` で作りなおす）。
 - PeerJS 1.5.5（MIT）・qrcode-generator 2.0.4（MIT）・canvas-confetti 1.9.4（ISC）・ZzFX 1.4.0（MIT）
 - 効果音・BGM・絵（CC0）：`vendor/audio/*.mp3`・`vendor/img/coin.png`・`vendor/img/planet.png`。作者は Kenney（kenney.nl）と Juhani Junkala（OpenGameArt）。patch.gg（公開素材の検索）で CC0・非AI と確認して取得。クレジットは任意だが感謝として載せる。一覧と元URLは `vendor/THIRD-PARTY-LICENSES.txt`。音は「音オン」のときだけ読み込み、読めなければ ZzFX の音にもどる。BGM は先生の大画面の「BGM」ボタンを押したときだけ（初期オフ）
-- 共有画像 `vendor/img/og-home.png`：2026-11-13 に `python tools/build-og-image.py`（Pillow）で作成。`index.html` の黒板・色トークン・めばえの SVG（`mb-b`／`mb-n`）に合わせて図形を描き、BIZ UDPGothic で文字を入れた 1200×630 の自作画像です。上記 CC0 素材には含みません。元の AI 生成画像は `vendor/img/og-home-v1.png` として保管しています（2026-11-12、Codex の画像生成、実在の人物ではありません）。
+- 共有画像（og:image）とロゴ：`vendor/img/og-hirametto.png`・`vendor/img/logo-hirametto.svg`・`vendor/img/logo-hirametto-dark.svg`・`vendor/img/logo-hirametto-mark.svg`・`vendor/img/logo-hirametto-mark-dark.svg`・`vendor/img/favicon.svg`・`vendor/img/favicon-32.png`・`vendor/img/apple-touch-icon.png`・`vendor/img/icon-192.png`・`vendor/img/icon-512.png`（「ひらめっと」のロゴ。2026-11-20 に `node tools/build-logo.js` で作成）。前の名前のときの共有画像 `vendor/img/og-home.png`（いまは使っていない）：2026-11-13 に `python tools/build-og-image.py`（Pillow）で作成。`index.html` の黒板・色トークン・めばえの SVG（`mb-b`／`mb-n`）に合わせて図形を描き、BIZ UDPGothic で文字を入れた 1200×630 の自作画像です。上記 CC0 素材には含みません。元の AI 生成画像は `vendor/img/og-home-v1.png` として保管しています（2026-11-12、Codex の画像生成、実在の人物ではありません）。 「ひらめっと」のロゴ（2026-11-20、案A：ひらめき電球）は `node tools/build-logo.js --png` で作った自作の図形で、文字もフォントを使わず線で描いています：`vendor/img/logo-hirametto.svg`・`vendor/img/logo-hirametto-dark.svg`・`vendor/img/logo-hirametto-mark.svg`・`vendor/img/logo-hirametto-mark-dark.svg`・`vendor/img/favicon.svg`・`vendor/img/favicon-32.png`・`vendor/img/apple-touch-icon.png`・`vendor/img/icon-192.png`・`vendor/img/icon-512.png`、共有画像の案 `vendor/img/og-hirametto.png`（まだ og:image には使っていません）。
 - アイコン：Lucide 1.71.0（ISC）。使う分だけを `index.html` の先頭に `<symbol>` として入れている（`#i-名前`）
 - フォント：BIZ UDPGothic（OFL-1.1、@fontsource 5.3.0）。`vendor/fonts/biz-udpgothic.css` と `vendor/fonts/files/*.woff2`（使う文字を含む分割ファイルだけ）。font-display:swap。読み込めなくても端末のフォントで表示される。文言を増やして新しい漢字を使ったときは、フォントの分割ファイルを作り直す
 

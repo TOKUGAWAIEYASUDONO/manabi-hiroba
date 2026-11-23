@@ -1,4 +1,4 @@
-/* まなびひろば「ロケット はっしゃ」の絵（SVG の symbol）。ロケットのモードに入るときだけ読みこむ（index.html の loadScript）。
+/* ひらめっと「ロケット はっしゃ」の絵（SVG の symbol）。ロケットのモードに入るときだけ読みこむ（index.html の loadScript）。
    描き方は hiroba-art.js と同じ：太い線 3.5・丸い角／色は CSS 変数だけ（背景の空と宇宙の色だけは、この絵の中で決める。ステージ4の惑星だけ vendor/img/planet.png）／文字なし／aria-hidden で使う。
    中身：ロケット rk-rocket・脇のブースター rk-side・炎 rk-fl1 rk-fl2・発射台 rk-pad・流れ星 rk-star・ブーストの絵 rk-bolt・
          せーのの的 rk-ring・ほしの印 rk-gem・ステージ背景 rk-bg0〜rk-bg5（地上・くも・そら・うちゅう・つき・ほし）・雲 rk-cloud */
