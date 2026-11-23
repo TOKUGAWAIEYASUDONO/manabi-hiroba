@@ -6,7 +6,7 @@
    - ページ内リンク（#id）と他ページへのリンクの先が実在する
    - TEXTBOOK_ORDER（あれば）の単元IDが実在する */
 const fs = require("fs"), path = require("path");
-const { root, load, BASE, SUBJ_ORDER, pageName, MOVE_TAG } = require("./guide-lib");
+const { root, load, BASE, SUBJ_ORDER, pageName, MOVE_TAG, PRETTY, pageUrl, unprettyLinks } = require("./guide-lib");
 const W = load(), UN = W.MH_UNITS, TB = W.TEXTBOOK_ORDER;
 const rikaPublic = /window\.RIKA_PUBLIC\s*=\s*true\s*;/.test(fs.readFileSync(path.join(root, "index.html"), "utf8"));
 const errors = [], err = m => errors.push(m);
@@ -16,7 +16,7 @@ const read = f => (fs.existsSync(f) ? fs.readFileSync(f, "utf8") : null);
 const expected = new Set(["index.html", "custom.html"]);  // about.html は非公開中（hold/guide-about に保管）
 for (const u of UN.UNITS) expected.add(pageName(u.g, u.subj));
 const pageHtml = {};
-for (const f of expected) { const s = read(path.join(gdir, f)); if (s === null) err(`ページがありません: guide/${f}`); else pageHtml[f] = s; }
+for (const f of expected) { const s = read(path.join(gdir, f)); if (s === null) err(`ページがありません: guide/${f}`); else pageHtml[f] = unprettyLinks(s); }   // リンクは ファイル名に もどして 見る（ON の ときは「.html」なしで 書く）
 if (rikaPublic) {
   for (let g = 3; g <= 6; g++) {
     const f = `g${g}-rika.html`;
@@ -41,7 +41,8 @@ for (const u of UN.UNITS) {
 for (const f in pageHtml) {
   const h = pageHtml[f], need = (re, name) => { if (!re.test(h)) err(`${f}: ${name}がありません`); };
   need(/<title>[^<]{10,}<\/title>/, "title"); need(/<meta name="description" content="[^"]{30,}">/, "description");
-  need(/<h1[ >]/, "h1"); need(new RegExp(`<link rel="canonical" href="${BASE}${f === "index.html" ? "guide/" : "guide/" + f}">`.replace(/\//g, "\\/")), "canonical（絶対URL）");
+  need(/<h1[ >]/, "h1"); need(new RegExp(`<link rel="canonical" href="${pageUrl(f)}">`.replace(/[./]/g, "\\$&")), "canonical（絶対URL）");
+  if (PRETTY && /<a [^>]*href="(?![a-z]+:)[^"#]*\.html[#"]/.test(read(path.join(gdir, f)))) err(`${f}: 「.html」つきの リンクが のこっています（新しい住所では「.html」なし）`);
   const lds = [...h.matchAll(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/g)];
   if (!lds.length) err(`${f}: JSON-LD がありません`);
   for (const m of lds) { try { JSON.parse(m[1]); } catch (e) { err(`${f}: JSON-LD が読めません`); } }
@@ -73,11 +74,12 @@ for (const f in pageHtml) {
 const sm = read(path.join(root, "sitemap.xml")), rb = read(path.join(root, "robots.txt"));
 if (!sm) err("sitemap.xml がありません");
 else {
-  const must = [BASE, BASE + "guide/", ...[...expected].filter(f => f !== "index.html").map(f => BASE + "guide/" + f)];
+  const must = [BASE, ...[...expected].map(pageUrl)];
   for (const u of must) if (!sm.includes(`<loc>${u}</loc>`)) err(`sitemap.xml にありません: ${u}`);
   if (/about\.html/.test(sm + Object.values(pageHtml).join(""))) err("非公開の 保護者・学校向けページ（about.html）への入口が残っています");
   if (!rikaPublic && /g[3-6]-rika\.html|#u=r[3-6]-|pick=r[3-6]-/.test(sm + Object.values(pageHtml).join(""))) err("非公開の理科への入口が残っています");
 }
+if (sm && PRETTY && /\.html<\/loc>/.test(sm)) err("sitemap.xml に「.html」つきの 住所が あります（新しい住所では「.html」なし）");
 if (!rb || !rb.includes(`Sitemap: ${BASE}sitemap.xml`)) err("robots.txt から sitemap を指していません");
 // 教科書の並び
 let tbRows = 0;

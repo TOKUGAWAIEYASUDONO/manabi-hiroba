@@ -19,7 +19,7 @@
      ON：公開の 日に true にする。true で 古い住所は 引っ越し係になり、canonical・sitemap・OGP の 住所も 新しい住所になる
          （住所の 書きかえは node tools/prepublish.js の 中の build-guide.js と site-url.js が する）。
      NEW_HOST：新しい住所。OLD_HOST・OLD_PATH：今の 住所（GitHub Pages）。 */
-  const SITE = { ON: false, NEW_HOST: "hirametto.com", OLD_HOST: "tokugawaieyasudono.github.io", OLD_PATH: "/manabi-hiroba" };
+  const SITE = { ON: true, NEW_HOST: "hirametto.com", OLD_HOST: "tokugawaieyasudono.github.io", OLD_PATH: "/manabi-hiroba" };
 
   const NEW_ORIGIN = "https://" + SITE.NEW_HOST, OLD_ORIGIN = "https://" + SITE.OLD_HOST;
   const NEW_BASE = NEW_ORIGIN + "/", OLD_BASE = OLD_ORIGIN + SITE.OLD_PATH + "/";

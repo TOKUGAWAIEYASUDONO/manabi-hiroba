@@ -5,7 +5,7 @@
    guide/（学年×教科ごとのページ・入口・custom.html）、guide/guide.css、sitemap.xml、robots.txt を書き出す。
    同じデータなら同じ出力（日付や乱数を入れない）。データを変えたら再生成して、生成物も commit する。 */
 const fs = require("fs"), path = require("path"), crypto = require("crypto");
-const { root, load, BASE, SUBJ, SUBJ_ORDER, pageName, MOVE_TAG } = require("./guide-lib");
+const { root, load, BASE, SUBJ, SUBJ_ORDER, pageName, MOVE_TAG, pageUrl, prettyLinks } = require("./guide-lib");
 if (/window\.RIKA_PUBLIC\s*=\s*true\s*;/.test(fs.readFileSync(path.join(root, "index.html"), "utf8"))) { SUBJ.rika = "理科"; SUBJ_ORDER.splice(3, 0, "rika"); }
 const W = load(), UN = W.MH_UNITS, plain = UN.plain, TB = W.TEXTBOOK_ORDER;
 const UNITS = UN.UNITS, SEED = 1;
@@ -151,7 +151,7 @@ function gradePage(p) {
   let desc = `${leadTxt}など、${GJ(g)} ${SUBJ[subj]}の単元から探せる学習ゲーム。単元一覧：${names.join("、")}`;
   if (desc.length > 120) desc = desc.slice(0, 119) + "…";
   desc += `。問題の例・答え方・課題リンクつき。無料・登録不要。`;
-  const canonical = BASE + "guide/" + p.file;
+  const canonical = pageUrl(p.file);
   const sets = UN.UNIT_SETS.filter(s => s.units.some(id => { const u = UN.byId[id]; return u && u.g === g && u.subj === subj; }));
   const ld = [{
     "@context": "https://schema.org", "@type": "CollectionPage", name: title, description: desc, url: canonical, inLanguage: "ja",
@@ -198,11 +198,11 @@ function indexPage() {
   const total = UNITS.length, rdn = ready(UNITS).length;
   const title = `小1〜小6 単元から さがす学習ゲーム｜算数 あまりのあるわり算・分数・小数ほか${rdn}単元｜ひらめっと（無料・登録不要）`;
   const desc = `小1〜小6の学年・教科・単元から、使える学習ゲームを探せる先生向けの一覧。算数の九九・あまりのあるわり算・分数・小数、国語の漢字、社会、英語など全${rdn}単元。問題の例と課題リンク・QRつき。無料・登録不要。`;
-  const canonical = BASE + "guide/";
+  const canonical = pageUrl("index.html");
   const ld = [{
     "@context": "https://schema.org", "@type": "CollectionPage", name: "学年・単元から さがす（先生向け）", description: desc, url: canonical, inLanguage: "ja",
     isPartOf: { "@type": "WebSite", name: "ひらめっと", url: BASE },
-    mainEntity: { "@type": "ItemList", numberOfItems: pages.length, itemListElement: pages.map((p, i) => ({ "@type": "ListItem", position: i + 1, name: `${GJ(p.g)} ${SUBJ[p.subj]}の単元と学習ゲーム`, url: BASE + "guide/" + p.file })) },
+    mainEntity: { "@type": "ItemList", numberOfItems: pages.length, itemListElement: pages.map((p, i) => ({ "@type": "ListItem", position: i + 1, name: `${GJ(p.g)} ${SUBJ[p.subj]}の単元と学習ゲーム`, url: pageUrl(p.file) })) },
     audience: { "@type": "EducationalAudience", educationalRole: "teacher" }, educationalLevel: "小学校", teaches: "算数・国語・社会・英語"
   }, { "@context": "https://schema.org", "@type": "BreadcrumbList", itemListElement: [{ "@type": "ListItem", position: 1, name: "ひらめっと", item: BASE }, { "@type": "ListItem", position: 2, name: "学年・単元から さがす", item: canonical }] }];
   let h = head({ title, desc, canonical, ld });
@@ -238,7 +238,7 @@ function indexPage() {
 function customPage() {
   const title = "先生がつくる問題で遊ぶ｜クイズ・たからばこ・すごろく・ロケットはっしゃ・Excel取り込み｜ひらめっと（無料・登録不要）";
   const desc = "どの教科でも使える、先生が自分で問題を作るクラス用ゲーム。クイズ・たからばこ・すごろく・ロケットはっしゃで遊べて、練習用リンクの配布や Excel（表）からの取り込みもできます。無料・登録不要。";
-  const canonical = BASE + "guide/custom.html";
+  const canonical = pageUrl("custom.html");
   const ld = [{
     "@context": "https://schema.org", "@type": "WebPage", name: title, description: desc, url: canonical, inLanguage: "ja",
     isPartOf: { "@type": "WebSite", name: "ひらめっと", url: BASE }, audience: { "@type": "EducationalAudience", educationalRole: "teacher" },
@@ -370,10 +370,10 @@ out.set("guide/index.html", indexPage().html);
 out.set("guide/custom.html", customPage().html);
 // 保護者・学校向け（about）は、ユーザーの OK が出るまで公開しない。文書照合（check-docs）のため --about で標準出力にだけ出す。
 if (process.argv.includes("--about")) { process.stdout.write(aboutPage().html); process.exit(0); }
-const urls = [BASE, BASE + "guide/", ...pages.map(p => BASE + "guide/" + p.file), BASE + "guide/custom.html"];
+const urls = [BASE, pageUrl("index.html"), ...pages.map(p => pageUrl(p.file)), pageUrl("custom.html")];
 out.set("sitemap.xml", `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${urls.map((u, i) => `  <url><loc>${u}</loc><priority>${i === 0 ? "1.0" : i === 1 ? "0.9" : "0.7"}</priority></url>`).join("\n")}\n</urlset>\n`);
 out.set("robots.txt", `User-agent: *\nAllow: /\n\nSitemap: ${BASE}sitemap.xml\n`);
 fs.mkdirSync(path.join(root, "guide"), { recursive: true });
-for (const [f, s] of out) if (process.argv.includes("--guide-only") ? f.startsWith("guide/") : true) fs.writeFileSync(path.join(root, f), f.startsWith("guide/") && f.endsWith(".html") ? s.replace(/href="guide\.css(?:\?v=[0-9a-f]{8})?"/g, `href="guide.css?v=${cssVersion}"`) : s, "utf8");
+for (const [f, s] of out) if (process.argv.includes("--guide-only") ? f.startsWith("guide/") : true) fs.writeFileSync(path.join(root, f), f.startsWith("guide/") && f.endsWith(".html") ? prettyLinks(s).replace(/href="guide\.css(?:\?v=[0-9a-f]{8})?"/g, `href="guide.css?v=${cssVersion}"`) : s, "utf8");
 // 公開対象外の旧ページはデータとして残す。入口と sitemap には含めない。
 console.log(`guide: 教科ページ${pages.length} + 入口 + custom、単元 ${UNITS.length}（ready ${ready(UNITS).length}）、教科書の並び：${TB ? "あり" : "なし"}`);

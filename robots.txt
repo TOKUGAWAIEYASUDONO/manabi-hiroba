@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://tokugawaieyasudono.github.io/manabi-hiroba/sitemap.xml
+Sitemap: https://hirametto.com/sitemap.xml

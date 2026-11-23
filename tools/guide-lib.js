@@ -26,4 +26,14 @@ const MOVE_TAG = `<script src="../data/move.js?v=${require("crypto").createHash(
 const SUBJ = { sansu: "算数", kokugo: "国語", shakai: "社会", eigo: "英語" };
 const SUBJ_ORDER = ["sansu", "kokugo", "shakai", "eigo"];
 const pageName = (g, s) => `g${g}-${s}.html`;
-module.exports = { root, load, BASE, SUBJ, SUBJ_ORDER, pageName, MOVE_TAG };
+/* 新しい住所（Cloudflare Pages）は「.html」を 外した 住所へ 308 で とばす。ON の ときは canonical・sitemap・JSON-LD・パンくず・ガイドの 中の リンクを
+   はじめから「.html」なしで 書く（https://hirametto.com/guide/g3-sansu）。古い「.html」の 住所でも 開けることは かわらない。オフの あいだは 今までどおり */
+const PRETTY = MOVE.SITE.ON;
+const pageUrl = f => BASE + "guide/" + (f === "index.html" ? "" : PRETTY ? f.replace(/\.html$/, "") : f);
+const A_HREF = /(<a\b[^>]*\shref=")([^"#:?]*)((?:#[^"]*)?)"/g;   // 同じ サイトの 中の リンク（https: などは さわらない）
+const prettyLinks = html => !PRETTY ? html : html.replace(A_HREF, (m, a, p, h) =>
+  a + (p === "" ? "" : p === "index.html" ? "./" : p === "../index.html" ? "../" : p.replace(/\.html$/, "")) + h + '"');
+/* 検査用：「.html」なしの リンクを ファイル名に もどす */
+const unprettyLinks = html => html.replace(A_HREF, (m, a, p, h) =>
+  a + (p === "./" ? "index.html" : p === "../" ? "../index.html" : /^[\w-]+$/.test(p) ? p + ".html" : p) + h + '"');
+module.exports = { root, load, BASE, SUBJ, SUBJ_ORDER, pageName, MOVE_TAG, PRETTY, pageUrl, prettyLinks, unprettyLinks };

@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 // index.html の JS/CSS に内容ベースの決定的な版を付ける。
-// move.html（新しい住所の 受けとり）と apps/100masu/index.html の data/move.js（おひっこし）にも 同じ 版を 付ける
+// move.html（新しい住所の 受けとり）・404.html（ないページ）と apps/100masu/index.html の data/move.js（おひっこし）にも 同じ 版を 付ける
 // （100マスの サービスワーカーは 同じ URL の 物を キャッシュから 出すので、版が かわらないと 古い 設定の まま 動く）。
 const fs = require('fs');
 const path = require('path');
@@ -8,7 +8,7 @@ const crypto = require('crypto');
 const root = path.resolve(__dirname, '..');
 const target = /(["'])((?:\.\.\/)*)(data\/(?:gen\/)?[\w.-]+\.js|vendor\/[\w./-]+\.(?:js|css))(?:\?v=[0-9a-f]{8})?\1/g;
 let bad = false;
-for (const rel of ['index.html', 'move.html', 'apps/100masu/index.html']) {
+for (const rel of ['index.html', 'move.html', '404.html', 'apps/100masu/index.html']) {
   const file = path.join(root, ...rel.split('/'));
   if (!fs.existsSync(file)) continue;
   const source = fs.readFileSync(file, 'utf8');

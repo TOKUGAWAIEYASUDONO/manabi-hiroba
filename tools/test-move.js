@@ -108,6 +108,23 @@ function checkNotLess(out, A, B) {
     assert(read('sitemap.xml').includes(`<loc>${MOVE.BASE}</loc>`) && read('robots.txt').includes(`Sitemap: ${MOVE.BASE}sitemap.xml`), 'sitemap・robots');
     assert(!read('sitemap.xml').includes('move.html'), 'move.html は sitemap に 入れない');
     assert(/<meta name="robots" content="noindex">/.test(read('move.html')), 'move.html は noindex');
+    // ないページ（404.html）：noindex・move.js を 読む（古い住所の ないページでも 新しい住所へ）・どの 深さでも 読みこむ 住所を サイトの 上に そろえる
+    const nf = read('404.html');
+    assert(/<meta name="robots" content="noindex">/.test(nf), '404.html は noindex');
+    assert(nf.includes(`<script src="data/move.js?v=${v}"></script>`), '404.html');
+    assert(nf.indexOf('<base href') < nf.indexOf('<script src="data/move.js') && nf.includes(JSON.stringify(MOVE.SITE.OLD_PATH + '/')), '404.html：<base> を 先に');
+    assert(!read('sitemap.xml').includes('404'), '404.html は sitemap に 入れない');
+    // 新しい住所（ON）は「.html」なしの 住所に そろえる（Cloudflare Pages が「.html」を 外した 住所へ とばすため）
+    if (MOVE.SITE.ON) {
+      const sm = read('sitemap.xml');
+      assert(!/\.html<\/loc>/.test(sm) && sm.includes(`<loc>${MOVE.BASE}guide/g3-sansu</loc>`), 'sitemap は「.html」なし');
+      for (const f of fs.readdirSync(path.join(root, 'guide')).filter(f => f.endsWith('.html'))) {
+        const g = read('guide/' + f), want = MOVE.BASE + 'guide/' + (f === 'index.html' ? '' : f.replace(/\.html$/, ''));
+        assert(g.includes(`<link rel="canonical" href="${want}">`) && g.includes(`<meta property="og:url" content="${want}">`), 'canonical・og:url：guide/' + f);
+        for (const m of g.matchAll(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/g))
+          for (const u of (m[1].match(/"https:[^"]+"/g) || []).filter(u => !u.startsWith('"https://schema.org'))) assert(u.startsWith('"' + MOVE.BASE) && !/\.html[#"]/.test(u), 'JSON-LD・パンくず：guide/' + f + ' ' + u);
+      }
+    }
   });
   await t('ON に すると 住所が 新しい住所に かわる（設定 1つで）', () => {
     const src = read('data/move.js').replace(/ON: (true|false)/, 'ON: true'), m = { exports: {} };
