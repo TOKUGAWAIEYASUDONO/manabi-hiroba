@@ -112,8 +112,45 @@ const wordReadings = {
   '回る':'回《まわ》る','回す':'回《まわ》す','冬眠':'冬眠《とうみん》',
   '変化':'変化《へんか》','毎回':'毎回《まいかい》','全部':'全部《ぜんぶ》',
   '分数':'分数《ぶんすう》','小数':'小数《しょうすう》','分母':'分母《ぶんぼ》',
-  '分子':'分子《ぶんし》','面積':'面積《めんせき》','体積':'体積《たいせき》'
+  '分子':'分子《ぶんし》','面積':'面積《めんせき》','体積':'体積《たいせき》',
+  'がい数':'がい数《すう》','こん虫':'｜こん虫《こんちゅう》'
 };
+/* 辞書（data/gen/core.js の FURI_WORDS）の かなをふくむ語も、本文の中で 語全体の読みになっているかを見る
+   （がい数 が がい数《かず》、こん虫 が こん虫《むし》 のように、一字の読みに落ちないように） */
+{
+  const src = fs.readFileSync(path.join(root, "data/gen/core.js"), "utf8");
+  const m = src.match(/const FURI_WORDS = `([^`]*)`/);
+  for (const w of m ? m[1].trim().split(/\s+/) : []) {
+    const k = QZ.plain(w);
+    if (/[ぁ-ゖァ-ヶー]/u.test(k) && HAN.test(k) && !(k in wordReadings)) wordReadings[k] = w;
+  }
+}
+const readOf = s => QZ.rubyParts(s).map(p => p.b != null ? p.r : p.t).join("");
+function readAt(parts, from, to) {
+  let pos = 0, base = "", read = "";
+  for (const p of parts) {
+    const b = p.b != null ? p.b : p.t, end = pos + b.length;
+    if (end > from && pos < to) {
+      if (p.b != null) { base += p.b; read += p.r; }
+      else { const t = p.t.slice(Math.max(0, from - pos), to - pos); base += t; read += t; }
+    }
+    pos = end;
+  }
+  return { base, read };
+}
+{
+  const strs = [...seen].map(k => k.split("\u0000")[1]);
+  for (const [word, expected] of Object.entries(wordReadings)) {
+    const r = readOf(expected);
+    for (const s of strs) {
+      const t = QZ.plain(s), parts = QZ.rubyParts(s);
+      for (let i = t.indexOf(word); i >= 0; i = t.indexOf(word, i + 1)) {
+        const x = readAt(parts, i, i + word.length);
+        if (HAN.test(x.base) && !HAN.test(x.read) && !x.read.includes(r)) { bad.set(`語の読み ${word}: ${s}`, `${x.base} が ${x.read}（正: ${r}）`); }
+      }
+    }
+  }
+}
 for (const [word, expected] of Object.entries(wordReadings)) {
   const actual = W.MH_GEN.ruby(word);
   if (actual !== expected) bad.set(`語の読み ${word}`, `${actual}（正: ${expected}）`);
