@@ -873,6 +873,10 @@ body[data-v=host] .wrap{max-width:none;padding:0}
 @media (max-width:900px){.px{overflow:auto}.px-lobby,.px-play,.px-race{grid-template-columns:1fr}.px-bd .sgbd{height:auto;width:100%}.px-row .nm{width:140px}}
 /* ===== 児童の端末：自分がやることだけ（全体の順位表は出さない） ===== */
 .mgrid.net{grid-template-columns:1fr}
+.mgrid.sb{grid-template-columns:1fr;gap:6px}.mgrid.sb .side{order:-1;padding:0;border:0;background:none;align-self:stretch}.mgrid.sb .bs-st{margin-bottom:0}
+@media (min-width:900px){.mgrid.sb .bs-mini{width:76px;height:76px}}
+.sbres .sbleft{font-size:17px;font-weight:700;margin:6px 0}
+.mgrid.sb .bs-runq .big,.sbres .num,.sbres .sbleft,.mgrid.sb .fb{word-break:keep-all;overflow-wrap:anywhere}.mgrid.sb .bs-runq .big{font-size:clamp(28px,5vw,48px)}
 .mgrid.net .side{order:-1;display:flex;gap:14px;align-items:center;justify-content:center;flex-wrap:wrap;padding:8px 12px;font-size:20px;font-weight:700}
 .mgrid.net .side .me1{display:inline-flex;align-items:center;gap:6px}
 /* ===== コレクション（じぶんの ひろば・ずかん・どんぐり） ===== */
@@ -1684,6 +1688,7 @@ body[data-v=host] .wrap{max-width:none;padding:0}
 <symbol id="a-abc" viewBox="0 0 64 64"><g stroke="var(--edge)" stroke-width="3.5" stroke-linejoin="round" stroke-linecap="round"><path d="M14 8h36a8 8 0 0 1 8 8v22a8 8 0 0 1-8 8H30L16 58V46h-2a8 8 0 0 1-8-8V16a8 8 0 0 1 8-8z" fill="var(--eng)"/><g fill="none" stroke="var(--paper)" stroke-width="4"><path d="M12 36l5-17 5 17M14 30h6"/><path d="M27 36V20h4.5q4.5 0 4.5 4.5t-4.5 4.5H27m4.5 0q5 0 5 4t-5 4H27"/><path d="M52 24q-2-4-6-4-5 1-5 8t5 8q4 0 6-4"/></g></g></symbol>
 <symbol id="a-chest" viewBox="0 0 64 64"><g stroke="var(--edge)" stroke-width="3.5" stroke-linejoin="round" stroke-linecap="round"><rect x="7" y="28" width="50" height="28" rx="3" fill="var(--wood)"/><path d="M7 29V22q0-14 25-14t25 14v7z" fill="var(--btl)"/><path d="M17 17v39M47 17v39" stroke="var(--soc)" stroke-width="7" stroke-linecap="butt"/><rect x="26" y="26" width="12" height="13" rx="2.5" fill="var(--soc)"/><circle cx="32" cy="31.5" r="2" fill="var(--edge)" stroke="none"/></g></symbol>
 <symbol id="a-dice" viewBox="0 0 64 64"><g stroke="var(--edge)" stroke-width="3.5" stroke-linejoin="round" stroke-linecap="round"><rect x="6" y="6" width="52" height="52" rx="12" fill="var(--paper)"/><g fill="var(--edge)" stroke="none"><circle cx="20" cy="20" r="4.5"/><circle cx="44" cy="20" r="4.5"/><circle cx="32" cy="32" r="4.5" fill="var(--math)"/><circle cx="20" cy="44" r="4.5"/><circle cx="44" cy="44" r="4.5"/></g></g></symbol>
+<symbol id="a-boss" viewBox="0 0 200 200"><g stroke="var(--edge)" stroke-width="7" stroke-linejoin="round" stroke-linecap="round"><path d="M66 58 54 22 88 48M134 58 146 22 112 48" fill="#8e6cf0"/><path d="M100 44c46 0 72 38 72 80 0 40-30 60-72 60s-72-20-72-60c0-42 26-80 72-80z" fill="#8e6cf0"/><ellipse cx="72" cy="184" rx="18" ry="9" fill="#8e6cf0"/><ellipse cx="128" cy="184" rx="18" ry="9" fill="#8e6cf0"/><circle cx="78" cy="104" r="15" fill="#fff"/><circle cx="122" cy="104" r="15" fill="#fff"/><path d="M78 134q22 20 44 0" fill="none"/></g><circle cx="80" cy="104" r="6" fill="var(--edge)"/><circle cx="124" cy="104" r="6" fill="var(--edge)"/></symbol>
 <!-- ===== 動物の顔（ニックネーム用）12種 ＋ ふつうの顔 ===== -->
 <symbol id="f-panda" viewBox="0 0 64 64"><g stroke="var(--edge)" stroke-width="3" stroke-linejoin="round" stroke-linecap="round"><circle cx="14" cy="14" r="8" fill="var(--edge)"/><circle cx="50" cy="14" r="8" fill="var(--edge)"/><circle cx="32" cy="35" r="25" fill="var(--paper)"/><ellipse cx="21" cy="33" rx="6" ry="8" fill="var(--edge)" transform="rotate(20 21 33)"/><ellipse cx="43" cy="33" rx="6" ry="8" fill="var(--edge)" transform="rotate(-20 43 33)"/><circle cx="22.5" cy="33" r="2.4" fill="var(--paper)" stroke="none"/><circle cx="41.5" cy="33" r="2.4" fill="var(--paper)" stroke="none"/><ellipse cx="32" cy="43" rx="4" ry="3" fill="var(--edge)"/><path d="M27 49q5 4 10 0" fill="none"/></g></symbol>
 <symbol id="f-usagi" viewBox="0 0 64 64"><g stroke="var(--edge)" stroke-width="3" stroke-linejoin="round" stroke-linecap="round"><ellipse cx="22" cy="15" rx="7" ry="13" fill="var(--paper)"/><ellipse cx="42" cy="15" rx="7" ry="13" fill="var(--paper)"/><ellipse cx="22" cy="16" rx="2.8" ry="8" fill="var(--pink)" stroke="none"/><ellipse cx="42" cy="16" rx="2.8" ry="8" fill="var(--pink)" stroke="none"/><circle cx="32" cy="39" r="22" fill="var(--paper)"/><circle cx="24" cy="37" r="2.8" fill="var(--edge)" stroke="none"/><circle cx="40" cy="37" r="2.8" fill="var(--edge)" stroke="none"/><circle cx="32" cy="44" r="2.5" fill="var(--pink)"/><path d="M32 46.5q-3 4-6.5 2M32 46.5q3 4 6.5 2" fill="none" stroke-width="2.4"/><circle cx="17" cy="45" r="3.5" fill="var(--pink)" stroke="none"/><circle cx="47" cy="45" r="3.5" fill="var(--pink)" stroke="none"/></g></symbol>
@@ -1830,7 +1835,7 @@ body[data-v=host] .wrap{max-width:none;padding:0}
 <script src="data/quizlib.js?v=3979195b"></script>
 <script src="data/mathview.js?v=cdf1f036"></script>
 <script src="data/ngwords.js?v=77368b92"></script>
-<script src="data/cooplib.js?v=3840c621"></script>
+<script src="data/cooplib.js?v=e2921c65"></script>
 <!-- 単元ごとの問題の型（単元から出題） -->
 <script src="data/gen/core.js?v=799f2c5e"></script>
 <script>window.RIKA_PUBLIC=true;</script>
@@ -2354,6 +2359,14 @@ const TX={
  "bs.me.none":["いっしょに あそんで くれて ありがとう！"],
  "bs.h.n":[n=>`いま ${n}にんで あそんでいるよ`],
  "bs.h.lv":[n=>`${n}ひきめ`],
+ "m.sboss.t":["ひとりで ボスバトル"],
+ "m.sboss.d":["正解《せいかい》で いたずらモンスターを くすぐって おいはらおう！ まちがえると、ボスが げんきを すこし とりもどすよ。時間《じかん》の 中《なか》で 何《なん》びき おいはらえるかな？","せいかいで いたずらモンスターを くすぐって おいはらおう！ まちがえると、ボスが げんきを すこし とりもどすよ。じかんの なかで なんびき おいはらえるかな？"],
+ "sb.tile":["1人《ひとり》で ちょうせん","ひとりで ちょうせん"],
+ "sb.heal":["ボスが げんきを すこし とりもどした…"],
+ "sb.ko":["⭕ ボスが わらって にげだした！"],
+ "sb.end":[n=>`${n}ひき おいはらった！`],
+ "sb.left":[n=>`つぎの ボスも、あと くすぐり ${n} で おいはらえた！`],
+ "sb.left0":[n=>`あと くすぐり ${n} で おいはらえた！`],
  "jn.name":["じんとりバトル"],
  "jn.team":[t=>["あかの ウサギ","あおの ペンギン"][t]||""],
  "jn.you":[t=>`あなたは ${["あかの ウサギ","あおの ペンギン"][t]||""} チーム`],
@@ -2819,6 +2832,7 @@ function gameTile(x,b){
     <span class="tnext">${medalize(homeNext(x,best))}</span></span></button>`;
 }
 function modeTile(m,b){
+  if(m.solo) return `<button class="tile" data-m="${m.id}"><span class="tico">${svgU(m.art)}</span><span class="tbody"><span class="tt">${m.t}</span><span class="td">${T("sb.tile")}</span></span></button>`;      // メダルは 数えない
   const mb=GAMES.reduce((n,x)=>Math.max(n,(b[m.id+"_"+x.id]||{}).medal||0),0);
   return `<button class="tile" data-m="${m.id}"><span class="tico">${svgU(m.art)}</span><span class="tbody"><span class="tt">${m.t}</span><span class="tstat">${stampsHtml(mb)}</span></span></button>`;
 }
@@ -2843,7 +2857,7 @@ function renderHome(){
   setLG(ui.grade);
   if(COLOK) m1HomeCheck();      // 100マス計算から もどったとき：どんぐり（授業モード・オフでは 何もしない）
   const b=bests(), easy=easyG(LG), zones=homeZones();
-  const btl=`<section class="zone s-btl"><h2>${ic("swords")}${T("home.battle")}</h2><div class="tiles">${MODES.map(m=>modeTile(m,b)).join("")}</div></section>`;
+  const btl=`<section class="zone s-btl"><h2>${ic("swords")}${T("home.battle")}</h2><div class="tiles">${SOLOMODES.map(m=>modeTile(m,b)).join("")}</div></section>`;
   app.innerHTML=`<div class="home${easy?" easy":""}">
     ${easy?`<div class="guide">${mbs("n")}<span class="say">${T("home.guide")}</span></div>`:""}
     ${COLOK?colDoor():""}
@@ -4274,6 +4288,10 @@ function startProjector(id,g,n,sec){
 /* ================= バトルモード（Blooket型：同じ問題をいろいろな遊び方で） ================= */
 const MODES=[{id:"chest",ico:"🎁",art:"a-chest"},{id:"race",ico:"🎲",art:"a-dice"}];
 MODES.forEach(m=>{ tget(m,"t","m."+m.id+".t"); tget(m,"d","m."+m.id+".d"); });
+/* ひとりで ボスバトル：CPU の いない 1人用。メダル・きろく（mh_best）・バックアップの文字（bkeys）・先生の課題リンク・友だち対戦には 入れないので、MODES とは 分ける。
+   ホームの「バトル」と 設定の画面（#modesetup）だけ SOLOMODES を使う。授業モード（task=1）では 遊べない */
+const SBMODE={id:"sboss",ico:"👾",art:"a-boss",solo:true}; tget(SBMODE,"t","m.sboss.t"); tget(SBMODE,"d","m.sboss.d");
+const SOLOMODES=[...MODES,SBMODE];
 const BOTS=[{n:"パンダ",e:"🐼"},{n:"ウサギ",e:"🐰"},{n:"カエル",e:"🐸"}];
 /* ルール：やさしい＝たからばこで「うばう・入れかえ・落とす」が出ない／すごろくに🌀（もどる）がない */
 const RULES=[{id:"normal",t:"ふつう"},{id:"easy",t:"やさしい"}];
@@ -4294,7 +4312,7 @@ function genChoice(id,g){
 
 /* モードを選んだあと：① 教科 → ② 問題（その教科の ゲームと 単元）。&s=教科 で ② から ひらける（もどったとき・ブックマーク） */
 function renderModeSetup(q){
-  const m=MODES.find(x=>x.id===q.get("m")); if(!m) return go("#home");
+  const m=SOLOMODES.find(x=>x.id===q.get("m")); if(!m) return go("#home");
   setLG(ui.grade);
   const G=ui.grade, gOk=x=>G===0||x.g.includes(G);
   const subjs=["math","jp","soc",...(window.RIKA_PUBLIC?["rika"]:[]),"eng"].filter(k=>GAMES.some(x=>x.s===k&&gOk(x))||UREADY.some(u=>u.subj===SJR[k]&&(G===0||u.g===G)));      // その学年で できる 教科だけ（理科は 単元だけでも 出す）
@@ -4341,7 +4359,7 @@ function renderModeSetup(q){
 
 let M=null;
 function renderMode(q){
-  const m=MODES.find(x=>x.id===q.get("m")), x=q.get("game")==="unit"?UNITX:GAMES.find(y=>y.id===q.get("game"));
+  const m=SOLOMODES.find(x=>x.id===q.get("m")), x=q.get("game")==="unit"?UNITX:GAMES.find(y=>y.id===q.get("game"));
   if(!m||!x) return go("#home");
   let g=+q.get("g")||x.g[0]; if(!x.g.includes(g)) g=x.g[0];
   const unitIds=(q.get("units")||"").split(",").filter(id=>UBY[id]).slice(0,UMAX);
@@ -4349,11 +4367,13 @@ function renderMode(q){
   if(x===UNITX&&!(unitQs&&unitQs.length)) return go("#home");      // 単元バトルは 単元が ないと 始められない
   const t=Math.min(300,Math.max(60,+q.get("t")||120)), task=q.get("task")==="1";
   const rule=q.has("r")?ruleOf(q.get("r")):defaultRule(g);
+  if(m.solo&&(task||LESSON)) return go("#home");      // ひとりで ボスバトルは 授業モード（課題リンク）では 遊べない
   setLG(g);
   M={m,x,g,t,task,rule,unitQs,unitIndex:0,ev:evOf(rule),ok:0,ng:0,misses:[],missObjs:[],phase:"q",end:Date.now()+t*1000,
      me:{n:T("b.me"),e:(l=>l[rnd(l.length)][1])(NICK_ANI.filter(a=>!BOTS.some(b=>b.e===a[1]))),v:0,me:true,...(mkAvMine()||{})},
-     bots:BOTS.map((b,i)=>({...b,v:0,wait:rr(2,5)*botK(g),spd:[1,1.15,0.85][i]})),
+     bots:m.solo?[]:BOTS.map((b,i)=>({...b,v:0,wait:rr(2,5)*botK(g),spd:[1,1.15,0.85][i]})),
      over:false};
+  if(m.solo){ M.sb=COOP.soloBoss({g,easy:rule==="easy",t}); M.sb.begin(Date.now()); M.end=M.sb.ae; }
   app.innerHTML=`<div class="mplay${m.id==="race"?" racew":""}">
     ${task?`<div class="banner">${ic("pencil")} ${T("p.task",`${m.t}（${x.t}・${g}年《ねん》）`)}</div>`:""}
     <div class="topbar">
@@ -4362,7 +4382,7 @@ function renderMode(q){
       <span class="timer" id="tm" aria-hidden="true">${t}</span>
     </div>
     <div class="tbar" id="tbar"><i id="tb"></i></div>
-    <div class="mgrid${m.id==="race"?" race":""}"><div id="mmain"></div><div class="side" id="mside"></div></div>
+    <div class="mgrid${m.id==="race"?" race":m.solo?" sb":""}"><div id="mmain"></div><div class="side" id="mside"></div></div>
   </div>`;
   if(task) $("#bk").onclick=()=>modeFinish();      // 授業モード：ホームへは行かず、結果の画面へ
   showQ(); drawSide();
@@ -4373,7 +4393,8 @@ function renderMode(q){
     const left=Math.max(0,(M.end-now)/1000);
     $("#tm").textContent=Math.ceil(left); $("#tb").style.width=(left/t*100)+"%";
     const warn=left<=10; $("#tm").classList.toggle("warn",warn); $("#tbar").classList.toggle("warn",warn);
-    botTick(dt); drawSide();
+    if(M.sb) sbTick(now); else botTick(dt);
+    drawSide();
     if(left<=0) modeFinish(true);
   },200);
 }
@@ -4394,8 +4415,8 @@ function mPick(b){
   const fb=$("#fb");
   if(M.net) api("act",{...NET,op:"answer",right}).catch(()=>{});
   const mm=M; sfx(right?"ok":"ng");
-  if(right){ M.ok++; fb.className="fb ok"; fb.textContent=T("fb.ok"); setTimeout(()=>M===mm&&!M.over&&reward(),400); }
-  else { M.ng++; const mo=mineMiss(); M.misses.push(`${mo.q} → ${mo.a}`); M.missObjs.push(mo); fb.className="fb ng"; fb.textContent=T("fb.ng",mo.a); setTimeout(()=>M===mm&&showQ(),1800); }   // まちがえたあとは1.8秒待つ
+  if(right){ M.ok++; fb.className="fb ok"; fb.textContent=T("fb.ok"); if(M.sb) sbAns(true); else setTimeout(()=>M===mm&&!M.over&&reward(),400); }
+  else { M.ng++; const mo=mineMiss(); M.misses.push(`${mo.q} → ${mo.a}`); M.missObjs.push(mo); fb.className="fb ng"; fb.textContent=T("fb.ng",mo.a); if(M.sb) sbAns(false); setTimeout(()=>M===mm&&showQ(),1800); }   // まちがえたあとは1.8秒待つ
 }
 function players(){
   if(M.net) return M.state.players.map(p=>({n:p.name,e:p.emoji,mk:p.mk,ms:p.ms,mh:p.mh,v:p.v,me:p.pid===NET.pid}));
@@ -4511,6 +4532,7 @@ function botTick(dt){
 }
 function drawSide(){
   if(!M) return;
+  if(M.sb) return sbSide();
   const ps=[...players()].sort((a,b)=>b.v-a.v);
   if(M.net){          // 児童の端末：自分の点と順位だけ。全体の順位表と盤は前の大画面で見る
     const i=ps.findIndex(p=>p.me), me=ps[i]||M.me, easy=M.rule==="easy";
@@ -4614,6 +4636,52 @@ function syncPieces(ps){
   for(const k in M.pk) if(M.pk[k].me) layer.appendChild(M.pk[k].el);       // 自分の駒をいちばん上に
   layoutPieces();
 }
+/* --- ひとりで ボスバトル（進行は data/cooplib.js の soloBoss。ここは 画面だけ） --- */
+function sbAns(right){
+  const r=M.sb.ans(right,Date.now()), fb=$("#fb"), mm=M; if(r.late) return;
+  if(right){
+    fb.textContent=r.ko?T("sb.ko"):T("bs.hit",r.dm);
+    if(r.ko){ M.phase="wait"; sfx("star"); setTimeout(()=>{ if(M===mm&&!M.over&&M.sb.ph==="run") sbRun(); },600); }
+    else setTimeout(()=>M===mm&&!M.over&&showQ(),700);
+  } else if(r.heal) M.sbHeal=Date.now()+1800;      // ボスの 下に 1.8秒 出す（ボタンの 位置は うごかさない）
+  drawSide();
+}
+function sbRun(){      // ボスが わらって にげていく（その あいだは 問題を 出さない。つぎの ボスが 来たら sbTick が 問題を 出す）
+  $("#mmain").innerHTML=`<div class="q bs-runq"><div class="bs-runa">${bsArt(M.sb.lv,2)}</div><div class="big">${T("bs.run")}</div><div class="small">${T("bs.next")}</div></div>`;
+  party();
+}
+function sbTick(now){
+  const B=M.sb, was=B.ph;
+  if(!B.tick(now)) return;
+  if(was==="run"&&B.ph==="play"&&M.phase==="wait") showQ();
+}
+function sbSide(){
+  const B=M.sb, el=$("#mside"); if(!el) return;
+  if(!M.sbBuilt){ M.sbBuilt=true;
+    el.innerHTML=`<div class="bs-st" id="sbst"><span class="bs-mini" id="sbart"></span><div class="bs-stx"><b id="sbnm"></b><div class="rk-hbar bs-hp"><i id="sbhp"></i></div><span class="note">${T("bs.hp")}</span></div><span class="bs-dn"><small>${T("bs.dnl")}</small><b id="sbdn"></b></span></div><div class="bs-trk" id="sbtr" aria-live="polite"></div>`; }
+  const pct=B.pct(), md=B.ph==="run"?2:pct<=35?1:0, k=B.lv+":"+md, a=$("#sbart");
+  if(a.dataset.k!==k){ a.dataset.k=k; a.innerHTML=bsArt(B.lv,md); $("#sbnm").innerHTML=esc(bsName(B.lv)); }
+  $("#sbhp").style.width=pct+"%"; $("#sbdn").textContent=T("bs.dnk",B.dn);
+  const cl="bs-st"+(B.tr?" tr"+B.tr.k:""), st=$("#sbst"); if(st.className!==cl) st.className=cl;
+  const tr=$("#sbtr"), tt=B.tr?T("bs.tr"+B.tr.k):M.sbHeal>Date.now()?T("sb.heal"):""; if(tr.dataset.t!==tt){ tr.dataset.t=tt; tr.innerHTML=tt; }
+}
+function sbResult(){      // まけは ない。メダル・きろくには 数えない（mh_best に 書かない）
+  const p=M, B=p.sb; B.finish(); const r=B.res, total=p.ok+p.ng, acc=total?Math.round(p.ok/total*100):0;
+  sfx("medal"); if(r.dn>0) party();
+  const left=r.left>0&&r.left<r.H?`<div class="note sbleft">${T(r.dn>0?"sb.left":"sb.left0",r.left)}</div>`:"";
+  app.innerHTML=`<div class="play"><div class="res sbres">
+    <div class="bs-runa">${bsArt(r.dn>0?r.dn-1:0,r.dn>0?2:0)}</div>
+    <div class="num">${r.dn>0?T("sb.end",r.dn):T("bs.end0")}</div>${left}
+    <div class="big2 bs-tdk">${T("bs.me.d",r.td)}</div>
+    <div class="actions"><button class="btn again" id="again">${ic("rotate-ccw")}${T("r.again")}</button>
+      <div class="subs">${p.missObjs.length?`<button class="btn sub" id="redo">${T("r.redo")}</button>`:""}<button class="btn sub" onclick="go('#home')">${T("r.other")}</button></div></div>
+    <div class="stats"><span>${T("r.ok")} <b>${T("r.n",p.ok)}</b></span><span>${T("r.acc")} <b>${acc}%</b></span></div>
+    ${p.missObjs.length?missCards(p.missObjs,p.x):""}
+  </div></div>`;
+  mathIn(app);
+  $("#again").onclick=()=>route();
+  const rd=$("#redo"); if(rd) rd.onclick=()=>startReview(p.missObjs,p.x,p.g,false);
+}
 function modeFinish(timeUp){
   if(!M||M.over) return; M.over=true; stopTimer();
   const mm=M;
@@ -4623,6 +4691,7 @@ function modeFinish(timeUp){
   } else modeResult();
 }
 function modeResult(){
+  if(M.sb) return sbResult();
   const p=M, ps=[...players()].sort((a,b)=>b.v-a.v||(a.me?-1:1));
   const place=ps.indexOf(p.me)+1, total=p.ok+p.ng, acc=total?Math.round(p.ok/total*100):0;
   const medal=place===1?3:place===2?2:place===3?1:0;

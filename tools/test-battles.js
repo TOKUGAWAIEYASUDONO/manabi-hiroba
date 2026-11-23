@@ -1,6 +1,7 @@
 // ボスバトル（協力）と じんとりバトル（2チーム）の検査。 node tools/test-battles.js
 // 1) data/cooplib.js：ボスの げんき・ダメージ・1人の上限・にげる→つぎのボス・いたずら（見た目だけ）・時間で おわる
 // 2) じんとり：本陣・ぬりの数・うばう+1・はなれたマス+1・インクがはねる・15秒の保護・やさしいルール・人数の補正・ラストスパート・あか／あおの公平・チーム分け
+// 1b) ひとりで ボスバトル（1人用・soloBoss）：げんき・まちがいで とりもどす・にげる→つぎのボス・時間で おわる・「あと いくつ」
 // 3) server.js（予備方式）：作成・チームの移動（先生だけ・待合室だけ）・自分のチームだけ届く・名前を送らない・最後まで通る
 const { spawn } = require("child_process");
 const path = require("path");
@@ -90,6 +91,45 @@ function play(E, N, acc, sec, seed, f) {
     assert.strictEqual(CO.clean({ k: "bs", ph: "zzz" }), null);
     const c = CO.clean({ k: "bs", ph: "play", lv: 2, hp: 250, tr: { i: 1, k: 9 }, bb: { i: 1, l: [[0, 1], ["x", 2]] } });
     assert.strictEqual(c.hp, 100); assert.strictEqual(c.tr, null); assert.deepStrictEqual(c.bb.l, [[0, 1]]);
+  });
+
+  /* ---------- 1b) ひとりで ボスバトル（1人用・soloBoss） ---------- */
+  await t("ひとりで ボス：げんきは 学年・やさしいで きまり、つぎのボスほど 1.15ばい（10ぴきめまで）", () => {
+    assert.strictEqual(CO.soloHp(1, false, 0), 40); assert.strictEqual(CO.soloHp(3, false, 0), 50); assert.strictEqual(CO.soloHp(5, false, 0), 60);
+    assert.ok(CO.soloHp(3, true, 0) < CO.soloHp(3, false, 0), "やさしいは 少ない");
+    for (const g of [1, 2, 3, 4, 5, 6]) for (const e of [false, true]) { let pv = 0; for (let lv = 0; lv <= 12; lv++) { const h = CO.soloHp(g, e, lv); assert.ok(h >= 30 && h % 10 === 0 && h >= pv, `g${g} lv${lv} ${h}`); pv = h; } assert.strictEqual(CO.soloHp(g, e, 10), CO.soloHp(g, e, 30), "10ぴきめで とまる"); }
+    assert.strictEqual(CO.soloHp(9, false, 0), CO.soloHp(3, false, 0), "学年が へんなら 3年");
+  });
+  await t("ひとりで ボス：正解は 協力と同じ ダメージ・まちがうと げんきを 8% とりもどす（満タンより ふえない）・れんぞくが きれる", () => {
+    const E = CO.soloBoss({ g: 3, t: 120, rand: rng(1) }); E.begin(0);
+    assert.strictEqual(E.ph, "play"); assert.strictEqual(E.ae, 120000); assert.strictEqual(E.H, 50);
+    assert.deepStrictEqual(E.ans(false, 100), { dm: 0, heal: 0 }, "満タンなら とりもどさない");
+    assert.deepStrictEqual(E.ans(true, 200), { dm: 10 }); assert.deepStrictEqual(E.ans(true, 300), { dm: 12 });
+    assert.strictEqual(E.hp, 28);
+    assert.deepStrictEqual(E.ans(false, 400), { dm: 0, heal: 4 }); assert.strictEqual(E.hp, 32);
+    assert.deepStrictEqual(E.ans(true, 500), { dm: 10 }, "まちがいで れんぞくが きれる");
+    assert.strictEqual(E.cb, 1); assert.strictEqual(E.an, 5); assert.strictEqual(E.ok, 3); assert.strictEqual(E.td, 32);
+  });
+  await t("ひとりで ボス：げんき 0 → にげる（2.4秒・答えは 数えない）→ つぎのボス。時間で おわり、res に「あと いくつ」", () => {
+    const E = CO.soloBoss({ g: 1, t: 60, rand: rng(2) }); E.begin(0);
+    let r; for (let k = 0; k < 10 && !(r && r.ko); k++) r = E.ans(true, 1000 + k);
+    assert.ok(r.ko && E.ph === "run" && E.dn === 1 && E.hp === 0 && E.pct() === 0, "おいはらった");
+    assert.ok(E.ans(true, 2000).late, "にげている あいだは 数えない");
+    assert.strictEqual(E.tick(3000), false); assert.strictEqual(E.tick(1000 + 4 + 2400), true);
+    assert.strictEqual(E.ph, "play"); assert.strictEqual(E.lv, 1); assert.strictEqual(E.H, CO.soloHp(1, false, 1)); assert.strictEqual(E.hp, E.H);
+    E.ans(true, 5000);
+    assert.strictEqual(E.tick(60000), true); assert.strictEqual(E.ph, "end");
+    assert.deepStrictEqual(E.res, { dn: 1, td: E.td, an: E.an, ok: E.ok, lv: 1, left: E.hp, H: E.H }); assert.ok(E.hp > 0 && E.hp < E.H);
+    assert.ok(E.ans(true, 60001).late, "おわったら 数えない");
+    const F = CO.soloBoss({ g: 1, t: 60 }); F.begin(0); for (let k = 0; k < 10 && F.ph === "play"; k++) F.ans(true, 59000 + k); F.tick(60000);
+    assert.strictEqual(F.res.left, 0, "にげている とちゅうで おわったら「あと」は 0");
+  });
+  await t("ひとりで ボス：いたずらは 見た目だけ（20〜30秒おき・3秒）。協力の bossEngine は かわらない", () => {
+    const E = CO.soloBoss({ g: 5, t: 180, rand: rng(4) }); E.begin(0); let seen = 0, hp0 = E.hp;
+    for (let now = 0; now < 90000; now += 250) { E.tick(now); if (E.tr) seen++; }
+    assert.ok(seen >= 2 * 12 && E.hp === hp0 && E.dn === 0, "いたずらで げんきは かわらない " + seen);
+    const B = boss(1, {}); assert.strictEqual(B.H, CO.bossHp(1, 3, false, 0), "協力の げんきは もとの式");
+    assert.deepStrictEqual(B.OPS, ["cans"]);
   });
 
   /* ---------- 2) じんとり ---------- */

@@ -315,6 +315,50 @@ function cleanBs(co){
   return o;
 }
 
+/* ---------- ひとりで ボスバトル（1人用。通信しない・ブラウザの中だけ） ----------
+   友だち対戦の ボスバトルと 同じ ボス・同じ ダメージ（bossDmg：正解 10＋れんぞく正解で 最大 +10）・同じ いたずら（飾りだけ）。ちがうところ：
+   ・ボスの げんきは 1人で 30〜40秒で おいはらえる見込み（学年・ルールで きまる）。つぎの ボスは 1.15ばいずつ（10ぴきめまで）
+   ・まちがえると ボスが げんきを すこし とりもどす（その ボスの げんきの 8%。満タンより ふえない）。れんぞく正解も 0 にもどる
+   ・1人の上限（bossCap）・送る間かくの制限（ansRate）は ない（通信しないので）
+   ・まけは ない。時間の中で 何びき おいはらえるか。おわりに「あと いくつで おいはらえたか」（res.left）を出す
+   友だち対戦の bossEngine には さわらない（別の部品）。 */
+const SB={BASE:[40,40,50,50,60,60],EASY:.8,GROW:1.15,HEAL:.08,RUN:2400};
+function soloHp(g,easy,lv){
+  const b=SB.BASE[(intIn(g,1,6)?g:3)-1]*(easy?SB.EASY:1)*Math.pow(SB.GROW,Math.min(Math.max(0,lv|0),10));
+  return Math.max(30,Math.round(b/10)*10);
+}
+const soloHeal=H=>Math.max(1,Math.round(H*SB.HEAL));
+function soloBoss(o){
+  const {easy,g,sc,rand,dur}=optsOf(o), T=ms=>Math.round(ms*sc);
+  const E={easy,g,ph:"lobby",lv:0,H:0,hp:0,dn:0,td:0,an:0,ok:0,cb:0,ae:0,pe:0,tr:null,trN:0,nextTr:0,res:null};
+  const nextTrick=now=>{ E.nextTr=now+T(BS.TRICK[0]+rand()*(BS.TRICK[1]-BS.TRICK[0])); };
+  const newBoss=()=>{ E.H=soloHp(g,easy,E.lv); E.hp=E.H; };
+  function finish(){ if(E.ph==="end") return; const run=E.ph==="run"; E.ph="end"; E.tr=null; E.res={dn:E.dn,td:E.td,an:E.an,ok:E.ok,lv:E.lv,left:run?0:E.hp,H:E.H}; }
+  E.finish=finish;
+  E.begin=now=>{ Object.assign(E,{lv:0,dn:0,td:0,an:0,ok:0,cb:0,tr:null,trN:0,res:null}); newBoss(); E.ph="play"; E.ae=now+T(dur); nextTrick(now); };
+  /* 答えた：ok は 正解か。かえす値 dm＝くすぐった数／heal＝ボスが とりもどした数／ko＝おいはらった／late＝もう 数えない */
+  E.ans=(ok,now)=>{
+    if(E.ph!=="play"||now>=E.ae) return {late:true};
+    E.an++;
+    if(!ok){ E.cb=0; const heal=Math.min(E.H-E.hp,soloHeal(E.H)); E.hp+=heal; return {dm:0,heal}; }
+    E.ok++; E.cb++;
+    const dm=Math.min(bossDmg(E.cb),E.hp); E.hp-=dm; E.td+=dm;
+    if(E.hp<=0){ E.dn++; E.ph="run"; E.pe=now+T(SB.RUN); E.tr=null; return {dm,ko:true}; }
+    return {dm};
+  };
+  /* 時計：段階が かわったら true */
+  E.tick=now=>{
+    if(E.ph==="lobby"||E.ph==="end") return false;
+    if(now>=E.ae){ finish(); return true; }
+    if(E.ph==="run"){ if(now>=E.pe){ E.lv++; newBoss(); E.ph="play"; E.nextTr=Math.max(E.nextTr,now+T(4000)); return true; } return false; }
+    if(E.tr&&now>=E.tr.e){ E.tr=null; nextTrick(now); return true; }
+    if(!E.tr&&now>=E.nextTr&&E.ae-now>T(BS.TRICK_MS+2000)){ E.trN++; E.tr={i:E.trN,k:(E.trN-1)%BS.TRICKS,e:now+T(BS.TRICK_MS)}; return true; }
+    return false;
+  };
+  E.pct=()=>E.ph==="run"||!E.H?0:Math.ceil(100*E.hp/E.H);
+  return E;
+}
+
 /* ---------- じんとりバトル（2チーム・k:"jn"） ----------
    7×7 の盤。あか（左上）と あお（右下）の「本陣」は うばえない。正解すると、チームの「ねらいマス」に ぬりが 1 たまる。
    マスごとに必要な ぬりの数があり（ふつう 2・★ 4・まんなか 6）、たまると そのチームの色になる。
@@ -456,6 +500,6 @@ function cleanJn(co){
 }
 
 const API={STAGES,SHORT,KINDS,OPS,SY,ST,C,stageTarget,capOf,engine,clean,
-  BS,bossHp,bossCap,bossDmg,bossEngine,JN,JN_N,JN_DEF,JN_NB,jnBoard,jnCost,jnOk,jnPick,jnResolve,jnScore,splitTeams,jinEngine,mkPop};
+  BS,bossHp,bossCap,bossDmg,bossEngine,SB,soloHp,soloHeal,soloBoss,JN,JN_N,JN_DEF,JN_NB,jnBoard,jnCost,jnOk,jnPick,jnResolve,jnScore,splitTeams,jinEngine,mkPop};
 if(typeof module!=="undefined"&&module.exports) module.exports=API; else root.MH_COOP=API;
 })(typeof window!=="undefined"?window:globalThis);
