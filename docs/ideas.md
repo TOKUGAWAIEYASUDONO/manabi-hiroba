@@ -25,6 +25,12 @@
    - 作る道具：PC の image2（まなびっこの絵と同じ）→ PC のセッションでやる。クラウドは、できた画像の組みこみ（サイズ・webp・data/sansu-items.js へのアイコン名）を担当できる
 
 ## あなたの返事待ち
+- 🏝 **島の 2D版・3D版を 学校の Chromebook で ためす**：https://claude.ai/artifact/VU9s8nzpR6jqBKpsJ7TkpX（左下のボタンで切りかえ・右すみに fps）。できたを150にしても 30fps 以上・熱くならないなら 3D も候補（ブランチ claude/hiroba-island-proto）
+  - 💡 **C案：スプライト・スタッキング**（2Dの絵を輪切りにして1pxずつずらして重ね、3Dっぽく見せる・回せる・軽い）（Hermes が X の投稿から調べた・2026-11-23）
+    - 参考：spritecook.ai の解説記事「Sprite stacking for fake 3D pixel art」・公開コード github.com/loktar00/sprite-stacking（MIT）
+    - 使うのは「やり方」だけ。サイトに Gemini・SpriteCook を組みこまない（Gemini は18歳未満向けへの組みこみが規約で制限・SpriteCook は13歳未満向けでない）。子どもの写真・名前・作品はアップロードしない
+    - 素材は PC の image2 か手描き（上・横・前・後ろの4方向）→ 輪切りは自分たちの小さなスクリプトで
+    - 公開の日のあとで、島の試作ページに C案の切りかえを足して、Chromebook で3つをくらべる
 - ❓ 「こんむし」はどの画面・どの端末で出た？（今の main では「こんちゅう」と出た。古いファイルが残っていた可能性）
 - 🌐 **公開の日の準備：Cloudflare Pages をつなぐ**（手順はブランチ claude/hirametto-move の docs/cloudflare-pages.md の1〜4。プレビュー ブランチは「なし」・www→ルートのリダイレクト）→ できたら `https://hirametto.com/` が出るか見て知らせる
 - 🚀 **1年のはみ出しの直し（claude/fix-g1-tablet-overflow）を公開していい？**
