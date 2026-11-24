@@ -16,8 +16,6 @@
 
 ## 作業中（セッションあり）
 <!-- - タスク名 — セッション: session_xxx -->
-- 🔥 **友だち対戦：子どもが10人くらい入るとエラー**（あやしい：総当たり対策の「部屋全体で1秒に10回まで」に、同時に入る子がひっかかる？）— セッション: session_01DeDokxsKVHHEWYDwjbyeHZ（ブランチ claude/room-crowd-join・claude/room-next-game-2 の上。公開は両方いっしょ）
-  - ✅ 部屋の順番待ち（1秒に10人ずつ通す・最大6秒・30人で約3秒）。🔄 いま「サーバーに接続できません」（0.peerjs.com につなぐ段階）の対策を追加中
 
 ## 次やる（3つまで）
 - 🔥 **友だち対戦の仲介サーバーを、自分たち専用にする（Cloudflare）**（2026-11-23：学校の Chromebook で、たからばこのあとロケットを開こうとしたら部屋が開けなくなった。接続テストの②〔0.peerjs.com への接続〕が×。家の PC ではつながる）
@@ -32,7 +30,7 @@
    - 作る道具：PC の image2（まなびっこの絵と同じ）→ PC のセッションでやる。クラウドは、できた画像の組みこみ（サイズ・webp・data/sansu-items.js へのアイコン名）を担当できる
 
 ## あなたの返事待ち
-- 🚀 **友だち対戦「部屋はそのまま つぎの あそび」（claude/room-next-game-2）を公開していい？**（授業のない時間に。公開後に学校の Chromebook で一度ためす）。古い claude/room-next-game は使わない
+- 🚀 **友だち対戦の直し2つを公開していい？**：claude/room-crowd-join（claude/room-next-game-2 をふくむ）＝部屋はそのまま つぎのあそび＋10人以上で入れる＋「サーバーに接続できません」のやり直し。授業のない時間に。公開後、学校の Chromebook で10人以上でためして、エラーのうしろの種類（timeout／server-error）を見る
 - 🖥 **公開の日のあと：PC の Claude に「本物のブラウザで確かめる・見た目の検査の基準・Search Console 登録」を頼む**（貼る文は司令塔が出した）
 - 📣 **先生たちに知らせる**：名前が「ひらめっと」・住所が https://hirametto.com/ に。前の住所を開いても記録を持って移る。子どもの端末は読みこみ直し
 - 🔐 **GitHub の Cloudflare Pages の許可を manabi-hiroba だけにしぼる**（今は非公開の manabi-hiroba-plan なども見える）：GitHub「Settings → Applications → Cloudflare Pages → Configure」→「Only select repositories」
@@ -161,3 +159,4 @@
 - ✅ Cloudflare Pages の設定（PC の Claude）→ プロジェクト hirametto・プレビューなし・hirametto.com と www（www→ルート 301）。`.html` は外した住所へ 308・ないページも 200 → 公開の日に直す
 - ✅ 🎉 公開の日：ひらめっと・ロゴ・hirametto.com への引っ越し（ON）・.html なしの住所・404.html を main へ（2dc1311・GitHub Pages success）
 - ✅ 友だち対戦：部屋はそのまま つぎの あそび・もういちど・つなぎ直しを減らす（だんだん間をあける）・接続テストに×の理由（ブランチ claude/room-next-game-2・今の main から）
+- ✅ 友だち対戦：10人以上で入るとエラー → 「部屋全体で1秒に10回」で断っていた→順番待ちに。仲介サーバーにつなぐ待ち時間10→20秒＋ずらして3回まで自動でやり直し＋エラーの種類を残す（ブランチ claude/room-crowd-join）。server-error が続くなら専用の仲介役（Cloudflare 無料）
