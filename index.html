@@ -2004,6 +2004,7 @@ const TX={
  "j.ask":["先生《せんせい》の画面《がめん》に出《で》ている<b>4けたの数字《すうじ》</b>を入《い》れてね","せんせいの がめんに でている <b>4けたの すうじ</b>を いれてね"],
  "j.nonet":["このページは友《とも》だち対戦《たいせん》に使《つか》えません。<br>先生《せんせい》に教《おし》えてもらったアドレスを開《ひら》いてね。","この ページでは たいせんが できないよ。<br>せんせいに おしえて もらった アドレスを ひらいてね。"],
  "j.auto":["つないでいます…","つないでいるよ…"],
+ "j.wait":["混《こ》んでいるので、じゅんばんに入《はい》れるよ。すこし待《ま》ってね…","こんでいるよ。じゅんばんに はいれるから、すこし まってね…"],
  "j.go":["参加《さんか》","はいる"],"j.need":["4けた入《い》れてね","4けた いれてね"],
  "l.room":["部屋《へや》","へや"],"l.name":["あなたの名前《なまえ》","あなたの なまえ"],"l.change":["名前《なまえ》をかえる","なまえを かえる"],
  "nm.ask":["名前《なまえ》を入《い》れてね","なまえを いれてね"],
@@ -4884,11 +4885,16 @@ function hrEmoji(r){      // 名前を入力する部屋のアイコン：まだ
 }
 /* 部屋に入れない状態：終わった／もう始まった（途中参加はできない）／先生が しめきった */
 const hrJoinBlock=r=>r.status==="ended"?[409,{error:"この対戦はもう終わっています"}]:r.status!=="lobby"?[409,{error:"もう始まっているので入れません"}]:r.closed?[409,{error:"入室はしめきられました"}]:null;
-/* join のくり返し制限：1つの接続から10秒に5回まで／部屋全体で1秒に10回まで（コードを当てる総当たり・部屋を埋める いたずら対策） */
+/* join のくり返し制限：1つの接続から10秒に5回まで／部屋全体で1秒に10回まで（コードを当てる総当たり・部屋を埋める いたずら対策）。
+   部屋全体の分は すぐ断らず、順番を まってもらう（先生が「みんな入って」と言うと、30人が同じ1秒に来るため）。
+   返すのは まつ ミリ秒（0 なら すぐ）。-1 は断る（同じ接続の くり返し・まちが 長すぎる） */
+const HR_JWAIT=6000;      // 児童の画面は 8秒で あきらめるので、それより みじかく
 function hrRate(r,conn){
-  const now=Date.now(); conn._jt=(conn._jt||[]).filter(t=>now-t<10000); r.jt=(r.jt||[]).filter(t=>now-t<1000);
-  if(conn._jt.length>=5||r.jt.length>=10) return false;
-  conn._jt.push(now); r.jt.push(now); return true;
+  const now=Date.now(); conn._jt=(conn._jt||[]).filter(t=>now-t<10000); r.jt=(r.jt||[]).filter(t=>t>now-1000);      // r.jt には、まっている子の「通す時刻」（これから先）も入る
+  if(conn._jt.length>=5) return -1;
+  const at=r.jt.length<10?now:Math.max(now,r.jt[r.jt.length-10]+1000);      // 1秒の中に10回より多く ならない いちばん早い時刻
+  if(at-now>HR_JWAIT) return -1;
+  conn._jt.push(now); r.jt.push(at); return at-now;
 }
 /* 児童から 来た まなびっこ：ID の表に ある子だけ（COL.mkWire）。この端末（先生）で コレクションが オフなら 受けとらない */
 const hrAv=b=>{ const w=mkAvOn()&&COL.mkWire(b.mk,b.ms,b.mh); return w?{mk:w.mk,ms:w.ms,mh:w.mh||""}:{mk:"",ms:0,mh:""}; };
@@ -4980,25 +4986,32 @@ function hrApi(r,name,b){
   if(r.mode==="race"&&p.v>=GOAL) hrEnd(r); else hrBroadcast(r);
   return [200,out];
 }
+function hrJoin(r,conn,m,body){
+  const old=!hrJoinBlock(r)&&conn._pid&&r.players.get(conn._pid);      // 同じ接続でもう一度入るときは、前の分を外す（1つの接続で人数をふやさない）
+  if(old){ r.players.delete(old.pid); if(r.qz) r.qz.remove(old.pid); if(r.co) r.co.remove(old.pid); conn._pid=""; }
+  const res=hrApi(r,"join",{name:body.name,mk:body.mk,ms:body.ms,mh:body.mh}); if(res[0]===200){ r.conns.add(conn); conn._pid=res[1].pid; } else if(old) hrBroadcast(r);
+  hrReply(r,conn,m,res);
+}
+function hrReply(r,conn,m,res){
+  try{ conn.send({id:m.id,status:res[0],obj:res[1]}); }catch(e){}
+  if(res[0]===200&&(m.name==="join"||m.name==="hello")) try{ conn.send({type:"state",s:hrKid(r,conn)}); }catch(e){}
+}
 function hrHandle(r,conn,m){
   if(!m||typeof m!=="object"||!m.id) return;
   let res;
   const body=m.body&&typeof m.body==="object"?m.body:{};
   if(m.name==="info") res=hrApi(r,"info",{});
   else if(m.name==="join"){
-    if(!hrRate(r,conn)) res=[429,{error:"しばらくしてから、もう一度ためしてね"}];
-    else{
-      const old=!hrJoinBlock(r)&&conn._pid&&r.players.get(conn._pid);      // 同じ接続でもう一度入るときは、前の分を外す（1つの接続で人数をふやさない）
-      if(old){ r.players.delete(old.pid); if(r.qz) r.qz.remove(old.pid); if(r.co) r.co.remove(old.pid); conn._pid=""; }
-      res=hrApi(r,"join",{name:body.name,mk:body.mk,ms:body.ms,mh:body.mh}); if(res[0]===200){ r.conns.add(conn); conn._pid=res[1].pid; } else if(old) hrBroadcast(r);
-    }
+    const w=hrRate(r,conn);
+    if(w<0) res=[429,{error:"しばらくしてから、もう一度ためしてね"}];
+    else if(w>0){ setTimeout(()=>{ if(HR===r&&conn.open) hrJoin(r,conn,m,body); },w); return; }      // こんでいるときは、順番に 通す
+    else return hrJoin(r,conn,m,body);
   }
   else if(m.name==="hello"){ const b=body, p=r.players.get(b.pid);
     if(p&&p.token===b.token){ r.conns.add(conn); conn._pid=p.pid; res=[200,{ok:true}]; } else res=[403,{error:"参加情報が見つかりません"}]; }
   else if(m.name==="reroll"||m.name==="rename"||m.name==="avatar"||m.name==="act"||m.name==="set") res=hrApi(r,m.name,body);
   else res=[400,{error:"不明な操作です"}];               // start / end / 名前の管理は児童からはできない
-  try{ conn.send({id:m.id,status:res[0],obj:res[1]}); }catch(e){}
-  if(res[0]===200&&(m.name==="join"||m.name==="hello")) try{ conn.send({type:"state",s:hrKid(r,conn)}); }catch(e){}
+  hrReply(r,conn,m,res);
 }
 /* あそびの中身（あそびかた・問題・学年・時間・ルール）を、値を調べてから作る。部屋を作るときと「つぎの あそび」で同じ部品（server.js の buildGame と同じ） */
 function hrBuild(s){
@@ -5186,7 +5199,13 @@ function renderJoin(q){
   const busy=on=>{ $("#jpad").classList.toggle("hidden",on); $("#jauto").classList.toggle("hidden",!on); };
   let STEP="code";
   const doJoin=async(code,name,replace,keep)=>{
-    const r=await api("join",{code,name,...mkAvBody()});      // まなびっこは ID と 段階だけ（コレクションが オフなら 何も つけない）
+    let r;
+    for(let i=0;;i++){      // こんでいて断られたら、自動で 少し まって もう一度（3回まで。先生の端末の「1つの接続から10秒に5回まで」より少なく）
+      try{ r=await api("join",{code,name,...mkAvBody()}); break; }      // まなびっこは ID と 段階だけ（コレクションが オフなら 何も つけない）
+      catch(e){ if(i>=3||errMsg(e.message)!==T("e.rate")||params().path!=="join") throw e;
+        const w=$("#jerr")||$("#nerr"); if(w) w.textContent=T("j.wait");
+        await new Promise(ok=>setTimeout(ok,1500+Math.random()*2500)); if(params().path!=="join") return; }
+    }
     if(params().path!=="join") return;                         // つないでいる間にほかの画面へ移ったとき
     NET=r; MINE=null; NETSET_P=null; sset("mh_net",NET);
     if(name) nameRemember(name,!!keep);                        // 次に入るときの初期値：ふつうはこのタブだけ。「じぶんだけ」のときだけ localStorage（きろくのバックアップには入れない）
