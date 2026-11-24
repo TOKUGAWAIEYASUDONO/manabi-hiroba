@@ -2004,6 +2004,7 @@ const TX={
  "j.ask":["先生《せんせい》の画面《がめん》に出《で》ている<b>4けたの数字《すうじ》</b>を入《い》れてね","せんせいの がめんに でている <b>4けたの すうじ</b>を いれてね"],
  "j.nonet":["このページは友《とも》だち対戦《たいせん》に使《つか》えません。<br>先生《せんせい》に教《おし》えてもらったアドレスを開《ひら》いてね。","この ページでは たいせんが できないよ。<br>せんせいに おしえて もらった アドレスを ひらいてね。"],
  "j.auto":["つないでいます…","つないでいるよ…"],
+ "j.retry":["つなぎ役《やく》のサーバーが混《こ》んでいるので、もう一度《いちど》つないでいます…","こんでいるから、もういちど つないでいるよ…"],
  "j.wait":["混《こ》んでいるので、じゅんばんに入《はい》れるよ。すこし待《ま》ってね…","こんでいるよ。じゅんばんに はいれるから、すこし まってね…"],
  "j.go":["参加《さんか》","はいる"],"j.need":["4けた入《い》れてね","4けた いれてね"],
  "l.room":["部屋《へや》","へや"],"l.name":["あなたの名前《なまえ》","あなたの なまえ"],"l.change":["名前《なまえ》をかえる","なまえを かえる"],
@@ -2407,7 +2408,7 @@ const easyG=g=>g===1||g===2;
 function T(k,...a){ const e=TX[k]; if(!e) return k; const v=(easyG(LG)&&e[1]!=null)?e[1]:e[0]; return typeof v==="function"?v(...a):v; }
 function T0(k,...a){ const v=TX[k][0]; return rbp(typeof v==="function"?v(...a):v); }   // 先生に送る結果など、いつも「ふつうの文言」（読みなしの文字）にしたいとき
 const ERRKEYS=Object.keys(TX).filter(k=>k.startsWith("e."));
-function errMsg(m){ m=String(m||""); const base=m.replace(/（[a-z-]+）$/,""); for(const k of ERRKEYS){ const z=rbp(TX[k][0]); if(z===m||z===base) return T(k); } return m; }
+function errMsg(m){ m=String(m||""); const base=m.replace(/（[a-z-]+）$/,""), sx=m.slice(base.length); for(const k of ERRKEYS){ const z=rbp(TX[k][0]); if(z===m||z===base) return T(k)+sx; } return m; }      // （server-error）などの しるしは のこす（先生が 原因を しらべられるように）
 function setLG(g){ LG=g||0; drawHeader(); }
 /* 道具アイコン：Lucide（ISC）を、ページの先頭にある <symbol> から使う */
 const ic=(n,c)=>`<svg class="ic${c?" "+c:""}" aria-hidden="true" focusable="false"><use href="#i-${n}"/></svg>`;
@@ -5104,15 +5105,24 @@ function hrNext(r,s){
 
 /* 児童の端末から先生の端末へつなぐ */
 let KC=null;
+let KC_OPEN_MS=20000, KC_WAIT_X=1;      // 仲介サーバーを待つ時間／やり直すまでの間（検査では みじかく する）
 async function kcConnect(code){
   await loadPeer();
   let peer=KC&&KC.peer;
   if(KC){ try{KC.conn&&KC.conn.close()}catch(e){} KC.onState=null; KC.onLost=null; }
   if(!peer||peer.destroyed||!peer.open){      // 仲介サーバーにつながっている Peer は使いまわす（つなぎ直しを へらす）
     if(peer) try{peer.destroy()}catch(e){}
-    peer=new Peer();
-    await withTimeout(new Promise((ok,ng)=>{peer.on("open",ok);peer.on("error",ng);}),10000,"つなぎ役のサーバーに接続できませんでした")
-      .catch(e=>{ try{peer.destroy()}catch(_){} if(KC&&KC.peer===peer) KC=null; throw new Error("つなぎ役のサーバーに接続できませんでした"+(e&&e.type?"（"+e.type+"）":"")); });
+    /* 仲介サーバー（0.peerjs.com・ヨーロッパ）へ。教室では 何十台が 同じ住所から いっせいに つなぐので、混んで おそくなったり 断られたりする。
+       待つのを 長めにし（20秒）、だめなら 子どもごとに ずらした 時間（2〜6秒・4〜12秒）を あけて 自動で やり直す（3回まで） */
+    for(let i=0;;i++){
+      peer=new Peer();
+      try{ await withTimeout(new Promise((ok,ng)=>{peer.on("open",ok);peer.on("error",ng);}),KC_OPEN_MS,"timeout"); break; }
+      catch(e){ try{peer.destroy()}catch(_){} if(KC&&KC.peer===peer) KC=null;
+        const ty=e&&e.type||(e&&e.message==="timeout"?"timeout":"");
+        if(i>=2) throw new Error("つなぎ役のサーバーに接続できませんでした"+(ty?"（"+ty+"）":""));
+        const w=$("#jerr")||$("#nerr"); if(w) w.textContent=T("j.retry");
+        await new Promise(ok=>setTimeout(ok,(2+Math.random()*4)*(i+1)*1000*KC_WAIT_X)); }
+    }
   }
   const k={peer,conn:null,code,pending:new Map(),seq:0,onState:null,onLost:null};
   KC=k;
