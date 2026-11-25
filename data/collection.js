@@ -129,10 +129,30 @@
 
   function fresh(today) {
     return { v: 1, d0: today, last: today, u: {}, ac: { e: 0, s: 0 }, day: { n: today, got: 0, carry: 0, first: 0, quiz: 0, cap: 0, shown: 0, rv: [], pd: 0 }, pd: 0,
-      own: [], pl: {}, gift: 0, done: 0, theme: 0, vp: 0, vz: 0, tk: { n: 0, star: 0, d: today, got: 0, used: 0 }, mo: [], mu: [], mk: mkFresh(), kz: kzFresh(), y: yaFresh(), kp: kpFresh() };
+      own: [], pl: {}, gift: 0, done: 0, theme: 0, vp: 0, vz: 0, tk: { n: 0, star: 0, d: today, got: 0, used: 0 }, mo: [], mu: [], mk: mkFresh(), kz: kzFresh(), y: yaFresh(), kp: kpFresh(), bz: bzFresh() };
   }
   /* mk：w はじめの1たいを もらった／q えらべる分（QCODE の字）／own { id: { d もらった日, p なかよし, ld なかよしが ふえた日, k きらきら(のちの段階), v 見せた段階 } }
      sh ひろばに だしている子／mg 古い記録から 計算した（はじめの 案内を出す） */
+  /* bz（2026-11-25。ひとりで ボスバトルの ステージ）：o ひらいた ステージ（0〜5。その番号まで はじめられる）／s ずかんに のった モンスター（"z" ざこ・"b1"〜"b6" ステージボス・"r1"〜"r6" レアボス）
+     rd レアボスに ちょうせんした 日（1日 1回）。レアボスの ちょうせんは どんぐり BZ_RARE こ（ac.s に たす＝お店の 買い物と 同じ あつかい） */
+  const BZ_N = 6, BZ_RARE = 3;
+  const BZ_IDS = ["z"].concat(Array.from({ length: BZ_N }, (_, i) => "b" + (i + 1)), Array.from({ length: BZ_N }, (_, i) => "r" + (i + 1)));
+  function bzFresh() { return { o: 0, s: [], rd: 0, rp: 0 }; }      // rp：どんぐりを はらって まだ おわっていない レアボス（ステージ番号+1。0＝なし）
+  function bzClean(raw) {
+    const B = bzFresh(); if (!raw || typeof raw !== "object") return B;
+    B.o = int(raw.o, 0, BZ_N - 1, 0); B.s = uniq(raw.s, id => BZ_IDS.includes(id)); B.rd = int(raw.rd, 0, 9e6, 0); B.rp = int(raw.rp, 0, BZ_N, 0); if (B.rp > B.o + 1) B.rp = 0;
+    return B;
+  }
+  /* おいはらった：ids を ずかんに のせ、ボス（stage 番号の ならび cl）の つぎの ステージを ひらく。かえす値＝{ fresh: はじめて のった id, opened: 新しく ひらいた ステージ（なければ -1） } */
+  function bzKo(S, ids, cl) {
+    const fresh = [], B = S.bz; let opened = -1;
+    for (const id of ids || []) if (BZ_IDS.includes(id) && !B.s.includes(id)) { B.s.push(id); fresh.push(id); }
+    for (const st of cl || []) if (st >= 0 && st < BZ_N - 1 && st + 1 > B.o) { B.o = st + 1; opened = B.o; }
+    return { fresh, opened };
+  }
+  const bzRareOk = (S, today) => S.bz.rd !== today && balance(S) >= BZ_RARE;
+  function bzRarePay(S, today, st) { if (!bzRareOk(S, today) || !(st >= 0 && st <= S.bz.o)) return false; S.ac.s += BZ_RARE; S.bz.rd = today; S.bz.rp = st + 1; return true; }
+  function bzRareDone(S) { S.bz.rp = 0; }      // レアボスの バトルが おわった（結果の 画面まで 行った）
   function mkFresh() { return { w: 0, q: [], own: {}, sh: [], mg: 0 }; }
   /* kz（v3.3）：o 買った きせかえ（学びで もらう物は 入れない＝その時の 記録から 計算）／e { まなびっこの id: { h, p, b, t } } つけている物 */
   function kzFresh() { return { o: [], e: {} }; }
@@ -195,6 +215,7 @@
     S.mk = mkClean(raw.mk, S, today);                                       // v3.0：古い記録には無い（そのときは 学びから 計算）
     S.kz = kzClean(raw.kz, S.mk);                                           // v3.3：古い記録には無い（そのときは 空）
     S.y = yaClean(raw.y);                                                  // v3.4：古い記録には無い（そのときは 0 から）
+    S.bz = bzClean(raw.bz);                                                // 2026-11-25：古い記録には無い（そのときは 0 から）
     S.kp = kpClean(raw.kp);                                                // もらった物（2026-11-19）：古い記録には無い（そのときは 下の keepUp で いまの 分を のこす）
     for (const id of S.kz.o) if (!KZ_BY.get(id).price && !S.kp.z.includes(id)) S.kp.z.push(id);
     S.kz.o = S.kz.o.filter(id => KZ_BY.get(id).price > 0);
@@ -920,7 +941,7 @@
     for (const id of x.sh) if (M.sh.length < MK_SHOW && !M.sh.includes(id)) M.sh.push(id);
   }
 
-  return { TK_MAX, TK_GET, TK_STARS, TK_USE, MEMO_O, tkRoll, tkLimit, tkState, tkUse, memoCount, memoTotal, memoAdd, memoPick, explorerMap, CAP, GIFT, CELLS, UNIT_IDS, IDX, PARTS, DECOR, PRICE_TOTAL, TRACK_SUBJ, uGrade, dayNum, dayDate, fresh, clean, balance, sync, give, gapFull,
+  return { BZ_N, BZ_RARE, BZ_IDS, bzKo, bzRareOk, bzRarePay, bzRareDone, TK_MAX, TK_GET, TK_STARS, TK_USE, MEMO_O, tkRoll, tkLimit, tkState, tkUse, memoCount, memoTotal, memoAdd, memoPick, explorerMap, CAP, GIFT, CELLS, UNIT_IDS, IDX, PARTS, DECOR, PRICE_TOTAL, TRACK_SUBJ, uGrade, dayNum, dayDate, fresh, clean, balance, sync, give, gapFull,
     MK, MK_IDS, MK_SOON, MK_STAGE, MK_CAND, MK_SHOW, MK_ART, mkFresh,
     KZ, KZ_IDS, KZ_SLOT, KZ_PRICE_TOTAL, kzFresh, kzUnlocked, kzHas, kzLeft, kzBuy, kzWear, kzOf, kzHatOk, mkStage, mkFree, mkAvail, mkCands, mkPick, mkShow, mkNext, mkWire, mkAvatar,
     YA_ACH, YA_SUBJ, YA_KIRA_C, YA_KIRA_K, yaFresh, yaRank, yaRankNow, yaNeed, kpFresh, keepUp, yaRankCount, yaCheck, yaList,

@@ -93,6 +93,40 @@ function play(E, N, acc, sec, seed, f) {
     assert.strictEqual(c.hp, 100); assert.strictEqual(c.tr, null); assert.deepStrictEqual(c.bb.l, [[0, 1]]);
   });
 
+  /* ---------- 1c) ひとりで ボスバトル：ステージ（soloStage。2026-11-25） ---------- */
+  await t("ステージ：ざこ 2ひき → ボス → つぎの ステージ。えらんだ ステージから はじまる", () => {
+    const E = CO.soloStage({ g: 3, t: 300, stage: 2, rand: rng(1) }); E.begin(0); let now = 0; const seq = [];
+    for (let k = 0; k < 40 && seq.length < 4; k++) { now += 3000; E.tick(now); if (E.ph !== "play") continue; const r = E.ans(true, now); if (r.ko) { seq.push(r.kind + E.st); now += 3000; E.tick(now); } }
+    assert.deepStrictEqual(seq, ["z2", "z2", "b2", "z3"]);
+    assert.strictEqual(E.dn, 1); assert.deepStrictEqual(E.cl, [2]);
+    assert.strictEqual(CO.soloStage({ g: 3, stage: 9 }).st, 0, "へんな 番号は ステージ1");
+  });
+  await t("ステージ：ひっさつわざは 正解 3回めごと（SPD）。まちがえると ゲージが 0", () => {
+    const E = CO.soloStage({ g: 6, t: 300, rand: rng(2) }); E.begin(0); let now = 0; const A = ok => { now += 3000; E.tick(now); if (E.ph === "run") { now += 3000; E.tick(now); } return E.ans(ok, now); };
+    while (E.kind !== "b") A(true);                       // ざこを おいはらう
+    E.sp = 0; E.cb = 0; const h0 = E.hp;
+    assert.ok(!A(true).sp); assert.strictEqual(E.sp, 1); A(false); assert.strictEqual(E.sp, 0, "まちがいで 0");
+    E.hp = E.H; A(true); A(true); const r = A(true); assert.ok(r.sp, "3回めで ひっさつ"); assert.strictEqual(r.dm, CO.SG.SPD); assert.strictEqual(E.sp, 0); assert.strictEqual(E.sps >= 1, true);
+    assert.ok(E.hp < h0);
+  });
+  await t("ステージ：ざこは まちがえても とりもどさない・ボスは 8% とりもどす・レアボスは げんきが 多い（はじめの ステージだけ）", () => {
+    const E = CO.soloStage({ g: 3, t: 300, stage: 1, rare: true, rand: rng(3) }); E.begin(0);
+    E.ans(true, 1000); const z = E.hp; assert.strictEqual(E.ans(false, 4000).heal, 0); assert.strictEqual(E.hp, z);
+    let now = 4000; while (E.kind !== "b") { now += 3000; E.tick(now); if (E.ph === "play") E.ans(true, now); }
+    assert.ok(E.rare); const N = CO.soloStage({ g: 3, t: 300, stage: 1, rand: rng(3) }); N.begin(0); N.zi = 2; 
+    assert.ok(E.H > CO.soloHp(3, false, 1), "レアは 多い");
+    E.ans(true, now + 3000); const r = E.ans(false, now + 6000); assert.ok(r.heal > 0);
+    while (E.dn < 1) { now += 3000; E.tick(now); if (E.ph === "play") E.ans(true, now); }
+    assert.ok(E.rareKo); now += 3000; E.tick(now); while (E.kind !== "b") { now += 3000; E.tick(now); if (E.ph === "play") E.ans(true, now); }
+    assert.ok(!E.rare, "つぎの ステージは ふつうの ボス");
+  });
+  await t("ステージ：6の つぎは 1に もどる（loop）・時間で おわる・res に cl と zk", () => {
+    const E = CO.soloStage({ g: 1, easy: true, t: 600, stage: 5, rand: rng(4) }); E.begin(0); let now = 0;
+    while (E.dn < 1) { now += 3000; E.tick(now); if (E.ph === "play") E.ans(true, now); }
+    now += 3000; E.tick(now); assert.strictEqual(E.st, 0); assert.strictEqual(E.loop, 1);
+    E.tick(600001); assert.strictEqual(E.ph, "end"); assert.deepStrictEqual(E.res.cl, [5]); assert.strictEqual(E.res.zk, 2);
+    assert.ok(E.ans(true, 600002).late);
+  });
   /* ---------- 1b) ひとりで ボスバトル（1人用・soloBoss） ---------- */
   await t("ひとりで ボス：げんきは 学年・やさしいで きまり、つぎのボスほど 1.15ばい（10ぴきめまで）", () => {
     assert.strictEqual(CO.soloHp(1, false, 0), 40); assert.strictEqual(CO.soloHp(3, false, 0), 50); assert.strictEqual(CO.soloHp(5, false, 0), 60);
