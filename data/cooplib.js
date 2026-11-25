@@ -359,6 +359,57 @@ function soloBoss(o){
   return E;
 }
 
+/* ---------- ひとりで ボスバトル：ステージ（2026-11-25。1人用・通信しない） ----------
+   ステージは 6つ（SG.N）。1ステージ＝ちびモンスター（ざこ）SG.ZAKO ひき → ステージボス 1ぴき。ボスを おいはらうと つぎの ステージへ（6のつぎは 1に もどり、少し げんきが 多い）。
+   ・はじめる ステージは えらべる（o.stage 0〜5。ひらいた ステージだけ、の 決まりは 画面の がわ）。o.rare なら はじめの ステージの ボスが レアボス（げんき SG.RARE ばい）
+   ・ざこの げんきは SG.ZHP（まちがえても とりもどさない）。ボスの げんきは soloHp（学年・ルール・ステージで きまる）。まちがえると ボスは 8% とりもどす（soloBoss と同じ）
+   ・ひっさつわざ：正解が SG.SP 回 つづくと、その 正解は SG.SPD の くすぐり（ふつうの ダメージの かわり）。ゲージ sp は まちがえると 0。出したら 0 から
+   ・まけは ない。res：dn＝おいはらった ボスの数／zk＝ざこの数／cl＝おいはらった ボスの ステージ番号（じゅんに）／rare＝レアボスを おいはらったか／sps＝ひっさつわざの 回数 */
+const SG={N:6,ZAKO:2,ZHP:20,SP:3,SPD:30,RARE:1.3,RUN:2400,ZRUN:1100};
+function soloStage(o){
+  const {easy,g,sc,rand,dur}=optsOf(o), T=ms=>Math.round(ms*sc);
+  const st0=intIn(o&&o.stage,0,SG.N-1)?o.stage:0, rare0=!!(o&&o.rare);
+  const E={easy,g,ph:"lobby",st:st0,loop:0,kind:"z",zi:0,rare:false,H:0,hp:0,dn:0,zk:0,td:0,an:0,ok:0,cb:0,sp:0,sps:0,cl:[],rareKo:false,ae:0,pe:0,tr:null,trN:0,nextTr:0,res:null};
+  const nextTrick=now=>{ E.nextTr=now+T(BS.TRICK[0]+rand()*(BS.TRICK[1]-BS.TRICK[0])); };
+  function spawn(){
+    if(E.zi<SG.ZAKO){ E.kind="z"; E.rare=false; E.H=SG.ZHP; }
+    else { E.kind="b"; E.rare=rare0&&E.loop===0&&E.st===st0; E.H=Math.max(30,Math.round(soloHp(g,easy,E.loop*SG.N+E.st)*(E.rare?SG.RARE:1)/10)*10); }
+    E.hp=E.H;
+  }
+  function finish(){ if(E.ph==="end") return; const run=E.ph==="run"; E.ph="end"; E.tr=null;
+    E.res={dn:E.dn,zk:E.zk,td:E.td,an:E.an,ok:E.ok,st:E.st,kind:E.kind,cl:E.cl.slice(),rare:E.rareKo,sps:E.sps,left:run?0:E.hp,H:E.H}; }
+  E.finish=finish;
+  E.begin=now=>{ Object.assign(E,{st:st0,loop:0,zi:0,dn:0,zk:0,td:0,an:0,ok:0,cb:0,sp:0,sps:0,cl:[],rareKo:false,tr:null,trN:0,res:null}); spawn(); E.ph="play"; E.ae=now+T(dur); nextTrick(now); };
+  /* 答えた。かえす値 dm／heal／ko（おいはらった）／sp（ひっさつわざが 出た）／kind（"z" ざこ・"b" ボス）／late */
+  E.ans=(ok,now)=>{
+    if(E.ph!=="play"||now>=E.ae) return {late:true};
+    E.an++; const kind=E.kind;
+    if(!ok){ E.cb=0; E.sp=0; const heal=kind==="b"?Math.min(E.H-E.hp,soloHeal(E.H)):0; E.hp+=heal; return {dm:0,heal,kind}; }
+    E.ok++; E.cb++; E.sp++;
+    const sp=E.sp>=SG.SP; if(sp){ E.sp=0; E.sps++; }
+    const dm=Math.min(sp?SG.SPD:bossDmg(E.cb),E.hp); E.hp-=dm; E.td+=dm;
+    if(E.hp<=0){
+      if(kind==="z") E.zk++; else { E.dn++; E.cl.push(E.st); if(E.rare) E.rareKo=true; }
+      E.ph="run"; E.pe=now+T(kind==="z"?SG.ZRUN:SG.RUN); E.tr=null; return {dm,ko:true,sp,kind};
+    }
+    return {dm,sp,kind};
+  };
+  E.tick=now=>{
+    if(E.ph==="lobby"||E.ph==="end") return false;
+    if(now>=E.ae){ finish(); return true; }
+    if(E.ph==="run"){ if(now>=E.pe){
+        if(E.kind==="z") E.zi++; else { E.zi=0; E.st++; if(E.st>=SG.N){ E.st=0; E.loop++; } }
+        spawn(); E.ph="play"; E.nextTr=Math.max(E.nextTr,now+T(4000)); return true; } return false; }
+    if(E.kind==="b"){
+      if(E.tr&&now>=E.tr.e){ E.tr=null; nextTrick(now); return true; }
+      if(!E.tr&&now>=E.nextTr&&E.ae-now>T(BS.TRICK_MS+2000)){ E.trN++; E.tr={i:E.trN,k:(E.trN-1)%BS.TRICKS,e:now+T(BS.TRICK_MS)}; return true; }
+    } else if(E.tr){ E.tr=null; return true; }
+    return false;
+  };
+  E.pct=()=>E.ph==="run"||!E.H?0:Math.ceil(100*E.hp/E.H);
+  return E;
+}
+
 /* ---------- じんとりバトル（2チーム・k:"jn"） ----------
    7×7 の盤。あか（左上）と あお（右下）の「本陣」は うばえない。正解すると、チームの「ねらいマス」に ぬりが 1 たまる。
    マスごとに必要な ぬりの数があり（ふつう 2・★ 4・まんなか 6）、たまると そのチームの色になる。
@@ -500,6 +551,6 @@ function cleanJn(co){
 }
 
 const API={STAGES,SHORT,KINDS,OPS,SY,ST,C,stageTarget,capOf,engine,clean,
-  BS,bossHp,bossCap,bossDmg,bossEngine,SB,soloHp,soloHeal,soloBoss,JN,JN_N,JN_DEF,JN_NB,jnBoard,jnCost,jnOk,jnPick,jnResolve,jnScore,splitTeams,jinEngine,mkPop};
+  BS,bossHp,bossCap,bossDmg,bossEngine,SB,soloHp,soloHeal,soloBoss,SG,soloStage,JN,JN_N,JN_DEF,JN_NB,jnBoard,jnCost,jnOk,jnPick,jnResolve,jnScore,splitTeams,jinEngine,mkPop};
 if(typeof module!=="undefined"&&module.exports) module.exports=API; else root.MH_COOP=API;
 })(typeof window!=="undefined"?window:globalThis);

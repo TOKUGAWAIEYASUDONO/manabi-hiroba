@@ -486,7 +486,7 @@ http.createServer(async (req, res) => {
       return fs.createReadStream(f).pipe(res);
     }
     if (req.method === "GET" && url.pathname === "/favicon.ico") { res.writeHead(204, { "Cache-Control": "public, max-age=86400" }); return res.end(); }
-    const am = url.pathname.match(/^\/vendor\/(audio\/[\w-]+\.mp3|img\/[\w-]+\.(?:png|svg)|img\/space\/[\w-]+\.webp)$/);   // 効果音・BGM・絵（CC0 の素材。vendor/THIRD-PARTY-LICENSES.txt）
+    const am = url.pathname.match(/^\/vendor\/(audio\/[\w-]+\.mp3|img\/[\w-]+\.(?:png|svg)|img\/(?:space|battle)\/[\w-]+\.webp)$/);   // 効果音・BGM・絵（CC0 の素材。vendor/THIRD-PARTY-LICENSES.txt）
     if (req.method === "GET" && am) {
       const f = path.join(__dirname, "vendor", am[1]);
       if (!fs.existsSync(f)) return json(res, 404, { error: "not found" });
