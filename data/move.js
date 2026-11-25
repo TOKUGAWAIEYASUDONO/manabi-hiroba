@@ -129,7 +129,8 @@
       if (!isObj(a) || !isObj(b)) return isObj(a) ? a : b;
       const o = { ...a };
       for (const k of Object.keys(b)) { const x = o[k], y = b[k]; if (!isObj(y)) continue;
-        o[k] = isObj(x) ? { ...x, score: hi(x.score, y.score) || 0, medal: hi(x.medal, y.medal) || 0 } : y; }
+        o[k] = isObj(x) ? { ...x, score: hi(x.score, y.score) || 0, medal: hi(x.medal, y.medal) || 0 } : y;
+        if (isObj(x)) for (const f of ['ta', 'sd']) { const v = hi(x[f], y[f]); if (v) o[k][f] = v; } }      // 算数の 単元の ★（タイムアタック・サドンデス）：大きいほう
       return o;
     },
     mh_meter(a, b) {                                    // { s: { ステージ: ★ }, guide, ch }：★は 大きいほう。設定は いまの ほう
