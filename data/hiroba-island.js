@@ -39,6 +39,7 @@
     e: [{ k: "flagjp", di: -2, dj: -2, part: "flagjp" }, { k: "flagus", di: 2, dj: -2, part: "flagus" }, { k: "tree", di: -3, dj: 3 }],
     sr: [{ k: "mapboard", di: -2, dj: 2, need: "s" }, { k: "telescope", di: 2, dj: 2, need: "r" }, { k: "tree", di: -3, dj: -3 }]
   };
+  const REST = { m: "lighthouse", j: "tent", e: "windmill", sr: "well" }; // とちゅうの 小島に 立つ もの
   const PONDS = { hub: [[3, 3], [3, 4], [4, 3]], m: [], j: [[-3, 2]], e: [], sr: [[2, -3]] };
   const area = R => { let n = 0; for (let a = -R; a <= R; a++) for (let b = -R; b <= R; b++) if (Math.hypot(a, b) <= R) n++; return n; };
   function sizeOf(isl, c) {
@@ -107,6 +108,16 @@
         if (!tiles.has(key)) tiles.set(key, { i, j, h: 0, t: "bridge", isl: "bridge" });
       }
     }
+    // とちゅうの 小島（はしの まんなか。ひとやすみの ばしょ）
+    for (const isl of ISLANDS.slice(1)) {
+      const m = D / 2, ci = isl.axis === "i" ? m * isl.dir : 0, cj = isl.axis === "j" ? m * isl.dir : 0;
+      for (let a = -2; a <= 2; a++) for (let b = -2; b <= 2; b++) {
+        if (Math.hypot(a, b) > 2.3 + (hash(ci + a, cj + b, 5) - .5)) continue;
+        const key = (ci + a) + "," + (cj + b), old = tiles.get(key), onWay = (isl.axis === "i" ? b : a) === 0;
+        tiles.set(key, { i: ci + a, j: cj + b, h: 0, t: onWay && old ? "path" : "grass", isl: "rest" });
+      }
+      things.push({ k: REST[isl.id], i: ci + (isl.axis === "i" ? 0 : 1), j: cj + (isl.axis === "i" ? 1 : 0), isl: "rest", sea: 1 });
+    }
     // おける ばしょ（いまの 広さに ある ものだけ）と、おいた かざり
     const spotList = [];
     sp.forEach((s, x) => { const t = tiles.get(s.i + "," + s.j); if (t && t.t === "grass") spotList.push({ cell: x + 1, i: s.i, j: s.j }); });
@@ -129,7 +140,18 @@
       if (Math.abs(t.i - isl.ci) <= 1 && Math.abs(t.j - isl.cj) <= 1) continue;
       things.push({ k: "tree", i: t.i, j: t.j, isl: t.isl, wild: 1 }); busy.add(key);
     }
-    return { c, tiles, things, labels, spots: spotList, hAt: (i, j) => (tiles.get(i + "," + j) || { h: 0 }).h };
+    // うみの もの（いわ・すな の小島・うきわ・ふね・さかな・なみ）。りくから はなれた ところに、きまった ばしょで
+    const sea = [], far = (i, j, r) => { for (let a = -r; a <= r; a++) for (let b = -r; b <= r; b++) if (tiles.has((i + a) + "," + (j + b))) return false; return true; };
+    const E = D + 13;
+    for (let i = -E; i <= E; i++) for (let j = -E; j <= E; j++) {
+      if (Math.abs(i - j) > E + 8 || Math.abs(i + j) > E + 8) continue;
+      const h = hash(i, j, 21); if (h > 0.045) continue;
+      const v = hash(i, j, 22), k = v < .34 ? "wave" : v < .56 ? "rock" : v < .68 ? "islet" : v < .78 ? "lily" : v < .87 ? "boat" : v < .94 ? "fish" : "buoy";
+      if (!far(i, j, k === "islet" ? 4 : k === "wave" ? 2 : 3)) continue;
+      if (k !== "wave" && sea.some(o => o.k !== "wave" && Math.abs(o.i - i) < 5 && Math.abs(o.j - j) < 5)) continue;
+      sea.push({ k, i, j, f: v });
+    }
+    return { c, tiles, things, labels, sea, spots: spotList, hAt: (i, j) => (tiles.get(i + "," + j) || { h: 0 }).h };
   }
   function bounds(w) {
     let a = Infinity, b = -Infinity, c = Infinity, e = -Infinity;
@@ -144,6 +166,14 @@
   const SYM = { school: "h-school", lib: "h-lib", book1: "h-book1", slide: "d-slide", swing: "d-swing", bar: "h-bar", jungle: "h-jungle", flagjp: "h-flagjp", flagus: "h-flagus", tree: "d-tree" };
   const SIZE = { school: 190, lib: 160, tree: 110, jungle: 120, rainbow: 120, clock: 130, hutch: 110, mapboard: 110, book1: 100, pond: 120, flower: 95, bench: 90 };
 
+  const OL = `stroke="${INK}" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"`;
+  const RESTART = { // とちゅうの 小島の たてもの（SVG）
+    lighthouse: (x, y) => `<path d="M${x - 16} ${y}l6 -70h20l6 70z" fill="#fffaf0" ${OL}/><path d="M${x - 13} ${y - 30}h26l1 14h-28z" fill="#e85d4a" ${OL}/><rect x="${x - 14}" y="${y - 88}" width="28" height="18" rx="3" fill="#ffe58a" ${OL}/><path d="M${x - 18} ${y - 88}l18 -16 18 16z" fill="#e85d4a" ${OL}/>`,
+    tent: (x, y) => `<path d="M${x - 40} ${y}l40 -62 40 62z" fill="#f2b544" ${OL}/><path d="M${x} ${y - 62}l-12 62h24z" fill="#e0942a" ${OL}/><path d="M${x} ${y - 62}v-14" ${OL}/><path d="M${x} ${y - 76}l16 6 -16 6z" fill="#e85d4a" ${OL}/>`,
+    windmill: (x, y) => `<path d="M${x - 18} ${y}l6 -58h24l6 58z" fill="#f5ecdc" ${OL}/><path d="M${x - 14} ${y - 58}l14 -16 14 16z" fill="#4b7fd1" ${OL}/><g class="isle-spin" style="transform-origin:${x}px ${y - 60}px"><path d="M${x} ${y - 60}l-8 -40h16zM${x} ${y - 60}l40 -8v16zM${x} ${y - 60}l8 40h-16zM${x} ${y - 60}l-40 8v-16z" fill="#fffaf0" ${OL}/></g><circle cx="${x}" cy="${y - 60}" r="5" fill="#f2b544" ${OL}/>`,
+    well: (x, y) => `<ellipse cx="${x}" cy="${y - 6}" rx="28" ry="12" fill="#b9b3a8" ${OL}/><path d="M${x - 28} ${y - 6}v-16a28 12 0 0 1 56 0v16" fill="#cfc9be" ${OL}/><ellipse cx="${x}" cy="${y - 22}" rx="20" ry="8" fill="#5fb0d0" ${OL}/><path d="M${x - 26} ${y - 22}v-40M${x + 26} ${y - 22}v-40" ${OL}/><path d="M${x - 36} ${y - 58}l36 -20 36 20z" fill="#e07a6a" ${OL}/>`
+  };
+
   /* opt：{ world, label(isl, n) → 文字, placing（おく ものを えらんでいる）, sel（えらんでいる かざりの id）, view, onSpot(cell), onDecor(cell), onView(view) } */
   function mount(host, opt) {
     const w = opt.world;
@@ -155,7 +185,7 @@
     const b = bounds(w);
     const box = { x: b.xmin * HW - HW - 40, y: b.ymin * HH - HH - 170, w: (b.xmax - b.xmin) * HW + 2 * HW + 80, h: (b.ymax - b.ymin) * HH + 2 * HH + WALL + 230 };
     svg.setAttribute("viewBox", `${box.x} ${box.y} ${box.w} ${box.h}`); svg.setAttribute("width", box.w); svg.setAttribute("height", box.h);
-    const ground = el("g", {}, svg), objs = el("g", {}, svg), tags = el("g", { class: "isle-tags" }, svg);
+    const seaG = el("g", { class: "isle-sea" }, svg), ground = el("g", {}, svg), objs = el("g", {}, svg), tags = el("g", { class: "isle-tags" }, svg);
 
     // じめん
     const list = [...w.tiles.values()].sort((a, c) => (a.i + a.j) - (c.i + c.j) || a.h - c.h);
@@ -173,6 +203,25 @@
       tops.push(`<polygon points="${pts([[x, y - HH], [x + HW, y], [x, y + HH], [x - HW, y]])}" fill="${pond ? "url(#isW)" : path ? "#f3e2bd" : (t.i + t.j) & 1 ? "url(#isG)" : t.h ? "#b3d987" : "#9fcb74"}" stroke="${pond ? "#4f9cbf" : path ? "#dcc391" : "#7fae58"}" stroke-width="1.2"/>`);
     }
     ground.innerHTML = tops.join("");
+    // うみ：島の まわりの あさせ（2だん）と、うみの もの
+    const seaS = [];
+    for (const pass of [[3.2, "#a5def0", .85], [1.9, "#c9f0f3", .95]]) { // りくの マスを 大きくした ひしがたを かさねる＝きしに そった かたち（path 1つ）
+      const k = pass[0]; let d = "";
+      for (const t of w.tiles.values()) { if (t.t === "bridge") continue; const [x, y] = P(t.i, t.j); d += `M${x} ${Math.round(y + 24 - HH * k)}l${Math.round(HW * k)} ${Math.round(HH * k)}l${-Math.round(HW * k)} ${Math.round(HH * k)}l${-Math.round(HW * k)} ${-Math.round(HH * k)}z`; }
+      seaS.push(`<path d="${d}" fill="${pass[1]}" opacity="${pass[2]}" stroke="${pass[1]}" stroke-width="${Math.round(k * 22)}" stroke-linejoin="round"/>`);
+    }
+    const O = `stroke="${INK}" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"`;
+    const SEA = {
+      wave: (x, y, f) => `<path class="isle-wv" d="M${x - 30} ${y}q8 -8 16 0t16 0M${x + 4} ${y + 14}q8 -8 16 0t16 0" fill="none" stroke="#fff" stroke-width="3.5" stroke-linecap="round" opacity=".75"/>`,
+      rock: (x, y, f) => `<ellipse cx="${x}" cy="${y + 8}" rx="40" ry="12" fill="#d3f1f4"/><path d="M${x - 26} ${y + 6}l6 -22 14 -8 12 10 6 20z" fill="#b9b3a8" ${O}/><path d="M${x + 6} ${y + 8}l4 -12 10 -3 8 15z" fill="#cfc9be" ${O}/><path d="M${x - 14} ${y - 12}l8 -4" stroke="#fff" stroke-width="3" stroke-linecap="round"/>`,
+      islet: (x, y, f) => `<ellipse cx="${x}" cy="${y + 6}" rx="78" ry="30" fill="#d3f1f4"/><ellipse cx="${x}" cy="${y}" rx="56" ry="20" fill="#f6e3b4" ${O}/><path d="M${x - 6} ${y - 2}q-6 -30 6 -52" fill="none" stroke="${INK}" stroke-width="9" stroke-linecap="round"/><path d="M${x - 6} ${y - 2}q-6 -30 6 -52" fill="none" stroke="#b98656" stroke-width="5" stroke-linecap="round"/><path d="M${x} ${y - 54}q-26 -14 -40 6q20 -6 40 -6q26 -14 40 6q-20 -6 -40 -6q-4 -24 -24 -24q16 6 24 24q4 -24 24 -24q-16 6 -24 24z" fill="#7fbf6a" ${O}/><circle cx="${x + 26}" cy="${y + 2}" r="5" fill="#f5a9c0" ${O}/>`,
+      lily: (x, y, f) => `<ellipse cx="${x - 14}" cy="${y}" rx="18" ry="8" fill="#8fcf7a" ${O}/><ellipse cx="${x + 16}" cy="${y + 10}" rx="14" ry="6" fill="#a9d98a" ${O}/><circle cx="${x - 14}" cy="${y - 3}" r="6" fill="#f9c6d8" ${O}/>`,
+      boat: (x, y, f) => `<g class="isle-bob"><path d="M${x - 34} ${y - 4}h68l-12 18h-44z" fill="#e07a6a" ${O}/><path d="M${x} ${y - 4}v-52" ${O}/><path d="M${x + 3} ${y - 54}l30 42h-30z" fill="#fffaf0" ${O}/><path d="M${x - 3} ${y - 46}l-22 34h22z" fill="#f2b544" ${O}/></g><path d="M${x - 44} ${y + 18}q10 -7 20 0t20 0t20 0t20 0" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" opacity=".8"/>`,
+      fish: (x, y, f) => `<g class="isle-jump"><path d="M${x - 16} ${y - 24}q16 -14 30 0q-14 14 -30 0zM${x - 16} ${y - 24}l-12 -9v18z" fill="#f2a05a" ${O}/><circle cx="${x + 6}" cy="${y - 26}" r="2.2" fill="${INK}"/></g><ellipse cx="${x}" cy="${y + 2}" rx="22" ry="7" fill="none" stroke="#fff" stroke-width="3" opacity=".8"/>`,
+      buoy: (x, y, f) => `<g class="isle-bob"><path d="M${x - 12} ${y}q12 -34 24 0z" fill="#e85d4a" ${O}/><path d="M${x - 7} ${y - 12}h14" stroke="#fff" stroke-width="5"/><circle cx="${x}" cy="${y - 22}" r="4" fill="#f2b544" ${O}/></g><ellipse cx="${x}" cy="${y + 2}" rx="20" ry="6" fill="none" stroke="#fff" stroke-width="3" opacity=".8"/>`
+    };
+    for (const o of w.sea) { const [x, y] = P(o.i, o.j), X = Math.round(x), Y = Math.round(y); seaS.push(`<g transform="translate(${X} ${Y}) scale(1.6) translate(${-X} ${-Y})">${SEA[o.k](X, Y, o.f)}</g>`); }
+    seaG.innerHTML = seaS.join("");
 
     // もの・おける ばしょ
     const drawn = [...w.things, ...(opt.placing ? w.spots.filter(s => !w.things.some(t => t.i === s.i && t.j === s.j)).map(s => ({ ...s, spot: 1 })) : [])]
@@ -185,6 +234,7 @@
         el("path", { d: `M${x} ${y - 9}v18M${x - 9} ${y}h18`, stroke: "#e0942a", "stroke-width": 4, "stroke-linecap": "round" }, g);
         continue;
       }
+      if (t.sea) { const g = el("g", {}, objs); g.innerHTML = RESTART[t.k](Math.round(x), Math.round(y)); continue; }
       const sz = SIZE[t.k] || 90;
       const g = t.decor ? el("g", { class: "isle-tap isle-decor" + (opt.sel === t.k ? " sel" : ""), tabindex: 0, role: "button", "data-decor": t.cell, "aria-label": opt.decorLabel ? opt.decorLabel(t.k) : t.k, ...(opt.sel === t.k ? { "aria-pressed": "true" } : {}) }, objs) : el("g", {}, objs);
       if (t.decor) el("polygon", { class: "hl", points: pts([[x, y - HH], [x + HW, y], [x, y + HH], [x - HW, y]]), fill: "#fff", "fill-opacity": .55, stroke: "#f2b544", "stroke-width": 4 }, g);

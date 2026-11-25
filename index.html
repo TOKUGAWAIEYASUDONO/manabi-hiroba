@@ -918,11 +918,14 @@ body[data-v=host] .wrap{max-width:none;padding:0}
 .nx .nxs .art{width:44px;height:44px}
 .sil{filter:brightness(0) opacity(.25)}
 .nx small{flex-basis:100%;font-size:12px;color:var(--muted)}
-.isle{position:relative;height:min(62vh,520px);min-height:300px;border-radius:12px;overflow:hidden;background:linear-gradient(#cdeefa,#9fd8ee)}
+.isle{position:relative;height:min(62vh,520px);min-height:300px;border-radius:12px;overflow:hidden;background:linear-gradient(#8fd0ea,#62b4dc)}
 .isle-vp{position:absolute;inset:0;touch-action:none;cursor:grab}
 .isle-svg{position:absolute;left:0;top:0;transform-origin:0 0;overflow:visible}
 .isle-tap{cursor:pointer}.isle-tap .hl{opacity:0}.isle-decor.sel .hl,.isle-tap:focus-visible .hl{opacity:1}.isle-tap:focus{outline:none}
 .isle-spot:focus-visible polygon{stroke:var(--edge);stroke-width:5}
+.isle-bob{animation:isleBob 3.2s ease-in-out infinite}.isle-jump{animation:isleJump 4.5s ease-in-out infinite}.isle-wv{animation:isleWv 4s ease-in-out infinite}.isle-spin{animation:isleSpin 9s linear infinite}
+@keyframes isleBob{50%{transform:translateY(-5px)}}@keyframes isleJump{0%,70%,100%{transform:translateY(22px);opacity:0}80%{transform:translateY(0);opacity:1}92%{transform:translateY(18px);opacity:.6}}@keyframes isleWv{50%{transform:translateX(8px);opacity:.4}}@keyframes isleSpin{to{transform:rotate(360deg)}}
+@media (prefers-reduced-motion:reduce){.isle-bob,.isle-jump,.isle-wv,.isle-spin{animation:none}}
 .isle-btns{position:absolute;right:8px;bottom:8px;z-index:2;display:flex;gap:6px}
 .isle-btns .btn{min-width:44px;min-height:44px}
 .hc{aspect-ratio:1;min-height:48px;background:rgba(255,255,255,.6);border:3px dashed rgba(22,55,42,.4);border-radius:12px;padding:4px;display:flex;align-items:center;justify-content:center;cursor:pointer}
