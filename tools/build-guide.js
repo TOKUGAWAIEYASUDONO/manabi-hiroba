@@ -370,7 +370,10 @@ out.set("guide/index.html", indexPage().html);
 out.set("guide/custom.html", customPage().html);
 // 保護者・学校向け（about）は、ユーザーの OK が出るまで公開しない。文書照合（check-docs）のため --about で標準出力にだけ出す。
 if (process.argv.includes("--about")) { process.stdout.write(aboutPage().html); process.exit(0); }
-const urls = [BASE, pageUrl("index.html"), ...pages.map(p => pageUrl(p.file)), pageUrl("custom.html")];
+// 先生向けの紹介ページ（sensei.html）。中身は tools/lp-page.js。サイトマップには入れるが、本体・ガイドからのリンクは置かない（一方通行）。
+const LP = require("./lp-page").lpPage({ BASE, MOVE_TAG, esc, jsonld, unitCount: ready(UNITS).length });
+out.set(LP.file, LP.html);
+const urls = [BASE, pageUrl("index.html"), ...pages.map(p => pageUrl(p.file)), pageUrl("custom.html"), LP.url];
 out.set("sitemap.xml", `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${urls.map((u, i) => `  <url><loc>${u}</loc><priority>${i === 0 ? "1.0" : i === 1 ? "0.9" : "0.7"}</priority></url>`).join("\n")}\n</urlset>\n`);
 out.set("robots.txt", `User-agent: *\nAllow: /\n\nSitemap: ${BASE}sitemap.xml\n`);
 fs.mkdirSync(path.join(root, "guide"), { recursive: true });
