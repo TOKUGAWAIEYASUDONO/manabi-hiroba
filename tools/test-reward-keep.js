@@ -38,7 +38,7 @@ const STRICT = [
   ['きせかえ nk', /un: \["nk", \d+\]/g, 'un: ["nk", 9]'],
   ['じっせきの 数', /\["(\w+)", (\d+)\]/g, (m, id, n) => `["${id}", ${n * 10}]`],
   ['きらきら', /YA_KIRA_C = 500, YA_KIRA_K = 5/g, 'YA_KIRA_C = 5000, YA_KIRA_K = 50'],
-  ['1日の どんぐり', /const CAP = 20,/g, 'const CAP = 3,'],
+  ['1日の どんぐり', /const CAP = 10,/g, 'const CAP = 3,'],
   ['買った きせかえを 学びで もらう物に', /\{ id: "h-ribbon", s: "h", ch: "🎀", price: 3 \}/g, '{ id: "h-ribbon", s: "h", ch: "🎀", un: ["can", 999] }'],
   ['かざりの 値段', /price: (\d+) \}/g, (m, n) => `price: ${n * 10} }`],
 ];
