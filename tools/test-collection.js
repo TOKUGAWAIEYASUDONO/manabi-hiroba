@@ -203,7 +203,7 @@ t("買う・置く・しまう：足りないと買えない／重ねて置け�
   const S = C.fresh(D); S.ac.e = 40;
   assert(C.buy(S, "tree")); assert(!C.buy(S, "tree")); assert(C.buy(S, "flower")); assert(!C.buy(S, "pond")); assert.strictEqual(C.balance(S), 25);
   assert(C.place(S, "tree", 3)); assert(!C.place(S, "flower", 3)); assert(C.place(S, "flower", 4)); assert(C.place(S, "tree", 5));
-  assert(!C.place(S, "bench", 1)); assert(!C.place(S, "tree", 13)); assert(C.unplace(S, "tree")); assert(!C.unplace(S, "tree"));
+  assert(!C.place(S, "bench", 1)); assert(!C.place(S, "tree", 36)); assert(C.unplace(S, "tree")); assert(!C.unplace(S, "tree"));
   assert(C.place(S, "flower", 3));
 });
 t("完成：かざり7つそろえて全部置く。完成日を1回だけ記録。そのあと どんぐりは まだ買っていない きせかえが あるあいだだけ出る（v3.3）", () => {
@@ -262,7 +262,7 @@ t("バックアップ：確認の数字が合っても、範囲がおかしい�
   assert.strictEqual(C.hrParse(mk(hdr("3", "5", "00", "0000000", "00"))), null);    // 使った＞もらった
   assert.strictEqual(C.hrParse(mk(hdr("5", "3", "01", "1100000", "00"))), null);    // 持っていない物を置いた
   assert.strictEqual(C.hrParse(mk(hdr("5", "3", "03", "1100000", "00"))), null);    // 同じ場所
-  assert.strictEqual(C.hrParse(mk(hdr("5", "3", "01", "D000000", "00"))), null);    // 場所の番号が 12 より大きい
+  assert(C.hrParse(mk(hdr("5", "3", "01", "Z000000", "00"))));                      // 場所の番号は 35（島の おける ばしょ）まで 読める
   assert.strictEqual(C.hrParse(mk(hdr("5", "3", "00", "0000000", "01") + "00")), null);      // 番号0・段階0
   assert.strictEqual(C.hrParse(mk(hdr("5", "3", "00", "0000000", "02") + "0504")), null);    // 同じ単元が2回
   assert.strictEqual(C.hrParse(mk(hdr("5", "3", "00", "0000000", "01") + "ZZ")), null);      // 単元の番号が表の外

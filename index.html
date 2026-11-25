@@ -918,7 +918,13 @@ body[data-v=host] .wrap{max-width:none;padding:0}
 .nx .nxs .art{width:44px;height:44px}
 .sil{filter:brightness(0) opacity(.25)}
 .nx small{flex-basis:100%;font-size:12px;color:var(--muted)}
-.gridh{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+.isle{position:relative;height:min(62vh,520px);min-height:300px;border-radius:12px;overflow:hidden;background:linear-gradient(#cdeefa,#9fd8ee)}
+.isle-vp{position:absolute;inset:0;touch-action:none;cursor:grab}
+.isle-svg{position:absolute;left:0;top:0;transform-origin:0 0;overflow:visible}
+.isle-tap{cursor:pointer}.isle-tap .hl{opacity:0}.isle-decor.sel .hl,.isle-tap:focus-visible .hl{opacity:1}.isle-tap:focus{outline:none}
+.isle-spot:focus-visible polygon{stroke:var(--edge);stroke-width:5}
+.isle-btns{position:absolute;right:8px;bottom:8px;z-index:2;display:flex;gap:6px}
+.isle-btns .btn{min-width:44px;min-height:44px}
 .hc{aspect-ratio:1;min-height:48px;background:rgba(255,255,255,.6);border:3px dashed rgba(22,55,42,.4);border-radius:12px;padding:4px;display:flex;align-items:center;justify-content:center;cursor:pointer}
 .hc.on{background:#fff;border:3px solid var(--edge);box-shadow:0 4px 0 var(--edge)}
 .hc.sel{outline:4px solid var(--sun);outline-offset:2px}
@@ -2144,7 +2150,7 @@ const TX={
  "col.p.school":["がっこう"],"col.p.slide":["すべりだい"],"col.p.swing":["ブランコ"],"col.p.bar":["てつぼう"],"col.p.jungle":["ジャングルジム"],
  "col.p.book1":["ほんばこ"],"col.p.lib":["としょかん"],"col.p.flagjp":["にほんの はた"],"col.p.flagus":["アメリカの はた"],
  "col.d.tree":["き"],"col.d.flower":["はなだん"],"col.d.bench":["ベンチ"],"col.d.hutch":["うさぎごや"],"col.d.pond":["いけ"],"col.d.clock":["とけいとう"],"col.d.rainbow":["にじ"],
- "col.grid":["かざりを おく ばしょ"],"col.cell":[n=>`あいている ばしょ ${n}`],
+ "col.grid":["かざりを おく ばしょ"],"col.isle.hub":["ひろば"],"col.isle.m":["さんすうじま"],"col.isle.j":["こくごじま"],"col.isle.e":["えいごじま"],"col.isle.sr":["しゃかい・りかじま"],"col.isle.in":["ちかく"],"col.isle.out":["とおく"],"col.isle.home":["もどす"],"col.cell":[n=>`あいている ばしょ ${n}`],
  "col.grid.pick":["おく ばしょを タップしてね。"],
  "col.grid.move":["うごかす ばしょを タップするか、「しまう」を おしてね。"],
  "col.price":[n=>`${n}こ`],"col.put":["おく"],"col.store":["しまう"],"col.cancel":["やめる"],"col.placed":["おいてあるよ"],
@@ -3556,10 +3562,10 @@ function colRunPlay(p){      // finish() から：単元ごとの正解数と、
 /* ----- じぶんの ひろば ----- */
 function renderHiroba(){
   if(colMode()!=="on") return go("#home");
-  setLG(ui.grade); HS={sel:null,shop:false,gift:0,cap:0,done:0,mkSel:null,mkGot:null,mkLater:false,mkInfo:null,mkGrow:[],tab:"d",kzMsg:null,ya:false};
+  setLG(ui.grade); HS={sel:null,shop:false,gift:0,cap:0,done:0,mkSel:null,mkGot:null,mkLater:false,mkInfo:null,mkGrow:[],tab:"d",kzMsg:null,ya:false,isle:null,iv:null};
   { const S0=colGet(); if(COL.yaCheck(S0,yaExt()).length) colSave(); }
   app.innerHTML=`<div class="hb"></div>`;
-  loadScript("data/hiroba-art.js?v=eddf43ff",()=>!!document.getElementById("hiroba-art")).then(()=>{ if(params().path==="hiroba") hbDraw(true); },()=>{ app.innerHTML=`<div class="q">${T("col.err")}</div>`; });
+  Promise.all([loadScript("data/hiroba-art.js?v=eddf43ff",()=>!!document.getElementById("hiroba-art")),loadScript("data/hiroba-island.js?v=1",()=>!!window.MH_ISLE)]).then(()=>{ if(params().path==="hiroba") hbDraw(true); },()=>{ app.innerHTML=`<div class="q">${T("col.err")}</div>`; });
 }
 function hbDraw(first){
   const S=colTouch(), today=colToday(), P=COL.parts(S), pm={}; P.forEach(p=>{ pm[p.id]=p; });
@@ -3572,16 +3578,7 @@ function hbDraw(first){
     colSave();
   }
   const sel=HS.sel, bal=COL.balance(S), D={}; COL.DECOR.forEach(d=>{ D[d.id]=d; });
-  const slot=(art,key,on)=>`<div class="fs ${on?"on":"off"}"><div class="fsb">${on?svgU(art):""}</div><span class="cap">${on?T("col.p."+key):"？"}</span></div>`;
-  const lib=pm.lib.have?pm.lib:pm.book1.have?pm.book1:null;
-  const fz=`<div class="fs on"><div class="fsb">${svgU("h-school")}</div><span class="cap">${T("col.p.school")}</span></div>`
-    +slot(lib?lib.art:"",lib?lib.id:"book1",!!lib)
-    +["slide","swing","bar","jungle","flagjp","flagus"].map(id=>slot(pm[id].art,id,pm[id].have)).join("");
   const nx=[...new Set(P.filter(p=>p.next).map(p=>p.art))];
-  const cells=[]; for(let c=1;c<=COL.CELLS;c++){
-    const id=COL.cellOf(S,c);
-    cells.push(`<button type="button" class="hc${id?" on":""}${id&&sel===id?" sel":""}" data-c="${c}" aria-label="${id?T("col.d."+id):T("col.cell",c)}"${id&&sel===id?' aria-pressed="true"':""}>${id?svgU(D[id].art):""}</button>`);
-  }
   const bar=sel?`<div class="hbar" role="status"><span>${T(S.pl[sel]?"col.grid.move":"col.grid.pick")}</span>${S.pl[sel]?`<button type="button" class="btn sub s" id="hbStore">${T("col.store")}</button>`:""}<button type="button" class="btn sub s" id="hbCancel">${T("col.cancel")}</button></div>`:"";
   const shop=COL.DECOR.map(d=>{ const own=S.own.includes(d.id), placed=d.id in S.pl;
     const act=!own?`<button type="button" class="btn s" data-buy="${d.id}"${bal<d.price?" disabled":""}>${acornSvg("ac")}${T("col.price",d.price)}</button>`
@@ -3603,9 +3600,8 @@ function hbDraw(first){
     ${done}
     <div class="hscene t${S.theme}">
       ${mkRowHtml(S)}
-      <div class="fz">${fz}</div>
+      <div class="isle" id="hbIsle"><div class="isle-btns"><button type="button" class="btn sub s" data-iz="1.4" aria-label="${esc(T("col.isle.in"))}">＋</button><button type="button" class="btn sub s" data-iz="0.7" aria-label="${esc(T("col.isle.out"))}">－</button><button type="button" class="btn sub s" data-iz="0">${T("col.isle.home")}</button></div></div>
       ${nx.length?`<div class="nx"><b>${T("col.next")}</b><span class="nxs">${nx.map(a=>svgU(a,"sil")).join("")}</span><small>${T("col.next.how")}</small></div>`:""}
-      <div class="gridh" role="group" aria-label="${esc(T("col.grid"))}">${cells.join("")}</div>
     </div>
     ${bar}
     <div class="hops"><button type="button" class="btn" id="hbShop" aria-expanded="${HS.shop}">${acornSvg("ac")}${T("col.shop")}</button><button type="button" class="btn" id="hbZk">${ic("book-open")}${T("col.zukan")}</button><button type="button" class="btn" id="hbYa" aria-expanded="${!!HS.ya}" aria-controls="yaBox">🏆 ${T("col.ya.t")}</button></div>
@@ -3616,7 +3612,7 @@ function hbDraw(first){
       <div class="pills stabs" role="group" aria-label="${esc(T("col.kz.tabs"))}">${["d","k"].map(k=>`<button type="button" class="pill small${HS.tab===k?" on":""}" data-stab="${k}" aria-pressed="${HS.tab===k}">${T("col.kz.tab."+k)}</button>`).join("")}</div>
       ${HS.tab==="k"?kzShopHtml(S,bal):shop}</section>
     <p class="note">${T("col.local")}</p>`;
-  root.querySelectorAll("[data-c]").forEach(b=>b.onclick=()=>hbCell(+b.dataset.c));
+  hbIsle(root,S,pm,D);
   root.querySelectorAll("[data-buy]").forEach(b=>b.onclick=()=>{ if(COL.buy(S,b.dataset.buy)){ HS.sel=b.dataset.buy; HS.shop=false; sfx("coin"); colSave(); hbDraw(false); } });
   root.querySelectorAll("[data-put]").forEach(b=>b.onclick=()=>{ HS.sel=b.dataset.put; HS.shop=false; hbDraw(false); });
   root.querySelectorAll("[data-th]").forEach(b=>b.onclick=()=>{ S.theme=+b.dataset.th; colSave(); hbDraw(false); });
@@ -3806,7 +3802,22 @@ function hbCell(c){
     else { COL.place(S,HS.sel,c); HS.sel=null; if(COL.checkDone(S,colToday())){ HS.done=1; sfx("medal"); party(); } colSave(); }
   } else if(id) HS.sel=id;
   hbDraw(false);
-  const f=app.querySelector(`[data-c="${c}"]`); if(f) f.focus();
+  const f=app.querySelector(`[data-decor="${c}"],[data-spot="${c}"]`)||app.querySelector("[data-spot]"); if(f) f.focus({preventScroll:true});
+}
+/* 島（data/hiroba-island.js）：島の広さは 教科ごとの「できた」の数。かざりは ひろばの島の「おける ばしょ」（cell 番号）に おく */
+function hbIsle(root,S,pm,D){
+  const host=root.querySelector("#hbIsle"); if(!host||!window.MH_ISLE) return;
+  const I=window.MH_ISLE, n=s=>COL.count(S,s,2), cnt={m:n("m"),j:n("j"),e:n("e"),s:n("s"),r:n("r")};
+  cnt.total=COL.summary(S).can;
+  const parts={}; Object.keys(pm).forEach(id=>{ if(pm[id].have) parts[id]=1; });
+  const placed=Object.keys(S.pl).map(id=>({id,art:D[id].art,cell:S.pl[id]}));
+  const w=I.build(cnt,parts,placed,COL.CELLS);
+  if(HS.isle) HS.isle.destroy();
+  HS.isle=I.mount(host,{world:w,placing:!!HS.sel,sel:HS.sel,view:HS.iv,aria:T("col.grid"),
+    label:(isl,k)=>T("col.isle."+isl.id)+(isl.id==="hub"?"":" "+k),
+    spotLabel:c=>T("col.cell",c),decorLabel:id=>T("col.d."+id),
+    onSpot:c=>hbCell(c),onDecor:c=>hbCell(c),onView:v=>{ HS.iv={...v}; }});
+  host.querySelectorAll("[data-iz]").forEach(b=>b.onclick=()=>{ const f=+b.dataset.iz; if(f) HS.isle.zoom(f); else HS.isle.home(); });
 }
 
 /* ----- ひろばたんけん（チケット1まいで1回。2〜3分。どんぐりは出ない・recordRun を通さない＝チケットの★にならない） ----- */

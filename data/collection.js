@@ -31,7 +31,7 @@
   if (typeof module === "object" && module.exports) module.exports = M; else root.MH_COL = M;
 })(typeof self !== "undefined" ? self : this, function () {
   "use strict";
-  const CAP = 10, GIFT = 5, CELLS = 12;
+  const CAP = 10, GIFT = 5, CELLS = 35;      // CELLS：ひろばの島の「おける ばしょ」の数（2026-11-25 12→35。バックアップの1字＝36進数で 35 まで）
   const RV_MAX = 2, PD_EVERY = 5, PD_GIVE = 3;
   const TK_MAX = 3, TK_GET = 2, TK_STARS = 5, TK_USE = 2, TK_USE_MAX = 5;
   /* 単元の ID の固定表（追加だけ。順番を変えない）。id の1字目＝教科（m算数 j国語 s社会 e英語）、2字目＝学年 */
