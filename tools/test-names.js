@@ -245,13 +245,14 @@ const why = s => NM.check(s).why;
         const rs = []; for (let i = 0; i < 7; i++) rs.push((await S.po("join", { code: r.code, name: "ばか" })).s);
         assert.deepStrictEqual(rs, [400, 400, 400, 400, 400, 429, 429]);
       } finally { S.p.kill(); }
-      S = await startSrv({});           // 3) 部屋全体で1秒に10回まで（ふつうの名前でも）
+      S = await startSrv({});           // 3) 部屋全体で1秒に10回まで（ふつうの名前でも）。こえた分は断らず、順番に待ってもらう（「みんな入って」で同時に来るため）
       try {
         const r = (await S.po("create", { mode: "chest", game: "calc", g: 3, t: 120 })).j;
-        const rs = []; for (let i = 0; i < 14; i++) rs.push((await S.po("join", { code: r.code, name: "こ" + "あいうえおかきくけこ"[i % 10] })).s);
-        assert.strictEqual(rs.filter(s => s === 200).length, 10, JSON.stringify(rs)); assert.ok(rs.slice(10).every(s => s === 429), JSON.stringify(rs));
-        await sleep(1100);
-        assert.strictEqual((await S.po("join", { code: r.code, name: "あとから" })).s, 200, "1秒たてば また入れる");
+        const t0 = Date.now(), done = [];
+        const rs = await Promise.all(Array.from({ length: 25 }, (_, i) => S.po("join", { code: r.code, name: "こ" + "あいうえおかきくけこ"[i % 10] }).then(x => { done.push(Date.now() - t0); return x.s; })));
+        assert.ok(rs.every(s => s === 200), "全員 入れる " + JSON.stringify(rs));
+        done.sort((a, b) => a - b);
+        assert.ok(done[9] < 900 && done[10] >= 900 && done[20] >= 1900, "1秒に10人ずつ 通す " + JSON.stringify(done));
       } finally { S.p.kill(); }
     });
     await t("サーバーの出力（ログ）に名前が残らない", async () => {
