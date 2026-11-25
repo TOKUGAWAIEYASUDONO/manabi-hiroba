@@ -164,7 +164,8 @@
   const pts = a => a.map(p => p.map(v => Math.round(v * 10) / 10).join(",")).join(" ");
   const ART = {}; // k -> 画像の パス（vendor/img/island に あるもの）。index.html が きめる
   const SYM = { school: "h-school", lib: "h-lib", book1: "h-book1", slide: "d-slide", swing: "d-swing", bar: "h-bar", jungle: "h-jungle", flagjp: "h-flagjp", flagus: "h-flagus", tree: "d-tree" };
-  const SIZE = { school: 190, lib: 160, tree: 110, jungle: 120, rainbow: 120, clock: 130, hutch: 110, mapboard: 110, book1: 100, pond: 120, flower: 95, bench: 90 };
+  const SIZE = { school: 190, lib: 160, tree: 110, jungle: 120, rainbow: 120, clock: 130, hutch: 110, mapboard: 110, book1: 100, pond: 120, flower: 95, bench: 90,
+    castle: 180, carousel: 150, balloon: 150, treehouse: 150, tower: 150, windmill: 150, bakery: 140, house: 130, fountain: 120, sakura: 120, appletree: 120, arch: 120, tent: 110, sandbox: 105, seesaw: 105, picnic: 95, lamp: 105, doghouse: 95, sheep: 80, mushroom: 70, grass: 75, sunflower: 90, post: 80, chicken: 75, cat: 70, duck: 80 };
 
   const OL = `stroke="${INK}" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"`;
   const RESTART = { // とちゅうの 小島の たてもの（SVG）

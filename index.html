@@ -974,7 +974,8 @@ body[data-v=host] .wrap{max-width:none;padding:0}
 .shop h3{margin:8px 0 2px;font-size:17px}
 .shop .row{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:2px dotted var(--line)}
 .shop .row:last-child{border-bottom:0}
-.shop .row>.art{width:48px;height:48px}
+.shop .row>.art{width:48px;height:48px;object-fit:contain}
+.shop .shg{margin:12px 0 0;font-size:14px;color:var(--muted);border-bottom:2px solid var(--line);padding-bottom:2px}
 .shop .row .nm{flex:1;font-weight:700;font-size:17px}
 .shop .row .btn{margin:0;min-width:96px;display:inline-flex;align-items:center;justify-content:center;gap:4px}
 .shop .row .btn .art{width:22px;height:22px}
@@ -2153,6 +2154,12 @@ const TX={
  "col.p.school":["がっこう"],"col.p.slide":["すべりだい"],"col.p.swing":["ブランコ"],"col.p.bar":["てつぼう"],"col.p.jungle":["ジャングルジム"],
  "col.p.book1":["ほんばこ"],"col.p.lib":["としょかん"],"col.p.flagjp":["にほんの はた"],"col.p.flagus":["アメリカの はた"],
  "col.d.tree":["き"],"col.d.flower":["はなだん"],"col.d.bench":["ベンチ"],"col.d.hutch":["うさぎごや"],"col.d.pond":["いけ"],"col.d.clock":["とけいとう"],"col.d.rainbow":["にじ"],
+ "col.d.mushroom":["きのこ"],"col.d.grass":["くさむら"],"col.d.sunflower":["ひまわり"],"col.d.sakura":["さくらの き"],"col.d.appletree":["りんごの き"],"col.d.arch":["はなの アーチ"],
+ "col.d.sandbox":["すなば"],"col.d.seesaw":["シーソー"],"col.d.fountain":["ふんすい"],"col.d.lamp":["がいとう"],"col.d.post":["ポスト"],"col.d.picnic":["ピクニックシート"],
+ "col.d.house":["ちいさな いえ"],"col.d.bakery":["パンやさん"],"col.d.treehouse":["ツリーハウス"],"col.d.tent":["テント"],"col.d.tower":["てんぼうだい"],"col.d.windmill":["ふうしゃ"],
+ "col.d.doghouse":["いぬごや"],"col.d.chicken":["にわとり"],"col.d.cat":["ねこ"],"col.d.sheep":["ひつじ"],"col.d.duck":["かも"],
+ "col.d.balloon":["ききゅう"],"col.d.carousel":["メリーゴーランド"],"col.d.castle":["おしろ"],
+ "col.dg.0":["はじめの かざり"],"col.dg.n":["しぜん"],"col.dg.p":["こうえん"],"col.dg.b":["たてもの"],"col.dg.a":["どうぶつ"],"col.dg.s":["とくべつ"],
  "col.grid":["かざりを おく ばしょ"],"col.isle.hub":["ひろば"],"col.isle.m":["さんすうじま"],"col.isle.j":["こくごじま"],"col.isle.e":["えいごじま"],"col.isle.sr":["しゃかい・りかじま"],"col.isle.in":["ちかく"],"col.isle.out":["とおく"],"col.isle.home":["もどす"],"col.cell":[n=>`あいている ばしょ ${n}`],
  "col.grid.pick":["おく ばしょを タップしてね。"],
  "col.grid.move":["うごかす ばしょを タップするか、「しまう」を おしてね。"],
@@ -3488,7 +3495,7 @@ function renderRecord(msg){
   $("#bkGo").onclick=()=>{
     const m=$("#bkMsg"), v=$("#bkIn").value.trim();
     if(!v){ m.className="err"; m.textContent=T("rec.bk.empty"); return; }
-    if(/^HR[1-4]/i.test(v.replace(/[^0-9A-Za-z]/g,""))){ if(!colImport(v)){ m.className="err"; m.textContent=T("rec.bk.ng"); return; } renderRecord(T("col.bk.ok")); return; }      // ひろばの文字（HR1）も、ここに入れてよい
+    if(/^HR[1-5]/i.test(v.replace(/[^0-9A-Za-z]/g,""))){ if(!colImport(v)){ m.className="err"; m.textContent=T("rec.bk.ng"); return; } renderRecord(T("col.bk.ok")); return; }      // ひろばの文字（HR1）も、ここに入れてよい
     const r=bkRead(v); if(!r){ m.className="err"; m.textContent=T("rec.bk.ng"); return; }
     bkApply(r); refreshMedals(); renderRecord(T("rec.bk.ok"));
   };
@@ -3583,10 +3590,10 @@ function hbDraw(first){
   const sel=HS.sel, bal=COL.balance(S), D={}; COL.DECOR.forEach(d=>{ D[d.id]=d; });
   const nx=[...new Set(P.filter(p=>p.next).map(p=>p.art))];
   const bar=sel?`<div class="hbar" role="status"><span>${T(S.pl[sel]?"col.grid.move":"col.grid.pick")}</span>${S.pl[sel]?`<button type="button" class="btn sub s" id="hbStore">${T("col.store")}</button>`:""}<button type="button" class="btn sub s" id="hbCancel">${T("col.cancel")}</button></div>`:"";
-  const shop=COL.DECOR.map(d=>{ const own=S.own.includes(d.id), placed=d.id in S.pl;
+  let dg=null; const shop=COL.DECOR.map(d=>{ const g=d.g||"0", hd=g!==dg?`<h4 class="shg">${T("col.dg."+g)}</h4>`:""; dg=g; const own=S.own.includes(d.id), placed=d.id in S.pl;
     const act=!own?`<button type="button" class="btn s" data-buy="${d.id}"${bal<d.price?" disabled":""}>${acornSvg("ac")}${T("col.price",d.price)}</button>`
       :placed?`<span class="note">${T("col.placed")}</span>`:`<button type="button" class="btn s" data-put="${d.id}">${T("col.put")}</button>`;
-    return `<div class="row">${svgU(d.art)}<span class="nm">${T("col.d."+d.id)}</span>${act}</div>`; }).join("");
+    return `${hd}<div class="row"><img class="art" src="vendor/img/island/${d.id}-256.webp?v=1" alt="" width="48" height="48" loading="lazy" decoding="async"><span class="nm">${T("col.d."+d.id)}</span>${act}</div>`; }).join("");
   const dd=S.done?COL.dayDate(S.done):null;
   const done=S.done?`<div class="hmsg done">${HS.done?`<b>${T("col.done")}</b><br>`:""}${T("col.done.on",dd.getUTCMonth()+1,dd.getUTCDate())}<br>${T(COL.kzLeft(S)?"col.done.k":"col.done.n")}
     <div class="pills" style="margin-top:8px"><b class="pl">${T("col.theme")}</b>${[0,1,2].map(i=>`<button type="button" class="pill small${S.theme===i?" on":""}" data-th="${i}" aria-pressed="${S.theme===i}">${T("col.theme."+i)}</button>`).join("")}</div></div>`:"";
@@ -3813,7 +3820,7 @@ function hbIsleShow(){ const e=app.querySelector("#hbIsle"); if(e) e.scrollIntoV
 function hbIsle(root,S,pm,D){
   const host=root.querySelector("#hbIsle"); if(!host||!window.MH_ISLE) return;
   const I=window.MH_ISLE, n=s=>COL.count(S,s,2);
-  if(!I.ART.school) HB_ISLE_ART.forEach(k=>{ I.ART[k]=`vendor/img/island/${k}-256.webp?v=1`; });
+  if(!I.ART.school) HB_ISLE_ART.concat(COL.DECOR.map(d=>d.id)).forEach(k=>{ I.ART[k]=`vendor/img/island/${k}-256.webp?v=1`; });
   const cnt={m:n("m"),j:n("j"),e:n("e"),s:n("s"),r:n("r")};
   cnt.total=COL.summary(S).can;
   const parts={}; Object.keys(pm).forEach(id=>{ if(pm[id].have) parts[id]=1; });
@@ -3838,7 +3845,7 @@ function exPool(S,g){
   const seen=shuffle(us.filter(u=>COL.stage(S,u.id)>=1)).slice(0,3), rest=shuffle(us.filter(u=>!seen.includes(u)));
   return [...seen,...rest].slice(0,5).map(u=>u.id);                                    // 学習ずみを まぜる（ふくしゅう）
 }
-function exItems(S){ return ["h-school"].concat(COL.parts(S).filter(p=>p.have).map(p=>p.art),COL.DECOR.filter(d=>S.own.includes(d.id)).map(d=>d.art)); }
+function exItems(S){ return ["h-school"].concat(COL.parts(S).filter(p=>p.have).map(p=>p.art),COL.DECOR.filter(d=>d.art&&S.own.includes(d.id)).map(d=>d.art)); }
 function renderTanken(){
   if(!colTkOn()) return go("#hiroba");
   setLG(ui.grade); app.innerHTML=`<div class="ex"></div>`;

@@ -20,7 +20,18 @@ t("単元の ID 表：units.js の ready な単元と同じ（新しい単元が
   for (const u of ready) { assert.strictEqual(u.id[0], SJ[u.subj]); assert.strictEqual(GFIX[u.id] || +u.id[1], u.g); }
   assert(C.UNIT_IDS.length * 4 + 3 < 46656);
 });
-t("かざりの値段の合計は 380", () => assert.strictEqual(C.PRICE_TOTAL, 380));
+t("かざりの値段の合計は 734（はじめの 7こ 380 ＋ 島の かざり 26こ 354）", () => { assert.strictEqual(C.PRICE_TOTAL, 734); assert.strictEqual(C.DECOR.length, 33); assert.strictEqual(C.DECOR0.reduce((n, d) => n + d.price, 0), 380); });
+t("バックアップ HR5：島の かざり（追加の 26こ）を もっていると HR5。買った物・おいた ばしょが もどる。もっていなければ 今まで通り", () => {
+  const S = C.fresh(D); S.ac.e = 900; ["tree", "castle", "duck", "mushroom"].forEach(id => assert(C.buy(S, id)));
+  assert(C.place(S, "tree", 2)); assert(C.place(S, "castle", 35)); assert(C.place(S, "duck", 7));
+  const code = C.hrMake(S); assert(/^HR5/.test(code));
+  const r = C.hrParse(code); assert(r); assert.deepStrictEqual(r.own.slice().sort(), ["castle", "duck", "mushroom", "tree"]); assert.deepStrictEqual(r.pl, { tree: 2, castle: 35, duck: 7 });
+  const T2 = C.fresh(D); C.hrMerge(T2, r, D); assert.deepStrictEqual(T2.pl, { tree: 2, castle: 35, duck: 7 }); assert(T2.own.includes("mushroom"));
+  const flat = code.replace(/-/g, ""); let bad = 0;
+  for (let i = 3; i < 3 + 32; i++) { const c = flat[i] === "0" ? "1" : "0"; if (!C.hrParse(flat.slice(0, i) + c + flat.slice(i + 1))) bad++; }
+  assert.strictEqual(bad, 32, "1字 かえると 断る");
+  const S0 = C.fresh(D); S0.ac.e = 900; C.buy(S0, "tree"); assert(!/^HR5/.test(C.hrMake(S0)));
+});
 t("はじめの どんぐり5こ：1回だけ。1日の上限には入らない", () => {
   const S = C.fresh(D);
   assert.strictEqual(C.claimGift(S, D), 5); assert.strictEqual(C.balance(S), 5); assert.strictEqual(S.day.got, 0);
