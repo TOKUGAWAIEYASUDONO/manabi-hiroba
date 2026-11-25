@@ -438,6 +438,20 @@ body[data-v=teacher] rt{display:none}
 .box{font-size:64px;background:#fff;border-radius:18px;padding:18px 0}
 .box.open{cursor:default;font-size:22px;font-weight:800;padding:30px 4px;background:#fff6e3;transform:translateY(3px);box-shadow:0 1px 0 var(--edge)}
 .box.dim{opacity:.35}
+/* バトルの 世界（2026-11-25）：たからばこ＝海ぞくの ほらあな／すごろく＝ぼうけんの 島。背景は image2 の 水彩（vendor/img/battle） */
+body[data-bw]{background:var(--bwc) var(--bwi) center top/cover no-repeat fixed}
+body[data-bw="chest"]{--bwc:#8a5426;--bwi:url(vendor/img/battle/chest-cave.webp)}
+body[data-bw="race"]{--bwc:#a9d7ee;--bwi:linear-gradient(#bfe3f5,#9fd0ea)}
+.bww .q,.bww .side{background:linear-gradient(#fdf4dc,#f3e0b4);color:#4a3120;border:4px solid #6b4526;border-radius:16px;box-shadow:0 5px 0 #6b4526}
+.bww .q .small,.bww .q .note{color:#7a5a3c}.bww .q .ptable td{border-bottom-color:#6b452655}
+.bww .topbar>span,.bww .timer{background:#fbf1d8;border:2px solid #5b3a22;border-radius:99px;padding:2px 12px;color:#4a3120}
+.bww .fb:not(:empty){background:#fbf1d8;border-radius:12px;padding:2px 12px}.bww .rank{background:#fff8}.bww .rank.me{background:#ffe08a}
+.chw .boxes{gap:6px;margin:6px 0 0}.chw .box{background:none;border:0;box-shadow:none;padding:0;position:relative;font-size:56px;min-height:120px}
+.chimg{display:block;width:min(100%,190px);margin:0 auto;filter:drop-shadow(0 8px 5px #0005);transition:transform .15s}.chw .box:not(.open):hover .chimg{transform:translateY(-4px) rotate(-2deg)}
+.chw .box.open{background:none;transform:none;padding:0;box-shadow:none}.chw .box.open .chimg{animation:chpop .35s}
+.chlb{position:absolute;left:50%;top:-4px;transform:translateX(-50%);white-space:nowrap;background:#fff6e3;border:3px solid #6b4526;border-radius:99px;padding:2px 12px;font-size:20px;font-weight:800;color:#4a3120}
+@keyframes chpop{0%{transform:scale(.8)}60%{transform:scale(1.12)}}
+@media (prefers-reduced-motion:reduce){.chw .box.open .chimg{animation:none}}
 .msg{font-size:24px;font-weight:800;min-height:36px;margin:8px 0}
 .sgbd{display:block;width:100%;height:auto;max-width:420px;margin:0 auto;border-radius:16px}   /* すごろく盤（校庭の地図）。SVGで描く */
 .sgbd text{font-family:inherit;font-weight:800;text-anchor:middle;pointer-events:none}
@@ -2029,7 +2043,7 @@ const TX={
  "ms.og":["ほかの 学年《がくねん》も 見《み》る","ほかの がくねんも みる"],
  "ms.time":["時間《じかん》","じかん"],"ms.2":["2分《ふん》","2ふん"],"ms.3":["3分《ぷん》","3ふん"],"ms.rule":["ルール"],
  "ms.ustart":["えらんだ 単元《たんげん》で はじめる","えらんだ たんげんで はじめる"],
- "b.pick":["たからばこを1つえらんでね"],
+ "b.pick":["たからばこを1つえらんでね"],"c.box":[n=>`たからばこ ${n}`],
  "b.get":[n=>`コイン ${n} まいゲット！`],"b.x2":["コインが2ばいになった！"],
  "b.lose":["あっ、コインを少《すこ》し落《お》とした…","あっ、コインを すこし おとした…"],
  "b.steal":[(w,n)=>`${w}から ${n} まいもらった！`],
@@ -4491,7 +4505,7 @@ function renderMode(q){
   if(m.solo&&SGOPEN){ const st=Math.min(sgBz().o,Math.max(0,+q.get("st")|0)), rare=sgBz().rp===st+1;
     M.sg=true; M.sbRare=rare; M.sb=COOP.soloStage({g,easy:rule==="easy",t,stage:st,rare}); M.sb.begin(Date.now()); M.end=M.sb.ae; }
   else if(m.solo){ M.sb=COOP.soloBoss({g,easy:rule==="easy",t}); M.sb.begin(Date.now()); M.end=M.sb.ae; }
-  app.innerHTML=`<div class="mplay${m.id==="race"?" racew":m.solo&&SGOPEN?" sgw":""}">
+  app.innerHTML=`<div class="mplay${m.id==="race"?" racew bww":m.solo&&SGOPEN?" sgw":m.id==="chest"?" bww chw":""}">
     ${task?`<div class="banner">${ic("pencil")} ${T("p.task",`${m.t}（${x.t}・${g}年《ねん》）`)}</div>`:""}
     <div class="topbar">
       ${task?`<button class="back" id="bk">${ic("x")}${T("back.end")}</button>`:`<button class="back" onclick="stopTimer();M=null;go('#home')">${BK()}</button>`}
@@ -4501,6 +4515,7 @@ function renderMode(q){
     <div class="tbar" id="tbar"><i id="tb"></i></div>
     <div class="mgrid${m.id==="race"?" race":m.solo?" sb":""}"><div id="mmain"></div><div class="side" id="mside"></div></div>
   </div>`;
+  if(m.id==="chest"||m.id==="race") document.body.dataset.bw=m.id;      // バトルの 世界（背景の 絵）。route() で 消す
   if(task) $("#bk").onclick=()=>modeFinish();      // 授業モード：ホームへは行かず、結果の画面へ
   showQ(); drawSide();
   stopTimer(); let last=Date.now();
@@ -4555,7 +4570,7 @@ function chestReward(){
   $("#mmain").innerHTML=`<div class="q" style="padding:16px"><button class="qm" id="qm" aria-label="${T("c.q")}" aria-expanded="false">？</button>
     <div style="font-size:20px;font-weight:bold">${T("b.pick")}</div>
     <div id="ptab" class="hidden"></div>
-    <div class="boxes">${[0,1,2].map(i=>`<button class="box" data-b="${i}">🎁</button>`).join("")}</div><div class="msg" id="msg"></div></div>`;
+    <div class="boxes">${[0,1,2].map(i=>`<button class="box" data-b="${i}" aria-label="${T("c.box",i+1)}">${chestImg("closed")}</button>`).join("")}</div><div class="msg" id="msg"></div></div>`;
   $("#mmain").querySelectorAll("[data-b]").forEach(b=>b.onclick=()=>openBox(b));
   $("#qm").onclick=()=>{            // 「？」：たからばこから出るものの確率の表
     const box=$("#ptab"), show=box.classList.contains("hidden");
@@ -4565,6 +4580,8 @@ function chestReward(){
   };
 }
 /* たからばこの中身と出やすさ（重み）。「？」の表も同じ数字を使う */
+const chestImg=k=>`<img class="chimg" src="vendor/img/battle/chest-${k}.webp" alt="" draggable="false" onerror="this.outerHTML='🎁'">`;      // 宝箱の 絵（image2 の 水彩）。closed／open-gold／open-empty
+const chestOpen=(btn,label,good)=>{ btn.classList.add("open"); btn.innerHTML=chestImg(good?"open-gold":"open-empty")+`<span class="chlb">${label}</span>`; };
 function chestTable(rule){
   return ruleOf(rule)==="easy"
     ?[["+10",24],["+20",26],["+30",18],["+50",12],["x2",8],["none",2]]          // やさしい：増えるか からっぽ だけ
@@ -4585,7 +4602,7 @@ function openBox(btn){
   else if(k==="steal"){ const n=Math.round(L.v*0.2); L.v-=n; M.me.v+=n; label=`🦝 +${n}`; msg=T("b.steal",`${face(L.e)}${esc(L.n)}`,n); }
   else if(k==="swap"){ if(L.v>M.me.v){ [L.v,M.me.v]=[M.me.v,L.v]; label=T("c.swapdone"); msg=T("b.swap",`${face(L.e)}${esc(L.n)}`); } else { M.me.v+=20; label="🪙 +20"; msg=T("b.get",20); } }
   else { label=T("c.none"); msg=T("b.none"); }
-  btn.classList.add("open"); btn.textContent=label; sfx(k[0]==="+"?"coin":"open");
+  chestOpen(btn,label,k!=="none"&&k!=="lose"); sfx(k[0]==="+"?"coin":"open");
   $("#mmain").querySelectorAll(".box").forEach(b=>{ if(b!==btn) b.classList.add("dim"); });
   $("#msg").innerHTML=msg; drawSide();
   const mm=M; setTimeout(()=>M===mm&&showQ(),1300);
@@ -5585,7 +5602,7 @@ async function netBox(k,btn){
   }
   if(!M||M.over) return;
   sfx(op==="add"?"coin":"open");
-  btn.classList.add("open"); btn.innerHTML=label;
+  chestOpen(btn,label,!!op&&op!=="lose");
   $("#mmain").querySelectorAll(".box").forEach(b=>{ if(b!==btn) b.classList.add("dim"); });
   $("#msg").innerHTML=msg;
   const mm=M; setTimeout(()=>M===mm&&showQ(),1300);
@@ -8434,7 +8451,7 @@ function route(){
   const lesson=!!lockedHash||((path==="play"||path==="mode"||path==="meter")&&q.get("task")==="1")||((path==="qlink"||path==="ulink")&&/[&?]task=1(?![0-9])/.test(location.hash));
   LESSON=lesson; document.body.classList.toggle("lesson",lesson); const lic=document.getElementById("licLink"); if(lic) lic.hidden=lesson;
   const lg=$("#logo"); if(lg) lg.disabled=lesson;          // 授業モードではロゴからホームへ行けない
-  delete document.body.dataset.sg;
+  delete document.body.dataset.sg; delete document.body.dataset.bw;
   window.scrollTo(0,0);
   if(!DATA_OK&&path!=="check"&&path!=="teacher"&&path!=="make"&&path!=="qlink"&&path!=="feedback"){
     app.innerHTML=`<div class="q">問題《もんだい》データ（data フォルダ）を読《よ》み込《こ》めませんでした。<br>index.html と同《おな》じ場所《ばしょ》に data フォルダがあるか確認《かくにん》してください。</div>`; return;
