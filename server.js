@@ -442,7 +442,7 @@ const API = {
       }
       case "move": {
         if (room.mode !== "race") break;
-        const n = Math.min(6, Math.max(1, b.n | 0));
+        const n = Math.min(18, Math.max(1, b.n | 0));      // 3問正解で サイコロ2こ（ボーナスは 3こ）
         p.v = Math.min(GOAL, p.v + n);
         out.ev = evOf(room.rule)[p.v] || "";
         if (out.ev === "⭐") p.v = Math.min(GOAL, p.v + 3);
