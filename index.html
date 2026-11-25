@@ -1533,6 +1533,54 @@ body[data-bw="jin"]{--bwc:#8fd04a;--bwi:url(vendor/img/battle/jin-field.webp)}
   .res>.medrow,.res>.msteps,.res>.num,.res>.nextm,.res>.actions,.res>.stats,.res>.umr,.res>.newbest{grid-column:1}
   .res>.miss{grid-column:2;grid-row:1/span 10;max-height:calc(100dvh - 120px);overflow:auto}
 }
+/* ===== 結果（finish）の 作りなおし 2026-11-25：.res.rs。①けっか ②つぎに すること ③もらったもの ④きろく ⑤まちがえた問題 ⑥もらいかた ===== */
+.res.rs{display:block;padding:14px 14px 16px;border-width:3px;border-radius:22px}
+.res.rs.ugold{border-color:#e0a100;box-shadow:0 4px 0 #b57f00}
+.res.rs.urainbow{border-color:transparent;box-shadow:0 4px 0 #b57f00;background:linear-gradient(#fff,#fff) padding-box,linear-gradient(90deg,#ff5d5d,#ffb13d,#ffe14a,#5fd068,#4aa8ff,#a56bff,#ff5d5d,#ffb13d,#ffe14a,#5fd068,#4aa8ff,#a56bff,#ff5d5d) border-box;background-size:100% 100%,200% 100%;animation:urb 6s linear infinite}
+@media (prefers-reduced-motion:reduce){.res.rs.urainbow{animation:none}}
+.rs-hero{text-align:center}
+.rs .mtst.big i{font-size:50px}.rs .ustbig{line-height:1.1}
+.rs .medrow .mb.big{width:80px;height:90px;margin:0}.rs .medrow .mb{margin-bottom:2px}
+.rs .medal .art{width:96px;height:96px}
+.rs .rs-badge{display:table;margin:2px auto 8px;padding:2px 14px;border-radius:999px;background:#fff3d6;border:2px solid #efc56a;font-size:16px;font-weight:800;color:#8a3b00}
+.rs .num{font-size:clamp(24px,7.6vw,32px);line-height:1.5}
+.rs .stats{margin:2px 0 6px}.rs .stats span{border-radius:999px;padding:3px 12px}
+.rs .nextm{font-size:19px;margin:2px 0 4px;line-height:1.5}
+.rs-pill{display:inline-flex;align-items:center;gap:4px;margin:2px 0 0;padding:2px 14px 2px 8px;border-radius:999px;background:#fff7e3;border:2px solid var(--sun);font-weight:800;font-size:16px;color:var(--ink)}
+.rs-pill .art{width:26px;height:26px}
+.rs-act{margin-top:10px;padding-top:10px;border-top:2px dashed var(--line);text-align:center}
+.rs-np{display:flex;flex-direction:column;align-items:center;gap:4px}.rs-npl{font-size:13px;font-weight:700;color:var(--muted)}
+.rs .actions{margin:8px 0 0;gap:8px}.rs .again{font-size:24px;padding:13px 24px;margin:0}
+.rs .subs .btn{font-size:15px;padding:9px 14px;min-height:44px;margin:0}
+.rs-r{margin-top:14px;display:flex;flex-direction:column;gap:12px}
+.rs-sec{background:#f4f8f1;border-radius:14px;padding:10px 12px;text-align:left}
+.rs-sec h3,.rs .miss>b{display:block;margin:0 0 6px;font-size:14px;font-weight:800;color:var(--muted)}
+.rs-got .acl{display:grid;grid-template-columns:auto minmax(0,1fr);align-items:start;gap:4px 10px;margin:0;max-width:none;border:0;background:none;padding:0}
+.rs-got .acl>.art{width:44px;height:44px;grid-row:1/span 2}
+.rs-got .acb{min-width:0;font-size:15px;line-height:1.45}.rs-got .acb b{font-size:19px;margin-bottom:2px}
+.rs-got .acb>div{position:relative;padding:4px 0 4px 16px;border-top:1px dashed var(--line)}
+.rs-got .acb>div::before{content:"";position:absolute;left:3px;top:.85em;width:7px;height:7px;border-radius:50%;background:var(--sun)}
+.rs-got .acl>.btn{grid-column:2;justify-self:start;margin:2px 0 0}
+.rs-rec{text-align:center}.rs-rec h3{text-align:left}
+.rs-rec .umarks{justify-content:flex-start;gap:4px 6px;margin:0 0 4px}.rs-rec .umarks.big{font-size:23px}.rs-rec .note{text-align:left}
+.rs-rec .tlres{margin-top:4px}.rs-rec .ubk{margin-top:6px;text-align:left}
+.rs .miss{margin:0;border-radius:14px;padding:10px 12px}
+.rs .mcard{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:0 8px;border-radius:10px;padding:8px 10px;margin-top:6px}
+.rs .mcard .mq{font-size:21px;line-height:1.35;grid-column:1/-1}.rs .mcard .ma{font-size:17px;grid-column:1}
+.rs .mcard .bad{grid-column:2;margin:0;padding:4px 8px;font-size:12px;font-weight:700;color:var(--muted);box-shadow:none;border:1px solid var(--line);white-space:nowrap}
+.rs .mcard .badid{grid-column:1/-1}
+.rs details.howto{margin:0;max-width:none}
+.rs-open{display:flex;align-items:center;gap:10px;text-align:left;padding:8px 12px;border-radius:14px;border:3px solid #e0a100;background:#fff8dc;color:#6b3a00;font-size:17px;line-height:1.45}
+.rs-open img{width:72px;height:72px;object-fit:contain;flex:none}
+@media (max-width:599px){.rs .mcard .ma{grid-column:1/-1}.rs .mcard .bad{grid-column:1/-1;justify-self:end;margin-top:2px}.rs .stats{font-size:13px}}
+@media (min-width:900px){
+  .play:has(>.res.rs:not(.rs-one)){max-width:1040px}
+  .res.rs:not(.rs-one){display:grid;grid-template-columns:minmax(320px,400px) minmax(0,1fr);gap:0 22px;align-items:start;padding:18px 20px 20px}
+  .res.rs:not(.rs-one)>.rs-l{position:sticky;top:8px}
+  .res.rs:not(.rs-one)>.rs-r{margin-top:0}
+  .res.rs:not(.rs-one):has(.rs-got) .rs-pill{display:none}
+  .res.rs.rs-one{max-width:520px;margin:0 auto}
+}
 /* PC：先生の「単元から つくる」は、左に絞り込み・中央に単元カード・右に設定（カードが最初の画面に見える）。児童の開始ボタンは下に固定 */
 @media (min-width:1024px){
   .up:not(.play):not(.kid)>.ufilters{display:block}
@@ -2078,6 +2126,7 @@ const TX={
  "r.new":["★ 自己《じこ》ベスト更新《こうしん》！","★ いちばん たくさん できた！"],
  "r.answered":["答《こた》えた数《かず》","こたえた かず"],"r.n":[n=>`${n} 問《もん》`,n=>`${n} もん`],
  "r.acc":["正答率《せいとうりつ》","せいかいの わりあい"],"r.best":["自己《じこ》ベスト","いちばん よかった"],"r.ok":["せいかい"],
+ "rs.got":["もらったもの"],"rs.np":["つぎは どれで あそぶ？"],
  "r.miss":["まちがえた問題《もんだい》（ふくしゅうしよう）","まちがえた もんだい（もういちど やろう）"],
  "r.send":["先生《せんせい》に送《おく》る結果《けっか》","せんせいに おくる けっか"],
  "r.ans":["こたえ"],"r.bad":["？ この もんだい、おかしい"],"r.badid":["問題《もんだい》ID","もんだいID"],"r.bad2":["せんせいに みせてね"],"r.ids":["まちがえた問題《もんだい》"],
@@ -3307,24 +3356,41 @@ function finish(){
   const report=`【${T0("g."+p.x.id+".t")}】${p.g}年 ${p.t}秒｜せいかい${p.ok}問／${total}問（正答率${acc}%）`;   //T
   if(p.u&&p.cur&&p.cur.tries>0&&!p.cur.re&&!p.missObjs.includes(p.cur)) p.missObjs.push(p.cur);
    const repFull=(p.u?unitReport(p):report)+tlReport(p)+missIds(p.missObjs,p.x);          // 課題リンクの結果の末尾に、まちがえた問題のID（単元のリンクは、単元名と ○△× の数）
-  app.innerHTML=`<div class="play"><div class="res">
+  /* 結果の ならび（2026-11-25 作りなおし）：①けっか（★・メダル → できた数 → つぎの めあて） ②つぎに すること（もう一回） ③もらったもの ④こたえの きろく ⑤まちがえた問題 ⑥もらいかた。
+     スマホは 上から ①→⑥、PC は 左に ①②、右に ③〜⑥（.rs-l / .rs-r）。「もう一回」が はじめの 画面に 入るように ①は みじかく する */
+  const badge=stOpen?"":stUp&&!p.task?T("ust.up"):showNew?T("r.new"):spr&&spr.isNew?T("sp.newbest"):"";
+  const glow=p.u&&!bx&&p.u.ids.length===1&&!p.task?uGlow(p.u.ids[0]):"";       // 単元カードと 同じ：いつもの ★3で 金の ふち、★9こで 虹色の ふち
+  const paid=colRun.paid|0;
+  const recHtml=p.u?`<section class="rs-sec rs-rec"><h3>${T("u.marks.t")}</h3><div class="umarks big">${uMarksHtml(p.marks,0,p.mtl)}</div><div class="note">${esc(T("u.marks"))}</div>${p.tlN?`<div class="note tlres">🧰 ${T("tl.res",p.tlN)}${plain&&p.hok?`<br>${T("tl.res.d")}`:""}</div>`:""}${ures&&ures.length>1?`<div class="ubk">${ures.map(r=>`<div class="stamp"><span class="sn">${esc(UBY[r.id].title)}<small>${T("u.best",r.o)}</small></span>${r.star?uStarH(r.medal):`<span class="slots" aria-hidden="true">${MEDAL_ICO.map((em,i)=>`<span class="slot${r.medal>i?" on":""}">${msvg(r.medal>i?i+1:0)}</span>`).join("")}</span>`}</div>`).join("")}</div>`:""}</section>`
+    :p.tlN?`<section class="rs-sec rs-rec"><div class="note tlres">🧰 ${T("tl.res",p.tlN)}${plain&&p.hok?`<br>${T("tl.res.d")}`:""}</div></section>`:"";
+  const howHtml=stN>=0&&!p.task?uHow():plain&&!p.task?(p.u?howUnit(ures.length):howSprint(p.x.type,p.t)):"";
+  const rHtml=`${stOpen?`<div class="rs-open"><img src="vendor/img/battle/chest-open-gold.webp" alt="" width="72" height="72" loading="lazy"><b>${T("ust.open")}</b></div>`:""}
+    ${colHtml?`<section class="rs-sec rs-got"><h3>${T("rs.got")}</h3>${colHtml}</section>`:""}
+    ${recHtml}
+    ${p.missObjs.length?missCards(p.missObjs,p.x):""}
+    ${howHtml}
+    ${p.task?`<div class="miss"><b>${T("r.send")}</b><br><span id="rep">${esc(repFull)}</span><br><button class="btn sub" id="cp">${T("r.copy")}</button></div>`:""}`;
+  const spPick=(p.x.id==="calc"||p.u)&&spOn(p.task)&&!(bx&&!boxLeft);
+  app.innerHTML=`<div class="play"><div class="res rs${glow}${rHtml.trim()?"":" rs-one"}">
+   <div class="rs-l">
+    <div class="rs-hero">
     ${stN>=0?ustRowA(stN,acc,stUp||!!(spr&&spr.isNew)):(plain?medRowA:medRow)(medal,acc,showNew||!!(spr&&spr.isNew)||(bx&&!boxLeft))}
+    ${badge?`<div class="newbest rs-badge">${badge}</div>`:""}
     <div class="num">${numHtml}</div>
+    <div class="stats"><span>${T("r.answered")} <b>${T("r.n",total)}</b></span><span>${T("r.acc")} <b>${acc}%</b></span>${bestHtml}</div>
     ${p.task||!nextMsg?"":`<div class="nextm">${medalize(esc(nextMsg))}</div>`}${spNote?`<div class="note">${esc(spNote)}</div>`:""}
-    ${stN>=0&&!p.task?uHow():plain&&!p.task?(p.u?howUnit(ures.length):howSprint(p.x.type,p.t)):""}
-    ${colHtml}
-    ${stOpen?`<div class="newbest ustopen">${T("ust.open")}</div>`:stUp&&!p.task?`<div class="newbest">${T("ust.up")}</div>`:showNew?`<div class="newbest">${T("r.new")}</div>`:spr&&spr.isNew?`<div class="newbest">${T("sp.newbest")}</div>`:""}
-    ${(p.x.id==="calc"||p.u)&&spOn(p.task)?`<div id="spres"></div>`:""}
+    ${paid>0?`<div class="rs-pill">${acornSvg()}${T("col.r.get",paid)}</div>`:""}
+    </div>
+    <div class="rs-act">
+    ${spPick?`<div class="rs-np"><span class="rs-npl">${T("rs.np")}</span><div id="spres"></div></div>`:""}
     <div class="actions"><button class="btn again" id="again">${ic("rotate-ccw")}${bx&&!boxLeft?T("sp.box.back"):T("r.again")}</button>
       <div class="subs">${p.missObjs.length?`<button class="btn sub" id="redo">${T("r.redo")}</button>`:""}${p.task?"":`<button class="btn sub" onclick="go(runBack())">${RUNBACK?T("back"):T("r.other")}</button>`}</div></div>
-    <div class="stats"><span>${T("r.answered")} <b>${T("r.n",total)}</b></span><span>${T("r.acc")} <b>${acc}%</b></span>${bestHtml}</div>
-    ${p.tlN?`<div class="note tlres">🧰 ${T("tl.res",p.tlN)}${plain&&p.hok?`<br>${T("tl.res.d")}`:""}</div>`:""}
-    ${p.u?`<div class="umr"><b>${T("u.marks.t")}</b><div class="umarks big">${uMarksHtml(p.marks,0,p.mtl)}</div><div class="note">${esc(T("u.marks"))}</div>${ures&&ures.length?`<div class="ubk">${ures.map(r=>`<div class="stamp"><span class="sn">${esc(UBY[r.id].title)}<small>${T("u.best",r.o)}</small></span>${r.star?uStarH(r.medal):`<span class="slots" aria-hidden="true">${MEDAL_ICO.map((em,i)=>`<span class="slot${r.medal>i?" on":""}">${msvg(r.medal>i?i+1:0)}</span>`).join("")}</span>`}</div>`).join("")}</div>`:""}</div>`:""}
-    ${p.missObjs.length?missCards(p.missObjs,p.x):""}
-    ${p.task?`<div class="miss"><b>${T("r.send")}</b><br><span id="rep">${esc(repFull)}</span><br><button class="btn sub" id="cp">${T("r.copy")}</button></div>`:""}
+    </div>
+   </div>
+   ${rHtml.trim()?`<div class="rs-r">${rHtml}</div>`:""}
   </div></div>`;
   mathIn(app);
-  const spres=$("#spres"); if(spres&&!(bx&&!boxLeft)) spres.replaceChildren(spChips({note:false}));      // つぎの あそびかたを えらんで「もう一回」
+  const spres=$("#spres"); if(spres) spres.replaceChildren(spChips({note:false}));      // つぎの あそびかたを えらんで「もう一回」
   $("#again").onclick=()=>bx&&!boxLeft?go(p.u.box.back):p.u?p.u.again():route();
   const rd=$("#redo"); if(rd) rd.onclick=()=>startReview(p.missObjs,p.x,p.g,p.task);
   const cp=$("#cp"); if(cp) cp.onclick=()=>{ navigator.clipboard?.writeText(repFull).then(()=>cp.textContent=T("r.copied"),()=>{}); };
@@ -3812,12 +3878,14 @@ function colDoor(){
 }
 /* 結果画面のどんぐりの1行。学習の流れを止めない。初日は何も増えなくても出す */
 function colRun(info){
+  colRun.paid=0;                                 // この回で ふえた どんぐり（結果の 上の ふだ .rs-pill 用。出さない回は 0）
   if(colMode()==="off") return "";
   const S=colGet(), today=colToday();
   const r=COL.recordRun(S,{today,grade:ui.grade|0,units:info.units||[],answered:info.answered|0,correct:info.correct|0,quiz:!!info.quiz});
   colSave();
   if(r.paid>0&&!info.quiet&&!r.blocked) setTimeout(()=>sfx("coin"),700);      // どんぐりがふえたとき（メダルの音のあと）
   if(info.quiet||r.blocked) return "";           // 授業モードは記録だけ。日付がもどっているときは何も出さない
+  colRun.paid=r.paid|0;
   const ttl=id=>UBY[id]?UBY[id].title:"", L=[], ev=t=>r.events.filter(e=>e.t===t);
   ev("can").slice(0,2).forEach(e=>L.push(T("col.r.can",ttl(e.id))));
   ev("master").slice(0,2).forEach(e=>L.push(T("col.r.master",ttl(e.id))));
