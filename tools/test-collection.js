@@ -55,12 +55,12 @@ t("2日目の最初の「できた」で すべりだい（算数1単元）が�
   const r = run(S, D + 1, [U("m3-amari")]); assert.deepStrictEqual(r.newParts, ["slide"]);
   assert(C.parts(S).find(p => p.id === "swing").next);
 });
-t("できた・マスターは一生に1回：くり返しても増えない", () => {
+t("できた・マスターは一生に1回：くり返しても増えない（あとは ふくしゅう +1 と あそんだ日の +3 だけ）", () => {
   const S = C.fresh(D); run(S, D, [U("m3-amari")]); run(S, D + 1, [U("m3-amari")]); const e0 = S.ac.e;
   const m = run(S, D + 2, [U("m3-amari")]); assert.strictEqual(C.stage(S, "m3-amari"), 3); assert(m.events.some(e => e.t === "master" && e.gain === 3));
   assert.strictEqual(S.ac.e, e0 + 3 + 1);       // マスター +3 と、その日の1回め +1
   const again = []; for (let d = 3; d < 10; d++) again.push(gain(run(S, D + d, [U("m3-amari")])));
-  assert.deepStrictEqual(again, [1, 1, 1, 1, 1, 1, 1]);      // 増えるのは「きょうの1回め」の +1 だけ
+  assert.deepStrictEqual(again, [2, 5, 2, 2, 2, 2, 5]);      // 「きょうの1回め」+1 と ふくしゅう +1。あそんだ日 5日め・10日めに +3
   assert.strictEqual(C.stage(S, "m3-amari"), 3);
 });
 t("マスターは「できた」の日より あとの日に ○9割以上（8割ではならない）", () => {
@@ -87,9 +87,74 @@ t("6年生が1年の単元を全部回しても 1日 13こ（満額なら 25こ�
   const g1 = C.UNIT_IDS.filter(i => i[0] === "m" && i[1] === "1"), S = C.fresh(D);
   run(S, D, g1.map(U), { grade: 6 });
   const r = run(S, D + 1, g1.map(U), { grade: 6 });
-  assert.strictEqual(r.paid, Math.min(20, g1.length + 1)); assert.strictEqual(r.deferred, Math.max(0, g1.length + 1 - 20));
+  assert.strictEqual(r.paid, Math.min(C.CAP, g1.length + 1)); assert.strictEqual(r.deferred, Math.max(0, g1.length + 1 - C.CAP));
   const S2 = C.fresh(D); run(S2, D, g1.map(U), { grade: 1 }); const r2 = run(S2, D + 1, g1.map(U), { grade: 1 });
   assert.strictEqual(r2.paid + r2.deferred, g1.length * 2 + 1);
+});
+/* ---------- 2026-11-25：案B（ふくしゅう）＋案C（上限10・あそんだ日）・100マス（m100Run）。docs/rewards-study.md ---------- */
+const mastered = (S, ids, d0, grade) => { const g = grade || 3; run(S, d0, ids.map(U), { grade: g }); run(S, d0 + 1, ids.map(U), { grade: g }); run(S, d0 + 2, ids.map(U), { grade: g }); };
+const evs = (r, t) => r.events.filter(e => e.t === t);
+t("ふくしゅう：マスターした 単元を あとの日に 9割で +1。マスターの 日・8割・4問では ならない", () => {
+  const S = C.fresh(D); mastered(S, ["m3-amari"], D);
+  assert.strictEqual(C.stage(S, "m3-amari"), 3);
+  assert.strictEqual(evs(run(S, D + 2, [U("m3-amari")]), "review").length, 0);                   // マスターした 日は まだ
+  assert.strictEqual(evs(run(S, D + 3, [{ id: "m3-amari", n: 10, o: 8 }]), "review").length, 0);  // 8割
+  assert.strictEqual(evs(run(S, D + 3, [{ id: "m3-amari", n: 4, o: 4 }]), "review").length, 0);   // 4問
+  const r = run(S, D + 3, [U("m3-amari")]); assert.deepStrictEqual(evs(r, "review").map(e => [e.id, e.gain]), [["m3-amari", 1]]);
+  assert.strictEqual(evs(run(S, D + 3, [U("m3-amari")]), "review").length, 0);                   // 同じ日の 2回めは ない
+  assert.strictEqual(evs(run(S, D + 4, [U("m3-amari")]), "review").length, 1);                   // つぎの日は また
+});
+t("ふくしゅう：「できた」だけの 単元は ふくしゅうに ならない（9割なら マスターに なる）", () => {
+  const S = C.fresh(D); run(S, D, [U("m3-amari")]); const r = run(S, D + 1, [U("m3-amari")]);
+  assert.strictEqual(C.stage(S, "m3-amari"), 2); assert.strictEqual(evs(r, "review").length, 0);
+  const r2 = run(S, D + 1, [U("m3-amari")]); assert.strictEqual(evs(r2, "review").length, 0);
+  const r3 = run(S, D + 2, [U("m3-amari")]); assert.strictEqual(evs(r3, "master").length, 1); assert.strictEqual(evs(r3, "review").length, 0);
+});
+t("ふくしゅう：1日 2こまで（1回で 3単元 やっても・回を わけても）。2学年 下の 単元も +1", () => {
+  const ids = ["m3-amari", "m3-man", "m3-en"], S = C.fresh(D); mastered(S, ids, D);
+  const r = run(S, D + 3, ids.map(U)); assert.strictEqual(evs(r, "review").length, 2);
+  assert.strictEqual(evs(run(S, D + 3, [U("m3-en")]), "review").length, 0);
+  assert.deepStrictEqual(S.day.rv, ["m3-amari", "m3-man"]);
+  const S2 = C.fresh(D); mastered(S2, ["m1-add10"], D, 3);
+  assert.strictEqual(evs(run(S2, D + 3, [U("m1-add10")], { grade: 3 }), "review").map(e => e.gain).join(), "1");
+});
+t("ふくしゅう：時計を もどすと ふえない・あたらしい日に rv は もどる・clean で 形を たしかめる", () => {
+  const S = C.fresh(D); mastered(S, ["m3-amari"], D); run(S, D + 5, [U("m3-amari")]);
+  const r = run(S, D + 4, [U("m3-amari")]); assert(r.blocked); assert.strictEqual(r.events.length, 0);
+  C.sync(S, D + 6); assert.deepStrictEqual(S.day.rv, []);
+  S.day.rv = ["m3-amari"]; const raw = JSON.parse(JSON.stringify(S)); raw.day.rv = ["m3-amari", "nai", 3, "m3-amari", "m3-man", "m3-en"];
+  assert.deepStrictEqual(C.clean(raw, D + 6).day.rv, ["m3-amari", "m3-man"]);
+  delete raw.day.rv; delete raw.pd; delete raw.day.pd; const c = C.clean(raw, D + 6);
+  assert.deepStrictEqual(c.day.rv, []); assert.strictEqual(c.pd, 0); assert.strictEqual(c.day.pd, 0);      // 古い 記録
+});
+t("あそんだ日：5問以上・6割の 日を 数え、5日に なるたび +3（れんぞくで なくて よい・1日1回）", () => {
+  const S = C.fresh(D), q = { answered: 10, correct: 6 }, got = [];
+  for (const d of [0, 2, 3, 7, 30]) got.push(evs(run(S, D + d, [], q), "days").length);
+  assert.deepStrictEqual(got, [0, 0, 0, 0, 1]); assert.strictEqual(S.pd, 5);
+  assert.strictEqual(evs(run(S, D + 30, [], q), "days").length, 0); assert.strictEqual(S.pd, 5);          // 同じ日は 1回
+  assert.strictEqual(evs(run(S, D + 31, [], { answered: 4, correct: 4 }), "days").length, 0);              // 4問は 数えない
+  assert.strictEqual(evs(run(S, D + 31, [], { answered: 10, correct: 5 }), "days").length, 0);             // 5割も
+  assert.strictEqual(S.pd, 5);
+  const T = C.fresh(D); for (let d = 0; d < 4; d++) run(T, D + d, [], q);
+  const r = run(T, D + 4, [], q); assert.deepStrictEqual(evs(r, "days").map(e => [e.n, e.gain]), [[5, 3]]); assert.strictEqual(gain(r), 1 + 3);
+});
+t("あそんだ日の +3 も 上限 10 の 中（あふれた分は 持ちこし）。バックアップの 文字には 入らない", () => {
+  const S = C.fresh(D), q = { answered: 10, correct: 6 }; for (let d = 0; d < 4; d++) run(S, D + d, [], q);
+  C.sync(S, D + 4); S.day.got = 9;
+  const r = run(S, D + 4, [], q); assert.strictEqual(r.paid, 1); assert.strictEqual(r.deferred, 3); assert.strictEqual(S.day.got, 10);
+  const L = C.fresh(D); C.hrMerge(L, C.hrParse(C.hrMake(S)), D + 4); assert.strictEqual(L.pd, 0);
+});
+t("100マス（m100Run）：どんぐりは 上限の 中・数える回で まなびっこの はじめの1たいと あそんだ日。0回なら なにも しない", () => {
+  const S = C.fresh(D);
+  let r = C.m100Run(S, D, 0, 0); assert.strictEqual(S.mk.w, 0); assert.strictEqual(S.pd, 0); assert.strictEqual(r.paid, 0);
+  r = C.m100Run(S, D, 2, 2); assert.strictEqual(r.paid, 2); assert.strictEqual(S.mk.w, 1); assert.deepStrictEqual(S.mk.q, ["*"]); assert.strictEqual(r.mk.add, 1); assert.strictEqual(S.pd, 1);
+  r = C.m100Run(S, D, 1, 1); assert.strictEqual(S.mk.q.length, 1); assert.strictEqual(S.pd, 1);             // 同じ日・2たいめは ない
+  assert(C.mkPick(S, C.mkCands(S)[0].id, D)); S.ac.e += 3; assert(C.kzBuy(S, "h-ribbon"));                   // 100マスだけでも きせかえが 買える
+  run(S, D, [], { answered: 10, correct: 10 }); assert.strictEqual(S.pd, 1);                                  // 単元と 100マスの 同じ日は 1日
+  for (let d = 1; d <= 4; d++) r = C.m100Run(S, D + d, 1, 1);
+  assert.strictEqual(S.pd, 5); assert.deepStrictEqual(evs(r, "days").map(e => e.gain), [3]); assert.strictEqual(r.paid, 4);
+  S.day.got = 9; r = C.m100Run(S, D + 4, 3, 1); assert.strictEqual(r.paid, 1); assert.strictEqual(r.deferred, 2);
+  r = C.m100Run(S, D + 2, 3, 3); assert(r.blocked); assert.strictEqual(r.paid, 0);                            // 時計もどし
 });
 t("きょうの1回め：1日1回・5問以上・6割以上で +1", () => {
   const S = C.fresh(D);
@@ -106,20 +171,22 @@ t("先生のクイズ：3問以上で +2、1日1回", () => {
   assert.strictEqual(gain(run(S, D, [], { quiz: true, answered: 4, correct: 0 })), 0);
   assert.strictEqual(gain(run(S, D + 1, [], { quiz: true, answered: 5, correct: 0 })), 2);
 });
-t("1日の上限 20：あふれた分は あしたに持ちこす。「また あした」は1日1回だけ", () => {
+t("1日の上限 10：あふれた分は あしたに持ちこす。「また あした」は1日1回だけ", () => {
   const S = C.fresh(D), ids = C.UNIT_IDS.filter(i => i[0] === "m" && (i[1] === "3" || i[1] === "4")).slice(0, 14);
   run(S, D, ids.map(U), { grade: 4 });
   const r = run(S, D + 1, ids.map(U), { grade: 4 });       // できた 14こ×2＝28 ＋ 1回め 1 ＝ 29
-  assert.strictEqual(r.paid, 20); assert.strictEqual(r.deferred, 9); assert.strictEqual(S.day.carry, 9); assert(r.capFirst);
+  assert.strictEqual(C.CAP, 10);
+  assert.strictEqual(r.paid, 10); assert.strictEqual(r.deferred, 19); assert.strictEqual(S.day.carry, 19); assert(r.capFirst);
   const r2 = run(S, D + 1, ids.map(U), { grade: 4 }); assert(!r2.capFirst); assert.strictEqual(r2.paid, 0);
-  const before = S.ac.e; assert.strictEqual(before, 1 + 20);       // 1日目の「1回め」1こ＋2日目の上限 20
-  C.sync(S, D + 2); assert.strictEqual(S.day.got, 9); assert.strictEqual(S.day.carry, 0); assert.strictEqual(S.ac.e, before + 9);
+  const before = S.ac.e; assert.strictEqual(before, 1 + 10);       // 1日目の「1回め」1こ＋2日目の上限 10
+  C.sync(S, D + 2); assert.strictEqual(S.day.got, 10); assert.strictEqual(S.day.carry, 9); assert.strictEqual(S.ac.e, before + 10);
+  C.sync(S, D + 3); assert.strictEqual(S.day.got, 9); assert.strictEqual(S.day.carry, 0); assert.strictEqual(S.ac.e, before + 19);
 });
-t("持ち越しが 20 を超えるときは、翌日 20 まで・のこりはさらに翌日", () => {
-  const S = C.fresh(D); S.day.carry = 45;
-  C.sync(S, D + 1); assert.strictEqual(S.day.got, 20); assert.strictEqual(S.day.carry, 25);
+t("持ち越しが 10 を超えるときは、翌日 10 まで・のこりはさらに翌日", () => {
+  const S = C.fresh(D); S.day.carry = 28;
+  C.sync(S, D + 1); assert.strictEqual(S.day.got, 10); assert.strictEqual(S.day.carry, 18);
   const ctx = { paid: 0, deferred: 0 }; C.give(S, 3, ctx); assert.strictEqual(ctx.paid, 0);      // 今日はもう上限
-  C.sync(S, D + 2); assert.strictEqual(S.day.got, 20); assert.strictEqual(S.day.carry, 8 );
+  C.sync(S, D + 2); assert.strictEqual(S.day.got, 10); assert.strictEqual(S.day.carry, 11);      // 18 ＋ 上限で 持ちこした 3 − 10
 });
 t("同じ日に何度 sync しても持ちこしを二重に払わない", () => {
   const S = C.fresh(D); S.day.carry = 5; C.sync(S, D + 1); C.sync(S, D + 1); C.sync(S, D + 1);
@@ -466,7 +533,7 @@ t("アバター：自分の 子は もっている子だけ。きめていなけ
 });
 /* ---------- v3.3：きせかえ（Qalc 合体 段階4。どんぐりで 買う・学びで もらう） ---------- */
 const kzState = () => { const S = mkState(); S.ac.e = 200; S.ac.s = 0; return S; };
-t("きせかえ：品の表（ぼうし12・もちもの8・はいけい8・しょうごう18：うち6つは やりこみの じっせきで もらう）。ID は ちがう・値段は 1〜20（1日の上限より 高くない）・絵文字は Unicode 12 まで", () => {
+t("きせかえ：品の表（ぼうし12・もちもの8・はいけい8・しょうごう18：うち6つは やりこみの じっせきで もらう）。ID は ちがう・値段は 1〜20（上限 10 の 2日ぶんまで）・絵文字は Unicode 12 まで", () => {
   const by = sl => C.KZ.filter(k => k.s === sl).length;
   assert.deepStrictEqual([by("h"), by("p"), by("b"), by("t")], [12, 8, 8, 18]);
   assert.strictEqual(new Set(C.KZ_IDS).size, C.KZ_IDS.length);
@@ -474,7 +541,7 @@ t("きせかえ：品の表（ぼうし12・もちもの8・はいけい8・し�
   for (const k of C.KZ) {
     assert(/^[hpbt]-[a-z0-9]+$/.test(k.id) && k.id.length <= 16 && k.id[0] === k.s, k.id);
     assert(!!k.price !== !!k.un, k.id + "：買う物か もらう物の どちらか");
-    if (k.price) assert(Number.isInteger(k.price) && k.price >= 1 && k.price <= C.CAP, k.id);
+    if (k.price) assert(Number.isInteger(k.price) && k.price >= 1 && k.price <= C.CAP * 2, k.id);
     if (k.un) assert((["can", "mst", "nk"].includes(k.un[0]) && Number.isInteger(k.un[1])) || (k.un[0] === "ach" && C.YA_ACH.some(a => a.id === k.un[1])), k.id);
     if (k.s === "b") assert(Array.isArray(k.bg) && k.bg.length >= 2 && k.bg.every(c => /^#[0-9a-f]{6}$/.test(c)), k.id);
     for (const ch of k.ch) { const cp = ch.codePointAt(0); assert(cp < 0x1FA70 || cp === 0xFE0F, k.id + " " + cp.toString(16)); }   // 1FA70〜（Unicode 12 の後半〜）は つかわない

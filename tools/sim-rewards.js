@@ -1,5 +1,6 @@
 #!/usr/bin/env node
 // どんぐりの シミュレーション（docs/rewards-study.md の 表を 作る。2026-11-23）。
+// ※2026-11-25 から 本番の コードが 案B＋案C に なった。いまは「--plan A」が 本番そのもの（B・C・BC は 本番に さらに 足すので 二重に なる）。
 // 本番の data/collection.js・data/masu100.js を そのまま 読んで、recordRun・give・buy・kzBuy・MASU.reward を 動かす。本番の コードは かえない。
 // prepublish には 入れない（名前が check-／test- で はじまらない）。
 //   node tools/sim-rewards.js            … 表（マークダウン）を 出す

@@ -1856,7 +1856,7 @@ body[data-v=host] .wrap{max-width:none;padding:0}
 <script src="data/units.js?v=74dad08a"></script>
 <script src="data/sansu-items.js?v=c9fca7b3"></script>
 <script src="data/tools-viz.js?v=0582ba52"></script>
-<script src="data/collection.js?v=54bd1139"></script>
+<script src="data/collection.js?v=ec54527d"></script>
 <script src="data/masu100.js?v=a19d68e5"></script>
 <script>
 /* ================= 画面の文言（1つの表） =================
@@ -2152,7 +2152,7 @@ const TX={
  "col.r.can":[t=>`「${t}」が できた！`],"col.r.master":[t=>`「${t}」が マスター！`],
  "col.r.found":["ずかんに シールが はれたよ"],
  "col.r.pend":["あした もういちど やると、シールに いろが つくよ"],
-  "col.r.first":["きょうの 1かいめ！"],"col.r.quiz":["クイズに さんか！"],"col.r.rocket":["ロケットに さんか！"],
+  "col.r.first":["きょうの 1かいめ！"],"col.r.review":[t=>`「${t}」を ふくしゅう！`],"col.r.days":[n=>`あそんだ ひが ${n}にちに なった！`],"col.r.quiz":["クイズに さんか！"],"col.r.rocket":["ロケットに さんか！"],
  "col.r.part":["ひろばに あたらしい ものが きたよ！"],
  "col.r.day1":["単元《たんげん》れんしゅうを すると、ずかんに シールが はれるよ","たんげんれんしゅうを すると、ずかんに シールが はれるよ"],
  "col.r.go":["ひろばを みる"],
@@ -2864,7 +2864,7 @@ function doorTile(k,l){
 }
 function renderHome(){
   setLG(ui.grade);
-  if(COLOK) m1HomeCheck();      // 100マス計算から もどったとき：どんぐり（授業モード・オフでは 何もしない）
+  if(COLOK) m1HomeCheck();      // 100マス計算から もどったとき：どんぐり（オフでは 何もしない。授業モードは 記録だけ）
   const b=bests(), easy=easyG(LG), zones=homeZones();
   const btl=`<section class="zone s-btl"><h2>${ic("swords")}${T("home.battle")}</h2><div class="tiles">${SOLOMODES.map(m=>modeTile(m,b)).join("")}</div></section>`;
   app.innerHTML=`<div class="home${easy?" easy":""}">
@@ -3524,9 +3524,11 @@ function colRun(info){
   const ttl=id=>UBY[id]?UBY[id].title:"", L=[], ev=t=>r.events.filter(e=>e.t===t);
   ev("can").slice(0,2).forEach(e=>L.push(T("col.r.can",ttl(e.id))));
   ev("master").slice(0,2).forEach(e=>L.push(T("col.r.master",ttl(e.id))));
+  ev("review").slice(0,2).forEach(e=>L.push(T("col.r.review",ttl(e.id))));
   if(ev("found").length) L.push(T("col.r.found"));
   if(ev("pend").length) L.push(T("col.r.pend"));
   if(ev("first").length) L.push(T("col.r.first"));
+  ev("days").slice(0,1).forEach(e=>L.push(T("col.r.days",e.n)));
   if(ev("quiz").length) L.push(T(info.rocket?"col.r.rocket":"col.r.quiz"));
   if(r.newParts.length) L.push(T("col.r.part"));
   if(r.tickets>0&&colTkOn()) L.push(T("col.tk.got"));
@@ -4000,7 +4002,7 @@ function colTeacherHtml(){
   return `<div class="form">
       <h3 class="tc-h3">ひろば（どんぐり・ずかん）</h3>
       <span class="prep"><b>準備：なし</b>（この端末の中だけに保存されます）</span>
-      <span class="note">勉強したあとが形になる「じぶんの ひろば」です。教科の なかま「まなびっこ」は、はじめての練習と、単元が「できた」になったときに 3つの候補から 1たい 選んで 迎えます（くじではありません。2学年以上 下の単元では増えません）。別の日に その教科を練習すると「なかよし」が3段階で育ち、休んでも下がりません。ランキング・くじ・課金・広告はありません。どんぐりは 1日 20こまでで、授業モード（課題リンク）では画面に出ません。</span>
+      <span class="note">勉強したあとが形になる「じぶんの ひろば」です。教科の なかま「まなびっこ」は、はじめての練習と、単元が「できた」になったときに 3つの候補から 1たい 選んで 迎えます（くじではありません。2学年以上 下の単元では増えません）。別の日に その教科を練習すると「なかよし」が3段階で育ち、休んでも下がりません。ランキング・くじ・課金・広告はありません。どんぐりは 1日 10こまで（あふれた分は 次の日に持ちこし）で、授業モード（課題リンク）では画面に出ません（100マス計算も 同じく 数えます）。</span>
       <label style="display:flex;gap:10px;align-items:center;font-size:16px"><input type="checkbox" id="colOn"${on?" checked":""} style="width:24px;height:24px"> この端末で ひろば・ずかん・どんぐりを つかう</label>
       <span class="note">オフにすると、ホーム・結果画面・きろく画面から ひろばが消えます（学習のきろくは今まで通り）。課題リンクの末尾に <b>&amp;col=0</b> を付けると、そのリンクだけ ひろばを出しません。<b>オフが優先</b>なので、オフの端末では、リンクに col=1 を付けてもオンになりません。</span>
       <label style="display:flex;gap:10px;align-items:center;font-size:16px;flex-wrap:wrap">ひろばたんけんの チケット：1日に つかえる数 <select id="colTk" style="font-size:16px;padding:6px">${[0,1,2,3,4,5].map(n=>`<option value="${n}"${n===(((store.get(COLCFG,null)||{}).tk)??2)?" selected":""}>${n}回${n===2?"（ふつう）":n===0?"（たんけんを出さない）":""}</option>`).join("")}</select></label>
@@ -6428,20 +6430,21 @@ function m1HostUpd(s,B){
     if(nw.dataset.h!==h){ nw.dataset.h=h; nw.innerHTML=h; } }
 }
 
-/* --- どんぐり：ホームに もどったとき、前に しらべたあとの 100マスの「数える回」を 数える（1日3こまで・全体の 1日20こ以内） ---
-   授業モード・先生の オフ・リンクの col=0 では 何もしない（数えるのも すすめない）。リンクで オフを オンには できない（colMode と同じ） */
+/* --- どんぐり：ホームに もどったとき、前に しらべたあとの 100マスの「数える回」を 数える（1日3こまで・全体の 1日10こ以内） ---
+   数える回が あれば、まなびっこの はじめの1たいと「あそんだ日」も（COL.m100Run）。
+   授業モード（課題リンク）でも 単元の 練習と 同じく 数える（2026-11-25。画面には 出さない）。
+   先生の オフ・リンクの col=0 では 何もしない（数えるのも すすめない）。リンクで オフを オンには できない（colMode と同じ） */
 const M1R="mh_m100";
 function m100Reward(){
-  if(!MASU||!COLOK||colMode()!=="on"||LESSON) return 0;
+  if(!MASU||!COLOK||colMode()!=="on") return 0;
   let log=null; try{ log=localStorage.getItem(MASU.LOG_KEY); }catch(e){ return 0; }
   if(!log) return 0;
   const now=Date.now(), r=MASU.reward(store.get(M1R,null),MASU.readRuns(log,now),now);
   if(r.blocked) return 0;
-  const S=colGet(); if(COL.sync(S,colToday())) return 0;        // 端末の 日付が もどっている
-  const ctx={paid:0,deferred:0,capFirst:false,events:[]};
-  if(r.give>0) COL.give(S,r.give,ctx);
+  const S=colGet(), ctx=COL.m100Run(S,colToday(),r.give,r.n);
+  if(ctx.blocked) return 0;        // 端末の 日付が もどっている
   colSave(); store.set(M1R,r.st);
-  return ctx.paid;
+  return LESSON?0:ctx.paid;        // 授業モードは 記録だけ（画面に 出さない）
 }
 function m1Toast(n){
   const old=document.getElementById("m1toast"); if(old) old.remove();
