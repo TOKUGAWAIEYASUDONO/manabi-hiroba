@@ -34,8 +34,9 @@ const ANI = [["パンダ", "🐼"], ["ウサギ", "🐰"], ["カエル", "🐸"]
 
 const rooms = new Map();
 // join のくり返し制限（コードを当てる総当たり・部屋を埋めるいたずら対策）
-// 部屋全体で1秒に10回まで。同じ接続元（IPアドレス）からは、失敗した試し（コード違い・名前の不備）が10秒に5回まで、成功も10秒に30回まで
-// （教室の端末は同じ接続元に見えることがあるので、成功のほうはゆるくしている）
+// 部屋全体で1秒に10回まで（こえた分は すぐ断らず、順番を まってもらう。先生が「みんな入って」と言うと、30人が同じ1秒に来るため）。
+// 同じ接続元（IPアドレス）からは、失敗した試し（コード違い・名前の不備）が10秒に5回まで、成功も10秒に70回まで
+// （教室の端末は同じ接続元に見えることがあるので、成功のほうはゆるくしている。1つの部屋は60人まで）
 const RATE_SCALE = Math.max(1, +process.env.JOIN_RATE_SCALE || 1);      // 回数の上限を何倍にするか（検査用。ふつうは 1 のまま）
 const hits = new Map();
 function hitOk(key, limit, ms, now) {
@@ -43,6 +44,15 @@ function hitOk(key, limit, ms, now) {
   const a = (hits.get(key) || []).filter(t => now - t < ms);
   if (a.length >= limit) { hits.set(key, a); return false; }
   a.push(now); hits.set(key, a); return true;
+}
+// 順番待ち：limit 回／ms をこえない、いちばん早い時刻まで まつ ミリ秒を返す（maxWait より長くなるときは -1）。まっている分も数に入れる
+const JOIN_WAIT = 6000;      // 児童の画面は 8秒で あきらめるので、それより みじかく
+function hitQueue(key, limit, ms, now, maxWait) {
+  limit *= RATE_SCALE;
+  const a = (hits.get(key) || []).filter(t => t > now - ms);
+  const at = a.length < limit ? now : Math.max(now, a[a.length - limit] + ms);
+  if (at - now > maxWait) { hits.set(key, a); return -1; }
+  a.push(at); hits.set(key, a); return at - now;
 }
 function hitPeek(key, limit, ms, now) { return (hits.get(key) || []).filter(t => now - t < ms).length < limit * RATE_SCALE; }
 const TOO_MANY = [429, { error: "しばらくしてから、もう一度ためしてね" }];
@@ -100,7 +110,7 @@ function newCode() {
 function pub(room, host) {
   const nm = p => host ? p.name : "";
   return {
-    code: room.code, mode: room.mode, game: room.game, g: room.g, t: room.t, rule: room.rule, nm: room.nm, nh: room.nh,
+    code: room.code, rd: room.rd | 0, mode: room.mode, game: room.game, g: room.g, t: room.t, rule: room.rule, nm: room.nm, nh: room.nh,
     status: room.status, closed: !!room.closed, endAt: room.endAt, now: Date.now(),
     gt: room.gt || "",
     ...(room.co ? { co: room.co.pub(Date.now(), host) } : {}),
@@ -192,6 +202,40 @@ function leader(room, me) {
   return [...room.players.values()].filter(p => p !== me).sort((a, b) => b.v - a.v)[0];
 }
 
+// あそびの中身（あそびかた・問題・学年・時間・ルール）を、送られた値を調べてから作る。部屋を作るときと「つぎの あそび」で同じ部品を使う
+function buildGame(b) {
+  const own = b.mode !== "m100" && (b.mode === "quiz" || b.game === "mine");       // 先生のもんだいを使う部屋（100マス はっぴょうは 問題を使わない）
+  if (!MODES.includes(b.mode) || !(own || GAMES.includes(b.game) || b.mode === "m100")) return [400, { error: "設定が正しくありません" }];
+  const g = Math.min(6, Math.max(1, b.g | 0)), t = b.mode === "rocket" ? 300 : Math.min(300, Math.max(60, b.t | 0));
+  const rule = RULES.includes(b.rule) ? b.rule : "normal";
+  const o = { mode: b.mode, game: b.mode === "quiz" ? "quiz" : b.mode === "m100" ? "calc" : b.game, g, t, rule, gt: "", set: null, qz: null, co: null, nh: b.nh === 0 ? 0 : 1 };      // nh：1＝児童の結果画面にひろば（どんぐり）を出さない（初期値）／0＝出す
+  if (own) {
+    const r = QZ.cleanSet({ title: b.gt, qs: b.qs });         // 型・文字数・個数・時間の値を調べてから使う
+    if (!r.ok) return [400, { error: "もんだいが正しくありません：" + r.why }];
+    const qs = b.mode === "quiz" ? r.set.qs : r.set.qs.filter(q => q.t === "mc");   // たからばこ・すごろくは4択だけ
+    if (!qs.length) return [400, { error: "4択の問題がありません" }];
+    o.gt = r.set.title; if (b.mode !== "quiz") o.set = { title: r.set.title, qs };   // クイズでは、答えつきの問題を児童に渡さない
+    if (b.mode === "quiz") o.qz = QZ.engine(qs, { easy: rule === "easy" });
+  }
+  if (b.mode === "rocket") o.co = COOP.engine({ easy: rule === "easy", g, scale: COOP_SCALE, stages: b.ns === 3 ? 3 : 5 });
+  if (b.mode === "boss") o.co = COOP.bossEngine({ easy: rule === "easy", g, t, scale: COOP_SCALE });
+  if (b.mode === "jin") o.co = COOP.jinEngine({ easy: rule === "easy", g, t, scale: COOP_SCALE });
+  return [200, o];
+}
+
+function joinRoom(b, ip, room, now) {      // join の つづき（順番を まったあと）
+  const blk = joinBlock(room); if (blk) return blk;
+  if (room.players.size >= MAX_PLAYERS) return [409, { error: "部屋がいっぱいです" }];
+  let who;
+  if (room.nm === "input") {       // 児童が入力した名前：長さ・文字・NG語を調べ、同じ名前には番号をつける
+    const c = NM.check(b.name);
+    if (!c.ok) { hitOk("bad:" + ip, 5, 10000, now); return [400, { error: NAME_ERR[c.why], why: c.why }]; }
+    who = { name: NM.dedupe(c.name, allNames(room)), emoji: pickEmoji(room) };
+  } else who = nick(room);
+  const p = { pid: id(), token: id(), ...who, ...mkIn(b), v: 0, ok: 0, ng: 0 };
+  room.players.set(p.pid, p); if (room.qz) room.qz.add(p.pid); if (room.co) room.co.add(p.pid); broadcast(room);
+  return [200, { code: room.code, pid: p.pid, token: p.token, name: p.name, emoji: p.emoji, nm: room.nm }];
+}
 const API = {
   create(b, ip) {
     const nowC = Date.now(), tlist = (createLog.get(ip) || []).filter(t => nowC - t < 3600e3);
@@ -200,23 +244,9 @@ const API = {
       return [429, { error: "部屋をつくりすぎです。しばらくしてから、もう一度ためしてね" }];
     if (rooms.size >= LIM.roomsTotal) return [503, { error: "いま部屋がいっぱいです。しばらくしてから、もう一度ためしてね" }];
     if ([...rooms.values()].filter(r => r.ip === ip).length >= LIM.roomsPerIp * RATE_SCALE) return [429, { error: "同時につくれる部屋の数をこえました。使い終わった部屋を「ここで終わる」で閉じてね" }];
-    const own = b.mode !== "m100" && (b.mode === "quiz" || b.game === "mine");       // 先生のもんだいを使う部屋（100マス はっぴょうは 問題を使わない）
-    if (!MODES.includes(b.mode) || !(own || GAMES.includes(b.game) || b.mode === "m100")) return [400, { error: "設定が正しくありません" }];
-    const g = Math.min(6, Math.max(1, b.g | 0)), t = b.mode === "rocket" ? 300 : Math.min(300, Math.max(60, b.t | 0));
-    const rule = RULES.includes(b.rule) ? b.rule : "normal";
-    const room = { code: newCode(), hostKey: id(), mode: b.mode, game: b.mode === "quiz" ? "quiz" : b.mode === "m100" ? "calc" : b.game, g, t, rule, status: "lobby", endAt: 0,
-      players: new Map(), clients: new Set(), created: Date.now(), last: Date.now(), ip, timer: null, gt: "", nm: b.nm === "auto" ? "auto" : "input", nh: b.nh === 0 ? 0 : 1 };      // nh：1＝児童の結果画面にひろば（どんぐり）を出さない（初期値）／0＝出す
-    if (own) {
-      const r = QZ.cleanSet({ title: b.gt, qs: b.qs });         // 型・文字数・個数・時間の値を調べてから使う
-      if (!r.ok) return [400, { error: "もんだいが正しくありません：" + r.why }];
-      const qs = b.mode === "quiz" ? r.set.qs : r.set.qs.filter(q => q.t === "mc");   // たからばこ・すごろくは4択だけ
-      if (!qs.length) return [400, { error: "4択の問題がありません" }];
-      room.gt = r.set.title; if (b.mode !== "quiz") room.set = { title: r.set.title, qs };   // クイズでは、答えつきの問題を児童に渡さない
-      if (b.mode === "quiz") room.qz = QZ.engine(qs, { easy: rule === "easy" });
-    }
-    if (b.mode === "rocket") room.co = COOP.engine({ easy: rule === "easy", g, scale: COOP_SCALE, stages: b.ns === 3 ? 3 : 5 });
-    if (b.mode === "boss") room.co = COOP.bossEngine({ easy: rule === "easy", g, t, scale: COOP_SCALE });
-    if (b.mode === "jin") room.co = COOP.jinEngine({ easy: rule === "easy", g, t, scale: COOP_SCALE });
+    const gm = buildGame(b); if (gm[0] !== 200) return gm;
+    const room = { code: newCode(), hostKey: id(), status: "lobby", endAt: 0, rd: 0,
+      players: new Map(), clients: new Set(), created: Date.now(), last: Date.now(), ip, timer: null, nm: b.nm === "auto" ? "auto" : "input", ...gm[1] };
     tlist.push(nowC); rooms.set(room.code, room);
     return [200, { code: room.code, hostKey: room.hostKey, nm: room.nm }];
   },
@@ -230,21 +260,13 @@ const API = {
   },
   join(b, ip) {
     const now = Date.now();
-    if (!hitPeek("bad:" + ip, 5, 10000, now) || !hitOk("ok:" + ip, 30, 10000, now)) return TOO_MANY;
+    if (!hitPeek("bad:" + ip, 5, 10000, now) || !hitOk("ok:" + ip, 70, 10000, now)) return TOO_MANY;
     const room = rooms.get(String(b.code));
     if (!room) { hitOk("bad:" + ip, 5, 10000, now); return [404, { error: "その部屋コードは見つかりません" }]; }
-    if (!hitOk("room:" + room.code, 10, 1000, now)) return TOO_MANY;
-    const blk = joinBlock(room); if (blk) return blk;
-    if (room.players.size >= MAX_PLAYERS) return [409, { error: "部屋がいっぱいです" }];
-    let who;
-    if (room.nm === "input") {       // 児童が入力した名前：長さ・文字・NG語を調べ、同じ名前には番号をつける
-      const c = NM.check(b.name);
-      if (!c.ok) { hitOk("bad:" + ip, 5, 10000, now); return [400, { error: NAME_ERR[c.why], why: c.why }]; }
-      who = { name: NM.dedupe(c.name, allNames(room)), emoji: pickEmoji(room) };
-    } else who = nick(room);
-    const p = { pid: id(), token: id(), ...who, ...mkIn(b), v: 0, ok: 0, ng: 0 };
-    room.players.set(p.pid, p); if (room.qz) room.qz.add(p.pid); if (room.co) room.co.add(p.pid); broadcast(room);
-    return [200, { code: room.code, pid: p.pid, token: p.token, name: p.name, emoji: p.emoji, nm: room.nm }];
+    const w = hitQueue("room:" + room.code, 10, 1000, now, JOIN_WAIT);
+    if (w < 0) return TOO_MANY;
+    if (w > 0) return new Promise(ok => setTimeout(() => ok(rooms.get(room.code) === room ? joinRoom(b, ip, room, Date.now()) : [404, { error: "その部屋コードは見つかりません" }]), w));      // こんでいるときは、順番に 通す
+    return joinRoom(b, ip, room, now);
   },
   reroll(b) {
     const room = rooms.get(String(b.code)), p = player(room, b);
@@ -312,6 +334,21 @@ const API = {
     if (!room || room.hostKey !== b.hostKey || !room.co || !room.co.split) return [403, { error: "先生の画面からのみ操作できます" }];
     if (room.status !== "lobby" || !room.co.split()) return [409, { error: "今は変えられません" }];
     broadcast(room, true); return [200, { ok: true }];
+  },
+  // 先生：同じ部屋・同じコードのまま、つぎの あそびを えらびなおす（児童は入りなおさない。入室のしめきり・なまえのきめかたは そのまま）
+  next(b) {
+    const room = rooms.get(String(b.code));
+    if (!room || room.hostKey !== b.hostKey) return [403, { error: "先生の画面からのみ操作できます" }];
+    if (room.status === "playing") return [409, { error: "あそんでいる とちゅうは かえられません。「ここで終わる」を おしてから えらんでください" }];
+    const gm = buildGame(b); if (gm[0] !== 200) return gm;
+    Object.assign(room, gm[1], { status: "lobby", endAt: 0, rd: (room.rd | 0) + 1, last: Date.now(), m1n: 0 });
+    const keep = ["pid", "token", "name", "emoji", "mk", "ms", "mh"];      // 名前・アイコンだけ引きつぐ。点数・記録は 0 から
+    for (const [pid, p] of room.players) {
+      const q = { v: 0, ok: 0, ng: 0 }; for (const k of keep) if (k in p) q[k] = p[k];
+      room.players.set(pid, q); if (room.qz) room.qz.add(pid); if (room.co) room.co.add(pid);
+    }
+    broadcast(room, true);
+    return [200, { ok: true, rd: room.rd }];
   },
   start(b) {
     const room = rooms.get(String(b.code));
@@ -486,7 +523,7 @@ http.createServer(async (req, res) => {
     if (req.method === "POST" && m && API[m[1]]) {
       const bd = await body(req), rm = bd && typeof bd === "object" && rooms.get(String(bd.code));
       if (rm && m[1] !== "info") rm.last = Date.now();         // 部屋の操作があった時刻（使われていない部屋を消す目安）
-      const [code, obj] = API[m[1]](bd, req.socket.remoteAddress || "");
+      const [code, obj] = await API[m[1]](bd, req.socket.remoteAddress || "");
       return json(res, code, obj);
     }
     json(res, 404, { error: "not found" });

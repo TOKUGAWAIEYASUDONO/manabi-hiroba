@@ -3,7 +3,10 @@
    決まり（plan/collection-plan.md 末尾の決定と plan/review-fable-collection.md を反映）
    ・「できた」＝その単元で 5問以上・○が7割以上の回が、べつの日にもう一度ある。「マスター」＝さらにべつの日に 5問以上・○が9割以上
    ・どんぐり：できた +2／マスター +3（項目ごと一生に1回）。2学年以上下の単元は +1。きょうの1回め +1。先生のクイズ +2。はじめの5こは1回だけ
-   ・1日にもらえるのは 20こまで。あふれた分は あしたに持ちこす（なくならない）
+   ・1日にもらえるのは 10こまで（2026-11-25 に 20→10。docs/rewards-study.md の 案C）。あふれた分は あしたに持ちこす（なくならない）
+   ・ふくしゅう（2026-11-25。案B）：マスターした 単元を、マスターした日より あとの日に もう一度 5問以上・9割で +1。1単元 1日1回・1日 2こまで（day.rv）
+   ・あそんだ日（2026-11-25。案C）：「きょうの1回め」の 条件（5問以上・6割）か 100マスの 数える回が あった日を pd に 数え、5日に なるたび +3。
+     れんぞくで なくて よい（休んでも へらない）。バックアップの 文字には 入れない（引きつぎでは 0 から）
    ・記録した日より前の日付（時計を戻した）のときは、どんぐりも段階も進めない
    ・たんけんチケット（v2）：「できた」「マスター」が 5つで 1まい。持てるのは 3まい。1日に もらえるのは 2まい、つかえるのは 2回まで（先生が 0〜5）。
      たんけんの 中の せいかいは チケットの ★ にならない（recordRun を通さない）。どんぐりも出さない
@@ -28,7 +31,8 @@
   if (typeof module === "object" && module.exports) module.exports = M; else root.MH_COL = M;
 })(typeof self !== "undefined" ? self : this, function () {
   "use strict";
-  const CAP = 20, GIFT = 5, CELLS = 12;
+  const CAP = 10, GIFT = 5, CELLS = 12;
+  const RV_MAX = 2, PD_EVERY = 5, PD_GIVE = 3;
   const TK_MAX = 3, TK_GET = 2, TK_STARS = 5, TK_USE = 2, TK_USE_MAX = 5;
   /* 単元の ID の固定表（追加だけ。順番を変えない）。id の1字目＝教科（m算数 j国語 s社会 e英語）、2字目＝学年 */
   const UNIT_IDS = [
@@ -92,7 +96,7 @@
   const MK_STAGE = [0, 3, 8], MK_CAND = 3, MK_SHOW = 3, MK_QMAX = 24, MK_ART = ["base", "grown", "joy"];
   const QCODE = "*mjser";        // q の中身：* はじめの1たい／m j s e r その教科の「できた」
   /* きせかえ（v3.3）。s＝つける場所（h ぼうし／p もちもの／b はいけい／t しょうごう）。ch＝絵文字（Unicode 12 までの物だけ。Windows 10・ChromeOS で 出る）。
-     price＝どんぐり（1日に もらえるのは 20こまで。ふつうは 1日 1〜3こ なので、3〜4こ＝1〜2日、5〜8こ＝数日、10〜15こ＝1〜2週間）。
+     price＝どんぐり（1日に もらえるのは 10こまで。毎日10分の子で 1日 4〜6こ なので、3〜4こ＝1日、5〜8こ＝1〜2日、10〜15こ＝2〜4日）。
      un＝買わずに 学びで もらえる：["can",n] できた以上の単元が n こ／["mst",n] マスターが n こ／["nk",st] どれかの まなびっこが なかよしの すがた st。
      bg＝はいけいの 色（上→下）。名前は 画面の文言の表（col.kz.i.*）。KZ_IDS は バックアップと 友だち対戦で 送る 番号なので、追加だけ。順番を変えない。
      品は Qalc（MIT, GIGAyama）src/data/shop.js の ぼうし・もちもの・はいけい・しょうごうから 学校に 合う物を えらび、値段を どんぐりに 合わせた */
@@ -124,7 +128,7 @@
   const dayDate = n => new Date(n * 864e5 + 12 * 36e5);   // 表示用（その日の昼）
 
   function fresh(today) {
-    return { v: 1, d0: today, last: today, u: {}, ac: { e: 0, s: 0 }, day: { n: today, got: 0, carry: 0, first: 0, quiz: 0, cap: 0, shown: 0 },
+    return { v: 1, d0: today, last: today, u: {}, ac: { e: 0, s: 0 }, day: { n: today, got: 0, carry: 0, first: 0, quiz: 0, cap: 0, shown: 0, rv: [], pd: 0 }, pd: 0,
       own: [], pl: {}, gift: 0, done: 0, theme: 0, vp: 0, vz: 0, tk: { n: 0, star: 0, d: today, got: 0, used: 0 }, mo: [], mu: [], mk: mkFresh(), kz: kzFresh(), y: yaFresh(), kp: kpFresh() };
   }
   /* mk：w はじめの1たいを もらった／q えらべる分（QCODE の字）／own { id: { d もらった日, p なかよし, ld なかよしが ふえた日, k きらきら(のちの段階), v 見せた段階 } }
@@ -174,7 +178,9 @@
     }
     if (raw.ac) { S.ac.e = int(raw.ac.e, 0, 9e6, 0); S.ac.s = Math.min(S.ac.e, int(raw.ac.s, 0, 9e6, 0)); }
     const d = raw.day || {};
-    S.day = { n: int(d.n, 0, 9e6, today), got: int(d.got, 0, CAP, 0), carry: int(d.carry, 0, 9e6, 0), first: d.first ? 1 : 0, quiz: d.quiz ? 1 : 0, cap: d.cap ? 1 : 0, shown: d.shown ? 1 : 0 };
+    S.day = { n: int(d.n, 0, 9e6, today), got: int(d.got, 0, CAP, 0), carry: int(d.carry, 0, 9e6, 0), first: d.first ? 1 : 0, quiz: d.quiz ? 1 : 0, cap: d.cap ? 1 : 0, shown: d.shown ? 1 : 0,
+      rv: uniq(d.rv, id => id in IDX).slice(0, RV_MAX), pd: d.pd ? 1 : 0 };      // rv・pd（2026-11-25）：古い記録には無い（そのときは 0 から）
+    S.pd = int(raw.pd, 0, 9e6, 0);
     S.own = (Array.isArray(raw.own) ? raw.own : []).filter((id, i, a) => id in DIDX && a.indexOf(id) === i);
     const used = new Set();
     if (raw.pl && typeof raw.pl === "object") for (const id of Object.keys(raw.pl)) {
@@ -202,7 +208,7 @@
     S.last = today;
     if (S.day.n !== today) {
       const pay = Math.min(S.day.carry, CAP);
-      S.day = { n: today, got: pay, carry: S.day.carry - pay, first: 0, quiz: 0, cap: 0, shown: 0 };
+      S.day = { n: today, got: pay, carry: S.day.carry - pay, first: 0, quiz: 0, cap: 0, shown: 0, rv: [], pd: 0 };
       S.ac.e += pay;
     }
     return false;
@@ -216,6 +222,12 @@
     if (rest > 0 && !S.day.cap) { S.day.cap = 1; ctx.capFirst = true; }
   }
   const gapFull = (grade, ug) => !grade || grade - ug <= 1;      // 自分の学年と1つ下までは満額
+  /* あそんだ日（案C）：その日 はじめての ときだけ pd を 1 ふやし、5日に なるたび +3（上限の 中。あふれた分は 持ちこし） */
+  function playDay(S, ctx) {
+    if (S.day.pd) return;
+    S.day.pd = 1; S.pd = Math.min(9e6, S.pd + 1);
+    if (S.pd % PD_EVERY === 0) { give(S, PD_GIVE, ctx); ctx.events.push({ t: "days", n: S.pd, gain: PD_GIVE }); }
+  }
 
   function count(S, subj, min) { let n = 0; for (const id in S.u) if (id[0] === subj && S.u[id][0] >= (min || 2)) n++; return n; }
   const partHave = (S, p) => count(S, TRACK_SUBJ[p.track]) >= p.need || !!(S.kp && S.kp.p.includes(p.id));     // 一度 来た 遊具は のこす（kp.p）
@@ -585,6 +597,8 @@
         else if (today > u[1]) { u[0] = 2; u[2] = today; const g = low ? 1 : 2; give(S, g, ctx); ctx.events.push({ t: "can", id: r.id, gain: g }); }
       } else if (u[0] === 2 && ok9 && today > u[2]) {
         u[0] = 3; u[2] = today; const g = low ? 1 : 3; give(S, g, ctx); ctx.events.push({ t: "master", id: r.id, gain: g });
+      } else if (u[0] === 3 && ok9 && today > u[2] && S.day.rv.length < RV_MAX && !S.day.rv.includes(r.id)) {
+        S.day.rv.push(r.id); give(S, 1, ctx); ctx.events.push({ t: "review", id: r.id, gain: 1 });      // ふくしゅう（案B）
       }
     }
     tkRoll(S, today);
@@ -592,6 +606,7 @@
     ctx.tickets = tkGrant(S);
     const ans = run.answered | 0, cor = run.correct | 0;
     if (!S.day.first && ans >= 5 && cor / ans >= 0.6) { S.day.first = 1; give(S, 1, ctx); ctx.events.push({ t: "first", gain: 1 }); }
+    if (ans >= 5 && cor / ans >= 0.6) playDay(S, ctx);
     if (run.quiz && !S.day.quiz && ans >= 3) { S.day.quiz = 1; give(S, 2, ctx); ctx.events.push({ t: "quiz", gain: 2 }); }
     ctx.newParts = parts(S).filter(p => p.have && !before.has(p.id)).map(p => p.id);
     /* まなびっこ：はじめの1たい・「できた」で えらべる分。なかよしは べつの日の れんしゅうと「できた」「マスター」で。下の学年（2つ以上）は 数えない */
@@ -606,6 +621,20 @@
       if (mkStageP(o.p) > st0) ctx.mk.grow.push(id);
     }
     yaRun(S, run, ctx);
+    keepUp(S);
+    return ctx;
+  }
+  /* 100マスの「数える回」を どんぐりに する（画面の m100Reward から）。give＝MASU.reward の give、n＝数えた回の数。
+     n が 1 以上なら：まなびっこの はじめの1たい（2026-11-25。100マスだけの子も きせかえが 買えるように）と、あそんだ日（案C）。
+     返り値は recordRun と 同じ形（paid・events・mk.add など） */
+  function m100Run(S, today, give0, n) {
+    const ctx = { blocked: false, events: [], paid: 0, deferred: 0, capFirst: false, mk: { add: 0, grow: [] } };
+    if (sync(S, today)) { ctx.blocked = true; return ctx; }
+    if (give0 > 0) give(S, give0, ctx);
+    if (n > 0) {
+      if (!S.mk.w) { S.mk.w = 1; mkPush(S, "*", ctx); }
+      playDay(S, ctx);
+    }
     keepUp(S);
     return ctx;
   }
@@ -895,5 +924,5 @@
     MK, MK_IDS, MK_SOON, MK_STAGE, MK_CAND, MK_SHOW, MK_ART, mkFresh,
     KZ, KZ_IDS, KZ_SLOT, KZ_PRICE_TOTAL, kzFresh, kzUnlocked, kzHas, kzLeft, kzBuy, kzWear, kzOf, kzHatOk, mkStage, mkFree, mkAvail, mkCands, mkPick, mkShow, mkNext, mkWire, mkAvatar,
     YA_ACH, YA_SUBJ, YA_KIRA_C, YA_KIRA_K, yaFresh, yaRank, yaRankNow, yaNeed, kpFresh, keepUp, yaRankCount, yaCheck, yaList,
-    count, parts, stage, pending, recordRun, claimGift, buy, cellOf, place, unplace, checkDone, summary, hrMake, hrParse, hrMerge, YA_BK };
+    RV_MAX, PD_EVERY, PD_GIVE, count, parts, stage, pending, recordRun, m100Run, claimGift, buy, cellOf, place, unplace, checkDone, summary, hrMake, hrParse, hrMerge, YA_BK };
 });
