@@ -43,7 +43,7 @@
   const PONDS = { hub: [[3, 3], [3, 4], [4, 3]], m: [], j: [[-3, 2]], e: [], sr: [[2, -3]] };
   const area = R => { let n = 0; for (let a = -R; a <= R; a++) for (let b = -R; b <= R; b++) if (Math.hypot(a, b) <= R) n++; return n; };
   function sizeOf(isl, c) {
-    if (isl.id === "hub") return Math.min(area(isl.R), 70 + c.total * 4);
+    if (isl.id === "hub") return Math.min(area(isl.R), 120 + c.total * 4);
     return Math.min(area(isl.R), 16 + c[isl.subj] * 8);
   }
   // 島の マスの ならび（ふえる じゅん）。まんなか・きまった もの は さいしょ
@@ -71,7 +71,7 @@
       if (out.length >= n) break;
       if (bad.has(c.di + "," + c.dj) || c.di === 0 || c.dj === 0 || (Math.abs(c.di) <= 1 && Math.abs(c.dj) <= 1)) continue; // みちと まんなかは あける
       if ([...bad].some(k => { const [a, b] = k.split(",").map(Number); return near(c, { di: a, dj: b }); })) continue;
-      if (out.some(o => near(o, c))) continue;
+      if (out.some(o => Math.abs(o.i - c.di) <= 2 && Math.abs(o.j - c.dj) <= 2)) continue; // あいだを 2マス あける（大きい かざりが かさならない）
       out.push({ i: c.di, j: c.dj });
     }
     return (spotCache[n] = out);

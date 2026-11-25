@@ -233,7 +233,7 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
 - vendor/img/og-home.png：AI生成画像。Codex の画像生成で 2026-11-12 にこのプロジェクト向けに作成。実在の人物の写真ではない。上記 CC0 素材には含まれない。
 - vendor/img/logo-hirametto*.svg・favicon.svg・favicon-32.png・apple-touch-icon.png・icon-192.png・icon-512.png・og-hirametto.png：「ひらめっと」のロゴ。tools/build-logo.js で 2026-11-20 に作った自作の図形（AI生成画像・フォントは使っていない）。
 - vendor/img/manabikko/（まなびっこ 4たい×基本・成長・よろこび の 12枚、各 256px・128px の webp 24ファイル）：AI生成画像。Codex（OpenAI）の画像生成で 2026-11 にこのプロジェクト向けに作成し、透明背景・色補正をして縮小（作業記録は plan/manabikko-art.md）。既存のキャラクターをもとにしたものではない。上記 CC0 素材には含まれない。
-- vendor/img/island/（じぶんのひろばの 島の 部品 18まい、各 256px の webp）：AI生成画像。PC の Codex（OpenAI）の画像生成（image2）で 2026-11-25 にこのプロジェクト向けに作成し、透明背景で縮小。元の PNG は art-src/island/。既存の作品をもとにしたものではない。上記 CC0 素材には含まれない。
+- vendor/img/island/（じぶんのひろばの 島の 部品 18まい＋かざり 26まい、各 256px の webp）：AI生成画像。PC の Codex（OpenAI）の画像生成（image2）で 2026-11-25 にこのプロジェクト向けに作成し、透明背景で縮小。元の PNG は art-src/island/。既存の作品をもとにしたものではない。上記 CC0 素材には含まれない。
 
 ## 宇宙の世界観の素材（2026-11）
 - vendor/img/space/（背景6枚〔*-norocket と -v2 をふくむ〕と、エネルギー・モニター・星の部品3枚）：AI生成画像。Codex（OpenAI）の画像生成でこのプロジェクト向けに作成。実在の人物の写真ではない。
