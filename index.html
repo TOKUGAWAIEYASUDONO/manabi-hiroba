@@ -1570,6 +1570,7 @@ body[data-v=host] .wrap{max-width:none;padding:0}
 .up.si .uexb{min-width:52px;font-size:20px}
 .up.si .siplay{margin-left:auto;flex:none;font-size:18px;color:var(--go)}
 .up.si .simode{display:flex;justify-content:center;gap:6px;margin:14px 0 6px}.up.si .simode .pill{min-height:44px;margin:0}
+.up.si .sihow{flex-wrap:wrap;align-items:center;margin:8px 0 4px}.up.si .sihow .pl{margin-right:2px}
 .up.si .sifoot[hidden]{display:none}
 .up.si .sifoot .err:empty{display:none}
 .up.si .sitools{margin-top:16px}.up.si .sitool{width:100%;max-width:520px}
@@ -1863,7 +1864,7 @@ body[data-v=host] .wrap{max-width:none;padding:0}
 <script src="data/sansu-items.js?v=c9fca7b3"></script>
 <script src="data/tools-viz.js?v=0582ba52"></script>
 <script src="data/learnhelp.js?v=062f8140"></script><!-- まなびの たすけ（はやすぎる まちがい・あとで もう一度・とき方・つまずき） -->
-<script src="data/collection.js?v=54bd1139"></script>
+<script src="data/collection.js?v=ec54527d"></script>
 <script src="data/masu100.js?v=a19d68e5"></script>
 <script>
 /* ================= 画面の文言（1つの表） =================
@@ -2167,7 +2168,7 @@ const TX={
  "col.r.can":[t=>`「${t}」が できた！`],"col.r.master":[t=>`「${t}」が マスター！`],
  "col.r.found":["ずかんに シールが はれたよ"],
  "col.r.pend":["あした もういちど やると、シールに いろが つくよ"],
-  "col.r.first":["きょうの 1かいめ！"],"col.r.quiz":["クイズに さんか！"],"col.r.rocket":["ロケットに さんか！"],
+  "col.r.first":["きょうの 1かいめ！"],"col.r.review":[t=>`「${t}」を ふくしゅう！`],"col.r.days":[n=>`あそんだ ひが ${n}にちに なった！`],"col.r.quiz":["クイズに さんか！"],"col.r.rocket":["ロケットに さんか！"],
  "col.r.part":["ひろばに あたらしい ものが きたよ！"],
  "col.r.day1":["単元《たんげん》れんしゅうを すると、ずかんに シールが はれるよ","たんげんれんしゅうを すると、ずかんに シールが はれるよ"],
  "col.r.go":["ひろばを みる"],
@@ -2879,7 +2880,7 @@ function doorTile(k,l){
 }
 function renderHome(){
   setLG(ui.grade);
-  if(COLOK) m1HomeCheck();      // 100マス計算から もどったとき：どんぐり（授業モード・オフでは 何もしない）
+  if(COLOK) m1HomeCheck();      // 100マス計算から もどったとき：どんぐり（オフでは 何もしない。授業モードは 記録だけ）
   const b=bests(), easy=easyG(LG), zones=homeZones();
   const btl=`<section class="zone s-btl"><h2>${ic("swords")}${T("home.battle")}</h2><div class="tiles">${SOLOMODES.map(m=>modeTile(m,b)).join("")}</div></section>`;
   app.innerHTML=`<div class="home${easy?" easy":""}">
@@ -3584,9 +3585,11 @@ function colRun(info){
   const ttl=id=>UBY[id]?UBY[id].title:"", L=[], ev=t=>r.events.filter(e=>e.t===t);
   ev("can").slice(0,2).forEach(e=>L.push(T("col.r.can",ttl(e.id))));
   ev("master").slice(0,2).forEach(e=>L.push(T("col.r.master",ttl(e.id))));
+  ev("review").slice(0,2).forEach(e=>L.push(T("col.r.review",ttl(e.id))));
   if(ev("found").length) L.push(T("col.r.found"));
   if(ev("pend").length) L.push(T("col.r.pend"));
   if(ev("first").length) L.push(T("col.r.first"));
+  ev("days").slice(0,1).forEach(e=>L.push(T("col.r.days",e.n)));
   if(ev("quiz").length) L.push(T(info.rocket?"col.r.rocket":"col.r.quiz"));
   if(r.newParts.length) L.push(T("col.r.part"));
   if(r.tickets>0&&colTkOn()) L.push(T("col.tk.got"));
@@ -4060,7 +4063,7 @@ function colTeacherHtml(){
   return `<div class="form">
       <h3 class="tc-h3">ひろば（どんぐり・ずかん）</h3>
       <span class="prep"><b>準備：なし</b>（この端末の中だけに保存されます）</span>
-      <span class="note">勉強したあとが形になる「じぶんの ひろば」です。教科の なかま「まなびっこ」は、はじめての練習と、単元が「できた」になったときに 3つの候補から 1たい 選んで 迎えます（くじではありません。2学年以上 下の単元では増えません）。別の日に その教科を練習すると「なかよし」が3段階で育ち、休んでも下がりません。ランキング・くじ・課金・広告はありません。どんぐりは 1日 20こまでで、授業モード（課題リンク）では画面に出ません。</span>
+      <span class="note">勉強したあとが形になる「じぶんの ひろば」です。教科の なかま「まなびっこ」は、はじめての練習と、単元が「できた」になったときに 3つの候補から 1たい 選んで 迎えます（くじではありません。2学年以上 下の単元では増えません）。別の日に その教科を練習すると「なかよし」が3段階で育ち、休んでも下がりません。ランキング・くじ・課金・広告はありません。どんぐりは 1日 10こまで（あふれた分は 次の日に持ちこし）で、授業モード（課題リンク）では画面に出ません（100マス計算も 同じく 数えます）。</span>
       <label style="display:flex;gap:10px;align-items:center;font-size:16px"><input type="checkbox" id="colOn"${on?" checked":""} style="width:24px;height:24px"> この端末で ひろば・ずかん・どんぐりを つかう</label>
       <span class="note">オフにすると、ホーム・結果画面・きろく画面から ひろばが消えます（学習のきろくは今まで通り）。課題リンクの末尾に <b>&amp;col=0</b> を付けると、そのリンクだけ ひろばを出しません。<b>オフが優先</b>なので、オフの端末では、リンクに col=1 を付けてもオンになりません。</span>
       <label style="display:flex;gap:10px;align-items:center;font-size:16px;flex-wrap:wrap">ひろばたんけんの チケット：1日に つかえる数 <select id="colTk" style="font-size:16px;padding:6px">${[0,1,2,3,4,5].map(n=>`<option value="${n}"${n===(((store.get(COLCFG,null)||{}).tk)??2)?" selected":""}>${n}回${n===2?"（ふつう）":n===0?"（たんけんを出さない）":""}</option>`).join("")}</select></label>
@@ -6659,20 +6662,21 @@ function m1HostUpd(s,B){
     if(nw.dataset.h!==h){ nw.dataset.h=h; nw.innerHTML=h; } }
 }
 
-/* --- どんぐり：ホームに もどったとき、前に しらべたあとの 100マスの「数える回」を 数える（1日3こまで・全体の 1日20こ以内） ---
-   授業モード・先生の オフ・リンクの col=0 では 何もしない（数えるのも すすめない）。リンクで オフを オンには できない（colMode と同じ） */
+/* --- どんぐり：ホームに もどったとき、前に しらべたあとの 100マスの「数える回」を 数える（1日3こまで・全体の 1日10こ以内） ---
+   数える回が あれば、まなびっこの はじめの1たいと「あそんだ日」も（COL.m100Run）。
+   授業モード（課題リンク）でも 単元の 練習と 同じく 数える（2026-11-25。画面には 出さない）。
+   先生の オフ・リンクの col=0 では 何もしない（数えるのも すすめない）。リンクで オフを オンには できない（colMode と同じ） */
 const M1R="mh_m100";
 function m100Reward(){
-  if(!MASU||!COLOK||colMode()!=="on"||LESSON) return 0;
+  if(!MASU||!COLOK||colMode()!=="on") return 0;
   let log=null; try{ log=localStorage.getItem(MASU.LOG_KEY); }catch(e){ return 0; }
   if(!log) return 0;
   const now=Date.now(), r=MASU.reward(store.get(M1R,null),MASU.readRuns(log,now),now);
   if(r.blocked) return 0;
-  const S=colGet(); if(COL.sync(S,colToday())) return 0;        // 端末の 日付が もどっている
-  const ctx={paid:0,deferred:0,capFirst:false,events:[]};
-  if(r.give>0) COL.give(S,r.give,ctx);
+  const S=colGet(), ctx=COL.m100Run(S,colToday(),r.give,r.n);
+  if(ctx.blocked) return 0;        // 端末の 日付が もどっている
   colSave(); store.set(M1R,r.st);
-  return ctx.paid;
+  return LESSON?0:ctx.paid;        // 授業モードは 記録だけ（画面に 出さない）
 }
 function m1Toast(n){
   const old=document.getElementById("m1toast"); if(old) old.remove();
@@ -7647,11 +7651,15 @@ function renderSubjItem(q){
   const stepOf=u=>u.series&&u.step!=null?u.step:1e9;
   const list=us.map((u,i)=>({u,i})).sort((a,b)=>a.u.g-b.u.g||(a.u.item===b.u.item?stepOf(a.u)-stepOf(b.u):0)||a.i-b.i).map(x=>x.u);
   let mix=false; const sel=[];
+  /* 答え方（すうじを いれる／4つから えらぶ）。単元えらびの 画面と 同じく この端末に 覚える（UPK.choice）。えらんで いない ときは 学年で きめる */
+  const cho=()=>uChoice(list.map(u=>u.id),UPK.choice);
+  const howRow=h("div",{class:"pills simode sihow",role:"group","aria-label":T("u.how")});
+  const drawHow=()=>howRow.replaceChildren(h("b",{class:"pl",text:T("u.how")}),upill(T("u.type"),!cho(),()=>{ UPK.choice=false; uSave(); drawHow(); }),upill(T("u.c4"),cho(),()=>{ UPK.choice=true; uSave(); drawHow(); }));
   const msg=h("div",{class:"err",role:"alert"}), cards=h("div",{class:"ugrid sicards"}), foot=h("div",{class:"ufoot kbar sifoot",hidden:true});
-  const startBtn=h("button",{type:"button",class:"btn again ustart",text:T("u.go"),onclick:()=>{ if(!sel.length){ msg.textContent=T("u.none"); return; } go(uHash({ids:sel.slice(),n:20,t:20,seed:uSeed(),mix:true,choice:null})); }});
+  const startBtn=h("button",{type:"button",class:"btn again ustart",text:T("u.go"),onclick:()=>{ if(!sel.length){ msg.textContent=T("u.none"); return; } go(uHash({ids:sel.slice(),n:20,t:20,seed:uSeed(),mix:true,choice:cho()})); }});
   const cnt=h("span",{class:"usum"});
   foot.append(cnt,msg,startBtn);
-  const one=u=>startUnitRun({ids:[u.id],n:20,t:20,seed:uSeed(),mix:true,choice:null});
+  const one=u=>startUnitRun({ids:[u.id],n:20,t:20,seed:uSeed(),mix:true,choice:cho()});
   function drawCards(){
     cards.replaceChildren(...(list.length?list.map(u=>{ const on=sel.includes(u.id);
       return h("div",{class:"ucardw"},
@@ -7670,12 +7678,12 @@ function renderSubjItem(q){
   const modeRow=h("div",{class:"pills simode",role:"group","aria-label":T("si.mix")});
   const drawMode=()=>modeRow.replaceChildren(upill(T("si.one.b"),!mix,()=>{ mix=false; sel.length=0; msg.textContent=""; drawMode(); drawCards(); hint.textContent=T("si.one"); }),upill(T("si.mix"),mix,()=>{ mix=true; drawMode(); drawCards(); hint.textContent=T("si.mix.d",UMAX); }));
   const hint=h("p",{class:"note sihint",text:T("si.one")});
-  drawMode();
+  drawMode(); drawHow();
   const toolBox=tools.length?h("section",{class:"sitools"},h("h3",{class:"sih",text:T("si.tool")}),
     ...tools.map(t=>h("button",{type:"button",class:"ucard sitool",onclick:()=>t.go.startsWith("url:")?(location.href=t.go.slice(4)):go(t.go)},h("span",{class:"ubody"},h("b",{text:siName(t.t)}),h("span",{class:"unote",text:siName(t.d)})),h("span",{class:"siplay","aria-hidden":"true",text:"▶"})))):null;
   app.replaceChildren(h("div",{class:"up kid si"},
     h("div",{class:"topbar"},h("button",{type:"button",class:"back",innerHTML:BK(),onclick:()=>go(back)}),h("h2",{class:"th2 uttl",text:`${SUBJ_JA.sansu} › ${siName(grp.t)}`}),h("span")),
-    list.length?spChips():null,hint,cards,list.length>1?modeRow:null,foot,toolBox));
+    list.length?spChips():null,list.length?howRow:null,hint,cards,list.length>1?modeRow:null,foot,toolBox));
   drawCards();
 }
 
