@@ -1394,6 +1394,20 @@ body[data-sg="s"] .sgsel h2{color:#fff;text-shadow:0 2px 0 #1b1530}body[data-sg=
 .bsh-side .lbl{font-weight:800;margin-top:6px}.bsh-side .lbl.sm{font-size:28px;color:var(--chalk);margin-top:14px}
 .bsh-hp{height:46px;background:rgba(255,255,255,.2);border:4px solid #fff;border-radius:24px;overflow:hidden;margin:6px 0 10px}
 .bsh-hp i{display:block;height:100%;width:100%;background:linear-gradient(90deg,#e86a9a,#ff9ec0);transition:width .5s ease}
+/* 協力ボス・じんとりの 世界（2026-11-25）：ボス＝ステージの 水彩／じんとり＝あかと あおの お城の 草原 */
+img.bsart{object-fit:contain;filter:drop-shadow(0 6px 4px #0005)}
+.bs-mini{background:center/cover no-repeat;border-radius:12px;border:2px solid var(--edge);overflow:hidden}
+.bsh-stage{background:center/cover no-repeat;border:5px solid #fff;border-radius:26px;overflow:hidden}
+.bsh-stage .bsh-nm,.bsh-stage .bsh-tr{position:relative;background:rgba(22,55,42,.72);border-radius:99px;padding:0 22px}.bsh-stage .bsh-tr:empty{background:none}
+body[data-bw="jin"]{--bwc:#8fd04a;--bwi:url(vendor/img/battle/jin-field.webp)}
+.jnk.bww .rk-hd,.jnk.bww .rk-qh,.jnk.bww .rk-sc,.jnk.bww .jn-st{background:#fbf1d8ee;border-radius:14px;padding:4px 10px}.jnk.bww .jn-st{padding:8px}
+.jnk.bww .bs-trk:not(:empty){background:#fbf1d8ee;border-radius:12px}
+.px.jn-px{background:#8fd04a url(vendor/img/battle/jin-field.webp) center/cover no-repeat}
+.jn-px .coh-top>span:not(:empty),.jn-px .jnh-leg{background:rgba(22,55,42,.82);border-radius:99px;padding:2px 18px}.jn-px .jnh-leg{border-radius:18px;justify-self:center}
+.jn-px .jn-tm{background:rgba(22,55,42,.84)}
+.jn-px .jn-bd.big{background:rgba(22,55,42,.75);border-color:#fff;box-shadow:0 8px 0 rgba(22,55,42,.45)}
+.jn-px .jn-bd .c:not(.o0):not(.o1){background:#cfe9a8}
+.jnk.bww .jn-bd .c:not(.o0):not(.o1){background:#dff0c4}
 .bsh-td{font-size:min(14vw,110px);font-weight:900;color:#ffe066;line-height:1.05;font-variant-numeric:tabular-nums}
 .co-row{display:flex;gap:6px;flex-wrap:wrap;min-height:54px}
 .co-row [data-pid]{display:inline-flex;background:rgba(255,255,255,.9);border:3px solid var(--edge);border-radius:50%;padding:2px;cursor:pointer}
@@ -6217,6 +6231,7 @@ function bsArt(k,mood){
     <ellipse cx="100" cy="150" rx="40" ry="24" fill="#fff" opacity=".35"/><ellipse cx="72" cy="186" rx="18" ry="9" fill="${c}" ${s}/><ellipse cx="128" cy="186" rx="18" ry="9" fill="${c}" ${s}/>${eye}${mouth}${sweat}
     <circle cx="60" cy="128" r="8" fill="#ff8f8f" opacity=".6"/><circle cx="140" cy="128" r="8" fill="#ff8f8f" opacity=".6"/></svg>`;
 }
+const coArt=(lv,md)=>`<img class="bsart" src="${sgSrc("b"+(lv%6+1),md)}" alt="" decoding="async" draggable="false">`, coStage=lv=>`url(${SG_IMG}stage${lv%6+1}.webp)`;      // 協力ボス：ステージ版と 同じ 水彩の ボスと 背景（ざこは 出ない）
 const bsName=lv=>(lv>=6?T("bs.super"):"")+T("bs.boss",lv%6);
 const bsMood=co=>co.ph==="run"?2:co.hp<=35?1:0;
 const JN_FACE=["🐰","🐧"];
@@ -6248,20 +6263,20 @@ function ckHead(){
 }
 function ckStatus(){
   const K=CB, co=K.co;
-  if(co.k==="bs") return `<div class="bs-st${co.tr?" tr"+co.tr.k:""}" id="bsst"><span class="bs-mini">${bsArt(co.lv,bsMood(co))}</span><div class="bs-stx"><b>${esc(bsName(co.lv))}</b><div class="rk-hbar bs-hp"><i id="bshpk" style="width:${co.hp}%"></i></div><span class="note">${T("bs.hp")}</span></div><span class="bs-dn"><small>${T("bs.dnl")}</small><b id="bsdnk">${T("bs.dnk",co.dn)}</b></span></div><div class="bs-trk" id="bstrk" aria-live="polite">${co.tr?T("bs.tr"+co.tr.k):""}</div>`;
+  if(co.k==="bs") return `<div class="bs-st${co.tr?" tr"+co.tr.k:""}" id="bsst"><span class="bs-mini" style="background-image:${coStage(co.lv)}">${coArt(co.lv,bsMood(co))}</span><div class="bs-stx"><b>${esc(bsName(co.lv))}</b><div class="rk-hbar bs-hp"><i id="bshpk" style="width:${co.hp}%"></i></div><span class="note">${T("bs.hp")}</span></div><span class="bs-dn"><small>${T("bs.dnl")}</small><b id="bsdnk">${T("bs.dnk",co.dn)}</b></span></div><div class="bs-trk" id="bstrk" aria-live="polite">${co.tr?T("bs.tr"+co.tr.k):""}</div>`;
   return `<div class="jn-st"><div id="jnbk">${jnBoardHtml(co,false)}</div><div class="jn-sc" id="jnsck">${ckJnScore(co)}</div></div><div class="bs-trk" id="jnlsk" aria-live="polite">${co.ls?T("jn.ls"):""}</div>`;
 }
 const ckJnScore=co=>`<span class="t0">${JN_FACE[0]} <b>${co.sc[0]}</b></span><span class="vs">−</span><span class="t1"><b>${co.sc[1]}</b> ${JN_FACE[1]}</span>`;
 function ckKidDraw(){
   const K=CB, co=K.co, bs=co.k==="bs"; ckStop();
-  const cls=`play ${bs?"bsk":"jnk jt"+K.mt}`;
+  const cls=`play ${bs?"bsk":"jnk bww jt"+K.mt}`; if(!bs) document.body.dataset.bw="jin";
   if(co.ph==="count"||co.ph==="lobby"){
     app.innerHTML=`<div class="${cls}">${ckHead()}${bs?"":ckStatus()}<div class="q"><div>${T(bs?"bs.soon":"jn.soon")}</div><div class="countdown" id="ckcd"></div></div></div>`;
     const tick=()=>{ const c=$("#ckcd"); if(c&&K.co.pe){ const n=Math.max(0,Math.ceil((K.co.pe-ckNow())/1000)); if(c.textContent!==String(n)){ if(n>0) sfx("tick"); c.textContent=n; } } };
     tick(); timerId=setInterval(tick,100);
   } else if(co.ph==="run"){
     sfx("star"); party();
-    app.innerHTML=`<div class="${cls}">${ckHead()}<div class="q bs-runq"><div class="bs-runa">${bsArt(co.lv,2)}</div><div class="big">${T("bs.run")}</div><div class="small">${T("bs.next")}</div></div></div>`;
+    app.innerHTML=`<div class="${cls}">${ckHead()}<div class="q bs-runq"><div class="bs-runa">${coArt(co.lv,2)}</div><div class="big">${T("bs.run")}</div><div class="small">${T("bs.next")}</div></div></div>`;
   } else {
     app.innerHTML=`<div class="${cls}">${ckHead()}${ckStatus()}<div class="rk-qh">${T(bs?"bs.q":"jn.q")}</div><div id="ckq"></div><div class="rk-sc" id="cktm"></div></div>`;
     ckShowQ(); ckClock(); timerId=setInterval(ckClock,500);
@@ -6272,7 +6287,7 @@ function ckKidLive(){
   const K=CB, co=K.co;
   if(co.k==="bs"){
     const h=$("#bshpk"); if(h) h.style.width=co.hp+"%";
-    const st=$("#bsst"); if(st){ st.className="bs-st"+(co.tr?" tr"+co.tr.k:""); const m=st.querySelector(".bs-mini"), md=bsMood(co); if(m&&m.dataset.m!==String(md)){ m.dataset.m=md; m.innerHTML=bsArt(co.lv,md); } }
+    const st=$("#bsst"); if(st){ st.className="bs-st"+(co.tr?" tr"+co.tr.k:""); const m=st.querySelector(".bs-mini"), md=bsMood(co); if(m&&m.dataset.m!==String(md)){ m.dataset.m=md; m.innerHTML=coArt(co.lv,md); m.style.backgroundImage=coStage(co.lv); } }
     const tr=$("#bstrk"), tt=co.tr?T("bs.tr"+co.tr.k):""; if(tr&&tr.dataset.t!==tt){ tr.dataset.t=tt; tr.innerHTML=tt; }
     const dn=$("#bsdnk"); if(dn) dn.textContent=T("bs.dnk",co.dn);
   } else {
@@ -6318,7 +6333,7 @@ function ckKidEnd(){
   sfx("medal"); party();
   const colHtml=COLOK?colRun({units:[],answered:K.ans,correct:K.ok,quiz:true,quiet:K.s.nh!==0}):"";      // どんぐり：ロケットと同じ（3問以上こたえた子に +2・1日1回。勝ち負けでは ふえない）
   let head;
-  if(bs) head=`<div class="bs-runa">${bsArt(Math.max(0,co.lv),r.dn>0?2:0)}</div><div class="num">${r.dn>0?T("bs.end",r.dn):T("bs.end0")}</div><div class="note">${T(r.dn>0?"bs.end.h":"bs.end.h0")}</div><div class="big2 bs-tdk">${T("bs.td",r.td|0)}</div>`;
+  if(bs) head=`<div class="bs-runa">${coArt(Math.max(0,co.lv),r.dn>0?2:0)}</div><div class="num">${r.dn>0?T("bs.end",r.dn):T("bs.end0")}</div><div class="note">${T(r.dn>0?"bs.end.h":"bs.end.h0")}</div><div class="big2 bs-tdk">${T("bs.td",r.td|0)}</div>`;
   else { const w=r.w, mine=K.mt, diff=Math.abs(r.sc[0]-r.sc[1]);
     head=`<div class="jn-endb">${jnBoardHtml({...co,ph:"end",tg:[-1,-1],tp:[0,0]},false)}</div><div class="num">${w<0?T("jn.draw"):T("jn.win",w)}</div><div class="jn-sc big">${ckJnScore({sc:r.sc})}</div>
       <div class="note">${w<0||w===mine?T("jn.yay"):T("jn.good",diff)}</div>`; }
@@ -6361,7 +6376,7 @@ function coHostUpd(s){
   if(co.k==="bs"){
     $$("bslv").textContent=T("bs.h.lv",co.lv+1); $$("bsdn").textContent=T("bs.dn",co.dn);
     const md=bsMood(co), stg=$$("bsstage"), bx=$$("bsb");
-    if(bx.dataset.k!==co.lv+":"+md){ bx.dataset.k=co.lv+":"+md; bx.innerHTML=bsArt(co.lv,md); $$("bsnm").textContent=rbp(bsName(co.lv)); }
+    if(bx.dataset.k!==co.lv+":"+md){ bx.dataset.k=co.lv+":"+md; bx.innerHTML=coArt(co.lv,md); stg.style.backgroundImage=coStage(co.lv); $$("bsnm").textContent=rbp(bsName(co.lv)); }
     bx.style.transform=co.ph==="run"?"":`scale(${(.55+.45*co.hp/100).toFixed(3)})`;
     stg.className="bsh-stage"+(co.ph==="run"?" run":"")+(co.tr?" tr"+co.tr.k:"");
     { const tr=$$("bstr"), tt=co.tr?T("bs.tr"+co.tr.k):""; if(tr.dataset.t!==tt){ tr.dataset.t=tt; tr.innerHTML=tt; } }
