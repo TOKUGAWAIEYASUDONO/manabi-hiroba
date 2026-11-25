@@ -891,7 +891,7 @@ body[data-v=host] .wrap{max-width:none;padding:0}
 .sg-hp{height:18px;border-radius:99px;border:3px solid #fff;background:#1b1530b3;overflow:hidden;margin-top:3px}.sg-hp i{display:block;height:100%;width:100%;background:linear-gradient(#ffa8cc,#ee5f9a);transition:width .25s}
 .sg-mon{position:absolute;left:50%;bottom:17%;height:58%;aspect-ratio:1;transform:translateX(-50%);display:flex;align-items:flex-end;justify-content:center;transition:opacity .3s}
 .sg-art{max-width:100%;max-height:100%;object-fit:contain;filter:drop-shadow(0 6px 4px #0005);user-select:none}
-.sg-mon.zk{height:36%;bottom:20%}.sg-mon.zk .sg-art,.sg-zc .sg-art.zk{filter:hue-rotate(var(--hue,0deg)) drop-shadow(0 4px 3px #0005)}
+.sg-mon.zk{height:36%;bottom:20%}.sg-mon.zk .sg-art{filter:sepia(.75) saturate(2.4) hue-rotate(var(--hue,0deg)) drop-shadow(0 4px 3px #0005)}
 .sg-mon.rr .sg-art{filter:drop-shadow(0 0 10px #ffe066) drop-shadow(0 6px 4px #0005)}
 .sg-mon .sg-art{animation:sgidle 2.4s ease-in-out infinite}.sg-mon.run .sg-art{animation:sgrun 2.2s ease-in forwards}
 .sg-scene.hit .sg-mon .sg-art{animation:sghit .35s}.sg-scene.spx .sg-mon .sg-art{animation:sghit .5s 2}.sg-scene.spx::before{content:"";position:absolute;inset:0;background:radial-gradient(circle at 50% 55%,#fff8 0,#ffe06655 30%,transparent 60%);animation:sgflash .6s forwards;pointer-events:none}
@@ -920,17 +920,17 @@ body[data-v=host] .wrap{max-width:none;padding:0}
 .sg-cs{position:absolute;left:0;right:0;bottom:0;background:#fbf1d8e6;font-size:14px;font-weight:800;padding:3px 6px;display:flex;gap:4px;align-items:center;justify-content:center}
 .sg-rare{display:flex;flex-wrap:wrap;gap:8px 12px;align-items:center;justify-content:center;margin-top:12px;padding:10px 12px;border:3px solid #c98a12;border-radius:16px;background:#fff7d6}
 .sg-rare>div{flex:1 1 260px;text-align:left}.sg-rare b{display:block;font-size:18px}.sg-rare .btn svg{width:22px;height:22px;vertical-align:-4px}.sg-rare .btn[aria-pressed=true]{background:#ffd43b}
-.sg-zk{display:grid;grid-template-columns:repeat(auto-fill,minmax(92px,1fr));gap:8px}
+.sg-zk{display:grid;grid-template-columns:repeat(auto-fill,minmax(80px,1fr));gap:8px}.sgsel .sg-zk{grid-template-columns:repeat(7,1fr)}
 .sg-zc{background:#fff;border:3px solid var(--edge);border-radius:14px;padding:6px 4px;text-align:center;font-size:13px;font-weight:800}.sg-zc .sg-art{height:64px;display:block;margin:0 auto 2px;filter:none}.sg-zc .sg-art.sil{filter:brightness(0) opacity(.25)}
 .sg-zc.rr{border-color:#c98a12;background:#fff7d6}.sg-zc.no{color:var(--muted)}
 .sg-new{margin:8px auto;max-width:520px}.sg-new b{display:block;margin-bottom:4px}.sg-open{font-weight:800;font-size:19px;color:#b3541e;margin:6px 0}
 .sbres .bs-runa .sg-art{width:100%;height:100%}
 .res.sbres{display:block;max-width:600px;margin:0 auto;text-align:center}.sbres .sg-zk{grid-template-columns:repeat(auto-fit,minmax(92px,110px));justify-content:center}
-body[data-sg]{background:var(--sgbg) fixed}body[data-sg="0"]{--sgbg:linear-gradient(#2b2350,#1f4a4c)}body[data-sg="1"]{--sgbg:linear-gradient(#c9f0de,#fbd3e2)}body[data-sg="2"]{--sgbg:linear-gradient(#232a5c,#3a5a4a)}
+body[data-sg]{background:var(--sgbg);min-height:100vh}body[data-sg="0"]{--sgbg:linear-gradient(#2b2350,#1f4a4c)}body[data-sg="1"]{--sgbg:linear-gradient(#c9f0de,#fbd3e2)}body[data-sg="2"]{--sgbg:linear-gradient(#232a5c,#3a5a4a)}
 body[data-sg="3"]{--sgbg:linear-gradient(#7a4a8c,#f29a5a)}body[data-sg="4"]{--sgbg:linear-gradient(#8fcaf2,#e6f4ff)}body[data-sg="5"]{--sgbg:linear-gradient(#f7b6c9,#ffe3b0)}body[data-sg="s"]{--sgbg:linear-gradient(#2b2350,#5a3a6a)}
 body[data-sg] .mplay.sgw .topbar>span,body[data-sg] .mplay.sgw .timer{background:#fbf1d8;border:2px solid #5b3a22;border-radius:99px;padding:2px 12px;color:#4a3120}
 body[data-sg="s"] .sgsel h2{color:#fff;text-shadow:0 2px 0 #1b1530}body[data-sg="s"] .sgsel .topbar b{background:#fbf1d8;border:2px solid #5b3a22;border-radius:99px;padding:2px 12px;color:#4a3120}body[data-sg="s"] .sgsel h2 .note{color:#ffe9a8}
-@media (max-width:640px){.sg-cards{grid-template-columns:repeat(2,1fr)}.sg-card{height:124px}.sg-l,.sg-r{font-size:12px}.sg-top{width:62%;top:72px}.sg-top b{font-size:16px}.sg-hp{height:14px}.sg-scene{height:clamp(200px,32vh,250px)}.sg-mon{height:44%;bottom:12%}.sg-mon.zk{height:30%;bottom:14%}.sg-pop{left:auto;right:6px;top:46%}.mplay.sgw .topbar .note{display:none}}
+@media (max-width:640px){.sgsel .sg-zk{grid-template-columns:repeat(4,1fr)}.sg-cards{grid-template-columns:repeat(2,1fr)}.sg-card{height:124px}.sg-l,.sg-r{font-size:12px}.sg-top{width:62%;top:72px}.sg-top b{font-size:16px}.sg-hp{height:14px}.sg-scene{height:clamp(200px,32vh,250px)}.sg-mon{height:44%;bottom:12%}.sg-mon.zk{height:30%;bottom:14%}.sg-pop{left:auto;right:6px;top:46%}.mplay.sgw .topbar .note{display:none}}
 @media (prefers-reduced-motion:reduce){.sg-mon .sg-art,.sg-scene.hit .sg-mon .sg-art,.sg-scene.spx .sg-mon .sg-art{animation:none}.sg-mon.run .sg-art{animation:none;opacity:.3}}
 .mgrid.sb .bs-runq .big,.sbres .num,.sbres .sbleft,.mgrid.sb .fb{word-break:keep-all;overflow-wrap:anywhere}.mgrid.sb .bs-runq .big{font-size:clamp(28px,5vw,48px)}
 .mgrid.net .side{order:-1;display:flex;gap:14px;align-items:center;justify-content:center;flex-wrap:wrap;padding:8px 12px;font-size:20px;font-weight:700}
@@ -1896,6 +1896,7 @@ body[data-sg="s"] .sgsel h2{color:#fff;text-shadow:0 2px 0 #1b1530}body[data-sg=
 <!-- 単元ごとの問題の型（単元から出題） -->
 <script src="data/gen/core.js?v=7681dc71"></script>
 <script>window.RIKA_PUBLIC=true;</script>
+<script>window.BOSS_STAGE_PUBLIC=false;      // ひとりで ボスバトルの ステージ版（ステージ・ざこ・ひっさつわざ・ずかん）：false の あいだは 公開ページでは 今までの ボスバトル。手もと（localhost）では 出る。ひろばの 公開と いっしょに true に する</script>
 <script>window.HIROBA_PUBLIC=false;      // じぶんの ひろば：false の あいだは 公開ページで「もうすぐ くるよ」（入れない・どんぐりも ふえない）。手もとの確認（localhost・127.0.0.1）では ひらく</script>
 <script>if(window.RIKA_PUBLIC) document.write('<script src="data/gen/rika.js?v=4f58fe09"><\/script>');</script>
 <script src="data/gen/other.js?v=0a3ecac9"></script>
@@ -1907,7 +1908,7 @@ body[data-sg="s"] .sgsel h2{color:#fff;text-shadow:0 2px 0 #1b1530}body[data-sg=
 <script src="data/units.js?v=74dad08a"></script>
 <script src="data/sansu-items.js?v=c9fca7b3"></script>
 <script src="data/tools-viz.js?v=0582ba52"></script>
-<script src="data/collection.js?v=a55d6d3d"></script>
+<script src="data/collection.js?v=96b5a614"></script>
 <script src="data/masu100.js?v=a19d68e5"></script>
 <script>
 /* ================= 画面の文言（1つの表） =================
@@ -4803,7 +4804,7 @@ function sbResult0(){      // まけは ない。メダル・きろくには 数
    絵は vendor/img/battle/（image2 の 水彩。元は art-src/battle/）。その ステージの 絵だけ 読みこむ */
 /* ステージ版は じゅんびちゅう（2026-11-25 ユーザー決定）：公開ページでは 今までの ひとりで ボスバトルの まま。data/config.js の BOSS_STAGE_PUBLIC を true に すると 出る（ひろばの 公開と いっしょに）。手もと（localhost）では 出る */
 const SGOPEN=window.BOSS_STAGE_PUBLIC===true||/^(localhost|127\.0\.0\.1)$/.test((typeof location!=="undefined"&&location.hostname)||"");
-const SG_IMG="vendor/img/battle/", SG_ZAKO="boss1";      // ざこの 絵（いまは もくもくんを 小さく・色ちがいで）
+const SG_IMG="vendor/img/battle/", SG_ZAKO="zako", SG_HUE=[230,105,-20,8,165,290];      // ざこ「ちびもく」は 白い絵。ステージごとに CSS で 色を つける（sepia → hue-rotate）
 const sgStName=st=>T("sg.st"+st), sgRareName=st=>T("sg.rare"+st);
 const sgId=(kind,st,rare)=>kind==="z"?"z":(rare?"r":"b")+(st+1);
 const sgName=id=>id==="z"?T("sg.zako"):id[0]==="r"?sgRareName(+id.slice(1)-1):T("bs.boss",+id.slice(1)-1);
@@ -4874,7 +4875,7 @@ function sbSide(){
       <div class="sg-trk" id="sbtr" aria-live="polite"></div></div>`; }
   const pct=B.pct(), md=B.ph==="run"?2:pct<=35?1:0, id=sgId(B.kind,B.st,B.rare), k=id+":"+md+":"+B.st+":"+B.zi+":"+B.loop, a=$("#sbart"), sc=$("#sgsc");
   if(a.dataset.k!==k){ a.dataset.k=k;
-    a.innerHTML=sgImg(id,md); a.className="sg-mon"+(B.kind==="z"?" zk":"")+(B.rare?" rr":"")+(md===2?" run":""); a.style.setProperty("--hue",(B.st*55)+"deg");
+    a.innerHTML=sgImg(id,md); a.className="sg-mon"+(B.kind==="z"?" zk":"")+(B.rare?" rr":"")+(md===2?" run":""); a.style.setProperty("--hue",SG_HUE[B.st]+"deg");
     $("#sbnm").textContent=(B.loop>0&&B.kind==="b"?T("bs.super"):"")+rbp(sgName(id));
     if(sc.dataset.st!==String(B.st)){ sc.dataset.st=B.st; document.body.dataset.sg=B.st; sc.style.backgroundImage=`url(${SG_IMG}stage${B.st+1}.webp)`; }
     $("#sgst").textContent=T("sg.stn",B.st+1)+" "+rbp(sgStName(B.st));
