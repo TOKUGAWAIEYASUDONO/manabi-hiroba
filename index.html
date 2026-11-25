@@ -3613,8 +3613,8 @@ function hbDraw(first){
       ${HS.tab==="k"?kzShopHtml(S,bal):shop}</section>
     <p class="note">${T("col.local")}</p>`;
   hbIsle(root,S,pm,D);
-  root.querySelectorAll("[data-buy]").forEach(b=>b.onclick=()=>{ if(COL.buy(S,b.dataset.buy)){ HS.sel=b.dataset.buy; HS.shop=false; sfx("coin"); colSave(); hbDraw(false); } });
-  root.querySelectorAll("[data-put]").forEach(b=>b.onclick=()=>{ HS.sel=b.dataset.put; HS.shop=false; hbDraw(false); });
+  root.querySelectorAll("[data-buy]").forEach(b=>b.onclick=()=>{ if(COL.buy(S,b.dataset.buy)){ HS.sel=b.dataset.buy; HS.shop=false; sfx("coin"); colSave(); hbDraw(false); hbIsleShow(); } });
+  root.querySelectorAll("[data-put]").forEach(b=>b.onclick=()=>{ HS.sel=b.dataset.put; HS.shop=false; hbDraw(false); hbIsleShow(); });
   root.querySelectorAll("[data-th]").forEach(b=>b.onclick=()=>{ S.theme=+b.dataset.th; colSave(); hbDraw(false); });
   root.querySelectorAll("[data-stab]").forEach(b=>b.onclick=()=>{ HS.tab=b.dataset.stab; HS.kzMsg=null; hbDraw(false); const f=app.querySelector(`[data-stab="${HS.tab}"]`); if(f) f.focus(); });
   root.querySelectorAll("[data-kzbuy]").forEach(b=>b.onclick=()=>{ const id=b.dataset.kzbuy; if(!COL.kzBuy(S,id)) return; HS.kzMsg=id; sfx("coin"); colSave(); hbDraw(false); const f=app.querySelector("#kzGoWear"); if(f) f.focus(); });
@@ -3804,6 +3804,7 @@ function hbCell(c){
   hbDraw(false);
   const f=app.querySelector(`[data-decor="${c}"],[data-spot="${c}"]`)||app.querySelector("[data-spot]"); if(f) f.focus({preventScroll:true});
 }
+function hbIsleShow(){ const e=app.querySelector("#hbIsle"); if(e) e.scrollIntoView({block:"center",behavior:matchMedia("(prefers-reduced-motion:reduce)").matches?"auto":"smooth"}); const f=app.querySelector("[data-spot]"); if(f) f.focus({preventScroll:true}); }      // かったら・「おく」を おしたら 島を 見せる
 /* 島（data/hiroba-island.js）：島の広さは 教科ごとの「できた」の数。かざりは ひろばの島の「おける ばしょ」（cell 番号）に おく */
 function hbIsle(root,S,pm,D){
   const host=root.querySelector("#hbIsle"); if(!host||!window.MH_ISLE) return;
