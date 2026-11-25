@@ -188,7 +188,6 @@
       const sz = SIZE[t.k] || 90;
       const g = t.decor ? el("g", { class: "isle-tap isle-decor" + (opt.sel === t.k ? " sel" : ""), tabindex: 0, role: "button", "data-decor": t.cell, "aria-label": opt.decorLabel ? opt.decorLabel(t.k) : t.k, ...(opt.sel === t.k ? { "aria-pressed": "true" } : {}) }, objs) : el("g", {}, objs);
       if (t.decor) el("polygon", { class: "hl", points: pts([[x, y - HH], [x + HW, y], [x, y + HH], [x - HW, y]]), fill: "#fff", "fill-opacity": .55, stroke: "#f2b544", "stroke-width": 4 }, g);
-      el("ellipse", { cx: x, cy: y + 2, rx: sz * .3, ry: sz * .09, fill: INK, opacity: .15 }, g);
       if (ART[t.k]) el("image", { href: ART[t.k], x: x - sz / 2, y: y - sz + 10, width: sz, height: sz }, g);
       else { const id = t.art || SYM[t.k]; if (id) el("use", { href: "#" + id, x: x - sz / 2, y: y - sz + 6, width: sz, height: sz, class: "isle-sym" }, g); }
     }
