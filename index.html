@@ -441,7 +441,7 @@ body[data-v=teacher] rt{display:none}
 /* バトルの 世界（2026-11-25）：たからばこ＝海ぞくの ほらあな／すごろく＝ぼうけんの 島。背景は image2 の 水彩（vendor/img/battle） */
 body[data-bw]{background:var(--bwc) var(--bwi) center top/cover no-repeat fixed}
 body[data-bw="chest"]{--bwc:#8a5426;--bwi:url(vendor/img/battle/chest-cave.webp)}
-body[data-bw="race"]{--bwc:#a9d7ee;--bwi:linear-gradient(#bfe3f5,#9fd0ea)}
+body[data-bw="race"]{--bwc:#a9d7ee;--bwi:url(vendor/img/battle/race-map.webp)}
 .bww .q,.bww .side{background:linear-gradient(#fdf4dc,#f3e0b4);color:#4a3120;border:4px solid #6b4526;border-radius:16px;box-shadow:0 5px 0 #6b4526}
 .bww .q .small,.bww .q .note{color:#7a5a3c}.bww .q .ptable td{border-bottom-color:#6b452655}
 .bww .topbar>span,.bww .timer{background:#fbf1d8;border:2px solid #5b3a22;border-radius:99px;padding:2px 12px;color:#4a3120}
@@ -453,7 +453,7 @@ body[data-bw="race"]{--bwc:#a9d7ee;--bwi:linear-gradient(#bfe3f5,#9fd0ea)}
 @keyframes chpop{0%{transform:scale(.8)}60%{transform:scale(1.12)}}
 @media (prefers-reduced-motion:reduce){.chw .box.open .chimg{animation:none}}
 .msg{font-size:24px;font-weight:800;min-height:36px;margin:8px 0}
-.sgbd{display:block;width:100%;height:auto;max-width:420px;margin:0 auto;border-radius:16px}   /* すごろく盤（校庭の地図）。SVGで描く */
+.sgbd{display:block;width:100%;height:auto;max-width:420px;margin:0 auto;border-radius:16px}   /* すごろく盤（ぼうけんの 島の 地図）。SVGで描く */
 .sgbd text{font-family:inherit;font-weight:800;text-anchor:middle;pointer-events:none}
 .pk{transition:transform .17s ease-in-out}
 .pk .hp{transform-box:fill-box;transform-origin:center}
@@ -4689,7 +4689,7 @@ function drawSide(){
     syncPieces(players());
   }
 }
-/* ===== すごろく盤（校庭の地図）：SVGで描く。40マスをヘビのように進む道。駒は参加者の動物＋色の輪 ===== */
+/* ===== すごろく盤（ぼうけんの 島の 地図）：SVGで描く。40マスをヘビのように進む道。駒は参加者の動物＋色の輪 ===== */
 const BD={W:400,H:512,COLS:5,X0:80,DX:60,Y0:60,DY:58}, SVGNS="http://www.w3.org/2000/svg";
 function cellXY(i){
   if(i<=0) return {x:34,y:BD.Y0+30};
@@ -4719,16 +4719,14 @@ function boardSvg(ev){
     else st+=`<g transform="translate(${x} ${y})"><circle r="22" fill="${cols[k]}" stroke="var(--edge)" stroke-width="3.5"/><text dy=".35em" font-size="19" fill="${tc[k]}">${i}</text></g>`;
   }
   const rd=roadD(), gl=cellXY(GOAL);
-  const tufts=[[150,100],[250,152],[110,214],[290,268],[200,330],[360,215],[40,260],[160,452],[250,490],[60,495],[330,485]].map(([x,y])=>`<path d="M${x-5} ${y}q1-8 5-9 4 1 5 9" fill="none" stroke="var(--agreen)" stroke-width="3" stroke-linecap="round"/>`).join("");
-  const flowers=[[45,140],[355,100],[365,330],[40,380]].map(([x,y])=>`<circle cx="${x}" cy="${y}" r="5" fill="var(--paper)" stroke="var(--edge)" stroke-width="2"/><circle cx="${x}" cy="${y}" r="1.8" fill="var(--soc)"/>`).join("");
   return `<svg class="sgbd" viewBox="0 0 ${BD.W} ${BD.H}" aria-hidden="true" focusable="false">
-    <rect x="2" y="2" width="${BD.W-4}" height="${BD.H-4}" rx="18" fill="var(--field)" stroke="var(--edge)" stroke-width="4"/>
-    ${tufts}${flowers}
-    <use href="#d-tree" x="6" y="183" width="46" height="46"/><use href="#d-slide" x="350" y="240" width="46" height="46"/>
-    <use href="#d-swing" x="6" y="298" width="46" height="46"/><use href="#d-tree" x="350" y="356" width="46" height="46"/>
-    <path d="${rd}" fill="none" stroke="var(--edge)" stroke-width="46" stroke-linecap="round" stroke-linejoin="round"/>
-    <path d="${rd}" fill="none" stroke="var(--cream)" stroke-width="40" stroke-linecap="round" stroke-linejoin="round"/>
-    <path d="${rd}" fill="none" stroke="var(--wood)" stroke-width="3" stroke-linecap="round" stroke-dasharray="1 10"/>
+    <defs><clipPath id="sgclip"><rect x="2" y="2" width="${BD.W-4}" height="${BD.H-4}" rx="18"/></clipPath></defs>
+    <rect x="2" y="2" width="${BD.W-4}" height="${BD.H-4}" rx="18" fill="#9fd0ea"/>
+    <image href="vendor/img/battle/race-board.webp" x="0" y="0" width="${BD.W}" height="${BD.H}" preserveAspectRatio="xMidYMid slice" clip-path="url(#sgclip)"/>
+    <rect x="2" y="2" width="${BD.W-4}" height="${BD.H-4}" rx="18" fill="none" stroke="#6b4526" stroke-width="4"/>
+    <path d="${rd}" fill="none" stroke="#6b4526" stroke-width="20" stroke-linecap="round" stroke-linejoin="round" opacity=".55"/>
+    <path d="${rd}" fill="none" stroke="#f6e3b0" stroke-width="15" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="${rd}" fill="none" stroke="#a9763f" stroke-width="3" stroke-linecap="round" stroke-dasharray="1 9"/>
     <use href="#d-gate" x="8" y="${BD.Y0-34}" width="50" height="50"/>
     <use href="#d-flag" x="4" y="${gl.y-38}" width="54" height="54"/>
     ${st}<g id="pcs"></g></svg>`;
