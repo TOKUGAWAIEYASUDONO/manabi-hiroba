@@ -747,4 +747,19 @@ t("バックアップ HR4：1字 かえると 断る・表に ない じっせ�
   assert.strictEqual(C.hrParse(mk4("0".repeat(9) + "1" + "ZZZZ" + kp0 + core)), null, "20ビットを こえる");
   assert.strictEqual(C.hrParse(mk4("0".repeat(8) + "11" + "ZZ" + "000" + "1" + "0000" + kp0 + core)), null, "表に ない 単元");
 });
+t("ボスバトルの ステージ（bz）：ずかん・ステージが ひらく・レアボスは どんぐり 3こで 1日 1回・こわれた 記録は 0 から", () => {
+  const S = C.clean(null, 100); assert.deepStrictEqual(S.bz, { o: 0, s: [], rd: 0, rp: 0 });
+  let r = C.bzKo(S, ["z", "b1", "xx"], [0]); assert.deepStrictEqual(r, { fresh: ["z", "b1"], opened: 1 }); assert.strictEqual(S.bz.o, 1);
+  r = C.bzKo(S, ["b1"], [0]); assert.deepStrictEqual(r, { fresh: [], opened: -1 });
+  r = C.bzKo(S, ["b6"], [5]); assert.strictEqual(S.bz.o, 1, "6を おいはらっても 先は ない・とびこえない");
+  assert.strictEqual(C.bzRarePay(S, 100, 0), false, "どんぐりが たりない");
+  S.ac.e = 5; assert.strictEqual(C.bzRarePay(S, 100, 3), false, "ひらいていない ステージ");
+  assert.strictEqual(C.bzRarePay(S, 100, 1), true); assert.strictEqual(C.balance(S), 2); assert.strictEqual(S.bz.rp, 2);
+  S.ac.e = 20; assert.strictEqual(C.bzRarePay(S, 100, 1), false, "1日 1回"); assert.strictEqual(C.bzRareOk(S, 101), true);
+  C.bzRareDone(S); assert.strictEqual(S.bz.rp, 0);
+  const T2 = C.clean(JSON.parse(JSON.stringify(S)), 101); assert.deepStrictEqual(T2.bz.s, ["z", "b1", "b6"]); assert.strictEqual(T2.bz.o, 1);
+  const bad = JSON.parse(JSON.stringify(S)); bad.bz = { o: "x", s: ["b1", "b1", "q", 3], rd: -1, rp: 4 };
+  assert.deepStrictEqual(C.clean(bad, 101).bz, { o: 0, s: ["b1"], rd: 0, rp: 0 });
+  assert.strictEqual(C.BZ_IDS.length, 13);
+});
 console.log(`\n${n} 件のテストを実行${process.exitCode ? "（失敗あり）" : "：すべて成功"}`);
