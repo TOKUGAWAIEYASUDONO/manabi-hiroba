@@ -238,7 +238,11 @@ h2{font-size:20px;margin:18px 0 8px}
 .score{font-size:15px;color:var(--muted);margin-top:8px}
 .fb{min-height:34px;font-size:24px;font-weight:800;margin:2px 0 10px}
 .fb.end{font-size:30px;color:var(--bad)}
-.fb.ok{animation:pop .25s ease-out;color:#0f6a3a} .fb.ng{color:var(--bad)}
+.fb.ok{animation:pop .25s ease-out;color:#0f6a3a} .fb.ng{color:var(--bad)} .fb.re{color:var(--ink);font-size:18px}
+.choices.lhrest .choice{opacity:.55} .fb .lhh{display:block;font-size:17px;font-weight:700;color:var(--ink);margin-top:4px}
+.lhhow{margin:0 auto 10px;max-width:560px;padding:10px 14px;border:3px solid var(--line);border-radius:14px;background:var(--paper);color:var(--ink);text-align:left;font-size:17px;line-height:1.55}
+.play.pg:has(#lhhow)>.q{flex:0 0 auto}.lhhow b{display:block;margin-bottom:4px}.lhhow .lhl{padding:2px 0;border-bottom:1px dashed var(--line)}.lhhow .lhl:last-of-type{border-bottom:0;font-weight:800}
+.lhhow .lhst{margin-top:8px;font-weight:800}.lhhow .lhex{margin:6px 0 0;white-space:pre-line;font-weight:400}.lhhow .lhbtns{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}.lhhow .lhbtns .btn{margin:0;flex:1 1 auto}
 @keyframes pop{from{transform:scale(1.25)}to{transform:scale(1)}}
 /* ===== 結果：メダル → あと○もん → もういっかい → まちがえた問題 ===== */
 .res{background:#fff;border:2px solid var(--line);border-radius:22px 22px 6px 6px;padding:20px 16px 18px}
@@ -1893,6 +1897,7 @@ body[data-v=host] .wrap{max-width:none;padding:0}
 <script src="data/units.js?v=74dad08a"></script>
 <script src="data/sansu-items.js?v=c9fca7b3"></script>
 <script src="data/tools-viz.js?v=0582ba52"></script>
+<script src="data/learnhelp.js?v=062f8140"></script><!-- まなびの たすけ（はやすぎる まちがい・あとで もう一度・とき方・つまずき） -->
 <script src="data/collection.js?v=ec54527d"></script>
 <script src="data/masu100.js?v=a19d68e5"></script>
 <script>
@@ -2133,6 +2138,9 @@ const TX={
  "u.retry":["❌ おしい！もう一度《いちど》やってみよう","❌ おしい！ もういちど やってみよう"],
  "hs.on":["マスで とく"],"hs.off":["こたえだけ"],"hs.aria":["ひっ算《ざん》の マス","ひっさんの マス"],"hs.look":[s=>`（${s}を 見《み》なおそう）`,s=>`（${s}を みなおそう）`],
  "hs.ans":["こたえ"],"hs.quot":["上《うえ》の こたえ（商《しょう》）"],"hs.prod":["かけた 数《かず》"],"hs.diff":["ひいた 数《かず》"],"hs.rem":["あまり"],"hs.part":["とちゅうの 式《しき》","とちゅうの しき"],"hs.carry":["くり上《あ》がり","くりあがり"],"hs.borrow":["くり下《さ》がり","くりさがり"],
+ "lh.slow":["🐢 ゆっくり よんでから えらぼう"],"lh.read":["🤔 もんだいを もう一度《いちど》 よもう","🤔 もんだいを もういちど よもう"],
+ "lh.again":["🔁 さっきの もんだいだよ"],"lh.got":["⭕ おぼえた！"],"lh.hint":["💡 ヒント："],"lh.how":["📝 この もんだいの ときかた"],"lh.ok":["わかった"],
+ "lh.stuck":["この たんげん、むずかしいかな？"],"lh.ex":["💡 れいだいを みる"],"lh.easy":[n=>`⬇ やさしい ステップ（${n}）に する`],
  "u.ok2":["△ 2回《かい》目《め》でせいかい！","△ 2かいめで せいかい！"],
  "u.marks":["○ 1回《かい》で正解《せいかい》　△ 2回《かい》目《め》で正解《せいかい》　× まちがい","○ 1かいで せいかい　△ 2かいめで せいかい　× まちがい"],
  "u.marks.t":["○△×のきろく","○△×の きろく"],
@@ -3028,7 +3036,7 @@ function renderPlay(q){
   const kuku=x.id==="kuku"?{d:parseDans(q.get("d")),o:["up","down","rand"].includes(q.get("o"))?q.get("o"):"rand",seq:[],i:0}:null;
   if(kuku) kuku.seq=kukuSeq(kuku.d,kuku.o);
   const sm=x.id==="calc"?spModeOf(task):"n";      // あそびかたは 計算スプリントだけ（課題リンクは いつもの）
-  P={x,g,t,left:t,ok:0,ng:0,cur:null,inp:"",misses:[],missObjs:[],task,lock:false,over:false,opt,kuku,chN:0,inN:0,sm,spN:SP_TA};
+  P={x,g,t,left:t,ok:0,ng:0,cur:null,inp:"",misses:[],missObjs:[],task,lock:false,over:false,opt,kuku,chN:0,inN:0,sm,spN:SP_TA,fastN:0,reQ:sm==="n"?[]:null,shown:0};
   const info=kuku?kukuLabel(kuku):(opt.k==="diff"?T("kc.diff"):"");
   app.innerHTML=`<div class="play pg">
      ${task?`<div class="banner">${ic("pencil")} ${T("p.task",`${x.t}（${g<=2?"":g+"年《ねん》・"}${t}${T("sec")}）`)}</div>`:""}
@@ -3056,11 +3064,14 @@ function timeUp(){
   setTimeout(()=>{ if(P===p) finish(); },800);
 }
 function next(){
+  const reIt=!P.review&&P.reQ&&LH?LH.rePop(P.reQ,P.shown):null;      // まちがえた問題を すこし あとで もう一度（data/learnhelp.js）
   if(P.review){ if(!P.queue.length) return reviewDone(); P.cur=P.queue.shift(); }
+  else if(reIt) P.cur={...reIt,re:true};
   else if(P.x.id==="kuku"&&P.kuku) P.cur=kukuNext();
   else P.cur=gen(P.x.id,P.g,P.opt);
   if(P.cur.ch) P.chN++; else P.inN++;
   P.cur.tl=false;                  // ずで かんがえた（この問題を 出しているあいだ）
+  P.shown=(P.shown|0)+1;
   if(P.x.id==="calc"&&P.cur.hsL===undefined) P.cur.hsL=calcCells(P.cur,P.g);
   drawCur();
 }
@@ -3070,6 +3081,7 @@ function calcCells(c,g){
   return hsCells(c.hissan,{val:String(c.a),g})||null;
 }
 function drawCur(){
+  P.t0q=Date.now(); lhReNote(P.cur);
   P.inp=""; P.lock=false; P.hs=P.cur.hsL&&hsPref()?hsNew(P.cur.hsL):null; tlSync();
   const pg=app.querySelector(".play.pg"); if(pg) pg.classList.toggle("cellmode",!!P.hs);
   const tg=$("#hstog"); if(tg) tg.replaceChildren(...(P.cur.hsL?[upill(T("hs.on"),!!P.hs,()=>hsSwitch(true)),upill(T("hs.off"),!P.hs,()=>hsSwitch(false))]:[]));
@@ -3106,25 +3118,66 @@ function key(k){
 function pick(b){
   if(P.lock) return;
   const right=b.dataset.c===P.cur.a;
+  lhFast(P,right);
   $("#area").querySelectorAll(".choice").forEach(e=>{ if(e.dataset.c===P.cur.a) e.classList.add("right"); else e.classList.add("wrong"); });
   judge(right,P.cur.a);
 }
 function judge(right,ans,wait){
   const p=P; p.lock=true;
-  const fb=$("#fb");
+  const fb=$("#fb"), re=!!p.cur.re;      // re：あとで もう一度 出した問題。せいかい・まちがいの 数（メダル・ベスト・どんぐり）には 入れない
   sfx(right?"ok":"ng");
-  if(right){ p.ok++; if(p.cur.tl) p.hok=(p.hok||0)+1; fb.className="fb ok"; fb.textContent=T("fb.ok"); }
+  if(right&&re){ fb.className="fb ok"; fb.textContent=T("lh.got"); }
+  else if(right){ p.ok++; if(p.cur.tl) p.hok=(p.hok||0)+1; fb.className="fb ok"; fb.textContent=T("fb.ok"); }
+  else if(re){ fb.className="fb ng"; fb.textContent=T("fb.ng",ans); mathIn(fb); }
   else {
     p.ng++; p.misses.push(`${p.cur.q} → ${ans}`); p.missObjs.push(p.cur);
+    if(p.reQ&&LH) LH.reAdd(p.reQ,p.cur,p.shown,Math.random());
     if(p.review&&!p.cur.retry) p.queue.push({...p.cur,retry:true});    // ふくしゅう中にまちがえた問題は、最後にもう一度
     fb.className="fb ng"; fb.textContent=T("fb.ng",ans); mathIn(fb);
   }
   if(p.review) $("#scw").innerHTML=T("p.left",p.queue.length); else $("#sc").textContent=p.ok;
-  boxNote(p,right);                // にがて ボックス（計算スプリント・単元のふくしゅう）
-  // 4択をでたらめに連打させないよう、まちがえたあとは1.8秒待つ
-  const w=wait||(right?350:(p.cur.ch?1800:1100));
+  if(!re) boxNote(p,right);                // にがて ボックス（計算スプリント・単元のふくしゅう）
+  // 4択をでたらめに連打させないよう、まちがえたあとは1.8秒待つ。はやすぎる まちがいが つづいたら もう2秒
+  const w=(wait||(right?(re?700:350):(p.cur.ch?1800:1100)))+lhRest(p,fb);
   if(spEnd(p,right,w)) return;     // タイムアタックの さいご・サドンデスの まちがい
   setTimeout(()=>{ if(P!==p) return; if(p.review||(p.left>0&&timerId)){ fb.className="fb"; fb.textContent=""; next(); } }, w);
+}
+/* ---- まなびの たすけ（data/learnhelp.js）：はやすぎる まちがい・あとで もう一度・ヒント・とき方・つまずき ---- */
+const LH=window.MH_LEARN||null;
+function lhFast(p,right){ if(!LH||!p) return; const f=LH.fast(p.fastN,Date.now()-(p.t0q||0),right); p.fastN=f.n; if(f.rest) p.lhSlow=true; }
+function lhRest(p,fb){ if(!LH||!p||!p.lhSlow) return 0; p.lhSlow=false; if(fb) fb.append(h("span",{class:"lhh",text:T("lh.slow")})); return LH.FAST_REST; }
+function lhReNote(c){ const fb=$("#fb"); if(fb&&c&&c.re){ fb.className="fb re"; fb.textContent=T("lh.again"); } }
+const lhMath=c=>!!c&&(c.subj==="sansu"||(!c.subj&&/^m\d/.test(c.uid||"")));
+const lhExLine=c=>String(c&&c.ex||"").split("\n").map(x=>x.trim()).filter(Boolean)[0]||"";
+/* 1回目に まちがえたとき（算数）：合う 🧰 が あれば ひらく。なければ れいだいの 1行目 */
+function lhHint(p,c,fb){
+  if(!LH||!lhMath(c)||p.sm!=="n") return;
+  if(tlList(p,c).length&&!(P.tlc&&P.tlc===c)) { tlOpen(0); return; }
+  const ex=lhExLine(c); if(ex&&fb) fb.append(h("span",{class:"lhh",text:T("lh.hint")+ex}));
+}
+/* 2回 まちがえたとき（算数）：その問題の 数で とき方。つまずき（同じ単元で × が つづく）なら れいだい・やさしい ステップも 出す。
+   「わかった」を 押してから つぎへ（done）。出すものが なければ false */
+function lhHow(p,c,stuck,done){
+  const lines=lhMath(c)?(LH.howTo(c.q,c.hissan,c.a)||(c.ex?String(c.ex).split("\n").filter(Boolean):null)):null;
+  const u=UBY[c.uid], easy=stuck&&u&&!p.task?LH.easier(u,UREADY):null;
+  stuck=stuck&&!!(easy||(u&&u.ex));      // かける ことばが ないときは 声かけしない
+  if(!lines&&!stuck) return false;
+  const fb=$("#fb"); if(!fb) return false;
+  tlClose();      // 図は とじて、問題と とき方を ならべる（スマホで 問題が かくれないように）
+  const box=h("div",{class:"lhhow",id:"lhhow"});
+  if(lines) box.append(h("b",{text:T("lh.how")}),...lines.map(l=>h("div",{class:"lhl",text:l})));
+  if(stuck){
+    box.append(h("div",{class:"lhst",text:T("lh.stuck")}));
+    if(u&&u.ex&&!lines) box.append(h("p",{class:"lhex",text:u.ex}));
+  }
+  const btns=h("div",{class:"lhbtns"});
+  if(stuck&&u&&u.ex&&lines) btns.append(h("button",{type:"button",class:"btn sub",text:T("lh.ex"),onclick:()=>uEx(u)}));
+  if(easy) btns.append(h("button",{type:"button",class:"btn sub",text:T("lh.easy",easy.stepLabel||easy.title),onclick:()=>{ if(P!==p) return; stopTimer(); startUnitRun({ids:[easy.id],n:20,t:20,seed:uSeed(),mix:true,choice:null}); }}));
+  const ok=h("button",{type:"button",class:"btn",text:T("lh.ok"),onclick:()=>{ box.remove(); done(); }});
+  btns.append(ok); box.append(btns);
+  fb.after(box); mathIn(box);
+  try{ ok.focus({preventScroll:true}); }catch(e){}
+  return true;
 }
 function finish(){
   const p=P; if(!p||p.done) return; p.done=true; p.lock=true; stopTimer();
@@ -3166,7 +3219,7 @@ function finish(){
   const bestHtml=plain?(p.u||!all[key]||!all[key].score?"":`<span>${T("r.best")} <b>${T("r.n",all[key].score)}</b></span>`):spr&&spr.best!=null?`<span>${T("sp.best","")} <b>${spBestTxt(sp,spr.best)}</b></span>`:"";
   const colHtml=COLOK?colRunPlay(p):"";
   const report=`【${T0("g."+p.x.id+".t")}】${p.g}年 ${p.t}秒｜せいかい${p.ok}問／${total}問（正答率${acc}%）`;   //T
-  if(p.u&&p.cur&&p.cur.tries>0&&!p.missObjs.includes(p.cur)) p.missObjs.push(p.cur);
+  if(p.u&&p.cur&&p.cur.tries>0&&!p.cur.re&&!p.missObjs.includes(p.cur)) p.missObjs.push(p.cur);
    const repFull=(p.u?unitReport(p):report)+tlReport(p)+missIds(p.missObjs,p.x);          // 課題リンクの結果の末尾に、まちがえた問題のID（単元のリンクは、単元名と ○△× の数）
   app.innerHTML=`<div class="play"><div class="res">
     ${stN>=0?ustRowA(stN,acc,stUp||!!(spr&&spr.isNew)):(plain?medRowA:medRow)(medal,acc,showNew||!!(spr&&spr.isNew)||(bx&&!boxLeft))}
@@ -7875,7 +7928,7 @@ function startUnitRun(c){
   const ids=c.ids, bx=c.box||null, g=bx?bx.g:uMaxG(ids), choice=uChoice(ids,c.choice); setLG(g);
   const t=60, sm=spModeOf(c.task), spN=bx?Math.min(SP_TA,bx.items.length):SP_TA;      // タイムアタックは 20問（ボックスが少ないときは その数）
   const pool=bx?shuffle(bx.items):UN.unitPick(ids,sm==="ta"?SP_TA:c.n,c.seed,c.mix);
-  P={x:UNITX,g,t,left:t,ok:0,ng:0,cur:null,inp:null,misses:[],missObjs:[],task:!!c.task,lock:false,over:false,chN:0,inN:0,marks:[],sm,spN,
+  P={x:UNITX,g,t,left:t,ok:0,ng:0,cur:null,inp:null,misses:[],missObjs:[],task:!!c.task,lock:false,over:false,chN:0,inN:0,marks:[],sm,spN,fastN:0,reQ:sm==="n"&&!bx?[]:null,shown:0,stk:{},
      u:{ids,n:c.n,seed:c.seed,mix:c.mix,choice,round:0,pool,pi:0,box:bx,
         again:()=>bx?startBoxRun(bx.subj,bx.back):startUnitRun({...c,seed:uSeed()})}};
   const names=bx?T("sp.box.t"):ids.map(i=>UBY[i].title).join("・");
@@ -7900,14 +7953,16 @@ function uMarksHtml(marks,max,tl){
   return m.map((x,i)=>t[i]?`<span class="${cls[x]} uh" title="${esc(T("tl.mark"))}">${x}</span>`:`<span class="${cls[x]}">${x}</span>`).join("");
 }
 function unitNext(){
-  const U=P.u;
+  const U=P.u, reIt=P.reQ&&LH?LH.rePop(P.reQ,P.shown):null;
+  P.shown=(P.shown|0)+1;
+  if(reIt){ const c=uCur(reIt,U.choice); c.re=true; P.cur=c; if(c.mode==="choice4") P.chN++; else P.inN++; return uDraw(); }      // まちがえた問題を すこし あとで もう一度
   if(U.pi>=U.pool.length){ U.round++; U.pool=U.box?shuffle(boxFor(U.box.subj)):UN.unitPick(U.ids,U.n,U.seed+"-"+U.round,U.mix); U.pi=0; if(!U.pool.length) return finish(); }      // ボックスの回は、のこっている問題を もう一周
   const c=uCur(U.pool[U.pi++],U.choice); P.cur=c;
   if(c.mode==="choice4") P.chN++; else P.inN++;
   uDraw();
 }
 function uDraw(){
-  const c=P.cur; P.inp={f:(c.len||[]).map(()=>""),at:0}; P.lock=false; P.hs=c.mode==="cells"?hsNew(c.hsL):null; tlSync();
+  const c=P.cur; P.t0q=Date.now(); lhReNote(c); P.inp={f:(c.len||[]).map(()=>""),at:0}; P.lock=false; P.hs=c.mode==="cells"?hsNew(c.hsL):null; tlSync();
   const pg=app.querySelector(".play.pg"); if(pg) pg.classList.toggle("cellmode",!!P.hs);
   const tg=$("#hstog"); if(tg) tg.replaceChildren(...(c.hsL?[upill(T("hs.on"),!!P.hs,()=>hsSwitch(true)),upill(T("hs.off"),!P.hs,()=>hsSwitch(false))]:[]));
   const ub=$("#uexb"); if(ub) ub.hidden=!UBY[c.uid];      // にがて ボックスの 計算スプリントの式には 例題が ない
@@ -7985,37 +8040,56 @@ function uUnitTap(un){
 function uPick(b){
   if(!P||P.lock||b.disabled) return;
   const right=b.dataset.c===P.cur.a;
+  lhFast(P,right);
   if(right) $("#area").querySelectorAll(".choice").forEach(e=>{ if(e.dataset.c===P.cur.a) e.classList.add("right"); else e.classList.add("wrong"); });
   else { b.classList.add("wrong"); b.disabled=true; }
   uJudge(right);
 }
 /* ○△×：1回目で正解＝○、1回まちがえて正解＝△、2回まちがえたら×（答えを見せて次へ） */
 function uJudge(right){
-  const p=P, c=p.cur, fb=$("#fb"); p.lock=true;
+  const p=P, c=p.cur, fb=$("#fb"), re=!!c.re; p.lock=true;      // re：あとで もう一度 出した問題。○△×・単元の「できた」・メダル・どんぐりには 入れない
   sfx(right?"ok":"ng");
   let mark, wait;
   if(right){
     mark=c.tries===0?"○":"△";
-    if(mark==="○"){ p.ok++; if(c.tl) p.hok=(p.hok||0)+1; fb.className="fb ok"; fb.textContent=T("fb.ok"); wait=350; }
+    if(re){ fb.className="fb ok"; fb.textContent=mark==="○"?T("lh.got"):T("u.ok2"); wait=700; }
+    else if(mark==="○"){ p.ok++; if(c.tl) p.hok=(p.hok||0)+1; fb.className="fb ok"; fb.textContent=T("fb.ok"); wait=350; }
     else { p.ng++; fb.className="fb ok"; fb.textContent=T("u.ok2"); wait=700; }
   } else {
     c.tries++;
-    if(!p.missObjs.includes(c)){ p.misses.push(`${c.q} → ${c.a}`); p.missObjs.push(c); }
+    if(!re&&!p.missObjs.includes(c)){ p.misses.push(`${c.q} → ${c.a}`); p.missObjs.push(c); }
     const again=c.tries<2&&p.sm!=="sd";      // サドンデスは やりなおしなし
-    if(again&&c.mode==="cells"&&p.hs){ fb.className="fb ng"; hsRetry(fb); p.lock=false; return; }
-    if(again){ fb.className="fb ng"; fb.textContent=T("u.retry"); p.inp={f:(c.len||[]).map(()=>""),at:0}; if(c.mode!=="choice4") uShowInp(); p.lock=false; return; }
-    mark="×"; p.ng++;
+    if(again&&c.mode==="cells"&&p.hs){ fb.className="fb ng"; hsRetry(fb); p.lock=false; lhHint(p,c,null); return; }
+    if(again){
+      fb.className="fb ng"; fb.textContent=T("u.retry"); p.inp={f:(c.len||[]).map(()=>""),at:0}; if(c.mode!=="choice4") uShowInp(); p.lock=false;
+      lhHint(p,c,fb);      // 算数：🧰 か れいだいの 1行目
+      if(c.mode==="choice4"&&LH){      // 4択：すぐ 押しなおさせず、ひと休み（もんだいを よみなおす）。はやすぎる まちがいが つづいたら もう少し
+        const rest=LH.RETRY_REST+lhRest(p,fb), box=$("#area").querySelector(".choices");
+        fb.firstChild.textContent=T("u.retry")+"　"+T("lh.read");
+        p.lock=true; if(box) box.classList.add("lhrest");
+        setTimeout(()=>{ if(P!==p||p.cur!==c||p.done) return; p.lock=false; if(box) box.classList.remove("lhrest"); },rest);
+      }
+      return;
+    }
+    mark="×"; if(!re) p.ng++;
     fb.className="fb ng"; fb.textContent=T("fb.ng",c.a); wait=1700;
     if(c.mode==="choice4") $("#area").querySelectorAll(".choice").forEach(e=>{ if(e.dataset.c===c.a) e.classList.add("right"); else e.classList.add("wrong"); });
     if(c.mode==="cells"&&p.hs){ p.hs.show=true; hsRender(); wait=2600; }
   }
   if(right&&c.mode==="cells"&&p.hs){ p.hs.ok=true; hsRender(); }
-  p.marks.push(mark); (p.mtl=p.mtl||[]).push(!!c.tl); $("#um").innerHTML=uMarksHtml(p.marks,12,p.mtl);
-  p.uSt=p.uSt||{}; const us=p.uSt[c.uid]=p.uSt[c.uid]||{n:0,o:0}; us.n++; if(mark==="○"&&!c.tl) us.o++;      // ずで かんがえた ○ は 「できた」・単元メダルの ○ に 入れない（こたえた数には 入る）
-  $("#sc").textContent=p.ok;
-  boxNote(p,mark==="○");          // にがて ボックス：1回目で ○ なら けす、△・× なら ためる
+  const plainRun=p.sm==="n"&&!(p.u&&p.u.box);
+  if(!re){
+    p.marks.push(mark); (p.mtl=p.mtl||[]).push(!!c.tl); $("#um").innerHTML=uMarksHtml(p.marks,12,p.mtl);
+    p.uSt=p.uSt||{}; const us=p.uSt[c.uid]=p.uSt[c.uid]||{n:0,o:0}; us.n++; if(mark==="○"&&!c.tl) us.o++;      // ずで かんがえた ○ は 「できた」・単元メダルの ○ に 入れない（こたえた数には 入る）
+    $("#sc").textContent=p.ok;
+    boxNote(p,mark==="○");          // にがて ボックス：1回目で ○ なら けす、△・× なら ためる
+    if(mark!=="○"&&p.reQ&&LH) LH.reAdd(p.reQ,c.u,p.shown,Math.random());      // △・× は すこし あとで もう一度
+  }
+  const stuck=plainRun&&LH?LH.stuck(p.stk,c.uid,mark).ask:false;      // 同じ単元で × が つづいた
   if(spEnd(p,mark==="○",wait)) return;
-  setTimeout(()=>{ if(P!==p) return; if(p.left>0&&timerId){ fb.className="fb"; fb.textContent=""; unitNext(); } },wait);
+  const go=()=>{ if(P!==p) return; if(p.left>0&&timerId){ fb.className="fb"; fb.textContent=""; unitNext(); } };
+  if(mark==="×"&&plainRun&&LH&&lhHow(p,c,stuck,go)) return;      // とき方を 見て「わかった」で つぎへ
+  setTimeout(go,wait);
 }
 function uKeydown(e){
   const c=P.cur;
