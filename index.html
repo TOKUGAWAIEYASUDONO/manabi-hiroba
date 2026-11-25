@@ -1564,6 +1564,7 @@ body[data-v=host] .wrap{max-width:none;padding:0}
 .up.si .uexb{min-width:52px;font-size:20px}
 .up.si .siplay{margin-left:auto;flex:none;font-size:18px;color:var(--go)}
 .up.si .simode{display:flex;justify-content:center;gap:6px;margin:14px 0 6px}.up.si .simode .pill{min-height:44px;margin:0}
+.up.si .sihow{flex-wrap:wrap;align-items:center;margin:8px 0 4px}.up.si .sihow .pl{margin-right:2px}
 .up.si .sifoot[hidden]{display:none}
 .up.si .sifoot .err:empty{display:none}
 .up.si .sitools{margin-top:16px}.up.si .sitool{width:100%;max-width:520px}
@@ -7413,11 +7414,15 @@ function renderSubjItem(q){
   const stepOf=u=>u.series&&u.step!=null?u.step:1e9;
   const list=us.map((u,i)=>({u,i})).sort((a,b)=>a.u.g-b.u.g||(a.u.item===b.u.item?stepOf(a.u)-stepOf(b.u):0)||a.i-b.i).map(x=>x.u);
   let mix=false; const sel=[];
+  /* 答え方（すうじを いれる／4つから えらぶ）。単元えらびの 画面と 同じく この端末に 覚える（UPK.choice）。えらんで いない ときは 学年で きめる */
+  const cho=()=>uChoice(list.map(u=>u.id),UPK.choice);
+  const howRow=h("div",{class:"pills simode sihow",role:"group","aria-label":T("u.how")});
+  const drawHow=()=>howRow.replaceChildren(h("b",{class:"pl",text:T("u.how")}),upill(T("u.type"),!cho(),()=>{ UPK.choice=false; uSave(); drawHow(); }),upill(T("u.c4"),cho(),()=>{ UPK.choice=true; uSave(); drawHow(); }));
   const msg=h("div",{class:"err",role:"alert"}), cards=h("div",{class:"ugrid sicards"}), foot=h("div",{class:"ufoot kbar sifoot",hidden:true});
-  const startBtn=h("button",{type:"button",class:"btn again ustart",text:T("u.go"),onclick:()=>{ if(!sel.length){ msg.textContent=T("u.none"); return; } go(uHash({ids:sel.slice(),n:20,t:20,seed:uSeed(),mix:true,choice:null})); }});
+  const startBtn=h("button",{type:"button",class:"btn again ustart",text:T("u.go"),onclick:()=>{ if(!sel.length){ msg.textContent=T("u.none"); return; } go(uHash({ids:sel.slice(),n:20,t:20,seed:uSeed(),mix:true,choice:cho()})); }});
   const cnt=h("span",{class:"usum"});
   foot.append(cnt,msg,startBtn);
-  const one=u=>startUnitRun({ids:[u.id],n:20,t:20,seed:uSeed(),mix:true,choice:null});
+  const one=u=>startUnitRun({ids:[u.id],n:20,t:20,seed:uSeed(),mix:true,choice:cho()});
   function drawCards(){
     cards.replaceChildren(...(list.length?list.map(u=>{ const on=sel.includes(u.id);
       return h("div",{class:"ucardw"},
@@ -7436,12 +7441,12 @@ function renderSubjItem(q){
   const modeRow=h("div",{class:"pills simode",role:"group","aria-label":T("si.mix")});
   const drawMode=()=>modeRow.replaceChildren(upill(T("si.one.b"),!mix,()=>{ mix=false; sel.length=0; msg.textContent=""; drawMode(); drawCards(); hint.textContent=T("si.one"); }),upill(T("si.mix"),mix,()=>{ mix=true; drawMode(); drawCards(); hint.textContent=T("si.mix.d",UMAX); }));
   const hint=h("p",{class:"note sihint",text:T("si.one")});
-  drawMode();
+  drawMode(); drawHow();
   const toolBox=tools.length?h("section",{class:"sitools"},h("h3",{class:"sih",text:T("si.tool")}),
     ...tools.map(t=>h("button",{type:"button",class:"ucard sitool",onclick:()=>t.go.startsWith("url:")?(location.href=t.go.slice(4)):go(t.go)},h("span",{class:"ubody"},h("b",{text:siName(t.t)}),h("span",{class:"unote",text:siName(t.d)})),h("span",{class:"siplay","aria-hidden":"true",text:"▶"})))):null;
   app.replaceChildren(h("div",{class:"up kid si"},
     h("div",{class:"topbar"},h("button",{type:"button",class:"back",innerHTML:BK(),onclick:()=>go(back)}),h("h2",{class:"th2 uttl",text:`${SUBJ_JA.sansu} › ${siName(grp.t)}`}),h("span")),
-    list.length?spChips():null,hint,cards,list.length>1?modeRow:null,foot,toolBox));
+    list.length?spChips():null,list.length?howRow:null,hint,cards,list.length>1?modeRow:null,foot,toolBox));
   drawCards();
 }
 
