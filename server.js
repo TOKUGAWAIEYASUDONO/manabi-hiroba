@@ -16,7 +16,9 @@ const PAGE = ["manabi-hiroba.html", "index.html"].map(f => path.join(__dirname, 
 const MODES = ["chest", "race", "quiz", "rocket", "boss", "jin", "m100"];
 const GAMES = ["calc", "kuku", "kanji", "kencho", "eigo"];
 const GOAL = 40;
-const EV = { 4: "⭐", 9: "🌀", 13: "⭐", 17: "🌀", 21: "⭐", 25: "🌀", 27: "⭐", 31: "🌀", 35: "⭐", 38: "🌀" };
+// マスの イベント（index.html の EV・WARP・raceLand と 同じ。そろえて 直すこと）
+const EV = { 4: "⭐", 5: "🌈", 7: "🎲", 9: "🌀", 11: "❓", 13: "⭐", 16: "🎲", 17: "🌀", 19: "❓", 20: "🌈", 21: "⭐", 23: "🎲", 25: "🌀", 26: "❓", 27: "⭐", 31: "🌀", 33: "🎲", 34: "❓", 35: "⭐", 38: "🌀" };
+const WARP = { 5: 12, 20: 29 };
 const MAX_PLAYERS = 60;
 // やさしいルール：たからばこの「うばう・入れかえ・落とす」と、すごろくの🌀（もどる）をなくす
 const RULES = ["normal", "easy"];
@@ -197,6 +199,22 @@ function json(res, code, obj) {
 function player(room, b) {
   const p = room && room.players.get(b.pid);
   return p && p.token === b.token ? p : null;
+}
+// マスに 止まった ときの できごと（index.html の raceLand と 同じ きまり）
+function raceLand(p, rule, lead) {
+  const ev = p.v >= GOAL ? "" : evOf(rule)[p.v] || "", o = { ev }, fwd = n => { p.v = Math.min(GOAL, p.v + n); };
+  if (ev === "⭐") fwd(3);
+  else if (ev === "🌀") p.v = Math.max(0, p.v - 2);
+  else if (ev === "🌈") p.v = WARP[p.v];
+  else if (ev === "🎲") o.again = true;
+  else if (ev === "❓") {
+    const easy = rule === "easy", r = Math.random() * 100;
+    if (r < (easy ? 70 : 45)) { o.qk = "go"; o.qn = 2 + Math.floor(Math.random() * 3); fwd(o.qn); }
+    else if (r < (easy ? 100 : 65)) { o.qk = "again"; o.again = true; }
+    else if (r < 80) { if (lead && lead.v > p.v && lead.v < GOAL) { o.qk = "swap"; [lead.v, p.v] = [p.v, lead.v]; } else { o.qk = "go"; o.qn = 3; fwd(3); } }
+    else { o.qk = "back"; o.qn = 3; p.v = Math.max(0, p.v - 3); }
+  }
+  return o;
 }
 function leader(room, me) {
   return [...room.players.values()].filter(p => p !== me).sort((a, b) => b.v - a.v)[0];
@@ -442,11 +460,10 @@ const API = {
       }
       case "move": {
         if (room.mode !== "race") break;
-        const n = Math.min(18, Math.max(1, b.n | 0));      // 3問正解で サイコロ2こ（ボーナスは 3こ）
+        const n = Math.min(20, Math.max(1, b.n | 0));      // 3問正解で サイコロ2こ（ボーナスは 3こ、おうえんパワー ＋2）
         p.v = Math.min(GOAL, p.v + n);
-        out.ev = evOf(room.rule)[p.v] || "";
-        if (out.ev === "⭐") p.v = Math.min(GOAL, p.v + 3);
-        if (out.ev === "🌀") p.v = Math.max(0, p.v - 2);
+        const t = leader(room, p);
+        Object.assign(out, raceLand(p, room.rule, t && t.v > p.v ? t : null));
         break;
       }
       default: return [400, { error: "不明な操作です" }];
