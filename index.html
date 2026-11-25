@@ -3804,11 +3804,14 @@ function hbCell(c){
   hbDraw(false);
   const f=app.querySelector(`[data-decor="${c}"],[data-spot="${c}"]`)||app.querySelector("[data-spot]"); if(f) f.focus({preventScroll:true});
 }
+const HB_ISLE_ART=["bar","bench","book1","clock","flagjp","flagus","flower","hutch","jungle","lib","mapboard","pond","rainbow","school","slide","swing","telescope","tree"];      // vendor/img/island（PC の image2 で 作った 絵）
 function hbIsleShow(){ const e=app.querySelector("#hbIsle"); if(e) e.scrollIntoView({block:"center",behavior:matchMedia("(prefers-reduced-motion:reduce)").matches?"auto":"smooth"}); const f=app.querySelector("[data-spot]"); if(f) f.focus({preventScroll:true}); }      // かったら・「おく」を おしたら 島を 見せる
 /* 島（data/hiroba-island.js）：島の広さは 教科ごとの「できた」の数。かざりは ひろばの島の「おける ばしょ」（cell 番号）に おく */
 function hbIsle(root,S,pm,D){
   const host=root.querySelector("#hbIsle"); if(!host||!window.MH_ISLE) return;
-  const I=window.MH_ISLE, n=s=>COL.count(S,s,2), cnt={m:n("m"),j:n("j"),e:n("e"),s:n("s"),r:n("r")};
+  const I=window.MH_ISLE, n=s=>COL.count(S,s,2);
+  if(!I.ART.school) HB_ISLE_ART.forEach(k=>{ I.ART[k]=`vendor/img/island/${k}-256.webp?v=1`; });
+  const cnt={m:n("m"),j:n("j"),e:n("e"),s:n("s"),r:n("r")};
   cnt.total=COL.summary(S).can;
   const parts={}; Object.keys(pm).forEach(id=>{ if(pm[id].have) parts[id]=1; });
   const placed=Object.keys(S.pl).map(id=>({id,art:D[id].art,cell:S.pl[id]}));

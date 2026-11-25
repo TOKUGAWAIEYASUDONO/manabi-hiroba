@@ -142,7 +142,7 @@
   const pts = a => a.map(p => p.map(v => Math.round(v * 10) / 10).join(",")).join(" ");
   const ART = {}; // k -> 画像の パス（vendor/img/island に あるもの）。index.html が きめる
   const SYM = { school: "h-school", lib: "h-lib", book1: "h-book1", slide: "d-slide", swing: "d-swing", bar: "h-bar", jungle: "h-jungle", flagjp: "h-flagjp", flagus: "h-flagus", tree: "d-tree" };
-  const SIZE = { school: 150, lib: 130, tree: 96, jungle: 110, rainbow: 120, clock: 120 };
+  const SIZE = { school: 190, lib: 160, tree: 110, jungle: 120, rainbow: 120, clock: 130, hutch: 110, mapboard: 110, book1: 100, pond: 120, flower: 95, bench: 90 };
 
   /* opt：{ world, label(isl, n) → 文字, placing（おく ものを えらんでいる）, sel（えらんでいる かざりの id）, view, onSpot(cell), onDecor(cell), onView(view) } */
   function mount(host, opt) {
