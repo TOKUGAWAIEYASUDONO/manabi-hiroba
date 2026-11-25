@@ -4482,14 +4482,15 @@ function renderMode(q){
   const rule=q.has("r")?ruleOf(q.get("r")):defaultRule(g);
   if(m.solo&&(task||LESSON)) return go("#home");      // ひとりで ボスバトルは 授業モード（課題リンク）では 遊べない
   setLG(g);
-  if(m.solo&&!q.has("st")) return sgSelect(q,m,x,g);      // ひとりで ボスバトル：さきに ステージを えらぶ
+  if(m.solo&&SGOPEN&&!q.has("st")) return sgSelect(q,m,x,g);      // ひとりで ボスバトル（ステージ版）：さきに ステージを えらぶ
   M={m,x,g,t,task,rule,unitQs,unitIndex:0,ev:evOf(rule),ok:0,ng:0,misses:[],missObjs:[],phase:"q",end:Date.now()+t*1000,
      me:{n:T("b.me"),e:(l=>l[rnd(l.length)][1])(NICK_ANI.filter(a=>!BOTS.some(b=>b.e===a[1]))),v:0,me:true,...(mkAvMine()||{})},
      bots:m.solo?[]:BOTS.map((b,i)=>({...b,v:0,wait:rr(2,5)*botK(g),spd:[1,1.15,0.85][i]})),
      over:false};
-  if(m.solo){ const st=Math.min(sgBz().o,Math.max(0,+q.get("st")|0)), rare=sgBz().rp===st+1;
-    M.sbRare=rare; M.sb=COOP.soloStage({g,easy:rule==="easy",t,stage:st,rare}); M.sb.begin(Date.now()); M.end=M.sb.ae; }
-  app.innerHTML=`<div class="mplay${m.id==="race"?" racew":m.solo?" sgw":""}">
+  if(m.solo&&SGOPEN){ const st=Math.min(sgBz().o,Math.max(0,+q.get("st")|0)), rare=sgBz().rp===st+1;
+    M.sg=true; M.sbRare=rare; M.sb=COOP.soloStage({g,easy:rule==="easy",t,stage:st,rare}); M.sb.begin(Date.now()); M.end=M.sb.ae; }
+  else if(m.solo){ M.sb=COOP.soloBoss({g,easy:rule==="easy",t}); M.sb.begin(Date.now()); M.end=M.sb.ae; }
+  app.innerHTML=`<div class="mplay${m.id==="race"?" racew":m.solo&&SGOPEN?" sgw":""}">
     ${task?`<div class="banner">${ic("pencil")} ${T("p.task",`${m.t}（${x.t}・${g}年《ねん》）`)}</div>`:""}
     <div class="topbar">
       ${task?`<button class="back" id="bk">${ic("x")}${T("back.end")}</button>`:`<button class="back" onclick="stopTimer();M=null;go('#home')">${BK()}</button>`}
@@ -4751,9 +4752,57 @@ function syncPieces(ps){
   for(const k in M.pk) if(M.pk[k].me) layer.appendChild(M.pk[k].el);       // 自分の駒をいちばん上に
   layoutPieces();
 }
+/* --- ひとりで ボスバトル（進行は data/cooplib.js の soloBoss。ここは 画面だけ）。公開中の 今までの 形。SGOPEN でない ときは こちら --- */
+function sbAns0(right){
+  const r=M.sb.ans(right,Date.now()), fb=$("#fb"), mm=M; if(r.late) return;
+  if(right){
+    fb.textContent=r.ko?T("sb.ko"):T("bs.hit",r.dm);
+    if(r.ko){ M.phase="wait"; sfx("star"); setTimeout(()=>{ if(M===mm&&!M.over&&M.sb.ph==="run") sbRun0(); },600); }
+    else setTimeout(()=>M===mm&&!M.over&&showQ(),700);
+  } else if(r.heal) M.sbHeal=Date.now()+1800;      // ボスの 下に 1.8秒 出す（ボタンの 位置は うごかさない）
+  drawSide();
+}
+function sbRun0(){      // ボスが わらって にげていく（その あいだは 問題を 出さない。つぎの ボスが 来たら sbTick0 が 問題を 出す）
+  $("#mmain").innerHTML=`<div class="q bs-runq"><div class="bs-runa">${bsArt(M.sb.lv,2)}</div><div class="big">${T("bs.run")}</div><div class="small">${T("bs.next")}</div></div>`;
+  party();
+}
+function sbTick0(now){
+  const B=M.sb, was=B.ph;
+  if(!B.tick(now)) return;
+  if(was==="run"&&B.ph==="play"&&M.phase==="wait") showQ();
+}
+function sbSide0(){
+  const B=M.sb, el=$("#mside"); if(!el) return;
+  if(!M.sbBuilt){ M.sbBuilt=true;
+    el.innerHTML=`<div class="bs-st" id="sbst"><span class="bs-mini" id="sbart"></span><div class="bs-stx"><b id="sbnm"></b><div class="rk-hbar bs-hp"><i id="sbhp"></i></div><span class="note">${T("bs.hp")}</span></div><span class="bs-dn"><small>${T("bs.dnl")}</small><b id="sbdn"></b></span></div><div class="bs-trk" id="sbtr" aria-live="polite"></div>`; }
+  const pct=B.pct(), md=B.ph==="run"?2:pct<=35?1:0, k=B.lv+":"+md, a=$("#sbart");
+  if(a.dataset.k!==k){ a.dataset.k=k; a.innerHTML=bsArt(B.lv,md); $("#sbnm").innerHTML=esc(bsName(B.lv)); }
+  $("#sbhp").style.width=pct+"%"; $("#sbdn").textContent=T("bs.dnk",B.dn);
+  const cl="bs-st"+(B.tr?" tr"+B.tr.k:""), st=$("#sbst"); if(st.className!==cl) st.className=cl;
+  const tr=$("#sbtr"), tt=B.tr?T("bs.tr"+B.tr.k):M.sbHeal>Date.now()?T("sb.heal"):""; if(tr.dataset.t!==tt){ tr.dataset.t=tt; tr.innerHTML=tt; }
+}
+function sbResult0(){      // まけは ない。メダル・きろくには 数えない（mh_best に 書かない）
+  const p=M, B=p.sb; B.finish(); const r=B.res, total=p.ok+p.ng, acc=total?Math.round(p.ok/total*100):0;
+  sfx("medal"); if(r.dn>0) party();
+  const left=r.left>0&&r.left<r.H?`<div class="note sbleft">${T(r.dn>0?"sb.left":"sb.left0",r.left)}</div>`:"";
+  app.innerHTML=`<div class="play"><div class="res sbres">
+    <div class="bs-runa">${bsArt(r.dn>0?r.dn-1:0,r.dn>0?2:0)}</div>
+    <div class="num">${r.dn>0?T("sb.end",r.dn):T("bs.end0")}</div>${left}
+    <div class="big2 bs-tdk">${T("bs.me.d",r.td)}</div>
+    <div class="actions"><button class="btn again" id="again">${ic("rotate-ccw")}${T("r.again")}</button>
+      <div class="subs">${p.missObjs.length?`<button class="btn sub" id="redo">${T("r.redo")}</button>`:""}<button class="btn sub" onclick="go('#home')">${T("r.other")}</button></div></div>
+    <div class="stats"><span>${T("r.ok")} <b>${T("r.n",p.ok)}</b></span><span>${T("r.acc")} <b>${acc}%</b></span></div>
+    ${p.missObjs.length?missCards(p.missObjs,p.x):""}
+  </div></div>`;
+  mathIn(app);
+  $("#again").onclick=()=>route();
+  const rd=$("#redo"); if(rd) rd.onclick=()=>startReview(p.missObjs,p.x,p.g,false);
+}
 /* --- ひとりで ボスバトル：ステージ（2026-11-25。進行は data/cooplib.js の soloStage。ここは 画面だけ） ---
    ステージ 6つ（背景と ステージボスが かわる）。ざこ 2ひき → ボス。ひらいた ステージから はじめられる。ずかん・レアボス（どんぐり）は data/collection.js の bz。
    絵は vendor/img/battle/（image2 の 水彩。元は art-src/battle/）。その ステージの 絵だけ 読みこむ */
+/* ステージ版は じゅんびちゅう（2026-11-25 ユーザー決定）：公開ページでは 今までの ひとりで ボスバトルの まま。data/config.js の BOSS_STAGE_PUBLIC を true に すると 出る（ひろばの 公開と いっしょに）。手もと（localhost）では 出る */
+const SGOPEN=window.BOSS_STAGE_PUBLIC===true||/^(localhost|127\.0\.0\.1)$/.test((typeof location!=="undefined"&&location.hostname)||"");
 const SG_IMG="vendor/img/battle/", SG_ZAKO="boss1";      // ざこの 絵（いまは もくもくんを 小さく・色ちがいで）
 const sgStName=st=>T("sg.st"+st), sgRareName=st=>T("sg.rare"+st);
 const sgId=(kind,st,rare)=>kind==="z"?"z":(rare?"r":"b")+(st+1);
@@ -4792,6 +4841,7 @@ function sgSelect(q,m,x,g){
 }
 function sgPop(txt,cls){ const sc=$("#sgsc"); if(!sc) return; const e=document.createElement("b"); e.className="sg-pop "+(cls||""); e.textContent=txt; sc.appendChild(e); setTimeout(()=>e.remove(),1100); }
 function sbAns(right){
+  if(!M.sg) return sbAns0(right);
   const B=M.sb, r=B.ans(right,Date.now()), fb=$("#fb"), mm=M; if(r.late) return;
   const sc=$("#sgsc");
   if(right){
@@ -4814,6 +4864,7 @@ function sbTick(now){
   if(was==="run"&&B.ph==="play"&&M.phase==="wait") showQ();
 }
 function sbSide(){
+  if(!M.sg) return sbSide0();
   const B=M.sb, el=$("#mside"); if(!el) return;
   if(!M.sbBuilt){ M.sbBuilt=true;
     el.innerHTML=`<div class="sg-scene" id="sgsc"><div class="sg-top"><b id="sbnm"></b><div class="sg-hp"><i id="sbhp"></i></div></div>
@@ -4834,6 +4885,7 @@ function sbSide(){
   const tr=$("#sbtr"), tt=B.tr?T("bs.tr"+B.tr.k):M.sbHeal>Date.now()?T("sb.heal"):""; if(tr.dataset.t!==tt){ tr.dataset.t=tt; tr.innerHTML=tt; }
 }
 function sbResult(){      // まけは ない。メダル・きろくには 数えない（mh_best に 書かない）。ずかん・ひらいた ステージは collection の bz に のこす
+  if(!M.sg) return sbResult0();
   const p=M, B=p.sb; B.finish(); const r=B.res, total=p.ok+p.ng, acc=total?Math.round(p.ok/total*100):0;
   let got={fresh:[],opened:-1};
   if(COLOK){ const S=colGet(), ids=[...(r.zk>0?["z"]:[]),...r.cl.map((st,i)=>sgId("b",st,r.rare&&i===0))];
