@@ -64,6 +64,14 @@ index.html は data フォルダと一緒に置くこと（ダブルクリック
 - 共有画像（og:image）とロゴ：`vendor/img/og-hirametto.png`・`vendor/img/logo-hirametto.svg`・`vendor/img/logo-hirametto-dark.svg`・`vendor/img/logo-hirametto-mark.svg`・`vendor/img/logo-hirametto-mark-dark.svg`・`vendor/img/favicon.svg`・`vendor/img/favicon-32.png`・`vendor/img/apple-touch-icon.png`・`vendor/img/icon-192.png`・`vendor/img/icon-512.png`（「ひらめっと」のロゴ。2026-11-20 に `node tools/build-logo.js` で作成）。前の名前のときの共有画像 `vendor/img/og-home.png`（いまは使っていない）：2026-11-13 に `python tools/build-og-image.py`（Pillow）で作成。`index.html` の黒板・色トークン・めばえの SVG（`mb-b`／`mb-n`）に合わせて図形を描き、BIZ UDPGothic で文字を入れた 1200×630 の自作画像です。上記 CC0 素材には含みません。元の AI 生成画像は `vendor/img/og-home-v1.png` として保管しています（2026-11-12、Codex の画像生成、実在の人物ではありません）。 「ひらめっと」のロゴ（2026-11-20、案A：ひらめき電球）は `node tools/build-logo.js --png` で作った自作の図形で、文字もフォントを使わず線で描いています：`vendor/img/logo-hirametto.svg`・`vendor/img/logo-hirametto-dark.svg`・`vendor/img/logo-hirametto-mark.svg`・`vendor/img/logo-hirametto-mark-dark.svg`・`vendor/img/favicon.svg`・`vendor/img/favicon-32.png`・`vendor/img/apple-touch-icon.png`・`vendor/img/icon-192.png`・`vendor/img/icon-512.png`、共有画像の案 `vendor/img/og-hirametto.png`（まだ og:image には使っていません）。
 - アイコン：Lucide 1.71.0（ISC）。使う分だけを `index.html` の先頭に `<symbol>` として入れている（`#i-名前`）
 - フォント：BIZ UDPGothic（OFL-1.1、@fontsource 5.3.0）。`vendor/fonts/biz-udpgothic.css` と `vendor/fonts/files/*.woff2`（使う文字を含む分割ファイルだけ）。font-display:swap。読み込めなくても端末のフォントで表示される。文言を増やして新しい漢字を使ったときは、フォントの分割ファイルを作り直す
+- 先生向けの紹介ページ用のフォント：Zen Maru Gothic Black・Yusei Magic（どちらも OFL-1.1、google/fonts）。`sensei.html` で使う文字だけにした `vendor/fonts/files/lp-*.woff2`（入れた文字は `vendor/fonts/lp-chars.txt`）。文を変えたら `python3 tools/build-lp-fonts.py` で作りなおす
+- 先生向けの紹介ページの画面写真：`vendor/img/lp/*.webp`（本体の画面をそのまま撮ったもの）
+
+## 先生向けの紹介ページ（sensei.html。2026-11-25）
+- 先生に ひらめっとを 知ってもらうための 1まいの ページ（https://hirametto.com/sensei）。中身は `tools/lp-page.js`、書き出しは `node tools/build-guide.js`（サイトマップにも入る）。
+- 木のわくの黒板の見出し → 「45分の授業」（導入・練習・みんなで・ふりかえり。スクロールに合わせて右の画面と背景の色が入れかわる）→ 学校で安心して使えるように → 先生の画面へのボタン。
+- 一方通行：このページから 本体（`./#teacher`・`./`・`guide/`）へは 行けるが、本体・ガイドから このページへの リンクは 置かない（子どもが 迷いこまないように）。`node tools/check-lp.js` が 検査する。
+- 外部からは 何も 読みこまない。動きを へらす 設定（prefers-reduced-motion）では アニメーションなし。
 
 ## 見た目の決まり（3周目B）
 - 色は `index.html` 先頭の CSS 変数（`--board` `--field` `--math` など）。押せる物だけ太いふち＋下影、押せない物は影なし
