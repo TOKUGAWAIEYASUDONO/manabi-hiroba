@@ -17,7 +17,7 @@
 <link rel="icon" href="vendor/img/favicon.svg" type="image/svg+xml">
 <link rel="icon" href="vendor/img/favicon-32.png" sizes="32x32" type="image/png">
 <link rel="apple-touch-icon" href="vendor/img/apple-touch-icon.png">
-<script src="data/move.js?v=59748a41"></script><!-- おひっこし（新しい住所へ）。設定は data/move.js の SITE だけ。いちばん先に 読む -->
+<script src="data/move.js?v=707d7965"></script><!-- おひっこし（新しい住所へ）。設定は data/move.js の SITE だけ。いちばん先に 読む -->
 <link rel="stylesheet" href="vendor/fonts/biz-udpgothic.css?v=ecfc8846">
 <style>
 :root{
@@ -521,6 +521,40 @@ body[data-v=teacher] rt{display:none}
 .stamp .sn{flex:1;min-width:0;font-weight:700;font-size:17px;line-height:1.35}
 .stamp .sn small{display:block;margin-top:2px;font-weight:400;font-size:13px;color:var(--muted)}
 .stamp .slots{display:flex;gap:6px}
+/* 算数の 単元の ★（単元カード・きろく）。いつもの・タイム・サドン の 3つ */
+.ustrow{display:flex;flex-wrap:wrap;align-items:center;gap:2px 10px;margin-top:4px}
+.ustg{display:inline-flex;align-items:center;gap:3px;white-space:nowrap}
+.ustg small{font-size:11px;font-weight:700;color:var(--muted)}
+.ustrow .mtst i{font-size:15px;letter-spacing:0}
+.ustrow.all .mtst i.on{color:#e07b00}
+.ustall{font-size:16px;line-height:1}
+.stamp.ustamp{flex-wrap:wrap;gap:4px 10px}.stamp.ustamp .sn{flex:1 1 100%}.stamp.ustamp .ustrow{margin-top:0;flex:none}
+.umsheet{width:min(100%,460px);max-height:calc(100vh - 28px);overflow:auto}
+.umsheet h3{font-size:22px;text-align:center;margin:0}
+.umu{text-align:center;margin:2px 0 10px;font-weight:700;color:var(--muted);font-size:15px}
+.umbtn{display:flex;align-items:center;gap:10px;width:100%;text-align:left;background:#fff;border:3px solid var(--edge);border-radius:14px;box-shadow:0 4px 0 var(--edge);padding:10px 12px;margin:0 0 12px;min-height:84px;cursor:pointer;font:inherit;color:inherit}
+.umbtn:active{transform:translateY(3px);box-shadow:0 1px 0 var(--edge)}
+.umbtn.um-n{background:#e6f4e8}.umbtn.um-ta{background:#e5f0fb}.umbtn.um-sd{background:#fdebe4}
+.umico{font-size:30px;flex:none;width:38px;text-align:center}
+.umbody{flex:1;min-width:0;display:flex;flex-direction:column;gap:1px}
+.umbody b{font-size:21px;line-height:1.3}.umd{font-size:14px;line-height:1.4}.umg{font-size:13px;font-weight:700;color:#8a3b00;line-height:1.4}
+.umst{flex:none}.umst .mtst i{font-size:20px;letter-spacing:0}
+.umx{display:block;margin:2px auto 0}
+/* ★が そろった 単元カード：金の ふち／虹色の ふち（カードの 中は 白いまま。動くのは ふちの 色だけ） */
+.ucard.ugold{border-color:#e0a100;box-shadow:0 4px 0 #b57f00}
+.ucard.ugold:active{box-shadow:0 1px 0 #b57f00}
+.ucard.urainbow{border-color:transparent;box-shadow:0 4px 0 #b57f00;
+  background:linear-gradient(#fffdf2,#fffdf2) padding-box,linear-gradient(90deg,#ff5d5d,#ffb13d,#ffe14a,#5fd068,#4aa8ff,#a56bff,#ff5d5d,#ffb13d,#ffe14a,#5fd068,#4aa8ff,#a56bff,#ff5d5d) border-box;
+  background-size:100% 100%,200% 100%;animation:urb 6s linear infinite}
+.ucard.urainbow:active{box-shadow:0 1px 0 #b57f00}
+.ucard.urainbow[aria-checked=true]{background:linear-gradient(#e1f0e3,#e1f0e3) padding-box,linear-gradient(90deg,#ff5d5d,#ffb13d,#ffe14a,#5fd068,#4aa8ff,#a56bff,#ff5d5d,#ffb13d,#ffe14a,#5fd068,#4aa8ff,#a56bff,#ff5d5d) border-box;background-size:100% 100%,200% 100%}
+@keyframes urb{from{background-position:0 0,0 0}to{background-position:0 0,-200% 0}}
+@media (prefers-reduced-motion:reduce){.ucard.urainbow{animation:none}}
+.ucard.ulock{opacity:.6;background:#f1f1ee;cursor:default;box-shadow:0 4px 0 var(--line);border-color:var(--line)}
+.ucard.ulock:active{transform:none;box-shadow:0 4px 0 var(--line)}
+.ulockn{display:block;font-size:13px;font-weight:700;color:var(--muted);line-height:1.4}
+.res>.ustbig{grid-column:1;text-align:center}.ustbig{text-align:center}
+.tile .td .ustsum{display:inline-block;font-weight:800;color:#a36a00;white-space:nowrap}
 .slot{width:46px;height:46px}.slot .art{width:46px;height:46px}
 .bak{background:#fff;border:2px solid var(--line);border-left:8px solid var(--eng);border-radius:4px 14px 14px 4px;padding:12px 14px;display:grid;gap:10px}
 .bak h3{margin:0;font-size:17px}
@@ -2091,7 +2125,7 @@ const TX={
  "g.unit.t":["単元《たんげん》練習《れんしゅう》","たんげん れんしゅう"],
  "u.pick":["単元《たんげん》をえらぶ","たんげんを えらぶ"],"u.pick.d":["カードを 1かい タップすると、すぐに はじまるよ","カードを 1かい タップすると、すぐに はじまるよ"],
  "sr.title":["算数《さんすう》の へや","さんすうの へや"],"sr.units":["単元《たんげん》で 練習《れんしゅう》","たんげんで れんしゅう"],"sr.tokkun":["とっくん","とっくん"],"sr.n":[n=>`${n}こ`,n=>`${n}こ`],"sr.all":["ぜんぶの 単元《たんげん》から えらぶ","ぜんぶの たんげんから えらぶ"],
- "si.one":["カードを タップすると すぐ はじまるよ","カードを タップすると すぐ はじまるよ"],"si.mix":["いくつか まぜる","いくつか まぜる"],"si.one.b":["1つずつ","1つずつ"],"si.mix.d":[n=>`カードを えらんで「はじめる」（${n}こまで）`,n=>`カードを えらんで「はじめる」（${n}こまで）`],"si.tool":["どうぐで 練習《れんしゅう》","どうぐで れんしゅう"],"si.none":["この学年《がくねん》には ないよ","この がくねんには ないよ"],
+ "si.one":["カードを タップして、あそびかたを えらぼう","カードを タップして、あそびかたを えらぼう"],"si.mix":["いくつか まぜる","いくつか まぜる"],"si.one.b":["1つずつ","1つずつ"],"si.mix.d":[n=>`カードを えらんで「はじめる」（${n}こまで）`,n=>`カードを えらんで「はじめる」（${n}こまで）`],"si.tool":["どうぐで 練習《れんしゅう》","どうぐで れんしゅう"],"si.none":["この学年《がくねん》には ないよ","この がくねんには ないよ"],
  "u.ex":["例題《れいだい》","れいだい"],"u.close":["とじる"],"u.grade":["学年《がくねん》","がくねん"],"u.all":["ぜんぶ"],
  "u.sets":["おすすめの組《く》み合《あ》わせ","おすすめ"],
  "u.sel":[n=>`えらんだ単元《たんげん》：${n}`,n=>`えらんだ たんげん：${n}`],"u.clear":["ぜんぶはずす","ぜんぶ はずす"],
@@ -2122,6 +2156,27 @@ const TX={
  "sp.newbest":["★ じぶんの ベスト こうしん！"],
  "sp.tamin":[n=>`${n}問《もん》 いじょう せいかいすると、タイムが きろくに のこるよ`,n=>`${n}もん いじょう せいかいすると、タイムが きろくに のこるよ`],
  "how.m":["メダルの もらいかた"],"how.s":["★の もらいかた"],
+ /* 算数の 単元の ★（いつもの・タイムアタック・サドンデス） */
+ "ust.n":["いつもの"],"ust.ta":["タイム"],"ust.sd":["サドン"],
+ "ust.aria":[(a,b,c)=>`ほし：いつもの ${a}、タイムアタック ${b}、サドンデス ${c}`],
+ "um.t":["どれで あそぶ？"],"um.next":["つぎの ★"],"ust.g.n":[n=>`1分《ぷん》で ○ ${n}こ`,n=>`1ぷんで ○ ${n}こ`],
+ "ust.top":["★3つ！ さいこう！"],"ust.up":["ほしが ふえた！"],
+ "ust.open":["★3つ！ バトルで この たんげんを えらべるように なったよ"],
+ "ust.next":[(n,k)=>`★${n}つまで あと ${k} 問《もん》`,(n,k)=>`★${n}つまで あと ${k} もん`],
+ "ust.nextacc":[(n,p)=>`★${n}つまで 正答率《せいとうりつ》を ${p}%以上《いじょう》に`,(n,p)=>`★${n}つまで せいかいの わりあいを ${p}%いじょうに`],
+ "ust.next.ta":[(n,t)=>`★${n}つまで：${t} いないで ゴール`],
+ "ust.next.ta3":[n=>`★3つまで：${n}問《もん》 いじょう せいかいしよう`,n=>`★3つまで：${n}もん いじょう せいかいしよう`],
+ "ust.cap.ch":["★3つは「すうじを いれる」で ちょうせんしよう"],
+ "ust.cap.mix":["★3つは たんげんを 1つだけ えらんで ちょうせんしよう"],
+ "ust.ms":[(m,s)=>s?`${m}分《ふん》${s}秒《びょう》`:`${m}分《ふん》`,(m,s)=>s?`${m}ふん${s}びょう`:`${m}ふん`],"ust.s":[s=>`${s}秒《びょう》`,s=>`${s}びょう`],
+ "ust.h.ta1":[(n,k)=>`${n}問《もん》を さいごまで（${k}問《もん》 いじょう せいかい）`,(n,k)=>`${n}もんを さいごまで（${k}もん いじょう せいかい）`],
+ "ust.h.ta":[t=>`${t} いないで ゴール`],
+ "ust.h.ta3":[(t,k)=>`${t} いない・${k}問《もん》 いじょう せいかい`,(t,k)=>`${t} いない・${k}もん いじょう せいかい`],
+ "ust.h.sd":[n=>`${n}問《もん》 れんぞくで せいかい`,n=>`${n}もん れんぞくで せいかい`],
+ "ust.h.d":["○は 1回《かい》目《め》で せいかい（ずで かんがえた 問題《もんだい》は 入《はい》らない）。いつもので ★3つ とると、バトルで この たんげんを えらべるよ","○は 1かいめで せいかい（ずで かんがえた もんだいは はいらない）。いつもので ★3つ とると、バトルで この たんげんを えらべるよ"],
+ "ust.lock":["🔒 いつもので ★3つ とると えらべるよ"],
+ "ust.lock.n":[n=>`🔒の たんげんは、算数《さんすう》の へやの「いつもの」で ★3つ とると えらべるよ（あと ${n}こ）`,n=>`🔒の たんげんは、さんすうの へやの「いつもの」で ★3つ とると えらべるよ（あと ${n}こ）`],
+ "ust.sum":[(a,b)=>`★ ${a} / ${b}`],
  "how.sp":[(t,n,p)=>`${t}秒《びょう》で ${n}問《もん》 せいかい・正答率《せいとうりつ》 ${p}%いじょう`,(t,n,p)=>`${t}びょうで ${n}もん せいかい・せいかいの わりあい ${p}%いじょう`],
  "how.sp.mix":["4つから えらぶ 問題《もんだい》が まざると、いる 数《かず》が 少《すこ》し へるよ。ずで かんがえて せいかいした 問題《もんだい》は 数《かぞ》えないよ","4つから えらぶ もんだいが まざると、いる かずが すこし へるよ。ずで かんがえて せいかいした もんだいは かぞえないよ"],
  "how.sp.tl":["ずで かんがえて せいかいした 問題《もんだい》は 数《かぞ》えないよ","ずで かんがえて せいかいした もんだいは かぞえないよ"],
@@ -2436,6 +2491,8 @@ const PIPS={1:[[32,32]],2:[[20,20],[44,44]],3:[[20,20],[32,32],[44,44]],4:[[20,2
 /* 結果の上：メダル＋めばえ（メダルなしのときは「おしい」のめばえだけ）。動きは「ぴょん」と1回だけ */
 /* 結果のマスコットの顔：メダル・自己ベスト・正答率80%以上は よろこぶ顔。正答率50%以上は ふつうの顔。それより低いときだけ おしい顔（ほめられているのに悲しい顔にならないように） */
 const medRow=(m,acc,best)=>{ const k=m||best||acc>=80?"h":"n"; return `<div class="medrow">${m?`<div class="medalwrap m${m}"><div class="medal">${msvg(m)}</div></div>`:""}${mbs(k,"hop"+(m?"":" big"))}</div>`; };
+/* 算数の 単元の 結果：大きい ★を stepUp で 1つずつ（めもり名人と 同じ 見た目） */
+const ustRowA=(n,acc,best)=>`<div class="mtbigst ustbig"><span class="mtst big" role="img" aria-label="ほし ${n}">${[0,1,2].map(()=>`<i data-step aria-hidden="true">★</i>`).join("")}</span></div>`+medRow(0,acc,best||n>0);
 /* 計算スプリント・単元練習の 結果：大きい メダルは さいごに 出し（mwait）、下の 🥉🥈🥇 の だんを stepUp で 1つずつ ふやす */
 const medRowA=(m,acc,best)=>medRow(m,acc,best).replace('class="medalwrap','class="medalwrap mwait')+`<div class="msteps" role="img" aria-label="${["","🥉","🥈","🥇"][m]?"メダル "+["","どう","ぎん","きん"][m]:"メダル なし"}">${[1,2,3].map(i=>`<span class="mstep" data-step aria-hidden="true"><span class="e">${msvg(0)}</span><span class="f">${msvg(i)}</span></span>`).join("")}</div>`;
 /* ★・メダルを 1つずつ ふやす（1つ 0.45秒。さいごに o.end）。画面を おすか キーで とばす。うごきを へらす 設定では すぐ ぜんぶ。
@@ -3146,9 +3203,16 @@ function finish(){
   const medEnd=()=>{ const w=app.querySelector(".medalwrap.mwait"); if(w) w.classList.remove("mwait"); if(medal>0) sfx("medal"); if(medal===3||(isNew&&medal>0)) party(); };      // メダルの 音・紙吹雪は だんが ふえおわってから
   if(plain&&!p.u){ all[key]={score:Math.max(prev.score,okM),medal:Math.max(prev.medal,medal)}; store.set("mh_best",all); refreshMedals(); }      // 単元練習は、単元ごとのきろく（u:単元ID）に残す（上の uRecord）
   const spr=sp&&!bx?spRecord(p):null;               // タイムアタック・サドンデスの じぶんの ベスト（mh_spbest）
-  if(spr&&spr.isNew){ sfx("medal"); party(); }
+  const starRun=plain&&!!p.u&&p.u.ids.every(uIsStar);
+  if(starRun&&!ures.length) nextMsg=T("ust.next",1,ustN(uTier(UBY[p.u.ids[0]],!!p.u.choice),0,0,p.u.ids.length,3).need[0]);      // 算数の 単元だけの 回は メダルでなく ★で 出す
+  const sst=spr?uSpStar(p,spr):null;               // 算数の 単元 1つの タイムアタック・サドンデス：★
+  if(spr&&spr.isNew&&!sst){ sfx("medal"); party(); }
   if(sp==="ta"&&spr&&!spr.counted) nextMsg=spr.tool?T("tl.ta"):T("sp.tamin",SP_TA_OK);
-  const spNote=sp&&!bx?T("sp.nomedal"):"";
+  else if(sst) nextMsg=sst.stars>=3?T("ust.top"):sst.stars>=sst.cap?T("ust.cap.ch"):sp==="ta"?(sst.stars+1===3&&p.ok<UST_TA_OK3?T("ust.next.ta3",UST_TA_OK3):T("ust.next.ta",sst.stars+1,spFmtMS(UST_TA[sst.tier][sst.stars]))):T("ust.next",sst.stars+1,UST_SD[sst.tier][sst.stars]-p.ok);
+  const spNote=sp&&!bx&&!sst?T("sp.nomedal"):"";
+  const stN=starRun?medal:sst?sst.stars:-1, stUp=starRun?ures.some(r=>r.up):!!(sst&&sst.up);      // stN：大きく 出す ★の 数（-1＝★の 回では ない）
+  const stOpen=starRun&&ures.length===1&&ures[0].up&&medal===3&&!p.task&&!LESSON;      // いつものの ★3：バトルで えらべるように なった
+  const uHow=()=>{ const r=starRun?ures.reduce((a,b)=>!a||b.medal>a.medal||(b.medal===a.medal&&b.o>a.o)?b:a,null):null, id=r?r.id:p.u.ids[0]; return howUStar(UBY[id],!!p.u.choice,sp||"n",starRun?ures.length:1); };
   const boxLeft=bx?boxFor(p.u.box.subj).length:0;
   if(bx) nextMsg=boxLeft?T("sp.box.left",boxLeft):T("sp.box.clear");
   const numHtml=sp==="ta"&&p.el!=null?`${T("sp.sec",spFmt(p.el))}<small class="spsub">${T("r.num",p.ok)}／${T("r.n",total)}</small>`:sp==="sd"?T("sp.streak",p.ok):T("r.num",p.ok);
@@ -3158,18 +3222,18 @@ function finish(){
   if(p.u&&p.cur&&p.cur.tries>0&&!p.cur.re&&!p.missObjs.includes(p.cur)) p.missObjs.push(p.cur);
    const repFull=(p.u?unitReport(p):report)+tlReport(p)+missIds(p.missObjs,p.x);          // 課題リンクの結果の末尾に、まちがえた問題のID（単元のリンクは、単元名と ○△× の数）
   app.innerHTML=`<div class="play"><div class="res">
-    ${(plain?medRowA:medRow)(medal,acc,showNew||!!(spr&&spr.isNew)||(bx&&!boxLeft))}
+    ${stN>=0?ustRowA(stN,acc,stUp||!!(spr&&spr.isNew)):(plain?medRowA:medRow)(medal,acc,showNew||!!(spr&&spr.isNew)||(bx&&!boxLeft))}
     <div class="num">${numHtml}</div>
     ${p.task||!nextMsg?"":`<div class="nextm">${medalize(esc(nextMsg))}</div>`}${spNote?`<div class="note">${esc(spNote)}</div>`:""}
-    ${plain&&!p.task?(p.u?howUnit(ures.length):howSprint(p.x.type,p.t)):""}
+    ${stN>=0&&!p.task?uHow():plain&&!p.task?(p.u?howUnit(ures.length):howSprint(p.x.type,p.t)):""}
     ${colHtml}
-    ${showNew?`<div class="newbest">${T("r.new")}</div>`:spr&&spr.isNew?`<div class="newbest">${T("sp.newbest")}</div>`:""}
+    ${stOpen?`<div class="newbest ustopen">${T("ust.open")}</div>`:stUp&&!p.task?`<div class="newbest">${T("ust.up")}</div>`:showNew?`<div class="newbest">${T("r.new")}</div>`:spr&&spr.isNew?`<div class="newbest">${T("sp.newbest")}</div>`:""}
     ${(p.x.id==="calc"||p.u)&&spOn(p.task)?`<div id="spres"></div>`:""}
     <div class="actions"><button class="btn again" id="again">${ic("rotate-ccw")}${bx&&!boxLeft?T("sp.box.back"):T("r.again")}</button>
       <div class="subs">${p.missObjs.length?`<button class="btn sub" id="redo">${T("r.redo")}</button>`:""}${p.task?"":`<button class="btn sub" onclick="go(runBack())">${RUNBACK?T("back"):T("r.other")}</button>`}</div></div>
     <div class="stats"><span>${T("r.answered")} <b>${T("r.n",total)}</b></span><span>${T("r.acc")} <b>${acc}%</b></span>${bestHtml}</div>
     ${p.tlN?`<div class="note tlres">🧰 ${T("tl.res",p.tlN)}${plain&&p.hok?`<br>${T("tl.res.d")}`:""}</div>`:""}
-    ${p.u?`<div class="umr"><b>${T("u.marks.t")}</b><div class="umarks big">${uMarksHtml(p.marks,0,p.mtl)}</div><div class="note">${esc(T("u.marks"))}</div>${ures&&ures.length?`<div class="ubk">${ures.map(r=>`<div class="stamp"><span class="sn">${esc(UBY[r.id].title)}<small>${T("u.best",r.o)}</small></span><span class="slots" aria-hidden="true">${MEDAL_ICO.map((em,i)=>`<span class="slot${r.medal>i?" on":""}">${msvg(r.medal>i?i+1:0)}</span>`).join("")}</span></div>`).join("")}</div>`:""}</div>`:""}
+    ${p.u?`<div class="umr"><b>${T("u.marks.t")}</b><div class="umarks big">${uMarksHtml(p.marks,0,p.mtl)}</div><div class="note">${esc(T("u.marks"))}</div>${ures&&ures.length?`<div class="ubk">${ures.map(r=>`<div class="stamp"><span class="sn">${esc(UBY[r.id].title)}<small>${T("u.best",r.o)}</small></span>${r.star?uStarH(r.medal):`<span class="slots" aria-hidden="true">${MEDAL_ICO.map((em,i)=>`<span class="slot${r.medal>i?" on":""}">${msvg(r.medal>i?i+1:0)}</span>`).join("")}</span>`}</div>`).join("")}</div>`:""}</div>`:""}
     ${p.missObjs.length?missCards(p.missObjs,p.x):""}
     ${p.task?`<div class="miss"><b>${T("r.send")}</b><br><span id="rep">${esc(repFull)}</span><br><button class="btn sub" id="cp">${T("r.copy")}</button></div>`:""}
   </div></div>`;
@@ -3179,7 +3243,8 @@ function finish(){
   const rd=$("#redo"); if(rd) rd.onclick=()=>startReview(p.missObjs,p.x,p.g,p.task);
   const cp=$("#cp"); if(cp) cp.onclick=()=>{ navigator.clipboard?.writeText(repFull).then(()=>cp.textContent=T("r.copied"),()=>{}); };
   if(p.task) lessonEndButton();
-  if(plain) stepUp(app.querySelector(".msteps"),medal,{end:medEnd});
+  if(stN>=0) stepUp(app.querySelector(".ustbig"),stN,{end:()=>{ if(stN>0) sfx("medal"); if(stN===3||stUp) party(); }});
+  else if(plain) stepUp(app.querySelector(".msteps"),medal,{end:medEnd});
 }
 /* まちがえた問題だけもう一回（その回のまちがい最大8問。記録・メダルには入れない。ふくしゅう中のまちがいは最後にもう一度） */
 function startReview(items,x,g,task){
@@ -3466,7 +3531,7 @@ function bkApply(r){
   for(const k in r.b){ const c=all[k]||{score:0,medal:0}, n=r.b[k];
     if(n.score||n.medal) all[k]={score:Math.max(c.score||0,n.score),medal:Math.max(c.medal||0,n.medal)}; }
   for(const u of (typeof UREADY!=="undefined"?UREADY:[])){ const n=r.u&&r.u[uHash4(u.id)]; if(!n) continue;
-    const c=all["u:"+u.id]||{score:0,medal:0}; all["u:"+u.id]={score:Math.max(c.score||0,n.score),medal:Math.max(c.medal||0,n.medal)}; }
+    const c=all["u:"+u.id]||{score:0,medal:0}; all["u:"+u.id]={...c,score:Math.max(c.score||0,n.score),medal:Math.max(c.medal||0,n.medal)}; }
   store.set("mh_best",all);
   if(r.mt&&r.mt.some(n=>n>0)) mtSet(c=>{ r.mt.forEach((n,i)=>{ if(i<MT_N&&n>mtStars(c,i+1)) c.s[i+1]=n; }); });      // めもり名人の ★：大きいほう
   if(r.g){ ui.grade=r.g; store.set("mh_ui",ui); }
@@ -3476,33 +3541,118 @@ function unitBook(b){
   if(!UNITS_OK) return "";
   const subs=[["sansu","math"],["kokugo","jp"],["shakai","soc"],...(window.RIKA_PUBLIC?[["rika","rika"]]:[]),["eigo","eng"]];
   const secs=subs.map(([sj,k])=>{
-    const us=UREADY.filter(u=>u.subj===sj&&b["u:"+u.id]&&(b["u:"+u.id].score||b["u:"+u.id].medal));
+    const us=UREADY.filter(u=>u.subj===sj&&b["u:"+u.id]&&(b["u:"+u.id].score||b["u:"+u.id].medal||b["u:"+u.id].ta||b["u:"+u.id].sd));
     if(!us.length) return "";
     return `<div class="ubk"><h4>${subjN(k)}</h4>${us.map(u=>{ const e=b["u:"+u.id], m=e.medal|0;
+      if(uIsStar(u.id)){ const s=uStars(u.id,b); return `<div class="stamp ustamp"><span class="sn">${esc(u.title)}<small>${u.g}年《ねん》・${T("u.best",e.score|0)}</small></span><span class="ustrow${s.n+s.ta+s.sd>=9?" all":""}" role="img" aria-label="${esc(T("ust.aria",s.n,s.ta,s.sd))}">${[["n",s.n],["ta",s.ta],["sd",s.sd]].map(([k,v])=>`<span class="ustg"><small>${T("ust."+k)}</small>${uStarH(v)}</span>`).join("")}</span></div>`; }
       return `<div class="stamp"><span class="sn">${esc(u.title)}<small>${u.g}年《ねん》・${T("u.best",e.score)}</small></span><span class="slots" aria-hidden="true">${MEDAL_ICO.map((em,i)=>`<span class="slot${m>i?" on":""}">${msvg(m>i?i+1:0)}</span>`).join("")}</span></div>`; }).join("")}</div>`;
   }).join("");
   return `<div class="book unitbook"><h3>${T("rec.unit")}</h3>${secs||`<div class="note" style="padding:8px 0">${T("rec.unit.none")}</div>`}</div>`;
 }
-/* 単元練習の メダル：1つの単元で ○（1回目で せいかい）が need こ・正答率 U_ACC% 以上。k＝その回に 出た 単元の 数 */
+/* 単元練習の メダル：1つの単元で ○（1回目で せいかい）が need こ・正答率 U_ACC% 以上。k＝その回に 出た 単元の 数（算数いがいの 教科は この きまりの まま） */
 const U_ACC=[60,75,90], uNeed=k=>[3,5,8].map(v=>Math.max(2,Math.ceil(v/Math.max(1,k))));
-function uNext(res){       // 結果の「つぎの メダルまで」：いちばん よかった 単元で 数える
+/* ================= 算数の 単元の ★（いつもの・タイムアタック・サドンデス で ★1〜3。1単元で ★9こまで） =================
+   2026-11-25：めもり名人と そろえて、算数の 単元は メダルでなく ★で 出す。きろくは 今までと 同じ mh_best の u:<単元ID>
+   （medal＝いつものの ★。ta・sd＝タイムアタック・サドンデスの ★）。メダルの ごうけいには 今までどおり いつものの ★だけ 入る。
+   ・基準は 単元の 問題の タイプで 4つ：A かんたん計算／B 手間のある入力／C 文章題・大きい ひっ算／D 4つから えらぶ
+   ・いつもの：1分で ○（1回目で せいかい）の 数＋正答率 U_ACC。タイムアタック：20問を 16問以上 ○ で ★1、タイムで ★2・★3（★3は 18問以上 ○）。
+     サドンデス：れんぞく せいかいの 数
+   ・タイムアタック・サドンデスの ★と、いつものの ★3は、単元を 1つだけ えらんだ ときだけ（まぜた ときは いつものの ★2まで）
+   ・3年生より 上の 入力の 単元を「4つから えらぶ」で あそぶと ★2まで（めもり名人と 同じ）。1・2年の 単元は 4つから えらんでも ★3まで
+   ・いつものの ★3で、ホームの バトル（ひとりで あそぶ とき）で その単元を えらべる（uBattleOk）。授業モード・先生の へや・課題リンクは かえない */
+/* UST-BEGIN 画面に依存しない きまり（tools/test-unit-stars.js で検査） */
+const UST_N={A:[6,10,14],B:[4,7,10],C:[3,5,7],D:[5,8,12]};            // いつもの：1分の ○ の数
+const UST_TA={A:[0,120,85],B:[0,170,120],C:[0,240,170],D:[0,150,100]};      // タイムアタック：★2・★3の タイム（秒いか）。★1は かんそう
+const UST_SD={A:[5,10,20],B:[4,8,15],C:[3,6,10],D:[5,10,20]};        // サドンデス：れんぞく せいかい
+const UST_TA_OK3=18, UST_CALC=["たし算","ひき算","かけ算","わり算"];   //T
+/* タイプ：ans＝こたえかた、item＝学習項目、load＝問題と答えの 数字の 数（平均）、hs＝ひっ算が あるか、choice＝4つから えらんで あそぶ */
+function ustTier(o){
+  if(o.choice||o.ans==="choice4") return "D";
+  if(o.item==="文章題") return "C";   //T
+  if(o.ans!=="num") return "B";
+  if(o.hs) return o.load<=5.5?"A":o.load<=7?"B":"C";
+  return UST_CALC.includes(o.item)&&o.load<=5.5?"A":"B";
+}
+function ustN(tier,o,n,k,cap){            // いつもの：o＝○の数、n＝こたえた数、k＝その回の 単元の数、cap＝★の 上限
+  const need=UST_N[tier].map(v=>Math.max(2,Math.ceil(v/Math.max(1,k)))), acc=n?o/n*100:0; let st=0;
+  for(let i=0;i<3;i++) if(o>=need[i]&&acc>=U_ACC[i]) st=i+1;
+  return {stars:Math.min(st,cap),raw:st,need};
+}
+function ustTA(tier,done,ok,sec,cap){     // タイムアタック
+  if(!(done>=20&&ok>=16)) return 0;
+  const T=UST_TA[tier]; let st=1; if(sec<=T[1]) st=2; if(sec<=T[2]&&ok>=UST_TA_OK3) st=3;
+  return Math.min(st,cap);
+}
+function ustSD(tier,streak,cap){ const S=UST_SD[tier]; let st=0; for(let i=0;i<3;i++) if(streak>=S[i]) st=i+1; return Math.min(st,cap); }
+const ustClamp=v=>Math.min(3,Math.max(0,v|0));
+/* UST-END */
+const uIsStar=id=>!!(UBY[id]&&UBY[id].subj==="sansu");
+const UST_CACHE={};
+function uTierInfo(u){            // 単元の 見本 12問から タイプを きめる（シード固定。いつも 同じ）
+  if(UST_CACHE[u.id]) return UST_CACHE[u.id];
+  let L=0, hs=false, ans="num", n=0;
+  for(let i=0;i<12;i++){ let it; try{ it=UN.make(u,"ust"+i); }catch(e){ continue; } n++; ans=it.ans;
+    const q=rbp(String(it.stem||"")+String(it.q));
+    L+=(q.match(/\d/g)||[]).length+String(it.a).replace(/\D/g,"").length; if(it.hissan) hs=true; }
+  return UST_CACHE[u.id]={ans,item:u.item,load:n?L/n:99,hs};
+}
+const uTier=(u,choice)=>ustTier({...uTierInfo(u),choice:!!choice});
+const uCap=(u,choice,k)=>k>1?2:(choice&&u.g>=3&&uTierInfo(u).ans!=="choice4"?2:3);      // まぜた ときは ★2まで。3年より 上の 入力の 単元を 4つから えらぶと ★2まで
+function uStars(id,b){ const e=(b||bests())["u:"+id]||{}; return {n:ustClamp(e.medal),ta:ustClamp(e.ta),sd:ustClamp(e.sd)}; }
+const uStarSum=(id,b)=>{ const s=uStars(id,b); return s.n+s.ta+s.sd; };
+/* ★が そろった 単元カードの ふち：いつものの ★3つ＝金（バトルに 出せる）、9こ ぜんぶ＝虹色（ゆっくり 光る。動くのは ふちの 色だけ） */
+const uGlow=(id,b)=>{ if(!uIsStar(id)) return ""; const s=uStars(id,b); return s.n+s.ta+s.sd>=9?" urainbow":s.n>=3?" ugold":""; };
+const uBattleOk=(id,b)=>!uIsStar(id)||uStars(id,b).n>=3;            // 算数の 単元は いつものの ★3で バトルに 出せる
+const uStarH=(n,cls)=>`<span class="mtst${cls?" "+cls:""}" role="img" aria-label="ほし ${n}">${[0,1,2].map(i=>`<i class="${i<n?"on":""}" aria-hidden="true">★</i>`).join("")}</span>`;
+/* 単元カードの ★の ようす（いつもの・タイム・サドンデス）。9こ ぜんぶで 👑 */
+function uStarRow(id,b){
+  const s=uStars(id,b), all=s.n+s.ta+s.sd>=9;
+  const one=(k,v)=>h("span",{class:"ustg"},h("small",{text:T("ust."+k)}),h("span",{innerHTML:uStarH(v)}));
+  return h("span",{class:"ustrow"+(all?" all":""),role:"img","aria-label":T("ust.aria",s.n,s.ta,s.sd)},one("n",s.n),one("ta",s.ta),one("sd",s.sd),all?h("span",{class:"ustall",text:"👑"}):null);
+}
+function uNext(res,p){       // 結果の「つぎの ★・メダルまで」：いちばん よかった 単元で 数える
   const r=res.reduce((a,b)=>!a||b.medal>a.medal||(b.medal===a.medal&&b.o>a.o)?b:a,null)||{medal:0,o:0};
+  if(r.star){
+    if(r.medal>=3) return T("ust.top");
+    if(r.medal>=r.cap) return res.length>1?T("ust.cap.mix"):T("ust.cap.ch");
+    const i=r.medal, left=r.need[i]-r.o;
+    return left>0?T("ust.next",i+1,left):T("ust.nextacc",i+1,U_ACC[i]);
+  }
   if(r.medal>=3) return T("r.top");
   const i=r.medal, left=uNeed(res.length)[i]-r.o;
   return left>0?T("r.next",MEDAL_ICO[i],left):T("r.nextacc",MEDAL_ICO[i],U_ACC[i]);
 }
-function uRecord(p){       // 単元ごとのベストとメダルを残す（キー u:<単元ID>）。メダルの合計にも入る
+function uRecord(p){       // 単元ごとのベストとメダル（算数は ★）を残す（キー u:<単元ID>）。メダルの合計にも入る
   const st=p.uSt||{}, ids=Object.keys(st).filter(i=>UBY[i]), k=Math.max(1,ids.length), all=bests();
   const need=uNeed(k), AC=U_ACC, res=[];
   for(const id of ids){
-    const s=st[id], acc=s.n?s.o/s.n*100:0; let medal=0;
-    for(let i=0;i<3;i++) if(s.o>=need[i]&&acc>=AC[i]) medal=i+1;
-    const key="u:"+id, prev=all[key]||{score:0,medal:0};
-    all[key]={score:Math.max(prev.score,s.o),medal:Math.max(prev.medal,medal)};
-    res.push({id,medal,o:s.o,n:s.n});
+    const s=st[id], acc=s.n?s.o/s.n*100:0; let medal=0, x={};
+    if(uIsStar(id)){ const u=UBY[id], ch=!!p.u.choice, tier=uTier(u,ch), cap=uCap(u,ch,k), r=ustN(tier,s.o,s.n,k,cap); medal=r.stars; x={star:true,need:r.need,cap,tier}; }
+    else for(let i=0;i<3;i++) if(s.o>=need[i]&&acc>=AC[i]) medal=i+1;
+    const key="u:"+id, prev={score:0,medal:0,...all[key]};
+    all[key]={...prev,score:Math.max(prev.score,s.o),medal:Math.max(prev.medal,medal)};      // ta・sd（タイムアタック・サドンデスの ★）は そのまま のこす
+    res.push({id,medal,o:s.o,n:s.n,up:medal>prev.medal,...x});
   }
   store.set("mh_best",all); refreshMedals(); return res;
 }
+/* タイムアタック・サドンデスの ★（算数の 単元を 1つだけ えらんだ とき。にがて ボックスは 入れない）。もどり：{stars, up, was} か null */
+function uSpStar(p,spr){
+  if(!p.u||p.u.box||p.u.ids.length!==1||!uIsStar(p.u.ids[0])||!(p.sm==="ta"||p.sm==="sd")) return null;
+  const id=p.u.ids[0], u=UBY[id], ch=!!p.u.choice, tier=uTier(u,ch), cap=uCap(u,ch,1);
+  const stars=p.sm==="ta"?(spr&&spr.counted?ustTA(tier,p.ok+p.ng,p.ok,p.el,cap):0):ustSD(tier,p.ok,cap);
+  const all=bests(), key="u:"+id, prev=all[key]||{score:0,medal:0}, was=ustClamp(prev[p.sm]);
+  if(stars>was){ all[key]={...prev,[p.sm]:stars}; store.set("mh_best",all); }
+  return {stars,up:stars>was,was,tier,cap};
+}
+/* ★の もらいかた（算数の 単元。その回の タイプと あそびかたで 出す） */
+function howUStar(u,choice,mode,k){
+  const tier=uTier(u,choice), cap=uCap(u,choice,k||1), st=n=>`<span class="hst" aria-label="ほし ${n}">${"★".repeat(n)}</span>`;
+  const rows=mode==="ta"?[[st(1),T("ust.h.ta1",SP_TA,SP_TA_OK)],[st(2),T("ust.h.ta",spFmtMS(UST_TA[tier][1]))],[st(3),T("ust.h.ta3",spFmtMS(UST_TA[tier][2]),UST_TA_OK3)]]
+    :mode==="sd"?[0,1,2].map(i=>[st(i+1),T("ust.h.sd",UST_SD[tier][i])])
+    :ustN(tier,0,0,k||1,3).need.map((n,i)=>[st(i+1),T("how.u",n,U_ACC[i])]);
+  return howBox(T("how.s"),rows.slice(0,Math.max(cap,1)).concat(cap<3?[[st(3),(k||1)>1?T("ust.cap.mix"):T("ust.cap.ch")]]:[]),mode==="n"||!mode?T("ust.h.d"):"");
+}
+const spFmtMS=sec=>sec>=60?T("ust.ms",Math.floor(sec/60),sec%60):T("ust.s",sec);
 function renderRecord(msg){
   setLG(ui.grade);
   const b=bests(), tot=medalTotal(), btl=Object.keys(b).filter(k=>!k.startsWith("u:")&&k.includes("_")).reduce((n,k)=>n+(b[k].medal||0),0);
@@ -4452,7 +4602,7 @@ function renderModeSetup(q){
     box.innerHTML=`<h2>${T("ms.pick")}</h2><p class="note" style="text-align:center">${list.length?T("ms.pick.n"):""}</p>
       ${list.length?`<div class="tiles">${list.map(x=>`<button class="tile" data-id="${x.id}"><span class="tico">${svgU(x.art)}</span><span class="tbody"><span class="tt">${x.t}</span>
       <span class="tstat">${tagHtml(x.s)}</span></span></button>`).join("")}</div>`:""}<div id="modeUnits"></div>`;
-    selected=UREADY.some(u=>u.subj===SJR[k])?unitPicker($("#modeUnits"),G,ugo,{subj:SJR[k]}):()=>[];
+    selected=UREADY.some(u=>u.subj===SJR[k])?unitPicker($("#modeUnits"),G,ugo,{subj:SJR[k],lock:!LESSON}):()=>[];
     box.querySelectorAll("[data-id]").forEach(b=>b.onclick=()=>{
       const x=GAMES.find(y=>y.id===b.dataset.id);
       withGrade(g0=>start(x.id,x.g.includes(g0)?g0:x.g[0],selected()));
@@ -7295,12 +7445,15 @@ function unitPicker(root,grade,onChange,opt){
     if(!fixed&&(!easy||subjects.length>1)) controls.append(h("div",{class:"pills subject-pills"},...subjects.map(s=>upill(SUBJ_JA[s],s===subject,()=>{subject=s;filter=easy?grade:gradeOf(s);draw();}))));
     if(!easy&&!gradesOpen) controls.append(h("button",{type:"button",class:"pill small ogbtn",text:T("ms.og"),onclick:()=>{gradesOpen=true;draw();}}));
     else if(!easy) controls.append(h("div",{class:"pills grade-pills"},...([0,1,2,3,4,5,6].map(g=>upill(g?g+"年《ねん》":"ぜんぶ",filter===g,()=>{filter=g;draw();})))));
-    const cards=h("div",{class:"ugrid"+(easy?" kidunits":"")},...pool.filter(u=>!filter||u.g===filter).map(u=>h("button",{type:"button",class:"ucard","data-uid":u.id,role:"checkbox","aria-checked":selected.includes(u.id)?"true":"false",onclick:()=>{const i=selected.indexOf(u.id);if(i>=0)selected.splice(i,1);else if(selected.length<UMAX)selected.push(u.id);draw();}},
-      h("span",{class:"ubox",text:selected.includes(u.id)?"✅":""}),h("span",{class:"ubody"},h("b",{text:u.title}),!easy?h("span",{class:"unote",text:u.note}):null))));
-    const setList=easy?[]:(UN.UNIT_SETS||[]).filter(s=>s.units.length>1&&s.units.every(id=>UBY[id]&&UBY[id].subj===subject)).map(s=>{ const b=upill("",false,()=>{selected.splice(0,selected.length,...s.units.slice(0,UMAX));setsOpen=false;draw();}); b.replaceChildren(...setLabel(s.title)); return b; });
+    const bb=opt.lock?bests():null, open=u=>!bb||uBattleOk(u.id,bb), shown0=pool.filter(u=>!filter||u.g===filter), shown=bb?[...shown0.filter(open),...shown0.filter(u=>!open(u))]:shown0, nLock=shown.filter(u=>!open(u)).length;      // opt.lock：ひとりで あそぶ バトル。算数の 単元は いつものの ★3で えらべる（えらべる 単元を 上に ならべる）
+    const cards=h("div",{class:"ugrid"+(easy?" kidunits":"")},...shown.map(u=>open(u)?h("button",{type:"button",class:"ucard","data-uid":u.id,role:"checkbox","aria-checked":selected.includes(u.id)?"true":"false",onclick:()=>{const i=selected.indexOf(u.id);if(i>=0)selected.splice(i,1);else if(selected.length<UMAX)selected.push(u.id);draw();}},
+      h("span",{class:"ubox",text:selected.includes(u.id)?"✅":""}),h("span",{class:"ubody"},h("b",{text:u.title}),!easy?h("span",{class:"unote",text:u.note}):null))
+      :h("button",{type:"button",class:"ucard ulock","data-uid":u.id,"aria-disabled":"true",onclick:()=>{}},h("span",{class:"ubox","aria-hidden":"true",text:"🔒"}),h("span",{class:"ubody"},h("b",{text:u.title}),h("span",{class:"ulockn",text:T("ust.lock")})))));
+    const lockNote=nLock?h("div",{class:"note ulocknote",text:T("ust.lock.n",nLock)}):null;
+    const setList=easy?[]:(UN.UNIT_SETS||[]).filter(s=>s.units.length>1&&s.units.every(id=>UBY[id]&&UBY[id].subj===subject&&open(UBY[id]))).map(s=>{ const b=upill("",false,()=>{selected.splice(0,selected.length,...s.units.slice(0,UMAX));setsOpen=false;draw();}); b.replaceChildren(...setLabel(s.title)); return b; });
     const sets=setList.length?h("details",{class:"upsets usetd",open:setsOpen,ontoggle:e=>{ setsOpen=e.target.open; }},h("summary",{text:"⭐ おすすめの組《く》み合《あ》わせ"}),h("div",{class:"set-grid"},...setList)):null;      // おすすめは たたんでおく（単元カードを先に見せる）
     root.replaceChildren(...[h("h2",{text:fixed?T("ms.unit"):"単元《たんげん》をえらぶ（えらばなければ学年《がくねん》の問題《もんだい》）"}),showCtl?controls:null,sets,
-      h("div",{class:"note",text:selected.length?selected.map(id=>UBY[id].title).join("・"):"単元《たんげん》は まだえらんでいません"}),cards].filter(Boolean));
+      h("div",{class:"note",text:selected.length?selected.map(id=>UBY[id].title).join("・"):"単元《たんげん》は まだえらんでいません"}),lockNote,cards].filter(Boolean));
     if(onChange) onChange(selected.length);
   };
   if(UNITS_OK) draw();
@@ -7310,6 +7463,26 @@ function unitModeQuestions(ids){
   const items=UN.unitPick(ids,40,uSeed(),true);
   return items.map(it=>({q:(it.stem?it.stem+"　":"")+it.q,hissan:it.hissan,a:String(it.a),ch:it.choices.map(String),small:""}))
     .filter(q=>q.ch.includes(q.a)&&q.ch.length>=2);
+}
+/* 単元カードを おした あと：「どれで あそぶ？」（いつもの・タイムアタック・サドンデス）。それぞれに ★と、つぎの ★の もらいかた。
+   2026-11-25：カードの 上の 切りかえに 気づかない・まよう 子が いたので、1つずつ 聞く 形に した */
+function uModeSheet(u,choice,start){
+  if(document.getElementById("umsheet")) return;
+  const onKey=e=>{ if(e.key==="Escape") close(); };
+  const close=()=>{ el.remove(); document.removeEventListener("keydown",onKey); };
+  const s=uStars(u.id), star=uIsStar(u.id), tier=star?uTier(u,choice):"", cap=star?uCap(u,choice,1):3;
+  const goal=(m,n)=>!star?"":n>=3?T("ust.top"):n>=cap?T("ust.cap.ch"):T("um.next")+"　"+(m==="n"?T("ust.g.n",UST_N[tier][n]):m==="ta"?(n===0?T("ust.h.ta1",SP_TA,SP_TA_OK):n===2?T("ust.h.ta3",spFmtMS(UST_TA[tier][2]),UST_TA_OK3):T("ust.h.ta",spFmtMS(UST_TA[tier][1]))):T("ust.h.sd",UST_SD[tier][n]));
+  const btn=(m,ico,n)=>h("button",{type:"button",class:"umbtn um-"+m,onclick:()=>{ close(); start(m); }},
+    h("span",{class:"umico","aria-hidden":"true",text:ico}),
+    h("span",{class:"umbody"},h("b",{text:T("sp."+m)}),h("span",{class:"umd",text:m==="n"?T("sp.n.d"):m==="ta"?T("sp.ta.d",SP_TA):T("sp.sd.d")}),star?h("span",{class:"umg",text:goal(m,n)}):null),
+    star?h("span",{class:"umst",innerHTML:uStarH(n)}):null);
+  const first=btn("n","⏱",s.n);
+  const el=h("div",{class:"sheetbg exbg",id:"umsheet",onclick:e=>{ if(e.target===el) close(); }},
+    h("div",{class:"sheet umsheet",role:"dialog","aria-modal":"true","aria-label":T("um.t")},
+      h("h3",{text:T("um.t")}),h("p",{class:"umu",text:u.title}),
+      first,btn("ta","🏁",s.ta),btn("sd","🔥",s.sd),
+      h("button",{type:"button",class:"btn sub s umx",text:T("back"),onclick:close})));
+  document.addEventListener("keydown",onKey); document.body.appendChild(el); first.focus();
 }
 /* 例題（ひとことの解き方）を見せる */
 function uEx(u){
@@ -7512,8 +7685,9 @@ function renderUnits(q){
     us.forEach(u=>(byG[u.g]=byG[u.g]||[]).push(u));
     const grades=Object.keys(byG).sort((a,b)=>a-b);
     if(kc){      // 学年 → 学習項目（たし算・わり算…）ごとに、小さいカードを並べる
+      const bb=bests();
       const card=u=>h("div",{class:"ucardw"},
-        h("button",{type:"button",class:"ucard",role:"checkbox","aria-checked":"false","data-id":u.id,onclick:()=>toggle(u.id)},h("span",{class:"ubox","aria-hidden":"true"}),h("span",{class:"ubody"},h("b",{text:u.title}),h("span",{class:"unote",text:u.note}))),
+        h("button",{type:"button",class:"ucard"+uGlow(u.id,bb),role:"checkbox","aria-checked":"false","data-id":u.id,onclick:()=>toggle(u.id)},h("span",{class:"ubox","aria-hidden":"true"}),h("span",{class:"ubody"},h("b",{text:u.title}),h("span",{class:"unote",text:u.note}),uIsStar(u.id)?uStarRow(u.id,bb):null)),
         h("button",{type:"button",class:"btn sub s uexb",text:"💡","aria-label":T("u.ex")+"："+u.title,title:T("u.ex"),onclick:()=>uEx(u)}));
       /* 学年 → 学習項目。3つ以上ある項目（たし算の段階など）は 1行に たたみ、ひらくと段階の順に カードが出る */
       const stepOf=u=>u.series&&u.step!=null?u.step:1e9;
@@ -7659,13 +7833,15 @@ function renderSubjItem(q){
   const startBtn=h("button",{type:"button",class:"btn again ustart",text:T("u.go"),onclick:()=>{ if(!sel.length){ msg.textContent=T("u.none"); return; } go(uHash({ids:sel.slice(),n:20,t:20,seed:uSeed(),mix:true,choice:cho()})); }});
   const cnt=h("span",{class:"usum"});
   foot.append(cnt,msg,startBtn);
-  const one=u=>startUnitRun({ids:[u.id],n:20,t:20,seed:uSeed(),mix:true,choice:cho()});
+  const run=u=>startUnitRun({ids:[u.id],n:20,t:20,seed:uSeed(),mix:true,choice:cho()});
+  const one=u=>spOn(false)?uModeSheet(u,cho(),m=>{ SPM=m; run(u); }):run(u);      // カードの あとに「どれで あそぶ？」（授業モードは いつもの だけなので すぐ はじめる）
   function drawCards(){
+    const bb=bests();
     cards.replaceChildren(...(list.length?list.map(u=>{ const on=sel.includes(u.id);
       return h("div",{class:"ucardw"},
-        h("button",{type:"button",class:"ucard","data-id":u.id,...(mix?{role:"checkbox","aria-checked":on?"true":"false"}:{}),onclick:()=>mix?toggle(u.id):one(u)},
+        h("button",{type:"button",class:"ucard"+uGlow(u.id,bb),"data-id":u.id,...(mix?{role:"checkbox","aria-checked":on?"true":"false"}:{}),onclick:()=>mix?toggle(u.id):one(u)},
           mix?h("span",{class:"ubox","aria-hidden":"true",text:on?"✅":""}):null,
-          h("span",{class:"ubody"},h("b",{text:u.title}),h("span",{class:"unote",text:(g?"":u.g+"年《ねん》　")+(u.note&&u.note!==u.title?u.note:"")})),
+          h("span",{class:"ubody"},h("b",{text:u.title}),h("span",{class:"unote",text:(g?"":u.g+"年《ねん》　")+(u.note&&u.note!==u.title?u.note:"")}),uStarRow(u.id,bb)),
           mix?null:h("span",{class:"siplay","aria-hidden":"true",text:"▶"})),
         h("button",{type:"button",class:"btn sub s uexb",text:"💡","aria-label":T("u.ex")+"："+u.title,title:T("u.ex"),onclick:()=>uEx(u)})); }):[h("div",{class:"empty",text:T("si.none")})]));
     foot.hidden=!mix; cnt.textContent=T("u.sel",sel.length); startBtn.disabled=!sel.length;
@@ -7683,7 +7859,7 @@ function renderSubjItem(q){
     ...tools.map(t=>h("button",{type:"button",class:"ucard sitool",onclick:()=>t.go.startsWith("url:")?(location.href=t.go.slice(4)):go(t.go)},h("span",{class:"ubody"},h("b",{text:siName(t.t)}),h("span",{class:"unote",text:siName(t.d)})),h("span",{class:"siplay","aria-hidden":"true",text:"▶"})))):null;
   app.replaceChildren(h("div",{class:"up kid si"},
     h("div",{class:"topbar"},h("button",{type:"button",class:"back",innerHTML:BK(),onclick:()=>go(back)}),h("h2",{class:"th2 uttl",text:`${SUBJ_JA.sansu} › ${siName(grp.t)}`}),h("span")),
-    list.length?spChips():null,list.length?howRow:null,hint,cards,list.length>1?modeRow:null,foot,toolBox));
+    list.length?howRow:null,hint,cards,list.length>1?modeRow:null,foot,toolBox));
   drawCards();
 }
 
@@ -7716,7 +7892,11 @@ function renderSubjRoom(q){
   const mark=id=>{ const m=SI_MARK[id]||"・"; return h("span",{class:"tico srmark"+(m.length>=3?" l3":""),"aria-hidden":"true",text:m}); };
   const raw=html=>{ const s=h("span",{class:"tico","aria-hidden":"true"}); s.innerHTML=html; return s; };
   const tkIco={kuku:()=>raw(svgU("a-kuku")),meter:()=>raw(mtIco()),masu100:()=>h("span",{class:"tico","aria-hidden":"true"},h("span",{class:"extico",text:"100"}))};
-  const items=gs.map(x=>tile("sritem",mark(x.id),siName(x.t),T("sr.n",x.units.length)+(x.tools.length?"＋"+x.tools.map(t=>siName(t.t)).join("・"):""),()=>go(`#subj?s=sansu&item=${x.id}`)));
+  const bb=bests();
+  const items=gs.map(x=>{ const el=tile("sritem",mark(x.id),siName(x.t),T("sr.n",x.units.length)+(x.tools.length?"＋"+x.tools.map(t=>siName(t.t)).join("・"):""),()=>go(`#subj?s=sansu&item=${x.id}`));
+    const got=x.units.reduce((n,u)=>n+uStarSum(u.id,bb),0), max=x.units.length*9, td=el.querySelector(".td");      // まとまりの ★の ようす（ぜんぶで 👑）
+    if(td&&max) td.append(h("br"),h("span",{class:"ustsum",text:T("ust.sum",got,max)+(got>=max?" 👑":"")}));
+    return el; });
   const tools=tk.map(t=>tile("srtool",(tkIco[t.id]||(()=>mark("")))(),siName(t.t),siName(t.d),()=>t.go.startsWith("url:")?(location.href=t.go.slice(4)):go(t.go)));
   app.replaceChildren(h("div",{class:"up kid si sroom"},
     h("div",{class:"topbar"},h("button",{type:"button",class:"back",innerHTML:BK(),onclick:()=>go("#home")}),h("h2",{class:"th2 uttl",text:T("sr.title")}),h("span")),

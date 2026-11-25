@@ -138,6 +138,7 @@ const parts = [
   grab(/const U_ACC=\[[^\n]*/, 'U_ACC・uNeed'),
   grab(/function bests\(\)\{[^\n]*/, 'bests'),
   grab(/function medalTotal\(\)\{[^\n]*/, 'medalTotal'),
+  grab(/const uIsStar=[^\n]*/, 'uIsStar'),
   grab(/function uRecord\(p\)\{[\s\S]*?\n\}\n/, 'uRecord'),
   grab(/const MTKEY=[^\n]*/, 'MTKEY'),
   grab(/function mtCfg\(\)\{[^\n]*/, 'mtCfg'),
