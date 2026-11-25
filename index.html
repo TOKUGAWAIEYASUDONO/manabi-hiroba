@@ -525,6 +525,17 @@ body[data-v=teacher] rt{display:none}
 .ustrow.all .mtst i.on{color:#e07b00}
 .ustall{font-size:16px;line-height:1}
 .stamp.ustamp{flex-wrap:wrap;gap:4px 10px}.stamp.ustamp .sn{flex:1 1 100%}.stamp.ustamp .ustrow{margin-top:0;flex:none}
+.umsheet{width:min(100%,460px);max-height:calc(100vh - 28px);overflow:auto}
+.umsheet h3{font-size:22px;text-align:center;margin:0}
+.umu{text-align:center;margin:2px 0 10px;font-weight:700;color:var(--muted);font-size:15px}
+.umbtn{display:flex;align-items:center;gap:10px;width:100%;text-align:left;background:#fff;border:3px solid var(--edge);border-radius:14px;box-shadow:0 4px 0 var(--edge);padding:10px 12px;margin:0 0 12px;min-height:84px;cursor:pointer;font:inherit;color:inherit}
+.umbtn:active{transform:translateY(3px);box-shadow:0 1px 0 var(--edge)}
+.umbtn.um-n{background:#e6f4e8}.umbtn.um-ta{background:#e5f0fb}.umbtn.um-sd{background:#fdebe4}
+.umico{font-size:30px;flex:none;width:38px;text-align:center}
+.umbody{flex:1;min-width:0;display:flex;flex-direction:column;gap:1px}
+.umbody b{font-size:21px;line-height:1.3}.umd{font-size:14px;line-height:1.4}.umg{font-size:13px;font-weight:700;color:#8a3b00;line-height:1.4}
+.umst{flex:none}.umst .mtst i{font-size:20px;letter-spacing:0}
+.umx{display:block;margin:2px auto 0}
 .ucard.ulock{opacity:.6;background:#f1f1ee;cursor:default;box-shadow:0 4px 0 var(--line);border-color:var(--line)}
 .ucard.ulock:active{transform:none;box-shadow:0 4px 0 var(--line)}
 .ulockn{display:block;font-size:13px;font-weight:700;color:var(--muted);line-height:1.4}
@@ -2099,7 +2110,7 @@ const TX={
  "g.unit.t":["単元《たんげん》練習《れんしゅう》","たんげん れんしゅう"],
  "u.pick":["単元《たんげん》をえらぶ","たんげんを えらぶ"],"u.pick.d":["カードを 1かい タップすると、すぐに はじまるよ","カードを 1かい タップすると、すぐに はじまるよ"],
  "sr.title":["算数《さんすう》の へや","さんすうの へや"],"sr.units":["単元《たんげん》で 練習《れんしゅう》","たんげんで れんしゅう"],"sr.tokkun":["とっくん","とっくん"],"sr.n":[n=>`${n}こ`,n=>`${n}こ`],"sr.all":["ぜんぶの 単元《たんげん》から えらぶ","ぜんぶの たんげんから えらぶ"],
- "si.one":["カードを タップすると すぐ はじまるよ","カードを タップすると すぐ はじまるよ"],"si.mix":["いくつか まぜる","いくつか まぜる"],"si.one.b":["1つずつ","1つずつ"],"si.mix.d":[n=>`カードを えらんで「はじめる」（${n}こまで）`,n=>`カードを えらんで「はじめる」（${n}こまで）`],"si.tool":["どうぐで 練習《れんしゅう》","どうぐで れんしゅう"],"si.none":["この学年《がくねん》には ないよ","この がくねんには ないよ"],
+ "si.one":["カードを タップして、あそびかたを えらぼう","カードを タップして、あそびかたを えらぼう"],"si.mix":["いくつか まぜる","いくつか まぜる"],"si.one.b":["1つずつ","1つずつ"],"si.mix.d":[n=>`カードを えらんで「はじめる」（${n}こまで）`,n=>`カードを えらんで「はじめる」（${n}こまで）`],"si.tool":["どうぐで 練習《れんしゅう》","どうぐで れんしゅう"],"si.none":["この学年《がくねん》には ないよ","この がくねんには ないよ"],
  "u.ex":["例題《れいだい》","れいだい"],"u.close":["とじる"],"u.grade":["学年《がくねん》","がくねん"],"u.all":["ぜんぶ"],
  "u.sets":["おすすめの組《く》み合《あ》わせ","おすすめ"],
  "u.sel":[n=>`えらんだ単元《たんげん》：${n}`,n=>`えらんだ たんげん：${n}`],"u.clear":["ぜんぶはずす","ぜんぶ はずす"],
@@ -2130,6 +2141,7 @@ const TX={
  /* 算数の 単元の ★（いつもの・タイムアタック・サドンデス） */
  "ust.n":["いつもの"],"ust.ta":["タイム"],"ust.sd":["サドン"],
  "ust.aria":[(a,b,c)=>`ほし：いつもの ${a}、タイムアタック ${b}、サドンデス ${c}`],
+ "um.t":["どれで あそぶ？"],"um.next":["つぎの ★"],"ust.g.n":[n=>`1分《ぷん》で ○ ${n}こ`,n=>`1ぷんで ○ ${n}こ`],
  "ust.top":["★3つ！ さいこう！"],"ust.up":["ほしが ふえた！"],
  "ust.open":["★3つ！ バトルで この たんげんを えらべるように なったよ"],
  "ust.next":[(n,k)=>`★${n}つまで あと ${k} 問《もん》`,(n,k)=>`★${n}つまで あと ${k} もん`],
@@ -7387,6 +7399,26 @@ function unitModeQuestions(ids){
   return items.map(it=>({q:(it.stem?it.stem+"　":"")+it.q,hissan:it.hissan,a:String(it.a),ch:it.choices.map(String),small:""}))
     .filter(q=>q.ch.includes(q.a)&&q.ch.length>=2);
 }
+/* 単元カードを おした あと：「どれで あそぶ？」（いつもの・タイムアタック・サドンデス）。それぞれに ★と、つぎの ★の もらいかた。
+   2026-11-25：カードの 上の 切りかえに 気づかない・まよう 子が いたので、1つずつ 聞く 形に した */
+function uModeSheet(u,choice,start){
+  if(document.getElementById("umsheet")) return;
+  const onKey=e=>{ if(e.key==="Escape") close(); };
+  const close=()=>{ el.remove(); document.removeEventListener("keydown",onKey); };
+  const s=uStars(u.id), star=uIsStar(u.id), tier=star?uTier(u,choice):"", cap=star?uCap(u,choice,1):3;
+  const goal=(m,n)=>!star?"":n>=3?T("ust.top"):n>=cap?T("ust.cap.ch"):T("um.next")+"　"+(m==="n"?T("ust.g.n",UST_N[tier][n]):m==="ta"?(n===0?T("ust.h.ta1",SP_TA,SP_TA_OK):n===2?T("ust.h.ta3",spFmtMS(UST_TA[tier][2]),UST_TA_OK3):T("ust.h.ta",spFmtMS(UST_TA[tier][1]))):T("ust.h.sd",UST_SD[tier][n]));
+  const btn=(m,ico,n)=>h("button",{type:"button",class:"umbtn um-"+m,onclick:()=>{ close(); start(m); }},
+    h("span",{class:"umico","aria-hidden":"true",text:ico}),
+    h("span",{class:"umbody"},h("b",{text:T("sp."+m)}),h("span",{class:"umd",text:m==="n"?T("sp.n.d"):m==="ta"?T("sp.ta.d",SP_TA):T("sp.sd.d")}),star?h("span",{class:"umg",text:goal(m,n)}):null),
+    star?h("span",{class:"umst",innerHTML:uStarH(n)}):null);
+  const first=btn("n","⏱",s.n);
+  const el=h("div",{class:"sheetbg exbg",id:"umsheet",onclick:e=>{ if(e.target===el) close(); }},
+    h("div",{class:"sheet umsheet",role:"dialog","aria-modal":"true","aria-label":T("um.t")},
+      h("h3",{text:T("um.t")}),h("p",{class:"umu",text:u.title}),
+      first,btn("ta","🏁",s.ta),btn("sd","🔥",s.sd),
+      h("button",{type:"button",class:"btn sub s umx",text:T("back"),onclick:close})));
+  document.addEventListener("keydown",onKey); document.body.appendChild(el); first.focus();
+}
 /* 例題（ひとことの解き方）を見せる */
 function uEx(u){
   if(document.getElementById("exsheet")) return;
@@ -7736,7 +7768,8 @@ function renderSubjItem(q){
   const startBtn=h("button",{type:"button",class:"btn again ustart",text:T("u.go"),onclick:()=>{ if(!sel.length){ msg.textContent=T("u.none"); return; } go(uHash({ids:sel.slice(),n:20,t:20,seed:uSeed(),mix:true,choice:cho()})); }});
   const cnt=h("span",{class:"usum"});
   foot.append(cnt,msg,startBtn);
-  const one=u=>startUnitRun({ids:[u.id],n:20,t:20,seed:uSeed(),mix:true,choice:cho()});
+  const run=u=>startUnitRun({ids:[u.id],n:20,t:20,seed:uSeed(),mix:true,choice:cho()});
+  const one=u=>spOn(false)?uModeSheet(u,cho(),m=>{ SPM=m; run(u); }):run(u);      // カードの あとに「どれで あそぶ？」（授業モードは いつもの だけなので すぐ はじめる）
   function drawCards(){
     const bb=bests();
     cards.replaceChildren(...(list.length?list.map(u=>{ const on=sel.includes(u.id);
@@ -7761,7 +7794,7 @@ function renderSubjItem(q){
     ...tools.map(t=>h("button",{type:"button",class:"ucard sitool",onclick:()=>t.go.startsWith("url:")?(location.href=t.go.slice(4)):go(t.go)},h("span",{class:"ubody"},h("b",{text:siName(t.t)}),h("span",{class:"unote",text:siName(t.d)})),h("span",{class:"siplay","aria-hidden":"true",text:"▶"})))):null;
   app.replaceChildren(h("div",{class:"up kid si"},
     h("div",{class:"topbar"},h("button",{type:"button",class:"back",innerHTML:BK(),onclick:()=>go(back)}),h("h2",{class:"th2 uttl",text:`${SUBJ_JA.sansu} › ${siName(grp.t)}`}),h("span")),
-    list.length?spChips():null,list.length?howRow:null,hint,cards,list.length>1?modeRow:null,foot,toolBox));
+    list.length?howRow:null,hint,cards,list.length>1?modeRow:null,foot,toolBox));
   drawCards();
 }
 
