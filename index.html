@@ -2098,7 +2098,7 @@ body[data-bw="jin"]{--bwc:#8fd04a;--bwi:url(vendor/img/battle/jin-field.webp)}
 <script src="data/sansu-items.js?v=54e3fedb"></script>
 <script src="data/tools-viz.js?v=0582ba52"></script>
 <script src="data/learnhelp.js?v=062f8140"></script><!-- まなびの たすけ（はやすぎる まちがい・あとで もう一度・とき方・つまずき） -->
-<script src="data/collection.js?v=aece8665"></script>
+<script src="data/collection.js?v=32fc1068"></script>
 <script src="data/masu100.js?v=a19d68e5"></script>
 <script>
 /* ================= 画面の文言（1つの表） =================
@@ -2502,20 +2502,15 @@ const TX={
  "col.kz.i.t-yac1000":["せいかい マイスター"],"col.kz.i.t-yanm30":["ノーミス 名人《めいじん》","ノーミス めいじん"],"col.kz.i.t-yaniji":["にじの コレクター"],
  "col.kz.i.t-yam100":["100マス はやわざ"],"col.kz.i.t-yameter":["めもりの たつじん"],"col.kz.i.t-yakira":["きらきら なかま"],
  "col.ya.t":["じっせき"],"col.ya.n":[(a,b)=>`たっせい ${a} / ${b}`],
- "col.ya.d":["その日《ひ》の うちに、やれば やるほど すすむよ。シールの ランクも ここで たしかめよう","そのひの うちに、やれば やるほど すすむよ。シールの ランクも ここで たしかめよう"],
+ "col.ya.d":["その日《ひ》の うちに、やれば やるほど すすむよ。★を あつめると たっせいできる ものも あるよ","そのひの うちに、やれば やるほど すすむよ。★を あつめると たっせいできる ものも あるよ"],
  "col.ya.hide":["？？？ かくし じっせき"],"col.ya.done":["たっせい！"],
  "col.ya.local":["やりこみの きろくは この 端末《たんまつ》だけに あるよ（「きろく」の ひろばの 文字《もじ》にも 入《はい》るよ）","やりこみの きろくは この たんまつだけに あるよ（「きろく」の ひろばの もじにも はいるよ）"],
- "col.ya.rk.0":["まだ"],"col.ya.rk.1":["どう"],"col.ya.rk.2":["ぎん"],"col.ya.rk.3":["きん"],"col.ya.rk.4":["にじ"],
- "col.ya.r.up":[(u,r)=>`「${u}」の シールが ${r}に なったよ！`],
+ "col.ya.rk.0":["まだ"],"col.ya.rk.1":["★1つ いじょう"],"col.ya.rk.2":["いつもの ★2つ いじょう"],"col.ya.rk.3":["いつもの ★3つ"],"col.ya.rk.4":["★9こ ぜんぶ"],
  "col.ya.r.ach":[s=>`じっせき「${s}」たっせい！`],
  "col.ya.r.kira":[n=>`${n}が きらきらの すがたに なったよ！`],
- "col.ya.zk":[r=>`シール：${r}`],
- "col.ya.nx.0":["5問《もん》いじょうを 7わり せいかいで「どう」","5もん いじょうを 7わり せいかいで「どう」"],
- "col.ya.nx.1":[(c,n9)=>`つぎの「ぎん」まで：${c?`せいかい あと ${c}もん`:""}${c&&n9?"・":""}${n9?"9わり いじょうの かい":""}`],
- "col.ya.nx.2":["つぎの「きん」まで：ノーミス（10もん いじょう ぜんぶ せいかい）1かい"],
- "col.ya.nx.3":[(c,nm)=>`つぎの「にじ」まで：${c?`せいかい あと ${c}もん`:""}${c&&nm?"・":""}${nm?`ノーミス あと ${nm}かい`:""}`],
- "col.ya.nx.4":["さいこうの「にじ」シール！"],
- "col.ya.kira":[(c,k)=>`きらきらまで：この きょうかで せいかい あと ${c}もん・きん いじょうの シール あと ${k}まい`],
+ "col.ya.zk":[n=>`★ ${n}こ`],
+ "col.ya.nx":["たんげん れんしゅうで ★を ふやそう"],"col.ya.nx.top":["★ ぜんぶ！ さいこう！"],
+ "col.ya.kira":[(c,k)=>`きらきらまで：この きょうかで せいかい あと ${c}もん・いつものが ★3つの たんげん あと ${k}こ`],
  "col.ya.kira.on":["きらきらの すがた"],
  "col.kz.un.can":[n=>`単元《たんげん》を ${n}つ「できた」に すると もらえるよ`,n=>`たんげんを ${n}つ「できた」に すると もらえるよ`],
  "col.kz.un.mst":[n=>`「マスター」が ${n}つで もらえるよ`],
@@ -2750,7 +2745,9 @@ function howSprint(type,t){
   t=t||60; const G=type==="choice"?MEDAL_CH:MEDAL_IN;
   return howBox(T("how.m"),[0,1,2].map(i=>[msvg(i+1),T("how.sp",t,Math.ceil(G[i]*t/60-1e-9),MEDAL_ACC[i])]),type==="choice"?T("how.sp.tl"):T("how.sp.mix"));
 }
-function howUnit(k){ const N=uNeed(k); return howBox(T("how.m"),[0,1,2].map(i=>[msvg(i+1),T("how.u",N[i],U_ACC[i])]),T("how.u.d")); }
+function howUnit(k,ids,choice){      // 単元の ★の もらいかた（いつもの）。ids が ぜんぶ 算数なら 算数の きまり（タイプごとの 数）で 出す
+  if(ids&&ids.length&&ids.every(uIsMath)) return howUStar(UBY[ids[0]],!!choice,"n",k);
+  const N=uNeed(k), st=n=>`<span class="hst" aria-label="ほし ${n}">${"★".repeat(n)}</span>`; return howBox(T("how.s"),[0,1,2].map(i=>[st(i+1),T("how.u",N[i],U_ACC[i])]),T("how.u.d")); }
 function howMeter(N){
   N=N||5; const st=n=>`<span class="hst" aria-label="ほし ${n}">${"★".repeat(n)}</span>`;
   return howBox(T("how.s"),[[st(1),T("how.mt1")],[st(2),T("how.mt2",Math.ceil(N*.6))],[st(3),T("how.mt3")]],T("how.mt.d",N));
@@ -3438,14 +3435,14 @@ function finish(){
   if(plain&&!p.u){ all[key]={score:Math.max(prev.score,okM),medal:Math.max(prev.medal,medal)}; store.set("mh_best",all); refreshMedals(); }      // 単元練習は、単元ごとのきろく（u:単元ID）に残す（上の uRecord）
   const spr=sp&&!bx?spRecord(p):null;               // タイムアタック・サドンデスの じぶんの ベスト（mh_spbest）
   const starRun=plain&&!!p.u&&p.u.ids.every(uIsStar);
-  if(starRun&&!ures.length) nextMsg=T("ust.next",1,ustN(uTier(UBY[p.u.ids[0]],!!p.u.choice),0,0,p.u.ids.length,3).need[0]);      // 算数の 単元だけの 回は メダルでなく ★で 出す
+  if(starRun&&!ures.length) nextMsg=T("ust.next",1,uNeedOf(UBY[p.u.ids[0]],!!p.u.choice,p.u.ids.length)[0]);      // 算数の 単元だけの 回は メダルでなく ★で 出す
   const sst=spr?uSpStar(p,spr):null;               // 算数の 単元 1つの タイムアタック・サドンデス：★
   if(spr&&spr.isNew&&!sst){ sfx("medal"); party(); }
   if(sp==="ta"&&spr&&!spr.counted) nextMsg=spr.tool?T("tl.ta"):T("sp.tamin",SP_TA_OK);
   else if(sst) nextMsg=sst.stars>=3?T("ust.top"):sst.stars>=sst.cap?T("ust.cap.ch"):sp==="ta"?(sst.stars+1===3&&p.ok<UST_TA_OK3?T("ust.next.ta3",UST_TA_OK3):T("ust.next.ta",sst.stars+1,spFmtMS(UST_TA[sst.tier][sst.stars]))):T("ust.next",sst.stars+1,UST_SD[sst.tier][sst.stars]-p.ok);
   const spNote=sp&&!bx&&!sst?T("sp.nomedal"):"";
   const stN=starRun?medal:sst?sst.stars:-1, stUp=starRun?ures.some(r=>r.up):!!(sst&&sst.up);      // stN：大きく 出す ★の 数（-1＝★の 回では ない）
-  const stOpen=starRun&&ures.length===1&&ures[0].up&&medal===3&&!p.task&&!LESSON;      // いつものの ★3：バトルで えらべるように なった
+  const stOpen=starRun&&ures.length===1&&uIsMath(ures[0].id)&&ures[0].up&&medal===3&&!p.task&&!LESSON;      // いつものの ★3：バトルで えらべるように なった
   const uHow=()=>{ const r=starRun?ures.reduce((a,b)=>!a||b.medal>a.medal||(b.medal===a.medal&&b.o>a.o)?b:a,null):null, id=r?r.id:p.u.ids[0]; return howUStar(UBY[id],!!p.u.choice,sp||"n",starRun?ures.length:1); };
   const boxLeft=bx?boxFor(p.u.box.subj).length:0;
   if(bx) nextMsg=boxLeft?T("sp.box.left",boxLeft):T("sp.box.clear");
@@ -3795,8 +3792,8 @@ function unitBook(b){
     const us=UREADY.filter(u=>u.subj===sj&&b["u:"+u.id]&&(b["u:"+u.id].score||b["u:"+u.id].medal||b["u:"+u.id].ta||b["u:"+u.id].sd));
     if(!us.length) return "";
     return `<div class="ubk"><h4>${subjN(k)}</h4>${us.map(u=>{ const e=b["u:"+u.id], m=e.medal|0;
-      if(uIsStar(u.id)){ const s=uStars(u.id,b); return `<div class="stamp ustamp"><span class="sn">${esc(u.title)}<small>${u.g}年《ねん》・${T("u.best",e.score|0)}</small></span><span class="ustrow${s.n+s.ta+s.sd>=9?" all":""}" role="img" aria-label="${esc(T("ust.aria",s.n,s.ta,s.sd))}">${[["n",s.n],["ta",s.ta],["sd",s.sd]].map(([k,v])=>`<span class="ustg"><small>${T("ust."+k)}</small>${uStarH(v)}</span>`).join("")}</span></div>`; }
-      return `<div class="stamp"><span class="sn">${esc(u.title)}<small>${u.g}年《ねん》・${T("u.best",e.score)}</small></span><span class="slots" aria-hidden="true">${MEDAL_ICO.map((em,i)=>`<span class="slot${m>i?" on":""}">${msvg(m>i?i+1:0)}</span>`).join("")}</span></div>`; }).join("")}</div>`;
+      if(uIsMath(u.id)){ const s=uStars(u.id,b); return `<div class="stamp ustamp"><span class="sn">${esc(u.title)}<small>${u.g}年《ねん》・${T("u.best",e.score|0)}</small></span><span class="ustrow${s.n+s.ta+s.sd>=9?" all":""}" role="img" aria-label="${esc(T("ust.aria",s.n,s.ta,s.sd))}">${[["n",s.n],["ta",s.ta],["sd",s.sd]].map(([k,v])=>`<span class="ustg"><small>${T("ust."+k)}</small>${uStarH(v)}</span>`).join("")}</span></div>`; }
+      return `<div class="stamp"><span class="sn">${esc(u.title)}<small>${u.g}年《ねん》・${T("u.best",e.score|0)}</small></span>${uStarH(ustClamp(m))}</div>`; }).join("")}</div>`;
   }).join("");
   return `<div class="book unitbook"><h3>${T("rec.unit")}</h3>${secs||`<div class="note" style="padding:8px 0">${T("rec.unit.none")}</div>`}</div>`;
 }
@@ -3837,7 +3834,8 @@ function ustTA(tier,done,ok,sec,cap){     // タイムアタック
 function ustSD(tier,streak,cap){ const S=UST_SD[tier]; let st=0; for(let i=0;i<3;i++) if(streak>=S[i]) st=i+1; return Math.min(st,cap); }
 const ustClamp=v=>Math.min(3,Math.max(0,v|0));
 /* UST-END */
-const uIsStar=id=>!!(UBY[id]&&UBY[id].subj==="sansu");
+const uIsMath=id=>!!(UBY[id]&&UBY[id].subj==="sansu"), uIsStar=id=>!!UBY[id];      // 2026-11-26：どの 教科の 単元も ★で 出す（uIsStar）。算数いがいは いつものの ★1〜3だけ（きまりは 前の メダルと 同じ uNeed・U_ACC）。★9こ・タイプ・バトルの かぎは 算数だけ（uIsMath）
+const uNeedOf=(u,choice,k)=>uIsMath(u.id)?ustN(uTier(u,choice),0,0,k,3).need:uNeed(k);
 const UST_CACHE={};
 function uTierInfo(u){            // 単元の 見本 12問から タイプを きめる（シード固定。いつも 同じ）
   if(UST_CACHE[u.id]) return UST_CACHE[u.id];
@@ -3853,12 +3851,13 @@ function uStars(id,b){ const e=(b||bests())["u:"+id]||{}; return {n:ustClamp(e.m
 const uStarSum=(id,b)=>{ const s=uStars(id,b); return s.n+s.ta+s.sd; };
 /* ★が そろった 単元カードの ふち：いつものの ★3つ＝金（バトルに 出せる）、9こ ぜんぶ＝虹色（ゆっくり 光る。動くのは ふちの 色だけ） */
 const uGlow=(id,b)=>{ if(!uIsStar(id)) return ""; const s=uStars(id,b); return s.n+s.ta+s.sd>=9?" urainbow":s.n>=3?" ugold":""; };
-const uBattleOk=(id,b)=>!uIsStar(id)||uStars(id,b).n>=3;            // 算数の 単元は いつものの ★3で バトルに 出せる
+const uBattleOk=(id,b)=>!uIsMath(id)||uStars(id,b).n>=3;            // 算数の 単元は いつものの ★3で バトルに 出せる
 const uStarH=(n,cls)=>`<span class="mtst${cls?" "+cls:""}" role="img" aria-label="ほし ${n}">${[0,1,2].map(i=>`<i class="${i<n?"on":""}" aria-hidden="true">★</i>`).join("")}</span>`;
 /* 単元カードの ★の ようす（いつもの・タイム・サドンデス）。9こ ぜんぶで 👑 */
 function uStarRow(id,b){
   const s=uStars(id,b), all=s.n+s.ta+s.sd>=9;
   const one=(k,v)=>h("span",{class:"ustg"},h("small",{text:T("ust."+k)}),h("span",{innerHTML:uStarH(v)}));
+  if(!uIsMath(id)) return h("span",{class:"ustrow",role:"img","aria-label":"ほし "+s.n},one("n",s.n));      // 算数いがい：いつものの ★だけ
   return h("span",{class:"ustrow"+(all?" all":""),role:"img","aria-label":T("ust.aria",s.n,s.ta,s.sd)},one("n",s.n),one("ta",s.ta),one("sd",s.sd),all?h("span",{class:"ustall",text:"👑"}):null);
 }
 function uNext(res,p){       // 結果の「つぎの ★・メダルまで」：いちばん よかった 単元で 数える
@@ -3878,8 +3877,8 @@ function uRecord(p){       // 単元ごとのベストとメダル（算数は �
   const need=uNeed(k), AC=U_ACC, res=[];
   for(const id of ids){
     const s=st[id], acc=s.n?s.o/s.n*100:0; let medal=0, x={};
-    if(uIsStar(id)){ const u=UBY[id], ch=!!p.u.choice, tier=uTier(u,ch), cap=uCap(u,ch,k), r=ustN(tier,s.o,s.n,k,cap); medal=r.stars; x={star:true,need:r.need,cap,tier}; }
-    else for(let i=0;i<3;i++) if(s.o>=need[i]&&acc>=AC[i]) medal=i+1;
+    if(uIsMath(id)){ const u=UBY[id], ch=!!p.u.choice, tier=uTier(u,ch), cap=uCap(u,ch,k), r=ustN(tier,s.o,s.n,k,cap); medal=r.stars; x={star:true,need:r.need,cap,tier}; }
+    else{ for(let i=0;i<3;i++) if(s.o>=need[i]&&acc>=AC[i]) medal=i+1; x={star:true,need,cap:3}; }      // 算数いがい：前の メダルの きまりの まま、★1〜3で 出す
     const key="u:"+id, prev={score:0,medal:0,...all[key]};
     all[key]={...prev,score:Math.max(prev.score,s.o),medal:Math.max(prev.medal,medal)};      // ta・sd（タイムアタック・サドンデスの ★）は そのまま のこす
     res.push({id,medal,o:s.o,n:s.n,up:medal>prev.medal,...x});
@@ -3888,7 +3887,7 @@ function uRecord(p){       // 単元ごとのベストとメダル（算数は �
 }
 /* タイムアタック・サドンデスの ★（算数の 単元を 1つだけ えらんだ とき。にがて ボックスは 入れない）。もどり：{stars, up, was} か null */
 function uSpStar(p,spr){
-  if(!p.u||p.u.box||p.u.ids.length!==1||!uIsStar(p.u.ids[0])||!(p.sm==="ta"||p.sm==="sd")) return null;
+  if(!p.u||p.u.box||p.u.ids.length!==1||!uIsMath(p.u.ids[0])||!(p.sm==="ta"||p.sm==="sd")) return null;
   const id=p.u.ids[0], u=UBY[id], ch=!!p.u.choice, tier=uTier(u,ch), cap=uCap(u,ch,1);
   const stars=p.sm==="ta"?(spr&&spr.counted?ustTA(tier,p.ok+p.ng,p.ok,p.el,cap):0):ustSD(tier,p.ok,cap);
   const all=bests(), key="u:"+id, prev=all[key]||{score:0,medal:0}, was=ustClamp(prev[p.sm]);
@@ -3897,6 +3896,7 @@ function uSpStar(p,spr){
 }
 /* ★の もらいかた（算数の 単元。その回の タイプと あそびかたで 出す） */
 function howUStar(u,choice,mode,k){
+  if(!uIsMath(u.id)) return howUnit(k||1);
   const tier=uTier(u,choice), cap=uCap(u,choice,k||1), st=n=>`<span class="hst" aria-label="ほし ${n}">${"★".repeat(n)}</span>`;
   const rows=mode==="ta"?[[st(1),T("ust.h.ta1",SP_TA,SP_TA_OK)],[st(2),T("ust.h.ta",spFmtMS(UST_TA[tier][1]))],[st(3),T("ust.h.ta3",spFmtMS(UST_TA[tier][2]),UST_TA_OK3)]]
     :mode==="sd"?[0,1,2].map(i=>[st(i+1),T("ust.h.sd",UST_SD[tier][i])])
@@ -3955,6 +3955,8 @@ let COLS=null, COLH=false, LESSON=false, QKA=0, HS={sel:null,shop:false,gift:0,c
 const colToday=()=>COL.dayNum(new Date());
 function colGet(){ if(!COLS) COLS=COL.clean(store.get(COLK,null),colToday()); return COLS; }
 function colSave(){ if(COLS) store.set(COLK,COLS); }
+/* 単元の ★（mh_best の u:<単元ID>）を ひろばの きろくに うつす（じっせき・きらきらは ★で 数える。2026-11-26） */
+function colStSync(S){ const b=bests(), m={}; for(const k in b) if(k.startsWith("u:")&&b[k]){ m[k.slice(2)]=[b[k].medal|0,b[k].ta|0,b[k].sd|0]; } return COL.stSync(S,m); }
 const colCfgOn=()=>{ const c=store.get(COLCFG,null); return !(c&&c.on===0); };
 function colSetCfg(p){ store.set(COLCFG,{...(store.get(COLCFG,null)||{}),...p}); }
 function colSetOn(v){ colSetCfg({on:v?1:0}); }
@@ -3964,7 +3966,7 @@ const colTkLimit=()=>{ const c=store.get(COLCFG,null); return COL.tkLimit(c&&typ
 const colTkOn=()=>colMode()==="on"&&UNITS_OK&&colTkLimit()>0;
 /* オフが勝つ：端末のオフ、またはリンクの col=0 のどちらかでオフ。リンクの col=1 では オンにならない */
 const colMode=()=>(!COLOK||!HBOPEN||!colCfgOn()||COLH)?"off":"on";
-function colTouch(){ const S=colGet(); COL.sync(S,colToday()); colSave(); return S; }
+function colTouch(){ const S=colGet(); colStSync(S); COL.sync(S,colToday()); colSave(); return S; }
 const acornSvg=c=>svgU("h-acorn",c);
 const colStageSum=S=>COL.UNIT_IDS.reduce((n,id)=>n+COL.stage(S,id),0);
 const colHave=S=>COL.parts(S).filter(p=>p.have).length;
@@ -3979,7 +3981,7 @@ function colDoor(){
 function colRun(info){
   colRun.paid=0;                                 // この回で ふえた どんぐり（結果の 上の ふだ .rs-pill 用。出さない回は 0）
   if(colMode()==="off") return "";
-  const S=colGet(), today=colToday();
+  const S=colGet(), today=colToday(); colStSync(S);
   const r=COL.recordRun(S,{today,grade:ui.grade|0,units:info.units||[],answered:info.answered|0,correct:info.correct|0,quiz:!!info.quiz});
   colSave();
   if(r.paid>0&&!info.quiet&&!r.blocked) setTimeout(()=>sfx("coin"),700);      // どんぐりがふえたとき（メダルの音のあと）
@@ -3998,7 +4000,7 @@ function colRun(info){
   if(r.tickets>0&&colTkOn()) L.push(T("col.tk.got"));
   if(r.mk&&r.mk.add>0&&COL.mkAvail(S)>0) L.push(T("col.mk.r.new"));            // まなびっこ：えらべる分が ふえた（えらぶのは ひろばで。学習の流れは 止めない）
   if(r.mk) r.mk.grow.slice(0,1).forEach(id=>L.push(T("col.mk.r.grow",mkNm(id))));
-  if(r.ya){ r.ya.rank.slice(0,2).forEach(e=>L.push(T("col.ya.r.up",ttl(e.id),T("col.ya.rk."+e.r)))); r.ya.kira.slice(0,1).forEach(id=>L.push(T("col.ya.r.kira",mkNm(id))));
+  if(r.ya){ r.ya.kira.slice(0,1).forEach(id=>L.push(T("col.ya.r.kira",mkNm(id))));
     COL.yaCheck(S,yaExt()).slice(0,2).forEach(id=>L.push(T("col.ya.r.ach",yaName(id)))); colSave(); }
   if(r.capFirst){ L.push(T("col.cap")); S.day.shown=1; colSave(); }
   if(!L.length&&!r.paid&&S.d0===today) L.push(T("col.r.day1"));
@@ -4014,7 +4016,7 @@ function colRunPlay(p){      // finish() から：単元ごとの正解数と、
 function renderHiroba(){
   if(colMode()!=="on") return go("#home");
   setLG(ui.grade); HS={sel:null,shop:false,gift:0,cap:0,done:0,mkSel:null,mkGot:null,mkLater:false,mkInfo:null,mkGrow:[],tab:"d",kzMsg:null,ya:false,isle:null,iv:null,sbNew:null,sbTab:null,sbMsg:null};
-  { const S0=colGet(); if(COL.yaCheck(S0,yaExt()).length) colSave(); }
+  { const S0=colGet(); colStSync(S0); if(COL.yaCheck(S0,yaExt()).length) colSave(); }
   app.innerHTML=`<div class="hb"></div>`;
   Promise.all([loadScript("data/hiroba-art.js?v=eddf43ff",()=>!!document.getElementById("hiroba-art")),loadScript("data/hiroba-island.js?v=2",()=>!!window.MH_ISLE)]).then(()=>{ if(params().path==="hiroba") hbDraw(true); },()=>{ app.innerHTML=`<div class="q">${T("col.err")}</div>`; });
 }
@@ -4146,7 +4148,7 @@ function yaName(id){
   let m;
   if((m=/^c(\d+)$/.exec(id))) return `せいかい ${m[1]}もん`;
   if((m=/^nm(\d+)$/.exec(id))) return `ノーミス ${m[1]}かい`;
-  if((m=/^r([1-4])_(\d+)$/.exec(id))) return `${T("col.ya.rk."+m[1])}シール ${m[2]}まい`;
+  if((m=/^r([1-4])_(\d+)$/.exec(id))) return `${T("col.ya.rk."+m[1])}の たんげん ${m[2]}こ`;
   if((m=/^s([mjsre])300$/.exec(id))) return `${YA_SJN[m[1]]} せいかい 300もん`;
   if(id==="mx1") return "1かいで 3きょうか"; if(id==="mx10") return "3きょうか ミックス 10かい";
   if((m=/^mk(\d)$/.exec(id))) return `なかま ${m[1]}たい`;
@@ -4154,7 +4156,7 @@ function yaName(id){
   if((m=/^m100n(\d+)$/.exec(id))) return `100マス ${m[1]}かい`;
   if(id==="m100t120") return "100マス 2ふん きり"; if(id==="m100t60") return "100マス 1ぷん きり";
   if(id==="mt10") return "めもり名人《めいじん》 ★10"; if(id==="mtall") return "めもり名人《めいじん》 ★ぜんぶ";
-  if(id==="kuku") return "九九《くく》 きんシール 3まい";
+  if(id==="kuku") return "九九《くく》の たんげん 3つで いつもの ★3つ";
   return id;
 }
 /* 100マス・めもり名人の 数（じっせきに つかう。読むだけ） */
@@ -4165,7 +4167,6 @@ function yaExt(){
   return x;
 }
 function yaKiraTxt(S,c){ if(S.mk.own[c.id].k) return `<p class="note yakr">✨ ${T("col.ya.kira.on")}</p>`; return `<p class="note yakr">${T("col.ya.kira",Math.max(0,COL.YA_KIRA_C-(S.y.s[c.subj]||0)),Math.max(0,COL.YA_KIRA_K-COL.yaRankCount(S,3,c.subj)))}</p>`; }
-function yaNextTxt(S,id){ const n=COL.yaNeed(S,id); return n.r===1?T("col.ya.nx.1",n.c,n.nine):n.r===3?T("col.ya.nx.3",n.c,n.nm):T("col.ya.nx."+n.r); }
 /* ひろばの「じっせき」：なかまごとに。かくしは たっせいまで ？？？ */
 function yaHtml(S){
   const L=COL.yaList(S,yaExt()), done=L.filter(a=>a.done).length;
@@ -4313,7 +4314,7 @@ function hbIsle(root,S,pm,D){
   root.querySelectorAll("[data-iz]").forEach(b=>b.onclick=()=>{ const f=+b.dataset.iz; if(f) HS.isle.zoom(f); else HS.isle.home(); });
 }
 
-/* ----- ひろばたんけん（チケット1まいで1回。2〜3分。どんぐりは出ない・recordRun を通さない＝チケットの★にならない） ----- */
+/* ----- ひろばたんけん（チケット1まいで1回。2〜3分。どんぐりは出ない・recordRun を通さない＝チケットの スタンプに ならない） ----- */
 function exMemo(k,id){
   if(k==="u"){ const u=UBY[id]; return {title:u?T("col.ex.of",u.title):id,text:u?u.ex||u.note||"":""}; }
   return {title:T(id==="school"||COL.PARTS.some(p=>p.id===id)?"col.p."+id:"col.d."+id),text:T("col.mm."+id)};
@@ -4440,12 +4441,12 @@ document.addEventListener("keydown",e=>{
 function renderZukan(){
   if(colMode()!=="on"||!UNITS_OK) return go("#home");
   setLG(ui.grade);
-  const S=colTouch(), g=ui.grade|0, sum=COL.summary(S);
+  const S=colTouch(), g=ui.grade|0, sum=COL.summary(S), bb=bests();
   S.vz=colStageSum(S); colSave();
   const stk=u=>{ const st=COL.stage(S,u.id), pend=COL.pending(S,u.id), k=SJ[u.subj];
     const mark=st===3?svgU("d-star","skstar"):st===2?ic("check"):pend?ic("moon"):"";
-    const yr=COL.yaRank(S,u.id);
-    return `<button type="button" class="sk s${st}${pend?" pend":""}${yr?" yr"+yr:""}" data-id="${u.id}" style="--sc:var(--${k});--sb:${SUBJ[k].bg}" aria-label="${esc(rbp(u.title))}：${T("col.s."+st)}${yr?"・"+T("col.ya.zk",T("col.ya.rk."+yr)):""}"><span class="skm">${mark}</span><span class="skt">${esc(u.title)}</span>${yr?`<span class="skr" aria-hidden="true">${T("col.ya.rk."+yr)}</span>`:""}</button>`; };
+    const yr=COL.yaRank(S,u.id), sn=uStarSum(u.id,bb);      // ★の 数（シールは ★に まとめた。2026-11-26）。yr は ふちの 色（3＝金・4＝虹）
+    return `<button type="button" class="sk s${st}${pend?" pend":""}${yr?" yr"+yr:""}" data-id="${u.id}" style="--sc:var(--${k});--sb:${SUBJ[k].bg}" aria-label="${esc(rbp(u.title))}：${T("col.s."+st)}${sn?"・"+T("col.ya.zk",sn):""}"><span class="skm">${mark}</span><span class="skt">${esc(u.title)}</span>${sn?`<span class="skr" aria-hidden="true">★${sn}</span>`:""}</button>`; };
   const sec=[["sansu","math"],["kokugo","jp"],["shakai","soc"],...(window.RIKA_PUBLIC?[["rika","rika"]]:[]),["eigo","eng"]].map(([sj,k])=>{
     const us=UREADY.filter(u=>u.subj===sj); if(!us.length) return "";
     const gs=[...new Set(us.map(u=>u.g))].sort((a,b)=>a-b), has=g&&gs.includes(g);
@@ -4462,7 +4463,7 @@ function renderZukan(){
   app.querySelectorAll(".sk").forEach(b=>b.onclick=()=>{
     const u=UBY[b.dataset.id], st=COL.stage(S,u.id), pend=COL.pending(S,u.id);
     const t=st===0?T("col.zk.hint0",u.title):st===1?T(pend?"col.zk.hint1":"col.zk.hint1b"):st===2?T("col.zk.hint2"):T("col.zk.hint3");
-    const yr=COL.yaRank(S,u.id), box=$("#zkmsg"); box.innerHTML=`<b>${esc(u.title)}</b><span>${esc(T("col.s."+st))}</span><p>${esc(t)}</p><p class="yanx"><span class="skr r${yr}">${T("col.ya.zk",T("col.ya.rk."+yr))}</span> ${esc(yaNextTxt(S,u.id))}</p><button type="button" class="btn s" id="zkgo">${T("col.zk.go")}</button>`;
+    const yr=COL.yaRank(S,u.id), ss=uStars(u.id,bb), mx=uIsMath(u.id)?9:3, sn=ss.n+ss.ta+ss.sd, box=$("#zkmsg"); box.innerHTML=`<b>${esc(u.title)}</b><span>${esc(T("col.s."+st))}</span><p>${esc(t)}</p><p class="yanx"><span class="skr r${yr}">${T("ust.sum",sn,mx)}</span> ${esc(T(sn>=mx?"col.ya.nx.top":"col.ya.nx"))}</p><button type="button" class="btn s" id="zkgo">${T("col.zk.go")}</button>`;
     $("#zkgo").onclick=()=>go(uHash({ids:[u.id],n:20,t:20,seed:uSeed(),mix:true,choice:null}));
     box.scrollIntoView({block:"nearest"});
   });
@@ -6015,7 +6016,7 @@ function startNetGame(s){
   const m=modeOf(s), x=gameOf(s), off=s.now-Date.now();
   const end=s.endAt-off, startAt=end-s.t*1000;
   const mine=s.players.find(p=>p.pid===NET.pid);
-  M={m,x,g:s.g,t:s.t,task:false,rule:ruleOf(s.rule),ev:evOf(s.rule),ok:mine.ok||0,ng:mine.ng||0,misses:[],missObjs:[],phase:"count",end,net:true,state:s,
+  M={m,x,g:s.g,t:s.t,task:false,rule:ruleOf(s.rule),ev:evOf(s.rule),ok:mine.ok||0,ng:mine.ng||0,chg:0,clean:true,misses:[],missObjs:[],phase:"count",end,net:true,state:s,
      me:{n:mine.name,e:mine.emoji,mk:mine.mk,ms:mine.ms,mh:mine.mh,v:mine.v,me:true},bots:[],over:false};
   app.innerHTML=`<div class="mplay">
     <div class="topbar"><span class="note" style="white-space:nowrap">${T("l.room")} ${s.code}</span><span><b>${m.ico} ${m.t}</b> <span class="note">${x.t}・${s.g}年《ねん》・${ruleName(s.rule)}</span></span><span class="timer" id="tm" aria-hidden="true">${s.t}</span></div>
@@ -7940,12 +7941,12 @@ function uModeSheet(u,choice,start){
   if(document.getElementById("umsheet")) return;
   const onKey=e=>{ if(e.key==="Escape") close(); };
   const close=()=>{ el.remove(); document.removeEventListener("keydown",onKey); };
-  const s=uStars(u.id), star=uIsStar(u.id), tier=star?uTier(u,choice):"", cap=star?uCap(u,choice,1):3;
-  const goal=(m,n)=>!star?"":n>=3?T("ust.top"):n>=cap?T("ust.cap.ch"):T("um.next")+"　"+(m==="n"?T("ust.g.n",UST_N[tier][n]):m==="ta"?(n===0?T("ust.h.ta1",SP_TA,SP_TA_OK):n===2?T("ust.h.ta3",spFmtMS(UST_TA[tier][2]),UST_TA_OK3):T("ust.h.ta",spFmtMS(UST_TA[tier][1]))):T("ust.h.sd",UST_SD[tier][n]));
+  const s=uStars(u.id), math=uIsMath(u.id), tier=math?uTier(u,choice):"", cap=math?uCap(u,choice,1):3;
+  const goal=(m,n)=>!math?(n>=3?T("ust.top"):T("um.next")+"　"+T("ust.g.n",uNeed(1)[n])):n>=3?T("ust.top"):n>=cap?T("ust.cap.ch"):T("um.next")+"　"+(m==="n"?T("ust.g.n",UST_N[tier][n]):m==="ta"?(n===0?T("ust.h.ta1",SP_TA,SP_TA_OK):n===2?T("ust.h.ta3",spFmtMS(UST_TA[tier][2]),UST_TA_OK3):T("ust.h.ta",spFmtMS(UST_TA[tier][1]))):T("ust.h.sd",UST_SD[tier][n]));
   const btn=(m,ico,n)=>h("button",{type:"button",class:"umbtn um-"+m,onclick:()=>{ close(); start(m); }},
     h("span",{class:"umico","aria-hidden":"true",text:ico}),
-    h("span",{class:"umbody"},h("b",{text:T("sp."+m)}),h("span",{class:"umd",text:m==="n"?T("sp.n.d"):m==="ta"?T("sp.ta.d",SP_TA):T("sp.sd.d")}),star?h("span",{class:"umg",text:goal(m,n)}):null),
-    star?h("span",{class:"umst",innerHTML:uStarH(n)}):null);
+    h("span",{class:"umbody"},h("b",{text:T("sp."+m)}),h("span",{class:"umd",text:m==="n"?T("sp.n.d"):m==="ta"?T("sp.ta.d",SP_TA):T("sp.sd.d")}),math||m==="n"?h("span",{class:"umg",text:goal(m,n)}):null),
+    math||m==="n"?h("span",{class:"umst",innerHTML:uStarH(n)}):null);      // 算数いがいは いつものだけ ★
   const first=btn("n","⏱",s.n);
   const el=h("div",{class:"sheetbg exbg",id:"umsheet",onclick:e=>{ if(e.target===el) close(); }},
     h("div",{class:"sheet umsheet",role:"dialog","aria-modal":"true","aria-label":T("um.t")},
@@ -8384,15 +8385,15 @@ function renderUnitLink(hash){
   if(!UNITS_OK||!c){ setLG(0); app.replaceChildren(h("div",{class:"play"},h("div",{class:"q"},T("u.bad"),h("br"),h("button",{type:"button",class:"btn",text:T("n.home"),onclick:()=>go("#home")})))); return; }
   const g=uMaxG(c.ids); setLG(g);
   let choice=uChoice(c.ids,c.choice);
-  const how=h("div",{class:"pills",style:"justify-content:center"}), draw=()=>how.replaceChildren(upill(T("u.type"),!choice,()=>{ choice=false; draw(); }),upill(T("u.c4"),choice,()=>{ choice=true; draw(); }));
-  if(uTypeOk(c.ids,"")) draw();
+  const how=h("div",{class:"pills",style:"justify-content:center"}), howU=h("div"), drawHow=()=>{ howU.innerHTML=howUnit(c.ids.length,c.ids,choice); }, draw=()=>{ how.replaceChildren(upill(T("u.type"),!choice,()=>{ choice=false; draw(); }),upill(T("u.c4"),choice,()=>{ choice=true; draw(); })); drawHow(); };
+  drawHow(); if(uTypeOk(c.ids,"")) draw();
   app.replaceChildren(h("div",{class:"play up"},
     h("div",{class:"topbar"},c.task?h("span"):h("button",{type:"button",class:"back",innerHTML:BK(),onclick:()=>go(runBack())}),h("b"),h("span")),
     h("div",{class:"q"},h("div",{class:"big",text:T("u.intro")}),spOn(c.task)?null:h("div",{class:"small",text:T("u.1min")})),
     h("div",{class:"uchips cen"},...c.ids.map(id=>h("span",{class:"uchipw"},h("span",{class:"uchip static"},c.task&&UBY[id].g<=2?null:h("span",{class:"ucg",text:UBY[id].g+"年《ねん》"}),h("span",{text:UBY[id].title})),
       h("button",{type:"button",class:"btn sub s uexb",text:T("u.ex"),"aria-label":T("u.ex")+"："+UBY[id].title,onclick:()=>uEx(UBY[id])})))),
     how,spOn(c.task)?spChips({bestKey:"u:"+[...c.ids].sort().join(",")}):null,
-    c.task?null:h("div",{innerHTML:howUnit(c.ids.length)}),
+    c.task?null:howU,
     h("div",{style:"margin-top:12px"},h("button",{type:"button",class:"btn again",id:"ugo",text:T("u.go"),onclick:()=>startUnitRun({...c,choice})}))));
   const b=document.getElementById("ugo"); if(b) b.focus();
 }
