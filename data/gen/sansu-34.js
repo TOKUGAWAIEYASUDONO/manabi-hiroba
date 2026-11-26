@@ -324,4 +324,188 @@
     ys = xs.map(f); const a = ys[4], prev = ys[3];
     return { q: `x が 1、2、3、4、5 の とき、 y は ${ys.slice(0, 4).join("、")}、□ です。 □に はいる 数は？`, a: String(a), choices: ch(r, a, S([prev + (prev - ys[2]) + 1, prev, a + 1, a - 1, a + 2, prev + 1]), nf(r, a, { min: 1, max: 60 })) };
   };
+
+  /* ===== 3年 こまかい だんかい（2026-11-26）=====
+     どの型も how:[行] を返す。2回 まちがえたとき「この もんだいの ときかた」に その問題の 数で 出る（index.html lhHow）。
+     p.k で 問い方を 1つに しぼる（だんかいごとに 1つの むずかしさ） */
+  const cm = v => v + "cm";
+  const pickK = (r, p, n) => p.k != null ? p.k : r.int(n);
+  g.en3d = (r, p) => {                                     // 円と球：ことば／はんけいと ちょっけい／ならんだ円／球
+    const kind = p.kind;
+    if (kind === "kotoba") {
+      const T = [
+        ["円の 中心から まわりまで ひいた 直線を 何と いう？", "はんけい", "円の 中心から まわりまでが はんけい だよ。"],
+        ["円の 中心を 通って、まわりから まわりまで ひいた 直線を 何と いう？", "ちょっけい", "中心を 通って 円の はしから はしまでが ちょっけい だよ。"],
+        ["円の まん中の 点を 何と いう？", "中心", "円の まん中の 点が 中心 だよ。"],
+        ["どこから 見ても 円に 見える 形を 何と いう？", "球", "ボールのように どこから 見ても 円に 見える 形が 球 だよ。"]
+      ];
+      const [q, a, how] = r.pick(T);
+      return { q, a, ans: "choice4", choices: r.shuffle(["はんけい", "ちょっけい", "中心", "球"]), how: [how, "ちょっけいは はんけいの 2ばい だよ。"] };
+    }
+    if (kind === "hankei") {
+      const x = r.range(2, 15), d = x * 2;
+      if (r.chance(0.5)) return { q: `はんけいが ${x}cmの 円の ちょっけいは？`, a: cm(d), choices: ch(r, cm(d), S([x, d + 1, d - 1, x * 4, x + 2]).map(cm), nf(r, d, { min: 2, max: 60, fmt: cm }), { loose: true }),
+        how: ["ちょっけいは はんけいの 2ばい", `${x} × 2 ＝ ${d}`, `答えは ${d}cm`] };
+      return { q: `ちょっけいが ${d}cmの 円の はんけいは？`, a: cm(x), choices: ch(r, cm(x), S([d, x + 1, x - 1, d * 2, x + 2]).map(cm), nf(r, x, { min: 1, max: 30, fmt: cm }), { loose: true }),
+        how: ["はんけいは ちょっけいの 半分", `${d} ÷ 2 ＝ ${x}`, `答えは ${x}cm`] };
+    }
+    if (kind === "narabi") {
+      const x = r.range(2, 6), n = r.range(2, 5), d = x * 2, L = d * n;
+      if (r.chance(0.6)) return { q: `はんけい ${x}cmの 同じ 円が ${n}こ、 よこに ぴったり ならんで 箱に 入っています。 箱の よこの 長さは？`, a: cm(L),
+        choices: ch(r, cm(L), S([x * n, L + d, L - d, d + n, x * n * 4]).map(cm), nf(r, L, { min: 4, max: 80, fmt: cm }), { loose: true }),
+        how: [`円 1この ちょっけいは ${x} × 2 ＝ ${d}cm`, `それが ${n}こ分 → ${d} × ${n} ＝ ${L}`, `答えは ${L}cm`] };
+      return { q: `同じ 円が ${n}こ、 よこに ぴったり ならんで、 はしから はしまで ${L}cm です。 円の はんけいは？`, a: cm(x),
+        choices: ch(r, cm(x), S([d, L / n + 1, x + 1, x - 1, L / 2]).map(cm), nf(r, x, { min: 1, max: 30, fmt: cm }), { loose: true }),
+        how: [`円 1この ちょっけいは ${L} ÷ ${n} ＝ ${d}cm`, `はんけいは その 半分 → ${d} ÷ 2 ＝ ${x}`, `答えは ${x}cm`] };
+    }
+    const x = r.range(2, 9), d = x * 2, k = pickK(r, p, 3);   // 球
+    if (k === 0) return { q: `はんけい ${x}cmの 球を まっすぐ 切ります。 切り口の 円の ちょっけいが いちばん 大きいのは 何cm？`, a: cm(d), choices: ch(r, cm(d), S([x, d + 1, d - 1, d * 2, d + 2]).map(cm), nf(r, d, { min: 2, max: 40, fmt: cm }), { loose: true }),
+      how: ["球の 中心を 通るように 切ると、切り口が いちばん 大きい", "その 円の ちょっけいは 球の ちょっけいと 同じ", `${x} × 2 ＝ ${d}`] };
+    if (k === 1) return { q: `はんけい ${x}cmの 球が ぴったり 入る さいころの 形の 箱が あります。 箱の 1つの へんの 長さは？`, a: cm(d), choices: ch(r, cm(d), S([x, d + 1, d - 1, d * 2, x * 3]).map(cm), nf(r, d, { min: 2, max: 40, fmt: cm }), { loose: true }),
+      how: ["ぴったり 入るので、箱の へんの 長さは 球の ちょっけいと 同じ", `${x} × 2 ＝ ${d}`, `答えは ${d}cm`] };
+    const n = r.range(2, 4), H = d * n;
+    return { q: `ちょっけい ${d}cmの 球を ${n}こ、 たてに ぴったり つみます。 高さは 何cm？`, a: cm(H), choices: ch(r, cm(H), S([x * n, H + d, H - d, d + n]).map(cm), nf(r, H, { min: 4, max: 80, fmt: cm }), { loose: true }),
+      how: [`球 1この 高さは ちょっけいの ${d}cm`, `${n}こ分 → ${d} × ${n} ＝ ${H}`] };
+  };
+  const gW = v => v + "g", kgW = v => v + "kg";
+  g.omosa3d = (r, p) => {                                  // 重さ：kgと g／tと kg／重さの 計算
+    if (p.kind === "kg") {
+      const a = r.range(1, 9), b = r.chance(0.5) ? r.range(1, 9) * 100 : r.range(1, 99) * 10, v = a * 1000 + b;
+      if (r.chance(0.5)) return { q: `${a}kg ${b}g = □g`, a: gW(v), choices: ch(r, gW(v), S([a * 100 + b, a * 1000 + b + 100, a * 1000 + b - 100, a + b, a * 10000 + b]).map(gW), nf(r, v, { step: 10, min: 1010, max: 9990, fmt: gW }), { loose: true }),
+        how: ["1kg ＝ 1000g", `${a}kg ＝ ${a * 1000}g`, `${a * 1000} ＋ ${b} ＝ ${v}`] };
+      const A = `${a}kg${b}g`;
+      return { q: `${v}gは 何kg何g？`, a: A, ans: "choice4", choices: ch(r, A, [`${a * 10}kg${b}g`, `${a}kg${b + 100}g`, `${a + 1}kg${b}g`, `${a}kg${b * 10 > 999 ? b + 10 : b * 10}g`, `${Math.max(1, a - 1)}kg${b}g`], [`${a + 2}kg${b}g`, `${a}kg${b + 200}g`], { loose: true }),
+        how: ["1000g ＝ 1kg", `${v}g は 1000gが ${a}こ と ${b}g`, `答えは ${a}kg${b}g`] };
+    }
+    if (p.kind === "t") {
+      const a = r.range(1, 9), b = r.range(1, 9) * 100, v = a * 1000 + b;
+      if (r.chance(0.5)) return { q: `${a}t ${b}kg = □kg`, a: kgW(v), choices: ch(r, kgW(v), S([a * 100 + b, a * 1000 + b + 100, a * 1000 + b - 100, a + b]).map(kgW), nf(r, v, { step: 100, min: 1100, max: 9900, fmt: kgW }), { loose: true }),
+        how: ["1t ＝ 1000kg", `${a}t ＝ ${a * 1000}kg`, `${a * 1000} ＋ ${b} ＝ ${v}`] };
+      return { q: `${a}t = □kg`, a: kgW(a * 1000), choices: ch(r, kgW(a * 1000), S([a * 100, a * 10000, a * 10, a * 1000 + 100]).map(kgW), nf(r, a * 1000, { step: 1000, min: 1000, max: 9000, fmt: kgW }), { loose: true }),
+        how: ["1t ＝ 1000kg", `${a}t は 1000kgが ${a}こ → ${a * 1000}kg`] };
+    }
+    const sub = r.chance(0.5);                             // 重さの 計算（g で 答える）
+    if (!sub) {
+      const a = r.range(1, 5), b = r.range(1, 9) * 100, c = r.range(1, 9) * 100, v = a * 1000 + b + c;
+      return { q: `${a}kg ${b}g と ${c}gを あわせると 何g？`, a: gW(v), choices: ch(r, gW(v), S([a * 1000 + b, a + b + c, v + 100, v - 100, v + 1000]).map(gW), nf(r, v, { step: 100, min: 1100, max: 9900, fmt: gW }), { loose: true }),
+        how: [`${a}kg ${b}g ＝ ${a * 1000 + b}g`, `${a * 1000 + b} ＋ ${c} ＝ ${v}`, `答えは ${v}g`] };
+    }
+    const a = r.range(2, 5), c = r.range(1, 9) * 100, v = a * 1000 - c;
+    return { q: `${a}kgから ${c}gを とると、 のこりは 何g？`, a: gW(v), choices: ch(r, gW(v), S([a - c > 0 ? a - c : a * 100, a * 1000 + c, v + 100, v - 100, a * 100 - c > 0 ? a * 100 - c : v + 200]).map(gW), nf(r, v, { step: 100, min: 100, max: 9900, fmt: gW }), { loose: true }),
+      how: ["たんいを g に そろえる", `${a}kg ＝ ${a * 1000}g`, `${a * 1000} − ${c} ＝ ${v}`] };
+  };
+  const hm = m => `${Math.floor(m / 60)}時${m % 60 ? m % 60 + "分" : ""}`;
+  g.jikoku3d = (r, p) => {                                  // 時こく：〜分後／〜分前／時間の 長さ／時間の たし算
+    if (p.kind === "ato" || p.kind === "mae") {
+      for (;;) {
+        const h = r.range(7, 10), m = r.range(1, 11) * 5, d = r.range(2, 11) * 5, t = h * 60 + m, e = p.kind === "ato" ? t + d : t - d;
+        if (Math.floor(e / 60) === h) continue;           // かならず 時を またぐ
+        const A = hm(e), w = [hm(e + 60), hm(e - 60), hm(e + 10), hm(e - 10), hm(p.kind === "ato" ? t - d : t + d)].filter(x => x !== A);
+        const nx = p.kind === "ato" ? (h + 1) * 60 : h * 60, gap = Math.abs(nx - t), rest = d - gap;
+        return { q: `${hm(t)}の ${d}分${p.kind === "ato" ? "後" : "前"}の 時こくは？`, a: A, ans: "choice4", choices: ch(r, A, w, [hm(e + 5), hm(e - 5), hm(e + 15)], { loose: true }),
+          how: [`${hm(t)}から ${hm(nx)}までは ${gap}分`, `${d}分 − ${gap}分 ＝ のこり ${rest}分`, `${hm(nx)}の ${rest}分${p.kind === "ato" ? "後" : "前"}で ${A}`] };
+      }
+    }
+    if (p.kind === "aida") {
+      for (;;) {
+        const h = r.range(7, 10), m = r.range(4, 11) * 5, d = r.range(3, 11) * 5, t = h * 60 + m, e = t + d;
+        if (Math.floor(e / 60) === h || d >= 60) continue;
+        const nx = (h + 1) * 60, a1 = nx - t, a2 = e - nx;
+        return { q: `${hm(t)}から ${hm(e)}までは 何分？`, a: String(d), choices: ch(r, d, S([e % 60 - m > 0 ? e % 60 - m : d + 20, d + 10, d - 5, a1, a2 + 60]), nf(r, d, { step: 5, min: 5, max: 60 }), { loose: true }),
+          how: [`${hm(t)}から ${hm(nx)}までは ${a1}分`, `${hm(nx)}から ${hm(e)}までは ${a2}分`, `${a1} ＋ ${a2} ＝ ${d}`] };
+      }
+    }
+    for (;;) {                                             // 時間の たし算（○分＋○分 → ○時間○分）
+      const a = r.range(4, 11) * 5, b = r.range(3, 11) * 5, s = a + b;
+      if (s <= 60 || s >= 120) continue;
+      const A = `1時間${s - 60}分`;
+      return { q: `${a}分 ＋ ${b}分 は 何時間何分？`, a: A, ans: "choice4", choices: ch(r, A, [`2時間${s - 60}分`, `1時間${s - 50}分`, `1時間${Math.max(5, s - 70)}分`, `${Math.floor(s / 100)}時間${s % 100}分`].filter(x => x !== A && !/時間0分$/.test(x) && +x.match(/(\d+)分$/)[1] < 60), [`1時間${(s - 40) % 60 || 25}分`, `1時間${(s - 35) % 60 || 35}分`, `1時間${(s - 30) % 60 || 45}分`], { loose: true }),
+        how: [`${a} ＋ ${b} ＝ ${s}分`, "60分 ＝ 1時間", `${s}分 ＝ 60分 ＋ ${s - 60}分 → ${A}`] };
+    }
+  };
+  g.shosu3d = (r, p) => {                                   // 小数：0.1の いくつ分／大小／整数と 小数の たしひき
+    if (p.kind === "ikutsu") {
+      let v = r.range(11, 99); if (v % 10 === 0) v++;
+      const D = dec(v, 1);
+      if (r.chance(0.5)) return { q: `0.1を ${v}こ あつめた 数は？`, a: D, ans: "dec", choices: ch(r, D, [String(v), dec(v, 2), dec(v + 1, 1), dec(v - 1, 1), dec(v + 10, 1)], nf(r, v, { min: 1, max: 99, fmt: x => dec(x, 1) }), { loose: true }),
+        how: ["0.1が 10こで 1", `${v}こ は 10こが ${Math.floor(v / 10)}つ と ${v % 10}こ`, `${Math.floor(v / 10)} と 0.${v % 10} で ${D}`] };
+      return { q: `${D}は 0.1を 何こ あつめた 数？`, a: String(v), choices: ch(r, v, S([Math.floor(v / 10) + v % 10, v % 10, v + 1, v - 1, v * 10]), nf(r, v, { min: 1, max: 99 }), { loose: true }),
+        how: [`${Math.floor(v / 10)} は 0.1が ${Math.floor(v / 10) * 10}こ`, `0.${v % 10} は 0.1が ${v % 10}こ`, `${Math.floor(v / 10) * 10} ＋ ${v % 10} ＝ ${v}`] };
+    }
+    if (p.kind === "kurabe") {
+      const set = new Set(); let v = r.range(12, 89); if (v % 10 === 0) v++;
+      const rv = (v % 10) * 10 + Math.floor(v / 10);     // 1.3 と 3.1 の ような まちがえやすい 数
+      [v, rv, v + 1, v - 1, v + 10, v - 10, v + 5].forEach(x => { if (x >= 1 && x <= 99 && set.size < 4) set.add(x); });
+      const L = [...set], big = r.chance(0.5), x = big ? Math.max(...L) : Math.min(...L), A = dec(x, 1);
+      return { q: `いちばん ${big ? "大きい" : "小さい"} 数は？`, a: A, ans: "choice4", choices: r.shuffle(L.map(y => dec(y, 1))),
+        how: ["まず 整数の ところ（小数点の 左）を くらべる", "同じなら 0.1の くらいを くらべる", `いちばん ${big ? "大きい" : "小さい"}のは ${A}`] };
+    }
+    for (;;) {                                             // 整数と 小数の たし算・ひき算（答えが 整数に なるもの も ふくむ）
+      const k = r.int(3); let q, v, how;
+      if (k === 0) { const a = r.range(2, 9), b = r.range(1, 9); v = a * 10 - b; q = `${a} − 0.${b}`; how = [`${a} を ${a}.0 と 考える`, `0.1が ${a * 10}こ から ${b}こ とる → ${v}こ`, `答えは ${dec(v, 1)}`]; }
+      else if (k === 1) { const a = r.range(1, 8), b = r.range(11, 89); if (b % 10 === 0) continue; v = a * 10 + b; q = `${a} + ${dec(b, 1)}`; how = [`整数の ところ どうしを たす：${a} ＋ ${Math.floor(b / 10)} ＝ ${a + Math.floor(b / 10)}`, `0.${b % 10} は そのまま`, `答えは ${dec(v, 1)}`]; }
+      else { const b = r.range(1, 9), a = r.range(11, 79); if (a % 10 + b !== 10) continue; v = a + b; q = `${dec(a, 1)} + 0.${b}`; how = [`0.${a % 10} ＋ 0.${b} ＝ 1`, `${Math.floor(a / 10)} ＋ 1 ＝ ${v / 10}`, `答えは ${v / 10}（小数点の 後ろの 0は かかない）`]; }
+      const D = dec(v, 1);
+      return { q, a: D, ans: "dec", choices: ch(r, D, [dec(v + 1, 1), dec(v - 1, 1), dec(v + 10, 1), dec(v - 10, 1), dec(v + 9, 1)].filter(x => +x > 0), nf(r, v, { min: 1, max: 99, fmt: x => dec(x, 1) }), { loose: true }), how };
+    }
+  };
+  g.bunsu3d = (r, p) => {                                   // 分数：大小／1から ひく
+    if (p.kind === "kurabe") {
+      const d = r.range(5, 10), ns = r.shuffle([...Array(d - 1)].map((_, i) => i + 1)).slice(0, 4), big = r.chance(0.5), x = big ? Math.max(...ns) : Math.min(...ns), A = `${x}/${d}`;
+      return { q: `いちばん ${big ? "大きい" : "小さい"} 分数は？`, a: A, ans: "choice4", choices: r.shuffle(ns.map(n => `${n}/${d}`)),
+        how: [`分母が どれも ${d} で 同じ`, "分母が 同じなら、分子が 大きいほど 大きい", `答えは ${A}`] };
+    }
+    for (;;) {
+      const d = r.range(3, 10), a = r.range(1, d - 1), n = d - a;
+      if (gcd(n, d) !== 1) continue;
+      const A = `${n}/${d}`;
+      return { q: `1 − ${a}/${d}`, a: A, choices: ch(r, A, [`${a}/${d}`, `${n}/${d - 1}`, `${n + 1}/${d}`, `${Math.max(1, n - 1)}/${d}`, `${1 - 0}/${d}`].filter(x => x !== A), [`${n + 2}/${d}`, `${n}/${d + 1}`, `${n + 1}/${d + 1}`]),
+        how: [`1 は ${d}/${d} と 同じ`, `${d}/${d} − ${a}/${d} ＝ ${n}/${d}`] };
+    }
+  };
+  g.graph3d = (r, p) => {                                   // ぼうグラフ：1めもりの 大きさ／めもりを よむ／何めもりか
+    const unit = r.pick([["人", "人"], ["本", "本"], ["こ", "こ"]])[0], st = r.pick([1, 2, 5, 10]);
+    if (p.kind === "memori") {
+      const n = 5, top = st * n;
+      return { q: `ぼうグラフの めもりで、 0から ${top}${unit}までが ${n}つに 分かれています。 1めもりは 何${unit}？`, a: String(st), choices: ch(r, st, S([n, top, st + 1, st * 2 === top ? st + 2 : st * 2, top - n]), nf(r, st, { min: 1, max: 20 }), { loose: true }),
+        how: [`${top} を ${n}つに 分ける`, `${top} ÷ ${n} ＝ ${st}`, `1めもりは ${st}${unit}`] };
+    }
+    const k = r.range(3, 12), v = k * st;
+    if (p.kind === "yomu") return { q: `1めもりが ${st}${unit}の ぼうグラフで、 ぼうの 長さが ${k}めもりです。 何${unit}？`, a: String(v), choices: ch(r, v, S([k, v + st, v - st, k + st, v + 1]), nf(r, v, { min: 1, max: 120 }), { loose: true }),
+      how: [`1めもりが ${st}${unit}`, `${k}めもりは ${st} × ${k} ＝ ${v}`, `答えは ${v}${unit}`] };
+    return { q: `1めもりが ${st}${unit}の ぼうグラフで、 ${v}${unit}を あらわすと 何めもり？`, a: String(k), choices: ch(r, k, S([v, k + 1, k - 1, k * 2, v - st]), nf(r, k, { min: 1, max: 30 }), { loose: true }),
+      how: [`1めもりが ${st}${unit}`, `${v} ÷ ${st} ＝ ${k}`, `答えは ${k}めもり`] };
+  };
+  g.sankaku3d = (r, p) => {                                 // 三角形：なかまわけ／角／まわりの 長さ
+    const N = ["正三角形", "二等へん三角形", "直角三角形", "四角形"];
+    if (p.kind === "namae") {
+      if (r.chance(0.5)) { const x = r.range(3, 9); return { q: `3つの へんの 長さが ${x}cm、${x}cm、${x}cm の 三角形は？`, a: N[0], ans: "choice4", choices: r.shuffle(N.slice()), how: ["3つの へんの 長さが ぜんぶ 同じ", "→ 正三角形"] }; }
+      let x, y; do { x = r.range(3, 9); y = r.range(2, 9); } while (x === y || 2 * x <= y);
+      return { q: `3つの へんの 長さが ${x}cm、${x}cm、${y}cm の 三角形は？`, a: N[1], ans: "choice4", choices: r.shuffle(N.slice()), how: ["2つの へんの 長さが 同じ", "→ 二等へん三角形"] };
+    }
+    if (p.kind === "kado") {
+      const T = [["正三角形の 3つの 角の 大きさは？", "ぜんぶ 同じ", "正三角形は 3つの 角が ぜんぶ 同じ 大きさ"], ["二等へん三角形の 角は どう なっている？", "2つの 角が 同じ", "二等へん三角形は 2つの 角が 同じ 大きさ"]];
+      const [q, a, how] = r.pick(T);
+      return { q, a, ans: "choice4", choices: r.shuffle(["ぜんぶ 同じ", "2つの 角が 同じ", "ぜんぶ ちがう", "1つだけ 直角"]), how: [how] };
+    }
+    if (r.chance(0.5)) {
+      const x = r.range(3, 12), v = x * 3;
+      if (r.chance(0.5)) return { q: `1つの へんが ${x}cmの 正三角形の まわりの 長さは？`, a: cm(v), choices: ch(r, cm(v), S([x * 2, x * 4, v + 1, v - 1, x + 3]).map(cm), nf(r, v, { min: 6, max: 40, fmt: cm }), { loose: true }), how: ["正三角形は 3つの へんが 同じ 長さ", `${x} × 3 ＝ ${v}`] };
+      return { q: `まわりの 長さが ${v}cmの 正三角形の 1つの へんは？`, a: cm(x), choices: ch(r, cm(x), S([v - 3, Math.floor(v / 2), x + 1, x - 1, x * 2]).map(cm), nf(r, x, { min: 1, max: 30, fmt: cm }), { loose: true }), how: ["正三角形は 3つの へんが 同じ 長さ", `${v} ÷ 3 ＝ ${x}`] };
+    }
+    let x, y; do { x = r.range(3, 9); y = r.range(2, 9); } while (x === y || 2 * x <= y);
+    const v = x * 2 + y;
+    return { q: `同じ 長さの へんが ${x}cm、 のこりの へんが ${y}cmの 二等へん三角形の まわりの 長さは？`, a: cm(v), choices: ch(r, cm(v), S([x + y, x * 3, y * 2 + x, v + 1, v - 1]).map(cm), nf(r, v, { min: 6, max: 40, fmt: cm }), { loose: true }),
+      how: [`同じ 長さの へんが 2本 → ${x} × 2 ＝ ${x * 2}`, `${x * 2} ＋ ${y} ＝ ${v}`] };
+  };
+  g.mul3d0 = (r) => {                                       // 3けた×1けた（十の位が 0）
+    const a = r.range(1, 9) * 100 + r.range(1, 9), b = r.range(2, 9), v = a * b;
+    return { q: `${a} × ${b}`, a: String(v), hissan: { a, b, op: "×" }, choices: ch(r, v, S([(Math.floor(a / 100) * b) * 100 + (a % 10) * b % 10, v + 10, v - 10, v + 100, v - 100, Math.floor(a / 100) * b * 10 + a % 10 * b]), nf(r, v, { min: 100, max: 9999 }), { loose: true }) };
+  };
+  g.div01 = (r) => {                                        // 0 や 1 の わり算
+    const k = r.int(3), d = r.range(2, 9);
+    if (k === 0) return { q: `0 ÷ ${d}`, a: "0", choices: ch(r, 0, S([d, 1, 10]), ["2", "3"], { loose: true }), how: ["0こを 何人で 分けても 1人分は 0こ", `0 ÷ ${d} ＝ 0`] };
+    if (k === 1) return { q: `${d} ÷ 1`, a: String(d), choices: ch(r, d, S([1, 0, d + 1, d - 1, d * 10]), nf(r, d, { min: 1, max: 20 }), { loose: true }), how: ["1で わると、答えは わられる数と 同じ", `${d} ÷ 1 ＝ ${d}`] };
+    return { q: `${d} ÷ ${d}`, a: "1", choices: ch(r, 1, S([0, d, 2, 10]), ["3", "4"], { loose: true }), how: ["同じ 数で わると、答えは 1", `${d} ÷ ${d} ＝ 1`] };
+  };
 })(window.MH_GEN);
