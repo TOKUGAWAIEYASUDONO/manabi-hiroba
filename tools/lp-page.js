@@ -1,0 +1,337 @@
+/* ひらめっと 先生向けの紹介ページ（sensei.html）の中身。tools/build-guide.js が読みこんで書き出す。
+   ・木のわくの黒板に大きな見出し。下は「45分の授業」で、スクロールに合わせて場面（導入→練習→みんなで→ふりかえり）が入れかわる。
+   ・色は本体の教科の色。外部からは何も読みこまない（文字の部品は vendor/fonts/files/lp-*.woff2、画面写真は vendor/img/lp/）。
+   ・見出し用の文字の部品は、このページで使う文字だけを入れている。文を変えたら python3 tools/build-lp-fonts.py で作りなおす（tools/check-lp.js が不足を見つける）。
+   ・一方通行：このページから ひらめっと へは行けるが、index.html・guide/ からこのページへのリンクは置かない（check-lp.js が検査）。 */
+const FILE = "sensei.html";
+const TITLE = "先生向けのご案内｜ひらめっと 小学生の無料学習ゲーム（登録不要・広告なし）";
+const DESC = "ひらめっとは、小学1〜6年生が学校の端末で遊べる無料の学習ゲームです。ログイン・登録なし、広告なし。授業の導入のクイズ、単元の練習、クラスの友だち対戦・協力モード、ふりかえりまで、45分の授業に合わせて使えます。";
+const CSS = `@font-face{font-family:"LP Zen Maru";font-style:normal;font-weight:900;font-display:swap;src:url(vendor/fonts/files/lp-zen-maru-gothic-900.woff2) format("woff2")}
+@font-face{font-family:"LP Yusei";font-style:normal;font-weight:400;font-display:swap;src:url(vendor/fonts/files/lp-yusei-magic-400.woff2) format("woff2")}
+:root{
+  color-scheme:light;
+  --board:#1f4d3a; --board2:#173c2d; --edge:#16372a; --wood:#8a5a2b; --wood2:#6d4520;
+  --chalk:#f4f7ef; --chalkdim:#cfe3d5; --gold:#ffd84d; --sun:#ff9422;
+  --field:#e9f4e4; --paper:#ffffff; --ink:#1b2a22; --muted:#46564d; --grid:#cfe0cb;
+  --s0:#146b60; --s0d:#0b4a42;
+  --s1:#2759b8; --s1d:#173d85;
+  --s2:#c2410c; --s2d:#8a2c06;
+  --s3:#6a3fc0; --s3d:#472a86;
+  --scene:var(--s0); --scened:var(--s0d);
+  --display:"LP Zen Maru","BIZ UDPGothic","Hiragino Maru Gothic ProN","Yu Gothic UI",Meiryo,sans-serif;
+  --hand:"LP Yusei","LP Zen Maru","Hiragino Maru Gothic ProN",Meiryo,sans-serif;
+  --body:"BIZ UDPGothic","Hiragino Kaku Gothic ProN","Yu Gothic UI","Yu Gothic",Meiryo,system-ui,sans-serif;
+  --gl:max(16px, env(safe-area-inset-left, 0px)); --gr:max(16px, env(safe-area-inset-right, 0px));
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0}
+img{max-width:100%}
+a:focus-visible{outline:3px solid var(--sun);outline-offset:3px}
+body{background:var(--board2);color:var(--ink);font-family:var(--body);font-size:17px;line-height:1.8}
+h1,h2,h3,p{margin:0}
+h1,h2,h3{font-family:var(--display);font-weight:900;line-height:1.25;text-wrap:balance}
+.in{max-width:1160px;margin:0 auto;padding-left:var(--gl);padding-right:var(--gr)}
+
+/* ---- 黒板 ---- */
+.hero{position:relative;color:var(--chalk);
+  background:
+    radial-gradient(60% 40% at 20% 30%, rgba(255,255,255,.07), transparent 70%),
+    radial-gradient(50% 35% at 80% 70%, rgba(255,255,255,.05), transparent 70%),
+    var(--board);
+  border:14px solid var(--wood);border-bottom-width:26px;
+  box-shadow:inset 0 0 0 3px var(--wood2), inset 0 0 60px rgba(0,0,0,.35);
+  margin-top:calc(-1 * env(safe-area-inset-top, 0px));padding-top:calc(env(safe-area-inset-top, 0px) + 1.2rem);padding-bottom:3.4rem}
+.hero::after{content:"";position:absolute;right:9%;bottom:-20px;width:74px;height:11px;border-radius:3px;background:var(--chalk);box-shadow:-96px 0 0 -1px var(--gold), 58px 0 0 -2px #ff9ab0}
+.brand{display:flex;align-items:center;gap:12px;margin-bottom:2rem}
+.brand a{display:flex}
+.brand img{height:36px;width:auto}
+.brand span{font-family:var(--hand);color:var(--chalkdim);font-size:17px}
+.nicchoku{position:absolute;top:calc(env(safe-area-inset-top, 0px) + 1.4rem);right:max(22px, env(safe-area-inset-right, 0px));writing-mode:vertical-rl;font-family:var(--hand);color:var(--chalkdim);
+  font-size:18px;letter-spacing:.14em;line-height:1.9;border-left:2px solid rgba(244,247,239,.35);padding-left:10px}
+.nicchoku b{color:var(--gold);font-weight:400}
+.hero h1{font-size:clamp(40px,9.2vw,112px);letter-spacing:-.01em;max-width:9.5em;text-shadow:0 2px 0 rgba(0,0,0,.25)}
+.hero h1 .l{display:block;opacity:0;transform:translateY(.35em);animation:rise .7s cubic-bezier(.2,.8,.2,1) forwards}
+.hero h1 .l:nth-child(2){animation-delay:.18s}
+@keyframes rise{to{opacity:1;transform:none}}
+.hero h1 em{font-style:normal;color:var(--gold);position:relative;white-space:nowrap}
+.hero h1 em svg{position:absolute;left:-4%;bottom:-.2em;width:108%;height:.34em;overflow:visible}
+.hero h1 em path{fill:none;stroke:var(--gold);stroke-width:7;stroke-linecap:round;stroke-dasharray:640;stroke-dashoffset:640;animation:draw .9s .8s ease-out forwards}
+@keyframes draw{to{stroke-dashoffset:0}}
+.hero .sub{font-size:clamp(17px,1.9vw,21px);color:var(--chalkdim);max-width:31em;margin-top:1.6rem}
+.magnets{display:flex;flex-wrap:wrap;gap:12px;list-style:none;padding:0;margin:1.8rem 0 0}
+.magnets li{font-family:var(--display);font-weight:900;font-size:clamp(16px,1.8vw,20px);color:var(--ink);background:var(--paper);border:3px solid var(--edge);border-radius:999px;padding:4px 18px 4px 12px;
+  display:flex;align-items:center;gap:8px;box-shadow:0 4px 0 var(--edge)}
+.magnets li::before{content:"";width:16px;height:16px;border-radius:50%;background:var(--m,#cf3d2c);box-shadow:inset -2px -3px 0 rgba(0,0,0,.2)}
+.magnets li:nth-child(2){--m:#2f6fd8;transform:rotate(-1.5deg)}
+.magnets li:nth-child(3){--m:#f2c230;transform:rotate(1deg)}
+.magnets li:nth-child(4){--m:#7a4cc8;transform:rotate(-.6deg)}
+.cta{display:flex;flex-wrap:wrap;gap:14px;margin-top:2rem}
+.down{display:flex;align-items:center;gap:12px;margin-top:2.2rem;font-family:var(--hand);color:var(--chalk);font-size:18px}
+.down i{width:24px;height:38px;border:2px solid var(--chalk);border-radius:12px;position:relative;flex:none}
+.down i::after{content:"";position:absolute;left:50%;top:7px;width:4px;height:8px;margin-left:-2px;border-radius:2px;background:var(--gold);animation:wheel 1.6s infinite}
+@keyframes wheel{0%{transform:translateY(0);opacity:1}70%{transform:translateY(12px);opacity:0}100%{opacity:0}}
+
+/* ---- 場面が入れかわるところ ---- */
+.story{position:relative;background:var(--scene);color:var(--paper);transition:background-color .7s ease;overflow:clip}
+.story[data-scene="1"]{--scene:var(--s1);--scened:var(--s1d)}
+.story[data-scene="2"]{--scene:var(--s2);--scened:var(--s2d)}
+.story[data-scene="3"]{--scene:var(--s3);--scened:var(--s3d)}
+.cols{display:grid;grid-template-columns:minmax(0,5fr) minmax(0,7fr);gap:56px}
+.stage{order:2;position:sticky;top:env(safe-area-inset-top, 0px);height:100vh;display:flex;flex-direction:column;justify-content:center;gap:26px;min-width:0}
+.steps{order:1;min-width:0;position:relative}
+
+/* 45分の時間の線 */
+.period{display:flex;flex-direction:column;gap:8px}
+.period .lbl{font-family:var(--hand);font-size:18px;letter-spacing:.06em}
+.period ol{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:5fr 20fr 15fr 5fr;gap:6px}
+.period li{font-family:var(--display);font-weight:900;font-size:13px;white-space:nowrap;opacity:.6;transition:opacity .4s}
+.period li::after{content:"";display:block;height:12px;margin-top:4px;border-radius:4px;border:2px solid var(--paper);background:transparent;transition:background-color .4s}
+.period li.done::after{background:rgba(255,255,255,.45)}
+.period li.on{opacity:1}
+.period li.on::after{background:var(--gold);border-color:var(--gold)}
+
+/* 画面のわく */
+.device{position:relative;aspect-ratio:16/10;max-width:100%;border:12px solid var(--edge);border-radius:26px;background:var(--edge);
+  box-shadow:14px 16px 0 var(--scened);transform:rotate(var(--tilt,-1.6deg));transition:transform .8s cubic-bezier(.2,.8,.2,1),box-shadow .7s}
+.story[data-scene="1"] .device{--tilt:1.4deg}
+.story[data-scene="2"] .device{--tilt:-1deg}
+.story[data-scene="3"] .device{--tilt:1.8deg}
+.screen{position:absolute;inset:0;border-radius:14px;overflow:hidden}
+.screen img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:top left;
+  opacity:0;transform:translateX(9%) scale(.92);transition:opacity .55s ease,transform .8s cubic-bezier(.2,.8,.2,1)}
+.screen img.past{transform:translateX(-9%) scale(.92)}
+.screen img.on{opacity:1;transform:none}
+.sticker{position:absolute;right:-18px;top:-26px;z-index:2;width:104px;height:104px;border-radius:50%;background:var(--gold);color:var(--ink);border:4px solid var(--edge);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;font-family:var(--display);font-weight:900;line-height:1;transform:rotate(9deg);box-shadow:0 5px 0 var(--edge)}
+.sticker b{font-size:38px}
+.sticker small{font-size:14px;margin-top:4px}
+.sticker.pop{animation:pop .5s cubic-bezier(.3,1.6,.5,1)}
+@keyframes pop{0%{transform:rotate(-8deg) scale(.6)}100%{transform:rotate(9deg) scale(1)}}
+.cap{font-family:var(--hand);font-size:18px;min-height:1.8em}
+
+/* 左の説明 */
+.step{position:relative;min-height:96vh;display:flex;flex-direction:column;justify-content:center;gap:16px;padding-block:3rem;opacity:.3;transform:translateY(14px);transition:opacity .5s,transform .6s}
+.step.on{opacity:1;transform:none}
+.step .big{position:absolute;left:-.06em;top:50%;transform:translateY(-62%);z-index:0;font-family:var(--display);font-weight:900;font-size:clamp(150px,24vw,330px);line-height:.8;
+  color:transparent;-webkit-text-stroke:3px rgba(255,255,255,.2);letter-spacing:-.05em;pointer-events:none;white-space:nowrap}
+.step > :not(.big){position:relative;z-index:1}
+.when{align-self:flex-start;font-family:var(--hand);font-size:20px;color:var(--ink);background:var(--gold);border:3px solid var(--edge);border-radius:8px;padding:0 14px;transform:rotate(-2deg);box-shadow:0 4px 0 var(--edge)}
+.step h2{font-size:clamp(30px,4.4vw,56px)}
+.step p{font-size:18px;max-width:26em}
+.step ul{margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:6px;font-size:16px}
+.step li{padding-left:1.6em;position:relative}
+.step li::before{content:"";position:absolute;left:0;top:.5em;width:.95em;height:.55em;border-left:4px solid var(--gold);border-bottom:4px solid var(--gold);transform:rotate(-45deg);border-radius:1px}
+
+/* ---- 安心：方眼のノート ---- */
+.safe{background:var(--field) linear-gradient(var(--grid) 1px,transparent 1px) 0 0/28px 28px;background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);background-size:28px 28px;padding-block:5rem;border-top:8px solid var(--edge)}
+.safe h2{font-size:clamp(28px,4.4vw,52px);margin-bottom:.4rem}
+.safe h2 span{background:linear-gradient(transparent 62%,var(--gold) 62%)}
+.safe .lead{color:var(--muted);margin-bottom:2rem}
+.facts{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:18px;margin:0}
+.facts div{background:var(--paper);border:3px solid var(--edge);border-radius:16px;padding:18px 16px;box-shadow:0 6px 0 var(--edge);min-width:0}
+.facts div:nth-child(odd){transform:rotate(-.8deg)}.facts div:nth-child(even){transform:rotate(.7deg)}
+.facts dt{font-family:var(--display);font-weight:900;font-size:clamp(24px,2.6vw,34px);line-height:1.2;color:var(--c,#cf3d2c)}
+.facts div:nth-child(2) dt{--c:#2f6fd8}.facts div:nth-child(3) dt{--c:#146b60}.facts div:nth-child(4) dt{--c:#6a3fc0}
+.facts dd{margin:8px 0 0;color:var(--muted);font-size:15px;line-height:1.7}
+
+/* ---- さいご：黒板 ---- */
+.end{background:var(--board);color:var(--chalk);padding-block:5rem;text-align:center;border-top:14px solid var(--wood)}
+.end .hand{font-family:var(--hand);color:var(--gold);font-size:22px}
+.end h2{font-size:clamp(30px,5.4vw,68px);margin:.3rem 0 .8rem}
+.end p{color:var(--chalkdim)}
+.btn{display:inline-flex;align-items:center;justify-content:center;min-height:68px;margin-top:1.8rem;padding:8px 40px;border-radius:16px;border:3px solid var(--edge);
+  background:var(--sun);color:var(--ink);font-family:var(--display);font-weight:900;font-size:clamp(20px,2.4vw,26px);box-shadow:0 7px 0 var(--edge);text-decoration:none;transition:transform .1s,box-shadow .1s}
+.btn:hover{transform:translateY(2px);box-shadow:0 5px 0 var(--edge)}
+.btn:active{transform:translateY(7px);box-shadow:0 0 0 var(--edge)}
+.btn.alt{background:var(--paper)}
+.hero .btn{margin-top:0;min-height:60px;padding-inline:28px}
+.end .cta{justify-content:center;margin-top:1.8rem}.end .btn{margin-top:0}
+.foot{background:var(--board2);color:var(--chalkdim);font-size:14px;text-align:center;padding-block:18px}
+.foot a{color:var(--chalk)}
+
+@media (max-width:820px){
+  body{font-size:16px}
+  .hero{border-width:8px;border-bottom-width:18px;padding-bottom:2.4rem}
+  .hero::after{bottom:-15px;width:50px;height:8px;box-shadow:-66px 0 0 -1px var(--gold)}
+  .nicchoku{font-size:14px;top:calc(env(safe-area-inset-top, 0px) + .8rem);right:10px;line-height:1.7}
+  .brand{margin-bottom:3.2rem}
+  .cols{display:block}
+  .stage{height:auto;z-index:3;background:var(--scene);transition:background-color .7s;padding-block:12px 14px;gap:12px;
+    margin-left:calc(-1 * var(--gl));margin-right:calc(-1 * var(--gr));padding-left:var(--gl);padding-right:calc(var(--gr) + 8px);box-shadow:0 10px 16px -10px rgba(0,0,0,.45)}
+  .period .lbl{font-size:15px}
+  .period li{font-size:11px}
+  .period li::after{height:8px}
+  .device{border-width:7px;border-radius:16px;box-shadow:7px 8px 0 var(--scened)}
+  .screen{border-radius:9px}
+  .sticker{width:64px;height:64px;right:-8px;top:-14px;border-width:3px}
+  .sticker b{font-size:22px}.sticker small{font-size:10px;margin-top:2px}
+  .cap{display:none}
+  .step{min-height:60vh;padding-block:2.2rem}
+  .step .big{font-size:44vw;top:46%}
+  .step p{font-size:16px}
+  .facts{grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+}
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation:none!important;transition:none!important}
+  .hero h1 .l{opacity:1;transform:none}
+  .hero h1 em path{stroke-dashoffset:0}
+  .btn:hover,.btn:active{transform:none}
+  .step{opacity:1;transform:none}
+}
+`;
+const JS = `(function(){
+  var story=document.getElementById('story'), steps=[].slice.call(document.querySelectorAll('.step')),
+      imgs=[].slice.call(document.querySelectorAll('.screen img')), tabs=[].slice.call(document.querySelectorAll('#tabs li')),
+      cap=document.getElementById('cap'), mins=document.getElementById('mins'), sticker=document.getElementById('sticker'),
+      stage=document.querySelector('.stage'), cur=0, tick=false;
+  try{
+    var d=new Date(), k='〇一二三四五六七八九', w='日月火水木金土';
+    var kan=function(n){return n<10?k[n]:n<20?'十'+(n%10?k[n%10]:''):k[Math.floor(n/10)]+'十'+(n%10?k[n%10]:'')};
+    document.getElementById('today').textContent=kan(d.getMonth()+1)+'月'+kan(d.getDate())+'日（'+w[d.getDay()]+'）';
+  }catch(e){}
+  function show(i){
+    if(i===cur) return; cur=i;
+    story.setAttribute('data-scene',i);
+    steps.forEach(function(s,n){s.classList.toggle('on',n===i)});
+    tabs.forEach(function(t,n){t.classList.toggle('on',n===i);t.classList.toggle('done',n<i)});
+    imgs.forEach(function(m,n){m.classList.toggle('on',n===i);m.classList.toggle('past',n<i)});
+    cap.textContent=steps[i].getAttribute('data-cap');
+    mins.textContent=steps[i].getAttribute('data-min');
+    sticker.classList.remove('pop'); void sticker.offsetWidth; sticker.classList.add('pop');
+  }
+  function update(){
+    tick=false;
+    var vh=window.innerHeight, line=vh*.5;
+    if(window.innerWidth<=820){var b=stage.getBoundingClientRect().bottom; line=b+(vh-b)*.45}
+    var best=0, bd=1e9;
+    steps.forEach(function(s,n){var r=s.getBoundingClientRect(), dd=Math.abs((r.top+r.bottom)/2-line); if(dd<bd){bd=dd;best=n}});
+    show(best);
+  }
+  function req(){ if(!tick){tick=true;requestAnimationFrame(update)} }
+  window.addEventListener('scroll',req,{passive:true}); window.addEventListener('resize',req); update();
+})();
+`;
+const body = N => `<header class="hero"><div class="in">
+  <div class="brand"><a href="./"><img src="vendor/img/logo-hirametto-dark.svg" alt="ひらめっと" width="155" height="36"></a><span>先生向けのご案内</span></div>
+  <p class="nicchoku" aria-hidden="true"><span id="today"></span>　日直 <b>ひらめっと</b></p>
+  <h1><span class="l">すきま時間の5分が、</span><span class="l"><em>学びの時間<svg viewBox="0 0 600 40" preserveAspectRatio="none" aria-hidden="true"><path d="M6 24 C 120 6, 230 34, 330 18 S 520 8, 594 22"/></svg></em>になる。</span></h1>
+  <p class="sub">ひらめっとは、小学1〜6年生が学校の端末で遊べる学習ゲームです。準備はいりません。開いたら、すぐに始められます。</p>
+  <ul class="magnets"><li>無料</li><li>ログインなし</li><li>広告なし</li><li>名前を集めない</li></ul>
+  <div class="cta"><a class="btn" href="./#teacher">先生の画面をひらく</a><a class="btn alt" href="./">児童の画面を見てみる</a></div>
+  <div class="down"><i></i>下にスクロールすると、45分の授業がはじまります</div>
+</div></header>
+
+<section class="story" id="story" data-scene="0"><div class="in cols">
+  <div class="stage">
+    <div class="period" aria-hidden="true">
+      <span class="lbl">45分の授業で、こう使えます</span>
+      <ol id="tabs"><li class="on">導入</li><li>練習</li><li>みんなで</li><li>ふりかえり</li></ol>
+    </div>
+    <div class="device" id="device">
+      <div class="sticker" id="sticker" aria-hidden="true"><b id="mins">5</b><small>分</small></div>
+      <div class="screen">
+        <img class="on" src="vendor/img/lp/lp-quiz.webp" width="1280" height="800" alt="教室に映す漢字よみクイズ。大きな字の問題と、色分けされた4つの答え">
+        <img src="vendor/img/lp/lp-practice.webp" width="1280" height="800" loading="lazy" alt="計算スプリントで、たし算のひっ算をといている画面">
+        <img src="vendor/img/lp/lp-room.webp" width="1280" height="800" loading="lazy" alt="先生の画面「クラスであそぶ」。たからばこ・すごろく・ロケットはっしゃなどがならぶ">
+        <img src="vendor/img/lp/lp-teacher.webp" width="1280" height="800" loading="lazy" alt="先生の画面「授業でどう使うか」。導入・練習・みんなで・ふりかえりの4つの列">
+      </div>
+    </div>
+    <p class="cap" id="cap">教室に映す4択クイズ</p>
+  </div>
+
+  <div class="steps">
+    <article class="step on" data-cap="教室に映す4択クイズ" data-min="5">
+      <span class="big" aria-hidden="true">5分</span>
+      <span class="when">導入・はじめの5分</span>
+      <h2>映すだけ。<br>クラス全員で答える</h2>
+      <p>前の時間のふりかえりや、朝の会に。児童の端末は使いません。</p>
+      <ul><li>3分・5分・10分からえらべます</li><li>漢字・県庁所在地・英単語</li></ul>
+    </article>
+    <article class="step" data-cap="計算スプリント（3年・ひっ算）" data-min="20">
+      <span class="big" aria-hidden="true">20分</span>
+      <span class="when">練習・ひとりずつ</span>
+      <h2>いまの単元を、<br>自分のペースで</h2>
+      <p>単元をえらぶと、練習用のリンクとQRコードができます。Google Classroom や Teams にはるだけです。</p>
+      <ul><li>算数・国語・社会・理科・英語の${N}単元</li><li>授業中はほかの画面に行かない設定</li><li>まちがえた問題は、少しあとにもう一度</li></ul>
+    </article>
+    <article class="step" data-cap="先生の画面「クラスであそぶ」" data-min="15">
+      <span class="big" aria-hidden="true">15分</span>
+      <span class="when">みんなで・端末をつないで</span>
+      <h2>4けたのコードで、<br>全員が参加</h2>
+      <p>たからばこ・すごろくの友だち対戦。勝ち負けがにがてなクラスには、全員で力を合わせる協力モードを。</p>
+      <ul><li>名前は自動ニックネームが初期設定</li><li>最下位の子の名前は画面に出しません</li></ul>
+    </article>
+    <article class="step" data-cap="先生の画面「授業でどう使うか」" data-min="5">
+      <span class="big" aria-hidden="true">5分</span>
+      <span class="when">ふりかえり・さいごの5分</span>
+      <h2>「はやさ」より<br>「のび」をほめる</h2>
+      <p>100マス計算の記録を大きな画面で発表。のびた子、こつこつ続けた子にも光が当たります。</p>
+      <ul><li>今日のまとめを4択・○×で作れます</li><li>表（Excel など）から取りこめます</li></ul>
+    </article>
+  </div>
+</div></section>
+
+<section class="safe"><div class="in">
+  <h2><span>学校で安心して使えるように</span></h2>
+  <p class="lead">名前を集めないつくりです。</p>
+  <dl class="facts">
+    <div><dt>登録なし</dt><dd>ログインも、アカウントも、名簿もいりません。</dd></div>
+    <div><dt>0円・広告なし</dt><dd>お金はかかりません。広告も出ません。</dd></div>
+  </dl>
+</div></section>
+
+<section class="end"><div class="in">
+  <p class="hand">つぎの授業の、はじめの5分から。</p>
+  <h2>まずは先生おひとりで、<br>ためしてみてください</h2>
+  <p>登録はいりません。先生の画面をひらいて、活動をえらぶだけです。</p>
+  <div class="cta"><a class="btn" href="./#teacher">先生の画面をひらく</a><a class="btn alt" href="guide/">学年・単元から さがす</a></div>
+</div></section>
+<footer class="foot"><div class="in"><a href="./">ひらめっと ホーム</a> ／ <a href="guide/">学年・単元から さがす</a> ／ <a href="guide/custom.html">先生の問題で遊ぶ</a></div></footer>
+
+`;
+
+function lpPage({ BASE, MOVE_TAG, esc, jsonld, unitCount }) {
+  const canonical = BASE + "sensei";
+  const ld = [{
+    "@context": "https://schema.org", "@type": "WebPage", name: TITLE, description: DESC, url: canonical, inLanguage: "ja",
+    isPartOf: { "@type": "WebSite", name: "ひらめっと", url: BASE }, audience: { "@type": "EducationalAudience", educationalRole: "teacher" },
+    about: { "@type": "LearningResource", name: "ひらめっと", learningResourceType: "学習ゲーム", educationalLevel: "小学校", inLanguage: "ja", isAccessibleForFree: true, provider: { "@type": "Organization", name: "ひらめっと", url: BASE } }
+  }];
+  const html = `<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#1f4d3a">
+${MOVE_TAG.replace('src="../', 'src="')}
+<title>${esc(TITLE)}</title>
+<meta name="description" content="${esc(DESC)}">
+<link rel="canonical" href="${canonical}">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="ひらめっと">
+<meta property="og:title" content="${esc(TITLE)}">
+<meta property="og:description" content="${esc(DESC)}">
+<meta property="og:url" content="${canonical}">
+<meta property="og:locale" content="ja_JP">
+<meta name="twitter:card" content="summary_large_image">
+<meta property="og:image" content="${BASE}vendor/img/og-hirametto.png">
+<meta property="og:image:width" content="1200"><meta property="og:image:height" content="630">
+<link rel="icon" href="vendor/img/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="vendor/img/favicon-32.png" sizes="32x32" type="image/png">
+<link rel="apple-touch-icon" href="vendor/img/apple-touch-icon.png">
+<link rel="stylesheet" href="vendor/fonts/biz-udpgothic.css">
+<link rel="preload" href="vendor/fonts/files/lp-zen-maru-gothic-900.woff2" as="font" type="font/woff2" crossorigin>
+<style>
+${CSS}</style>
+${ld.map(jsonld).join("\n")}
+</head>
+<body>
+${body(unitCount)}<script>
+${JS}</script>
+</body>
+</html>
+`;
+  return { file: FILE, url: canonical, title: TITLE, desc: DESC, html };
+}
+module.exports = { lpPage, FILE };

@@ -60,7 +60,8 @@
     "m5-dec-mul-tenths","m5-dec-mul-hundredths","m5-dec-div-tenths","m5-dec-div-hundredths","m5-frac-reduce-one","m5-frac-reduce-multi","m5-frac-common-multiple","m5-frac-common-coprime","m5-frac-add-simple","m5-frac-add-reduce","m5-frac-sub-simple","m5-frac-sub-reduce","m5-frac-mul-int","m5-frac-div-int",
     "m6-frac-mul-proper","m6-frac-mul-cross","m6-frac-div-proper","m6-frac-div-mixed","m6-mix-dec-frac","m6-ratio-reduce","m6-speed-distance","m6-speed-time",
     "m1-bun-awase","m1-bun-nokori","m1-bun-chigai","m1-bun-junjo","m1-bun-3kazu","m1-bun-add20","m1-bun-sub20","m1-nanjuu","m2-bun-add","m2-bun-sub","m2-bun-gyaku","m2-bun-kake","m2-bun-tani","m2-nanjuu","m2-kuku-1","m3-bun-addsub","m3-bun-kake","m3-bun-bai","m3-bun-amari","m3-bun-kiri","m3-bun-tani","m3-byou","m4-bun-bai","m4-bun-shiki","m4-bun-shosu","m5-bun-wariai","m5-bun-buai","m6-bun-hi","m6-bun-bunsu",
-    "m3-shosu-tani"
+    "m3-shosu-tani",
+    "m3-en-kotoba","m3-en-hankei","m3-en-narabi","m3-en-kyuu","m3-sankaku-namae","m3-sankaku-kado","m3-sankaku-mawari","m3-omosa-kg","m3-omosa-t","m3-omosa-keisan","m3-jikan-ato","m3-jikan-mae","m3-jikan-aida","m3-jikan-tashi","m3-dec-ikutsu","m3-dec-kurabe","m3-dec-seisu","m3-frac-kurabe","m3-frac-1hiku","m3-graph-memori","m3-graph-yomu","m3-graph-kaku","m3-add-4d","m3-sub-4d","m3-sub-1000","m3-mul-3d1d-zero","m3-div-01"
   ];
   const IDX = {}; UNIT_IDS.forEach((id, i) => { IDX[id] = i; });
   const GRADE_FIX = { "m6-hayasa": 5, "m5-bunsu-int": 6, "m5-frac-mul-int": 6, "m5-frac-div-int": 6, "m6-speed-distance": 5, "m6-speed-time": 5 }; /* 現行教科書に合わせて学年を直した単元（IDは互換のため据え置き） */
@@ -132,6 +133,20 @@
   const KZ_IDS = KZ.map(k => k.id), KZ_SLOT = ["h", "p", "b", "t"];
   const KZ_BY = new Map(KZ.map(k => [k.id, k]));
   const KZ_PRICE_TOTAL = KZ.reduce((n, k) => n + (k.price || 0), 0);
+  /* じぶんの まなびっこ（素体。2026-11-26 ユーザー決定）：16しゅるいの 中から、はじめの 1たいは ランダムで きまる（無料・1回だけ）。
+     ほかの 子は どんぐりで「この子」と えらんで 買う（くじでは ない）。買った 子は なくならず、いつでも かえられる。きせかえは この子に つける（kz.e.sb）。
+     教科の 4たい（MK）は 今までどおり なかま。SB_IDS は バックアップ（HR6）の 番号なので、追加だけ・順番を かえない。
+     絵は vendor/img/soutai/{id}-{256|128}.webp（元は art-src/kisekae/soutai-b*.png を 800×800 に 切りだした物）。h＝ぼうしを のせる 頭の てっぺん、p＝もちものを もつ 右手（どちらも 絵の 幅・高さを 100 と した 位置） */
+  const SB_PRICE = 10;
+  const SB = [
+    { id: "neko", h: [49, 14], p: [81, 63] }, { id: "kuma", h: [51, 13], p: [82, 60] }, { id: "hiyoko", h: [51, 13], p: [82, 59] },
+    { id: "obake", h: [51, 12], p: [82, 63] }, { id: "kyoryu", h: [51, 13], p: [82, 61] }, { id: "robo", h: [51, 13], p: [81, 65] },
+    { id: "usagi", h: [51, 13], p: [81, 61] }, { id: "pengin", h: [51, 13], p: [82, 63] }, { id: "kaeru", h: [52, 18], p: [84, 63] },
+    { id: "panda", h: [51, 13], p: [80, 65] }, { id: "kitsune", h: [52, 14], p: [84, 62] }, { id: "hamster", h: [51, 13], p: [82, 57] },
+    { id: "hitsuji", h: [50, 13], p: [81, 62] }, { id: "tako", h: [51, 13], p: [82, 58] }, { id: "uchujin", h: [50, 19], p: [76, 61] },
+    { id: "slime", h: [49, 17], p: [87, 75] }
+  ];
+  const SB_IDS = SB.map(b => b.id), SB_BY = new Map(SB.map(b => [b.id, b]));
 
   const int = (v, lo, hi, d) => { v = Math.floor(+v); return Number.isFinite(v) ? Math.min(hi, Math.max(lo, v)) : d; };
   const dayNum = d => Math.floor(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()) / 864e5);
@@ -139,18 +154,47 @@
 
   function fresh(today) {
     return { v: 1, d0: today, last: today, u: {}, ac: { e: 0, s: 0 }, day: { n: today, got: 0, carry: 0, first: 0, quiz: 0, cap: 0, shown: 0, rv: [], pd: 0 }, pd: 0,
-      own: [], pl: {}, gift: 0, done: 0, theme: 0, vp: 0, vz: 0, tk: { n: 0, star: 0, d: today, got: 0, used: 0 }, mo: [], mu: [], mk: mkFresh(), kz: kzFresh(), y: yaFresh(), kp: kpFresh() };
+      own: [], pl: {}, gift: 0, done: 0, theme: 0, vp: 0, vz: 0, tk: { n: 0, star: 0, d: today, got: 0, used: 0 }, mo: [], mu: [], mk: mkFresh(), kz: kzFresh(), sb: sbFresh(), y: yaFresh(), kp: kpFresh(), bz: bzFresh() };
   }
   /* mk：w はじめの1たいを もらった／q えらべる分（QCODE の字）／own { id: { d もらった日, p なかよし, ld なかよしが ふえた日, k きらきら(のちの段階), v 見せた段階 } }
      sh ひろばに だしている子／mg 古い記録から 計算した（はじめの 案内を出す） */
+  /* bz（2026-11-25。ひとりで ボスバトルの ステージ）：o ひらいた ステージ（0〜5。その番号まで はじめられる）／s ずかんに のった モンスター（"z" ざこ・"b1"〜"b6" ステージボス・"r1"〜"r6" レアボス）
+     rd レアボスに ちょうせんした 日（1日 1回）。レアボスの ちょうせんは どんぐり BZ_RARE こ（ac.s に たす＝お店の 買い物と 同じ あつかい） */
+  const BZ_N = 6, BZ_RARE = 3;
+  const BZ_IDS = ["z"].concat(Array.from({ length: BZ_N }, (_, i) => "b" + (i + 1)), Array.from({ length: BZ_N }, (_, i) => "r" + (i + 1)));
+  function bzFresh() { return { o: 0, s: [], rd: 0, rp: 0 }; }      // rp：どんぐりを はらって まだ おわっていない レアボス（ステージ番号+1。0＝なし）
+  function bzClean(raw) {
+    const B = bzFresh(); if (!raw || typeof raw !== "object") return B;
+    B.o = int(raw.o, 0, BZ_N - 1, 0); B.s = uniq(raw.s, id => BZ_IDS.includes(id)); B.rd = int(raw.rd, 0, 9e6, 0); B.rp = int(raw.rp, 0, BZ_N, 0); if (B.rp > B.o + 1) B.rp = 0;
+    return B;
+  }
+  /* おいはらった：ids を ずかんに のせ、ボス（stage 番号の ならび cl）の つぎの ステージを ひらく。かえす値＝{ fresh: はじめて のった id, opened: 新しく ひらいた ステージ（なければ -1） } */
+  function bzKo(S, ids, cl) {
+    const fresh = [], B = S.bz; let opened = -1;
+    for (const id of ids || []) if (BZ_IDS.includes(id) && !B.s.includes(id)) { B.s.push(id); fresh.push(id); }
+    for (const st of cl || []) if (st >= 0 && st < BZ_N - 1 && st + 1 > B.o) { B.o = st + 1; opened = B.o; }
+    return { fresh, opened };
+  }
+  const bzRareOk = (S, today) => S.bz.rd !== today && balance(S) >= BZ_RARE;
+  function bzRarePay(S, today, st) { if (!bzRareOk(S, today) || !(st >= 0 && st <= S.bz.o)) return false; S.ac.s += BZ_RARE; S.bz.rd = today; S.bz.rp = st + 1; return true; }
+  function bzRareDone(S) { S.bz.rp = 0; }      // レアボスの バトルが おわった（結果の 画面まで 行った）
   function mkFresh() { return { w: 0, q: [], own: {}, sh: [], mg: 0 }; }
   /* kz（v3.3）：o 買った きせかえ（学びで もらう物は 入れない＝その時の 記録から 計算）／e { まなびっこの id: { h, p, b, t } } つけている物 */
   function kzFresh() { return { o: [], e: {} }; }
-  function kzClean(raw, M) {
+  /* sb：c いまの 子（"" は まだ きまっていない）／o もっている 子 */
+  function sbFresh() { return { c: "", o: [] }; }
+  function sbClean(raw) {
+    const B = sbFresh(); if (!raw || typeof raw !== "object") return B;
+    B.o = uniq(raw.o, id => SB_BY.has(id));
+    if (typeof raw.c === "string" && B.o.includes(raw.c)) B.c = raw.c;
+    else if (B.o.length) B.c = B.o[0];
+    return B;
+  }
+  function kzClean(raw, M, B) {
     const K = kzFresh(); if (!raw || typeof raw !== "object") return K;
     K.o = uniq(raw.o, id => KZ_BY.has(id));            // 買った物（あとで 学びで もらう物に かわった物は clean で kp.z へ うつす）
     if (raw.e && typeof raw.e === "object") for (const mk of Object.keys(raw.e)) {
-      const x = raw.e[mk]; if (!MK_IDS.includes(mk) || !M.own[mk] || !x || typeof x !== "object") continue;
+      const x = raw.e[mk]; if (!(mk === "sb" ? B && B.c : MK_IDS.includes(mk) && M.own[mk]) || !x || typeof x !== "object") continue;
       const o = {}; for (const sl of KZ_SLOT) { const id = x[sl]; if (typeof id === "string" && KZ_BY.has(id) && KZ_BY.get(id).s === sl) o[sl] = id; }
       if (Object.keys(o).length) K.e[mk] = o;
     }
@@ -203,8 +247,10 @@
     S.tk = { n: int(k.n, 0, TK_MAX, 0), star: int(k.star, 0, TK_STARS, 0), d: int(k.d, 0, 9e6, today), got: int(k.got, 0, TK_GET, 0), used: int(k.used, 0, TK_USE_MAX, 0) };
     S.mo = uniq(raw.mo, id => MEMO_O.includes(id)); S.mu = uniq(raw.mu, id => id in IDX);
     S.mk = mkClean(raw.mk, S, today);                                       // v3.0：古い記録には無い（そのときは 学びから 計算）
-    S.kz = kzClean(raw.kz, S.mk);                                           // v3.3：古い記録には無い（そのときは 空）
+    S.sb = sbClean(raw.sb);                                                // じぶんの まなびっこ（2026-11-26）：古い記録には無い（そのときは まだ きまっていない）
+    S.kz = kzClean(raw.kz, S.mk, S.sb);                                           // v3.3：古い記録には無い（そのときは 空）
     S.y = yaClean(raw.y);                                                  // v3.4：古い記録には無い（そのときは 0 から）
+    S.bz = bzClean(raw.bz);                                                // 2026-11-25：古い記録には無い（そのときは 0 から）
     S.kp = kpClean(raw.kp);                                                // もらった物（2026-11-19）：古い記録には無い（そのときは 下の keepUp で いまの 分を のこす）
     for (const id of S.kz.o) if (!KZ_BY.get(id).price && !S.kp.z.includes(id)) S.kp.z.push(id);
     S.kz.o = S.kz.o.filter(id => KZ_BY.get(id).price > 0);
@@ -443,7 +489,7 @@
   /* ---------- きせかえ（v3.3） ---------- */
   /* 学びで もらう物の 条件を 満たしているか。can／mst は 全部の教科の 単元の数、nk は まなびっこの いちばん 進んだ すがた。どれも 下がらない */
   function kzUnlocked(S, k) {
-    if (!k || !k.un || !Object.keys(S.mk.own).length) return false;     // まなびっこが いないと つける子が いない
+    if (!k || !k.un || !(Object.keys(S.mk.own).length || S.sb.c)) return false;     // まなびっこが いないと つける子が いない
     if (S.kp && S.kp.z.includes(k.id)) return true;                      // 一度 もらった物は のこす（kp.z）
     const [c, n] = k.un;
     if (c === "ach") return !!(S.y && S.y.a.includes(n));
@@ -452,16 +498,16 @@
     return c === "can" ? sm.can >= n : c === "mst" ? sm.master >= n : false;
   }
   const kzHas = (S, id) => { const k = KZ_BY.get(id); return !!k && (k.price ? S.kz.o.includes(id) : kzUnlocked(S, k)); };
-  const kzLeft = S => KZ.filter(k => k.price && !S.kz.o.includes(k.id)).length;      // まだ 買っていない（どんぐりの）きせかえの数
+  const kzLeft = S => KZ.filter(k => k.price && !S.kz.o.includes(k.id)).length + (S.sb.c ? SB_IDS.length - S.sb.o.length : 0);      // まだ 買っていない（どんぐりの）きせかえと 素体の数
   /* 買う：どんぐりの品・まだ もっていない・まなびっこが 1たい以上・のこりが 足りる */
   function kzBuy(S, id) {
     const k = KZ_BY.get(id);
-    if (!k || !k.price || S.kz.o.includes(id) || !Object.keys(S.mk.own).length || balance(S) < k.price) return false;
+    if (!k || !k.price || S.kz.o.includes(id) || !(Object.keys(S.mk.own).length || S.sb.c) || balance(S) < k.price) return false;
     S.ac.s += k.price; S.kz.o.push(id); return true;
   }
   /* つける：id が その場所の物で もっている物。id を "" に すると はずす。同じ物を もう一度 つけると はずす */
   function kzWear(S, mk, sl, id) {
-    if (!MK_IDS.includes(mk) || !S.mk.own[mk] || !KZ_SLOT.includes(sl)) return false;
+    if (!(mk === "sb" ? S.sb.c : MK_IDS.includes(mk) && S.mk.own[mk]) || !KZ_SLOT.includes(sl)) return false;
     const e = S.kz.e[mk] || {};
     if (id) { const k = KZ_BY.get(id); if (!k || k.s !== sl || !kzHas(S, id)) return false; if (e[sl] === id) delete e[sl]; else e[sl] = id; }
     else delete e[sl];
@@ -470,10 +516,26 @@
   }
   /* その子が いま つけている物（もっていない物は 出さない） */
   function kzOf(S, mk) {
-    const e = S && S.kz && MK_IDS.includes(mk) ? S.kz.e[mk] : null, o = {};
+    const e = S && S.kz && (MK_IDS.includes(mk) || (mk === "sb" && S.sb && S.sb.c)) ? S.kz.e[mk] : null, o = {};
     if (e) for (const sl of KZ_SLOT) if (e[sl] && kzHas(S, e[sl])) o[sl] = e[sl];
     return o;
   }
+
+  /* ---------- じぶんの まなびっこ（素体） ---------- */
+  /* はじめの 1たい：まだ きまっていなければ rnd（0以上1未満）で 1たい きめて もたせる。きまった id を 返す（もう いれば null） */
+  function sbStart(S, rnd) {
+    if (S.sb.c) return null;
+    const r = typeof rnd === "function" ? rnd() : Math.random(), id = SB_IDS[Math.min(SB_IDS.length - 1, Math.max(0, Math.floor(r * SB_IDS.length)))];
+    if (!S.sb.o.includes(id)) S.sb.o.push(id);
+    S.sb.c = id; return id;
+  }
+  /* 買う：はじめの 1たいが きまっていて・まだ もっていない 子・のこりが 足りる。買ったら その子に かわる */
+  function sbBuy(S, id) {
+    if (!S.sb.c || !SB_BY.has(id) || S.sb.o.includes(id) || balance(S) < SB_PRICE) return false;
+    S.ac.s += SB_PRICE; S.sb.o.push(id); S.sb.c = id; return true;
+  }
+  /* かえる：もっている 子に */
+  function sbSet(S, id) { if (!S.sb.o.includes(id)) return false; S.sb.c = id; return true; }
 
   /* ---------- やりこみ（v3.4。2026-11-19 ユーザー決定：日を またがない。やれば やるほど その日の うちに 進む。どんぐりは ふやさない） ----------
      y = { c 正解の合計, s { 教科の字: 正解 }, nm ノーミスの回, mx 1回で 3教科いじょうの回,
@@ -691,7 +753,7 @@
      やりこみの部分：正解の数・ノーミスの回・3教科の回・教科ごとの 正解の数（YA_SUBJ の順）・単元の数・［単元の番号(2)・正解・ノーミス・しるし(1：7割の回＋9割の回×2)］×数・じっせき（YA_BK の順の ビット。かたまりの数(1)・［20ビット(4)］×数）
      もらった物の部分：遊具（PARTS の順の 8ビット(2)）・学びで もらった きせかえ（KZ_IDS の順の ビット。かたまりの数(1)・［20ビット(4)］×数）・シールの ランクの 数・［単元の番号(2)・ランク(1)］×数
      古い版のサイトは HR4 を こわれた文字として 断る（だまって 消えない） */
-  const EPOCH = 18262, RE = /^HR[12345][0-9A-Z]+$/;
+  const EPOCH = 18262, RE = /^HR[12345][0-9A-Z]+$/, RE6 = /^HR6[0-9A-Z]+$/;
   /* HR5（2026-11-25。島の かざり 26こ）＝「HR5」＋ 追加の かざりの部分（もっている物 6字＋おいた ばしょ 26字）＋ HR4 と同じ中身。
      追加の かざりを 1つも もっていなければ 今まで通り HR4〜HR1。古い版のサイトは HR5 を こわれた文字として 断る */
   const XLEN = 6 + DECOR_X.length;
@@ -827,7 +889,31 @@
       return { kp: K, len: R.pos() };
     } catch (e) { return null; }
   }
+  /* HR6（2026-11-26。じぶんの まなびっこ）＝「HR6」＋ 素体の部分(13) ＋ 中身（HR1〜HR5 の 文字そのまま。自分の 確認つき）＋ 確認(3)。
+     素体の部分：いまの 子（SB_IDS の番号＋1、なしは 0）(1)・もっている 子（SB_IDS の順の 16ビット）(4)・この子の ぼうし・もちもの・はいけい・しょうごう（KZ_IDS の番号＋1、なしは 0）(2)×4。
+     中身の 形は かえないので、ほかの 版（HR5 など）が ふえても 包む だけで よい。素体が まだ きまっていなければ 今まで通り HR4〜HR1。古い版のサイトは HR6 を こわれた文字として 断る */
+  function sbStr(S) {
+    const B = S.sb, e = (S.kz.e.sb) || {}; let bits = 0;
+    SB_IDS.forEach((id, i) => { if (B.o.includes(id)) bits |= 1 << i; });
+    return b36(B.c ? SB_IDS.indexOf(B.c) + 1 : 0, 1) + b36(bits, 4) + KZ_SLOT.map(sl => b36(e[sl] ? KZ_IDS.indexOf(e[sl]) + 1 : 0, 2)).join("");
+  }
+  function sbParse(t) {
+    if (t.length < 13 || !/^[0-9A-Z]+$/.test(t.slice(0, 13))) return null;
+    const c = parseInt(t[0], 36), bits = parseInt(t.slice(1, 5), 36), o = [], e = {};
+    if (c > SB_IDS.length || bits >= (1 << SB_IDS.length)) return null;
+    SB_IDS.forEach((id, i) => { if (bits & (1 << i)) o.push(id); });
+    const cur = c ? SB_IDS[c - 1] : ""; if (cur && !o.includes(cur)) return null;
+    for (let j = 0; j < KZ_SLOT.length; j++) { const v = parseInt(t.slice(5 + j * 2, 7 + j * 2), 36); if (!v) continue; const k = KZ_BY.get(KZ_IDS[v - 1]); if (!k || k.s !== KZ_SLOT[j]) return null; e[KZ_SLOT[j]] = k.id; }
+    if (!cur && Object.keys(e).length) return null;
+    return { c: cur, o, e };
+  }
   function hrMake(S) {
+    const inner = hrMakeIn(S);
+    if (!S.sb.c && !S.sb.o.length) return inner;
+    const body = sbStr(S) + inner.replace(/-/g, "");
+    return ("HR6" + body + sum3("HR6" + body)).match(/.{1,8}/g).join("-");
+  }
+  function hrMakeIn(S) {
     const v5 = dxAny(S), v4 = v5 || yaAny(S) || kpAny(S), kzs = kzStr(S, v4), ids = UNIT_IDS.filter(id => stage(S, id) >= 1), mks = kzs ? kzs + mkStr(S, true) : mkStr(S);
     const tag = v5 ? "HR5" : v4 ? "HR4" : kzs ? "HR3" : mks ? "HR2" : "HR1";
     let own = 0; DECOR0.forEach((d, i) => { if (S.own.includes(d.id)) own |= 1 << i; });
@@ -839,6 +925,14 @@
   }
   function hrParse(str) {
     const t = String(str || "").toUpperCase().replace(/[^0-9A-Z]/g, "");
+    if (RE6.test(t)) {
+      if (t.length < 3 + 13 + 3) return null;
+      const body = t.slice(3, -3); if (sum3("HR6" + body) !== t.slice(-3)) return null;
+      const sb = sbParse(body); if (!sb) return null;
+      const inner = body.slice(13); if (!RE.test(inner)) return null;          // 中は HR1〜HR5 だけ（HR6 の 中に HR6 は 入れない）
+      const r = hrParse(inner); if (r) r.sb = sb;
+      return r;
+    }
     if (!RE.test(t) || t.length < 3 + HEAD + 3) return null;
     const tag = t.slice(0, 3); let body = t.slice(3, -3); if (sum3(tag + body) !== t.slice(-3)) return null;
     let mk = null, kz = null, y = null, kp = null, dx = null;
@@ -907,6 +1001,11 @@
       for (const id of r.kz.o) if (KZ_BY.has(id) && !S.kz.o.includes(id)) S.kz.o.push(id);
       for (const mk in r.kz.e) if (S.mk.own[mk] && !S.kz.e[mk] && Object.keys(r.kz.e[mk]).length) S.kz.e[mk] = { ...r.kz.e[mk] };
     }
+    if (r.sb) {                    // じぶんの まなびっこ：もっている 子は 両方。いまの 子と きせかえは この端末で まだ きまっていない ときだけ
+      for (const id of r.sb.o) if (SB_BY.has(id) && !S.sb.o.includes(id)) S.sb.o.push(id);
+      if (!S.sb.c && r.sb.c) S.sb.c = r.sb.c;
+      if (S.sb.c && !S.kz.e.sb && Object.keys(r.sb.e).length) S.kz.e.sb = { ...r.sb.e };
+    }
     for (const id of r.own) if (!S.own.includes(id)) S.own.push(id);
     for (const id in r.pl) if (!(id in S.pl) && !cellOf(S, r.pl[id])) S.pl[id] = r.pl[id];
     S.ac.e = Math.max(S.ac.e, r.e); S.ac.s = Math.min(Math.max(S.ac.s, r.s), S.ac.e);
@@ -953,8 +1052,9 @@
     for (const id of x.sh) if (M.sh.length < MK_SHOW && !M.sh.includes(id)) M.sh.push(id);
   }
 
-  return { TK_MAX, TK_GET, TK_STARS, TK_USE, MEMO_O, tkRoll, tkLimit, tkState, tkUse, memoCount, memoTotal, memoAdd, memoPick, explorerMap, CAP, GIFT, CELLS, UNIT_IDS, IDX, PARTS, DECOR, DECOR0, PRICE_TOTAL, TRACK_SUBJ, uGrade, dayNum, dayDate, fresh, clean, balance, sync, give, gapFull,
+  return { BZ_N, BZ_RARE, BZ_IDS, bzKo, bzRareOk, bzRarePay, bzRareDone, TK_MAX, TK_GET, TK_STARS, TK_USE, MEMO_O, tkRoll, tkLimit, tkState, tkUse, memoCount, memoTotal, memoAdd, memoPick, explorerMap, CAP, GIFT, CELLS, UNIT_IDS, IDX, PARTS, DECOR, DECOR0, PRICE_TOTAL, TRACK_SUBJ, uGrade, dayNum, dayDate, fresh, clean, balance, sync, give, gapFull,
     MK, MK_IDS, MK_SOON, MK_STAGE, MK_CAND, MK_SHOW, MK_ART, mkFresh,
+    SB, SB_IDS, SB_PRICE, sbFresh, sbStart, sbBuy, sbSet,
     KZ, KZ_IDS, KZ_SLOT, KZ_PRICE_TOTAL, kzFresh, kzUnlocked, kzHas, kzLeft, kzBuy, kzWear, kzOf, kzHatOk, mkStage, mkFree, mkAvail, mkCands, mkPick, mkShow, mkNext, mkWire, mkAvatar,
     YA_ACH, YA_SUBJ, YA_KIRA_C, YA_KIRA_K, yaFresh, yaRank, yaRankNow, yaNeed, kpFresh, keepUp, yaRankCount, yaCheck, yaList,
     RV_MAX, PD_EVERY, PD_GIVE, count, parts, stage, pending, recordRun, m100Run, claimGift, buy, cellOf, place, unplace, checkDone, summary, hrMake, hrParse, hrMerge, YA_BK };
