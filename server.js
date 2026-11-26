@@ -200,19 +200,23 @@ function player(room, b) {
   const p = room && room.players.get(b.pid);
   return p && p.token === b.token ? p : null;
 }
-// マスに 止まった ときの できごと（index.html の raceLand と 同じ きまり）
-function raceLand(p, rule, lead) {
-  const ev = p.v >= GOAL ? "" : evOf(rule)[p.v] || "", o = { ev }, fwd = n => { p.v = Math.min(GOAL, p.v + n); };
+// サイコロの 分だけ すすんで、止まった マスの できごとを おこす（index.html の raceMove の loop=true と 同じ きまり）。
+// 部屋の すごろくは ゴールしても 終わらず、時間まで 何しゅうも まわる。p.v は すすんだ マスの 合計（1しゅう 40）。ゴールを こえたら つぎの しゅうの スタートに 止まる
+function raceMove(p, n, rule, lead) {
+  const base = Math.floor(p.v / GOAL) * GOAL, o = { ev: "" };
+  const fwd = k => { p.v = Math.min(base + GOAL, p.v + k); if (p.v >= base + GOAL) o.lap = p.v / GOAL + 1; };
+  fwd(n); if (p.v >= base + GOAL) return o;
+  const ev = o.ev = evOf(rule)[p.v - base] || "";
   if (ev === "⭐") fwd(3);
-  else if (ev === "🌀") p.v = Math.max(0, p.v - 2);
-  else if (ev === "🌈") p.v = WARP[p.v];
+  else if (ev === "🌀") p.v = Math.max(base, p.v - 2);
+  else if (ev === "🌈") p.v = base + WARP[p.v - base];
   else if (ev === "🎲") o.again = true;
   else if (ev === "❓") {
     const easy = rule === "easy", r = Math.random() * 100;
     if (r < (easy ? 70 : 45)) { o.qk = "go"; o.qn = 2 + Math.floor(Math.random() * 3); fwd(o.qn); }
     else if (r < (easy ? 100 : 65)) { o.qk = "again"; o.again = true; }
-    else if (r < 80) { if (lead && lead.v > p.v && lead.v < GOAL) { o.qk = "swap"; [lead.v, p.v] = [p.v, lead.v]; } else { o.qk = "go"; o.qn = 3; fwd(3); } }
-    else { o.qk = "back"; o.qn = 3; p.v = Math.max(0, p.v - 3); }
+    else if (r < 80) { if (lead && lead.v > p.v) { o.qk = "swap"; [lead.v, p.v] = [p.v, lead.v]; } else { o.qk = "go"; o.qn = 3; fwd(3); } }
+    else { o.qk = "back"; o.qn = 3; p.v = Math.max(base, p.v - 3); }
   }
   return o;
 }
@@ -461,15 +465,14 @@ const API = {
       case "move": {
         if (room.mode !== "race") break;
         const n = Math.min(20, Math.max(1, b.n | 0));      // 3問正解で サイコロ2こ（ボーナスは 3こ、おうえんパワー ＋2）
-        p.v = Math.min(GOAL, p.v + n);
         const t = leader(room, p);
-        Object.assign(out, raceLand(p, room.rule, t && t.v > p.v ? t : null));
+        Object.assign(out, raceMove(p, n, room.rule, t && t.v > p.v ? t : null));
         break;
       }
       default: return [400, { error: "不明な操作です" }];
     }
     out.v = p.v;
-    if (room.mode === "race" && p.v >= GOAL) endRoom(room); else broadcast(room);
+    broadcast(room);      // すごろくも 時間で 終わる（ゴールしても つづく）
     return [200, out];
   }
 };
