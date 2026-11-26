@@ -277,6 +277,7 @@ const body = N => `<header class="hero"><div class="in">
   <p class="lead">名前を集めないつくりです。</p>
   <dl class="facts">
     <div><dt>登録なし</dt><dd>ログインも、アカウントも、名簿もいりません。</dd></div>
+    <div><dt>名前のない数字だけ</dt><dd>全体の平均を出すため、名前のない数字（単元・問題数・正解数・かかった時間）だけを送ります。先生の設定で止められます。</dd></div>
     <div><dt>0円・広告なし</dt><dd>お金はかかりません。広告も出ません。</dd></div>
   </dl>
 </div></section>

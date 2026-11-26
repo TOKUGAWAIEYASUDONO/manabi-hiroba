@@ -2136,7 +2136,7 @@ body[data-bw="jin"]{--bwc:#8fd04a;--bwi:url(vendor/img/battle/jin-field.webp)}
 <script src="data/sansu-items.js?v=54e3fedb"></script>
 <script src="data/tools-viz.js?v=0582ba52"></script>
 <script src="data/learnhelp.js?v=062f8140"></script><!-- まなびの たすけ（はやすぎる まちがい・あとで もう一度・とき方・つまずき） -->
-<script src="data/statlib.js?v=2733002d"></script><!-- 回答スピードの あつまり（名前なしの 数字だけ。ON・先生の オフは data/statlib.js） -->
+<script src="data/statlib.js?v=d9dababa"></script><!-- 回答スピードの あつまり（名前なしの 数字だけ。ON・先生の オフは data/statlib.js） -->
 <script src="data/collection.js?v=bd560604"></script>
 <script src="data/masu100.js?v=a19d68e5"></script>
 <script>
@@ -4763,7 +4763,7 @@ function renderTeacher(q){
         <div class="tc-ph"><h2>この端末の設定</h2><p>ここで変えた設定は、いま開いているこの端末だけに効きます。</p></div>
         ${colTeacherHtml()}${toolTeacherHtml()}${statTeacherHtml()}</section>
       <section class="tc-pane hidden" id="tp-guide" aria-label="児童の情報と使い方">
-        <div class="tc-ph"><h2>児童の情報のあつかい</h2><p>友だち対戦で児童が入れた名前は、先生の端末のメモリにだけ置き、部屋を閉じると消えます。</p></div>
+        <div class="tc-ph"><h2>児童の情報のあつかい</h2><p>友だち対戦で児童が入れた名前は、先生の端末のメモリにだけ置き、部屋を閉じると消えます。全体の平均を出すため、名前のない数字（単元・問題数・正解数・かかった時間）だけを送ります。先生の設定で止められます。（「この端末の設定」の「回答スピードの集計」）</p></div>
         <div class="form tc-guide" id="tguide"><ol>${TGUIDE.map(t=>`<li>${esc(t)}</li>`).join("")}</ol></div>
       </section>
       </div>

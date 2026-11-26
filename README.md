@@ -19,7 +19,7 @@
 - `tools/test-collection.js` … どんぐり・ずかん・バックアップの単体テスト。`node tools/test-collection.js`
 - `data/tools-viz.js` … 算数の「🧰 ずで かんがえる」どうぐ（ブロック・さくらんぼ・アレイ・くらい・ぶんすう）の判定と図。Qalc（MIT）の かんがえるどうぐ を作り直したもの。判定は `tools/test-tools-viz.js` で検査
 - `tools/test-quiz.js` … 「先生がつくる もんだい」の部品の単体テスト。`node tools/test-quiz.js`
-- `data/statlib.js` … 回答スピードの あつまり（名前なしの数字だけ）。ひとりの練習が1回おわると、遊びの種類・学年・単元・あそびかた・問題数・正解数・答えるのにかかった時間を1回だけ `/api/stat` に送る（`ON` が false のあいだは送らない。本番の住所だけ。先生の設定 `mh_statcfg` でオフ）。受けとり口は `functions/api/stat.js`・まとめは `functions/api/stats.js`（Cloudflare Pages Functions。D1 を `DB` でつなぐ・合言葉は `STATS_KEY`）、見る画面は `stats.html`（どこからもリンクしない・検索に出さない）。手順は `docs/cloudflare-pages.md`、検査は `node tools/test-statlib.js`
+- `data/statlib.js` … 回答スピードの あつまり（名前なしの数字だけ）。ひとりの練習が1回おわると、遊びの種類・学年・単元・あそびかた・問題数・正解数・答えるのにかかった時間を1回だけ `/api/stat` に送る（`ON` が送るスイッチ。本番の住所だけ。先生の設定 `mh_statcfg` でオフ）。受けとり口は `functions/api/stat.js`・まとめは `functions/api/stats.js`（Cloudflare Pages Functions。D1 を `DB` でつなぐ・合言葉は `STATS_KEY`）、見る画面は `stats.html`（どこからもリンクしない・検索に出さない）。手順は `docs/cloudflare-pages.md`、検査は `node tools/test-statlib.js`
 - `data/learnhelp.js` … まなびの たすけ（ひとりの 練習だけ）。4択で はやすぎる まちがいが つづいたら ひと休み、単元練習で まちがえたら 1.5秒 押せない、まちがえた問題を 3〜5問 あとに もう一度（その回は メダル・どんぐりに 数えない）、算数で 1回目の まちがいに ヒント（🧰 か れいだい）、2回 まちがえたら その問題の 数で とき方（「わかった」で つぎへ）、同じ単元で × が 3回 つづいたら れいだい・やさしい ステップを すすめる。検査は `node tools/test-learnhelp.js`
 
 ## 問題の確認状況
