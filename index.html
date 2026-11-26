@@ -918,15 +918,28 @@ body[data-v=host] .wrap{max-width:none;padding:0}
 .nx .nxs .art{width:44px;height:44px}
 .sil{filter:brightness(0) opacity(.25)}
 .nx small{flex-basis:100%;font-size:12px;color:var(--muted)}
-.isle{position:relative;height:min(62vh,520px);min-height:300px;border-radius:12px;overflow:hidden;background:linear-gradient(#8fd0ea,#62b4dc)}
-.isle-vp{position:absolute;inset:0;touch-action:none;cursor:grab}
-.isle-svg{position:absolute;left:0;top:0;transform-origin:0 0;overflow:visible}
-.isle-tap{cursor:pointer}.isle-tap .hl{opacity:0}.isle-decor.sel .hl,.isle-tap:focus-visible .hl{opacity:1}.isle-tap:focus{outline:none}
-.isle-spot:focus-visible polygon{stroke:var(--edge);stroke-width:5}
-.isle-bob{animation:isleBob 3.2s ease-in-out infinite}.isle-jump{animation:isleJump 4.5s ease-in-out infinite}.isle-wv{animation:isleWv 4s ease-in-out infinite}.isle-spin{animation:isleSpin 9s linear infinite}
-@keyframes isleBob{50%{transform:translateY(-5px)}}@keyframes isleJump{0%,70%,100%{transform:translateY(22px);opacity:0}80%{transform:translateY(0);opacity:1}92%{transform:translateY(18px);opacity:.6}}@keyframes isleWv{50%{transform:translateX(8px);opacity:.4}}@keyframes isleSpin{to{transform:rotate(360deg)}}
-@media (prefers-reduced-motion:reduce){.isle-bob,.isle-jump,.isle-wv,.isle-spin{animation:none}}
-.isle-btns{position:absolute;right:8px;bottom:8px;z-index:2;display:flex;gap:6px}
+.isle{position:relative;width:min(100%,1040px,117vh);margin:0 auto;aspect-ratio:3/2;border-radius:12px;overflow:hidden;background:#8fd0ea}
+.isle-vp{position:absolute;inset:0;overflow:auto;isolation:isolate;-webkit-overflow-scrolling:touch}
+.isle-st{position:relative;aspect-ratio:3/2;container-type:inline-size}
+.isle-base{position:absolute;inset:0;width:100%;height:100%;display:block;user-select:none}
+.isle-it{position:absolute;transform:translate(-50%,-96%);transform-origin:50% 96%;padding:0;border:0;background:none;cursor:pointer;-webkit-tap-highlight-color:transparent}
+.isle-it img,img.isle-it{display:block;height:auto;user-select:none}.isle-decor img{width:100%;transform-origin:50% 96%}
+.isle-decor,.isle-decor:focus,.isle-decor:focus-visible{outline:none!important;box-shadow:none!important}.isle-decor.sel img,.isle-decor:focus-visible img{filter:drop-shadow(0 0 3px #fff) drop-shadow(0 0 5px #ff8a00)}
+.isle-spot{position:absolute;width:6.5%;min-width:44px;aspect-ratio:1;transform:translate(-50%,-62%);padding:0;border:3px dashed #ff8a00;border-radius:50%;background:rgba(255,255,255,.72);cursor:pointer;animation:isleSpot 1.4s ease-in-out infinite}
+.isle-spot::after{content:"＋";font-weight:800;color:#d96a00;font-size:20px;line-height:1}
+.isle-spot:focus-visible{outline:4px solid var(--edge);outline-offset:2px}
+.isle-st:not(.placing) .isle-decor:hover img{transform:scale(1.05)}
+.isle-mk{position:absolute;width:6.6%;transform:translate(-50%,-92%);transition:left 2.4s linear,top 2.4s linear;pointer-events:none}
+.isle-mk img{width:100%;display:block;animation:isleHop .6s ease-in-out infinite}
+.isle-sway{animation:isleSway 3.6s ease-in-out infinite}img.isle-fx.isle-sway{animation-name:isleSwayF}
+.isle-wob{animation:isleWob .5s ease-out!important}
+@keyframes isleSpot{50%{transform:translate(-50%,-62%) scale(1.1)}}
+@keyframes isleHop{50%{transform:translateY(-8%)}}
+@keyframes isleSway{50%{transform:rotate(2deg)}}
+@keyframes isleSwayF{50%{transform:translate(-50%,-96%) rotate(2deg)}}
+@keyframes isleWob{30%{transform:translate(-50%,-96%) scale(1.12,.9)}60%{transform:translate(-50%,-96%) scale(.94,1.1)}}
+@media (prefers-reduced-motion:reduce){.isle-spot,.isle-mk img,.isle-sway,.isle-wob{animation:none!important}.isle-mk{transition:none}}
+.isle-btns{display:flex;gap:6px;justify-content:flex-end;width:min(100%,1040px,117vh);margin:6px auto 0}
 .isle-btns .btn{min-width:44px;min-height:44px}
 .hc{aspect-ratio:1;min-height:48px;background:rgba(255,255,255,.6);border:3px dashed rgba(22,55,42,.4);border-radius:12px;padding:4px;display:flex;align-items:center;justify-content:center;cursor:pointer}
 .hc.on{background:#fff;border:3px solid var(--edge);box-shadow:0 4px 0 var(--edge)}
@@ -3575,7 +3588,7 @@ function renderHiroba(){
   setLG(ui.grade); HS={sel:null,shop:false,gift:0,cap:0,done:0,mkSel:null,mkGot:null,mkLater:false,mkInfo:null,mkGrow:[],tab:"d",kzMsg:null,ya:false,isle:null,iv:null};
   { const S0=colGet(); if(COL.yaCheck(S0,yaExt()).length) colSave(); }
   app.innerHTML=`<div class="hb"></div>`;
-  Promise.all([loadScript("data/hiroba-art.js?v=eddf43ff",()=>!!document.getElementById("hiroba-art")),loadScript("data/hiroba-island.js?v=1",()=>!!window.MH_ISLE)]).then(()=>{ if(params().path==="hiroba") hbDraw(true); },()=>{ app.innerHTML=`<div class="q">${T("col.err")}</div>`; });
+  Promise.all([loadScript("data/hiroba-art.js?v=eddf43ff",()=>!!document.getElementById("hiroba-art")),loadScript("data/hiroba-island.js?v=2",()=>!!window.MH_ISLE)]).then(()=>{ if(params().path==="hiroba") hbDraw(true); },()=>{ app.innerHTML=`<div class="q">${T("col.err")}</div>`; });
 }
 function hbDraw(first){
   const S=colTouch(), today=colToday(), P=COL.parts(S), pm={}; P.forEach(p=>{ pm[p.id]=p; });
@@ -3610,7 +3623,7 @@ function hbDraw(first){
     ${done}
     <div class="hscene t${S.theme}">
       ${mkRowHtml(S)}
-      <div class="isle" id="hbIsle"><div class="isle-btns"><button type="button" class="btn sub s" data-iz="1.4" aria-label="${esc(T("col.isle.in"))}">＋</button><button type="button" class="btn sub s" data-iz="0.7" aria-label="${esc(T("col.isle.out"))}">－</button><button type="button" class="btn sub s" data-iz="0">${T("col.isle.home")}</button></div></div>
+      <div class="isle" id="hbIsle"></div><div class="isle-btns"><button type="button" class="btn sub s" data-iz="1.4" aria-label="${esc(T("col.isle.in"))}">＋</button><button type="button" class="btn sub s" data-iz="0.7" aria-label="${esc(T("col.isle.out"))}">－</button><button type="button" class="btn sub s" data-iz="0">${T("col.isle.home")}</button></div>
       ${nx.length?`<div class="nx"><b>${T("col.next")}</b><span class="nxs">${nx.map(a=>svgU(a,"sil")).join("")}</span><small>${T("col.next.how")}</small></div>`:""}
     </div>
     ${bar}
@@ -3816,22 +3829,23 @@ function hbCell(c){
 }
 const HB_ISLE_ART=["bar","bench","book1","clock","flagjp","flagus","flower","hutch","jungle","lib","mapboard","pond","rainbow","school","slide","swing","telescope","tree"];      // vendor/img/island（PC の image2 で 作った 絵）
 function hbIsleShow(){ const e=app.querySelector("#hbIsle"); if(e) e.scrollIntoView({block:"center",behavior:matchMedia("(prefers-reduced-motion:reduce)").matches?"auto":"smooth"}); const f=app.querySelector("[data-spot]"); if(f) f.focus({preventScroll:true}); }      // かったら・「おく」を おしたら 島を 見せる
-/* 島（data/hiroba-island.js）：島の広さは 教科ごとの「できた」の数。かざりは ひろばの島の「おける ばしょ」（cell 番号）に おく */
+/* 島（data/hiroba-island.js）：水彩の 一枚絵の 上の きまった ばしょ（cell 番号）に かざりを おく。おける ばしょは「できた」の 数で ふえる */
 function hbIsle(root,S,pm,D){
   const host=root.querySelector("#hbIsle"); if(!host||!window.MH_ISLE) return;
   const I=window.MH_ISLE, n=s=>COL.count(S,s,2);
-  if(!I.ART.school) HB_ISLE_ART.concat(COL.DECOR.map(d=>d.id)).forEach(k=>{ I.ART[k]=`vendor/img/island/${k}-256.webp?v=1`; });
+  if(!I.ART.school){ HB_ISLE_ART.concat(COL.DECOR.map(d=>d.id)).forEach(k=>{ I.ART[k]=`vendor/img/island/${k}-256.webp?v=1`; }); I.BASE.src="vendor/img/island/base-a.webp?v=1"; }
   const cnt={m:n("m"),j:n("j"),e:n("e"),s:n("s"),r:n("r")};
   cnt.total=COL.summary(S).can;
   const parts={}; Object.keys(pm).forEach(id=>{ if(pm[id].have) parts[id]=1; });
-  const placed=Object.keys(S.pl).map(id=>({id,art:D[id].art,cell:S.pl[id]}));
+  const placed=Object.keys(S.pl).map(id=>({id,cell:S.pl[id]}));
   const w=I.build(cnt,parts,placed,COL.CELLS);
+  const mates=(S.mk.sh||[]).filter(id=>id&&S.mk.own[id]).map(id=>{ const c=mkC(id); return c&&c.art?`vendor/img/manabikko/${c.art}-${COL.MK_ART[COL.mkStage(S,id)]}-v3-128.webp`:""; }).filter(Boolean);
+  const sc=HS.isle&&HS.isle.scroll?HS.isle.scroll():null;
   if(HS.isle) HS.isle.destroy();
-  HS.isle=I.mount(host,{world:w,placing:!!HS.sel,sel:HS.sel,view:HS.iv,aria:T("col.grid"),
-    label:(isl,k)=>T("col.isle."+isl.id)+(isl.id==="hub"?"":" "+k),
+  HS.isle=I.mount(host,{world:w,placing:!!HS.sel,sel:HS.sel,mates,zoom:HS.iv||1,scroll:sc,aria:T("col.grid"),
     spotLabel:c=>T("col.cell",c),decorLabel:id=>T("col.d."+id),
-    onSpot:c=>hbCell(c),onDecor:c=>hbCell(c),onView:v=>{ HS.iv={...v}; }});
-  host.querySelectorAll("[data-iz]").forEach(b=>b.onclick=()=>{ const f=+b.dataset.iz; if(f) HS.isle.zoom(f); else HS.isle.home(); });
+    onSpot:c=>hbCell(c),onDecor:c=>hbCell(c),onZoom:z=>{ HS.iv=z; }});
+  root.querySelectorAll("[data-iz]").forEach(b=>b.onclick=()=>{ const f=+b.dataset.iz; if(f) HS.isle.zoom(f); else HS.isle.home(); });
 }
 
 /* ----- ひろばたんけん（チケット1まいで1回。2〜3分。どんぐりは出ない・recordRun を通さない＝チケットの★にならない） ----- */
