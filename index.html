@@ -576,6 +576,15 @@ body[data-bw="race"]{--bwc:#a9d7ee;--bwi:url(vendor/img/battle/race-map.webp)}
 .umico{font-size:30px;flex:none;width:38px;text-align:center}
 .umbody{flex:1;min-width:0;display:flex;flex-direction:column;gap:1px}
 .umbody b{font-size:21px;line-height:1.3}.umd{font-size:14px;line-height:1.4}.umg{font-size:13px;font-weight:700;color:#8a3b00;line-height:1.4}
+.umwrap{margin:0 0 12px}.umwrap .umbtn{margin:0}
+.umtog{display:block;margin:4px 0 0 auto;background:none;border:0;padding:6px 8px;font:inherit;font-size:14px;font-weight:700;color:#355d8a;cursor:pointer;min-height:36px}
+.umgl{display:flex;flex-direction:column;gap:2px;border-radius:10px;padding:4px;margin-top:2px;border:2px solid var(--edge)}.umgl[hidden]{display:none}
+.umwrap.um-n .umgl{background:#f1f9f2}.umwrap.um-ta .umgl{background:#f0f6fd}.umwrap.um-sd .umgl{background:#fef5f1}
+.umgr{display:flex;align-items:baseline;gap:6px;font-size:14px;line-height:1.35;color:#5b4a3a;padding:1px 6px;border-radius:8px}
+.umgr.nx{background:#fff3c4;color:#8a3b00;font-weight:700}
+.umgr.done{color:#7a8a7a}.umgr.capd{color:#8a7f74;font-size:12px}
+.umgs{flex:none;width:3.3em;white-space:nowrap;color:#e0a400;letter-spacing:-1px;font-weight:400}.umgr.capd .umgs,.umgr.done .umgs{color:#b9b0a4}
+.umgt{flex:1;min-width:0}.umgk{flex:none;color:#2e8b57;font-weight:700}
 .umst{flex:none}.umst .mtst i{font-size:20px;letter-spacing:0}
 .umx{display:block;margin:2px auto 0}
 /* ★が そろった 単元カード：金の ふち／虹色の ふち（カードの 中は 白いまま。動くのは ふちの 色だけ） */
@@ -2125,6 +2134,9 @@ body[data-bw="jin"]{--bwc:#8fd04a;--bwi:url(vendor/img/battle/jin-field.webp)}
    文言には関数も使える。T("キー", 引数...) で取り出す。画面の文言を足す・直すときはこの表だけを直す。
    検査：node tools/check-questions.js は、やさしい側が小1配当の漢字だけでできているかを調べる */
 /*TX-BEGIN*/
+/* 2026-11-26：「正答率」は 子どもに むずかしいので、★・メダルの きまりでは「10もんに 6もん いじょう せいかい」の ように 言う（60%→10に6、75%→4に3） */
+function accW(p,kana){ const [a,b]=p===75?[4,3]:p%10===0?[10,p/10]:[100,p], q=kana?"もん":"問《もん》"; return `${a}${q}に ${b}${q} いじょう せいかい`; }
+
 const TX={
  /* ヘッダー・共通 */
  "h.join":["コードで参加《さんか》","はいる"],
@@ -2228,7 +2240,7 @@ const TX={
  "r.again":["もう一回《いっかい》","もういっかい"],"r.other":["ほかのゲーム","ほかの ゲーム"],
  "r.redo":["まちがえた問題《もんだい》だけもう一回《いっかい》","まちがえた もんだいだけ もういっかい"],
  "r.next":[(m,n)=>`${m}まで あと ${n} 問《もん》`,(m,n)=>`${m}まで あと ${n} もん`],
- "r.nextacc":[(m,p)=>`${m}まで 正答率《せいとうりつ》を ${p}%以上《いじょう》に`,(m,p)=>`${m}まで せいかいの わりあいを ${p}%いじょうに`],
+ "r.nextacc":[(m,p)=>`${m}まで：まちがいを へらして ${accW(p)}`,(m,p)=>`${m}まで：まちがいを へらして ${accW(p,1)}`],
  "r.top":["🥇 さいこう！"],
  /* バトルモード */
  "ms.which":["どの問題《もんだい》でたたかう？","どの もんだいで たたかう？"],
@@ -2388,28 +2400,28 @@ const TX={
  /* 算数の 単元の ★（いつもの・タイムアタック・サドンデス） */
  "ust.n":["いつもの"],"ust.ta":["タイム"],"ust.sd":["サドン"],
  "ust.aria":[(a,b,c)=>`ほし：いつもの ${a}、タイムアタック ${b}、サドンデス ${c}`],
- "um.t":["どれで あそぶ？"],"um.next":["つぎの ★"],"ust.g.n":[n=>`1分《ぷん》で ○ ${n}こ`,n=>`1ぷんで ○ ${n}こ`],
+ "um.t":["どれで あそぶ？"],"um.next":["つぎの ★"],"um.all":["★を とる 方法《ほうほう》 ▼","★を とる ほうほう ▼"],"um.close":["とじる ▲"],"ust.g.n":[(n,p)=>`1分《ぷん》で ○ ${n}こ（${accW(p)}）`,(n,p)=>`1ぷんで ○ ${n}こ（${accW(p,1)}）`],"um.got":["とった"],
  "ust.top":["★3つ！ さいこう！"],"ust.up":["ほしが ふえた！"],
  "ust.open":["★3つ！ バトルで この たんげんを えらべるように なったよ"],
  "ust.next":[(n,k)=>`★${n}つまで あと ${k} 問《もん》`,(n,k)=>`★${n}つまで あと ${k} もん`],
- "ust.nextacc":[(n,p)=>`★${n}つまで 正答率《せいとうりつ》を ${p}%以上《いじょう》に`,(n,p)=>`★${n}つまで せいかいの わりあいを ${p}%いじょうに`],
- "ust.next.ta":[(n,t)=>`★${n}つまで：${t} いないで ゴール`],
+ "ust.nextacc":[(n,p)=>`★${n}つまで：まちがいを へらして ${accW(p)}`,(n,p)=>`★${n}つまで：まちがいを へらして ${accW(p,1)}`],
+ "ust.next.ta":[(n,t)=>`★${n}つまで：${t}より はやく とこう`],
  "ust.next.ta3":[n=>`★3つまで：${n}問《もん》 いじょう せいかいしよう`,n=>`★3つまで：${n}もん いじょう せいかいしよう`],
  "ust.cap.ch":["★3つは「すうじを いれる」で ちょうせんしよう"],
  "ust.cap.mix":["★3つは たんげんを 1つだけ えらんで ちょうせんしよう"],
  "ust.ms":[(m,s)=>s?`${m}分《ふん》${s}秒《びょう》`:`${m}分《ふん》`,(m,s)=>s?`${m}ふん${s}びょう`:`${m}ふん`],"ust.s":[s=>`${s}秒《びょう》`,s=>`${s}びょう`],
- "ust.h.ta1":[(n,k)=>`${n}問《もん》を さいごまで（${k}問《もん》 いじょう せいかい）`,(n,k)=>`${n}もんを さいごまで（${k}もん いじょう せいかい）`],
- "ust.h.ta":[t=>`${t} いないで ゴール`],
- "ust.h.ta3":[(t,k)=>`${t} いない・${k}問《もん》 いじょう せいかい`,(t,k)=>`${t} いない・${k}もん いじょう せいかい`],
+ "ust.h.ta1":[(n,k)=>`${n}問《もん》 ぜんぶ とく（${k}問《もん》 いじょう せいかい）`,(n,k)=>`${n}もん ぜんぶ とく（${k}もん いじょう せいかい）`],
+ "ust.h.ta":[(t,n)=>`${n}問《もん》を ${t}より はやく とく`,(t,n)=>`${n}もんを ${t}より はやく とく`],
+ "ust.h.ta3":[(t,k,n)=>`${n}問《もん》を ${t}より はやく とく ＋ ${k}問《もん》 いじょう せいかい`,(t,k,n)=>`${n}もんを ${t}より はやく とく ＋ ${k}もん いじょう せいかい`],
  "ust.h.sd":[n=>`${n}問《もん》 れんぞくで せいかい`,n=>`${n}もん れんぞくで せいかい`],
  "ust.h.d":["○は 1回《かい》目《め》で せいかい（ずで かんがえた 問題《もんだい》は 入《はい》らない）。いつもので ★3つ とると、バトルで この たんげんを えらべるよ","○は 1かいめで せいかい（ずで かんがえた もんだいは はいらない）。いつもので ★3つ とると、バトルで この たんげんを えらべるよ"],
  "ust.lock":["🔒 いつもので ★3つ とると えらべるよ"],
  "ust.lock.n":[n=>`🔒の たんげんは、算数《さんすう》の へやの「いつもの」で ★3つ とると えらべるよ（あと ${n}こ）`,n=>`🔒の たんげんは、さんすうの へやの「いつもの」で ★3つ とると えらべるよ（あと ${n}こ）`],
  "ust.sum":[(a,b)=>`★ ${a} / ${b}`],
- "how.sp":[(t,n,p)=>`${t}秒《びょう》で ${n}問《もん》 せいかい・正答率《せいとうりつ》 ${p}%いじょう`,(t,n,p)=>`${t}びょうで ${n}もん せいかい・せいかいの わりあい ${p}%いじょう`],
+ "how.sp":[(t,n,p)=>`${t}秒《びょう》で ${n}問《もん》 せいかい（${accW(p)}）`,(t,n,p)=>`${t}びょうで ${n}もん せいかい（${accW(p,1)}）`],
  "how.sp.mix":["4つから えらぶ 問題《もんだい》が まざると、いる 数《かず》が 少《すこ》し へるよ。ずで かんがえて せいかいした 問題《もんだい》は 数《かぞ》えないよ","4つから えらぶ もんだいが まざると、いる かずが すこし へるよ。ずで かんがえて せいかいした もんだいは かぞえないよ"],
  "how.sp.tl":["ずで かんがえて せいかいした 問題《もんだい》は 数《かぞ》えないよ","ずで かんがえて せいかいした もんだいは かぞえないよ"],
- "how.u":[(n,p)=>`1つの たんげんで ○ ${n}こ・正答率《せいとうりつ》 ${p}%いじょう`,(n,p)=>`1つの たんげんで ○ ${n}こ・せいかいの わりあい ${p}%いじょう`],
+ "how.u":[(n,p)=>`1つの たんげんで ○ ${n}こ（${accW(p)}）`,(n,p)=>`1つの たんげんで ○ ${n}こ（${accW(p,1)}）`],
  "how.u.d":["○は 1回《かい》目《め》で せいかい（ずで かんがえた 問題《もんだい》は 入《はい》らない）。たんげんを たくさん えらぶと、1つの たんげんで いる ○の 数《かず》が へるよ","○は 1かいめで せいかい（ずで かんがえた もんだいは はいらない）。たんげんを たくさん えらぶと、1つの たんげんで いる ○の かずが へるよ"],
  "how.mt1":["さいごまで こたえる"],
  "how.mt2":[n=>`1回目《かいめ》で ${n}問《もん》 いじょう せいかい`,n=>`1かいめで ${n}もん いじょう せいかい`],
@@ -3392,7 +3404,8 @@ function judge(right,ans,wait){
   // 4択をでたらめに連打させないよう、まちがえたあとは1.8秒待つ。はやすぎる まちがいが つづいたら もう2秒
   const w=(wait||(right?(re?700:350):(p.cur.ch?1800:1100)))+lhRest(p,fb);
   if(spEnd(p,right,w)) return;     // タイムアタックの さいご・サドンデスの まちがい
-  setTimeout(()=>{ if(P!==p) return; if(p.review||(p.left>0&&timerId)){ fb.className="fb"; fb.textContent=""; next(); } }, w);
+  if(right&&!p.review) spHold(p);
+  setTimeout(()=>{ if(P!==p) return; spGo(p); if(p.review||(p.left>0&&timerId)){ fb.className="fb"; fb.textContent=""; next(); } }, w);
 }
 /* ---- まなびの たすけ（data/learnhelp.js）：はやすぎる まちがい・あとで もう一度・ヒント・とき方・つまずき ---- */
 const LH=window.MH_LEARN||null;
@@ -3674,10 +3687,11 @@ function startBoxRun(subj,back){
 function spClock(p){
   stopTimer();
   if(p.sm==="n"){
-    const t=p.t, end=Date.now()+t*1000;
+    const t=p.t; p.end=Date.now()+t*1000;
     timerId=setInterval(()=>{
       if(P!==p){ stopTimer(); return; }
-      p.left=Math.max(0,(end-Date.now())/1000);
+      if(p.pz) return;      // せいかいの あとの ひと間は 時計を とめる（spHold）
+      p.left=Math.max(0,(p.end-Date.now())/1000);
       $("#tm").textContent=Math.ceil(p.left); $("#tb").style.width=(p.left/t*100)+"%";
       const warn=p.left<=10; $("#tm").classList.toggle("warn",warn); $("#tbar").classList.toggle("warn",warn);   // 残り10秒：赤くて大きい
       if(p.left<=0){ stopTimer(); timeUp(); }
@@ -3687,8 +3701,13 @@ function spClock(p){
   p.left=1; p.t0=Date.now();
   const tb=$("#tbar"); if(tb) tb.classList.toggle("spsd",p.sm==="sd");
   spTick(p);
-  timerId=setInterval(()=>{ if(P!==p){ stopTimer(); return; } if(p.sm==="ta"){ const tm=$("#tm"); if(tm) tm.textContent=spFmt((Date.now()-p.t0)/1000); } },100);
+  timerId=setInterval(()=>{ if(P!==p){ stopTimer(); return; } if(p.sm==="ta"&&!p.pz){ const tm=$("#tm"); if(tm) tm.textContent=spFmt((Date.now()-p.t0)/1000); } },100);
 }
+/* 2026-11-26：「せいかい！」を 見せて つぎの 問題に うつるまでの ひと間で タイムが へる（ふえる）のは ふこうへい と 言われたので、
+   その間は いつもの（のこり時間）も タイムアタック（かかった時間）も 時計を とめる。まちがえた あとの まち時間は 今までどおり 時間に 入る
+   （4つから えらぶ ときの でたらめ連打を ふせぐため）。サドンデスは 時間なし */
+function spHold(p){ if(p&&!p.pz&&(p.end||p.t0)) p.pz=Date.now(); }
+function spGo(p){ if(!p||!p.pz) return; const d=Date.now()-p.pz; p.pz=0; if(p.end) p.end+=d; if(p.t0) p.t0+=d; }
 function spTick(p){
   if(p.sm!=="ta") return;
   const done=p.u?p.marks.length:p.ok+p.ng, l=$("#spl"), b=$("#tb");
@@ -3932,7 +3951,7 @@ function uSpStar(p,spr){
 function howUStar(u,choice,mode,k){
   if(!uIsMath(u.id)) return howUnit(k||1);
   const tier=uTier(u,choice), cap=uCap(u,choice,k||1), st=n=>`<span class="hst" aria-label="ほし ${n}">${"★".repeat(n)}</span>`;
-  const rows=mode==="ta"?[[st(1),T("ust.h.ta1",SP_TA,SP_TA_OK)],[st(2),T("ust.h.ta",spFmtMS(UST_TA[tier][1]))],[st(3),T("ust.h.ta3",spFmtMS(UST_TA[tier][2]),UST_TA_OK3)]]
+  const rows=mode==="ta"?[[st(1),T("ust.h.ta1",SP_TA,SP_TA_OK)],[st(2),T("ust.h.ta",spFmtMS(UST_TA[tier][1]),SP_TA)],[st(3),T("ust.h.ta3",spFmtMS(UST_TA[tier][2]),UST_TA_OK3,SP_TA)]]
     :mode==="sd"?[0,1,2].map(i=>[st(i+1),T("ust.h.sd",UST_SD[tier][i])])
     :ustN(tier,0,0,k||1,3).need.map((n,i)=>[st(i+1),T("how.u",n,U_ACC[i])]);
   return howBox(T("how.s"),rows.slice(0,Math.max(cap,1)).concat(cap<3?[[st(3),(k||1)>1?T("ust.cap.mix"):T("ust.cap.ch")]]:[]),mode==="n"||!mode?T("ust.h.d"):"");
@@ -7986,19 +8005,35 @@ function uModeSheet(u,choice,start){
   if(document.getElementById("umsheet")) return;
   const onKey=e=>{ if(e.key==="Escape") close(); };
   const close=()=>{ el.remove(); document.removeEventListener("keydown",onKey); };
-  const s=uStars(u.id), math=uIsMath(u.id), tier=math?uTier(u,choice):"", cap=math?uCap(u,choice,1):3;
-  const goal=(m,n)=>!math?(n>=3?T("ust.top"):T("um.next")+"　"+T("ust.g.n",uNeed(1)[n])):n>=3?T("ust.top"):n>=cap?T("ust.cap.ch"):T("um.next")+"　"+(m==="n"?T("ust.g.n",UST_N[tier][n]):m==="ta"?(n===0?T("ust.h.ta1",SP_TA,SP_TA_OK):n===2?T("ust.h.ta3",spFmtMS(UST_TA[tier][2]),UST_TA_OK3):T("ust.h.ta",spFmtMS(UST_TA[tier][1]))):T("ust.h.sd",UST_SD[tier][n]));
-  const btn=(m,ico,n)=>h("button",{type:"button",class:"umbtn um-"+m,onclick:()=>{ close(); start(m); }},
-    h("span",{class:"umico","aria-hidden":"true",text:ico}),
-    h("span",{class:"umbody"},h("b",{text:T("sp."+m)}),h("span",{class:"umd",text:m==="n"?T("sp.n.d"):m==="ta"?T("sp.ta.d",SP_TA):T("sp.sd.d")}),math||m==="n"?h("span",{class:"umg",text:goal(m,n)}):null),
-    math||m==="n"?h("span",{class:"umst",innerHTML:uStarH(n)}):null);      // 算数いがいは いつものだけ ★
-  const first=btn("n","⏱",s.n);
+  const s=uStars(u.id), math=uIsMath(u.id), tier=math?uTier(u,choice):"", cap=math?uCap(u,choice,1):3;      // 算数いがいは いつものだけ ★（きまりは uNeed・U_ACC）
+  /* 2026-11-26：まだ あそんで いない ときに ★1の きまりしか 出ず わかりにくかったので、★1〜★3の きまりを いつも ぜんぶ ならべる。
+     とった ★は ✓、つぎに ねらう ★は 色を こく する */
+  const cond=(m,i)=>m==="n"?T("ust.g.n",math?UST_N[tier][i]:uNeed(1)[i],U_ACC[i]):m==="ta"?(i===0?T("ust.h.ta1",SP_TA,SP_TA_OK):i===2?T("ust.h.ta3",spFmtMS(UST_TA[tier][2]),UST_TA_OK3,SP_TA):T("ust.h.ta",spFmtMS(UST_TA[tier][1]),SP_TA)):T("ust.h.sd",UST_SD[tier][i]);
+  const goal=(m,n)=>h("span",{class:"umgl"},...[0,1,2].map(i=>{ const done=n>i, capd=!done&&i>=cap, nx=!done&&!capd&&i===n;
+    return h("span",{class:"umgr"+(done?" done":nx?" nx":"")+(capd?" capd":"")},
+      h("span",{class:"umgs","aria-label":"ほし "+(i+1),text:"★".repeat(i+1)}),
+      h("span",{class:"umgt",text:capd?T("ust.cap.ch"):cond(m,i)}),
+      done?h("span",{class:"umgk",text:"✓","aria-label":T("um.got")}):null); }));
+  /* 2026-11-26：3行 ずっと 出すと 行が 多すぎるので、はじめは「つぎの ★」の 1行だけ。「★の きまりを ぜんぶ 見る」で 3行 ひらく */
+  const star=m=>math||m==="n";
+  const nextLine=(m,n)=>n>=3?T("ust.top"):n>=cap?T("ust.cap.ch"):T("um.next")+(n+1)+"："+cond(m,n);
+  const btn=(m,ico,n)=>{
+    const b=h("button",{type:"button",class:"umbtn um-"+m,onclick:()=>{ close(); start(m); }},
+      h("span",{class:"umico","aria-hidden":"true",text:ico}),
+      h("span",{class:"umbody"},h("b",{text:T("sp."+m)}),h("span",{class:"umd",text:m==="n"?T("sp.n.d"):m==="ta"?T("sp.ta.d",SP_TA):T("sp.sd.d")}),star(m)?h("span",{class:"umg",text:nextLine(m,n)}):null),
+      star(m)?h("span",{class:"umst",innerHTML:uStarH(n)}):null);
+    if(!star(m)) return b;
+    const list=goal(m,n); list.hidden=true;
+    const tog=h("button",{type:"button",class:"umtog","aria-expanded":"false",text:T("um.all"),onclick:()=>{ const op=list.hidden; list.hidden=!op; tog.setAttribute("aria-expanded",String(op)); tog.textContent=T(op?"um.close":"um.all"); }});
+    return h("div",{class:"umwrap um-"+m},b,tog,list);
+  };
+  const first=btn("n","⏱",s.n), firstB=first.tagName==="BUTTON"?first:first.firstChild;
   const el=h("div",{class:"sheetbg exbg",id:"umsheet",onclick:e=>{ if(e.target===el) close(); }},
     h("div",{class:"sheet umsheet",role:"dialog","aria-modal":"true","aria-label":T("um.t")},
       h("h3",{text:T("um.t")}),h("p",{class:"umu",text:u.title}),
       first,btn("ta","🏁",s.ta),btn("sd","🔥",s.sd),
       h("button",{type:"button",class:"btn sub s umx",text:T("back"),onclick:close})));
-  document.addEventListener("keydown",onKey); document.body.appendChild(el); first.focus();
+  document.addEventListener("keydown",onKey); document.body.appendChild(el); firstB.focus();
 }
 /* 例題（ひとことの解き方）を見せる */
 function uEx(u){
@@ -8606,7 +8641,8 @@ function uJudge(right){
   }
   const stuck=plainRun&&LH?LH.stuck(p.stk,c.uid,mark).ask:false;      // 同じ単元で × が つづいた
   if(spEnd(p,mark==="○",wait)) return;
-  const go=()=>{ if(P!==p) return; if(p.left>0&&timerId){ fb.className="fb"; fb.textContent=""; unitNext(); } };
+  if(right) spHold(p);
+  const go=()=>{ if(P!==p) return; spGo(p); if(p.left>0&&timerId){ fb.className="fb"; fb.textContent=""; unitNext(); } };
   if(mark==="×"&&plainRun&&LH&&lhHow(p,c,stuck,go)) return;      // とき方を 見て「わかった」で つぎへ
   setTimeout(go,wait);
 }
