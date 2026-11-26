@@ -655,29 +655,30 @@ t("きせかえ：値段の すじみち（はじめの 5こ＋1日1〜3こで�
   assert(C.KZ_PRICE_TOTAL >= 150 && C.KZ_PRICE_TOTAL <= 300, "ぜんぶで " + C.KZ_PRICE_TOTAL);
 });
 /* やりこみ（v3.4）：日を またがない。やれば やるほど その日の うちに 進む */
-t("やりこみ：シールは その日の うちに どう→ぎん→きん→にじ（日を またがなくてよい）", () => {
+t("やりこみ：単元の ランクは ★から きまる（★1つ→1・いつもの★2→2・いつもの★3→3・★9こ→4）。シールの きまりは もう 使わない", () => {
   const S = C.fresh(D), id = "m3-amari";
   assert.strictEqual(C.yaRank(S, id), 0);
-  run(S, D, [{ id, n: 10, o: 7 }]); assert.strictEqual(C.yaRank(S, id), 1, "7割で どう");
-  run(S, D, [{ id, n: 10, o: 9 }]); run(S, D, [{ id, n: 10, o: 8 }]); assert.strictEqual(C.yaRank(S, id), 1, "正解 24 では まだ どう");
-  const r = run(S, D, [{ id, n: 10, o: 9 }]); assert.strictEqual(C.yaRank(S, id), 2, "正解 33・9割の回で ぎん");
-  assert.deepStrictEqual(r.ya.rank, [{ id, r: 2 }], "結果に ランクが 上がった ことが 出る");
-  run(S, D, [{ id, n: 10, o: 10 }]); assert.strictEqual(C.yaRank(S, id), 3, "ノーミスで きん");
-  for (let i = 0; i < 6; i++) run(S, D, [{ id, n: 10, o: 10 }]);
-  assert.strictEqual(C.yaRank(S, id), 4, "正解 100・ノーミス 3回で にじ（同じ日）");
-  assert.deepStrictEqual(C.yaNeed(S, id), { r: 4 });
+  for (let i = 0; i < 12; i++) run(S, D, [{ id, n: 10, o: 10 }]);
+  assert.strictEqual(C.yaRank(S, id), 0, "正解・ノーミスを かさねても ★が なければ 0（前の シールの きまりでは にじ）");
+  assert.strictEqual(C.stSync(S, { [id]: [0, 1, 0] }), true); assert.strictEqual(C.yaRank(S, id), 1, "タイムアタックの ★だけでも 1");
+  C.stSync(S, { [id]: [2, 0, 0] }); assert.strictEqual(C.yaRank(S, id), 2); assert.deepStrictEqual(C.stOf(S, id), [2, 1, 0], "大きいほうを のこす");
+  C.stSync(S, { [id]: [3, 3, 2] }); assert.strictEqual(C.yaRank(S, id), 3, "いつものの ★3で 3");
+  assert.strictEqual(C.stSync(S, { [id]: [1, 1, 3] }), true); assert.strictEqual(C.yaRank(S, id), 4, "★9こで 4"); assert.deepStrictEqual(C.yaNeed(S, id), { r: 4 });
+  assert.strictEqual(C.stSync(S, { [id]: [1, 0, 0] }), false, "へらない・ふえなければ false"); assert.strictEqual(C.stSum(S), 9); assert.strictEqual(C.stSum(S, "j"), 0);
 });
-t("やりこみ：ランクは じゅんばん どおり（ノーミスだけでは きんに ならない）・9問の ぜんもん正解は ノーミスでない", () => {
+t("やりこみ：★の きろくは 保存して 読める・こわれた ★は すてる・★に まとめる 前の 記録の シールの ランクは のこる（1回だけ）", () => {
   const S = C.fresh(D), id = "m3-amari";
-  run(S, D, [{ id, n: 9, o: 9 }]); assert.strictEqual(S.y.u[id][1], 0, "10問より 少ない");
-  run(S, D, [{ id, n: 10, o: 10 }]); assert.strictEqual(C.yaRank(S, id), 1, "正解 19 なので ぎんの 前で とまる");
-  assert.deepStrictEqual(C.yaNeed(S, id), { r: 1, c: 11, nine: 0 });
-  run(S, D, [{ id, n: 4, o: 4 }]); assert.strictEqual(C.yaRank(S, id), 1);
+  C.stSync(S, { [id]: [9, -1, "x"], nope: [3, 3, 3], "j3-kanji-yomi": "bad" }); assert.deepStrictEqual(S.st, { [id]: [3, 0, 0] });
+  const S2 = C.clean(JSON.parse(JSON.stringify(S)), D); assert.deepStrictEqual(S2.st, { [id]: [3, 0, 0] }); assert.strictEqual(C.yaRank(S2, id), 3);
+  const old = JSON.parse(JSON.stringify(C.fresh(D))); delete old.st; delete old.kp; old.y.u["m3-wari99"] = [120, 3, 1, 1]; old.y.u[id] = [35, 0, 1, 1];
+  const O = C.clean(old, D); assert.strictEqual(C.yaRank(O, "m3-wari99"), 4, "前に にじだった 単元は 4の まま"); assert.strictEqual(C.yaRank(O, id), 2);
+  const O2 = C.clean(JSON.parse(JSON.stringify(O)), D); run(O2, D, [{ id: "m3-man", n: 10, o: 10 }]);
+  assert.strictEqual(C.yaRank(C.clean(JSON.parse(JSON.stringify(O2)), D), "m3-man"), 0, "新しい 記録では シールの きまりで ランクは 上がらない");
 });
-t("やりこみ：2学年いじょう 下の 単元は 合計に 数えない（シールは 進む）・単元の ない ゲームは 正解の 合計だけ", () => {
+t("やりこみ：2学年いじょう 下の 単元は 合計に 数えない・単元の ない ゲームは 正解の 合計だけ", () => {
   const S = C.fresh(D);
   run(S, D, [{ id: "m1-add10", n: 10, o: 10 }], { grade: 3 });
-  assert.strictEqual(S.y.c, 0); assert.strictEqual(S.y.nm, 0); assert.strictEqual(C.yaRank(S, "m1-add10"), 1);
+  assert.strictEqual(S.y.c, 0); assert.strictEqual(S.y.nm, 0);
   run(S, D, [{ id: "m2-kuku-low", n: 10, o: 10 }], { grade: 3 });
   assert.strictEqual(S.y.c, 10); assert.strictEqual(S.y.s.m, 10); assert.strictEqual(S.y.nm, 1);
   C.recordRun(S, { today: D, grade: 3, units: [], answered: 20, correct: 18 }); assert.strictEqual(S.y.c, 28);
@@ -708,10 +709,12 @@ t("やりこみ：じっせきで もらう しょうごうは たっせいし�
   assert.strictEqual(bad.y.c, 0); assert.deepStrictEqual(bad.y.s, { m: 0 }); assert.deepStrictEqual(Object.keys(bad.y.u), ["m3-amari"]); assert.deepStrictEqual(bad.y.a, ["c1000"]);
   const old = JSON.parse(JSON.stringify(S)); delete old.y; assert.deepStrictEqual(C.clean(old, D).y, C.yaFresh());
 });
-t("やりこみ：まなびっこの きらきらは その教科の 正解 500・きんいじょう 5まいで（同じ日でも）", () => {
+t("やりこみ：まなびっこの きらきらは その教科の 正解 500・いつものの ★3の 単元 5つで（同じ日でも）", () => {
   const S = C.fresh(D); S.mk.own.sankakuru = { d: D, p: 0, ld: D, k: 0, v: 0 };
   const ids = ["m3-amari", "m3-wari99", "m3-add-hissan", "m3-sub-hissan", "m3-man"];
   for (const id of ids) { run(S, D, [{ id, n: 10, o: 7 }]); run(S, D, [{ id, n: 30, o: 28 }]); run(S, D, [{ id, n: 10, o: 10 }]); }
+  assert.strictEqual(C.yaRankCount(S, 3, "m"), 0, "★が なければ 数えない");
+  C.stSync(S, Object.fromEntries(ids.map(id => [id, [3, 0, 0]])));
   assert.strictEqual(C.yaRankCount(S, 3, "m"), 5);
   assert(!S.mk.own.sankakuru.k, "正解が まだ 500 に たりない");
   let r = null; for (let i = 0; i < 40 && !S.mk.own.sankakuru.k; i++) r = run(S, D, [{ id: "m3-amari", n: 10, o: 10 }]);

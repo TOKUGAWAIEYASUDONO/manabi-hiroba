@@ -43,7 +43,6 @@ const STRICT = [
   ['かざりの 値段', /price: (\d+) \}/g, (m, n) => `price: ${n * 10} }`],
 ];
 const LOOSE = [
-  ['シール ぎん', /u\[0\] >= 30 && u\[3\]/g, 'u[0] >= 1'],
   ['遊具の need', /need: (\d+) \}/g, 'need: 1 }'],
   ['きせかえ can/mst', /un: \["(can|mst)", (\d+)\]/g, (m, c) => `un: ["${c}", 1]`],
 ];
@@ -68,11 +67,13 @@ function oldRaw() {
   S.own = ['tree', 'flower']; S.pl = { tree: 1 };
   S.kz.o = ['h-ribbon', 'p-book'];
   const ext = { m100n: 12, m100best: 90000, mtStars: 10, mtMax: 33 };
+  for (const id of Object.keys(Y.u)) S.kp.r[id] = cur.yaRankOld(S, id);      // 前の版では シールの ランクで じっせきを 数えていた（kp は 下で 消す）
   cur.yaCheck(S, ext);
   S.kz.e.sankakuru = { h: 'h-ribbon', t: 't-ippo', p: 'p-bag' };
   S.kz.e.kotohane = { h: 'h-sprout', t: 't-yac1000' };
   const raw = JSON.parse(JSON.stringify(S));
   delete raw.kp;                    // 前の版には kp が ない
+  delete raw.st;                    // ★に まとめる 前の 版には st が ない（シールの ランクは 読みこむ ときに kp に のこす。2026-11-26）
   return { raw, ext };
 }
 function measure(C, S, ext) {
@@ -126,7 +127,7 @@ const hr = strict.hrMake(S3), back = strict.hrParse(hr);
 check(!!back, `きびしい 版: バックアップの 文字が 読めない（${hr}）`);
 // ゆるい 版で ひらくと、その分が 新しく もらえる（へらない）
 const S4 = loose.clean(JSON.parse(saved), D + 1);
-cmp('いまの 版 → ゆるい 版', M1, measure(loose, S4, ext), ['シールの ランクの 合計', 'ひろばの 遊具', '学びで もらった きせかえ・しょうごう']);
+cmp('いまの 版 → ゆるい 版', M1, measure(loose, S4, ext), ['ひろばの 遊具', '学びで もらった きせかえ・しょうごう']);      // 単元の ランクは ★から きまる（2026-11-26）ので、シールの 基準を ゆるくしても ふえない
 // もう一度 いまの 版に もどしても へらない（ゆるい 版で もらった 分も のこる）
 cmp('ゆるい 版 → いまの 版', M1, measure(cur, cur.clean(JSON.parse(JSON.stringify(S4)), D + 2), ext));
 
@@ -138,7 +139,7 @@ const parts = [
   grab(/const U_ACC=\[[^\n]*/, 'U_ACC・uNeed'),
   grab(/function bests\(\)\{[^\n]*/, 'bests'),
   grab(/function medalTotal\(\)\{[^\n]*/, 'medalTotal'),
-  grab(/const uIsStar=[^\n]*/, 'uIsStar'),
+  grab(/const uIsMath=[^\n]*/, 'uIsMath・uIsStar'),
   grab(/function uRecord\(p\)\{[\s\S]*?\n\}\n/, 'uRecord'),
   grab(/const MTKEY=[^\n]*/, 'MTKEY'),
   grab(/function mtCfg\(\)\{[^\n]*/, 'mtCfg'),
