@@ -464,10 +464,34 @@ body[data-bw="race"]{--bwc:#a9d7ee;--bwi:url(vendor/img/battle/race-map.webp)}
 .pk .hp.hop{animation:pkhop .17s ease-out 1}
 @keyframes pkhop{0%{transform:translateY(0)}50%{transform:translateY(-9px)}100%{transform:translateY(0)}}
 .rline{font-size:16px;font-weight:700;margin:2px 0 8px}
+.sglg{display:flex;flex-wrap:wrap;justify-content:center;gap:4px 12px;font-size:13px;font-weight:700;margin:6px 0;color:#4a3120}
+.sglg span{display:inline-flex;align-items:center;gap:4px;white-space:nowrap}.sglg i{font-style:normal;width:24px;height:24px;border-radius:50%;border:2px solid;display:grid;place-items:center;font-size:13px}
 .dice{margin:10px 0;display:inline-block}
-.dice .art{width:88px;height:88px}
-.dice.roll{animation:roll .5s linear infinite}
-@keyframes roll{to{transform:rotate(360deg)}}
+.dice .art{width:88px;height:88px;display:block;filter:drop-shadow(0 6px 4px #0004)}
+/* サイコロ：2こ（ボーナスは 金の サイコロが ふえて 3こ）。ころころ はねて とまる */
+.rollq{padding:16px;text-align:center}
+.rtitle{font-size:20px;font-weight:800}.rtitle.bonus{color:#8a5a00;background:#ffe9a0;border-radius:99px;display:inline-block;padding:2px 14px;border:2px solid #c99a2e}
+.dices{display:flex;justify-content:center;gap:14px;margin:12px 0 4px;min-height:96px;align-items:center}
+.dices .dice{margin:0}
+.dice.roll{animation:dtumble .36s ease-in-out infinite}
+.dice.roll:nth-child(2){animation-delay:-.12s}.dice.roll:nth-child(3){animation-delay:-.24s}
+.dice.land{animation:dland .45s cubic-bezier(.3,1.6,.5,1)}
+.dice.gold .art{filter:drop-shadow(0 0 8px #ffd75e) drop-shadow(0 6px 4px #0004)}
+@keyframes dtumble{0%{transform:translateY(0) rotate(0)}50%{transform:translateY(-22px) rotate(180deg)}100%{transform:translateY(0) rotate(360deg)}}
+@keyframes dland{0%{transform:scale(1.25) rotate(-12deg)}100%{transform:none}}
+.rollbtn{font-size:22px;padding:14px 34px;margin-top:6px}
+/* 3問で 1回：たまり ぐあいの ゲージ */
+.chg{display:flex;align-items:center;gap:10px;background:#fffaf0;border:3px solid #6b4526;border-radius:16px;padding:6px 12px;margin:0 0 8px;color:#4a3120;box-shadow:0 3px 0 #6b4526}
+.chgs{display:flex;gap:6px;flex:none}
+.chgs i{width:38px;height:38px;border-radius:50%;border:3px dashed #b99467;background:#f3e6c6;display:grid;place-items:center}
+.chgs i.on{border:3px solid #2f7a4a;background:#d9f2c9}.chg.clean .chgs i.on{border-color:#c99a2e;background:#ffe9a0}
+.chgs i .art,.chgs i svg{width:26px;height:26px}
+.chgs i.pop{animation:dland .45s cubic-bezier(.3,1.6,.5,1)}
+.chgt{display:flex;flex-direction:column;text-align:left;line-height:1.25}.chgt b{font-size:17px}.chgt small{font-size:13px;color:#7a5a3c}
+.chg.clean .chgt small{color:#8a5a00;font-weight:700}
+#pkt.bonus{color:#8a5a00}
+.chw #mmain>.q,.mgrid.race #mmain>.q{flex:none}.chw .boxes{margin:14px 0 4px}
+@media (prefers-reduced-motion:reduce){.dice.roll,.dice.land,.chgs i.pop{animation:none}}
 /* ===== 友だち対戦 ===== */
 .bigcode{font-size:clamp(56px,14vw,120px);font-weight:800;letter-spacing:.15em;color:var(--go);font-family:ui-monospace,Consolas,monospace}
 .chips{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin:12px 0}
@@ -604,6 +628,23 @@ body.lesson .foot{display:none}
   .mgrid.race .side{grid-template-columns:1fr}
   .mgrid.race .side>.sgbd,.mgrid.race .side>#rk{grid-column:1}
   .mgrid.race .side>.sgbd{width:100%;height:auto;max-width:420px;margin:0 auto}
+}
+/* PC（よこ長の 画面）：よこ長の 盤を 左に 大きく。右に ゲージ・問題・サイコロ。順位は 盤の 上に 1行で */
+@media (min-width:1000px) and (min-height:600px){
+  .mplay.racew{max-width:1500px}
+  .mgrid.race{grid-template-columns:minmax(0,1fr) minmax(300px,360px);gap:16px}
+  .mgrid.race .side{grid-column:1;grid-row:1;display:block;padding:10px 14px 14px}
+  .mgrid.race #mmain{grid-column:2;grid-row:1}
+  .mgrid.race .side>h3{display:none}
+  .mgrid.race .side>.rline{display:none}
+  .mgrid.race .side>#rk{display:flex;flex-wrap:wrap;gap:6px;margin:0 0 8px}
+  .mgrid.race .side>#rk .rank{flex:1 1 0;min-width:0;margin:0;padding:4px 10px;white-space:nowrap;overflow:hidden;border-radius:99px;border:2px solid #6b452655}
+  .mgrid.race .side>#rk .rank.me{border-color:#c99a2e}
+  .mgrid.race .side>.sgbd{width:100%;max-width:none;height:auto;max-height:calc(100dvh - 250px)}
+  .mgrid.race #mmain>.q:first-of-type{padding:14px}
+  .mgrid.race #mmain .big{font-size:clamp(34px,3.4vw,52px)}
+  .mgrid.race .choices{grid-template-columns:1fr 1fr}
+  .mgrid.race .dice .art{width:92px;height:92px}
 }
 /* ===== 先生がつくる もんだい・クイズ ===== */
 .mk h2{margin:14px 0 6px}
@@ -2061,9 +2102,9 @@ const TX={
  "q.kanji":["この漢字《かんじ》の読《よ》みは？","この かんじの よみは？"],"q.kencho":["県庁所在地《けんちょうしょざいち》は？"],"q.eigo":["意味《いみ》は？"],
  /* バトルモード・ルール */
  "m.chest.t":["たからばこラッシュ","たからばこ ラッシュ"],
- "m.chest.d":["正解《せいかい》するとたからばこを1つ開《あ》けられる。コインを一番《いちばん》集《あつ》めた人《ひと》の勝《か》ち！","せいかいすると たからばこを 1つ あけられるよ。コインを いちばん あつめた ひとの かち！"],
+ "m.chest.d":["3問《もん》正解《せいかい》するとたからばこを1つ開《あ》けられる（れんぞく正解《せいかい》なら2つ）。コインを一番《いちばん》集《あつ》めた人《ひと》の勝《か》ち！","3もん せいかいすると たからばこを 1つ あけられるよ（れんぞくなら 2つ）。コインを いちばん あつめた ひとの かち！"],
  "m.race.t":["すごろくレース","すごろく レース"],
- "m.race.d":["正解《せいかい》するとサイコロをふれる。先《さき》にゴールした人《ひと》の勝《か》ち！","せいかいすると サイコロを ふれるよ。さきに ゴールした ひとの かち！"],
+ "m.race.d":["3問《もん》正解《せいかい》するとサイコロをふれる（れんぞく正解《せいかい》なら金《きん》のサイコロつき）。先《さき》にゴールした人《ひと》の勝《か》ち！","3もん せいかいすると サイコロを ふれるよ（れんぞくなら きんの サイコロ つき）。さきに ゴールした ひとの かち！"],
  "ru.normal.d":["うばう・入《い》れかえ・もどる もある","うばう・いれかえ・もどる も あるよ"],
  "ru.easy.d":["コインがへらない・もどらない","コインが へらない・もどらない"],
  "ru.auto":["おまかせ"],"ru.auto.d":["1〜2年《ねん》の問題《もんだい》ならやさしい","1〜2ねんの もんだいなら やさしい"],
@@ -2156,7 +2197,16 @@ const TX={
  "c.swapdone":["🔄 こうかん","🔄 いれかえ"],
  "c.table":["たからばこから出《で》る確率《かくりつ》","たからばこから でる かくりつ"],
  "c.q":["確率《かくりつ》を見《み》る","かくりつを みる"],
- "b.roll":["サイコロをふる"],"b.go":[n=>`${n} すすむ！`],"b.star":[" ⭐でさらに3すすむ！"],"b.swirl":[" 🌀で2もどる…"],
+ "b.roll":["サイコロをふる"],
+ "b.warp":[" 🌈にじの橋《はし》で ワープ！"," 🌈にじの はしで ワープ！"],"b.again":[" 🎲もう1回《かい》 ふれる！"," 🎲もう1かい ふれる！"],"b.again.t":["🎲 もう1回《かい》！","🎲 もう1かい！"],
+ "b.q.go":[n=>` ❓はてなマス！ さらに ${n}すすむ！`],"b.q.again":[" ❓はてなマス！ もう1回《かい》 ふれる！"," ❓はてなマス！ もう1かい ふれる！"],
+ "b.q.swap":[" ❓はてなマス！ 1位《い》と ばしょを こうかん！"," ❓はてなマス！ 1ばんの ひとと ばしょを こうかん！"],"b.q.back":[n=>` ❓はてなマス… ${n}もどる`],
+ "b.cheer":["📣 おうえんパワー ＋2！ "],
+ "b.lg.star":["3すすむ"],"b.lg.swirl":["2もどる"],"b.lg.dice":["もう1回《かい》","もう1かい"],"b.lg.warp":["ワープ"],"b.lg.q":["なにかが おこる"],
+ "g.left.race":[n=>`サイコロまで あと ${n}問《もん》`,n=>`サイコロまで あと ${n}もん`],"g.left.chest":[n=>`たからばこまで あと ${n}問《もん》`,n=>`たからばこまで あと ${n}もん`],
+ "g.bonus.race":["れんぞく正解《せいかい》なら 金《きん》のサイコロつき！","れんぞく せいかいなら きんの サイコロ つき！"],"g.bonus.chest":["れんぞく正解《せいかい》なら 2つ開《あ》けられる！","れんぞく せいかいなら 2つ あけられる！"],
+ "g.miss":["つぎは れんぞくを ねらおう"],
+ "b.bonus.race":["れんぞくボーナス！ 金《きん》のサイコロつき！","れんぞく ボーナス！ きんの サイコロ つき！"],"b.pick2":["れんぞくボーナス！ 2つえらんでね","れんぞく ボーナス！ 2つ えらんでね"],"b.pick.more":["もう1つ えらんでね！"],"b.go":[n=>`${n} すすむ！`],"b.star":[" ⭐でさらに3すすむ！"],"b.swirl":[" 🌀で2もどる…"],
  "b.rank":["ランキング"],"b.rank.e":["がんばってる みんな"],
  "b.race":["すごろく"],"b.right":[n=>`正解《せいかい》${n}問《もん》`,n=>`せいかい ${n} もん`],
  "b.place":[n=>`${n} 位《い》！`,n=>`${n} ばん！`],
@@ -2656,7 +2706,7 @@ function howMeter(N){
   N=N||5; const st=n=>`<span class="hst" aria-label="ほし ${n}">${"★".repeat(n)}</span>`;
   return howBox(T("how.s"),[[st(1),T("how.mt1")],[st(2),T("how.mt2",Math.ceil(N*.6))],[st(3),T("how.mt3")]],T("how.mt.d",N));
 }
-const diceSvg=n=>`<svg class="art" viewBox="0 0 64 64" aria-hidden="true" focusable="false"><g stroke="var(--edge)" stroke-width="3.5" stroke-linejoin="round"><rect x="6" y="6" width="52" height="52" rx="12" fill="var(--paper)"/>${PIPS[n].map(([x,y])=>`<circle cx="${x}" cy="${y}" r="4.5" fill="${n===1?"var(--math)":"var(--edge)"}" stroke="none"/>`).join("")}</g></svg>`;
+const diceSvg=(n,gold)=>`<svg class="art" viewBox="0 0 64 64" aria-hidden="true" focusable="false"><rect x="7" y="10" width="52" height="52" rx="13" fill="${gold?"#b8860b":"#c9b48f"}"/><rect x="5" y="5" width="52" height="52" rx="13" fill="${gold?"#ffd75e":"#fffaf0"}" stroke="${gold?"#8a5a00":"#5b3a22"}" stroke-width="3"/><path d="M12 14q0-6 6-6h26" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" opacity=".8"/>${PIPS[n].map(([x,y])=>`<circle cx="${x-1}" cy="${y-1}" r="5" fill="${n===1&&!gold?"#d9412b":gold?"#6b3f00":"#3b2616"}"/><circle cx="${x-2.4}" cy="${y-2.4}" r="1.4" fill="#fff" opacity=".55"/>`).join("")}</svg>`;
 function drawHeader(){
   const c=document.getElementById("hSound"), l=document.getElementById("licLink"), gb=document.getElementById("hGrade"), rb=document.getElementById("hRec");
   if(l){ l.textContent=T("ft.lic"); l.hidden=!!window.LESSON; }
@@ -4463,7 +4513,7 @@ function renderTeacher(q){
       <details class="tguide" id="roomHelp"><summary>くわしい説明（名前・ルール・ロケット・ボス・じんとり・100マス）</summary>
       <span class="note">部屋を作ると4桁のコードが出ます。児童は「コードで参加」からコードを入れて、名前を入力します（名前は先生の画面に出ます。大画面に映すと、クラスの全員に見えます）。ふざけた名前は、先生の画面で名前を押すと変更・ニックネーム化・退出ができます。全員がそろったら「入室をしめきる」を押してください。ゲームが始まったあとは入れません。「なまえのきめかた」を自動ニックネームにすると、動物の名前になります。終わると全員の正解数・正答率が集まります。</span>
       <span class="note">「クイズ」は先生のもんだいだけで遊べます（③のタブでセットをつくります）。たからばこ・すごろくでも、先生のセットの4択を使えます。学年は、児童の画面の文字（1〜2年はやさしい文字）に使います。</span>
-      <span class="note">やさしいルール：たからばこで「うばう・入れかえ・落とす」が出ず、すごろくに🌀（もどる）がありません。1〜2年を選ぶと、はじめは「やさしい」になります。</span>
+      <span class="note">やさしいルール：たからばこで「うばう・入れかえ・落とす」が出ず、すごろくに🌀（もどる）がなく、❓（はてなマス）も良いことだけが出ます。1〜2年を選ぶと、はじめは「やさしい」になります。</span>
       <span class="note hidden" id="bsnote"><b>ボスバトル（協力モード）</b>：クラス全員で、いたずらモンスター（ボス）を「くすぐって」おいはらいます。だれかが正解するたびにボスの「げんき」がへり、0になるとボスは笑ってにげていき、少しだけげんきの多い次のボスが来ます。時間の中で何ひきおいはらえるかをクラスでめざします（時間は「時間」でえらびます）。正解は 10（連続正解で最大 20）、まちがいでも答えれば 1。1人が出せる量には上限があります。20〜30秒ごとのボスの「いたずら」は見た目だけで、点数や問題には何も起きません。順位や個人の正誤は大画面にも児童の画面にも出ません。</span>
       <span class="note hidden" id="jnnote"><b>じんとりバトル（2チーム）</b>：あか（ウサギ）とあお（ペンギン）に分かれ、正解で 7×7 の盤のマスをぬります。ぬるマスは自動で決まり（えらべません）、マスごとに必要な正解の数がちがいます（ふつう2・★4・まんなか6。相手のマスは+1、自分の陣地からはなれたマスは+1）。ぬったばかりのマスは15秒うばえません。のこり30秒はラストスパート（2倍）。人数がちがっても、チームの力が同じになるように調整します。チームは参加した順に交互に入り、大画面のメニューで「自動で分けなおす」や1人ずつの移動ができます（始まると変えられません）。「やさしい」ルールでは、相手のマスをうばえません（全部ぬれたら終わり）。</span>
       <span class="note hidden" id="m1note"><b>100マスはっぴょう</b>：児童が「100マス計算」で練習した記録を、先生の大画面に計算（たし算・ひき算・かけ算）ごとに出します。児童が部屋に入ると、その画面の上で100マス計算がひらき、ボタンを押さなくても、入ったときと1回おわるたびに、その子の集計（数字だけ）が自動で届きます。生の記録は送りません。画面は2つを切りかえます。「このじかん」は部屋に入ってからの回で、はやさ・のびりつ（入る前の自己ベストより速くなった割合）・がんばり（やったセット数）・じこベストこうしん（順位なし）。「これまで」は入ったときに届く記録で、じこベスト・るいけい（いままでの回数の合計）・コツコツ（今週の日数）。出す計算は先生が選べます（はじめは記録のある計算だけ）。それぞれ上位5人まで（計算を2つ以上ならべるときは一部3人まで）で、最下位は出しません。できるだけ多くの子がどこかに出るよう、1つめの欄以外はほかの欄に出た子をあとまわしにします。数えるのは「100問・だんをしぼらない・最後まで・正答率9割以上・1マス0.4秒以上」の回だけです。記録は児童の端末にあるので、書きかえれば数字は変えられます（ほかの対戦と同じ）。成績には使わないでください。「スタート」はなく、入室をしめきる・終わるだけです。</span>
@@ -4541,7 +4591,7 @@ function renderTeacher(q){
         <div class="tc-ph"><h2>この端末の設定</h2><p>ここで変えた設定は、いま開いているこの端末だけに効きます。</p></div>
         ${colTeacherHtml()}${toolTeacherHtml()}</section>
       <section class="tc-pane hidden" id="tp-guide" aria-label="児童の情報と使い方">
-        <div class="tc-ph"><h2>児童の情報のあつかい</h2><p>友だち対戦で児童が入れた名前は、先生の端末のメモリにだけ置き、部屋を閉じると消えます。運営者は名前・成績を集めません。</p></div>
+        <div class="tc-ph"><h2>児童の情報のあつかい</h2><p>友だち対戦で児童が入れた名前は、先生の端末のメモリにだけ置き、部屋を閉じると消えます。</p></div>
         <div class="form tc-guide" id="tguide"><ol>${TGUIDE.map(t=>`<li>${esc(t)}</li>`).join("")}</ol></div>
       </section>
       </div>
@@ -4783,9 +4833,9 @@ function renderMode(q){
   if(m.solo&&(task||LESSON)) return go("#home");      // ひとりで ボスバトルは 授業モード（課題リンク）では 遊べない
   setLG(g);
   if(m.solo&&SGOPEN&&!q.has("st")) return sgSelect(q,m,x,g);      // ひとりで ボスバトル（ステージ版）：さきに ステージを えらぶ
-  M={m,x,g,t,task,rule,unitQs,unitIndex:0,ev:evOf(rule),ok:0,ng:0,misses:[],missObjs:[],phase:"q",end:Date.now()+t*1000,
+  M={m,x,g,t,task,rule,unitQs,unitIndex:0,ev:evOf(rule),ok:0,ng:0,chg:0,clean:true,misses:[],missObjs:[],phase:"q",end:Date.now()+t*1000,
      me:{n:T("b.me"),e:(l=>l[rnd(l.length)][1])(NICK_ANI.filter(a=>!BOTS.some(b=>b.e===a[1]))),v:0,me:true,...(mkAvMine()||{})},
-     bots:m.solo?[]:BOTS.map((b,i)=>({...b,v:0,wait:rr(2,5)*botK(g),spd:[1,1.15,0.85][i]})),
+     bots:m.solo?[]:BOTS.map((b,i)=>({...b,v:0,wait:rr(8,14)*botK(g),spd:[1,1.15,0.85][i]})),
      over:false};
   if(m.solo&&SGOPEN){ const st=Math.min(sgBz().o,Math.max(0,+q.get("st")|0)), rare=sgBz().rp===st+1;
     M.sg=true; M.sbRare=rare; M.sb=COOP.soloStage({g,easy:rule==="easy",t,stage:st,rare}); M.sb.begin(Date.now()); M.end=M.sb.ae; }
@@ -4819,7 +4869,7 @@ function showQ(){
   if(!M||M.over) return;
   M.phase="q"; M.cur=M.unitQs?M.unitQs[(M.unitIndex++)%M.unitQs.length]:genChoice(M.x.id,M.g);
   const cls=["ca","cb","cc","cd"];
-  $("#mmain").innerHTML=`<div class="q"><div class="big${!M.cur.hissan&&rbp(M.cur.q).length>16?" long":""}">${M.cur.rich?"":M.cur.hissan?renderHissan(M.cur.hissan).outerHTML:esc(M.cur.q)}${spkBtn(M.x.id,M.cur.q)}</div><div class="small">${esc(M.cur.small||"")}</div></div>
+  $("#mmain").innerHTML=`${M.sb?"":chgHtml()}<div class="q"><div class="big${!M.cur.hissan&&rbp(M.cur.q).length>16?" long":""}">${M.cur.rich?"":M.cur.hissan?renderHissan(M.cur.hissan).outerHTML:esc(M.cur.q)}${spkBtn(M.x.id,M.cur.q)}</div><div class="small">${esc(M.cur.small||"")}</div></div>
     <div class="fb" id="fb" aria-live="polite"></div>
     <div class="choices">${M.cur.ch.map((c,i)=>`<button class="choice ${cls[i]}" data-c="${esc(c)}"><span class="kh" aria-hidden="true">${i+1}</span>${M.cur.rich?"":chLabel(c,M.cur)}</button>`).join("")}</div>`;
   $("#mmain").querySelectorAll("[data-c]").forEach(b=>b.onclick=()=>mPick(b));
@@ -4832,8 +4882,11 @@ function mPick(b){
   const fb=$("#fb");
   if(M.net) api("act",{...NET,op:"answer",right}).catch(()=>{});
   const mm=M; sfx(right?"ok":"ng");
-  if(right){ M.ok++; fb.className="fb ok"; fb.textContent=T("fb.ok"); if(M.sb) sbAns(true); else setTimeout(()=>M===mm&&!M.over&&reward(),400); }
-  else { M.ng++; const mo=mineMiss(); M.misses.push(`${mo.q} → ${mo.a}`); M.missObjs.push(mo); fb.className="fb ng"; fb.textContent=T("fb.ng",mo.a); if(M.sb) sbAns(false); setTimeout(()=>M===mm&&showQ(),1800); }   // まちがえたあとは1.8秒待つ
+  if(right){ M.ok++; fb.className="fb ok"; fb.textContent=T("fb.ok"); if(M.sb) sbAns(true);
+    else { M.chg++; chgDraw(true);
+      if(M.chg>=CHG){ const bonus=M.clean; M.chg=0; M.clean=true; setTimeout(()=>M===mm&&!M.over&&reward(bonus),650); }
+      else setTimeout(()=>M===mm&&!M.over&&showQ(),650); } }
+  else { M.ng++; if(!M.sb&&M.clean&&M.chg>0){ M.clean=false; chgDraw(); } const mo=mineMiss(); M.misses.push(`${mo.q} → ${mo.a}`); M.missObjs.push(mo); fb.className="fb ng"; fb.textContent=T("fb.ng",mo.a); if(M.sb) sbAns(false); setTimeout(()=>M===mm&&showQ(),1800); }   // まちがえたあとは1.8秒待つ
 }
 function players(){
   if(M.net) return M.state.players.map(p=>({n:p.name,e:p.emoji,mk:p.mk,ms:p.ms,mh:p.mh,v:p.v,me:p.pid===NET.pid}));
@@ -4849,11 +4902,21 @@ function easyList(ps){ const top=ps.slice(0,3).map(p=>[p,0]), i=ps.findIndex(p=>
 const rankRows=(rows,unit)=>rows.map(([p,i])=>`<div class="rank ${p.me?"me":""}">${i?i+". ":""}${face(p.e)}${mkAv(p.mk,p.ms,p.mh)} ${esc(p.n)}<span class="v">${unit(p)}</span></div>`).join("");
 
 /* --- ごほうび（モードごと） --- */
-function reward(){ M.phase="reward"; if(M.m.id==="chest") chestReward(); else raceReward(); }
+function reward(bonus){ M.phase="reward"; if(M.m.id==="chest") chestReward(bonus); else raceReward(bonus); }
+/* 3問《もん》正解《せいかい》で サイコロ／たからばこ（2026-11-25）。まちがえても たまった分は のこる。
+   3問 つづけて 正解（そのあいだ 1回も まちがえない）なら ボーナス：すごろく＝金のサイコロが 1こ ふえる／たからばこ＝2つ あけられる */
+const CHG=3;
+function chgHtml(){
+  const race=M.m.id==="race", left=CHG-M.chg;
+  return `<div class="chg${M.clean?" clean":""}" id="chg"><span class="chgs">${[0,1,2].map(i=>`<i class="${i<M.chg?"on":""}">${i<M.chg?svgU(race?"a-dice":"a-chest"):""}</i>`).join("")}</span>
+    <span class="chgt"><b>${T(race?"g.left.race":"g.left.chest",left)}</b><small>${M.clean?T(race?"g.bonus.race":"g.bonus.chest"):T("g.miss")}</small></span></div>`;
+}
+function chgDraw(pop){ const el=$("#chg"); if(!el) return; el.outerHTML=chgHtml(); if(pop){ const i=$("#chg").querySelectorAll(".chgs i.on"); const l=i[i.length-1]; if(l) l.classList.add("pop"); } }
 
-function chestReward(){
+function chestReward(bonus){
+  M.picks=bonus?2:1;
   $("#mmain").innerHTML=`<div class="q" style="padding:16px"><button class="qm" id="qm" aria-label="${T("c.q")}" aria-expanded="false">？</button>
-    <div style="font-size:20px;font-weight:bold">${T("b.pick")}</div>
+    <div style="font-size:20px;font-weight:bold" id="pkt"${bonus?' class="bonus"':""}>${T(bonus?"b.pick2":"b.pick")}</div>
     <div id="ptab" class="hidden"></div>
     <div class="boxes">${[0,1,2].map(i=>`<button class="box" data-b="${i}" aria-label="${T("c.box",i+1)}">${chestImg("closed")}</button>`).join("")}</div><div class="msg" id="msg"></div></div>`;
   $("#mmain").querySelectorAll("[data-b]").forEach(b=>b.onclick=()=>openBox(b));
@@ -4878,48 +4941,75 @@ function rollChest(rule){
   let r=Math.random()*tb.reduce((n,x)=>n+x[1],0); for(const [k,w] of tb){ if((r-=w)<0) return k; } return "+10";
 }
 function openBox(btn){
-  if(M.phase!=="reward") return; M.phase="wait";
+  if(M.phase!=="reward"||btn.classList.contains("open")) return; M.phase="wait";
   if(M.net) return netBox(rollChest(M.rule),btn);
   const k=rollChest(M.rule), L=leaderBot(); let label, msg;
   if(k[0]==="+"){ const n=+k.slice(1); M.me.v+=n; label=`🪙 +${n}`; msg=T("b.get",n); }
   else if(k==="x2"){ M.me.v*=2; label=T("c.x2"); msg=T("b.x2"); }
   else if(k==="lose"){ const n=Math.round(M.me.v*0.25); M.me.v-=n; label=`💸 −${n}`; msg=T("b.lose"); }
+  else if(k==="steal"&&L.v<=0){ M.me.v+=20; label="🪙 +20"; msg=T("b.get",20); }      // うばえる コインが ない ときは +20（友だち対戦の サーバーと 同じ）
   else if(k==="steal"){ const n=Math.round(L.v*0.2); L.v-=n; M.me.v+=n; label=`🦝 +${n}`; msg=T("b.steal",`${face(L.e)}${esc(L.n)}`,n); }
   else if(k==="swap"){ if(L.v>M.me.v){ [L.v,M.me.v]=[M.me.v,L.v]; label=T("c.swapdone"); msg=T("b.swap",`${face(L.e)}${esc(L.n)}`); } else { M.me.v+=20; label="🪙 +20"; msg=T("b.get",20); } }
   else { label=T("c.none"); msg=T("b.none"); }
   chestOpen(btn,label,k!=="none"&&k!=="lose"); sfx(k[0]==="+"?"coin":"open");
-  $("#mmain").querySelectorAll(".box").forEach(b=>{ if(b!==btn) b.classList.add("dim"); });
   $("#msg").innerHTML=msg; drawSide();
-  const mm=M; setTimeout(()=>M===mm&&showQ(),1300);
+  chestNext(btn);
+}
+function chestNext(btn){      // ボーナスで もう1つ あけられるときは、えらべる ままに する
+  const mm=M;
+  if(--M.picks>0){ M.phase="reward"; const t=$("#pkt"); if(t) t.innerHTML=T("b.pick.more"); return; }
+  $("#mmain").querySelectorAll(".box").forEach(b=>{ if(!b.classList.contains("open")) b.classList.add("dim"); });
+  setTimeout(()=>M===mm&&showQ(),1300);
 }
 
-const GOAL=40, EV={4:"⭐",9:"🌀",13:"⭐",17:"🌀",21:"⭐",25:"🌀",27:"⭐",31:"🌀",35:"⭐",38:"🌀"};
-function raceReward(){
-  $("#mmain").innerHTML=`<div class="q" style="padding:16px"><div class="dice" id="dc">${diceSvg(5)}</div><div class="msg" id="msg"></div>
-    <button class="btn" id="rollBtn">${T("b.roll")}</button></div>`;
+/* マスの イベント（2026-11-25 ふやした）：⭐3すすむ／🌀2もどる／🎲もう1回 ふれる／🌈にじの橋で ワープ／❓はてな（なにかが おこる）。
+   やさしいルールは 🌀が なく、❓も 良いこと だけ。server.js にも 同じ 表と 同じ きまりが ある（そろえて 直すこと） */
+const GOAL=40, EV={4:"⭐",5:"🌈",7:"🎲",9:"🌀",11:"❓",13:"⭐",16:"🎲",17:"🌀",19:"❓",20:"🌈",21:"⭐",23:"🎲",25:"🌀",26:"❓",27:"⭐",31:"🌀",33:"🎲",34:"❓",35:"⭐",38:"🌀"}, WARP={5:12,20:29};
+/* マスに 止まった ときの できごと。p.v を 書きかえて、何が おきたかを 返す。lead＝自分より 前の いちばん 先の 人（いなければ null） */
+function raceLand(p,rule,lead){
+  const ev=p.v>=GOAL?"":evOf(rule)[p.v]||"", o={ev}, fwd=n=>{ p.v=Math.min(GOAL,p.v+n); };
+  if(ev==="⭐") fwd(3);
+  else if(ev==="🌀") p.v=Math.max(0,p.v-2);
+  else if(ev==="🌈") p.v=WARP[p.v];
+  else if(ev==="🎲") o.again=true;
+  else if(ev==="❓"){
+    const easy=ruleOf(rule)==="easy", r=Math.random()*100;
+    if(r<(easy?70:45)){ o.qk="go"; o.qn=2+rnd(3); fwd(o.qn); }
+    else if(r<(easy?100:65)){ o.qk="again"; o.again=true; }
+    else if(r<80){ if(lead&&lead.v>p.v&&lead.v<GOAL){ o.qk="swap"; [lead.v,p.v]=[p.v,lead.v]; } else { o.qk="go"; o.qn=3; fwd(3); } }
+    else { o.qk="back"; o.qn=3; p.v=Math.max(0,p.v-3); }
+  }
+  return o;
+}
+const raceEvMsg=o=>o.ev==="⭐"?T("b.star"):o.ev==="🌀"?T("b.swirl"):o.ev==="🌈"?T("b.warp"):o.ev==="🎲"?T("b.again"):o.ev==="❓"?T("b.q."+o.qk,o.qn):"";
+/* おうえんパワー：いちばん うしろの 人は サイコロに ＋2（おくれた 子も おいつける） */
+function raceCheer(){ const ps=players(), me=ps.find(p=>p.me); return !!me&&ps.length>1&&ps.every(p=>p===me||p.v>me.v+3); }
+function raceReward(bonus){ raceRoll(bonus?3:2,bonus,bonus?T("b.bonus.race"):T("b.roll"),true); }
+function raceRoll(nd,bonus,title,first){
+  const dz=k=>`<div class="dice${bonus&&k===2?" gold":""}" data-k="${bonus&&k===2?2:0}">${diceSvg(1+rnd(6),bonus&&k===2)}</div>`;
+  $("#mmain").innerHTML=`<div class="q rollq"><div class="rtitle${bonus||!first?" bonus":""}">${title}</div>
+    <div class="dices">${[...Array(nd).keys()].map(dz).join("")}</div><div class="msg" id="msg"></div>
+    <button class="btn rollbtn" id="rollBtn">${T("b.roll")}</button></div>`;
   $("#rollBtn").onclick=()=>{
     if(M.phase!=="reward") return; M.phase="wait";
-    $("#rollBtn").remove(); $("#dc").classList.add("roll");
+    $("#rollBtn").remove(); const ds=[...$("#mmain").querySelectorAll(".dice")];
+    ds.forEach(d=>d.classList.add("roll")); sfx("click");
+    const spin=reduceMotion()?0:setInterval(()=>ds.forEach(d=>d.innerHTML=diceSvg(1+rnd(6),d.dataset.k==="2")),90);
     setTimeout(()=>{
+      clearInterval(spin);
       if(!M||M.over) return;
-      const n=1+rnd(6); $("#dc").classList.remove("roll"); $("#dc").innerHTML=diceSvg(n);
-      if(M.net){
-        api("act",{...NET,op:"move",n}).then(r=>{
-          if(!M||M.over) return;
-          M.me.v=r.v;
-          $("#msg").textContent=T("b.go",n)+(r.ev==="⭐"?T("b.star"):r.ev==="🌀"?T("b.swirl"):"");
-          if(r.v<GOAL) setTimeout(showQ,1200);
-        }).catch(()=>{});
-        return;
-      }
-      let msg=T("b.go",n); M.me.v=Math.min(GOAL,M.me.v+n);
-      const e=M.ev[M.me.v];
-      if(e==="⭐"){ M.me.v=Math.min(GOAL,M.me.v+3); msg+=T("b.star"); }
-      if(e==="🌀"){ M.me.v=Math.max(0,M.me.v-2); msg+=T("b.swirl"); }
-      $("#msg").textContent=msg; drawSide();
-      if(M.me.v>=GOAL) return setTimeout(modeFinish,1500);       // 駒がゴールまで進むのを見せてから結果へ
-      setTimeout(showQ,1200);
-    },600);
+      const mm=M, ns=ds.map(d=>{ const v=1+rnd(6); d.classList.remove("roll"); d.classList.add("land"); d.innerHTML=diceSvg(v,d.dataset.k==="2"); return v; });
+      const cheer=first&&raceCheer(), n=ns.reduce((a,b)=>a+b,0)+(cheer?2:0), sum=(cheer?T("b.cheer"):"")+(ns.length>1||cheer?`${ns.join(" ＋ ")}${cheer?" ＋ 2":""} ＝ `:"");
+      const after=o=>{
+        $("#msg").innerHTML=sum+T("b.go",n)+raceEvMsg(o); drawSide(); if(o.ev) sfx(o.ev==="🌀"||o.qk==="back"?"open":"star");
+        if(M.me.v>=GOAL){ if(!M.net) setTimeout(()=>M===mm&&modeFinish(),1800); return; }       // 駒がゴールまで進むのを見せてから結果へ
+        if(o.again) setTimeout(()=>{ if(M!==mm||M.over) return; M.phase="reward"; raceRoll(1,false,T("b.again.t"),false); },1700);
+        else setTimeout(()=>M===mm&&!M.over&&showQ(),o.ev?2100:1500);
+      };
+      if(M.net){ api("act",{...NET,op:"move",n}).then(r=>{ if(M!==mm||M.over) return; M.me.v=r.v; after(r); }).catch(()=>{}); return; }
+      M.me.v=Math.min(GOAL,M.me.v+n);
+      const L=leaderBot(); after(raceLand(M.me,M.rule,L&&L.v>M.me.v?L:null));
+    },800);
   };
 }
 
@@ -4937,14 +5027,14 @@ function botTick(dt){
   for(const b of M.bots){
     b.wait-=dt*b.spd; if(b.wait>0) continue;
     if(M.m.id==="chest"){
-      b.wait=rr(3.5,6.5)*botK(M.g)+botRubber(b);
+      b.wait=rr(11,19)*botK(M.g)+botRubber(b)*2;      // 3問《もん》で 1回 あける ので、人と 同じくらいの はやさに
       const r=Math.random();
       const E=M.rule==="easy"?BOT_EASY:BOT_NORMAL;
       if(r<E.x2) b.v*=2; else if(r<0.14&&M.rule!=="easy") b.v=Math.round(b.v*0.75); else b.v+=E.gain[rnd(E.gain.length)];   // やさしいルールのCPUは、たまにもらう量も少なめ
     } else {
-      b.wait=rr(4.5,7.5)*botK(M.g)+botRubber(b);
-      b.v=Math.min(GOAL,b.v+1+rnd(4));
-      const e=M.ev[b.v]; if(e==="⭐") b.v=Math.min(GOAL,b.v+3); if(e==="🌀") b.v=Math.max(0,b.v-2);
+      b.wait=rr(13,21)*botK(M.g)+botRubber(b)*2;
+      b.v=Math.min(GOAL,b.v+2+rnd(4)+rnd(4));      // 人は サイコロ2こ（平均7）。CPUは 少し ひかえめ（平均5）
+      if(raceLand(b,M.rule,null).again) b.v=Math.min(GOAL,b.v+1+rnd(6));      // CPUは 人と ばしょを こうかん しない。もう1回は そのまま すすむ だけ
       if(b.v>=GOAL){ if(!M.finishing){ M.finishing=true; M.phase="wait"; setTimeout(()=>modeFinish(),1500); } return; }
     }
   }
@@ -4967,25 +5057,29 @@ function drawSide(){
     const line=T("b.line.me",me?me.v:0)+(easy?"":ps[0]&&ps[0].me?T("b.line.1st"):`／${T("b.line.top",face(ps[0].e)+mkAv(ps[0].mk,ps[0].ms,ps[0].mh)+esc(ps[0].n),ps[0].v)}`);
     const rk=`${rankRows(easy?easyList(ps):topList(ps),p=>p.v+"マス")}`;
     if(!M.sgBuilt){          // 盤は1回だけ作る（作り直すと駒の動きが止まるので、あとは駒・文字だけ更新）
-      M.sgBuilt=true; M.pk={};
-      $("#mside").innerHTML=`<h3>${svgU("a-dice","ti")} ${T("b.race")}</h3><div class="rline" id="rl"></div>${boardSvg(M.ev)}<div style="margin-top:8px" id="rk"></div>`;
+      M.sgBuilt=true; M.pk={}; BD=bdWide()?BDW:BDT;
+      $("#mside").innerHTML=`<h3>${svgU("a-dice","ti")} ${T("b.race")}</h3><div class="rline" id="rl"></div>${boardSvg(M.ev)}<div class="sglg">${[["⭐","star"],["🎲","dice"],["🌈","warp"],["❓","q"],["🌀","swirl"]].filter(([e])=>Object.values(M.ev).includes(e)).map(([e,k])=>`<span><i style="background:${EVC[e][0]};border-color:${EVC[e][1]}">${e}</i>${T("b.lg."+k)}</span>`).join("")}</div><div id="rk"></div>`;
     }
     $("#rl").innerHTML=line; $("#rk").innerHTML=rk;
     syncPieces(players());
   }
 }
 /* ===== すごろく盤（ぼうけんの 島の 地図）：SVGで描く。40マスをヘビのように進む道。駒は参加者の動物＋色の輪 ===== */
-const BD={W:400,H:512,COLS:5,X0:80,DX:60,Y0:60,DY:58}, SVGNS="http://www.w3.org/2000/svg";
+/* 盤の形：たて（スマホ・先生の大画面）と よこ（PC の ひとり用）。どちらも 40マス。よこは 村（左上）から お城（右下）へ */
+const BDT={W:400,H:512,COLS:5,X0:80,DX:60,Y0:60,DY:58,SX:34,R:22,img:"race-board"},
+      BDW={W:900,H:560,COLS:8,X0:120,DX:94,Y0:88,DY:96,SX:44,R:29,img:"race-map"}, SVGNS="http://www.w3.org/2000/svg";
+let BD=BDT;
+const bdWide=()=>window.innerWidth>=1000&&window.innerHeight>=600;
 function cellXY(i){
-  if(i<=0) return {x:34,y:BD.Y0+30};
+  if(i<=0) return {x:BD.SX,y:BD.Y0+BD.R+8};
   const r=Math.floor((i-1)/BD.COLS); let c=(i-1)%BD.COLS; if(r%2) c=BD.COLS-1-c;
   return {x:BD.X0+c*BD.DX,y:BD.Y0+r*BD.DY+(i%2?-4:4)};
 }
 function roadD(){
-  const pts=[{x:34,y:BD.Y0}];
+  const pts=[{x:BD.SX,y:BD.Y0}];
   for(let i=1;i<=GOAL;i++){
     pts.push(cellXY(i));
-    if(i%BD.COLS===0&&i<GOAL){ const a=cellXY(i), b=cellXY(i+1); pts.push({x:a.x+(a.x>200?30:-30),y:(a.y+b.y)/2}); }   // 折り返しをふくらませる
+    if(i%BD.COLS===0&&i<GOAL){ const a=cellXY(i), b=cellXY(i+1), o=BD.R+8; pts.push({x:a.x+(a.x>BD.W/2?o:-o),y:(a.y+b.y)/2}); }   // 折り返しをふくらませる
   }
   let d=`M${pts[0].x} ${pts[0].y}`;
   for(let k=0;k<pts.length-1;k++){
@@ -4994,27 +5088,37 @@ function roadD(){
   }
   return d;
 }
+/* マス：ふみ石（クリーム色）。10・20・30は 目じるしの 石。⭐＝金／🌀＝むらさき／40＝ゴールの 旗 */
+const EVC={"⭐":["#ffe27a","#8a5a00","#6b3f00"],"🌀":["#e6d6ff","#6a4aa8","#4a2e86"],"🎲":["#c9efc0","#2f7a4a","#1d4d2e"],"❓":["#ffd2a6","#c2571a","#8a3a0c"],"🌈":["#d5efff","#2f78b7","#1d4f7c"]};
 function boardSvg(ev){
-  const cols=["var(--math)","var(--jp)","var(--soc)","var(--eng)"], tc=["#fff","#fff","var(--ink)","#fff"];
+  const R=BD.R, f=Math.round(R*.82);
   let st="";
   for(let i=1;i<=GOAL;i++){
-    const {x,y}=cellXY(i), e=ev[i], g=i===GOAL, k=(i-1)%4;
-    if(g) st+=`<g transform="translate(${x} ${y})"><circle r="27" fill="var(--gold)" stroke="var(--edge)" stroke-width="3.5"/><circle r="20.5" fill="none" stroke="var(--edge)" stroke-width="2" stroke-dasharray="4 4"/><text dy=".35em" font-size="20" fill="var(--ink)">${i}</text></g>`;
-    else if(e) st+=`<g transform="translate(${x} ${y})"><circle r="25" fill="var(--paper)" stroke="var(--edge)" stroke-width="3.5"/><circle r="19" fill="none" stroke="var(${e==="⭐"?"--soc":"--eng"})" stroke-width="3"/><use href="#${e==="⭐"?"d-star":"d-swirl"}" x="-11" y="-21" width="22" height="22"/><text y="12" dy=".35em" font-size="15" fill="var(--ink)">${i}</text></g>`;
-    else st+=`<g transform="translate(${x} ${y})"><circle r="22" fill="${cols[k]}" stroke="var(--edge)" stroke-width="3.5"/><text dy=".35em" font-size="19" fill="${tc[k]}">${i}</text></g>`;
+    const {x,y}=cellXY(i), e=ev[i], g=i===GOAL, ms=i%10===0;
+    if(g) st+=`<g transform="translate(${x} ${y})"><circle r="${R+9}" fill="#ffd75e" stroke="#5b3a22" stroke-width="4"/><circle r="${R+3}" fill="none" stroke="#8a5a00" stroke-width="2" stroke-dasharray="4 4"/><text dy=".36em" font-size="${f+2}" fill="#5b3a22">${i}</text></g>`;
+    else if(e){ const [fc,sc,tc]=EVC[e], ic=e==="⭐"||e==="🌀"?`<use href="#${e==="⭐"?"d-star":"d-swirl"}" x="${-R*.55}" y="${-R*.9}" width="${R*1.1}" height="${R*1.1}"/>`
+        :e==="🎲"?`<use href="#a-dice" x="${-R*.52}" y="${-R*.88}" width="${R*1.04}" height="${R*1.04}"/>`
+        :e==="❓"?`<text dy="${R*.12}" font-size="${Math.round(R*1.05)}" fill="${tc}">？</text>`
+        :`<g fill="none" stroke-linecap="round" stroke-width="${(R*.16).toFixed(1)}" transform="translate(0 ${(R*.1).toFixed(1)})">${["#e85d5d","#f2b632","#3f8fd6"].map((c,k)=>{ const q=R*(.62-k*.17); return `<path d="M${-q} 0A${q} ${q} 0 0 1 ${q} 0" stroke="${c}"/>`; }).join("")}</g>`;
+      st+=`<g transform="translate(${x} ${y})"><ellipse cy="4" rx="${R+1}" ry="${R-2}" fill="#0003"/><circle r="${R+1}" fill="${fc}" stroke="${sc}" stroke-width="3.5"/>${ic}<text dy="${R*.66}" font-size="${Math.round(R*.48)}" fill="${tc}">${i}</text></g>`; }
+    else st+=`<g transform="translate(${x} ${y})"><ellipse cy="4" rx="${R}" ry="${R-3}" fill="#0003"/><circle r="${R}" fill="${ms?"#ffeec2":"#fffaf0"}" stroke="#6b4526" stroke-width="${ms?4:3}"/><circle r="${R-5}" fill="none" stroke="#e7d3a8" stroke-width="2"/><text dy=".36em" font-size="${f}" fill="#5b3a22">${i}</text></g>`;
   }
-  const rd=roadD(), gl=cellXY(GOAL);
-  return `<svg class="sgbd" viewBox="0 0 ${BD.W} ${BD.H}" aria-hidden="true" focusable="false">
+  const rd=roadD(), gl=cellXY(GOAL), s0=cellXY(0), wide=BD===BDW;
+  const bridges=Object.keys(WARP).filter(k=>ev[k]==="🌈").map(k=>{      // にじの橋：ワープの 行き先まで 3色の 弓なりの 線
+    const a=cellXY(+k), b=cellXY(WARP[k]), mx=(a.x+b.x)/2, my=(a.y+b.y)/2, dx=b.x-a.x, dy=b.y-a.y, l=Math.hypot(dx,dy)||1, h=Math.min(46,l*.3), cx=mx+dy/l*h, cy=my-dx/l*h;
+    return ["#e85d5d","#f2b632","#3f8fd6"].map((c,j)=>`<path d="M${a.x} ${a.y}Q${cx.toFixed(1)} ${cy.toFixed(1)} ${b.x} ${b.y}" fill="none" stroke="${c}" stroke-width="${(R*.5-j*R*.17).toFixed(1)}" stroke-linecap="round" opacity=".9"/>`).join("")
+      +`<circle cx="${b.x}" cy="${b.y}" r="${R+5}" fill="none" stroke="#3f8fd6" stroke-width="3" stroke-dasharray="3 5"/>`; }).join("");
+  return `<svg class="sgbd${wide?" wide":""}" viewBox="0 0 ${BD.W} ${BD.H}" aria-hidden="true" focusable="false">
     <defs><clipPath id="sgclip"><rect x="2" y="2" width="${BD.W-4}" height="${BD.H-4}" rx="18"/></clipPath></defs>
     <rect x="2" y="2" width="${BD.W-4}" height="${BD.H-4}" rx="18" fill="#9fd0ea"/>
-    <image href="vendor/img/battle/race-board.webp" x="0" y="0" width="${BD.W}" height="${BD.H}" preserveAspectRatio="xMidYMid slice" clip-path="url(#sgclip)"/>
+    <image href="vendor/img/battle/${BD.img}.webp" x="0" y="0" width="${BD.W}" height="${BD.H}" preserveAspectRatio="xMidYMid slice" clip-path="url(#sgclip)"/>
     <rect x="2" y="2" width="${BD.W-4}" height="${BD.H-4}" rx="18" fill="none" stroke="#6b4526" stroke-width="4"/>
-    <path d="${rd}" fill="none" stroke="#6b4526" stroke-width="20" stroke-linecap="round" stroke-linejoin="round" opacity=".55"/>
-    <path d="${rd}" fill="none" stroke="#f6e3b0" stroke-width="15" stroke-linecap="round" stroke-linejoin="round"/>
-    <path d="${rd}" fill="none" stroke="#a9763f" stroke-width="3" stroke-linecap="round" stroke-dasharray="1 9"/>
-    <use href="#d-gate" x="8" y="${BD.Y0-34}" width="50" height="50"/>
-    <use href="#d-flag" x="4" y="${gl.y-38}" width="54" height="54"/>
-    ${st}<g id="pcs"></g></svg>`;
+    <path d="${rd}" fill="none" stroke="#6b4526" stroke-width="${R+2}" stroke-linecap="round" stroke-linejoin="round" opacity=".45"/>
+    <path d="${rd}" fill="none" stroke="#f6e3b0" stroke-width="${R-4}" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="${rd}" fill="none" stroke="#a9763f" stroke-width="3" stroke-linecap="round" stroke-dasharray="1 10"/>
+    <g transform="translate(${s0.x} ${BD.Y0-R-16})"><rect x="-30" y="-13" width="60" height="24" rx="12" fill="#2f7a4a" stroke="#1d4d2e" stroke-width="2.5"/><text dy=".33em" font-size="13" fill="#fff">スタート</text></g>
+    <use href="#d-flag" x="${gl.x-6}" y="${gl.y-R-58}" width="54" height="54"/>
+    ${bridges}${st}<g id="pcs"></g></svg>`;
 }
 /* 駒：マスごとに1歩ずつ、ぴょこぴょこ進む（動きを減らす設定では、すぐに着く） */
 const PCOL=["var(--go)","var(--math)","var(--jp)","var(--eng)","var(--sun)","var(--soc)"];
@@ -5022,7 +5126,7 @@ function layoutPieces(){
   if(!M||!M.pk) return;
   const g={}; for(const k in M.pk){ const o=M.pk[k]; (g[o.shown]=g[o.shown]||[]).push(o); }
   for(const c in g){ const a=g[c], b=cellXY(+c);
-    a.forEach((o,k)=>{ const dx=(k-(a.length-1)/2)*(a.length>12?4:a.length>4?9:16), dy=-20+(+c===0?0:0);
+    a.forEach((o,k)=>{ const dx=(k-(a.length-1)/2)*(a.length>12?4:a.length>4?9:16)*(BD===BDW?1.4:1), dy=-BD.R+2;
       o.el.style.transform=`translate(${(b.x+dx).toFixed(1)}px,${(b.y+dy).toFixed(1)}px)`; }); }
 }
 function stepPiece(o){
@@ -5030,7 +5134,8 @@ function stepPiece(o){
   if(reduceMotion()){ o.shown=o.tgt; layoutPieces(); return; }
   const adv=()=>{
     o.timer=0; if(M!==m||!m.pk) return;
-    o.shown+=o.tgt>o.shown?1:-1;
+    if(WARP[o.shown]===o.tgt) o.shown=o.tgt;      // にじの橋：橋の 上を すべって ワープ
+    else o.shown+=o.tgt>o.shown?1:-1;
     const h=o.el.querySelector(".hp"); if(h){ h.classList.remove("hop"); void h.getBoundingClientRect(); h.classList.add("hop"); }
     layoutPieces();
     if(o.shown!==o.tgt) o.timer=setTimeout(adv,210);
@@ -5043,8 +5148,8 @@ function syncPieces(ps){
     let o=M.pk[p.n];
     if(!o){
       const el=document.createElementNS(SVGNS,"g"); el.setAttribute("class","pk");
-      const big=p.me, sz=big?30:24, col=PCOL[idx%PCOL.length];
-      el.innerHTML=`<g class="hp">${big?`<circle r="26" fill="var(--sun)" stroke="var(--edge)" stroke-width="3"/>`:""}<circle r="${big?20:16}" fill="${col}" stroke="var(--edge)" stroke-width="${big?4:3}"/><use href="#${faceId(p.e)}" x="${-sz/2}" y="${-sz/2}" width="${sz}" height="${sz}"/></g>`;
+      const big=p.me, k=BD===BDW?1.25:1, sz=(big?30:24)*k, col=PCOL[idx%PCOL.length];
+      el.innerHTML=`<g class="hp">${big?`<circle r="${26*k}" fill="var(--sun)" stroke="var(--edge)" stroke-width="3"/>`:""}<circle r="${(big?20:16)*k}" fill="${col}" stroke="var(--edge)" stroke-width="${big?4:3}"/><use href="#${faceId(p.e)}" x="${-sz/2}" y="${-sz/2}" width="${sz}" height="${sz}"/></g>`;
       layer.appendChild(el); o=M.pk[p.n]={shown:0,tgt:0,el,timer:0,me:!!p.me};
     }
     o.tgt=p.v;
@@ -5454,8 +5559,8 @@ function hrApi(r,name,b){
     case "lose": out.n=Math.round(p.v*0.25); p.v-=out.n; break;
     case "steal": { const t=leader(); if(t&&t.v>0){ out.n=Math.round(t.v*0.2); t.v-=out.n; p.v+=out.n; out.target=t.emoji; } else { out.n=20; p.v+=20; } break; }
     case "swap": { const t=leader(); if(t&&t.v>p.v){ [t.v,p.v]=[p.v,t.v]; out.target=t.emoji; } else { p.v+=20; out.n=20; } break; }
-    case "move": { if(r.mode!=="race") break; const n=Math.min(6,Math.max(1,b.n|0)); p.v=Math.min(GOAL,p.v+n);
-      out.ev=evOf(r.rule)[p.v]||""; if(out.ev==="⭐") p.v=Math.min(GOAL,p.v+3); if(out.ev==="🌀") p.v=Math.max(0,p.v-2); break; }
+    case "move": { if(r.mode!=="race") break; const n=Math.min(20,Math.max(1,b.n|0)); p.v=Math.min(GOAL,p.v+n);
+      const t=leader(); Object.assign(out,raceLand(p,r.rule,t&&t.v>p.v?t:null)); break; }
     default: return [400,{error:"不明な操作です"}];
   }
   out.v=p.v;
@@ -5886,9 +5991,8 @@ async function netBox(k,btn){
   if(!M||M.over) return;
   sfx(op==="add"?"coin":"open");
   chestOpen(btn,label,!!op&&op!=="lose");
-  $("#mmain").querySelectorAll(".box").forEach(b=>{ if(b!==btn) b.classList.add("dim"); });
   $("#msg").innerHTML=msg;
-  const mm=M; setTimeout(()=>M===mm&&showQ(),1300);
+  chestNext(btn);
 }
 
 /* --- 先生：前に映す大画面（プロジェクター・電子黒板用）。児童の端末とは画面を分ける ---
@@ -6132,7 +6236,7 @@ function renderHost(){
   };
   const raceBuild=(s,m,x)=>{
     px.className="px px-race-w";
-    px.innerHTML=`<div class="px-race"><div class="px-bd" id="pxbd">${boardSvg(evOf(s.rule))}</div>
+    BD=BDT; px.innerHTML=`<div class="px-race"><div class="px-bd" id="pxbd">${boardSvg(evOf(s.rule))}</div>
       <div class="px-r"><div class="px-tl">のこり</div><div class="px-timer" id="pxt"></div>
         <div class="px-top" id="pxtop"></div><div class="px-more" id="pxmore"></div></div></div>`;
     M={pk:{},host:true};

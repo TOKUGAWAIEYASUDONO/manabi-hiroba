@@ -274,11 +274,9 @@ const body = N => `<header class="hero"><div class="in">
 
 <section class="safe"><div class="in">
   <h2><span>学校で安心して使えるように</span></h2>
-  <p class="lead">個人情報を集めないつくりです。</p>
+  <p class="lead">名前を集めないつくりです。</p>
   <dl class="facts">
     <div><dt>登録なし</dt><dd>ログインも、アカウントも、名簿もいりません。</dd></div>
-    <div><dt>集めない</dt><dd>運営者は、名前・成績・メールアドレスを集めません。</dd></div>
-    <div><dt>端末の中だけ</dt><dd>遊びの記録は、その端末の中だけに残ります。</dd></div>
     <div><dt>0円・広告なし</dt><dd>お金はかかりません。広告も出ません。</dd></div>
   </dl>
 </div></section>
