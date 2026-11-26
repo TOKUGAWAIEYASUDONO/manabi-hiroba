@@ -60,7 +60,8 @@
     "m5-dec-mul-tenths","m5-dec-mul-hundredths","m5-dec-div-tenths","m5-dec-div-hundredths","m5-frac-reduce-one","m5-frac-reduce-multi","m5-frac-common-multiple","m5-frac-common-coprime","m5-frac-add-simple","m5-frac-add-reduce","m5-frac-sub-simple","m5-frac-sub-reduce","m5-frac-mul-int","m5-frac-div-int",
     "m6-frac-mul-proper","m6-frac-mul-cross","m6-frac-div-proper","m6-frac-div-mixed","m6-mix-dec-frac","m6-ratio-reduce","m6-speed-distance","m6-speed-time",
     "m1-bun-awase","m1-bun-nokori","m1-bun-chigai","m1-bun-junjo","m1-bun-3kazu","m1-bun-add20","m1-bun-sub20","m1-nanjuu","m2-bun-add","m2-bun-sub","m2-bun-gyaku","m2-bun-kake","m2-bun-tani","m2-nanjuu","m2-kuku-1","m3-bun-addsub","m3-bun-kake","m3-bun-bai","m3-bun-amari","m3-bun-kiri","m3-bun-tani","m3-byou","m4-bun-bai","m4-bun-shiki","m4-bun-shosu","m5-bun-wariai","m5-bun-buai","m6-bun-hi","m6-bun-bunsu",
-    "m3-shosu-tani"
+    "m3-shosu-tani",
+    "m3-en-kotoba","m3-en-hankei","m3-en-narabi","m3-en-kyuu","m3-sankaku-namae","m3-sankaku-kado","m3-sankaku-mawari","m3-omosa-kg","m3-omosa-t","m3-omosa-keisan","m3-jikan-ato","m3-jikan-mae","m3-jikan-aida","m3-jikan-tashi","m3-dec-ikutsu","m3-dec-kurabe","m3-dec-seisu","m3-frac-kurabe","m3-frac-1hiku","m3-graph-memori","m3-graph-yomu","m3-graph-kaku","m3-add-4d","m3-sub-4d","m3-sub-1000","m3-mul-3d1d-zero","m3-div-01"
   ];
   const IDX = {}; UNIT_IDS.forEach((id, i) => { IDX[id] = i; });
   const GRADE_FIX = { "m6-hayasa": 5, "m5-bunsu-int": 6, "m5-frac-mul-int": 6, "m5-frac-div-int": 6, "m6-speed-distance": 5, "m6-speed-time": 5 }; /* 現行教科書に合わせて学年を直した単元（IDは互換のため据え置き） */
