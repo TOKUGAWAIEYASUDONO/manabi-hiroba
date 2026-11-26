@@ -803,7 +803,25 @@ textarea.fld{resize:vertical}
 .uextext{white-space:pre-line;font-size:18px;line-height:1.6;margin:8px 0 14px}
 .uexrow{margin-top:8px}.uexrow .btn{margin:0}
 .q .big.long{font-size:clamp(22px,5.5vw,36px);line-height:1.5}
-@media (max-width:599px){#mmain>.q:first-child:has(.big.long){flex:none;padding:12px 10px}#mmain .q .big.long{font-size:clamp(20px,5.8vw,28px)}}      /* 長い問題でも、答えのボタンが画面の中に残るように */
+.q .big.xlong{font-size:clamp(18px,2.6vw,30px);line-height:1.55}
+#ckq+.rk-sc{margin-top:10px}
+.q:has(.big.long){padding-top:12px;padding-bottom:12px}.q:has(.big.long)>.small:empty{display:none}
+@media (max-width:599px){#mmain>.q:first-child:has(.big.long){flex:none;padding:12px 10px}#mmain .q .big.long,#rkq .q .big.long,#ckq .q .big.long{font-size:clamp(20px,5.8vw,28px)}
+  #mmain .q .big.xlong,#rkq .q .big.xlong,#ckq .q .big.xlong{font-size:clamp(16px,4.6vw,20px);line-height:1.6}
+  .q:has(.big.long){padding:8px 10px}
+  /* スマホ：長い 問題でも 4つの 答えが 画面に 入るように、まわりを つめる */
+  .q:has(.big.long)~.fb:empty{min-height:6px;margin:0 0 4px}
+  .q:has(.big.long)~.choices{gap:8px}.q:has(.big.long)~.choices .choice{min-height:58px;padding:8px 6px;font-size:clamp(17px,4.6vw,24px);line-height:1.5}
+  .mgrid.net .side{font-size:17px;padding:4px 10px;gap:4px 12px}
+  .chg{padding:4px 10px;margin-bottom:6px}.chgs i{width:30px;height:30px}.chgs i .art,.chgs i svg{width:20px;height:20px}.chgt b{font-size:15px}.chgt small{font-size:12px}
+  #mmain:has(.big.long) .chgt small{display:none}
+  .bsk:has(.big.long) .rk-qh,.jnk:has(.big.long) .rk-qh{display:none}}
+/* PC・Chromebook（たてが みじかい 画面）：長い 問題の ときは つめて、4つの 答えが 画面に 入るように */
+@media (min-width:600px) and (max-height:860px){
+  .q .big.long{font-size:clamp(20px,2.3vw,28px);line-height:1.5}.q .big.xlong{font-size:clamp(18px,2vw,24px)}
+  .q:has(.big.long)~.fb:empty{min-height:6px;margin:0 0 4px}
+  .q:has(.big.long)~.choices .choice{min-height:64px;padding:8px;font-size:clamp(18px,2vw,24px);line-height:1.5}
+  .bsk:has(.big.long) .rk-qh,.jnk:has(.big.long) .rk-qh{display:none}}      /* 長い問題でも、答えのボタンが画面の中に残るように */
 #qq{white-space:pre-line}
 .umarks{display:flex;gap:6px;flex-wrap:wrap;justify-content:center;min-height:30px;font-size:22px;font-weight:800;margin-bottom:2px}
 .umarks .mo{color:#0f6a3a}.umarks .mt{color:#8a3b00}.umarks .mx{color:var(--bad)}
@@ -2695,6 +2713,7 @@ const TX={
  "jn.board":[(a,b)=>`あか ${a}マス、あお ${b}マス`]
 };
 /*TX-END*/
+const qLong=s=>{ const n=rbp(s).length; return n>40?" long xlong":n>16?" long":""; };      // 長い 問題文（理科・社会の 文章題など）は 字を 小さく。バトルの 問題で 使う
 const rbp=s=>{ const Q=window.MH_QUIZ; return Q?Q.plain(s):String(s==null?"":s).replace(/《[^《》]*》/g,""); };   // 読みを除いた本文
 let LG=0;                                   // いま見せている画面の学年（1〜2年なら「やさしい文字」）
 const easyG=g=>g===1||g===2;
@@ -4741,7 +4760,7 @@ function renderTeacher(q){
   markModes();
   const roomFromForm=()=>{ const mode=$("#nm").value, gv=$("#ng").value, base={mode,g:+$("#ngr").value,t:+$("#nt").value,rule:ruleOf($("#nr").value),nm:$("#nmm").value==="input"?"input":"auto",nh:$("#nnh").checked?1:0,ns:$("#nm").value==="rocket"&&$("#nstg").value==="3"?3:5};
     if(mode==="m100") return {...base,rule:"normal",game:"calc"};      // 100マス はっぴょう：問題は使わない
-    if((mode==="chest"||mode==="race"||mode==="boss"||mode==="jin")&&roomSelected().length){
+    if((mode==="chest"||mode==="race"||mode==="boss"||mode==="jin"||mode==="rocket")&&roomSelected().length){      // ロケットも 単元を 使う（2026-11-26：えらんでも 計算スプリントに なっていた）
       const ids=roomSelected(), qs=unitModeQuestions(ids).map(q=>({t:"mc",q:q.q,ch:q.ch,ok:[q.ch.indexOf(q.a)],sec:20,pt:"normal"}));
       return {...base,game:"mine",gt:"単元《たんげん》："+ids.map(id=>UBY[id].title).join("・"),qs,unitIds:ids};
     }
@@ -4966,7 +4985,7 @@ function showQ(){
   if(!M||M.over) return;
   M.phase="q"; M.cur=M.unitQs?M.unitQs[(M.unitIndex++)%M.unitQs.length]:genChoice(M.x.id,M.g);
   const cls=["ca","cb","cc","cd"];
-  $("#mmain").innerHTML=`${M.sb?"":chgHtml()}<div class="q"><div class="big${!M.cur.hissan&&rbp(M.cur.q).length>16?" long":""}">${M.cur.rich?"":M.cur.hissan?renderHissan(M.cur.hissan).outerHTML:esc(M.cur.q)}${spkBtn(M.x.id,M.cur.q)}</div><div class="small">${esc(M.cur.small||"")}</div></div>
+  $("#mmain").innerHTML=`${M.sb?"":chgHtml()}<div class="q"><div class="big${M.cur.hissan?"":qLong(M.cur.q)}">${M.cur.rich?"":M.cur.hissan?renderHissan(M.cur.hissan).outerHTML:esc(M.cur.q)}${spkBtn(M.x.id,M.cur.q)}</div><div class="small">${esc(M.cur.small||"")}</div></div>
     <div class="fb" id="fb" aria-live="polite"></div>
     <div class="choices">${M.cur.ch.map((c,i)=>`<button class="choice ${cls[i]}" data-c="${esc(c)}"><span class="kh" aria-hidden="true">${i+1}</span>${M.cur.rich?"":chLabel(c,M.cur)}</button>`).join("")}</div>`;
   $("#mmain").querySelectorAll("[data-c]").forEach(b=>b.onclick=()=>mPick(b));
@@ -6490,7 +6509,7 @@ function rkShowQ(){
   if(s.game==="mine"&&!MINE) return rkLoadMine();
   const q=K.cur=(s.game==="mine"?genMine():genChoice(s.game,s.g)); K.lock=false;
   const cls=["ca","cb","cc","cd"];
-  box.innerHTML=`<div class="q"><div class="big">${q.rich?"":esc(q.q)}${spkBtn(s.game,q.q)}</div><div class="small">${esc(q.small||"")}</div></div>
+  box.innerHTML=`<div class="q"><div class="big${qLong(q.q)}">${q.rich?"":esc(q.q)}${spkBtn(s.game,q.q)}</div><div class="small">${esc(q.small||"")}</div></div>
     <div class="fb" id="fb" aria-live="polite"></div>
     <div class="choices">${q.ch.map((c,i)=>`<button class="choice ${cls[i]}" data-c="${esc(c)}"><span class="kh" aria-hidden="true">${i+1}</span>${q.rich?"":chLabel(c,q)}</button>`).join("")}</div>`;
   if(q.rich){ box.querySelector(".big").prepend(rubyNode(q.q)); box.querySelectorAll(".choice").forEach((b,i)=>b.append(rubyNode(q.ch[i]))); }
@@ -6778,7 +6797,7 @@ function ckShowQ(){
   }
   const q=K.cur=(s.game==="mine"?genMine():genChoice(s.game,s.g)); K.lock=false;
   const cls=["ca","cb","cc","cd"];
-  box.innerHTML=`<div class="q"><div class="big">${q.rich?"":esc(q.q)}${spkBtn(s.game,q.q)}</div><div class="small">${esc(q.small||"")}</div></div>
+  box.innerHTML=`<div class="q"><div class="big${qLong(q.q)}">${q.rich?"":esc(q.q)}${spkBtn(s.game,q.q)}</div><div class="small">${esc(q.small||"")}</div></div>
     <div class="fb" id="fb" aria-live="polite"></div>
     <div class="choices">${q.ch.map((c,i)=>`<button class="choice ${cls[i]}" data-c="${esc(c)}"><span class="kh" aria-hidden="true">${i+1}</span>${q.rich?"":chLabel(c,q)}</button>`).join("")}</div>`;
   if(q.rich){ box.querySelector(".big").prepend(rubyNode(q.q)); box.querySelectorAll(".choice").forEach((b,i)=>b.append(rubyNode(q.ch[i]))); }
