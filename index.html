@@ -2063,7 +2063,8 @@ body[data-bw="jin"]{--bwc:#8fd04a;--bwi:url(vendor/img/battle/jin-field.webp)}
 <script src="data/units.js?v=74dad08a"></script>
 <script src="data/sansu-items.js?v=c9fca7b3"></script>
 <script src="data/tools-viz.js?v=0582ba52"></script>
-<script src="data/learnhelp.js?v=062f8140"></script><!-- まなびの たすけ（はやすぎる まちがい・あとで もう一度・とき方・つまずき） -->
+<script src="data/learnhelp.js?v=062f8140"></script>
+<script src="data/statlib.js?v=92f43e22"></script><!-- 回答スピードの あつまり（名前なしの 数字だけ。ON・先生の オフは data/statlib.js） --><!-- まなびの たすけ（はやすぎる まちがい・あとで もう一度・とき方・つまずき） -->
 <script src="data/collection.js?v=96b5a614"></script>
 <script src="data/masu100.js?v=a19d68e5"></script>
 <script>
@@ -3310,6 +3311,7 @@ function pick(b){
 function judge(right,ans,wait){
   const p=P; p.lock=true;
   const fb=$("#fb"), re=!!p.cur.re;      // re：あとで もう一度 出した問題。せいかい・まちがいの 数（メダル・ベスト・どんぐり）には 入れない
+  if(!re&&!p.review&&ST){ ST.addMs(p,Date.now()-(p.t0q||Date.now())); if(right) p.aOk=(p.aOk||0)+1; }      // 回答スピード（答えるまでの 時間・1問 60秒まで）
   sfx(right?"ok":"ng");
   if(right&&re){ fb.className="fb ok"; fb.textContent=T("lh.got"); }
   else if(right){ p.ok++; if(p.cur.tl) p.hok=(p.hok||0)+1; fb.className="fb ok"; fb.textContent=T("fb.ok"); }
@@ -3364,8 +3366,21 @@ function lhHow(p,c,stuck,done){
   try{ ok.focus({preventScroll:true}); }catch(e){}
   return true;
 }
+/* 回答スピード：1回の 練習が おわったら 名前なしの 数字を 1回だけ 送る（data/statlib.js の ON・本番の 住所・先生の オフで きまる） */
+const ST=window.MH_STAT||null;
+const stCfgOn=()=>{ const c=store.get(ST?ST.CFG:"mh_statcfg",null); return !(c&&c.on===0); };
+function stSend(p){
+  try{
+    if(!ST||!ST.allowed(location.hostname,store.get(ST.CFG,null),window.MH_MOVE&&MH_MOVE.SITE)) return;
+    const o=ST.fromRun(p); if(!o) return;
+    const b=JSON.stringify(o);
+    if(navigator.sendBeacon&&navigator.sendBeacon(ST.ENDPOINT,new Blob([b],{type:"application/json"}))) return;
+    fetch(ST.ENDPOINT,{method:"POST",body:b,headers:{"content-type":"application/json"},keepalive:true,credentials:"omit"}).catch(()=>{});
+  }catch(e){}
+}
 function finish(){
   const p=P; if(!p||p.done) return; p.done=true; p.lock=true; stopTimer();
+  stSend(p);
   const sp=p.sm&&p.sm!=="n"?p.sm:"", bx=!!(p.u&&p.u.box), plain=!sp&&!bx;      // plain：いつもの（メダル・自己ベストに入る）
   const total=p.ok+p.ng, acc=total?Math.round(p.ok/total*100):0;
   const okM=p.ok-(p.hok||0), accM=total?Math.round(okM/total*100):0;      // メダル・じぶんの ベストは ずで かんがえずに せいかいした数
@@ -4426,6 +4441,16 @@ function colTeacherHtml(){
       <span class="note">端末が変わると、ひろばは新しく始まります（引きつぎは「きろく」画面のバックアップ文字・QR。ひろばは原則その端末のものです）。</span>
     </div>`;
 }
+function statTeacherHtml(){
+  if(!window.MH_STAT) return "";
+  return `<div class="form">
+      <h3 class="tc-h3">回答スピードの集計</h3>
+      <span class="prep"><b>準備：なし</b>（この設定は、この端末の中だけに保存されます）</span>
+      <span class="note">ひらめっと全体の「単元ごとの平均の速さ・正答率」を出すために、ひとりの練習が1回終わるたびに、名前のない数字（遊びの種類・学年・単元・問題数・正解数・答えるのにかかった時間）だけを運営者に送ります。名前・ニックネーム・端末を見分ける番号・1問ずつの答えは送りません。${window.MH_STAT.ON?"":"<b>いまは準備中で、まだ何も送っていません。</b>"}</span>
+      <label style="display:flex;gap:10px;align-items:center;font-size:16px"><input type="checkbox" id="statOn"${stCfgOn()?" checked":""} style="width:24px;height:24px"> この端末から 名前のない数字を送る</label>
+      <span class="note"><b>この設定は、いま開いているこの端末だけ</b>に効きます（児童の端末は、それぞれの端末で切りかえます）。</span>
+    </div>`;
+}
 function toolTeacherHtml(){
   if(!window.MH_TOOLS) return "";
   return `<div class="form">
@@ -4589,7 +4614,7 @@ function renderTeacher(q){
     </section>
       <section class="tc-pane hidden" id="tp-set" aria-label="この端末の設定">
         <div class="tc-ph"><h2>この端末の設定</h2><p>ここで変えた設定は、いま開いているこの端末だけに効きます。</p></div>
-        ${colTeacherHtml()}${toolTeacherHtml()}</section>
+        ${colTeacherHtml()}${toolTeacherHtml()}${statTeacherHtml()}</section>
       <section class="tc-pane hidden" id="tp-guide" aria-label="児童の情報と使い方">
         <div class="tc-ph"><h2>児童の情報のあつかい</h2><p>友だち対戦で児童が入れた名前は、先生の端末のメモリにだけ置き、部屋を閉じると消えます。</p></div>
         <div class="form tc-guide" id="tguide"><ol>${TGUIDE.map(t=>`<li>${esc(t)}</li>`).join("")}</ol></div>
@@ -4619,6 +4644,7 @@ function renderTeacher(q){
   $("#mku2").onclick=()=>go("#units");
   const co=$("#colOn"); if(co) co.onchange=()=>colSetOn(co.checked);
   const to=$("#toolOn"); if(to) to.onchange=()=>store.set(TLCFG,{on:to.checked?1:0});
+  const so=$("#statOn"); if(so) so.onchange=()=>store.set(ST.CFG,{on:so.checked?1:0});
   const ct=$("#colTk"); if(ct) ct.onchange=()=>colSetCfg({tk:+ct.value});
   $("#mku").onclick=()=>go("#units");
   const setRule=()=>{ $("#nr").value=defaultRule(+$("#ngr").value); };

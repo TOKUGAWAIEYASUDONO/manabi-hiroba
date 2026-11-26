@@ -8,7 +8,7 @@ const crypto = require('crypto');
 const root = path.resolve(__dirname, '..');
 const target = /(["'])((?:\.\.\/)*)(data\/(?:gen\/)?[\w.-]+\.js|vendor\/[\w./-]+\.(?:js|css))(?:\?v=[0-9a-f]{8})?\1/g;
 let bad = false;
-for (const rel of ['index.html', 'move.html', '404.html', 'apps/100masu/index.html']) {
+for (const rel of ['index.html', 'move.html', '404.html', 'stats.html', 'apps/100masu/index.html']) {
   const file = path.join(root, ...rel.split('/'));
   if (!fs.existsSync(file)) continue;
   const source = fs.readFileSync(file, 'utf8');
