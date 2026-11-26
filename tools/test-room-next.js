@@ -76,7 +76,7 @@ async function flow(label, base, opt) {
         assert.ok((await k.evaluate(() => location.hash)).startsWith("#lobby"), "児童は 待合室のまま");
       }
     };
-    await t(label + "：たからばこ（1つめ）", () => play("chest", () => M && M.net));
+    await t(label + "：たからばこ（1つめ）", () => play("chest", () => M && M.net && M.chg === 0 && !document.body.textContent.includes("NaN")));
     await t(label + "：「つぎの あそびを えらぶ」→ ロケット（同じコード・児童は待合室へ）", () => next("rocket"));
     if (opt.reload) await t(label + "：児童が読みこみ直しても、同じ部屋・同じ pid にもどる", async () => {
       await kids[0].reload();
