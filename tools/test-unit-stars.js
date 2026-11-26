@@ -53,4 +53,20 @@ assert.equal(S.ustClamp(7),3); assert.equal(S.ustClamp(-1),0); assert.equal(S.us
 // 画面の ほうの きまり（文字で たしかめる）
 assert(html.includes('lock:!LESSON'),'ひとりで あそぶ バトルだけ ロック（授業モードは かけない）');
 assert(/let roomSelected=unitPicker\(\$\("#roomUnits"\),\+\$\("#ngr"\)\.value\);/.test(html),'先生の へやは ロックなし');
+// うでだめし（2026-11-26）：どの とっくんでも ★3つで ひらく・★の きろく（画面の ほうの きまりを とり出して たしかめる）
+{ const a2=html.indexOf('/* UD-BEGIN'), b2=html.indexOf('/* UD-END */'); assert(a2>0&&b2>a2,'UD-BEGIN / UD-END が見つかりません');
+  const c2={}; vm.createContext(c2);
+  vm.runInContext('let BEST={}; const store={set(k,v){BEST=v}}, bests=()=>BEST, UBY={a:{subj:"sansu"},k:{subj:"kokugo"}}, uIsMath=id=>UBY[id]&&UBY[id].subj==="sansu", ustClamp=v=>Math.min(3,Math.max(0,v|0));'
+    +'function uStars(id,b){ const e=(b||bests())["u:"+id]||{}; return {n:ustClamp(e.medal),ta:ustClamp(e.ta),sd:ustClamp(e.sd)}; }'
+    +html.slice(a2,b2)+';Object.assign(this,{uBattleOk,uOpenLeft,udStars,udLvMax,udRecord,UD_LVK,setB:b=>{BEST=b},getB:()=>BEST});',c2);
+  c2.setB({'u:a':{medal:2,ta:2,sd:2}}); assert.equal(c2.uBattleOk('a'),false,'★2ばかりでは ひらかない'); assert.equal(c2.uOpenLeft('a'),1);
+  for(const k of ['medal','ta','sd']){ c2.setB({'u:a':{[k]:3}}); assert.equal(c2.uBattleOk('a'),true,k+' の ★3で ひらく'); }
+  c2.setB({}); assert.equal(c2.uBattleOk('a'),false); assert.equal(c2.uOpenLeft('a'),3); assert.equal(c2.uBattleOk('k'),true,'算数いがいは かぎなし');
+  assert.equal(c2.udLvMax('a','chest'),1,'はじめは やさしい だけ');
+  let r=c2.udRecord('a','chest',1); assert(r.up&&r.stars===1); assert.equal(c2.udLvMax('a','chest'),2); assert.equal(c2.udLvMax('a','race'),1,'バトルごとに べつ');
+  r=c2.udRecord('a','chest',0); assert(!r.up); assert.deepEqual([...c2.udStars('a')],[1,0,0],'まけても ★は へらない');
+  c2.udRecord('a','sboss',9); assert.deepEqual([...c2.udStars('a')],[1,0,3],'★は 3つまで');
+  assert.equal(c2.getB()['u:a'].medal,0,'うでだめしの ★は メダル（合計）に 入れない');
+  assert(c2.UD_LVK[0]>1&&c2.UD_LVK[1]===1&&c2.UD_LVK[2]<1,'ふつうは 今までと 同じ はやさ');
+}
 console.log('test-unit-stars: OK');

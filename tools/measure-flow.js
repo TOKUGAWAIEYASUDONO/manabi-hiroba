@@ -113,9 +113,9 @@ async function main() {
         await page.goto(base + '#home');
         await page.evaluate(gr => { localStorage.clear(); localStorage.setItem('mh_ui', JSON.stringify({ grade: gr, subj: 'all' })); }, g);
         await page.reload(); await page.waitForSelector('.home');
-        const door = page.locator(`.home [data-m="${m}"]`);
-        if (!(await door.count())) { bad(where, 'ホームに バトルの 入口が ない'); await ctx.close(); continue; }
-        await door.click(); await page.waitForSelector('#app .bsj[data-sj]');
+        if (!(await page.locator('.home #hUde').count())) { bad(where, 'ホームに うでだめしの 入口が ない'); await ctx.close(); continue; }
+        await page.click('.home #hUde'); await page.waitForSelector(`#app .ude [data-m="${m}"]`);      // ホーム → うでだめし → バトル（2026-11-26）
+        await page.click(`#app .ude [data-m="${m}"]`); await page.waitForSelector('#app .bsj[data-sj]');
         const sjs = await page.$$eval('#app .bsj[data-sj]', l => l.map(e => e.dataset.sj));
         if (await page.locator('#modeUnits .ucard,#app .tile[data-id]').count()) bad(where, '教科を えらぶ 前から 問題が ならんでいる');
         const want = g === 1 ? 'math' : 'rika';
@@ -160,7 +160,7 @@ async function main() {
         await page.goto(base + '#home');
         await page.evaluate(() => { localStorage.clear(); localStorage.setItem('mh_ui', JSON.stringify({ grade: 3, subj: 'all' })); });
         await page.reload(); await page.waitForSelector('.home');
-        await page.click('.home [data-m="sboss"]'); await page.waitForSelector('#app .bsj[data-sj="math"]');
+        await page.click('.home #hUde'); await page.click('#app .ude [data-m="sboss"]'); await page.waitForSelector('#app .bsj[data-sj="math"]');
         await page.click('#app .bsj[data-sj="math"]'); await page.waitForSelector('#modeUnits .ucard');      // ① 教科 → ② 単元（ほかの バトルと おなじ 流れ）
         await page.locator('#modeUnits .ucard').first().click(); await page.click('#ugo');
         await page.waitForSelector('.mplay #sbst');

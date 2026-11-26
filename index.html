@@ -1681,6 +1681,56 @@ body[data-bw="jin"]{--bwc:#8fd04a;--bwi:url(vendor/img/battle/jin-field.webp)}
 #modeUnits .upsets .pill,#roomUnits .upsets .pill{flex-direction:column;gap:0}#modeUnits .upsets .nw,#roomUnits .upsets .nw{display:inline-block;white-space:nowrap;font-size:.9em}
 .form select,.upanel select,#app select{min-height:44px}
  .ugrade-jump{display:flex;align-items:center;flex-wrap:wrap;gap:6px;margin:8px 0}.ugrade-jump a{font-size:13px;padding:3px 7px;display:inline-flex;align-items:center;justify-content:center;min-height:44px;min-width:44px;border-radius:6px;background:#e1f0e3;color:var(--ink)}.ugrp{scroll-margin-top:12px}@media (min-width:1400px){.up:not(.play):not(.kid) .ugrid{grid-template-columns:repeat(3,minmax(0,1fr))}}@media (min-width:900px) and (max-height:740px){.home:not(.easy){gap:4px}.home:not(.easy) .zone{padding-bottom:5px}.home:not(.easy) .tiles{gap:5px}.home:not(.easy) .tile{min-height:50px}.home:not(.easy) .bottom{gap:2px}.home:not(.easy) .bottom .gdlink{padding:0}}</style>
+<style>
+/* ===== 2026-11-26 ホームと どうじょう・うでだめし ===== */
+body[data-gr="1"] #hGrade{display:inline-flex}
+.hdh small{font-size:14px;font-weight:400;margin-left:10px;letter-spacing:0;color:var(--muted)}
+.sdoor{position:relative;overflow:hidden;padding-top:30px}
+.sdoor .dsign{position:absolute;top:0;left:0;right:0;height:22px;line-height:20px;background:var(--btl);color:#fff3d6;border-bottom:3px solid var(--edge);font-size:12px;font-weight:700;letter-spacing:.35em;text-align:center}
+.sdoor .dst{font-size:14px;font-weight:700;opacity:1;letter-spacing:0}
+.udarr{text-align:center;color:var(--btl);font-size:18px;line-height:1;margin:8px 0 -4px}
+.udebtn{display:flex;align-items:center;gap:12px;width:100%;max-width:760px;margin:8px auto 0;text-align:left;font:inherit;cursor:pointer;background:var(--btl);color:#fff;border:3px solid var(--edge);border-radius:18px;box-shadow:0 5px 0 var(--edge);padding:10px 14px;min-height:84px}
+.udebtn:active{transform:translateY(3px);box-shadow:0 2px 0 var(--edge)}.udebtn:focus-visible{outline:4px solid var(--sun);outline-offset:2px}
+.udebtn .dico{flex:none;width:60px;height:60px;border-radius:14px;background:#fff;display:grid;place-items:center;border:3px solid var(--edge)}.udebtn .dico .art{width:48px;height:48px}
+.udebtn .dbody{flex:1;min-width:0;display:flex;flex-direction:column;gap:2px}.udebtn .dt{font-size:24px;font-weight:900;letter-spacing:.06em;line-height:1.3}.udebtn .dd{font-size:14px;line-height:1.4;color:#fff3d6}.udebtn .udego{font-size:20px}
+.home.easy .udebtn{margin-top:12px}
+@media (min-width:900px) and (max-height:800px){.sdoor{min-height:132px}.udebtn{min-height:72px;padding:6px 14px}.udebtn .dico{width:52px;height:52px}.udebtn .dico .art{width:42px;height:42px}}
+.play.ude h2{margin:14px 0 8px}
+.udtiles{grid-template-columns:1fr!important;text-align:left}.udnote{margin-top:14px}
+.udunit{display:flex;align-items:center;gap:8px;flex-wrap:wrap;background:#fff;border:3px solid var(--edge);border-radius:14px;padding:8px 12px;text-align:left}
+.udunit small{color:var(--muted);font-size:13px}.udunit b{flex:1;min-width:8em;font-size:18px;line-height:1.4}
+.udn9{font-size:14px;font-weight:700;color:#8a5a00;white-space:nowrap}
+.udlist{display:grid;gap:10px;background:var(--btl);border-radius:16px;border-top:5px solid var(--edge);padding:10px}
+.udm{display:flex;align-items:center;gap:12px;width:100%;text-align:left;font:inherit;color:var(--ink);cursor:pointer;background:#fff;border:3px solid var(--edge);border-radius:14px;box-shadow:0 4px 0 var(--edge);padding:8px 12px;min-height:64px}
+.udm .tico{flex:none;width:44px;height:44px}.udm .tico .art{width:44px;height:44px}.udm b{flex:1;font-size:18px;line-height:1.3}
+.udm.on{outline:4px solid var(--sun);outline-offset:1px;background:#fff8e6}
+.udmst{flex:none}.udmst .mtst i{font-size:18px;letter-spacing:0}
+.udlvs{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;max-width:560px;margin:0 auto}
+.udlv{font:inherit;color:var(--ink);cursor:pointer;background:#fff;border:3px solid var(--edge);border-radius:14px;box-shadow:0 4px 0 var(--edge);padding:8px 4px;min-height:72px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px}
+.udlv b{font-size:17px}.udlv small{font-size:12px;line-height:1.35;color:var(--muted)}.udlvst{font-size:13px;color:#c98f00}
+.udlv.on{background:var(--go);color:#fff}.udlv.on small{color:#fff}.udlv.on .udlvst{color:#ffe08a}
+.udlv.off{background:#eef0ec;box-shadow:0 4px 0 var(--line);border-color:var(--line);cursor:default;color:var(--muted)}
+.ugobar #udLvBox{margin:0 auto 8px;max-width:560px}.ugobar .udlvh{display:block;font-size:14px;margin-bottom:4px}.ugobar .udlv{min-height:52px;padding:4px 2px}.ugobar .udlv b{font-size:15px}.ugobar .udlv small{font-size:11px}.ugobar .udlvst{display:none}.ugobar .note{margin:4px 0 6px;font-size:12px}
+.udstart{margin-top:16px}.udstart .btn{min-width:min(100%,280px)}
+.udboss{margin:12px auto;max-width:520px}
+.udsteps{display:flex;align-items:center;gap:4px;background:#fff3d6;border:2px solid var(--wood);border-radius:12px;padding:6px 8px;margin:0 0 10px}
+.udsteps em{font-style:normal;color:var(--wood);font-size:11px;flex:none}
+.udstp{flex:1;min-width:0;display:flex;align-items:center;gap:5px;font-size:12px;line-height:1.3;color:var(--muted);text-align:left}
+.udstp b{flex:none;width:22px;height:22px;border-radius:50%;background:#d8cdb6;color:#fff;display:grid;place-items:center;font-size:13px}
+.udstp.on{color:var(--ink);font-weight:700}.udstp.on b{background:#c95f00}
+@media (min-width:700px){.udsteps{max-width:640px;margin-left:auto;margin-right:auto}.udstp{font-size:14px}}
+.udbadge,.udnear{display:inline-block;align-self:flex-start;font-size:12px;font-weight:700;border-radius:10px;padding:1px 8px;margin-top:2px;line-height:1.5}
+.udbadge{background:var(--btl);color:#fff}.udnear{background:#fff3d6;color:#8a4b00;border:1px solid #e0b060}
+.umbtn.um-ud{background:var(--btl);color:#fff;border-color:#e0a100}.umbtn.um-ud .umico .ic{width:28px;height:28px}.umbtn.um-ud .udn9{color:#ffe08a}
+.umbtn.um-ud.lock{background:#eef0ec;color:var(--muted);border-color:var(--line);box-shadow:0 4px 0 var(--line);cursor:default}
+.umbtn.umhot{outline:4px solid var(--sun);outline-offset:1px}
+.ulsh{font-size:19px!important;line-height:1.4}.ulsf{text-align:center;margin:0 0 8px}
+.ucard.ulock{opacity:1;cursor:pointer}.ucard.ulock .ubody{flex:1}
+.ulgo{flex:none;background:var(--go);color:#fff;border-radius:14px;padding:4px 10px;font-size:13px;font-weight:700;white-space:nowrap}
+.udres{display:flex;flex-direction:column;align-items:center;gap:4px;margin:10px auto;max-width:360px;padding:8px 12px;border-radius:14px;border:3px solid var(--line);background:#fff;font-size:16px;line-height:1.45}
+.udres.up{border-color:#e0a100;background:#fff8dc}.udres .udrst i{font-size:30px}
+.rs-open>span{display:flex;flex-direction:column;gap:6px;align-items:flex-start}.rs-open .udgo{background:var(--btl);color:#fff}
+</style>
 <style id="mathview-style"> .ugrade-jump{display:flex;align-items:center;flex-wrap:wrap;gap:6px;margin:8px 0}.ugrade-jump a{font-size:13px;padding:3px 7px;display:inline-flex;align-items:center;justify-content:center;min-height:44px;min-width:44px;border-radius:6px;background:#e1f0e3;color:var(--ink)}.ugrp{scroll-margin-top:12px}@media (min-width:1400px){.up:not(.play):not(.kid) .ugrid{grid-template-columns:repeat(3,minmax(0,1fr))}}@media (min-width:900px) and (max-height:740px){.home:not(.easy){gap:4px}.home:not(.easy) .zone{padding-bottom:5px}.home:not(.easy) .tiles{gap:5px}.home:not(.easy) .tile{min-height:50px}.home:not(.easy) .bottom{gap:2px}.home:not(.easy) .bottom .gdlink{padding:0}}</style>
 <style>.qclock{margin:0 auto 4px}.kidunits{grid-template-columns:1fr}.kidunits .ucard{min-height:76px;justify-content:center;text-align:center;font-size:1.25rem}.lesson-end{display:block;margin:16px auto 8px;padding:10px 16px;min-height:48px;border:1px solid var(--line);border-radius:10px;background:linear-gradient(to right,var(--go) var(--hold-progress,0%),var(--paper) var(--hold-progress,0%));color:var(--ink);font-size:14px;font-weight:700;touch-action:none;-webkit-touch-callout:none;-webkit-user-select:none;user-select:none}.colorpick{grid-template-columns:repeat(2,minmax(0,1fr))}.colorpick .choice[data-c="あお"]{background:#3979e5;color:#fff}.colorpick .choice[data-c="あか"]{background:#e35a56;color:#fff}.colorpick .choice[data-c="きいろ"]{background:#f5cd49;color:#243447}@media(max-width:375px){.play.pg .q:has(#qpic){padding:5px 6px;margin-bottom:3px}.play.pg .q:has(#qpic) .big{font-size:20px;line-height:1.25}.play.pg .q:has(#qpic) .big:not(.long){white-space:nowrap}.play.pg .q:has(#qpic) svg{max-height:90px}.play.pg .q:has(#qpic)~.umarks{margin:2px auto}.play.pg:has(#qpic) .choices .choice{min-height:44px;padding:5px}.play.pg:has(#qpic) .fb{min-height:20px;font-size:18px;margin-bottom:3px}.play.pg:has(#qpic) .choices{gap:6px}.play.pg:has(#qpic) .topbar{margin-bottom:3px}.play.pg:has(#qpic) .tbar{margin-bottom:4px}}
  .ugrade-jump{display:flex;align-items:center;flex-wrap:wrap;gap:6px;margin:8px 0}.ugrade-jump a{font-size:13px;padding:3px 7px;display:inline-flex;align-items:center;justify-content:center;min-height:44px;min-width:44px;border-radius:6px;background:#e1f0e3;color:var(--ink)}.ugrp{scroll-margin-top:12px}@media (min-width:1400px){.up:not(.play):not(.kid) .ugrid{grid-template-columns:repeat(3,minmax(0,1fr))}}@media (min-width:900px) and (max-height:740px){.home:not(.easy){gap:4px}.home:not(.easy) .zone{padding-bottom:5px}.home:not(.easy) .tiles{gap:5px}.home:not(.easy) .tile{min-height:50px}.home:not(.easy) .bottom{gap:2px}.home:not(.easy) .bottom .gdlink{padding:0}}</style>
@@ -2146,7 +2196,7 @@ const TX={
  "home.guide.l":["学年《がくねん》・単元《たんげん》から さがす（先生《せんせい》向《む》け）","がくねん・たんげんから さがす（せんせいむけ）"],
  "home.guide":["いっしょに あそぼう！"],
  "home.all":["ぜんぶ"],
- "hd.title":["どの 教科《きょうか》に する？","どの きょうかに する？"],"hd.math.d":["単元《たんげん》・とっくん","たんげん・とっくん"],"hd.quiz.d":["クイズ・単元《たんげん》","クイズ・たんげん"],"hd.unit.d":["単元《たんげん》","たんげん"],"hd.room":[k=>`${k}の へや`,k=>`${k}の へや`],
+ "hd.title":["どの 教科《きょうか》に する？","どの きょうかに する？"],"hd.math.d":["単元《たんげん》で とっくん","たんげんで とっくん"],"hd.quiz.d":["クイズ・単元《たんげん》","クイズ・たんげん"],"hd.unit.d":["単元《たんげん》","たんげん"],"hd.room":[k=>`${k} どうじょう`,k=>`${k} どうじょう`],
  "home.empty":["この学年《がくねん》のゲームはじゅんび中《ちゅう》です","この ゲームは じゅんびちゅう です"],
  "home.battle":["バトル（2〜3分《ぷん》）","たいせん（2〜3ふん）"],
  "h.gradepick":["学年《がくねん》をえらぶ","がくねんを えらぶ"],"h.gradeq":["何《なん》年生《ねんせい》？","なんねんせい？"],
@@ -2334,7 +2384,7 @@ const TX={
  /* 単元から出題・単元練習 */
  "g.unit.t":["単元《たんげん》練習《れんしゅう》","たんげん れんしゅう"],
  "u.pick":["単元《たんげん》をえらぶ","たんげんを えらぶ"],"u.pick.d":["カードを 1かい タップすると、すぐに はじまるよ","カードを 1かい タップすると、すぐに はじまるよ"],
- "sr.title":["算数《さんすう》の へや","さんすうの へや"],"sr.units":["単元《たんげん》で 練習《れんしゅう》","たんげんで れんしゅう"],"sr.tokkun":["とっくん","とっくん"],"sr.n":[n=>`${n}こ`,n=>`${n}こ`],"sr.all":["ぜんぶの 単元《たんげん》から えらぶ","ぜんぶの たんげんから えらぶ"],
+ "sr.title":["算数《さんすう》 どうじょう","さんすう どうじょう"],"sr.units":["単元《たんげん》で とっくん","たんげんで とっくん"],"sr.tokkun":["わざを みがく","わざを みがく"],"sr.n":[n=>`${n}こ`,n=>`${n}こ`],"sr.all":["ぜんぶの 単元《たんげん》から えらぶ","ぜんぶの たんげんから えらぶ"],
  "si.one":["カードを タップして、あそびかたを えらぼう","カードを タップして、あそびかたを えらぼう"],"si.mix":["いくつか まぜる","いくつか まぜる"],"si.one.b":["1つずつ","1つずつ"],"si.mix.d":[n=>`カードを えらんで「はじめる」（${n}こまで）`,n=>`カードを えらんで「はじめる」（${n}こまで）`],"si.tool":["どうぐで 練習《れんしゅう》","どうぐで れんしゅう"],"si.none":["この学年《がくねん》には ないよ","この がくねんには ないよ"],
  "u.ex":["例題《れいだい》","れいだい"],"u.close":["とじる"],"u.grade":["学年《がくねん》","がくねん"],"u.all":["ぜんぶ"],
  "u.sets":["おすすめの組《く》み合《あ》わせ","おすすめ"],
@@ -2371,7 +2421,7 @@ const TX={
  "ust.aria":[(a,b,c)=>`ほし：いつもの ${a}、タイムアタック ${b}、サドンデス ${c}`],
  "um.t":["どれで あそぶ？"],"um.next":["つぎの ★"],"ust.g.n":[n=>`1分《ぷん》で ○ ${n}こ`,n=>`1ぷんで ○ ${n}こ`],
  "ust.top":["★3つ！ さいこう！"],"ust.up":["ほしが ふえた！"],
- "ust.open":["★3つ！ バトルで この たんげんを えらべるように なったよ"],
+ "ust.open":["★3つ！ この たんげんの うでだめしが ひらいたよ"],
  "ust.next":[(n,k)=>`★${n}つまで あと ${k} 問《もん》`,(n,k)=>`★${n}つまで あと ${k} もん`],
  "ust.nextacc":[(n,p)=>`★${n}つまで 正答率《せいとうりつ》を ${p}%以上《いじょう》に`,(n,p)=>`★${n}つまで せいかいの わりあいを ${p}%いじょうに`],
  "ust.next.ta":[(n,t)=>`★${n}つまで：${t} いないで ゴール`],
@@ -2383,9 +2433,27 @@ const TX={
  "ust.h.ta":[t=>`${t} いないで ゴール`],
  "ust.h.ta3":[(t,k)=>`${t} いない・${k}問《もん》 いじょう せいかい`,(t,k)=>`${t} いない・${k}もん いじょう せいかい`],
  "ust.h.sd":[n=>`${n}問《もん》 れんぞくで せいかい`,n=>`${n}もん れんぞくで せいかい`],
- "ust.h.d":["○は 1回《かい》目《め》で せいかい（ずで かんがえた 問題《もんだい》は 入《はい》らない）。いつもので ★3つ とると、バトルで この たんげんを えらべるよ","○は 1かいめで せいかい（ずで かんがえた もんだいは はいらない）。いつもので ★3つ とると、バトルで この たんげんを えらべるよ"],
- "ust.lock":["🔒 いつもので ★3つ とると えらべるよ"],
- "ust.lock.n":[n=>`🔒の たんげんは、算数《さんすう》の へやの「いつもの」で ★3つ とると えらべるよ（あと ${n}こ）`,n=>`🔒の たんげんは、さんすうの へやの「いつもの」で ★3つ とると えらべるよ（あと ${n}こ）`],
+ "ust.h.d":["○は 1回《かい》目《め》で せいかい（ずで かんがえた 問題《もんだい》は 入《はい》らない）。どれかで ★3つ とると、うでだめしで この たんげんを えらべるよ","○は 1かいめで せいかい（ずで かんがえた もんだいは はいらない）。どれかで ★3つ とると、うでだめしで この たんげんを えらべるよ"],
+ "ust.lock":[n=>`あと ★${n}つで ひらくよ`],
+ "ust.lock.n":[n=>`🔒の たんげんは、どうじょうの とっくんの どれかで ★3つ とると ひらくよ。おすと とっくんへ いけるよ（あと ${n}こ）`],
+ "hd.dj":["どうじょう"],"hd.dojo":["① どうじょうで とっくん","どうじょうで とっくん"],"hd.dojo.s":["★を あつめよう"],
+ "hd.ude":["② うでだめし","うでだめし"],"hd.ude.d":["とっくんの ちからを バトルで ためそう"],
+ "hd.st":[(a,k)=>k?`★ ${a}　ひらいた ${k}こ`:`★ ${a}`],
+ "ud.t":["うでだめし"],"ud.which":["どの バトルに する？"],"ud.note":["どうじょうの とっくんで ★3つ とった 単元《たんげん》を、バトルで つかえるよ","どうじょうの とっくんで ★3つ とった たんげんを、バトルで つかえるよ"],
+ "ud.unit":["単元《たんげん》","たんげん"],"ud.chg":["かえる"],"ud.go":["はじめる"],
+ "ud.lv":["あいての つよさ"],"ud.lv1":["やさしい"],"ud.lv2":["ふつう"],"ud.lv3":["つよい"],
+ "ud.lv.d":[n=>`1ばんに なると ★${n}つ`],"ud.lv.ok":["✓ クリア"],"ud.lv.go":["ちょうせん！"],"ud.lv.lock":[t=>`「${t}」で 1ばんに なると ひらく`],
+ "ud.lv.free":["★が もらえるのは、単元《たんげん》を 1つだけ えらんだ とき","★が もらえるのは、たんげんを 1つだけ えらんだ とき"],
+ "ud.boss":["ボスを 1ぴき おいはらうと ★1つ、2ひきで ★2つ、3びきで ★3つ"],
+ "ud.sum":[n=>`うでだめしの ★ ${n} / 9`],
+ "ud.row.d":["バトルで ちからを ためそう"],"ud.row.lock":["とっくんの どれかで ★3つ とると ひらくよ"],
+ "ud.badge":["うでだめしOK"],"ud.near":[n=>`あと ★${n}つで うでだめし`],
+ "ud.ls.t":[t=>`「${t}」は まだ ひらいて いないよ`],"ud.ls.d":["どうじょうの とっくんの どれかで ★3つ とると ひらくよ"],"ud.ls.left":[n=>`あと ★${n}つ`],"ud.ls.near":[n=>`あと ★${n}つ！ いちばん ちかい`],"ud.ls.f":["おすと その とっくんが はじまるよ"],
+ "ud.to":["とっくんへ"],
+ "ud.r.get":[n=>`うでだめしの ★${n}つ ゲット！`],"ud.r.keep":[n=>`うでだめしの ★${n}つ`],"ud.r.need":[(t,n)=>`「${t}」で 1ばんに なると ★${n}つ`],"ud.r.next":[t=>`つぎは「${t}」に ちょうせん`],"ud.r.top":["★3つ！ さいこう！"],
+ "ud.r.boss":[n=>`あと ${n}ひき おいはらうと ★が ふえるよ`],
+ "ud.open.go":["この 単元《たんげん》で うでだめし","この たんげんで うでだめし"],
+ "st1":["どうじょうで とっくん"],"st2":["どれかで ★3つ"],"st3":["うでだめしが ひらく！"],
  "ust.sum":[(a,b)=>`★ ${a} / ${b}`],
  "how.sp":[(t,n,p)=>`${t}秒《びょう》で ${n}問《もん》 せいかい・正答率《せいとうりつ》 ${p}%いじょう`,(t,n,p)=>`${t}びょうで ${n}もん せいかい・せいかいの わりあい ${p}%いじょう`],
  "how.sp.mix":["4つから えらぶ 問題《もんだい》が まざると、いる 数《かず》が 少《すこ》し へるよ。ずで かんがえて せいかいした 問題《もんだい》は 数《かぞ》えないよ","4つから えらぶ もんだいが まざると、いる かずが すこし へるよ。ずで かんがえて せいかいした もんだいは かぞえないよ"],
@@ -3162,21 +3230,24 @@ function homeZones(){
 }
 const DOOR_ART={math:"a-soroban",jp:"a-kanji",soc:"a-japan",rika:"a-rika",eng:"a-abc"};
 /* 教科の とびら（3〜6年・「ぜんぶ」）。docs/screen-split.md 3章の 段階④ */
-function doorTile(k,l){
-  const d=k==="math"?T("hd.math.d"):l.length?T("hd.quiz.d"):T("hd.unit.d");
-  return `<button type="button" class="sdoor s-${k}" data-door="${k}"><span class="dico">${svgU(DOOR_ART[k])}</span><span class="dbody"><span class="dt">${subjN(k)}</span><span class="dd">${d}</span></span></button>`;
+function doorTile(k,l,b){      // 2026-11-26：とびらは「どうじょう」。上に かんばん、下に その学年の ★の 数（算数は うでだめしが ひらいた 単元の 数も）
+  const g=ui.grade, us=UNITS_OK&&SJR[k]?UREADY.filter(u=>u.subj===SJR[k]&&(!g||u.g===g)):[];
+  const st=us.reduce((n,u)=>n+uStarSum(u.id,b),0), op=k==="math"?us.filter(u=>uBattleOk(u.id,b)).length:0;
+  return `<button type="button" class="sdoor s-${k}" data-door="${k}"><span class="dsign">${T("hd.dj")}</span><span class="dico">${svgU(DOOR_ART[k])}</span><span class="dbody"><span class="dt">${subjN(k)}</span>${us.length?`<span class="dd dst">${T("hd.st",st,op)}</span>`:""}</span></button>`;
 }
+/* ホームの「うでだめし」：バトルの 中身は 出さず、ボタン 1つ（2026-11-26 ユーザー指示）。おすと #ude で バトルを えらぶ */
+const udeBtn=()=>`<button type="button" class="udebtn" id="hUde"><span class="dico">${svgU("a-boss")}</span><span class="dbody"><span class="dt">${T("hd.ude")}</span><span class="dd">${T("hd.ude.d")}</span></span><span class="udego" aria-hidden="true">▶</span></button>`;
 function renderHome(){
   setLG(ui.grade);
   if(COLOK) m1HomeCheck();      // 100マス計算から もどったとき：どんぐり（オフでは 何もしない。授業モードは 記録だけ）
   const b=bests(), easy=easyG(LG), zones=homeZones();
-  const btl=`<section class="zone s-btl"><h2>${ic("swords")}${T("home.battle")}</h2><div class="tiles">${SOLOMODES.map(m=>modeTile(m,b)).join("")}</div></section>`;
+  const btl=udeBtn();
   app.innerHTML=`<div class="home${easy?" easy":""}">
     ${easy?`<div class="guide">${mbs("n")}<span class="say">${T("home.guide")}</span></div>`:""}
     ${COLOK?colDoor():""}
     ${easy?`<div class="zones" data-n="${zones.length+1}">${zones.map(([k,l])=>`<section class="zone s-${k}"><h2>${subjN(k)}</h2><div class="tiles">${l.map(x=>gameTile(x,b)).join("")}${k==="math"?meterTile()+extTiles():""}${k==="rika"?`<button class="tile unitgo" data-un="rika"><span class="tico">${svgU("a-rika")}</span><span class="tbody"><span class="tt">${T("u.pick")}</span></span></button>`:""}</div></section>`).join("")}<section class="zone s-math"><div class="tiles">${unitTile("math")}</div></section>
-${btl}</div>`
-      :`<h2 class="hdh">${T("hd.title")}</h2><div class="sdoors" data-n="${zones.length}">${zones.map(([k,l])=>doorTile(k,l)).join("")}</div>${btl}`}
+</div>${btl}`
+      :`<h2 class="hdh">${T("hd.dojo")}<small>${T("hd.dojo.s")}</small></h2><div class="sdoors" data-n="${zones.length}">${zones.map(([k,l])=>doorTile(k,l,b)).join("")}</div><div class="udarr" aria-hidden="true">▼</div>${btl}`}
     ${zones.length?"":`<div class="empty">${T("home.empty")}</div>`}
     <div class="bottom">
       <button class="hbtn" id="hJoin2">${ic("key-round")}${T("h.join")}</button>
@@ -3200,7 +3271,7 @@ ${btl}</div>`
     if(k==="math") withGrade(g0=>go(g0>=3&&SI?"#subj?s=sansu":"#units?kid=1&subj=sansu"));      // 3〜6年は 算数の へや（段階③）
     else go(`#subj?s=${SJR[k]}`);
   });
-  app.querySelectorAll("[data-m]").forEach(e=>e.onclick=()=>go(`#modesetup?m=${e.dataset.m}`));
+  const hu=$("#hUde"); if(hu) hu.onclick=()=>go("#ude");
   app.querySelectorAll("[data-un]").forEach(e=>e.onclick=()=>go("#units?kid=1"));      // 1・2年の ホームだけ
 }
 /* 右上の学年：押すと選び直し */
@@ -3420,6 +3491,7 @@ function finish(){
   const nAll=p.chN+p.inN, wc=nAll?p.chN/nAll:(p.x.type==="choice"?1:0);
   const goal=[0,1,2].map(i=>wc*MEDAL_CH[i]+(1-wc)*MEDAL_IN[i]);
   let medal=0; if(plain&&!p.u) for(let i=0;i<3;i++) if(per>=goal[i]&&accM>=MEDAL_ACC[i]) medal=i+1;
+  const openId=p.u&&!bx&&p.u.ids.length===1&&uIsMath(p.u.ids[0])&&!p.task&&!LESSON?p.u.ids[0]:null, wasOpen=openId?uBattleOk(openId):true;      // この回で うでだめしが ひらいたか（きろくの 前に しらべる）
   let ures=null;
   if(plain&&p.u){ ures=uRecord(p); medal=ures.reduce((n,r)=>Math.max(n,r.medal),0); }      // 単元練習の メダルは 単元ごとの メダル（いちばん よい物）。1分あたりの 数では きめない
   let nextMsg=T("r.top");
@@ -3442,7 +3514,7 @@ function finish(){
   else if(sst) nextMsg=sst.stars>=3?T("ust.top"):sst.stars>=sst.cap?T("ust.cap.ch"):sp==="ta"?(sst.stars+1===3&&p.ok<UST_TA_OK3?T("ust.next.ta3",UST_TA_OK3):T("ust.next.ta",sst.stars+1,spFmtMS(UST_TA[sst.tier][sst.stars]))):T("ust.next",sst.stars+1,UST_SD[sst.tier][sst.stars]-p.ok);
   const spNote=sp&&!bx&&!sst?T("sp.nomedal"):"";
   const stN=starRun?medal:sst?sst.stars:-1, stUp=starRun?ures.some(r=>r.up):!!(sst&&sst.up);      // stN：大きく 出す ★の 数（-1＝★の 回では ない）
-  const stOpen=starRun&&ures.length===1&&uIsMath(ures[0].id)&&ures[0].up&&medal===3&&!p.task&&!LESSON;      // いつものの ★3：バトルで えらべるように なった
+  const stOpen=!!openId&&!wasOpen&&uBattleOk(openId);      // どれかの とっくんで はじめて ★3：うでだめしが ひらいた
   const uHow=()=>{ const r=starRun?ures.reduce((a,b)=>!a||b.medal>a.medal||(b.medal===a.medal&&b.o>a.o)?b:a,null):null, id=r?r.id:p.u.ids[0]; return howUStar(UBY[id],!!p.u.choice,sp||"n",starRun?ures.length:1); };
   const boxLeft=bx?boxFor(p.u.box.subj).length:0;
   if(bx) nextMsg=boxLeft?T("sp.box.left",boxLeft):T("sp.box.clear");
@@ -3460,7 +3532,7 @@ function finish(){
   const recHtml=p.u?`<section class="rs-sec rs-rec"><h3>${T("u.marks.t")}</h3><div class="umarks big">${uMarksHtml(p.marks,0,p.mtl)}</div><div class="note">${esc(T("u.marks"))}</div>${p.tlN?`<div class="note tlres">🧰 ${T("tl.res",p.tlN)}${plain&&p.hok?`<br>${T("tl.res.d")}`:""}</div>`:""}${ures&&ures.length>1?`<div class="ubk">${ures.map(r=>`<div class="stamp"><span class="sn">${esc(UBY[r.id].title)}<small>${T("u.best",r.o)}</small></span>${r.star?uStarH(r.medal):`<span class="slots" aria-hidden="true">${MEDAL_ICO.map((em,i)=>`<span class="slot${r.medal>i?" on":""}">${msvg(r.medal>i?i+1:0)}</span>`).join("")}</span>`}</div>`).join("")}</div>`:""}</section>`
     :p.tlN?`<section class="rs-sec rs-rec"><div class="note tlres">🧰 ${T("tl.res",p.tlN)}${plain&&p.hok?`<br>${T("tl.res.d")}`:""}</div></section>`:"";
   const howHtml=stN>=0&&!p.task?uHow():plain&&!p.task?(p.u?howUnit(ures.length):howSprint(p.x.type,p.t)):"";
-  const rHtml=`${stOpen?`<div class="rs-open"><img src="vendor/img/battle/chest-open-gold.webp" alt="" width="72" height="72" loading="lazy"><b>${T("ust.open")}</b></div>`:""}
+  const rHtml=`${stOpen?`<div class="rs-open"><img src="vendor/img/battle/chest-open-gold.webp" alt="" width="72" height="72" loading="lazy"><span><b>${T("ust.open")}</b><button type="button" class="btn s udgo" id="udgo">${ic("swords")}${T("ud.open.go")}</button></span></div>`:""}
     ${colHtml?`<section class="rs-sec rs-got"><h3>${T("rs.got")}</h3>${colHtml}</section>`:""}
     ${recHtml}
     ${p.missObjs.length?missCards(p.missObjs,p.x):""}
@@ -3489,6 +3561,7 @@ function finish(){
   const spres=$("#spres"); if(spres) spres.replaceChildren(spChips({note:false}));      // つぎの あそびかたを えらんで「もう一回」
   $("#again").onclick=()=>bx&&!boxLeft?go(p.u.box.back):p.u?p.u.again():route();
   const rd=$("#redo"); if(rd) rd.onclick=()=>startReview(p.missObjs,p.x,p.g,p.task);
+  const ug=$("#udgo"); if(ug) ug.onclick=()=>go("#ude?u="+openId);
   const cp=$("#cp"); if(cp) cp.onclick=()=>{ navigator.clipboard?.writeText(repFull).then(()=>cp.textContent=T("r.copied"),()=>{}); };
   if(p.task) lessonEndButton();
   if(stN>=0) stepUp(app.querySelector(".ustbig"),stN,{end:()=>{ if(stN>0) sfx("medal"); if(stN===3||stUp) party(); }});
@@ -3850,8 +3923,26 @@ const uCap=(u,choice,k)=>k>1?2:(choice&&u.g>=3&&uTierInfo(u).ans!=="choice4"?2:3
 function uStars(id,b){ const e=(b||bests())["u:"+id]||{}; return {n:ustClamp(e.medal),ta:ustClamp(e.ta),sd:ustClamp(e.sd)}; }
 const uStarSum=(id,b)=>{ const s=uStars(id,b); return s.n+s.ta+s.sd; };
 /* ★が そろった 単元カードの ふち：いつものの ★3つ＝金（バトルに 出せる）、9こ ぜんぶ＝虹色（ゆっくり 光る。動くのは ふちの 色だけ） */
-const uGlow=(id,b)=>{ if(!uIsStar(id)) return ""; const s=uStars(id,b); return s.n+s.ta+s.sd>=9?" urainbow":s.n>=3?" ugold":""; };
-const uBattleOk=(id,b)=>!uIsMath(id)||uStars(id,b).n>=3;            // 算数の 単元は いつものの ★3で バトルに 出せる
+const uGlow=(id,b)=>{ if(!uIsStar(id)) return ""; const s=uStars(id,b); return s.n+s.ta+s.sd>=9?" urainbow":Math.max(s.n,s.ta,s.sd)>=3?" ugold":""; };
+/* UD-BEGIN うでだめしの かぎと ★の きまり（tools/test-unit-stars.js で検査） */
+const uBattleOk=(id,b)=>{ if(!uIsMath(id)) return true; const s=uStars(id,b); return Math.max(s.n,s.ta,s.sd)>=3; };      // 算数の 単元は、いつもの・タイムアタック・サドンデスの どれかで ★3つ とると うでだめし（ひとりの バトル）に 出せる（2026-11-26：いつもの だけ → どれでも）
+const uOpenLeft=(id,b)=>{ const s=uStars(id,b); return 3-Math.max(s.n,s.ta,s.sd); };      // ひらくまで あと ★いくつ（いちばん ちかい とっくんで）
+/* ---- うでだめしの ★（2026-11-26）：単元 × バトル（たからばこ・すごろく・ボス）ごとに ★3つ。1単元で ★9こまで（どうじょうの ★9こと 同じ形）
+   ・たからばこ・すごろく：あいての つよさ（やさしい・ふつう・つよい）で 1ばんに なると ★1・2・3。ふつうは やさしいの ★、つよいは ふつうの ★を とると ひらく
+   ・ボス：1回で おいはらった 数（1・2・3びき）で ★1・2・3
+   ・単元を 1つだけ えらんだ ときだけ（まぜた とき・ゲームの 問題は ★なし。つよさは 自由に えらべる）。授業モードでは 数えない
+   ・きろくは mh_best の u:<単元ID> の ud（[たからばこ, すごろく, ボス]）。メダルの ごうけい・きせかえの ★の ごうけいには 入れない（2026-11-26 ユーザー決定） */
+const UD_MODES=["chest","race","sboss"], UD_LVK=[1.35,1,0.75];      // UD_LVK：CPU の まち時間に かける 数（やさしい＝ゆっくり・つよい＝はやい。ふつうは 今までと 同じ）
+const udStars=(id,b)=>{ const e=(b||bests())["u:"+id]||{}, a=Array.isArray(e.ud)?e.ud:[]; return UD_MODES.map((_,i)=>ustClamp(a[i])); };
+const udSum=(id,b)=>udStars(id,b).reduce((n,v)=>n+v,0);
+const udLvMax=(id,mid,b)=>Math.min(3,udStars(id,b)[UD_MODES.indexOf(mid)]+1);      // えらべる つよさの 上（1〜3）
+function udRecord(id,mid,stars){
+  const i=UD_MODES.indexOf(mid); if(i<0||!UBY[id]) return {stars:0,up:false,was:0};
+  const all=bests(), key="u:"+id, prev={score:0,medal:0,...all[key]}, ud=udStars(id,all), was=ud[i]; stars=ustClamp(stars);
+  if(stars>was){ ud[i]=stars; all[key]={...prev,ud}; store.set("mh_best",all); }
+  return {stars,up:stars>was,was};
+}
+/* UD-END */
 const uStarH=(n,cls)=>`<span class="mtst${cls?" "+cls:""}" role="img" aria-label="ほし ${n}">${[0,1,2].map(i=>`<i class="${i<n?"on":""}" aria-hidden="true">★</i>`).join("")}</span>`;
 /* 単元カードの ★の ようす（いつもの・タイム・サドンデス）。9こ ぜんぶで 👑 */
 function uStarRow(id,b){
@@ -4871,6 +4962,72 @@ function genChoice(id,g){
 }
 
 /* モードを選んだあと：① 教科 → ② 問題（その教科の ゲームと 単元）。&s=教科 で ② から ひらける（もどったとき・ブックマーク） */
+/* ================= うでだめし（#ude。2026-11-26） =================
+   ホームの「うでだめし」→ バトルを えらぶ（→ 今までの #modesetup で 教科・問題を えらぶ）。
+   どうじょうの「どれで あそぶ？」→ #ude?u=<単元ID>：その 単元で バトルと あいての つよさを えらんで はじめる（★は udStars）。 */
+const udSteps=on=>h("div",{class:"udsteps",role:"note"},...["st1","st2","st3"].flatMap((k,i)=>[i?h("em",{"aria-hidden":"true",text:"▶"}):null,h("span",{class:"udstp"+(i===on?" on":"")},h("b",{text:String(i+1)}),h("span",{text:T(k)}))]));
+function udLvPills(lv,max,got,single,pick){      // あいての つよさ：やさしい・ふつう・つよい。single＝単元 1つ（★が つく。上の つよさは 下の ★を とると ひらく）
+  return h("div",{class:"udlvs",role:"radiogroup","aria-label":T("ud.lv")},...[1,2,3].map(n=>{ const off=n>max;
+    return h("button",{type:"button",class:"udlv"+(n===lv?" on":"")+(off?" off":""),role:"radio","aria-checked":n===lv?"true":"false",disabled:off,onclick:()=>pick(n)},
+      h("b",{text:(off?"🔒 ":"")+T("ud.lv"+n)}),single?h("small",{text:off?T("ud.lv.lock",T("ud.lv"+(n-1))):n<=got?T("ud.lv.ok"):T("ud.lv.d",n)}):null,single&&n<=got?h("span",{class:"udlvst","aria-hidden":"true",text:"★".repeat(n)}):null); }));
+}
+function renderUde(q){
+  stopTimer(); setLG(ui.grade);
+  const uid=q.get("u"), u=uid&&UBY[uid]&&!LESSON?UBY[uid]:null, b=bests();
+  if(u&&!uBattleOk(u.id,b)){ uLockSheet(u); return go("#ude"); }      // まだ ひらいて いない 単元：とっくんへ さそう
+  if(!u){
+    app.innerHTML=`<div class="play ude"><div class="topbar"><button class="back" onclick="go('#home')">${BK()}</button><b>${ic("swords")} ${T("ud.t")}</b><span></span></div>
+      <h2>${T("ud.which")}</h2><div class="tiles udtiles">${SOLOMODES.map(m=>modeTile(m,b)).join("")}</div><p class="note udnote">${T("ud.note")}</p></div>`;
+    app.querySelectorAll("[data-m]").forEach(e=>e.onclick=()=>go(`#modesetup?m=${e.dataset.m}`));
+    return;
+  }
+  const back=RUNBACK||"#ude", g=ui.grade||u.g;
+  let mid=UD_MODES.includes(q.get("m"))?q.get("m"):"chest", lv=0;
+  const root=h("div",{class:"play ude"});
+  const start=()=>go(`#mode?m=${mid}&game=unit&g=${g}&t=120&r=${defaultRule(g)}&units=${u.id}${mid==="sboss"?"":"&lv="+lv}`);
+  function draw(){
+    const st=udStars(u.id), got=st[UD_MODES.indexOf(mid)], max=Math.min(3,got+1); if(!lv||lv>max) lv=max;
+    root.replaceChildren(
+      h("div",{class:"topbar"},h("button",{type:"button",class:"back",innerHTML:BK(),onclick:()=>go(back)}),h("b",{innerHTML:ic("swords")+" "+T("ud.t")}),h("span")),
+      h("div",{class:"udunit"},h("small",{text:T("ud.unit")}),h("b",{text:u.title}),h("span",{class:"udn9",text:T("ud.sum",st[0]+st[1]+st[2])})),
+      h("h2",{text:T("ud.which")}),
+      h("div",{class:"udlist",role:"radiogroup","aria-label":T("ud.which")},...SOLOMODES.map(m=>h("button",{type:"button",class:"udm"+(m.id===mid?" on":""),role:"radio","aria-checked":m.id===mid?"true":"false","data-udm":m.id,onclick:()=>{ mid=m.id; lv=0; draw(); }},
+        h("span",{class:"tico",innerHTML:svgU(m.art)}),h("b",{text:m.t}),h("span",{class:"udmst",innerHTML:uStarH(st[UD_MODES.indexOf(m.id)])})))),
+      mid==="sboss"?h("p",{class:"note udboss",text:T("ud.boss")}):h("div",{class:"udlvw"},h("h2",{text:T("ud.lv")}),udLvPills(lv,max,got,true,n=>{ lv=n; draw(); })),
+      h("div",{class:"udstart"},h("button",{type:"button",class:"btn again",id:"udStart",innerHTML:ic("play")+T("ud.go"),onclick:start})));
+  }
+  app.replaceChildren(root); draw();
+}
+/* 🔒の 単元を おした とき：ひらく ための とっくん（いつもの・タイムアタック・サドンデス）と 今の ★。おすと その とっくんが はじまる。
+   3年より 上の 入力の 単元は「4つから えらぶ」だと ★2まで なので、ここからは「すうじを いれる」で はじめる */
+function uLockSheet(u){
+  if(document.getElementById("ulsheet")) return;
+  const onKey=e=>{ if(e.key==="Escape") close(); };
+  const close=()=>{ el.remove(); document.removeEventListener("keydown",onKey); };
+  const s=uStars(u.id), ch0=uChoice([u.id],UPK.choice), choice=uCap(u,ch0,1)<3?false:ch0, best=Math.max(s.n,s.ta,s.sd), near=["n","ta","sd"].find(m=>s[m]===best);
+  const btn=(m,ico)=>h("button",{type:"button",class:"umbtn um-"+m+(m===near?" umhot":""),"data-ulm":m,onclick:()=>{ close(); RUNBACK=location.hash; SPM=m; startUnitRun({ids:[u.id],n:20,t:20,seed:uSeed(),mix:true,choice}); }},
+    h("span",{class:"umico","aria-hidden":"true",text:ico}),
+    h("span",{class:"umbody"},h("b",{text:T("sp."+m)}),h("span",{class:"umg",text:m===near?T("ud.ls.near",3-s[m]):T("ud.ls.left",3-s[m])})),
+    h("span",{class:"umst",innerHTML:uStarH(s[m])}));
+  const first=btn("n","⏱");
+  const el=h("div",{class:"sheetbg exbg",id:"ulsheet",onclick:e=>{ if(e.target===el) close(); }},
+    h("div",{class:"sheet umsheet",role:"dialog","aria-modal":"true","aria-label":T("ud.ls.t",rbp(u.title))},
+      h("h3",{class:"ulsh",text:T("ud.ls.t",u.title)}),h("p",{class:"umu",text:T("ud.ls.d")}),
+      first,btn("ta","🏁"),btn("sd","🔥"),h("p",{class:"note ulsf",text:T("ud.ls.f")}),
+      h("button",{type:"button",class:"btn sub s umx",text:T("back"),onclick:close})));
+  document.addEventListener("keydown",onKey); document.body.appendChild(el); first.focus();
+}
+function udResHtml(p,ud,win){      // たからばこ・すごろくの 結果に 出す うでだめしの ★
+  const now=udStars(p.ud)[UD_MODES.indexOf(p.m.id)], nm=n=>T("ud.lv"+n);
+  const msg=win?(ud.up?T("ud.r.get",ud.stars):now>=3?T("ud.r.top"):T("ud.r.keep",now)):T("ud.r.need",nm(p.lv),p.lv);
+  const next=win&&p.lv<3?`<button type="button" class="btn sub s" id="udnext">${T("ud.r.next",nm(p.lv+1))}</button>`:"";
+  return `<div class="udres${ud.up?" up":""}">${uStarH(now,"udrst")}<b>${msg}</b>${next}</div>`;
+}
+function udBossHtml(p,r){          // ボスの 結果に 出す うでだめしの ★（おいはらった 数）
+  if(!p.ud) return "";
+  const ud=udRecord(p.ud,"sboss",Math.min(3,r.dn|0)), now=udStars(p.ud)[2];
+  return `<div class="udres${ud.up?" up":""}">${uStarH(now,"udrst")}<b>${ud.up?T("ud.r.get",ud.stars):now>=3?T("ud.r.top"):T("ud.boss")}</b></div>`;
+}
 function renderModeSetup(q){
   const m=SOLOMODES.find(x=>x.id===q.get("m")); if(!m) return go("#home");
   setLG(ui.grade);
@@ -4880,20 +5037,24 @@ function renderModeSetup(q){
   const rule0=G?defaultRule(G):"auto";   // 「ぜんぶ」のときは、えらんだ問題の学年で決める
   const ruleBtns=G?RULES:[{id:"auto",t:T("ru.auto"),d:T("ru.auto.d")},...RULES];
   app.innerHTML=`<div class="play${easyG(G)?" easy-ms":""}">
-    <div class="topbar"><button class="back" onclick="go('#home')">${BK()}</button><b>${svgU(m.art,"ti")} ${m.t}</b><span></span></div>
+    <div class="topbar"><button class="back" onclick="go('#ude')">${BK()}</button><b>${svgU(m.art,"ti")} ${m.t}</b><span></span></div>
     <div class="q"><div style="font-size:15px">${m.d}</div></div>
     <h2>${T("ms.subj")}</h2>
     <div class="bsjs" style="--n:${subjs.length}">${subjs.map(k=>`<button type="button" class="bsj s-${k}" data-sj="${k}" aria-pressed="false"><span class="dico">${svgU(DOOR_ART[k])}</span><span>${subjN(k)}</span></button>`).join("")}</div>
     <div id="modePick"></div>
-    <div id="modeUgo" class="ugobar hidden"><button class="btn" id="ugo">${ic("play")}${T("ms.ustart")}</button></div>
+    <div id="modeUgo" class="ugobar hidden">${m.solo?`<p class="note udboss">${T("ud.boss")}（${T("ud.lv.free")}）</p>`:`<div id="udLvBox"></div>`}<button class="btn" id="ugo">${ic("play")}${T("ms.ustart")}</button></div>
     <h2>${T("ms.time")}</h2>
     <div class="pills" style="justify-content:center"><button class="pill on" data-t="120">${T("ms.2")}</button><button class="pill" data-t="180">${T("ms.3")}</button></div>
     <h2>${T("ms.rule")}</h2>
     <div class="pills" style="justify-content:center">${ruleBtns.map(r=>`<button class="pill ${r.id===rule0?"on":""}" data-r="${r.id}">${r.t}<span class="note" style="color:inherit">（${r.d}）</span></button>`).join("")}</div>
   </div>`;
-  let t=120, rule=rule0, selected=()=>[];
-  const ugo=n=>$("#modeUgo").classList.toggle("hidden",!n);      // 単元をえらんだら「はじめる」を出す（画面の 下に いつも 見える）
-  const start=(game,g,ids)=>go(`#mode?m=${m.id}&game=${game}&g=${g}&t=${t}&r=${rule==="auto"?defaultRule(g):rule}${ids.length?"&units="+ids.join(","):""}`);
+  let t=120, rule=rule0, selected=()=>[], lv=2, lvTouched=false;
+  /* あいての つよさ（たからばこ・すごろく）。単元を 1つだけ えらんだ ときは ★が つき、つぎに ちょうせんする つよさを はじめに えらんで おく */
+  const drawLv=()=>{ const box=$("#udLvBox"); if(!box) return; const ids=selected(), single=ids.length===1&&!LESSON, got=single?udStars(ids[0])[UD_MODES.indexOf(m.id)]:0, max=single?Math.min(3,got+1):3;
+    if(!lvTouched) lv=single?max:2; if(lv>max) lv=max;
+    box.replaceChildren(...[h("b",{class:"udlvh",text:T("ud.lv")}),udLvPills(lv,max,got,single,n=>{ lv=n; lvTouched=true; drawLv(); }),single?null:h("p",{class:"note",text:T("ud.lv.free")})].filter(Boolean)); };
+  const ugo=n=>{ $("#modeUgo").classList.toggle("hidden",!n); lvTouched=false; drawLv(); };      // 単元をえらんだら「はじめる」を出す（画面の 下に いつも 見える）
+  const start=(game,g,ids)=>go(`#mode?m=${m.id}&game=${game}&g=${g}&t=${t}&r=${rule==="auto"?defaultRule(g):rule}${ids.length?"&units="+ids.join(","):""}${m.solo?"":"&lv="+(game==="unit"?lv:Math.min(lv,3))}`);
   const pick=k=>{
     sj=k; ugo(0);
     app.querySelector(".bsjs").classList.toggle("picked",!!k);
@@ -4903,7 +5064,9 @@ function renderModeSetup(q){
     box.innerHTML=`<h2>${T("ms.pick")}</h2><p class="note" style="text-align:center">${list.length?T("ms.pick.n"):""}</p>
       ${list.length?`<div class="tiles">${list.map(x=>`<button class="tile" data-id="${x.id}"><span class="tico">${svgU(x.art)}</span><span class="tbody"><span class="tt">${x.t}</span>
       <span class="tstat">${tagHtml(x.s)}</span></span></button>`).join("")}</div>`:""}<div id="modeUnits"></div>`;
-    selected=UREADY.some(u=>u.subj===SJR[k])?unitPicker($("#modeUnits"),G,ugo,{subj:SJR[k],lock:!LESSON}):()=>[];
+    selected=()=>[];
+    selected=UREADY.some(u=>u.subj===SJR[k])?unitPicker($("#modeUnits"),G,ugo,{subj:SJR[k],lock:!LESSON,udm:m.id}):()=>[];
+    drawLv();
     box.querySelectorAll("[data-id]").forEach(b=>b.onclick=()=>{
       const x=GAMES.find(y=>y.id===b.dataset.id);
       withGrade(g0=>start(x.id,x.g.includes(g0)?g0:x.g[0],selected()));
@@ -4914,6 +5077,7 @@ function renderModeSetup(q){
   app.querySelectorAll("[data-t]").forEach(b=>b.onclick=()=>{t=+b.dataset.t;app.querySelectorAll("[data-t]").forEach(e=>e.classList.toggle("on",e===b));});
   app.querySelectorAll("[data-r]").forEach(b=>b.onclick=()=>{rule=b.dataset.r;app.querySelectorAll("[data-r]").forEach(e=>e.classList.toggle("on",e===b));});
   $("#ugo").onclick=()=>{ const ids=selected(); if(!ids.length) return; withGrade(g=>start("unit",g,ids)); };
+  drawLv();
   if(sj) pick(sj);
 }
 
@@ -4927,12 +5091,14 @@ function renderMode(q){
   if(x===UNITX&&!(unitQs&&unitQs.length)) return go("#home");      // 単元バトルは 単元が ないと 始められない
   const t=Math.min(300,Math.max(60,+q.get("t")||120)), task=q.get("task")==="1";
   const rule=q.has("r")?ruleOf(q.get("r")):defaultRule(g);
+  const udId=!task&&!LESSON&&x===UNITX&&unitIds.length===1?unitIds[0]:null;      // うでだめしの ★が つく 回（単元 1つ・授業モードで ない）
+  let lv=+q.get("lv"); lv=lv===1||lv===3?lv:2; if(udId&&!m.solo) lv=Math.min(lv,udLvMax(udId,m.id));      // あいての つよさ（1 やさしい・2 ふつう・3 つよい）。なければ 今までと 同じ ふつう
   if(m.solo&&(task||LESSON)) return go("#home");      // ひとりで ボスバトルは 授業モード（課題リンク）では 遊べない
   setLG(g);
   if(m.solo&&SGOPEN&&!q.has("st")) return sgSelect(q,m,x,g);      // ひとりで ボスバトル（ステージ版）：さきに ステージを えらぶ
-  M={m,x,g,t,task,rule,unitQs,unitIndex:0,ev:evOf(rule),ok:0,ng:0,chg:0,clean:true,misses:[],missObjs:[],phase:"q",end:Date.now()+t*1000,
+  M={m,x,g,t,task,rule,lv,ud:udId,unitQs,unitIndex:0,ev:evOf(rule),ok:0,ng:0,chg:0,clean:true,misses:[],missObjs:[],phase:"q",end:Date.now()+t*1000,
      me:{n:T("b.me"),e:(l=>l[rnd(l.length)][1])(NICK_ANI.filter(a=>!BOTS.some(b=>b.e===a[1]))),v:0,me:true,...(mkAvMine()||{})},
-     bots:m.solo?[]:BOTS.map((b,i)=>({...b,v:0,wait:rr(8,14)*botK(g),spd:[1,1.15,0.85][i]})),
+     bots:m.solo?[]:BOTS.map((b,i)=>({...b,v:0,wait:rr(8,14)*botK(g)*UD_LVK[lv-1],spd:[1,1.15,0.85][i]})),
      over:false};
   if(m.solo&&SGOPEN){ const st=Math.min(sgBz().o,Math.max(0,+q.get("st")|0)), rare=sgBz().rp===st+1;
     M.sg=true; M.sbRare=rare; M.sb=COOP.soloStage({g,easy:rule==="easy",t,stage:st,rare}); M.sb.begin(Date.now()); M.end=M.sb.ae; }
@@ -5124,12 +5290,12 @@ function botTick(dt){
   for(const b of M.bots){
     b.wait-=dt*b.spd; if(b.wait>0) continue;
     if(M.m.id==="chest"){
-      b.wait=rr(11,19)*botK(M.g)+botRubber(b)*2;      // 3問《もん》で 1回 あける ので、人と 同じくらいの はやさに
+      b.wait=rr(11,19)*botK(M.g)*UD_LVK[(M.lv||2)-1]+botRubber(b)*2;      // 3問《もん》で 1回 あける ので、人と 同じくらいの はやさに
       const r=Math.random();
       const E=M.rule==="easy"?BOT_EASY:BOT_NORMAL;
       if(r<E.x2) b.v*=2; else if(r<0.14&&M.rule!=="easy") b.v=Math.round(b.v*0.75); else b.v+=E.gain[rnd(E.gain.length)];   // やさしいルールのCPUは、たまにもらう量も少なめ
     } else {
-      b.wait=rr(13,21)*botK(M.g)+botRubber(b)*2;
+      b.wait=rr(13,21)*botK(M.g)*UD_LVK[(M.lv||2)-1]+botRubber(b)*2;
       b.v=Math.min(GOAL,b.v+2+rnd(4)+rnd(4));      // 人は サイコロ2こ（平均7）。CPUは 少し ひかえめ（平均5）
       if(raceLand(b,M.rule,null).again) b.v=Math.min(GOAL,b.v+1+rnd(6));      // CPUは 人と ばしょを こうかん しない。もう1回は そのまま すすむ だけ
       if(b.v>=GOAL){ if(!M.finishing){ M.finishing=true; M.phase="wait"; setTimeout(()=>modeFinish(),1500); } return; }
@@ -5292,6 +5458,7 @@ function sbResult0(){      // まけは ない。メダル・きろくには 数
     <div class="bs-runa">${bsArt(r.dn>0?r.dn-1:0,r.dn>0?2:0)}</div>
     <div class="num">${r.dn>0?T("sb.end",r.dn):T("bs.end0")}</div>${left}
     <div class="big2 bs-tdk">${T("bs.me.d",r.td)}</div>
+    ${udBossHtml(p,r)}
     <div class="actions"><button class="btn again" id="again">${ic("rotate-ccw")}${T("r.again")}</button>
       <div class="subs">${p.missObjs.length?`<button class="btn sub" id="redo">${T("r.redo")}</button>`:""}<button class="btn sub" onclick="go('#home')">${T("r.other")}</button></div></div>
     <div class="stats"><span>${T("r.ok")} <b>${T("r.n",p.ok)}</b></span><span>${T("r.acc")} <b>${acc}%</b></span></div>
@@ -5402,6 +5569,7 @@ function sbResult(){      // まけは ない。メダル・きろくには 数�
     ${got.fresh.length?`<div class="sg-new"><b>${T("sg.newzk")}</b><div class="sg-zk">${got.fresh.map(id=>`<div class="sg-zc${id[0]==="r"?" rr":""}">${sgImg(id,2)}<span>${esc(sgName(id))}</span></div>`).join("")}</div></div>`:""}
     ${got.opened>=0?`<div class="sg-open">${T("sg.opened",got.opened+1,sgStName(got.opened))}</div>`:""}
     <div class="big2 bs-tdk">${T("bs.me.d",r.td)}${r.sps?`<span class="note"> ${T("sg.sps",r.sps)}</span>`:""}</div>
+    ${udBossHtml(p,r)}
     <div class="actions"><button class="btn again" id="again">${ic("rotate-ccw")}${T("r.again")}</button>
       <div class="subs">${p.missObjs.length?`<button class="btn sub" id="redo">${T("r.redo")}</button>`:""}<button class="btn sub" id="sgsel">${T("sg.tosel")}</button><button class="btn sub" onclick="go('#home')">${T("r.other")}</button></div></div>
     <div class="stats"><span>${T("r.ok")} <b>${T("r.n",p.ok)}</b></span><span>${T("r.acc")} <b>${acc}%</b></span></div>
@@ -5427,6 +5595,7 @@ function modeResult(){
   const medal=place===1?3:place===2?2:place===3?1:0;
   const all=bests(), key=p.m.id+"_"+p.x.id, prev=all[key]||{score:0,medal:0};
   all[key]={score:Math.max(prev.score,p.ok),medal:Math.max(prev.medal,medal)}; store.set("mh_best",all); refreshMedals();
+  const ud=p.ud?udRecord(p.ud,p.m.id,place===1?p.lv:0):null;      // うでだめしの ★：1ばんに なると、えらんだ つよさの 数
   const unit=p.m.id==="chest"?"コイン":"マス";
   const easy=p.rule==="easy";      // やさしいルール：順位の数字と最下位は出さない
   if(easy||place<=3) sfx("medal");
@@ -5437,6 +5606,7 @@ function modeResult(){
     ${medRow(easy?3:medal,acc)}
     <div class="num">${easy?T("b.done"):T("b.place",place)}</div>
     <div style="margin:10px auto;max-width:320px">${rankRows(easy?easyList(ps):ps.map((q,i)=>[q,i+1]),q=>q.v+" "+unit)}</div>
+    ${ud?udResHtml(p,ud,place===1):""}
     <div class="actions"><button class="btn again" id="again">${ic("rotate-ccw")}${T("r.again")}</button>
       <div class="subs">${p.missObjs.length?`<button class="btn sub" id="redo">${T("r.redo")}</button>`:""}${p.task?"":`<button class="btn sub" onclick="go('#home')">${T("r.other")}</button>`}</div></div>
     <div class="stats"><span>${T("r.ok")} <b>${T("r.n",p.ok)}</b></span><span>${T("r.acc")} <b>${acc}%</b></span></div>
@@ -5445,6 +5615,7 @@ function modeResult(){
   </div></div>`;
   mathIn(app);
   $("#again").onclick=()=>route();
+  const un=$("#udnext"); if(un) un.onclick=()=>go(location.hash.replace(/&lv=\d+/,"")+"&lv="+(p.lv+1));
   const rd=$("#redo"); if(rd) rd.onclick=()=>startReview(p.missObjs,p.x,p.g,p.task);
   const cp=$("#cp"); if(cp) cp.onclick=()=>navigator.clipboard?.writeText(repFull).then(()=>cp.textContent=T("r.copied"),()=>{});
   if(p.task) lessonEndButton();
@@ -7916,10 +8087,10 @@ function unitPicker(root,grade,onChange,opt){
     if(!fixed&&(!easy||subjects.length>1)) controls.append(h("div",{class:"pills subject-pills"},...subjects.map(s=>upill(SUBJ_JA[s],s===subject,()=>{subject=s;filter=easy?grade:gradeOf(s);draw();}))));
     if(!easy&&!gradesOpen) controls.append(h("button",{type:"button",class:"pill small ogbtn",text:T("ms.og"),onclick:()=>{gradesOpen=true;draw();}}));
     else if(!easy) controls.append(h("div",{class:"pills grade-pills"},...([0,1,2,3,4,5,6].map(g=>upill(g?g+"年《ねん》":"ぜんぶ",filter===g,()=>{filter=g;draw();})))));
-    const bb=opt.lock?bests():null, open=u=>!bb||uBattleOk(u.id,bb), shown0=pool.filter(u=>!filter||u.g===filter), shown=bb?[...shown0.filter(open),...shown0.filter(u=>!open(u))]:shown0, nLock=shown.filter(u=>!open(u)).length;      // opt.lock：ひとりで あそぶ バトル。算数の 単元は いつものの ★3で えらべる（えらべる 単元を 上に ならべる）
+    const bb=opt.lock?bests():null, open=u=>!bb||uBattleOk(u.id,bb), shown0=pool.filter(u=>!filter||u.g===filter), shown=bb?[...shown0.filter(open),...shown0.filter(u=>!open(u)).map((u,i)=>[uOpenLeft(u.id,bb),i,u]).sort((a,b)=>a[0]-b[0]||a[1]-b[1]).map(x=>x[2])]:shown0, nLock=shown.filter(u=>!open(u)).length;      // opt.lock：ひとりで あそぶ バトル。算数の 単元は いつものの ★3で えらべる（えらべる 単元を 上に ならべる）
     const cards=h("div",{class:"ugrid"+(easy?" kidunits":"")},...shown.map(u=>open(u)?h("button",{type:"button",class:"ucard","data-uid":u.id,role:"checkbox","aria-checked":selected.includes(u.id)?"true":"false",onclick:()=>{const i=selected.indexOf(u.id);if(i>=0)selected.splice(i,1);else if(selected.length<UMAX)selected.push(u.id);draw();}},
-      h("span",{class:"ubox",text:selected.includes(u.id)?"✅":""}),h("span",{class:"ubody"},h("b",{text:u.title}),!easy?h("span",{class:"unote",text:u.note}):null))
-      :h("button",{type:"button",class:"ucard ulock","data-uid":u.id,"aria-disabled":"true",onclick:()=>{}},h("span",{class:"ubox","aria-hidden":"true",text:"🔒"}),h("span",{class:"ubody"},h("b",{text:u.title}),h("span",{class:"ulockn",text:T("ust.lock")})))));
+      h("span",{class:"ubox",text:selected.includes(u.id)?"✅":""}),h("span",{class:"ubody"},h("b",{text:u.title}),!easy?h("span",{class:"unote",text:u.note}):null),bb&&opt.udm?h("span",{class:"udmst",innerHTML:uStarH(udStars(u.id,bb)[UD_MODES.indexOf(opt.udm)])}):null)
+      :h("button",{type:"button",class:"ucard ulock","data-uid":u.id,onclick:()=>uLockSheet(u)},h("span",{class:"ubox","aria-hidden":"true",text:"🔒"}),h("span",{class:"ubody"},h("b",{text:u.title}),h("span",{class:"ulockn",text:T("ust.lock",uOpenLeft(u.id,bb))})),h("span",{class:"ulgo",text:T("ud.to")+" ▶"}))));
     const lockNote=nLock?h("div",{class:"note ulocknote",text:T("ust.lock.n",nLock)}):null;
     const setList=easy?[]:(UN.UNIT_SETS||[]).filter(s=>s.units.length>1&&s.units.every(id=>UBY[id]&&UBY[id].subj===subject&&open(UBY[id]))).map(s=>{ const b=upill("",false,()=>{selected.splice(0,selected.length,...s.units.slice(0,UMAX));setsOpen=false;draw();}); b.replaceChildren(...setLabel(s.title)); return b; });
     const sets=setList.length?h("details",{class:"upsets usetd",open:setsOpen,ontoggle:e=>{ setsOpen=e.target.open; }},h("summary",{text:"⭐ おすすめの組《く》み合《あ》わせ"}),h("div",{class:"set-grid"},...setList)):null;      // おすすめは たたんでおく（単元カードを先に見せる）
@@ -7948,10 +8119,14 @@ function uModeSheet(u,choice,start){
     h("span",{class:"umbody"},h("b",{text:T("sp."+m)}),h("span",{class:"umd",text:m==="n"?T("sp.n.d"):m==="ta"?T("sp.ta.d",SP_TA):T("sp.sd.d")}),math||m==="n"?h("span",{class:"umg",text:goal(m,n)}):null),
     math||m==="n"?h("span",{class:"umst",innerHTML:uStarH(n)}):null);      // 算数いがいは いつものだけ ★
   const first=btn("n","⏱",s.n);
+  /* 4つ目：うでだめし。ひらいた 単元は ここから そのまま バトルへ。まだの 単元は 🔒（どれかで ★3つ） */
+  const udRow=LESSON?null:uBattleOk(u.id)?h("button",{type:"button",class:"umbtn um-ud",onclick:()=>{ close(); go("#ude?u="+u.id); }},
+      h("span",{class:"umico","aria-hidden":"true",innerHTML:ic("swords")}),h("span",{class:"umbody"},h("b",{text:T("ud.t")}),h("span",{class:"umd",text:T("ud.row.d")})),h("span",{class:"umst udn9",text:"★ "+udSum(u.id)+" / 9"}))
+    :h("div",{class:"umbtn um-ud lock",role:"note"},h("span",{class:"umico","aria-hidden":"true",text:"🔒"}),h("span",{class:"umbody"},h("b",{text:T("ud.t")}),h("span",{class:"umd",text:T("ud.row.lock")})));
   const el=h("div",{class:"sheetbg exbg",id:"umsheet",onclick:e=>{ if(e.target===el) close(); }},
     h("div",{class:"sheet umsheet",role:"dialog","aria-modal":"true","aria-label":T("um.t")},
       h("h3",{text:T("um.t")}),h("p",{class:"umu",text:u.title}),
-      first,btn("ta","🏁",s.ta),btn("sd","🔥",s.sd),
+      first,btn("ta","🏁",s.ta),btn("sd","🔥",s.sd),udRow,
       h("button",{type:"button",class:"btn sub s umx",text:T("back"),onclick:close})));
   document.addEventListener("keydown",onKey); document.body.appendChild(el); first.focus();
 }
@@ -8315,7 +8490,8 @@ function renderSubjItem(q){
       return h("div",{class:"ucardw"},
         h("button",{type:"button",class:"ucard"+uGlow(u.id,bb),"data-id":u.id,...(mix?{role:"checkbox","aria-checked":on?"true":"false"}:{}),onclick:()=>mix?toggle(u.id):one(u)},
           mix?h("span",{class:"ubox","aria-hidden":"true",text:on?"✅":""}):null,
-          h("span",{class:"ubody"},h("b",{text:u.title}),h("span",{class:"unote",text:(g?"":u.g+"年《ねん》　")+(u.note&&u.note!==u.title?u.note:"")}),uStarRow(u.id,bb)),
+          h("span",{class:"ubody"},h("b",{text:u.title}),h("span",{class:"unote",text:(g?"":u.g+"年《ねん》　")+(u.note&&u.note!==u.title?u.note:"")}),uStarRow(u.id,bb),
+            LESSON||!uIsMath(u.id)?null:uBattleOk(u.id,bb)?h("span",{class:"udbadge",text:T("ud.badge")}):uOpenLeft(u.id,bb)===1?h("span",{class:"udnear",text:T("ud.near",1)}):null),
           mix?null:h("span",{class:"siplay","aria-hidden":"true",text:"▶"})),
         h("button",{type:"button",class:"btn sub s uexb",text:"💡","aria-label":T("u.ex")+"："+u.title,title:T("u.ex"),onclick:()=>uEx(u)})); }):[h("div",{class:"empty",text:T("si.none")})]));
     foot.hidden=!mix; cnt.textContent=T("u.sel",sel.length); startBtn.disabled=!sel.length;
@@ -8374,6 +8550,7 @@ function renderSubjRoom(q){
   const tools=tk.map(t=>tile("srtool",(tkIco[t.id]||(()=>mark("")))(),siName(t.t),siName(t.d),()=>t.go.startsWith("url:")?(location.href=t.go.slice(4)):go(t.go)));
   app.replaceChildren(h("div",{class:"up kid si sroom"},
     h("div",{class:"topbar"},h("button",{type:"button",class:"back",innerHTML:BK(),onclick:()=>go("#home")}),h("h2",{class:"th2 uttl",text:T("sr.title")}),h("span")),
+    LESSON?null:udSteps(0),
     h("section",{class:"zone s-math srz"},h("h3",{class:"srh",text:T("sr.units")}),items.length?h("div",{class:"tiles srgrid sritems"},...items):h("div",{class:"empty",text:T("si.none")})),
     tools.length?h("section",{class:"zone s-math srz"},h("h3",{class:"srh",text:T("sr.tokkun")}),h("div",{class:"tiles srgrid srtools"},...tools)):null,
     h("p",{class:"srall"},h("a",{href:"#units?kid=1&subj=sansu&all=1",class:"gdlink",text:T("sr.all")}))));
@@ -8983,9 +9160,10 @@ function route(){
   stopTimer(); P=null; M=null; QK=null; QS=null; QH=null; if(RKH) clearInterval(RKH.iv); RK=null; RKH=null; ckStop(); prStop(); wakeOff();
   if(ES){ ES.close(); ES=null; }
   const {path:path0,q}=params(), path=location.hash.startsWith("#q=")?"qlink":location.hash.startsWith("#u=")?"ulink":path0;
-  if(path==="subj"||(path==="units"&&q.get("kid")==="1")) RUNBACK=location.hash; else if(!["play","setup","ulink","meter"].includes(path)) RUNBACK=null;
-  setLG(path==="home"||path==="modesetup"||path==="join"||path==="record"?ui.grade:0);
-  document.body.dataset.v=["check","play","setup","modesetup","mode","join","lobby","host","teacher","record","make","qlink","units","subj","ulink","hiroba","zukan","tanken","feedback","meter"].includes(path)?path:"home";
+  if(path==="subj"||(path==="units"&&q.get("kid")==="1")) RUNBACK=location.hash; else if(!["play","setup","ulink","meter","ude"].includes(path)) RUNBACK=null;
+  setLG(path==="home"||path==="modesetup"||path==="join"||path==="record"||path==="ude"?ui.grade:0);
+  document.body.dataset.gr=path==="subj"||path==="ude"||path==="modesetup"||(path==="units"&&q.get("kid")==="1")?"1":"0";      // 単元・バトルを えらぶ 画面では 右上の 学年を ずっと 出す（問題が はじまったら 出さない。2026-11-26 ユーザー指示）
+  document.body.dataset.v=["check","play","setup","modesetup","mode","join","lobby","host","teacher","record","make","qlink","units","subj","ude","ulink","hiroba","zukan","tanken","feedback","meter"].includes(path)?path:"home";
   // 課題リンク（task=1）で開いたゲームでは、ほかの画面への入口を隠す（授業モード）
   const lesson=!!lockedHash||((path==="play"||path==="mode"||path==="meter")&&q.get("task")==="1")||((path==="qlink"||path==="ulink")&&/[&?]task=1(?![0-9])/.test(location.hash));
   LESSON=lesson; document.body.classList.toggle("lesson",lesson); const lic=document.getElementById("licLink"); if(lic) lic.hidden=lesson;
@@ -9001,6 +9179,7 @@ function route(){
   else if(path==="play") renderPlay(q);
   else if(path==="setup") renderSetup(q);
   else if(path==="modesetup") renderModeSetup(q);
+  else if(path==="ude") renderUde(q);
   else if(path==="mode") renderMode(q);
   else if(path==="join") renderJoin(q);
   else if(path==="lobby") renderLobby();
