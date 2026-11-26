@@ -31,7 +31,7 @@
   if (typeof module === "object" && module.exports) module.exports = M; else root.MH_COL = M;
 })(typeof self !== "undefined" ? self : this, function () {
   "use strict";
-  const CAP = 10, GIFT = 5, CELLS = 12;
+  const CAP = 10, GIFT = 5, CELLS = 35;      // CELLS：ひろばの島の「おける ばしょ」の数（2026-11-25 12→35。バックアップの1字＝36進数で 35 まで）
   const RV_MAX = 2, PD_EVERY = 5, PD_GIVE = 3;
   const TK_MAX = 3, TK_GET = 2, TK_STARS = 5, TK_USE = 2, TK_USE_MAX = 5;
   /* 単元の ID の固定表（追加だけ。順番を変えない）。id の1字目＝教科（m算数 j国語 s社会 e英語）、2字目＝学年 */
@@ -75,15 +75,25 @@
   ];
   const TRACK_SUBJ = { play: "m", lib: "j", flag: "e" };
   /* かざり（どんぐりで買う）。値段の合計 380 */
-  const DECOR = [
+  const DECOR0 = [
     { id: "tree", art: "d-tree", price: 5 }, { id: "flower", art: "h-flower", price: 10 }, { id: "bench", art: "h-bench", price: 25 },
     { id: "hutch", art: "h-hutch", price: 40 }, { id: "pond", art: "h-pond", price: 60 }, { id: "clock", art: "h-clock", price: 90 },
     { id: "rainbow", art: "h-rainbow", price: 150 }
   ];
+  /* 島の かざり（2026-11-25 追加の 26こ。値段の合計 360）。足すだけ・順番を かえない（バックアップ HR5 の 番号）。
+     絵は vendor/img/island/{id}-256.webp（art は 絵の symbol が ない しるし）。g：なかま（n しぜん／p こうえん／b たてもの／a どうぶつ／s とくべつ） */
+  const DECOR_X = [
+    ["mushroom", 4, "n"], ["grass", 4, "n"], ["sunflower", 6, "n"], ["sakura", 8, "n"], ["appletree", 8, "n"], ["arch", 10, "n"],
+    ["sandbox", 7, "p"], ["seesaw", 10, "p"], ["fountain", 20, "p"], ["lamp", 7, "p"], ["post", 6, "p"], ["picnic", 6, "p"],
+    ["house", 18, "b"], ["bakery", 20, "b"], ["treehouse", 25, "b"], ["tent", 10, "b"], ["tower", 25, "b"], ["windmill", 20, "b"],
+    ["doghouse", 8, "a"], ["chicken", 7, "a"], ["cat", 8, "a"], ["sheep", 8, "a"], ["duck", 6, "a"],
+    ["balloon", 28, "s"], ["carousel", 35, "s"], ["castle", 40, "s"]
+  ].map(([id, price, g]) => ({ id, art: "", price, g }));
+  const DECOR = DECOR0.concat(DECOR_X);
   const DIDX = {}; DECOR.forEach((d, i) => { DIDX[d.id] = i; });
   const PRICE_TOTAL = DECOR.reduce((n, d) => n + d.price, 0);
   /* たんけんメモ（ひろばの物ぶん）：がっこう ＋ 固定ゾーン 8 ＋ かざり 7 ＝ 16 */
-  const MEMO_O = ["school"].concat(PARTS.map(p => p.id), DECOR.map(d => d.id));
+  const MEMO_O = ["school"].concat(PARTS.map(p => p.id), DECOR0.map(d => d.id));      // メモは はじめの 7こ まで（バックアップの 数字の 幅）
   /* まなびっこ（v3.0）。MK_IDS は バックアップ・（のちの）友だち対戦で送る番号なので、追加だけ。順番を変えない。
      subj は 単元 ID の1字目と同じ。art は vendor/img/manabikko/{art}-{base|grown|joy}-v3-{256|128}.webp（null なら絵がまだ＝出さない）。
      理科（r）など 絵のない教科は MK_SOON に 書いておき、画面では「もうすぐ」の枠だけ出す */
@@ -743,10 +753,27 @@
      やりこみの部分：正解の数・ノーミスの回・3教科の回・教科ごとの 正解の数（YA_SUBJ の順）・単元の数・［単元の番号(2)・正解・ノーミス・しるし(1：7割の回＋9割の回×2)］×数・じっせき（YA_BK の順の ビット。かたまりの数(1)・［20ビット(4)］×数）
      もらった物の部分：遊具（PARTS の順の 8ビット(2)）・学びで もらった きせかえ（KZ_IDS の順の ビット。かたまりの数(1)・［20ビット(4)］×数）・シールの ランクの 数・［単元の番号(2)・ランク(1)］×数
      古い版のサイトは HR4 を こわれた文字として 断る（だまって 消えない） */
-  const EPOCH = 18262, RE = /^HR[1234][0-9A-Z]+$/, RE6 = /^HR6[0-9A-Z]+$/;
+  const EPOCH = 18262, RE = /^HR[12345][0-9A-Z]+$/, RE6 = /^HR6[0-9A-Z]+$/;
+  /* HR5（2026-11-25。島の かざり 26こ）＝「HR5」＋ 追加の かざりの部分（もっている物 6字＋おいた ばしょ 26字）＋ HR4 と同じ中身。
+     追加の かざりを 1つも もっていなければ 今まで通り HR4〜HR1。古い版のサイトは HR5 を こわれた文字として 断る */
+  const XLEN = 6 + DECOR_X.length;
+  const dxAny = S => DECOR_X.some(d => S.own.includes(d.id));
+  function dxStr(S) { let m = 0; DECOR_X.forEach((d, i) => { if (S.own.includes(d.id)) m += Math.pow(2, i); }); return b36(m, 6) + DECOR_X.map(d => (S.pl[d.id] || 0).toString(36).toUpperCase()).join(""); }
+  function dxParse(body) {
+    if (body.length < XLEN) return null;
+    const m = parseInt(body.slice(0, 6), 36); if (!(m >= 0) || m >= Math.pow(2, DECOR_X.length)) return null;
+    const own = [], pl = {}, used = new Set();
+    for (let i = 0; i < DECOR_X.length; i++) {
+      const has = Math.floor(m / Math.pow(2, i)) % 2 === 1, c = parseInt(body[6 + i], 36);
+      if (!(c >= 0 && c <= CELLS)) return null;
+      if (has) own.push(DECOR_X[i].id);
+      if (c) { if (!has || used.has(c)) return null; used.add(c); pl[DECOR_X[i].id] = c; }
+    }
+    return { own, pl, len: XLEN };
+  }
   const b36 = (n, w) => Math.min(Math.pow(36, w) - 1, Math.max(0, n | 0)).toString(36).toUpperCase().padStart(w, "0");
   const sum3 = t => { let h = 7; for (const c of t) h = (h * 31 + c.charCodeAt(0)) % 46656; return h.toString(36).toUpperCase().padStart(3, "0"); };
-  const HEAD = 3 + 3 + 3 + 3 + 2 + DECOR.length + 2;
+  const HEAD = 3 + 3 + 3 + 3 + 2 + DECOR0.length + 2;
   /* たんけんメモ（あるときだけ 末尾）：ひろばの物 16ビット(4字)＋単元 20ビットずつ(4字ずつ)。
      単元が ふえると かたまりも ふえる。読むときは 前の版の 少ない かたまりの 文字も 読める（単元は 末尾に 足すだけなので 番号は 同じ） */
   const MEMO_CH = Math.ceil(UNIT_IDS.length / 20);
@@ -862,7 +889,7 @@
       return { kp: K, len: R.pos() };
     } catch (e) { return null; }
   }
-  /* HR6（2026-11-26。じぶんの まなびっこ）＝「HR6」＋ 素体の部分(13) ＋ 中身（HR1〜HR4 の 文字そのまま。自分の 確認つき）＋ 確認(3)。
+  /* HR6（2026-11-26。じぶんの まなびっこ）＝「HR6」＋ 素体の部分(13) ＋ 中身（HR1〜HR5 の 文字そのまま。自分の 確認つき）＋ 確認(3)。
      素体の部分：いまの 子（SB_IDS の番号＋1、なしは 0）(1)・もっている 子（SB_IDS の順の 16ビット）(4)・この子の ぼうし・もちもの・はいけい・しょうごう（KZ_IDS の番号＋1、なしは 0）(2)×4。
      中身の 形は かえないので、ほかの 版（HR5 など）が ふえても 包む だけで よい。素体が まだ きまっていなければ 今まで通り HR4〜HR1。古い版のサイトは HR6 を こわれた文字として 断る */
   function sbStr(S) {
@@ -887,13 +914,13 @@
     return ("HR6" + body + sum3("HR6" + body)).match(/.{1,8}/g).join("-");
   }
   function hrMakeIn(S) {
-    const v4 = yaAny(S) || kpAny(S), kzs = kzStr(S, v4), ids = UNIT_IDS.filter(id => stage(S, id) >= 1), mks = kzs ? kzs + mkStr(S, true) : mkStr(S);
-    const tag = v4 ? "HR4" : kzs ? "HR3" : mks ? "HR2" : "HR1";
-    let own = 0; DECOR.forEach((d, i) => { if (S.own.includes(d.id)) own |= 1 << i; });
+    const v5 = dxAny(S), v4 = v5 || yaAny(S) || kpAny(S), kzs = kzStr(S, v4), ids = UNIT_IDS.filter(id => stage(S, id) >= 1), mks = kzs ? kzs + mkStr(S, true) : mkStr(S);
+    const tag = v5 ? "HR5" : v4 ? "HR4" : kzs ? "HR3" : mks ? "HR2" : "HR1";
+    let own = 0; DECOR0.forEach((d, i) => { if (S.own.includes(d.id)) own |= 1 << i; });
     const body = mks + b36(S.d0 - EPOCH, 3) + b36(S.ac.e, 3) + b36(S.ac.s, 3) + b36(S.done ? S.done - EPOCH : 0, 3) + b36(own, 2)
-      + DECOR.map(d => (S.pl[d.id] || 0).toString(36).toUpperCase()).join("") + b36(ids.length, 2)
+      + DECOR0.map(d => (S.pl[d.id] || 0).toString(36).toUpperCase()).join("") + b36(ids.length, 2)
       + ids.map(id => b36(IDX[id] * 4 + stage(S, id), 2)).join("") + memoStr(S);
-    const head = v4 ? yaStr(S) + kpStr(S) : "";
+    const head = (v5 ? dxStr(S) : "") + (v4 ? yaStr(S) + kpStr(S) : "");
     return (tag + head + body + sum3(tag + head + body)).match(/.{1,8}/g).join("-");
   }
   function hrParse(str) {
@@ -902,34 +929,40 @@
       if (t.length < 3 + 13 + 3) return null;
       const body = t.slice(3, -3); if (sum3("HR6" + body) !== t.slice(-3)) return null;
       const sb = sbParse(body); if (!sb) return null;
-      const inner = body.slice(13); if (!RE.test(inner)) return null;          // 中は HR1〜HR4 だけ（HR6 の 中に HR6 は 入れない）
+      const inner = body.slice(13); if (!RE.test(inner)) return null;          // 中は HR1〜HR5 だけ（HR6 の 中に HR6 は 入れない）
       const r = hrParse(inner); if (r) r.sb = sb;
       return r;
     }
     if (!RE.test(t) || t.length < 3 + HEAD + 3) return null;
     const tag = t.slice(0, 3); let body = t.slice(3, -3); if (sum3(tag + body) !== t.slice(-3)) return null;
-    let mk = null, kz = null, y = null, kp = null;
-    if (tag === "HR4") {
+    let mk = null, kz = null, y = null, kp = null, dx = null;
+    if (tag === "HR5") { dx = dxParse(body); if (!dx) return null; body = body.slice(dx.len); }
+    if (tag === "HR4" || tag === "HR5") {
       const a = yaParse(body); if (!a) return null; y = a.y; body = body.slice(a.len);
       const b = kpParse(body); if (!b) return null; kp = b.kp; body = body.slice(b.len);
     }
-    if (tag === "HR3" || tag === "HR4") { const k = kzParse(body); if (!k) return null; kz = k.kz; body = body.slice(k.len); }
+    if (tag === "HR3" || tag === "HR4" || tag === "HR5") { const k = kzParse(body); if (!k) return null; kz = k.kz; body = body.slice(k.len); }
     if (tag !== "HR1") {
       const m = mkParse(body); if (!m) return null; mk = m.mk; body = body.slice(m.len); if (body.length < HEAD) return null;
       if (kz) for (const id in kz.e) if (!mk.own[id]) return null;           // もっていない子の きせかえ
     }
     const r = coreParse(body); if (r) { r.mk = mk; r.kz = kz; r.y = y; r.kp = kp; }
+    if (r && dx) {
+      const used = new Set(Object.values(r.pl));
+      for (const id in dx.pl) { if (used.has(dx.pl[id])) return null; r.pl[id] = dx.pl[id]; }      // 同じ ばしょに 2つは 断る
+      r.own = r.own.concat(dx.own);
+    }
     return r;
   }
   function coreParse(body) {
     let p = 0; const rd = w => { const v = parseInt(body.slice(p, p + w), 36); p += w; return v; };
     const d0 = rd(3), e = rd(3), s = rd(3), dn = rd(3), ownM = rd(2);
-    if (!(s <= e) || ownM >= (1 << DECOR.length)) return null;
+    if (!(s <= e) || ownM >= (1 << DECOR0.length)) return null;
     const pl = {}, used = new Set();
-    for (let i = 0; i < DECOR.length; i++) {
+    for (let i = 0; i < DECOR0.length; i++) {
       const c = parseInt(body[p++], 36);
       if (!(c >= 0 && c <= CELLS)) return null;
-      if (c) { if (used.has(c) || !(ownM & (1 << i))) return null; used.add(c); pl[DECOR[i].id] = c; }
+      if (c) { if (used.has(c) || !(ownM & (1 << i))) return null; used.add(c); pl[DECOR0[i].id] = c; }
     }
     const n = rd(2);
     const rest = body.length - (p + n * 2);
@@ -950,7 +983,7 @@
         for (let i = 0; i < 20; i++) if (v & (1 << i)) { const id = UNIT_IDS[c * 20 + i]; if (!id) return null; mu.push(id); }
       }
     }
-    return { d0: d0 + EPOCH, e, s, done: dn ? dn + EPOCH : 0, own: DECOR.filter((d, i) => ownM & (1 << i)).map(d => d.id), pl, u, mo, mu };
+    return { d0: d0 + EPOCH, e, s, done: dn ? dn + EPOCH : 0, own: DECOR0.filter((d, i) => ownM & (1 << i)).map(d => d.id), pl, u, mo, mu };
   }
   /* 読みこみ：記録が減らない合成。段階は大きいほう、かざりは両方、もらった／つかったは大きいほう（残りがマイナスなら つかったを下げる）。
      今日の分・持ちこし・日付のしるしは読みこまない（読みこみで上限は戻らない） */
@@ -1019,7 +1052,7 @@
     for (const id of x.sh) if (M.sh.length < MK_SHOW && !M.sh.includes(id)) M.sh.push(id);
   }
 
-  return { BZ_N, BZ_RARE, BZ_IDS, bzKo, bzRareOk, bzRarePay, bzRareDone, TK_MAX, TK_GET, TK_STARS, TK_USE, MEMO_O, tkRoll, tkLimit, tkState, tkUse, memoCount, memoTotal, memoAdd, memoPick, explorerMap, CAP, GIFT, CELLS, UNIT_IDS, IDX, PARTS, DECOR, PRICE_TOTAL, TRACK_SUBJ, uGrade, dayNum, dayDate, fresh, clean, balance, sync, give, gapFull,
+  return { BZ_N, BZ_RARE, BZ_IDS, bzKo, bzRareOk, bzRarePay, bzRareDone, TK_MAX, TK_GET, TK_STARS, TK_USE, MEMO_O, tkRoll, tkLimit, tkState, tkUse, memoCount, memoTotal, memoAdd, memoPick, explorerMap, CAP, GIFT, CELLS, UNIT_IDS, IDX, PARTS, DECOR, DECOR0, PRICE_TOTAL, TRACK_SUBJ, uGrade, dayNum, dayDate, fresh, clean, balance, sync, give, gapFull,
     MK, MK_IDS, MK_SOON, MK_STAGE, MK_CAND, MK_SHOW, MK_ART, mkFresh,
     SB, SB_IDS, SB_PRICE, sbFresh, sbStart, sbBuy, sbSet,
     KZ, KZ_IDS, KZ_SLOT, KZ_PRICE_TOTAL, kzFresh, kzUnlocked, kzHas, kzLeft, kzBuy, kzWear, kzOf, kzHatOk, mkStage, mkFree, mkAvail, mkCands, mkPick, mkShow, mkNext, mkWire, mkAvatar,
