@@ -292,13 +292,16 @@ function run(E, from, to, step, f) { let now = from; for (; now <= to; now += st
     const m = await post("create", { mode: "rocket", game: "mine", g: 3, gt: "せっと", qs: [{ t: "mc", q: "1+1は？", ch: ["1", "2", "3"], ok: [1], sec: 10, pt: "normal" }] }); assert.strictEqual(m.s, 200, "先生のもんだい（4択）でも作れる");
     const p = (await post("join", { code: m.j.code, name: "あ" })).j; assert.strictEqual((await post("set", { code: m.j.code, pid: p.pid, token: p.token })).s, 200, "児童は先生のもんだいを受け取れる");
   });
-  await t("server.js：権限・名前を送らない・開始後は入れない・操作の検証", async () => {
+  await t("server.js：権限・名前を送らない・とちゅうから入る／しめきり・操作の検証", async () => {
     const { r, ps } = await mk(3, {}); const [a, b, c] = ps;
     assert.strictEqual((await act(r.code, a, "cans", { ok: true, k: 1 })).s, 409, "始まる前は使えない");
     assert.strictEqual((await post("start", { code: r.code, hostKey: "bad" })).s, 403); assert.strictEqual((await post("start", { code: r.code, hostKey: a.token })).s, 403);
     const hostEv = await events(r.code, { hostKey: r.hostKey }), kidEv = await events(r.code, { pid: a.pid, token: a.token });
     assert.strictEqual((await post("start", { code: r.code, hostKey: r.hostKey })).s, 200);
-    assert.strictEqual((await post("join", { code: r.code, name: "おそい" })).s, 409, "始まってからは入れない");
+    assert.strictEqual((await post("close", { code: r.code, hostKey: r.hostKey, on: true })).s, 200);
+    assert.strictEqual((await post("join", { code: r.code, name: "おそい" })).s, 409, "しめきったら 始まってからも入れない");
+    assert.strictEqual((await post("close", { code: r.code, hostKey: r.hostKey, on: false })).s, 200);
+    const late = await post("join", { code: r.code, name: "おそい" }); assert.strictEqual(late.s, 200, "しめきっていなければ、とちゅうからでも入れる");
     await sleep(SC * 3000 + 400);
     for (const [pid, tk] of [[a.pid, "bad"]]) assert.strictEqual((await post("act", { code: r.code, pid, token: tk, op: "cans", ok: true, k: 1 })).s, 403);
     for (const op of ["add", "move", "qans", "answer", "x2", "steal", "zzz", ""]) assert.strictEqual((await act(r.code, a, op, { ok: true, k: 1, right: true, n: 5 })).s, 403, op);
@@ -311,7 +314,7 @@ function run(E, from, to, step, f) { let now = from; for (; now <= to; now += st
     const kid = kidEv.msgs[kidEv.msgs.length - 1], host = hostEv.msgs[hostEv.msgs.length - 1];
     assert.strictEqual(kid.mode, "rocket"); assert.ok(kid.co && kid.co.k === "rk"); assert.deepStrictEqual(kid.players, [], "対戦中は人の一覧を送らない"); assert.strictEqual(typeof kid.me, "string");
     const txt = JSON.stringify(kidEv.msgs); for (const q of ps) assert.ok(!txt.includes(q.token), "token を送らない"); assert.ok(!("bb" in kid.co), "吹き出しは児童に送らない");
-    assert.ok(host.players.length === 3 && host.players.every(p => p.name && "ix" in p), "先生には名前つきの一覧（吹き出し用）");
+    assert.ok(host.players.length === 4 && host.players.every(p => p.name && "ix" in p), "先生には名前つきの一覧（吹き出し用）");
     assert.ok(!kidEv.msgs.some(m => (m.players || []).some(p => p.name)), "児童には他の子の名前を送らない");
     assert.ok(hostEv.msgs.some(m => m.co && m.co.bb), "先生には吹き出しが届く");
     assert.strictEqual((await post("kick", { code: r.code, hostKey: r.hostKey, pid: c.pid })).s, 200);
