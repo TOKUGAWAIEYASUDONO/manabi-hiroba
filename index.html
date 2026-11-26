@@ -856,6 +856,16 @@ body[data-v=host] .wrap{max-width:none;padding:0}
 .px .note,.px .chip,.px .hrank .note{font-size:28px}
 .px-dock{position:fixed;right:14px;bottom:12px;display:flex;gap:10px;align-items:center;justify-content:flex-end;flex-wrap:wrap;max-width:calc(100vw - 28px);z-index:25}
 .px-dock .btn{font-size:20px;padding:8px 18px;min-height:52px}
+.px-code{position:fixed;left:14px;bottom:12px;z-index:24;display:flex;align-items:center;gap:10px;flex-wrap:wrap;max-width:calc(100vw - 28px);background:rgba(255,255,255,.94);color:#2b2b2b;border:3px solid #f2b705;border-radius:14px;padding:6px 12px;box-shadow:0 4px 12px rgba(0,0,0,.25)}
+.px-code .l{font-size:16px;font-weight:700}
+.px-code b{font-size:36px;letter-spacing:.12em;line-height:1;font-variant-numeric:tabular-nums}
+.px-code .btn{font-size:14px;padding:4px 10px;min-height:36px}
+.px-code.closed{border-color:#999}
+.px-code.inline{position:static;box-shadow:none;margin-right:auto;padding:4px 10px;gap:6px}
+.qzh-ctl .px-code .btn{font-size:13px;padding:3px 8px;min-height:32px}
+.px-code.inline b{font-size:28px}
+.px-code.inline .l{font-size:13px}
+@media (max-width:700px){ .px-code{bottom:auto;top:8px;left:8px} .px-code b{font-size:26px} }
 .px-dock .px-next{display:flex;gap:10px;flex-wrap:wrap}
 .px-dock .px-sig{flex-basis:100%;text-align:right;font-size:15px;background:#fff7d6;color:#5a4300;border:2px solid #e0b400;border-radius:10px;padding:6px 10px}
 .px-dock #hs{font-size:34px;padding:10px 46px;min-height:76px;background:var(--go);color:#fff;border:4px solid #fff;box-shadow:0 0 0 4px var(--go),0 6px 14px rgba(0,0,0,.35)}
@@ -2119,7 +2129,7 @@ const TX={
  /* 前に映す大画面（先生の端末） */
  "px.fs":["全画面《ぜんがめん》"],"px.back":["先生《せんせい》の画面《がめん》"],"px.start":["スタート！"],"px.end":["ここで終《お》わる"],"px.copy":["結果《けっか》をコピー"],"px.new":["同《おな》じ設定《せってい》で新《あたら》しい部屋《へや》"],"px.next":["つぎの あそびを えらぶ"],"px.again":["もういちど おなじ あそび"],"px.chg":["あそびを かえる（この へやの まま）"],
  "px.sig.retry":["仲介《ちゅうかい》サーバーに つなぎなおしています。いま つながっている子《こ》は そのまま あそべます"],"px.sig.lost":["仲介《ちゅうかい》サーバーに つながりません。いま つながっている子《こ》は そのまま あそべますが、あとから 入《はい》る子《こ》は 入《はい》れません"],
- "px.close":["入室《にゅうしつ》をしめきる"],"px.open":["しめきりを やめる"],"px.locked":["入室《にゅうしつ》はしめきりました"],
+ "px.close":["入室《にゅうしつ》をしめきる"],"px.late":["とちゅうからでも 入《はい》れるよ　ばんごう"],"px.open":["しめきりを やめる"],"px.locked":["入室《にゅうしつ》はしめきりました"],
  "px.memo":["先生《せんせい》用《よう》"],"px.url":["参加《さんか》のアドレス："],"px.code":["コードで参加《さんか》","ばんごう"],"px.n":["参加《さんか》：","さんか "],"px.nin":["人《にん》","にん"],"px.none":["まだ誰《だれ》もいません"],
  "px.more":[n=>`ほか ${n}人《にん》`],"px.left":["のこり時間《じかん》"],"px.ev":["できごと"],"px.top3":["上位《じょうい》3人《にん》"],"px.masu":["マス"],
  "px.res":["結果《けっか》"],"px.avg":[(n,a)=>`${n}人《にん》・平均《へいきん》正答率《せいとうりつ》 ${a}%`],"px.ok":[(a,b)=>`正解《せいかい》 ${a}/${b}`],
@@ -5561,8 +5571,8 @@ function hrEmoji(r){      // 名前を入力する部屋のアイコン：まだ
   const used=new Set([...r.players.values()].map(p=>p.emoji)), free=NICK_ANI.filter(a=>!used.has(a[1])), from=free.length?free:NICK_ANI;
   return from[rnd(from.length)][1];
 }
-/* 部屋に入れない状態：終わった／もう始まった（途中参加はできない）／先生が しめきった */
-const hrJoinBlock=r=>r.status==="ended"?[409,{error:"この対戦はもう終わっています"}]:r.status!=="lobby"?[409,{error:"もう始まっているので入れません"}]:r.closed?[409,{error:"入室はしめきられました"}]:null;
+/* 部屋に入れない状態：終わった／先生が しめきった。あそんでいる とちゅうでも 入れる（とちゅうから 入った子は 0点・スタートの マスから。じんとりは 人数の すくない チームへ） */
+const hrJoinBlock=r=>r.status==="ended"?[409,{error:"この対戦はもう終わっています"}]:r.closed?[409,{error:"入室はしめきられました"}]:null;
 /* join のくり返し制限：1つの接続から10秒に5回まで／部屋全体で1秒に10回まで（コードを当てる総当たり・部屋を埋める いたずら対策）。
    部屋全体の分は すぐ断らず、順番を まってもらう（先生が「みんな入って」と言うと、30人が同じ1秒に来るため）。
    返すのは まつ ミリ秒（0 なら すぐ）。-1 は断る（同じ接続の くり返し・まちが 長すぎる） */
@@ -6264,7 +6274,7 @@ function renderHost(){
   function dockSet(k){
     if(dockKind===k) return; dockKind=k;
     const d=document.getElementById("pxdock");
-    const note=`<details class="px-note"><summary>${T("px.memo")}</summary><div class="pn">${warn()}${privacy()}<div class="note">${T("px.url")}${esc(joinUrl)}</div><div class="note">全員《ぜんいん》がそろったら「入室をしめきる」を押してください（ゲームが始まると、あとからは入れません）。コードを教室の外の人に知られたときは、「先生の画面」にもどって部屋を作りなおすと、新しいコードになります。名前が気になる子は、名前を押すと変えたり出したりできます。</div><div id="pxextra"></div><div class="err" id="herr"></div></div></details>`;   //T
+    const note=`<details class="px-note"><summary>${T("px.memo")}</summary><div class="pn">${warn()}${privacy()}<div class="note">${T("px.url")}${esc(joinUrl)}</div><div class="note">あそんでいる とちゅうでも、画面の左下の ばんごうで あとから入れます（0点・スタートから）。入れたくないときは「入室をしめきる」を押してください。コードを教室の外の人に知られたときは、「先生の画面」にもどって部屋を作りなおすと、新しいコードになります。名前が気になる子は、名前を押すと変えたり出したりできます。</div><div id="pxextra"></div><div class="err" id="herr"></div></div></details>`;   //T
     const bk=`<button type="button" class="btn sub" onclick="go('#teacher')">${ic("arrow-left")}${T("px.back")}</button>`;
     const nx=`<button type="button" class="btn" id="hnx">${ic("arrow-right")}${T("px.next")}</button><button type="button" class="btn sub" id="hn">${ic("rotate-ccw")}${T("px.again")}</button>`;      // 同じ部屋・同じコードのまま（児童は入りなおさない）
     const chg=`<button type="button" class="btn sub" id="hnx">${T("px.chg")}</button>`;
@@ -6272,7 +6282,7 @@ function renderHost(){
       :k==="rkend"||k==="m1end"?nx
       :k==="m1"?`<button type="button" class="btn sub" id="hcl" aria-pressed="false">${ic("lock")}<span id="hclt">${T("px.close")}</span></button><button type="button" class="btn sub" id="he">${T("px.end")}</button>`
       :k==="end"?`${csvOptHtml()}<button type="button" class="btn sub" id="hc">${T("px.copy")}</button>${nx}`
-      :`<button type="button" class="btn sub" id="he">${T("px.end")}</button>`;
+      :`<button type="button" class="btn sub" id="hcl" aria-pressed="false">${ic("lock")}<span id="hclt">${T("px.close")}</span></button><button type="button" class="btn sub" id="he">${T("px.end")}</button>`;      // あそんでいる とちゅうも しめきれる
     const ends=k==="end"||k==="rkend"||k==="m1end";      // 終わったら、つぎへの ボタンは メニューの外にも出す
     d.innerHTML=`<details class="px-menu"><summary>&#9776; メニュー</summary><div class="px-menu-panel">${note}${bk}${main.replace(/<button[^>]*id="hs"[^>]*>.*?<\/button>/, "").replace(ends?nx:"\u0000","")}${fsBtn()}${bgmBtn()}</div></details>`+(k==="lobby"?`<button type="button" class="btn" id="hs">${T("px.start")}</button>`:"")+(ends?`<span class="px-next">${nx}</span>`:"")+`<div class="px-sig hidden" id="pxsig" role="status"></div>`;
     const b=id=>document.getElementById(id);
@@ -6366,10 +6376,25 @@ function renderHost(){
     extra.innerHTML=`<div class="note">${T("px.avg",ps.length,avg)}・${T("z.all",allOk)}</div>`;
     if(!easyR) extra.append(teacherOnly(h("div",{innerHTML:rows.slice(0,vis).map(rowHtml).join("")+(rows.length>vis?`<p class="px-more">${T("px.more",rows.length-vis)}</p>`:"")})));
   };
+  /* あそんでいる とちゅうの ばんごう：大画面の 左下に 小さく。しめきったら ばんごうは かくす。クイズは 画面ぜんぶを 作りなおすので、毎回 たしかめて つけなおす */
+  const pxCodeTag=s=>{
+    let e=document.getElementById("pxcode");
+    const on=s.status==="playing"&&s.mode!=="m100";
+    if(!on){ if(e) e.remove(); return; }
+    const box=app.querySelector(".qzh-ctl")||app;      // クイズは 下の ボタンの 列の 中に（ボタンに かさならない）
+    if(!e||e.parentNode!==box){ if(e) e.remove(); e=document.createElement("div"); e.id="pxcode"; e.className="px-code"+(box===app?"":" inline"); e.setAttribute("role","status"); box.prepend(e); e.dataset.k=""; }
+    const k=s.code+":"+(s.closed?1:0); if(e.dataset.k===k) return; e.dataset.k=k;
+    e.classList.toggle("closed",!!s.closed);
+    e.innerHTML=(s.closed?`<span class="l">${ic("lock")} ${rbp(T("px.locked"))}</span>`:`<span class="l">${rbp(T("px.late"))}</span><b>${esc(s.code)}</b>`)
+      +`<button type="button" class="btn sub" id="pxcl">${s.closed?rbp(T("px.open")):rbp(T("px.close"))}</button>`;
+    e.querySelector("#pxcl").onclick=()=>api("close",{...HOST,on:!s.closed}).catch(err);
+    const cl=document.getElementById("hcl"); if(cl){ document.getElementById("hclt").textContent=T(s.closed?"px.open":"px.close"); cl.setAttribute("aria-pressed",s.closed?"true":"false"); }
+  };
   const sigShow=s=>{ const e=document.getElementById("pxsig"); if(!e) return; const k=s.sig==="retry"||s.sig==="lost"?s.sig:"";
     e.classList.toggle("hidden",!k); if(k) e.textContent=rbp(T("px.sig."+k)); };
   const draw=s=>{
     last=s; HLAST=s; setLG(s.g); bgmSync(); const m=modeOf(s), x=gameOf(s);
+    setTimeout(()=>pxCodeTag(s),0);      // あそんでいる とちゅうも、左下に ばんごう（あとから 来た子が 入れる）
     if(B.rd===undefined) B.rd=s.rd; else if(s.rd!==B.rd){ B.rd=s.rd; setTimeout(route,0); return; }      // つぎの あそびになったら、大画面を はじめから 作りなおす
     setTimeout(()=>sigShow(s),0);
     if(s.mode==="m100"){      // 100マス はっぴょう：待合室のまま 受けとって、その場で 出す

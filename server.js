@@ -96,9 +96,8 @@ function pickEmoji(room) {
   const free = ANI.filter(a => !used.has(a[1])), from = free.length ? free : ANI;
   return from[rnd(from.length)][1];
 }
-// 部屋に入れない状態：終わった／もう始まった（途中参加はできない）／先生が しめきった
+// 部屋に入れない状態：終わった／先生が しめきった。あそんでいる とちゅうでも 入れる（0点・スタートから。じんとりは 人数の すくない チームへ）
 const joinBlock = room => room.status === "ended" ? [409, { error: "この対戦はもう終わっています" }]
-  : room.status !== "lobby" ? [409, { error: "もう始まっているので入れません" }]
   : room.closed ? [409, { error: "入室はしめきられました" }] : null;
 const NAME_ERR = { empty: "名前を入れてね", long: "名前は8文字までです", chars: "使えない文字が入っています", ng: "その名前は使えません", pii: "数字が長くならぶ名前や、メール・URLの名前は使えません" };
 const allNames = (room, except) => [...room.players.values()].filter(q => q !== except).map(q => q.name);
