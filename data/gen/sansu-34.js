@@ -124,6 +124,8 @@
       if (sub && A <= B) continue;
       if (p.detailCarry === 'no' && a % 10 + b % 10 >= 10) continue;
       if (p.detailCarry === 'yes' && a % 10 + b % 10 < 10) continue;
+      if (p.detailBorrow === 'no' && (!sub || A % 10 < B % 10)) continue;     // 3年 小数の ひき算：0.1の位で くり下がらない
+      if (p.detailBorrow === 'yes' && (!sub || A % 10 >= B % 10)) continue;   // 0.1の位で くり下がる
       const ans = sub ? A - B : A + B;
       if (!nz(ans)) continue;
       const wr = [sub ? Math.abs(a - b) : a + b, ans + 1, ans - 1, ans + 10, ans - 10, ans + 100, ans - 100].filter((x, i) => i < 1 ? pa !== pb : true);
