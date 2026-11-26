@@ -65,6 +65,9 @@ const g=await (await SL.handleGet(get('himitsu-123'),env,T0)).json();
 assert.equal(g.rows.length,1,'回数の 少ない 行（1回）は 出さない');
 assert.equal(g.rows[0].rounds,12);
 assert.deepEqual(g.days,[{day:'2026-11-26',rounds:13,q:260}]);
+const env2={DB,STATS_KEY:'ひみつの ことば'};
+assert.equal((await SL.handleGet(get(encodeURIComponent('ひみつの ことば')),env2,T0)).status,200,'日本語の 合言葉');
+assert.equal((await SL.handleGet(get(encodeURIComponent('ひみつの')),env2,T0)).status,401);
 const g7=await (await SL.handleGet(get('himitsu-123',7),env,T0+40*864e5)).json();
 assert.equal(g7.rows.length,0,'期間の 外は 出さない');
 assert.equal(SL.sameKey('a','a'),true); assert.equal(SL.sameKey('a','ab'),false); assert.equal(SL.sameKey('',''),false);
@@ -75,6 +78,7 @@ assert.ok(/<script src="data\/statlib\.js\?v=[0-9a-f]{8}"><\/script>/.test(html)
 assert.equal((html.match(/stSend\(p\);/g)||[]).length,1,'送るのは finish の 1か所だけ');
 assert.ok(/id="statOn"/.test(html)&&/ST\.CFG,\{on:so\.checked\?1:0\}/.test(html),'先生の 設定で オフに できる');
 const st=fs.readFileSync(path.join(root,'stats.html'),'utf8');
+assert.ok(st.includes('"x-stats-key":encodeURIComponent(key)'),'合言葉は エンコードして 送る');
 assert.ok(/name="robots" content="noindex/.test(st),'見る画面は 検索に 出さない');
 assert.ok(!html.includes('stats.html'),'児童の 画面から 見る画面へ リンクしない');
 for(const f of ['stat.js','stats.js']) assert.ok(/from "\.\.\/\.\.\/data\/statlib\.js"/.test(fs.readFileSync(path.join(root,'functions/api',f),'utf8')),f);

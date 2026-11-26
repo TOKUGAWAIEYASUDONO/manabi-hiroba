@@ -72,9 +72,9 @@
     let d = a.length ^ b.length; for (let i = 0; i < Math.max(a.length, b.length); i++) d |= (a.charCodeAt(i) | 0) ^ (b.charCodeAt(i) | 0);
     return d === 0;
   }
-  /* GET /api/stats?days=7|30|0（0＝ぜんぶ）。合言葉は x-stats-key */
+  /* GET /api/stats?days=7|30|0（0＝ぜんぶ）。合言葉は x-stats-key（日本語も 使えるよう encodeURIComponent した 形で 送る・くらべる） */
   async function handleGet(request, env, now) {
-    if (!env || !env.STATS_KEY || !sameKey(request.headers.get("x-stats-key"), env.STATS_KEY)) return res(401, { error: "key" });
+    if (!env || !env.STATS_KEY || !sameKey(request.headers.get("x-stats-key"), encodeURIComponent(env.STATS_KEY))) return res(401, { error: "key" });
     if (!env.DB) return res(503, { error: "db" });
     await ensure(env.DB);
     const days = +new URL(request.url).searchParams.get("days") || 0;

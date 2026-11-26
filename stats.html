@@ -74,7 +74,7 @@ td.n{text-align:right}
 <script src="data/gen/textbook-extra.js?v=a71e349b"></script>
 <script src="data/gen/bunsho.js?v=816e2a4c"></script>
 <script src="data/units.js?v=74dad08a"></script>
-<script src="data/statlib.js?v=92f43e22"></script>
+<script src="data/statlib.js?v=2733002d"></script>
 <script>
 (function(){
   var GN={calc:"計算スプリント",kuku:"九九",kanji:"漢字のよみ",kencho:"県庁所在地",eigo:"英単語"}, MN={n:"いつもの",ta:"タイムアタック",sd:"サドンデス"};
@@ -95,7 +95,7 @@ td.n{text-align:right}
   $("f").onsubmit=function(e){
     e.preventDefault(); $("st").className="msg"; $("st").textContent="読みこみ中…";
     var key=$("key").value;
-    fetch("/api/stats?days="+$("days").value,{headers:{"x-stats-key":key},cache:"no-store"}).then(function(r){
+    fetch("/api/stats?days="+$("days").value,{headers:{"x-stats-key":encodeURIComponent(key)},cache:"no-store"}).then(function(r){
       if(r.status===401) throw new Error("合言葉がちがいます。");
       if(r.status===503) throw new Error("データベースがまだつながっていません。");
       if(!r.ok) throw new Error("読みこめませんでした（"+r.status+"）。");
