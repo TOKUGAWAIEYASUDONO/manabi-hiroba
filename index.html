@@ -576,8 +576,10 @@ body[data-bw="race"]{--bwc:#a9d7ee;--bwi:url(vendor/img/battle/race-map.webp)}
 .umico{font-size:30px;flex:none;width:38px;text-align:center}
 .umbody{flex:1;min-width:0;display:flex;flex-direction:column;gap:1px}
 .umbody b{font-size:21px;line-height:1.3}.umd{font-size:14px;line-height:1.4}.umg{font-size:13px;font-weight:700;color:#8a3b00;line-height:1.4}
-.umbtn:has(.umgl){flex-wrap:wrap;row-gap:6px}
-.umgl{flex-basis:100%;display:flex;flex-direction:column;gap:2px;background:rgba(255,255,255,.6);border-radius:10px;padding:4px}
+.umwrap{margin:0 0 12px}.umwrap .umbtn{margin:0}
+.umtog{display:block;margin:4px 0 0 auto;background:none;border:0;padding:6px 8px;font:inherit;font-size:14px;font-weight:700;color:#355d8a;cursor:pointer;min-height:36px}
+.umgl{display:flex;flex-direction:column;gap:2px;border-radius:10px;padding:4px;margin-top:2px;border:2px solid var(--edge)}.umgl[hidden]{display:none}
+.umwrap.um-n .umgl{background:#f1f9f2}.umwrap.um-ta .umgl{background:#f0f6fd}.umwrap.um-sd .umgl{background:#fef5f1}
 .umgr{display:flex;align-items:baseline;gap:6px;font-size:14px;line-height:1.35;color:#5b4a3a;padding:1px 6px;border-radius:8px}
 .umgr.nx{background:#fff3c4;color:#8a3b00;font-weight:700}
 .umgr.done{color:#7a8a7a}.umgr.capd{color:#8a7f74;font-size:12px}
@@ -2379,7 +2381,7 @@ const TX={
  /* 算数の 単元の ★（いつもの・タイムアタック・サドンデス） */
  "ust.n":["いつもの"],"ust.ta":["タイム"],"ust.sd":["サドン"],
  "ust.aria":[(a,b,c)=>`ほし：いつもの ${a}、タイムアタック ${b}、サドンデス ${c}`],
- "um.t":["どれで あそぶ？"],"um.next":["つぎの ★"],"ust.g.n":[(n,p)=>`1分《ぷん》で ○ ${n}こ（${accW(p)}）`,(n,p)=>`1ぷんで ○ ${n}こ（${accW(p,1)}）`],"um.got":["とった"],
+ "um.t":["どれで あそぶ？"],"um.next":["つぎの ★"],"um.all":["★の きまりを ぜんぶ 見《み》る ▼","★の きまりを ぜんぶ みる ▼"],"um.close":["とじる ▲"],"ust.g.n":[(n,p)=>`1分《ぷん》で ○ ${n}こ（${accW(p)}）`,(n,p)=>`1ぷんで ○ ${n}こ（${accW(p,1)}）`],"um.got":["とった"],
  "ust.top":["★3つ！ さいこう！"],"ust.up":["ほしが ふえた！"],
  "ust.open":["★3つ！ バトルで この たんげんを えらべるように なったよ"],
  "ust.next":[(n,k)=>`★${n}つまで あと ${k} 問《もん》`,(n,k)=>`★${n}つまで あと ${k} もん`],
@@ -7966,17 +7968,25 @@ function uModeSheet(u,choice,start){
       h("span",{class:"umgs","aria-label":"ほし "+(i+1),text:"★".repeat(i+1)}),
       h("span",{class:"umgt",text:capd?T("ust.cap.ch"):cond(m,i)}),
       done?h("span",{class:"umgk",text:"✓","aria-label":T("um.got")}):null); }));
-  const btn=(m,ico,n)=>h("button",{type:"button",class:"umbtn um-"+m,onclick:()=>{ close(); start(m); }},
-    h("span",{class:"umico","aria-hidden":"true",text:ico}),
-    h("span",{class:"umbody"},h("b",{text:T("sp."+m)}),h("span",{class:"umd",text:m==="n"?T("sp.n.d"):m==="ta"?T("sp.ta.d",SP_TA):T("sp.sd.d")})),
-    star?h("span",{class:"umst",innerHTML:uStarH(n)}):null,star?goal(m,n):null);
-  const first=btn("n","⏱",s.n);
+  /* 2026-11-26：3行 ずっと 出すと 行が 多すぎるので、はじめは「つぎの ★」の 1行だけ。「★の きまりを ぜんぶ 見る」で 3行 ひらく */
+  const nextLine=(m,n)=>n>=3?T("ust.top"):n>=cap?T("ust.cap.ch"):T("um.next")+(n+1)+"："+cond(m,n);
+  const btn=(m,ico,n)=>{
+    const b=h("button",{type:"button",class:"umbtn um-"+m,onclick:()=>{ close(); start(m); }},
+      h("span",{class:"umico","aria-hidden":"true",text:ico}),
+      h("span",{class:"umbody"},h("b",{text:T("sp."+m)}),h("span",{class:"umd",text:m==="n"?T("sp.n.d"):m==="ta"?T("sp.ta.d",SP_TA):T("sp.sd.d")}),star?h("span",{class:"umg",text:nextLine(m,n)}):null),
+      star?h("span",{class:"umst",innerHTML:uStarH(n)}):null);
+    if(!star) return b;
+    const list=goal(m,n); list.hidden=true;
+    const tog=h("button",{type:"button",class:"umtog","aria-expanded":"false",text:T("um.all"),onclick:()=>{ const op=list.hidden; list.hidden=!op; tog.setAttribute("aria-expanded",String(op)); tog.textContent=T(op?"um.close":"um.all"); }});
+    return h("div",{class:"umwrap um-"+m},b,tog,list);
+  };
+  const first=btn("n","⏱",s.n), firstB=first.tagName==="BUTTON"?first:first.firstChild;
   const el=h("div",{class:"sheetbg exbg",id:"umsheet",onclick:e=>{ if(e.target===el) close(); }},
     h("div",{class:"sheet umsheet",role:"dialog","aria-modal":"true","aria-label":T("um.t")},
       h("h3",{text:T("um.t")}),h("p",{class:"umu",text:u.title}),
       first,btn("ta","🏁",s.ta),btn("sd","🔥",s.sd),
       h("button",{type:"button",class:"btn sub s umx",text:T("back"),onclick:close})));
-  document.addEventListener("keydown",onKey); document.body.appendChild(el); first.focus();
+  document.addEventListener("keydown",onKey); document.body.appendChild(el); firstB.focus();
 }
 /* 例題（ひとことの解き方）を見せる */
 function uEx(u){
