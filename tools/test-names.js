@@ -173,18 +173,21 @@ const why = s => NM.check(s).why;
       await post("act", { code: r.code, pid: b.pid, token: b.token, op: "qans", i: 0, c: 0 });       // 残り全員が答えた → 正解を見せる
       assert.strictEqual((await state(`code=${r.code}&hostKey=${r.hostKey}`)).j.quiz.phase, "reveal");
     });
-    await t("ゲームが始まったあとの参加は断る（待合室だけ参加できる）", async () => {
+    await t("ゲームが始まったあとも参加できる（しめきっていなければ）。終わったあとは断る", async () => {
       const r = await mkRoom(), a = (await post("join", { code: r.code, name: "さき" })).j;
-      assert.strictEqual((await post("info", { code: r.code })).s, 200);
       assert.strictEqual((await post("start", { code: r.code, hostKey: r.hostKey })).s, 200);
+      assert.strictEqual((await post("info", { code: r.code })).s, 200, "info も通る");
       const j = await post("join", { code: r.code, name: "おくれ" });
-      assert.strictEqual(j.s, 409); assert.ok(/始まっている/.test(j.j.error), j.j.error);
-      assert.strictEqual((await post("info", { code: r.code })).s, 409, "info でも先に断る");
-      const h = (await state(`code=${r.code}&hostKey=${r.hostKey}`)).j; assert.strictEqual(h.players.length, 1);
+      assert.strictEqual(j.s, 200, "とちゅうから入れる");
+      const h = (await state(`code=${r.code}&hostKey=${r.hostKey}`)).j; assert.strictEqual(h.players.length, 2);
+      assert.strictEqual(h.players.find(p => p.pid === j.j.pid).v, 0, "とちゅうから来た子は 0 から");
       assert.strictEqual((await post("act", { code: r.code, pid: a.pid, token: a.token, op: "add", n: 5 })).s, 200, "はじめから入っていた子は遊べる");
+      assert.strictEqual((await post("act", { code: r.code, pid: j.j.pid, token: j.j.token, op: "add", n: 5 })).s, 200, "とちゅうから来た子も遊べる");
+      assert.strictEqual((await post("close", { code: r.code, hostKey: r.hostKey, on: true })).s, 200);
+      assert.strictEqual((await post("join", { code: r.code, name: "もっと" })).s, 409, "しめきったら入れない");
       const q = (await post("create", { mode: "quiz", game: "quiz", g: 3, t: 120, gt: "T", qs: [{ t: "mc", q: "1+1は？", ch: ["1", "2"], ok: [1], sec: 20, pt: "normal" }] })).j;
       await post("join", { code: q.code, name: "ひとり" }); await post("start", { code: q.code, hostKey: q.hostKey });
-      assert.strictEqual((await post("join", { code: q.code, name: "とちゅう" })).s, 409, "クイズも途中参加はできない");
+      assert.strictEqual((await post("join", { code: q.code, name: "とちゅう" })).s, 200, "クイズも とちゅうから入れる");
       const e = await mkRoom(); await post("join", { code: e.code, name: "ひと" }); await post("end", { code: e.code, hostKey: e.hostKey });
       assert.strictEqual((await post("join", { code: e.code, name: "あと" })).s, 409, "終わったあとも不可");
     });

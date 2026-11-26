@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>回答スピードの集計</title>
+<!-- 運営者だけの ページ（合言葉つき）。どこからも リンクしない。中身の きまりは data/statlib.js -->
+<style>
+:root{--bg:#f7f7f4;--card:#fff;--ink:#1f2328;--sub:#5b636b;--line:#dfe2e5;--acc:#2f6f4f;--bar:#7fb89a}
+@media (prefers-color-scheme:dark){:root{--bg:#16181b;--card:#1f2226;--ink:#e8eaed;--sub:#a3abb3;--line:#353a40;--acc:#7fcfa4;--bar:#3f7d5c}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.6 system-ui,-apple-system,"Hiragino Sans","Yu Gothic UI",sans-serif}
+main{max-width:1000px;margin:0 auto;padding:20px 16px 60px}
+h1{font-size:22px;margin:0 0 4px}
+.sub{color:var(--sub);font-size:13px;margin:0 0 16px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px 16px;margin:0 0 14px}
+form{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+input,select,button{font:inherit;padding:8px 10px;border:1px solid var(--line);border-radius:8px;background:var(--card);color:var(--ink)}
+button{background:var(--acc);color:#fff;border-color:var(--acc);cursor:pointer}
+.kpi{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px}
+.kpi div{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:10px 14px}
+.kpi b{display:block;font-size:24px;font-variant-numeric:tabular-nums}
+.kpi span{color:var(--sub);font-size:12px}
+.wrap{overflow-x:auto}
+table{border-collapse:collapse;width:100%;min-width:640px;font-variant-numeric:tabular-nums}
+th,td{padding:7px 8px;border-bottom:1px solid var(--line);text-align:left;white-space:nowrap}
+th{font-size:12px;color:var(--sub);font-weight:600;cursor:pointer}
+td.n{text-align:right}
+.bar{display:inline-block;height:8px;border-radius:4px;background:var(--bar);vertical-align:middle;margin-left:6px}
+.days{display:flex;align-items:flex-end;gap:3px;height:90px;margin-top:8px}
+.days i{flex:1;min-width:3px;background:var(--bar);border-radius:3px 3px 0 0}
+.msg{color:var(--sub)}
+.err{color:#c0392b}
+</style>
+</head>
+<body>
+<main>
+<h1>回答スピードの集計</h1>
+<p class="sub">ひとりの練習が1回終わるたびに届く、名前のない数字の合計です。回数が少ない（<span id="min">10</span>回未満の）組み合わせは出しません。</p>
+<div class="card">
+<form id="f">
+<input id="key" type="password" placeholder="合言葉" autocomplete="current-password" required>
+<select id="days"><option value="7">この1週間</option><option value="30" selected>この30日</option><option value="0">ぜんぶ</option></select>
+<button>見る</button>
+<span id="st" class="msg"></span>
+</form>
+</div>
+<div id="out" hidden>
+<div class="kpi" id="kpi"></div>
+<div class="card"><b>日ごとの回数</b><div class="days" id="dbar"></div><div class="msg" id="drange"></div></div>
+<div class="card wrap"><table><thead><tr>
+<th data-k="name">遊び・単元</th><th data-k="g">学年</th><th data-k="m">あそびかた</th><th data-k="rounds">回数</th><th data-k="q">問題数</th><th data-k="sec">1問の平均（秒）</th><th data-k="acc">正答率</th>
+</tr></thead><tbody id="tb"></tbody></table></div>
+</div>
+</main>
+<script src="data/questions.js?v=4b6cb4e6"></script>
+<script src="data/config.js?v=493aa644"></script>
+<script src="data/calc.js?v=68d3ad60"></script>
+<script src="data/choices.js?v=6181c790"></script>
+<script src="data/quizlib.js?v=b43d5f5f"></script>
+<script src="data/mathview.js?v=cdf1f036"></script>
+<script src="data/ngwords.js?v=8e481828"></script>
+<script src="data/cooplib.js?v=de6dd4c5"></script>
+<script src="data/gen/core.js?v=6d93eab5"></script>
+<script>window.RIKA_PUBLIC=true;</script>
+<script>window.BOSS_STAGE_PUBLIC=false;      // ひとりで ボスバトルの ステージ版（ステージ・ざこ・ひっさつわざ・ずかん）：false の あいだは 公開ページでは 今までの ボスバトル。手もと（localhost）では 出る。ひろばの 公開と いっしょに true に する</script>
+<script>window.HIROBA_PUBLIC=false;      // じぶんの ひろば：false の あいだは 公開ページで「もうすぐ くるよ」（入れない・どんぐりも ふえない）。手もとの確認（localhost・127.0.0.1）では ひらく</script>
+<script>if(window.RIKA_PUBLIC) document.write('<script src="data/gen/rika.js?v=4f58fe09"><\/script>');</script>
+<script src="data/gen/other.js?v=0a3ecac9"></script>
+<script src="data/gen/sansu-12.js?v=6804d0aa"></script>
+<script src="data/gen/sansu-34.js?v=e3693340"></script>
+<script src="data/gen/sansu-56.js?v=a59a9cba"></script>
+<script src="data/gen/textbook-extra.js?v=a71e349b"></script>
+<script src="data/gen/bunsho.js?v=816e2a4c"></script>
+<script src="data/units.js?v=89994373"></script>
+<script src="data/statlib.js?v=2733002d"></script>
+<script>
+(function(){
+  var GN={calc:"計算スプリント",kuku:"九九",kanji:"漢字のよみ",kencho:"県庁所在地",eigo:"英単語"}, MN={n:"いつもの",ta:"タイムアタック",sd:"サドンデス"};
+  var UT={}; try{ (window.UNITS||[]).forEach(function(u){ UT[u.id]=u.title; }); }catch(e){}
+  var $=function(id){return document.getElementById(id)}, rows=[], sortK="rounds", sortD=-1;
+  if(window.MH_STAT) $("min").textContent=MH_STAT.MIN_ROUNDS;
+  try{ var k=sessionStorage.getItem("mh_stats_key"); if(k) $("key").value=k; }catch(e){}
+  var esc=function(s){return String(s).replace(/[&<>"]/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]})};
+  function paint(){
+    var max=Math.max.apply(null,rows.map(function(r){return r.sec}).concat([1]));
+    rows.sort(function(a,b){ var x=a[sortK],y=b[sortK]; return (x>y?1:x<y?-1:0)*sortD; });
+    $("tb").innerHTML=rows.map(function(r){
+      return "<tr><td>"+esc(r.name)+"</td><td>"+(r.g?r.g+"年":"―")+"</td><td>"+MN[r.m]+"</td><td class=n>"+r.rounds+"</td><td class=n>"+r.q+
+        "</td><td class=n>"+r.sec.toFixed(1)+"<span class=bar style='width:"+Math.round(r.sec/max*60)+"px'></span></td><td class=n>"+r.acc+"%</td></tr>";
+    }).join("")||"<tr><td colspan=7 class=msg>まだ出せる数字がありません。</td></tr>";
+  }
+  document.querySelectorAll("th").forEach(function(th){ th.onclick=function(){ var k=th.dataset.k; sortD=k===sortK?-sortD:(k==="name"?1:-1); sortK=k; paint(); }; });
+  $("f").onsubmit=function(e){
+    e.preventDefault(); $("st").className="msg"; $("st").textContent="読みこみ中…";
+    var key=$("key").value;
+    fetch("/api/stats?days="+$("days").value,{headers:{"x-stats-key":encodeURIComponent(key)},cache:"no-store"}).then(function(r){
+      if(r.status===401) throw new Error("合言葉がちがいます。");
+      if(r.status===503) throw new Error("データベースがまだつながっていません。");
+      if(!r.ok) throw new Error("読みこめませんでした（"+r.status+"）。");
+      return r.json();
+    }).then(function(d){
+      try{ sessionStorage.setItem("mh_stats_key",key); }catch(e){}
+      $("st").textContent="";
+      rows=d.rows.map(function(r){ return {name:(GN[r.game]||r.game)+(r.u?"・"+(UT[r.u]||r.u):""), game:r.game, g:r.g, m:r.m, rounds:r.rounds, q:r.q,
+        sec:r.q?r.ms/r.q/1000:0, acc:r.q?Math.round(r.ok/r.q*100):0}; });
+      var R=0,Q=0,MS=0,OK=0; d.days.forEach(function(x){ R+=x.rounds; Q+=x.q; });
+      d.rows.forEach(function(r){ MS+=r.ms; OK+=r.ok; }); var Qr=d.rows.reduce(function(n,r){return n+r.q},0);
+      $("kpi").innerHTML="<div><b>"+R+"</b><span>練習の回数</span></div><div><b>"+Q+"</b><span>答えた問題の数</span></div>"+
+        "<div><b>"+(Qr?(MS/Qr/1000).toFixed(1):"―")+"</b><span>1問の平均（秒）</span></div><div><b>"+(Qr?Math.round(OK/Qr*100)+"%":"―")+"</b><span>正答率</span></div>";
+      var dm=Math.max.apply(null,d.days.map(function(x){return x.rounds}).concat([1]));
+      $("dbar").innerHTML=d.days.map(function(x){ return "<i title='"+x.day+"："+x.rounds+"回' style='height:"+Math.max(3,Math.round(x.rounds/dm*100))+"%'></i>"; }).join("");
+      $("drange").textContent=d.days.length?d.days[0].day+" 〜 "+d.days[d.days.length-1].day:"まだ届いた数字がありません。";
+      $("out").hidden=false; paint();
+    }).catch(function(err){ $("st").className="err"; $("st").textContent=err.message; });
+  };
+})();
+</script>
+</body>
+</html>

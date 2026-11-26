@@ -34,7 +34,7 @@
   const MOVE = {
     // 「その他」の 行き先
     "m1-tokei": "tani", "m1-tokei-fun": "tani",                                    // とけい（時こく）
-    "m4-gaisu": "kazu",                                                            // がい数
+    "m4-gaisu": "kazu", "m4-gaisu-shisha": "kazu", "m4-gaisu-ue": "kazu", "m4-gaisu-hanni": "kazu", "m4-gaisu-mitsumori": "kazu",                                                            // がい数
     "m5-baisu": "kazu", "m5-yakusu": "kazu", "m5-kobaisu": "kazu", "m5-koyakusu": "kazu",   // 整数の 性質
     "m6-baai": "graph",                                                            // 場合の数（データの活用）
     "m4-henka": "wariai",                                                          // 変わり方
@@ -44,7 +44,9 @@
     // item とは べつの まとまりに 入れる
     "m2-kuku-hole": "kake",            // □の数：九九の □ は かけ算の 中で
     "m2-keisan-kufu": "tashihiki",     // 計算のきまり：2年の けいさんの くふうは たし算
-    "m5-seisu-shosu": "shosu"          // 数をおぼえる：整数と 小数の しくみは 小数の 中で
+    "m5-seisu-shosu": "shosu",
+    // 5・6年の だんかい分け（2026-11-26）
+    "m5-guusu": "kazu", "m5-wari-pct": "wariai", "m5-wari-wariai": "wariai", "m5-wari-kuraberu": "wariai", "m5-wari-moto": "wariai", "m5-hayasa-motomeru": "wariai", "m5-hayasa-kansan": "wariai", "m6-hirei-y": "wariai", "m6-hirei-k": "wariai", "m6-hanpi-y": "wariai", "m6-hanpi-k": "wariai", "m6-baai-narabi": "graph", "m6-baai-kumi": "graph", "m6-baai-kake": "graph"          // 数をおぼえる：整数と 小数の しくみは 小数の 中で
   };
   const TOKKUN = [
     { id: "kuku", t: ["九九《くく》チャレンジ", "くく チャレンジ"], d: ["九九《くく》を すばやく 答《こた》えよう", "くくを はやく こたえよう"], g: [2, 3], go: "#setup?game=kuku" },
