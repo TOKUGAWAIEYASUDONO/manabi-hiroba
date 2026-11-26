@@ -762,4 +762,33 @@ t("ボスバトルの ステージ（bz）：ずかん・ステージが ひら�
   assert.deepStrictEqual(C.clean(bad, 101).bz, { o: 0, s: ["b1"], rd: 0, rp: 0 });
   assert.strictEqual(C.BZ_IDS.length, 13);
 });
+t("じぶんの まなびっこ（素体）：はじめは ランダムで 1たい・どんぐり 10こで えらんで 買う・きせかえを つける・こわれた 記録は 空", () => {
+  assert.strictEqual(C.SB_IDS.length, 16); assert.strictEqual(new Set(C.SB_IDS).size, 16);
+  const S = C.clean(null, 100); assert.deepStrictEqual(S.sb, { c: "", o: [] });
+  assert.strictEqual(C.sbBuy(S, "kuma"), false, "はじめの 1たいの 前は 買えない");
+  assert.strictEqual(C.sbStart(S, () => 0.99), "slime"); assert.deepStrictEqual(S.sb, { c: "slime", o: ["slime"] });
+  assert.strictEqual(C.sbStart(S, () => 0), null, "2回めは ない"); assert.strictEqual(C.balance(S), 0, "はじめの 1たいは 無料");
+  assert.strictEqual(C.sbBuy(S, "kuma"), false, "どんぐりが たりない");
+  S.ac.e = 25; assert(C.sbBuy(S, "kuma")); assert.strictEqual(C.balance(S), 15); assert.strictEqual(S.sb.c, "kuma");
+  assert.strictEqual(C.sbBuy(S, "kuma"), false, "もっている 子は 買えない"); assert.strictEqual(C.sbBuy(S, "xx"), false);
+  assert(C.sbSet(S, "slime")); assert.strictEqual(C.sbSet(S, "neko"), false);
+  assert(C.kzBuy(S, "h-cap"), "まなびっこ（4たい）が いなくても 素体が いれば きせかえを 買える"); assert(C.kzWear(S, "sb", "h", "h-cap"));
+  assert.deepStrictEqual(C.kzOf(S, "sb"), { h: "h-cap" });
+  const T2 = C.clean(JSON.parse(JSON.stringify(S)), 101); assert.deepStrictEqual(T2.sb, { c: "slime", o: ["slime", "kuma"] }); assert.deepStrictEqual(C.kzOf(T2, "sb"), { h: "h-cap" });
+  const bad = JSON.parse(JSON.stringify(S)); bad.sb = { c: "neko", o: ["kuma", "kuma", "q", 3] };
+  assert.deepStrictEqual(C.clean(bad, 101).sb, { c: "kuma", o: ["kuma"] });
+  bad.sb = 5; const B = C.clean(bad, 101); assert.deepStrictEqual(B.sb, { c: "", o: [] }); assert.deepStrictEqual(C.kzOf(B, "sb"), {}, "子が いなければ きせかえも ない");
+});
+t("バックアップ HR6：素体が いれば 包む・読みこむと 合わさる（いまの 子は この端末を 大事に）・1字 かえると 断る・素体が いなければ 今まで通り", () => {
+  const S = C.clean(null, 20000); assert(/^HR1/.test(C.hrMake(S)));
+  C.sbStart(S, () => 0.1); S.ac.e = 30; C.sbBuy(S, "tako"); C.kzBuy(S, "h-crown"); C.kzWear(S, "sb", "h", "h-crown");
+  const str = C.hrMake(S); assert(/^HR6/.test(str)); const r = C.hrParse(str);
+  assert(r && r.sb); assert.deepStrictEqual(r.sb, { c: "tako", o: ["kuma", "tako"], e: { h: "h-crown" } });
+  const T2 = C.clean(null, 20000); C.sbStart(T2, () => 0.0); C.hrMerge(T2, r, 20001);
+  assert.deepStrictEqual(T2.sb, { c: "neko", o: ["neko", "kuma", "tako"] }); assert(T2.kz.o.includes("h-crown"));
+  const T3 = C.clean(null, 20000); C.hrMerge(T3, C.hrParse(str), 20001); assert.strictEqual(T3.sb.c, "tako"); assert.deepStrictEqual(C.kzOf(T3, "sb"), { h: "h-crown" });
+  const raw = str.replace(/-/g, ""), i = 4, bad = raw.slice(0, i) + (raw[i] === "0" ? "1" : "0") + raw.slice(i + 1);
+  assert.strictEqual(C.hrParse(bad), null);
+  assert.strictEqual(C.hrParse("HR6" + raw.slice(3, -3).slice(0, 13) + raw + "000"), null, "中に HR6 は 入れない");
+});
 console.log(`\n${n} 件のテストを実行${process.exitCode ? "（失敗あり）" : "：すべて成功"}`);
