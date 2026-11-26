@@ -20,7 +20,24 @@ t("単元の ID 表：units.js の ready な単元と同じ（新しい単元が
   for (const u of ready) { assert.strictEqual(u.id[0], SJ[u.subj]); assert.strictEqual(GFIX[u.id] || +u.id[1], u.g); }
   assert(C.UNIT_IDS.length * 4 + 3 < 46656);
 });
-t("かざりの値段の合計は 380", () => assert.strictEqual(C.PRICE_TOTAL, 380));
+t("かざりの値段の合計は 734（はじめの 7こ 380 ＋ 島の かざり 26こ 354）", () => { assert.strictEqual(C.PRICE_TOTAL, 734); assert.strictEqual(C.DECOR.length, 33); assert.strictEqual(C.DECOR0.reduce((n, d) => n + d.price, 0), 380); });
+t("バックアップ HR5：島の かざり（追加の 26こ）を もっていると HR5。買った物・おいた ばしょが もどる。もっていなければ 今まで通り", () => {
+  const S = C.fresh(D); S.ac.e = 900; ["tree", "castle", "duck", "mushroom"].forEach(id => assert(C.buy(S, id)));
+  assert(C.place(S, "tree", 2)); assert(C.place(S, "castle", 35)); assert(C.place(S, "duck", 7));
+  const code = C.hrMake(S); assert(/^HR5/.test(code));
+  const r = C.hrParse(code); assert(r); assert.deepStrictEqual(r.own.slice().sort(), ["castle", "duck", "mushroom", "tree"]); assert.deepStrictEqual(r.pl, { tree: 2, castle: 35, duck: 7 });
+  const T2 = C.fresh(D); C.hrMerge(T2, r, D); assert.deepStrictEqual(T2.pl, { tree: 2, castle: 35, duck: 7 }); assert(T2.own.includes("mushroom"));
+  const flat = code.replace(/-/g, ""); let bad = 0;
+  for (let i = 3; i < 3 + 32; i++) { const c = flat[i] === "0" ? "1" : "0"; if (!C.hrParse(flat.slice(0, i) + c + flat.slice(i + 1))) bad++; }
+  assert.strictEqual(bad, 32, "1字 かえると 断る");
+  const S0 = C.fresh(D); S0.ac.e = 900; C.buy(S0, "tree"); assert(!/^HR5/.test(C.hrMake(S0)));
+});
+t("バックアップ HR6 の 中に HR5：素体が いて 追加の かざりも もっていると、包んだ 中が HR5。両方 もどる", () => {
+  const S = C.fresh(D); S.ac.e = 900; ["tree", "castle"].forEach(id => assert(C.buy(S, id))); assert(C.place(S, "castle", 35));
+  const id = C.SB_IDS[0]; S.sb.o.push(id); S.sb.c = id;
+  const code = C.hrMake(S); assert(/^HR6/.test(code)); assert(code.replace(/-/g, "").slice(16, 19) === "HR5");
+  const r = C.hrParse(code); assert(r); assert.deepStrictEqual(r.pl, { castle: 35 }); assert(r.own.includes("castle")); assert.strictEqual(r.sb.c, id);
+});
 t("はじめの どんぐり5こ：1回だけ。1日の上限には入らない", () => {
   const S = C.fresh(D);
   assert.strictEqual(C.claimGift(S, D), 5); assert.strictEqual(C.balance(S), 5); assert.strictEqual(S.day.got, 0);
@@ -203,7 +220,7 @@ t("買う・置く・しまう：足りないと買えない／重ねて置け�
   const S = C.fresh(D); S.ac.e = 40;
   assert(C.buy(S, "tree")); assert(!C.buy(S, "tree")); assert(C.buy(S, "flower")); assert(!C.buy(S, "pond")); assert.strictEqual(C.balance(S), 25);
   assert(C.place(S, "tree", 3)); assert(!C.place(S, "flower", 3)); assert(C.place(S, "flower", 4)); assert(C.place(S, "tree", 5));
-  assert(!C.place(S, "bench", 1)); assert(!C.place(S, "tree", 13)); assert(C.unplace(S, "tree")); assert(!C.unplace(S, "tree"));
+  assert(!C.place(S, "bench", 1)); assert(!C.place(S, "tree", 36)); assert(C.unplace(S, "tree")); assert(!C.unplace(S, "tree"));
   assert(C.place(S, "flower", 3));
 });
 t("完成：かざり7つそろえて全部置く。完成日を1回だけ記録。そのあと どんぐりは まだ買っていない きせかえが あるあいだだけ出る（v3.3）", () => {
@@ -262,10 +279,10 @@ t("バックアップ：確認の数字が合っても、範囲がおかしい�
   assert.strictEqual(C.hrParse(mk(hdr("3", "5", "00", "0000000", "00"))), null);    // 使った＞もらった
   assert.strictEqual(C.hrParse(mk(hdr("5", "3", "01", "1100000", "00"))), null);    // 持っていない物を置いた
   assert.strictEqual(C.hrParse(mk(hdr("5", "3", "03", "1100000", "00"))), null);    // 同じ場所
-  assert.strictEqual(C.hrParse(mk(hdr("5", "3", "01", "D000000", "00"))), null);    // 場所の番号が 12 より大きい
+  assert(C.hrParse(mk(hdr("5", "3", "01", "Z000000", "00"))));                      // 場所の番号は 35（島の おける ばしょ）まで 読める
   assert.strictEqual(C.hrParse(mk(hdr("5", "3", "00", "0000000", "01") + "00")), null);      // 番号0・段階0
   assert.strictEqual(C.hrParse(mk(hdr("5", "3", "00", "0000000", "02") + "0504")), null);    // 同じ単元が2回
-  if (C.UNIT_IDS.length <= 323) assert.strictEqual(C.hrParse(mk(hdr("5", "3", "00", "0000000", "01") + "ZZ")), null);      // 単元の番号が表の外（324こを こえたら ZZ＝323番は 表の中。3字は HR5 で 検査）
+  if (C.UNIT_IDS.length <= 323) assert.strictEqual(C.hrParse(mk(hdr("5", "3", "00", "0000000", "01") + "ZZ")), null);      // 単元の番号が表の外（324こを こえたら ZZ＝323番は 表の中。3字は HR7 で 検査）
   assert.strictEqual(C.hrParse(mk(hdr("5", "3", "00", "0000000", "02") + "05")), null);      // 個数と合わない
 });
 t("バックアップ：読みこんでも記録は減らない（段階は大きいほう）／今日の上限は戻らない", () => {
@@ -709,17 +726,26 @@ const yaState = () => {      // 3年 1学期ぶん ＋ やりこみ（シール�
   S.kp.r["m3-amari"] = 4; S.kp.z.push("t-yam100"); S.kp.p.push(C.PARTS[C.PARTS.length - 1].id);      // いまの 記録からは 計算できない（前の 基準で もらった）物
   C.keepUp(S); return S;
 };
-t("バックアップ HR5：324番め より 後ろの 単元を 持つと 1つ 3字で 書き、往復する（それ以外は 今まで通り）", () => {
+t("バックアップ HR7：324番め より 後ろの 単元を 持つと 1つ 3字で 書き、往復する（それ以外は 今まで通り）", () => {
   const S = C.fresh(D); run(S, D, [U("m1-kazoeru")]);
-  assert(!/^HR5/.test(C.hrMake(S)), "後ろの 単元が なければ HR5 に しない");
+  assert(!/^HR7/.test(C.hrMake(S)), "後ろの 単元が なければ HR7 に しない");
   const big = C.UNIT_IDS.slice(324);
   if (!big.length) return;
   big.forEach(id => { S.u[id] = [2, 0, D]; });
   const s = C.hrMake(S), r = C.hrParse(s);
-  assert(/^HR5/.test(s), s.slice(0, 4)); assert(r, "読めない");
+  assert(/^HR7/.test(s), s.slice(0, 4)); assert(r, "読めない");
   const B = C.hrMerge(C.fresh(D + 1), r, D + 1);
   for (const id of C.UNIT_IDS) assert.strictEqual(C.stage(B, id), C.stage(S, id), id);
-  assert.strictEqual(C.hrParse(s.replace(/^HR5/, "HR4")), null, "HR4 として 読ませると 断る");
+  assert.strictEqual(C.hrParse(s.replace(/^HR7/, "HR5")), null, "HR5 として 読ませると 断る");
+});
+t("バックアップ HR6 の 中に HR7：素体・追加の かざり・324番め より 後ろの 単元が そろっても 全部 もどる", () => {
+  const big = C.UNIT_IDS.slice(324); if (!big.length) return;
+  const S = C.fresh(D); S.ac.e = 900; ["tree", "castle"].forEach(id => assert(C.buy(S, id))); assert(C.place(S, "castle", 35));
+  const id = C.SB_IDS[0]; S.sb.o.push(id); S.sb.c = id;
+  big.forEach(u => { S.u[u] = [3, 0, D]; });
+  const code = C.hrMake(S); assert(/^HR6/.test(code)); assert.strictEqual(code.replace(/-/g, "").slice(16, 19), "HR7");
+  const r = C.hrParse(code); assert(r); assert.deepStrictEqual(r.pl, { castle: 35 }); assert.strictEqual(r.sb.c, id);
+  const B = C.hrMerge(C.fresh(D + 1), r, D + 1); big.forEach(u => assert.strictEqual(C.stage(B, u), 3, u));
 });
 t("バックアップ HR4：やりこみ（正解・ノーミス・シールの しるし・じっせき）と もらった物（ランク・きせかえ・遊具）が 往復する", () => {
   const S = yaState(), s = C.hrMake(S), r = C.hrParse(s);
@@ -773,5 +799,34 @@ t("ボスバトルの ステージ（bz）：ずかん・ステージが ひら�
   const bad = JSON.parse(JSON.stringify(S)); bad.bz = { o: "x", s: ["b1", "b1", "q", 3], rd: -1, rp: 4 };
   assert.deepStrictEqual(C.clean(bad, 101).bz, { o: 0, s: ["b1"], rd: 0, rp: 0 });
   assert.strictEqual(C.BZ_IDS.length, 13);
+});
+t("じぶんの まなびっこ（素体）：はじめは ランダムで 1たい・どんぐり 10こで えらんで 買う・きせかえを つける・こわれた 記録は 空", () => {
+  assert.strictEqual(C.SB_IDS.length, 16); assert.strictEqual(new Set(C.SB_IDS).size, 16);
+  const S = C.clean(null, 100); assert.deepStrictEqual(S.sb, { c: "", o: [] });
+  assert.strictEqual(C.sbBuy(S, "kuma"), false, "はじめの 1たいの 前は 買えない");
+  assert.strictEqual(C.sbStart(S, () => 0.99), "slime"); assert.deepStrictEqual(S.sb, { c: "slime", o: ["slime"] });
+  assert.strictEqual(C.sbStart(S, () => 0), null, "2回めは ない"); assert.strictEqual(C.balance(S), 0, "はじめの 1たいは 無料");
+  assert.strictEqual(C.sbBuy(S, "kuma"), false, "どんぐりが たりない");
+  S.ac.e = 25; assert(C.sbBuy(S, "kuma")); assert.strictEqual(C.balance(S), 15); assert.strictEqual(S.sb.c, "kuma");
+  assert.strictEqual(C.sbBuy(S, "kuma"), false, "もっている 子は 買えない"); assert.strictEqual(C.sbBuy(S, "xx"), false);
+  assert(C.sbSet(S, "slime")); assert.strictEqual(C.sbSet(S, "neko"), false);
+  assert(C.kzBuy(S, "h-cap"), "まなびっこ（4たい）が いなくても 素体が いれば きせかえを 買える"); assert(C.kzWear(S, "sb", "h", "h-cap"));
+  assert.deepStrictEqual(C.kzOf(S, "sb"), { h: "h-cap" });
+  const T2 = C.clean(JSON.parse(JSON.stringify(S)), 101); assert.deepStrictEqual(T2.sb, { c: "slime", o: ["slime", "kuma"] }); assert.deepStrictEqual(C.kzOf(T2, "sb"), { h: "h-cap" });
+  const bad = JSON.parse(JSON.stringify(S)); bad.sb = { c: "neko", o: ["kuma", "kuma", "q", 3] };
+  assert.deepStrictEqual(C.clean(bad, 101).sb, { c: "kuma", o: ["kuma"] });
+  bad.sb = 5; const B = C.clean(bad, 101); assert.deepStrictEqual(B.sb, { c: "", o: [] }); assert.deepStrictEqual(C.kzOf(B, "sb"), {}, "子が いなければ きせかえも ない");
+});
+t("バックアップ HR6：素体が いれば 包む・読みこむと 合わさる（いまの 子は この端末を 大事に）・1字 かえると 断る・素体が いなければ 今まで通り", () => {
+  const S = C.clean(null, 20000); assert(/^HR1/.test(C.hrMake(S)));
+  C.sbStart(S, () => 0.1); S.ac.e = 30; C.sbBuy(S, "tako"); C.kzBuy(S, "h-crown"); C.kzWear(S, "sb", "h", "h-crown");
+  const str = C.hrMake(S); assert(/^HR6/.test(str)); const r = C.hrParse(str);
+  assert(r && r.sb); assert.deepStrictEqual(r.sb, { c: "tako", o: ["kuma", "tako"], e: { h: "h-crown" } });
+  const T2 = C.clean(null, 20000); C.sbStart(T2, () => 0.0); C.hrMerge(T2, r, 20001);
+  assert.deepStrictEqual(T2.sb, { c: "neko", o: ["neko", "kuma", "tako"] }); assert(T2.kz.o.includes("h-crown"));
+  const T3 = C.clean(null, 20000); C.hrMerge(T3, C.hrParse(str), 20001); assert.strictEqual(T3.sb.c, "tako"); assert.deepStrictEqual(C.kzOf(T3, "sb"), { h: "h-crown" });
+  const raw = str.replace(/-/g, ""), i = 4, bad = raw.slice(0, i) + (raw[i] === "0" ? "1" : "0") + raw.slice(i + 1);
+  assert.strictEqual(C.hrParse(bad), null);
+  assert.strictEqual(C.hrParse("HR6" + raw.slice(3, -3).slice(0, 13) + raw + "000"), null, "中に HR6 は 入れない");
 });
 console.log(`\n${n} 件のテストを実行${process.exitCode ? "（失敗あり）" : "：すべて成功"}`);
