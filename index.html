@@ -1229,6 +1229,17 @@ body[data-sg="s"] .sgsel h2{color:#fff;text-shadow:0 2px 0 #1b1530}body[data-sg=
 .mkavw{position:relative;display:inline-block;line-height:0;vertical-align:-.32em;margin-left:.08em}
 .mkavw>.mkav{vertical-align:top;margin-left:0}
 .kzw{display:grid;gap:6px}
+/* じぶんの まなびっこ（素体。2026-11-26） */
+.sbbox{display:grid;gap:10px;background:#fffdf6;border:3px solid var(--edge);border-radius:18px;padding:12px;margin:10px 0;box-shadow:0 3px 0 var(--edge)}
+.sbtop{display:flex;gap:12px;align-items:center;flex-wrap:wrap}
+.sbme .mkw{width:min(44vw,180px)}
+.sbinfo{display:grid;gap:4px;min-width:0;flex:1}
+.sbinfo h3{margin:0;font-size:15px}.sbnm{font-size:22px}
+.sbbtns{display:flex;gap:6px;flex-wrap:wrap;margin-top:4px}
+.sbg{display:grid;grid-template-columns:repeat(auto-fill,minmax(104px,1fr));gap:8px}
+.sbc{display:grid;justify-items:center;gap:2px;border:2px solid var(--line);border-radius:14px;padding:6px 4px 8px;background:#fff;text-align:center}
+.sbc img{width:88px;height:88px}.sbc.on{border-color:var(--edge);background:#fff3c4}
+.sbc.no img{filter:saturate(.35) opacity(.75)}
 .kzrow{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
 .kzl{flex:0 0 100%;font-size:13px;font-weight:800;color:var(--muted)}
 .kzb2{display:inline-flex;align-items:center;gap:4px;min-height:44px;min-width:44px;padding:2px 8px;border:3px solid var(--line);border-radius:12px;background:#fffdf6;cursor:pointer;font:inherit;font-size:13px;color:var(--ink)}
@@ -2064,7 +2075,7 @@ body[data-bw="jin"]{--bwc:#8fd04a;--bwi:url(vendor/img/battle/jin-field.webp)}
 <script src="data/sansu-items.js?v=c9fca7b3"></script>
 <script src="data/tools-viz.js?v=0582ba52"></script>
 <script src="data/learnhelp.js?v=062f8140"></script><!-- まなびの たすけ（はやすぎる まちがい・あとで もう一度・とき方・つまずき） -->
-<script src="data/collection.js?v=5b8171e6"></script>
+<script src="data/collection.js?v=4e0c59d4"></script>
 <script src="data/masu100.js?v=a19d68e5"></script>
 <script>
 /* ================= 画面の文言（1つの表） =================
@@ -2437,6 +2448,15 @@ const TX={
  "col.mk.soon":["もうすぐ 来《く》るよ","もうすぐ くるよ"],"col.mk.soon.r":["理科《りか》の なかま","りかの なかま"],"col.mk.soon.x":["あたらしい なかま"],
  "col.mk.show":["ひろばに だす"],"col.mk.hide":["ひろばから もどす"],"col.mk.full":["ひろばに だせるのは 3たいまで。"],
  "col.mk.row":["ひろばの なかま"],"col.mk.slot":["あき"],
+ /* じぶんの まなびっこ（素体。2026-11-26）：はじめは ランダムで 1たい・どんぐりで えらんで かえる・きせかえは この子に */
+ "col.sb.t":["じぶんの まなびっこ"],"col.sb.kz":["きせかえ"],"col.sb.chg":["すがたを かえる"],
+ "col.sb.new":[n=>`あなたの まなびっこは「${n}」に きまったよ！ どんぐりで ほかの すがたにも かえられるよ。`],
+ "col.sb.d":[n=>`もっている すがたは いつでも かえられるよ。ほかの すがたは どんぐり ${n}こで かえるよ。`],
+ "col.sb.n":[(a,b)=>`すがた ${a} / ${b}`],"col.sb.now":["いまの すがた"],"col.sb.use":["この すがたに する"],
+ "col.sb.bought":[n=>`「${n}」に なったよ！`],
+ "col.sb.c.neko":["ねこ"],"col.sb.c.kuma":["くま"],"col.sb.c.hiyoko":["ひよこ"],"col.sb.c.obake":["おばけ"],"col.sb.c.kyoryu":["きょうりゅう"],"col.sb.c.robo":["ロボ"],
+ "col.sb.c.usagi":["うさぎ"],"col.sb.c.pengin":["ペンギン"],"col.sb.c.kaeru":["かえる"],"col.sb.c.panda":["パンダ"],"col.sb.c.kitsune":["きつね"],"col.sb.c.hamster":["ハムスター"],
+ "col.sb.c.hitsuji":["ひつじ"],"col.sb.c.tako":["たこ"],"col.sb.c.uchujin":["うちゅうじん"],"col.sb.c.slime":["スライム"],
  "col.mk.l.kind":["せいかく"],"col.mk.l.like":["すきな ばしょ"],"col.mk.forms":["すがた"],
  "col.mk.grow":[n=>`${n}と もっと なかよしに なったよ！ すがたが かわったよ。`],
  "col.mk.r.new":["まなびっこが なかまに なりたがっているよ！ ひろばで えらぼう。"],
@@ -3885,7 +3905,7 @@ function renderRecord(msg){
   $("#bkGo").onclick=()=>{
     const m=$("#bkMsg"), v=$("#bkIn").value.trim();
     if(!v){ m.className="err"; m.textContent=T("rec.bk.empty"); return; }
-    if(/^HR[1-4]/i.test(v.replace(/[^0-9A-Za-z]/g,""))){ if(!colImport(v)){ m.className="err"; m.textContent=T("rec.bk.ng"); return; } renderRecord(T("col.bk.ok")); return; }      // ひろばの文字（HR1）も、ここに入れてよい
+    if(/^HR[1-46]/i.test(v.replace(/[^0-9A-Za-z]/g,""))){ if(!colImport(v)){ m.className="err"; m.textContent=T("rec.bk.ng"); return; } renderRecord(T("col.bk.ok")); return; }      // ひろばの文字（HR1）も、ここに入れてよい
     const r=bkRead(v); if(!r){ m.className="err"; m.textContent=T("rec.bk.ng"); return; }
     bkApply(r); refreshMedals(); renderRecord(T("rec.bk.ok"));
   };
@@ -3964,7 +3984,7 @@ function colRunPlay(p){      // finish() から：単元ごとの正解数と、
 /* ----- じぶんの ひろば ----- */
 function renderHiroba(){
   if(colMode()!=="on") return go("#home");
-  setLG(ui.grade); HS={sel:null,shop:false,gift:0,cap:0,done:0,mkSel:null,mkGot:null,mkLater:false,mkInfo:null,mkGrow:[],tab:"d",kzMsg:null,ya:false};
+  setLG(ui.grade); HS={sel:null,shop:false,gift:0,cap:0,done:0,mkSel:null,mkGot:null,mkLater:false,mkInfo:null,mkGrow:[],tab:"d",kzMsg:null,ya:false,sbNew:null,sbTab:null,sbMsg:null};
   { const S0=colGet(); if(COL.yaCheck(S0,yaExt()).length) colSave(); }
   app.innerHTML=`<div class="hb"></div>`;
   loadScript("data/hiroba-art.js?v=eddf43ff",()=>!!document.getElementById("hiroba-art")).then(()=>{ if(params().path==="hiroba") hbDraw(true); },()=>{ app.innerHTML=`<div class="q">${T("col.err")}</div>`; });
@@ -3977,6 +3997,7 @@ function hbDraw(first){
     S.vp=colHave(S); S.vz=colStageSum(S);
     HS.mkGrow=Object.keys(S.mk.own).filter(id=>COL.mkStage(S,id)>S.mk.own[id].v);      // まなびっこ：前に見たときより すがたが かわった子
     HS.mkGrow.forEach(id=>{ S.mk.own[id].v=COL.mkStage(S,id); });
+    HS.sbNew=COL.sbStart(S,Math.random);                                                  // じぶんの まなびっこ：はじめて ひろばに 来たら ランダムで 1たい
     colSave();
   }
   const sel=HS.sel, bal=COL.balance(S), D={}; COL.DECOR.forEach(d=>{ D[d.id]=d; });
@@ -4007,6 +4028,7 @@ function hbDraw(first){
     ${HS.gift?`<div class="hmsg">${acornSvg("ac")} ${T("col.gift")}</div>`:""}
     ${HS.cap?`<div class="hmsg">${T("col.cap")}</div>`:""}
     ${HS.mkGrow.map(id=>`<div class="hmsg">${T("col.mk.grow",mkNm(id))}</div>`).join("")}
+    ${sbHtml(S,bal)}
     ${mkPickHtml(S)}
     ${done}
     <div class="hscene t${S.theme}">
@@ -4030,7 +4052,7 @@ function hbDraw(first){
   root.querySelectorAll("[data-th]").forEach(b=>b.onclick=()=>{ S.theme=+b.dataset.th; colSave(); hbDraw(false); });
   root.querySelectorAll("[data-stab]").forEach(b=>b.onclick=()=>{ HS.tab=b.dataset.stab; HS.kzMsg=null; hbDraw(false); const f=app.querySelector(`[data-stab="${HS.tab}"]`); if(f) f.focus(); });
   root.querySelectorAll("[data-kzbuy]").forEach(b=>b.onclick=()=>{ const id=b.dataset.kzbuy; if(!COL.kzBuy(S,id)) return; HS.kzMsg=id; sfx("coin"); colSave(); hbDraw(false); const f=app.querySelector("#kzGoWear"); if(f) f.focus(); });
-  if(root.querySelector("#kzGoWear")) root.querySelector("#kzGoWear").onclick=()=>{ HS.mkInfo=S.mk.sh.find(id=>S.mk.own[id])||COL.MK_IDS.find(id=>S.mk.own[id])||null; HS.shop=false; HS.kzMsg=null; hbDraw(false); const e=app.querySelector("#mkInfo"); if(e){ e.scrollIntoView({block:"start"}); const f=e.querySelector(".kzb2.on,.kzb2"); if(f) f.focus({preventScroll:true}); } };
+  if(root.querySelector("#kzGoWear")) root.querySelector("#kzGoWear").onclick=()=>{ if(S.sb.c){ HS.sbTab="kz"; HS.sbMsg=null; HS.sbNew=null; HS.shop=false; HS.kzMsg=null; hbDraw(false); const e=app.querySelector("#sbBox"); if(e) e.scrollIntoView({block:"start"}); return; } HS.mkInfo=S.mk.sh.find(id=>S.mk.own[id])||COL.MK_IDS.find(id=>S.mk.own[id])||null; HS.shop=false; HS.kzMsg=null; hbDraw(false); const e=app.querySelector("#mkInfo"); if(e){ e.scrollIntoView({block:"start"}); const f=e.querySelector(".kzb2.on,.kzb2"); if(f) f.focus({preventScroll:true}); } };
   const q=id=>root.querySelector(id);
   q("#hbShop").onclick=()=>{ HS.shop=!HS.shop; hbDraw(false); };
   q("#hbZk").onclick=()=>go("#zukan");
@@ -4038,7 +4060,7 @@ function hbDraw(first){
   if(q("#hbTk")) q("#hbTk").onclick=()=>go("#tanken");
   if(q("#hbStore")) q("#hbStore").onclick=()=>{ COL.unplace(S,HS.sel); HS.sel=null; colSave(); hbDraw(false); };
   if(q("#hbCancel")) q("#hbCancel").onclick=()=>{ HS.sel=null; hbDraw(false); };
-  mkBind(root,S);
+  mkBind(root,S); sbBind(root,S);
 }
 /* ----- まなびっこ（v3.0。中身は data/collection.js の mk*）：えらぶ・ひろばに だす・ずかん。
    「できた」（と はじめの1回）で えらべる分が たまり、ここで 候補3つから 1たい えらぶ（いまは 絵が 4たいなので、その教科の子＋ほかの教科の子）。
@@ -4063,6 +4085,41 @@ function mkDress(c,st,px,eq,cls,kira){          // まなびっこの絵＋き�
   const ov=h||p?`<svg class="kzo" viewBox="0 0 100 100" aria-hidden="true">${h?kzHatSvg(h,26,30):""}${p?`<text x="83" y="94" font-size="26" text-anchor="middle">${p.ch}</text>`:""}</svg>`:"";
   const bm=b?`<svg class="kzb" viewBox="0 0 100 100" aria-hidden="true"><text x="15" y="24" font-size="18" text-anchor="middle" opacity=".6">${b.ch}</text><text x="88" y="44" font-size="12" text-anchor="middle" opacity=".45">${b.ch}</text></svg>`:"";
   return `<span class="mkw${b?" kzbg":""}"${b?` style="${kzBgCss(b)}"`:""}>${bm}${img}${ov}</span>`;
+}
+/* ----- じぶんの まなびっこ（素体。2026-11-26。中身は data/collection.js の sb*）：16しゅるいの 絵に、きせかえを その子の 頭・右手の 位置に かさねる ----- */
+const sbNm=id=>T("col.sb.c."+id);
+function sbDress(id,px,eq){
+  const b0=COL.SB.find(x=>x.id===id); if(!b0) return "";
+  const img=`<img class="mki" src="vendor/img/soutai/${id}-${px}.webp" alt="" width="${px}" height="${px}" decoding="async" onerror="this.style.visibility='hidden'">`;
+  const e=eq||{}, b=e.b&&kzC(e.b), h=e.h&&kzC(e.h), p=e.p&&kzC(e.p), [hx,hy]=b0.h, [px2,py]=b0.p;
+  const ov=h||p?`<svg class="kzo" viewBox="0 0 100 100" aria-hidden="true">${h?`<text x="${hx}" y="${hy+9}" font-size="24" text-anchor="middle" transform="rotate(-8 ${hx} ${hy})">${h.ch}</text>`:""}${p?`<text x="${px2}" y="${py+8}" font-size="20" text-anchor="middle">${p.ch}</text>`:""}</svg>`:"";
+  const bm=b?`<svg class="kzb" viewBox="0 0 100 100" aria-hidden="true"><text x="15" y="24" font-size="18" text-anchor="middle" opacity=".6">${b.ch}</text><text x="88" y="44" font-size="12" text-anchor="middle" opacity=".45">${b.ch}</text></svg>`:"";
+  return `<span class="mkw${b?" kzbg":""}"${b?` style="${kzBgCss(b)}"`:""}>${bm}${img}${ov}</span>`;
+}
+function sbHtml(S,bal){
+  const id=S.sb.c; if(!id) return "";
+  const eq=COL.kzOf(S,"sb"), tab=HS.sbTab;
+  const tb=(k,t)=>`<button type="button" class="btn${tab===k?"":" sub"} s" data-sbtab="${k}" aria-expanded="${tab===k}" aria-controls="sbPanel">${t}</button>`;
+  let panel="";
+  if(tab==="kz") panel=kzWearHtml(S,"sb","sbw");
+  else if(tab==="sb") panel=`<p class="note">${T("col.sb.d",COL.SB_PRICE)}</p><div class="sbg">${COL.SB_IDS.map(x=>{ const own=S.sb.o.includes(x), cur=x===id;
+      const act=cur?`<span class="note ok">${T("col.sb.now")}</span>`:own?`<button type="button" class="btn s" data-sbset="${x}">${T("col.sb.use")}</button>`
+        :`<button type="button" class="btn s" data-sbbuy="${x}"${bal<COL.SB_PRICE?" disabled":""}>${acornSvg("ac")}${T("col.price",COL.SB_PRICE)}</button>`;
+      return `<div class="sbc${cur?" on":""}${own?"":" no"}"><img src="vendor/img/soutai/${x}-128.webp" alt="" width="128" height="128" decoding="async"><b>${sbNm(x)}</b>${act}</div>`; }).join("")}</div>`;
+  return `<section class="sbbox" id="sbBox" aria-labelledby="sbT">
+    ${HS.sbNew?`<div class="hmsg">${T("col.sb.new",sbNm(HS.sbNew))}</div>`:""}${HS.sbMsg?`<div class="hmsg" role="status">${T("col.sb.bought",sbNm(HS.sbMsg))}</div>`:""}
+    <div class="sbtop"><div class="sbme">${sbDress(id,256,eq)}</div><div class="sbinfo"><h3 id="sbT">${T("col.sb.t")}</h3><b class="sbnm">${sbNm(id)}</b>${kzTitle(eq)}
+      <small class="note">${T("col.sb.n",S.sb.o.length,COL.SB_IDS.length)}</small><div class="sbbtns">${tb("kz",T("col.sb.kz"))}${tb("sb",T("col.sb.chg"))}</div></div></div>
+    ${panel?`<div id="sbPanel">${panel}</div>`:""}</section>`;
+}
+function sbBind(root,S){
+  const redraw=()=>{ hbDraw(false); const e=app.querySelector("#sbBox"); if(e) e.scrollIntoView({block:"nearest"}); };
+  root.querySelectorAll("[data-sbtab]").forEach(b=>b.onclick=()=>{ HS.sbTab=HS.sbTab===b.dataset.sbtab?null:b.dataset.sbtab; HS.sbNew=null; HS.sbMsg=null; redraw(); });
+  root.querySelectorAll("[data-sbset]").forEach(b=>b.onclick=()=>{ if(COL.sbSet(S,b.dataset.sbset)){ colSave(); HS.sbMsg=null; redraw(); } });
+  root.querySelectorAll("[data-sbbuy]").forEach(b=>b.onclick=()=>{ const id=b.dataset.sbbuy; if(!COL.sbBuy(S,id)) return; HS.sbMsg=id; sfx("coin"); colSave(); redraw(); });
+  root.querySelectorAll("[data-sbw]").forEach(b=>b.onclick=()=>{
+    const sl=b.dataset.sbw, id=b.dataset.kzi; if(!COL.kzWear(S,"sb",sl,id)) return; colSave(); redraw();
+    const f=app.querySelector(`[data-sbw="${sl}"][data-kzi="${id}"]`); if(f) f.focus({preventScroll:true}); });
 }
 const kzTitle=eq=>{ const k=eq&&eq.t&&kzC(eq.t); return k?`<span class="kzt">${k.ch} ${kzNm(k.id)}</span>`:""; };
 const YA_SJN={m:"さんすう",j:"こくご",s:"しゃかい",r:"りか",e:"えいご"};
@@ -4099,7 +4156,7 @@ function yaHtml(S){
 }
 function kzUnTxt(k){ const [c,n]=k.un; if(c==="ach") return T("col.kz.un.ach",yaName(n)); return c==="can"?(n?T("col.kz.un.can",n):T("col.kz.un.can0")):c==="mst"?T("col.kz.un.mst",n):T("col.kz.un.nk."+n); }
 function kzShopHtml(S,bal){        // おみせの「きせかえ」：ぜんぶの 品と 値段・もらえる 条件を 見せる（抽選・期間限定は ない）
-  const has=Object.keys(S.mk.own).length>0;
+  const has=Object.keys(S.mk.own).length>0||!!S.sb.c;
   const card=k=>{ const own=COL.kzHas(S,k.id);
     const act=k.price?(own?`<span class="note">${T("col.kz.have")}</span>`:`<button type="button" class="btn s" data-kzbuy="${k.id}"${!has||bal<k.price?" disabled":""}>${acornSvg("ac")}${T("col.price",k.price)}</button>`)
       :(own?`<span class="note ok">${T("col.kz.got")}</span>`:`<span class="note">${kzUnTxt(k)}</span>`);
@@ -4108,10 +4165,10 @@ function kzShopHtml(S,bal){        // おみせの「きせかえ」：ぜんぶ
     ${HS.kzMsg?`<div class="hmsg" role="status">${T("col.kz.bought",kzNm(HS.kzMsg))}<br><button type="button" class="btn s" id="kzGoWear">${T("col.kz.wear")}</button></div>`:""}
     ${COL.KZ_SLOT.map(sl=>`<h4 class="kzh4">${T("col.kz.s."+sl)}</h4><div class="kzg">${COL.KZ.filter(k=>k.s===sl).map(card).join("")}</div>`).join("")}`;
 }
-function kzWearHtml(S,id){         // ずかんの くわしい所：もっている物から えらんで つける（「なし」で はずす）
-  const eq=COL.kzOf(S,id);
+function kzWearHtml(S,id,at){      // ずかんの くわしい所：もっている物から えらんで つける（「なし」で はずす）。at＝ボタンの しるし（じぶんの まなびっこは "sbw"）
+  const eq=COL.kzOf(S,id), A=at||"kzw";
   return `<div class="kzw"><b>${T("col.kz.wear.t")}</b>${COL.KZ_SLOT.map(sl=>{ const items=COL.KZ.filter(k=>k.s===sl&&COL.kzHas(S,k.id));
-    const b=(k,on)=>`<button type="button" class="kzb2${on?" on":""}" data-kzw="${sl}" data-kzi="${k?k.id:""}" aria-pressed="${on}"${k&&sl!=="t"?` aria-label="${esc(rbp(kzNm(k.id)))}"`:""}>${k?kzIcon(k)+(sl==="t"?`<span>${kzNm(k.id)}</span>`:""):T("col.kz.none")}</button>`;
+    const b=(k,on)=>`<button type="button" class="kzb2${on?" on":""}" data-${A}="${sl}" data-kzi="${k?k.id:""}" aria-pressed="${on}"${k&&sl!=="t"?` aria-label="${esc(rbp(kzNm(k.id)))}"`:""}>${k?kzIcon(k)+(sl==="t"?`<span>${kzNm(k.id)}</span>`:""):T("col.kz.none")}</button>`;
     return `<div class="kzrow" role="group" aria-label="${esc(rbp(T("col.kz.s."+sl)))}"><span class="kzl">${T("col.kz.s."+sl)}</span>${items.length?b(null,!eq[sl])+items.map(k=>b(k,eq[sl]===k.id)).join(""):`<span class="note">${T("col.kz.empty")}</span>`}</div>`; }).join("")}</div>`;
 }
 /* ----- まなびっこアバター（v3.1-a。plan/collection-v3-plan.md 7章3）：友だち対戦・ゲームで 名前の よこに 出す。
