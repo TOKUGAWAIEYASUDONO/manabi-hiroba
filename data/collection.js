@@ -9,7 +9,7 @@
      れんぞくで なくて よい（休んでも へらない）。バックアップの 文字には 入れない（引きつぎでは 0 から）
    ・記録した日より前の日付（時計を戻した）のときは、どんぐりも段階も進めない
    ・たんけんチケット（v2）：「できた」「マスター」が 5つで 1まい。持てるのは 3まい。1日に もらえるのは 2まい、つかえるのは 2回まで（先生が 0〜5）。
-     たんけんの 中の せいかいは チケットの ★ にならない（recordRun を通さない）。どんぐりも出さない
+     たんけんの 中の せいかいは チケットの スタンプに ならない（recordRun を通さない）。どんぐりも出さない
    ・たんけんメモ（v2）：ゴールで 1つ。ひろばの物の豆知識（16）か、単元の例題の一言。保存は mo（物）と mu（単元）
    ・まなびっこ（v3.0。plan/collection-v3-plan.md 5章・7章）：教科の 小さな なかま。
      ① はじめて 5問《もん》以上 こたえた回（先生の クイズは 3問）で 1たい「えらべる」（初日に かならず 1たい）
@@ -62,7 +62,8 @@
     "m1-bun-awase","m1-bun-nokori","m1-bun-chigai","m1-bun-junjo","m1-bun-3kazu","m1-bun-add20","m1-bun-sub20","m1-nanjuu","m2-bun-add","m2-bun-sub","m2-bun-gyaku","m2-bun-kake","m2-bun-tani","m2-nanjuu","m2-kuku-1","m3-bun-addsub","m3-bun-kake","m3-bun-bai","m3-bun-amari","m3-bun-kiri","m3-bun-tani","m3-byou","m4-bun-bai","m4-bun-shiki","m4-bun-shosu","m5-bun-wariai","m5-bun-buai","m6-bun-hi","m6-bun-bunsu",
     "m3-shosu-tani",
     "m3-en-kotoba","m3-en-hankei","m3-en-narabi","m3-en-kyuu","m3-sankaku-namae","m3-sankaku-kado","m3-sankaku-mawari","m3-omosa-kg","m3-omosa-t","m3-omosa-keisan","m3-jikan-ato","m3-jikan-mae","m3-jikan-aida","m3-jikan-tashi","m3-dec-ikutsu","m3-dec-kurabe","m3-dec-seisu","m3-frac-kurabe","m3-frac-1hiku","m3-graph-memori","m3-graph-yomu","m3-graph-kaku","m3-add-4d","m3-sub-4d","m3-sub-1000","m3-mul-3d1d-zero","m3-div-01",
-    "m4-dec-keta","m4-dec-seisu","m4-dec-zero","m4-dec-mul2","m4-dec-susumu","m4-dec-gaisu","m4-dec-amari","m4-gaisu-shisha","m4-gaisu-ue","m4-gaisu-hanni","m4-gaisu-mitsumori","m4-kaku-ookii","m4-kaku-jougi","m4-kaku-keisan","m4-men-chou","m4-men-sei","m4-men-hen","m4-men-kiri","m4-men-a","m4-kimari-kakko","m4-kimari-saki","m4-kimari-mix","m4-kimari-kufu","m3-dec-sub-no","m3-dec-sub-borrow"
+    "m4-dec-keta","m4-dec-seisu","m4-dec-zero","m4-dec-mul2","m4-dec-susumu","m4-dec-gaisu","m4-dec-amari","m4-gaisu-shisha","m4-gaisu-ue","m4-gaisu-hanni","m4-gaisu-mitsumori","m4-kaku-ookii","m4-kaku-jougi","m4-kaku-keisan","m4-men-chou","m4-men-sei","m4-men-hen","m4-men-kiri","m4-men-a","m4-kimari-kakko","m4-kimari-saki","m4-kimari-mix","m4-kimari-kufu","m3-dec-sub-no","m3-dec-sub-borrow",
+    "m1-add-10to","m1-add-kuri-98","m1-add-kuri-765","m1-add-kuri-small","m1-sub-zero","m1-sub-10to","m1-sub-kuri-98","m1-sub-kuri-mix","m1-sub-2d1-no","m2-add-2d-tens","m2-add-2d-both","m2-add-3d2d","m2-sub-2d1d","m2-sub-3d-tens","m2-sub-3d-both","m2-sub-3d2d-no","m1-ikutsu-5to9","m1-big-120","m2-kake-kimari","m2-nagasa-mm","m2-nagasa-m","m2-nagasa-keisan","m2-kasa-dl","m2-kasa-ml","m2-kasa-keisan","m2-jikan-fun","m2-jikan-gozen","m2-jikan-1nichi","m2-zukei-namae","m2-zukei-chokkaku","m2-zukei-hen","m2-kazu-10ko","m2-kazu-sen","m2-kazu-1000","m2-hako"
   ];
   const IDX = {}; UNIT_IDS.forEach((id, i) => { IDX[id] = i; });
   const GRADE_FIX = { "m6-hayasa": 5, "m5-bunsu-int": 6, "m5-frac-mul-int": 6, "m5-frac-div-int": 6, "m6-speed-distance": 5, "m6-speed-time": 5 }; /* 現行教科書に合わせて学年を直した単元（IDは互換のため据え置き） */
@@ -155,7 +156,7 @@
 
   function fresh(today) {
     return { v: 1, d0: today, last: today, u: {}, ac: { e: 0, s: 0 }, day: { n: today, got: 0, carry: 0, first: 0, quiz: 0, cap: 0, shown: 0, rv: [], pd: 0 }, pd: 0,
-      own: [], pl: {}, gift: 0, done: 0, theme: 0, vp: 0, vz: 0, tk: { n: 0, star: 0, d: today, got: 0, used: 0 }, mo: [], mu: [], mk: mkFresh(), kz: kzFresh(), sb: sbFresh(), y: yaFresh(), kp: kpFresh(), bz: bzFresh() };
+      own: [], pl: {}, gift: 0, done: 0, theme: 0, vp: 0, vz: 0, tk: { n: 0, star: 0, d: today, got: 0, used: 0 }, mo: [], mu: [], mk: mkFresh(), kz: kzFresh(), sb: sbFresh(), y: yaFresh(), st: {}, kp: kpFresh(), bz: bzFresh() };
   }
   /* mk：w はじめの1たいを もらった／q えらべる分（QCODE の字）／own { id: { d もらった日, p なかよし, ld なかよしが ふえた日, k きらきら(のちの段階), v 見せた段階 } }
      sh ひろばに だしている子／mg 古い記録から 計算した（はじめの 案内を出す） */
@@ -253,6 +254,8 @@
     S.y = yaClean(raw.y);                                                  // v3.4：古い記録には無い（そのときは 0 から）
     S.bz = bzClean(raw.bz);                                                // 2026-11-25：古い記録には無い（そのときは 0 から）
     S.kp = kpClean(raw.kp);                                                // もらった物（2026-11-19）：古い記録には無い（そのときは 下の keepUp で いまの 分を のこす）
+    S.st = stClean(raw.st);                                                // 単元の ★（2026-11-26）：古い記録には無い
+    if (!raw.st) for (const id of Object.keys(S.y.u)) { const r = yaRankOld(S, id); if (r > (S.kp.r[id] || 0)) S.kp.r[id] = r; }      // ★に まとめる 前の 記録：その時の シールの ランクは のこす（1回だけ）
     for (const id of S.kz.o) if (!KZ_BY.get(id).price && !S.kp.z.includes(id)) S.kp.z.push(id);
     S.kz.o = S.kz.o.filter(id => KZ_BY.get(id).price > 0);
     keepUp(S);
@@ -297,7 +300,7 @@
   const pending = (S, id) => !!(S.u[id] && S.u[id][0] === 1 && S.u[id][1]);      // 1回めの条件は満たした（あしたの2回めを待つ）
 
   /* ---------- たんけんチケット ----------
-     ★ は「できた」「マスター」1つにつき1つ。5つで 1まい。持てるのは 3まい。1日に増えるのは 2まいまで。
+     スタンプ（tk.star。単元の ★とは べつ）は「できた」「マスター」1つにつき1つ。5つで 1まい。持てるのは 3まい。1日に増えるのは 2まいまで。
      3まい持っているとき・今日 2まい増えたときは ★ を 5つで止めておく（なくならない。あとで まい数にかわる） */
   function tkRoll(S, today) {
     if (today > S.tk.d) { S.tk.d = today; S.tk.got = 0; S.tk.used = 0; }
@@ -543,8 +546,8 @@
            u { 単元id: [正解の合計, ノーミスの回, 7割の回が あった, 9割の回が あった] }, a [たっせいした じっせきの id] }
      ・2学年いじょう 下の 単元は、合計（c・s・nm・mx）に 数えない（かんたんな 単元だけで 数を かせがない）。単元の シールは その単元の 物なので 数える
      ・ノーミス＝10問いじょうを ぜんぶ 正解。7割・9割の 回は 5問いじょう
-     ・シール：どう（7割の回）→ ぎん（正解 30・9割の回）→ きん（ノーミス 1回）→ にじ（正解 100・ノーミス 3回）。前の ランクも そろっている ときだけ 上がる。下がらない
-     ・まなびっこの きらきら（o.k）：その教科で 正解 500・きんいじょうの シール 5まい。一度 なったら もどらない
+     ・単元の ランク（じっせき・きらきらが 数える）は ★から きめる（2026-11-26。下の「単元の ★」）。前の シール（どう→ぎん→きん→にじ）は やめた。u の 4つの 数は そのまま ためる
+     ・まなびっこの きらきら（o.k）：その教科で 正解 500・いつものの ★3の 単元 5つ。一度 なったら もどらない
      ・じっせき：YA_ACH。数は 下がらないので、たっせいは 下がらない。100マス・めもり名人は 画面の側から ext で わたす */
   const YA_SUBJ = ["m", "j", "s", "r", "e"];
   const YA_KIRA_C = 500, YA_KIRA_K = 5;
@@ -572,15 +575,41 @@
   /* いま もらえている物を kp に のこす（clean・recordRun・hrMerge の さいご）。ランク → 遊具 → きせかえ の 順（きせかえは ランクや じっせきで きまる物が ある） */
   function keepUp(S) {
     const K = S.kp || (S.kp = kpFresh());
-    for (const id of Object.keys(S.y.u)) { const r = yaRankNow(S, id); if (r > (K.r[id] || 0)) K.r[id] = r; }
+    for (const id of Object.keys(S.st || {})) { const r = yaRankNow(S, id); if (r > (K.r[id] || 0)) K.r[id] = r; }
     for (const p of PARTS) if (!K.p.includes(p.id) && partHave(S, p)) K.p.push(p.id);
     for (const k of KZ) if (k.un && !K.z.includes(k.id) && kzUnlocked(S, k)) K.z.push(k.id);
     return S;
   }
-  /* シールの ランク 0〜4（0：まだ／1 どう／2 ぎん／3 きん／4 にじ）と、つぎの ランクまでに 足りない物。
-     yaRank は 一度 もらった ランク（kp.r）より 下がらない。yaRankNow は いまの 基準で 記録から 計算した ランク */
+  /* 単元の ★（2026-11-26 ユーザー決定：シール（どう・ぎん・きん・にじ）は やめて、単元の しるしは ★に まとめる）。
+     ★の きろくは 画面の側（mh_best の u:<単元ID>）に ある。画面が stSync で S.st に うつす：st = { 単元id: [いつもの, タイムアタック, サドンデス] }（どれも 0〜3）。足すだけ（下がらない）。
+     じっせき・きらきらが 数える「ランク」0〜4 は ★から きめる：1＝★が 1つ いじょう／2＝いつものの ★2／3＝いつものの ★3（金の ふち）／4＝★9こ ぜんぶ（虹の ふち）。
+     yaRank は 一度 もらった ランク（kp.r。前の シールの 分も ここに のこる）より 下がらない。yaRankNow は いまの ★から 計算した ランク */
+  const st3 = v => int(v, 0, 3, 0);
+  function stClean(raw) {
+    const T = {}; if (!raw || typeof raw !== "object") return T;
+    for (const id of Object.keys(raw)) { const a = raw[id]; if (!(id in IDX) || !Array.isArray(a)) continue; const v = [st3(a[0]), st3(a[1]), st3(a[2])]; if (v[0] + v[1] + v[2]) T[id] = v; }
+    return T;
+  }
+  /* 画面の ★を うつす。map = { 単元id: [いつもの, タイムアタック, サドンデス] }。ふえた ときだけ true */
+  function stSync(S, map) {
+    const T = S.st || (S.st = {}); let ch = false;
+    if (map && typeof map === "object") for (const id of Object.keys(map)) {
+      const a = map[id]; if (!(id in IDX) || !Array.isArray(a)) continue;
+      const o = T[id] || [0, 0, 0], v = [Math.max(o[0], st3(a[0])), Math.max(o[1], st3(a[1])), Math.max(o[2], st3(a[2]))];
+      if (v[0] + v[1] + v[2] > o[0] + o[1] + o[2]) { T[id] = v; ch = true; }
+    }
+    if (ch) keepUp(S);
+    return ch;
+  }
+  const stOf = (S, id) => (S.st && S.st[id]) || [0, 0, 0];
+  const stSum = (S, subj) => Object.keys(S.st || {}).reduce((n, id) => n + (!subj || id[0] === subj ? S.st[id][0] + S.st[id][1] + S.st[id][2] : 0), 0);
   const yaRank = (S, id) => Math.max(yaRankNow(S, id), (S.kp && S.kp.r[id]) || 0);
   function yaRankNow(S, id) {
+    const t = stOf(S, id), sum = t[0] + t[1] + t[2];
+    return sum >= 9 ? 4 : t[0] >= 3 ? 3 : t[0] >= 2 ? 2 : sum > 0 ? 1 : 0;
+  }
+  /* 前の シールの きまり（正解の数・ノーミスの回数）。★に まとめる 前の 記録を 読む ときだけ 使う（clean） */
+  function yaRankOld(S, id) {
     const u = S.y && S.y.u[id]; if (!u) return 0;
     if (!u[2]) return 0;
     if (!(u[0] >= 30 && u[3])) return 1;
@@ -588,15 +617,8 @@
     if (!(u[0] >= 100 && u[1] >= 3)) return 3;
     return 4;
   }
-  function yaNeed(S, id) {
-    const u = (S.y && S.y.u[id]) || [0, 0, 0, 0], r = yaRank(S, id);
-    if (r === 0) return { r, seven: 1 };
-    if (r === 1) return { r, c: Math.max(0, 30 - u[0]), nine: u[3] ? 0 : 1 };
-    if (r === 2) return { r, nm: 1 };
-    if (r === 3) return { r, c: Math.max(0, 100 - u[0]), nm: Math.max(0, 3 - u[1]) };
-    return { r };
-  }
-  const yaRankCount = (S, min, subj) => Object.keys(S.y.u).filter(id => (!subj || id[0] === subj) && yaRank(S, id) >= min).length;
+  const yaNeed = (S, id) => ({ r: yaRank(S, id) });
+  const yaRankCount = (S, min, subj) => [...new Set(Object.keys(S.st || {}).concat(Object.keys((S.kp && S.kp.r) || {})))].filter(id => (!subj || id[0] === subj) && yaRank(S, id) >= min).length;
   /* 1回の れんしゅうを やりこみに 足す（recordRun の さいご）。単元の ない ゲームは 正解の合計だけ */
   function yaRun(S, run, ctx) {
     const Y = S.y, ev = ctx.ya, low = id => !gapFull(run.grade, uGrade(id)), subj = new Set();
@@ -1061,6 +1083,6 @@
     MK, MK_IDS, MK_SOON, MK_STAGE, MK_CAND, MK_SHOW, MK_ART, mkFresh,
     SB, SB_IDS, SB_PRICE, sbFresh, sbStart, sbBuy, sbSet,
     KZ, KZ_IDS, KZ_SLOT, KZ_PRICE_TOTAL, kzFresh, kzUnlocked, kzHas, kzLeft, kzBuy, kzWear, kzOf, kzHatOk, mkStage, mkFree, mkAvail, mkCands, mkPick, mkShow, mkNext, mkWire, mkAvatar,
-    YA_ACH, YA_SUBJ, YA_KIRA_C, YA_KIRA_K, yaFresh, yaRank, yaRankNow, yaNeed, kpFresh, keepUp, yaRankCount, yaCheck, yaList,
+    YA_ACH, YA_SUBJ, YA_KIRA_C, YA_KIRA_K, yaFresh, yaRank, yaRankNow, yaRankOld, yaNeed, stSync, stOf, stSum, kpFresh, keepUp, yaRankCount, yaCheck, yaList,
     RV_MAX, PD_EVERY, PD_GIVE, count, parts, stage, pending, recordRun, m100Run, claimGift, buy, cellOf, place, unplace, checkDone, summary, hrMake, hrParse, hrMerge, YA_BK };
 });
