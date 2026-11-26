@@ -2001,22 +2001,22 @@ body[data-bw="jin"]{--bwc:#8fd04a;--bwi:url(vendor/img/battle/jin-field.webp)}
 <script src="data/ngwords.js?v=8e481828"></script>
 <script src="data/cooplib.js?v=de6dd4c5"></script>
 <!-- 単元ごとの問題の型（単元から出題） -->
-<script src="data/gen/core.js?v=7681dc71"></script>
+<script src="data/gen/core.js?v=94de9e87"></script>
 <script>window.RIKA_PUBLIC=true;</script>
 <script>window.BOSS_STAGE_PUBLIC=false;      // ひとりで ボスバトルの ステージ版（ステージ・ざこ・ひっさつわざ・ずかん）：false の あいだは 公開ページでは 今までの ボスバトル。手もと（localhost）では 出る。ひろばの 公開と いっしょに true に する</script>
 <script>window.HIROBA_PUBLIC=false;      // じぶんの ひろば：false の あいだは 公開ページで「もうすぐ くるよ」（入れない・どんぐりも ふえない）。手もとの確認（localhost・127.0.0.1）では ひらく</script>
 <script>if(window.RIKA_PUBLIC) document.write('<script src="data/gen/rika.js?v=4f58fe09"><\/script>');</script>
 <script src="data/gen/other.js?v=0a3ecac9"></script>
 <script src="data/gen/sansu-12.js?v=0f9a4f23"></script>
-<script src="data/gen/sansu-34.js?v=d1659d93"></script>
+<script src="data/gen/sansu-34.js?v=d9cb8a97"></script>
 <script src="data/gen/sansu-56.js?v=ce8228c8"></script>
 <script src="data/gen/textbook-extra.js?v=a71e349b"></script>
 <script src="data/gen/bunsho.js?v=816e2a4c"></script>
-<script src="data/units.js?v=74dad08a"></script>
+<script src="data/units.js?v=0af8eb74"></script>
 <script src="data/sansu-items.js?v=c9fca7b3"></script>
 <script src="data/tools-viz.js?v=0582ba52"></script>
 <script src="data/learnhelp.js?v=062f8140"></script><!-- まなびの たすけ（はやすぎる まちがい・あとで もう一度・とき方・つまずき） -->
-<script src="data/collection.js?v=96b5a614"></script>
+<script src="data/collection.js?v=5b8171e6"></script>
 <script src="data/masu100.js?v=a19d68e5"></script>
 <script>
 /* ================= 画面の文言（1つの表） =================
@@ -3294,7 +3294,7 @@ function lhHint(p,c,fb){
 /* 2回 まちがえたとき（算数）：その問題の 数で とき方。つまずき（同じ単元で × が つづく）なら れいだい・やさしい ステップも 出す。
    「わかった」を 押してから つぎへ（done）。出すものが なければ false */
 function lhHow(p,c,stuck,done){
-  const lines=lhMath(c)?(LH.howTo(c.q,c.hissan,c.a)||(c.ex?String(c.ex).split("\n").filter(Boolean):null)):null;
+  const lines=lhMath(c)?((c.u&&Array.isArray(c.u.how)&&c.u.how.length?c.u.how:null)||LH.howTo(c.q,c.hissan,c.a)||(c.ex?String(c.ex).split("\n").filter(Boolean):null)):null;
   const u=UBY[c.uid], easy=stuck&&u&&!p.task?LH.easier(u,UREADY):null;
   stuck=stuck&&!!(easy||(u&&u.ex));      // かける ことばが ないときは 声かけしない
   if(!lines&&!stuck) return false;
@@ -8129,7 +8129,10 @@ function renderSubjItem(q){
   if(!UNITS_OK||!grp){ app.replaceChildren(h("div",{class:"q"},T("si.none"),h("br"),h("button",{type:"button",class:"btn",text:T("n.home"),onclick:()=>go("#home")}))); return; }
   const full=siGroups(g).find(x=>x.id===grp.id), us=full?full.units:[], tools=full?full.tools:[];
   const stepOf=u=>u.series&&u.step!=null?u.step:1e9;
-  const list=us.map((u,i)=>({u,i})).sort((a,b)=>a.u.g-b.u.g||(a.u.item===b.u.item?stepOf(a.u)-stepOf(b.u):0)||a.i-b.i).map(x=>x.u);
+  /* 同じ 学年・項目の 中は、series（円と球・三角形 など）ごとに まとめて step の 順。series の 順は その series が はじめて 出る 位置 */
+  const sFirst={}; us.forEach((u,i)=>{ const k=u.g+"|"+(u.series||"#"+i); if(!(k in sFirst)) sFirst[k]=i; });
+  const sKey=x=>sFirst[x.u.g+"|"+(x.u.series||"#"+x.i)];
+  const list=us.map((u,i)=>({u,i})).sort((a,b)=>a.u.g-b.u.g||(a.u.item===b.u.item?(a.u.series&&a.u.series===b.u.series?stepOf(a.u)-stepOf(b.u):sKey(a)-sKey(b)):0)||a.i-b.i).map(x=>x.u);
   let mix=false; const sel=[];
   /* 答え方（すうじを いれる／4つから えらぶ）。単元えらびの 画面と 同じく この端末に 覚える（UPK.choice）。えらんで いない ときは 学年で きめる */
   const cho=()=>uChoice(list.map(u=>u.id),UPK.choice);
