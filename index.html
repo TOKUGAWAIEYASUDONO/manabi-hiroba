@@ -1124,6 +1124,7 @@ body[data-sg="s"] .sgsel h2{color:#fff;text-shadow:0 2px 0 #1b1530}body[data-sg=
 .hops{display:flex;gap:10px;margin:12px 0 4px}
 .hops .btn{flex:1;margin:0;display:flex;align-items:center;justify-content:center;gap:6px;min-height:54px;font-size:20px}
 .hops .btn .art{width:28px;height:28px}
+@media (max-width:480px){.hops{gap:6px}.hops .btn{flex-direction:column;gap:2px;font-size:16px;white-space:nowrap;padding-left:4px;padding-right:4px}}
 .shop{background:#fff;border:2px solid var(--line);border-radius:4px;padding:4px 12px 8px;margin:8px 0}
 .shop h3{margin:8px 0 2px;font-size:17px}
 .shop .row{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:2px dotted var(--line)}
@@ -1133,6 +1134,16 @@ body[data-sg="s"] .sgsel h2{color:#fff;text-shadow:0 2px 0 #1b1530}body[data-sg=
 .shop .row .nm{flex:1;font-weight:700;font-size:17px}
 .shop .row .btn{margin:0;min-width:96px;display:inline-flex;align-items:center;justify-content:center;gap:4px}
 .shop .row .btn .art{width:22px;height:22px}
+.shop .shc{display:grid;grid-template-columns:repeat(auto-fill,minmax(132px,1fr));gap:8px;padding:8px 0}
+.shop .sc{display:flex;flex-direction:column;align-items:center;gap:4px;background:#fffdf6;border:2px solid var(--line);border-radius:14px;padding:8px 6px;text-align:center}
+.shop .sc.own{background:#eef7ea}
+.shop .sc>.art{width:96px;height:96px;object-fit:contain}
+.shop .sc .nm{font-weight:700;font-size:15px;line-height:1.3;min-height:2.6em;display:flex;align-items:center}
+.shop .sc .btn{margin:0;width:100%;min-height:44px;display:inline-flex;align-items:center;justify-content:center;gap:4px}
+.shop .sc .btn .art{width:22px;height:22px}
+.shop .sc .note{min-height:44px;display:flex;align-items:center;margin:0}
+.nx .nxs img.sil{filter:brightness(0);opacity:.28;object-fit:contain}
+@media (min-width:1000px){.hb{max-width:960px}}
 .zks{margin:12px 0;border:3px solid var(--edge);border-radius:12px;background:#fff;overflow:hidden}
 .zks h2{margin:0;padding:6px 12px;font-size:18px;color:#fff;background:var(--math)}
 .zk-jp h2{background:var(--jp)}.zk-eng h2{background:var(--eng)}.zk-soc h2{background:var(--soc);color:var(--ink)}
@@ -4030,12 +4041,12 @@ function hbDraw(first){
     colSave();
   }
   const sel=HS.sel, bal=COL.balance(S), D={}; COL.DECOR.forEach(d=>{ D[d.id]=d; });
-  const nx=[...new Set(P.filter(p=>p.next).map(p=>p.art))];
+  const nx=P.filter(p=>p.next).map(p=>p.id);
   const bar=sel?`<div class="hbar" role="status"><span>${T(S.pl[sel]?"col.grid.move":"col.grid.pick")}</span>${S.pl[sel]?`<button type="button" class="btn sub s" id="hbStore">${T("col.store")}</button>`:""}<button type="button" class="btn sub s" id="hbCancel">${T("col.cancel")}</button></div>`:"";
-  let dg=null; const shop=COL.DECOR.map(d=>{ const g=d.g||"0", hd=g!==dg?`<h4 class="shg">${T("col.dg."+g)}</h4>`:""; dg=g; const own=S.own.includes(d.id), placed=d.id in S.pl;
+  let dg=null, dg0=0; const shop=COL.DECOR.map(d=>{ const g=d.g||"0", hd=g!==dg?`<h4 class="shg">${T("col.dg."+g)}</h4>`:""; dg=g; const own=S.own.includes(d.id), placed=d.id in S.pl;
     const act=!own?`<button type="button" class="btn s" data-buy="${d.id}"${bal<d.price?" disabled":""}>${acornSvg("ac")}${T("col.price",d.price)}</button>`
       :placed?`<span class="note">${T("col.placed")}</span>`:`<button type="button" class="btn s" data-put="${d.id}">${T("col.put")}</button>`;
-    return `${hd}<div class="row"><img class="art" src="vendor/img/island/${d.id}-256.webp?v=1" alt="" width="48" height="48" loading="lazy" decoding="async"><span class="nm">${T("col.d."+d.id)}</span>${act}</div>`; }).join("");
+    return `${hd?(dg0++?"</div>":"")+hd+'<div class="shc">':""}<div class="sc${own?" own":""}"><img class="art" src="vendor/img/island/${d.id}-256.webp?v=1" alt="" width="96" height="96" loading="lazy" decoding="async"><span class="nm">${T("col.d."+d.id)}</span>${act}</div>`; }).join("")+"</div>";
   const dd=S.done?COL.dayDate(S.done):null;
   const done=S.done?`<div class="hmsg done">${HS.done?`<b>${T("col.done")}</b><br>`:""}${T("col.done.on",dd.getUTCMonth()+1,dd.getUTCDate())}<br>${T(COL.kzLeft(S)?"col.done.k":"col.done.n")}
     <div class="pills" style="margin-top:8px"><b class="pl">${T("col.theme")}</b>${[0,1,2].map(i=>`<button type="button" class="pill small${S.theme===i?" on":""}" data-th="${i}" aria-pressed="${S.theme===i}">${T("col.theme."+i)}</button>`).join("")}</div></div>`:"";
@@ -4048,22 +4059,23 @@ function hbDraw(first){
     ${HS.gift?`<div class="hmsg">${acornSvg("ac")} ${T("col.gift")}</div>`:""}
     ${HS.cap?`<div class="hmsg">${T("col.cap")}</div>`:""}
     ${HS.mkGrow.map(id=>`<div class="hmsg">${T("col.mk.grow",mkNm(id))}</div>`).join("")}
-    ${sbHtml(S,bal)}
     ${mkPickHtml(S)}
+    ${HS.sbNew?sbHtml(S,bal):""}
     ${done}
     <div class="hscene t${S.theme}">
-      ${mkRowHtml(S)}
       <div class="isle" id="hbIsle"></div><div class="isle-btns"><button type="button" class="btn sub s" data-iz="1.4" aria-label="${esc(T("col.isle.in"))}">＋</button><button type="button" class="btn sub s" data-iz="0.7" aria-label="${esc(T("col.isle.out"))}">－</button><button type="button" class="btn sub s" data-iz="0">${T("col.isle.home")}</button></div>
-      ${nx.length?`<div class="nx"><b>${T("col.next")}</b><span class="nxs">${nx.map(a=>svgU(a,"sil")).join("")}</span><small>${T("col.next.how")}</small></div>`:""}
+      ${nx.length?`<div class="nx"><b>${T("col.next")}</b><span class="nxs">${nx.map(id=>`<img class="art sil" src="vendor/img/island/${id}-256.webp?v=1" alt="" width="44" height="44" decoding="async">`).join("")}</span><small>${T("col.next.how")}</small></div>`:""}
+      ${mkRowHtml(S)}
     </div>
     ${bar}
     <div class="hops"><button type="button" class="btn" id="hbShop" aria-expanded="${HS.shop}">${acornSvg("ac")}${T("col.shop")}</button><button type="button" class="btn" id="hbZk">${ic("book-open")}${T("col.zukan")}</button><button type="button" class="btn" id="hbYa" aria-expanded="${!!HS.ya}" aria-controls="yaBox">🏆 ${T("col.ya.t")}</button></div>
-    ${HS.ya?yaHtml(S):""}
-    ${mkZkHtml(S)}
-    ${tkBox()}
     <section class="shop${HS.shop?"":" hidden"}" id="shopBox"><h3>${T("col.shop")}</h3>
       <div class="pills stabs" role="group" aria-label="${esc(T("col.kz.tabs"))}">${["d","k"].map(k=>`<button type="button" class="pill small${HS.tab===k?" on":""}" data-stab="${k}" aria-pressed="${HS.tab===k}">${T("col.kz.tab."+k)}</button>`).join("")}</div>
       ${HS.tab==="k"?kzShopHtml(S,bal):shop}</section>
+    ${HS.ya?yaHtml(S):""}
+    ${HS.sbNew?"":sbHtml(S,bal)}
+    ${mkZkHtml(S)}
+    ${tkBox()}
     <p class="note">${T("col.local")}</p>`;
   hbIsle(root,S,pm,D);
   root.querySelectorAll("[data-buy]").forEach(b=>b.onclick=()=>{ if(COL.buy(S,b.dataset.buy)){ HS.sel=b.dataset.buy; HS.shop=false; sfx("coin"); colSave(); hbDraw(false); hbIsleShow(); } });
@@ -4304,7 +4316,7 @@ function hbIsle(root,S,pm,D){
   const parts={}; Object.keys(pm).forEach(id=>{ if(pm[id].have) parts[id]=1; });
   const placed=Object.keys(S.pl).map(id=>({id,cell:S.pl[id]}));
   const w=I.build(cnt,parts,placed,COL.CELLS);
-  const mates=(S.mk.sh||[]).filter(id=>id&&S.mk.own[id]).map(id=>{ const c=mkC(id); return c&&c.art?`vendor/img/manabikko/${c.art}-${COL.MK_ART[COL.mkStage(S,id)]}-v3-128.webp`:""; }).filter(Boolean);
+  const mates=(S.sb&&S.sb.c?[`vendor/img/soutai/${S.sb.c}-128.webp`]:[]).concat((S.mk.sh||[]).filter(id=>id&&S.mk.own[id]).map(id=>{ const c=mkC(id); return c&&c.art?`vendor/img/manabikko/${c.art}-${COL.MK_ART[COL.mkStage(S,id)]}-v3-128.webp`:""; }).filter(Boolean));
   const sc=HS.isle&&HS.isle.scroll?HS.isle.scroll():null;
   if(HS.isle) HS.isle.destroy();
   HS.isle=I.mount(host,{world:w,placing:!!HS.sel,sel:HS.sel,mates,zoom:HS.iv||1,scroll:sc,aria:T("col.grid"),
