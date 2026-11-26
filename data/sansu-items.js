@@ -34,7 +34,7 @@
   const MOVE = {
     // 「その他」の 行き先
     "m1-tokei": "tani", "m1-tokei-fun": "tani",                                    // とけい（時こく）
-    "m4-gaisu": "kazu",                                                            // がい数
+    "m4-gaisu": "kazu", "m4-gaisu-shisha": "kazu", "m4-gaisu-ue": "kazu", "m4-gaisu-hanni": "kazu", "m4-gaisu-mitsumori": "kazu",                                                            // がい数
     "m5-baisu": "kazu", "m5-yakusu": "kazu", "m5-kobaisu": "kazu", "m5-koyakusu": "kazu",   // 整数の 性質
     "m6-baai": "graph",                                                            // 場合の数（データの活用）
     "m4-henka": "wariai",                                                          // 変わり方

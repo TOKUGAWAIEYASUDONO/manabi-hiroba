@@ -265,7 +265,7 @@ t("バックアップ：確認の数字が合っても、範囲がおかしい�
   assert.strictEqual(C.hrParse(mk(hdr("5", "3", "01", "D000000", "00"))), null);    // 場所の番号が 12 より大きい
   assert.strictEqual(C.hrParse(mk(hdr("5", "3", "00", "0000000", "01") + "00")), null);      // 番号0・段階0
   assert.strictEqual(C.hrParse(mk(hdr("5", "3", "00", "0000000", "02") + "0504")), null);    // 同じ単元が2回
-  assert.strictEqual(C.hrParse(mk(hdr("5", "3", "00", "0000000", "01") + "ZZ")), null);      // 単元の番号が表の外
+  if (C.UNIT_IDS.length <= 323) assert.strictEqual(C.hrParse(mk(hdr("5", "3", "00", "0000000", "01") + "ZZ")), null);      // 単元の番号が表の外（324こを こえたら ZZ＝323番は 表の中。3字は HR5 で 検査）
   assert.strictEqual(C.hrParse(mk(hdr("5", "3", "00", "0000000", "02") + "05")), null);      // 個数と合わない
 });
 t("バックアップ：読みこんでも記録は減らない（段階は大きいほう）／今日の上限は戻らない", () => {
@@ -709,6 +709,18 @@ const yaState = () => {      // 3年 1学期ぶん ＋ やりこみ（シール�
   S.kp.r["m3-amari"] = 4; S.kp.z.push("t-yam100"); S.kp.p.push(C.PARTS[C.PARTS.length - 1].id);      // いまの 記録からは 計算できない（前の 基準で もらった）物
   C.keepUp(S); return S;
 };
+t("バックアップ HR5：324番め より 後ろの 単元を 持つと 1つ 3字で 書き、往復する（それ以外は 今まで通り）", () => {
+  const S = C.fresh(D); run(S, D, [U("m1-kazoeru")]);
+  assert(!/^HR5/.test(C.hrMake(S)), "後ろの 単元が なければ HR5 に しない");
+  const big = C.UNIT_IDS.slice(324);
+  if (!big.length) return;
+  big.forEach(id => { S.u[id] = [2, 0, D]; });
+  const s = C.hrMake(S), r = C.hrParse(s);
+  assert(/^HR5/.test(s), s.slice(0, 4)); assert(r, "読めない");
+  const B = C.hrMerge(C.fresh(D + 1), r, D + 1);
+  for (const id of C.UNIT_IDS) assert.strictEqual(C.stage(B, id), C.stage(S, id), id);
+  assert.strictEqual(C.hrParse(s.replace(/^HR5/, "HR4")), null, "HR4 として 読ませると 断る");
+});
 t("バックアップ HR4：やりこみ（正解・ノーミス・シールの しるし・じっせき）と もらった物（ランク・きせかえ・遊具）が 往復する", () => {
   const S = yaState(), s = C.hrMake(S), r = C.hrParse(s);
   assert(/^HR4/.test(s), s.slice(0, 4)); assert(r && r.y && r.kp && r.mk && r.kz);

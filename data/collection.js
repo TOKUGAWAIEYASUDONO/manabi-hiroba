@@ -61,7 +61,8 @@
     "m6-frac-mul-proper","m6-frac-mul-cross","m6-frac-div-proper","m6-frac-div-mixed","m6-mix-dec-frac","m6-ratio-reduce","m6-speed-distance","m6-speed-time",
     "m1-bun-awase","m1-bun-nokori","m1-bun-chigai","m1-bun-junjo","m1-bun-3kazu","m1-bun-add20","m1-bun-sub20","m1-nanjuu","m2-bun-add","m2-bun-sub","m2-bun-gyaku","m2-bun-kake","m2-bun-tani","m2-nanjuu","m2-kuku-1","m3-bun-addsub","m3-bun-kake","m3-bun-bai","m3-bun-amari","m3-bun-kiri","m3-bun-tani","m3-byou","m4-bun-bai","m4-bun-shiki","m4-bun-shosu","m5-bun-wariai","m5-bun-buai","m6-bun-hi","m6-bun-bunsu",
     "m3-shosu-tani",
-    "m3-en-kotoba","m3-en-hankei","m3-en-narabi","m3-en-kyuu","m3-sankaku-namae","m3-sankaku-kado","m3-sankaku-mawari","m3-omosa-kg","m3-omosa-t","m3-omosa-keisan","m3-jikan-ato","m3-jikan-mae","m3-jikan-aida","m3-jikan-tashi","m3-dec-ikutsu","m3-dec-kurabe","m3-dec-seisu","m3-frac-kurabe","m3-frac-1hiku","m3-graph-memori","m3-graph-yomu","m3-graph-kaku","m3-add-4d","m3-sub-4d","m3-sub-1000","m3-mul-3d1d-zero","m3-div-01"
+    "m3-en-kotoba","m3-en-hankei","m3-en-narabi","m3-en-kyuu","m3-sankaku-namae","m3-sankaku-kado","m3-sankaku-mawari","m3-omosa-kg","m3-omosa-t","m3-omosa-keisan","m3-jikan-ato","m3-jikan-mae","m3-jikan-aida","m3-jikan-tashi","m3-dec-ikutsu","m3-dec-kurabe","m3-dec-seisu","m3-frac-kurabe","m3-frac-1hiku","m3-graph-memori","m3-graph-yomu","m3-graph-kaku","m3-add-4d","m3-sub-4d","m3-sub-1000","m3-mul-3d1d-zero","m3-div-01",
+    "m4-dec-keta","m4-dec-seisu","m4-dec-zero","m4-dec-mul2","m4-dec-susumu","m4-dec-gaisu","m4-dec-amari","m4-gaisu-shisha","m4-gaisu-ue","m4-gaisu-hanni","m4-gaisu-mitsumori","m4-kaku-ookii","m4-kaku-jougi","m4-kaku-keisan","m4-men-chou","m4-men-sei","m4-men-hen","m4-men-kiri","m4-men-a","m4-kimari-kakko","m4-kimari-saki","m4-kimari-mix","m4-kimari-kufu"
   ];
   const IDX = {}; UNIT_IDS.forEach((id, i) => { IDX[id] = i; });
   const GRADE_FIX = { "m6-hayasa": 5, "m5-bunsu-int": 6, "m5-frac-mul-int": 6, "m5-frac-div-int": 6, "m6-speed-distance": 5, "m6-speed-time": 5 }; /* 現行教科書に合わせて学年を直した単元（IDは互換のため据え置き） */
@@ -702,8 +703,10 @@
      やりこみ（y）も もらった物（kp）も 何もなければ 今まで通り HR3／HR2／HR1。数は「長さ(1)＋数字」の 形（0 は「0」の 1字）。
      やりこみの部分：正解の数・ノーミスの回・3教科の回・教科ごとの 正解の数（YA_SUBJ の順）・単元の数・［単元の番号(2)・正解・ノーミス・しるし(1：7割の回＋9割の回×2)］×数・じっせき（YA_BK の順の ビット。かたまりの数(1)・［20ビット(4)］×数）
      もらった物の部分：遊具（PARTS の順の 8ビット(2)）・学びで もらった きせかえ（KZ_IDS の順の ビット。かたまりの数(1)・［20ビット(4)］×数）・シールの ランクの 数・［単元の番号(2)・ランク(1)］×数
-     古い版のサイトは HR4 を こわれた文字として 断る（だまって 消えない） */
-  const EPOCH = 18262, RE = /^HR[1234][0-9A-Z]+$/;
+     古い版のサイトは HR4 を こわれた文字として 断る（だまって 消えない）
+     HR5（2026-11-26。単元が 324こを こえたため）＝ HR4 と 同じ 形で、単元の 番号と 段階を 1つ 3字で 書く。
+     番号が 2字に 入らない 単元（324番め から）を 1つでも 持っている ときだけ 作る。それ以外は 今まで通り HR4〜HR1 */
+  const EPOCH = 18262, RE = /^HR[12345][0-9A-Z]+$/;
   const b36 = (n, w) => Math.min(Math.pow(36, w) - 1, Math.max(0, n | 0)).toString(36).toUpperCase().padStart(w, "0");
   const sum3 = t => { let h = 7; for (const c of t) h = (h * 31 + c.charCodeAt(0)) % 46656; return h.toString(36).toUpperCase().padStart(3, "0"); };
   const HEAD = 3 + 3 + 3 + 3 + 2 + DECOR.length + 2;
@@ -823,12 +826,13 @@
     } catch (e) { return null; }
   }
   function hrMake(S) {
-    const v4 = yaAny(S) || kpAny(S), kzs = kzStr(S, v4), ids = UNIT_IDS.filter(id => stage(S, id) >= 1), mks = kzs ? kzs + mkStr(S, true) : mkStr(S);
-    const tag = v4 ? "HR4" : kzs ? "HR3" : mks ? "HR2" : "HR1";
+    const ids = UNIT_IDS.filter(id => stage(S, id) >= 1), wide = ids.some(id => IDX[id] * 4 + 3 >= 36 * 36), W = wide ? 3 : 2;   // 番号が 2字に 入らない 単元が あれば HR5（1つ 3字）
+    const v4 = wide || yaAny(S) || kpAny(S), kzs = kzStr(S, v4), mks = kzs ? kzs + mkStr(S, true) : mkStr(S);
+    const tag = wide ? "HR5" : v4 ? "HR4" : kzs ? "HR3" : mks ? "HR2" : "HR1";
     let own = 0; DECOR.forEach((d, i) => { if (S.own.includes(d.id)) own |= 1 << i; });
     const body = mks + b36(S.d0 - EPOCH, 3) + b36(S.ac.e, 3) + b36(S.ac.s, 3) + b36(S.done ? S.done - EPOCH : 0, 3) + b36(own, 2)
       + DECOR.map(d => (S.pl[d.id] || 0).toString(36).toUpperCase()).join("") + b36(ids.length, 2)
-      + ids.map(id => b36(IDX[id] * 4 + stage(S, id), 2)).join("") + memoStr(S);
+      + ids.map(id => b36(IDX[id] * 4 + stage(S, id), W)).join("") + memoStr(S);
     const head = v4 ? yaStr(S) + kpStr(S) : "";
     return (tag + head + body + sum3(tag + head + body)).match(/.{1,8}/g).join("-");
   }
@@ -837,19 +841,19 @@
     if (!RE.test(t) || t.length < 3 + HEAD + 3) return null;
     const tag = t.slice(0, 3); let body = t.slice(3, -3); if (sum3(tag + body) !== t.slice(-3)) return null;
     let mk = null, kz = null, y = null, kp = null;
-    if (tag === "HR4") {
+    if (tag === "HR4" || tag === "HR5") {
       const a = yaParse(body); if (!a) return null; y = a.y; body = body.slice(a.len);
       const b = kpParse(body); if (!b) return null; kp = b.kp; body = body.slice(b.len);
     }
-    if (tag === "HR3" || tag === "HR4") { const k = kzParse(body); if (!k) return null; kz = k.kz; body = body.slice(k.len); }
+    if (tag === "HR3" || tag === "HR4" || tag === "HR5") { const k = kzParse(body); if (!k) return null; kz = k.kz; body = body.slice(k.len); }
     if (tag !== "HR1") {
       const m = mkParse(body); if (!m) return null; mk = m.mk; body = body.slice(m.len); if (body.length < HEAD) return null;
       if (kz) for (const id in kz.e) if (!mk.own[id]) return null;           // もっていない子の きせかえ
     }
-    const r = coreParse(body); if (r) { r.mk = mk; r.kz = kz; r.y = y; r.kp = kp; }
+    const r = coreParse(body, tag === "HR5" ? 3 : 2); if (r) { r.mk = mk; r.kz = kz; r.y = y; r.kp = kp; }
     return r;
   }
-  function coreParse(body) {
+  function coreParse(body, W) {
     let p = 0; const rd = w => { const v = parseInt(body.slice(p, p + w), 36); p += w; return v; };
     const d0 = rd(3), e = rd(3), s = rd(3), dn = rd(3), ownM = rd(2);
     if (!(s <= e) || ownM >= (1 << DECOR.length)) return null;
@@ -860,12 +864,12 @@
       if (c) { if (used.has(c) || !(ownM & (1 << i))) return null; used.add(c); pl[DECOR[i].id] = c; }
     }
     const n = rd(2);
-    const rest = body.length - (p + n * 2);
+    const rest = body.length - (p + n * W);
     const nch = (rest - 4) / 4;
     if (!(n >= 0) || (rest !== 0 && !(Number.isInteger(nch) && nch >= 1 && nch <= MEMO_CH))) return null;
     const u = {}, seen = new Set();
     for (let i = 0; i < n; i++) {
-      const v = rd(2), idx = Math.floor(v / 4), st = v % 4;
+      const v = rd(W), idx = Math.floor(v / 4), st = v % 4;
       if (!(idx < UNIT_IDS.length) || !st || seen.has(idx)) return null;
       seen.add(idx); u[UNIT_IDS[idx]] = st;
     }
