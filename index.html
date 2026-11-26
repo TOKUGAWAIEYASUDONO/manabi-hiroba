@@ -1143,7 +1143,44 @@ body[data-sg="s"] .sgsel h2{color:#fff;text-shadow:0 2px 0 #1b1530}body[data-sg=
 .shop .sc .btn .art{width:22px;height:22px}
 .shop .sc .note{min-height:44px;display:flex;align-items:center;margin:0}
 .nx .nxs img.sil{filter:brightness(0);opacity:.28;object-fit:contain}
-@media (min-width:1000px){.hb{max-width:960px}}
+.hbg{position:fixed;left:0;right:0;bottom:0;max-width:none;z-index:5;background:#4fcbe0;overflow:hidden}
+.hbg .isle{position:absolute;inset:0;width:auto;aspect-ratio:auto;border-radius:0;margin:0;background:#4fcbe0}
+.hbg .isle-vp{display:flex}.hbg .isle-st{flex:none;margin:auto}
+.hud{position:absolute;z-index:3;display:flex;gap:8px;pointer-events:none}.hud>*{pointer-events:auto}
+.hud.tl{left:10px;top:10px;align-items:center}.hud.tr{right:10px;top:10px;align-items:center}
+.hud .back{margin:0}
+.hme{display:flex;align-items:center;gap:8px;background:#fffdf6;border:3px solid var(--edge);border-radius:16px;padding:4px 14px 4px 6px;font:inherit;color:inherit;cursor:pointer;box-shadow:0 4px 0 var(--edge);min-height:52px;text-align:left}
+.hme img{width:44px;height:44px;border-radius:12px;background:#e6f2dc}.hme span{display:grid;line-height:1.25}.hme b{font-size:16px}.hme small{font-size:12px;color:var(--muted)}
+.hme:disabled{cursor:default;opacity:1}
+.hbg .acn{box-shadow:0 4px 0 var(--edge);min-height:44px}.hbg .acn.tk .art{width:30px;height:22px}.hbg .acn small{font-size:12px}
+.hud.ms{left:50%;top:70px;transform:translateX(-50%);flex-direction:column;width:min(480px,calc(100% - 20px));gap:6px}.hud.ms .hmsg{cursor:pointer}.hud.ms .hmsg,.hud.ms .hbar{margin:0;box-shadow:0 3px 0 rgba(0,0,0,.15)}
+.hud.rt{right:10px;top:74px;flex-direction:column;width:240px}
+.hrb{display:flex;align-items:center;gap:10px;background:#fffdf6;border:3px solid var(--edge);border-radius:16px;padding:8px 12px;font:inherit;color:inherit;cursor:pointer;box-shadow:0 4px 0 var(--edge);min-height:56px;text-align:left}
+.hrb>i svg{width:22px;height:22px}.hrb>i,.hrb>.art{flex:none;width:36px;height:36px;display:grid;place-items:center;font-style:normal;font-size:24px;background:#fff;border:2px solid var(--line);border-radius:10px}
+.hrb span{display:grid;line-height:1.25}.hrb b{font-size:18px}.hrb small{font-size:12px;color:var(--muted)}
+.hrb.go{background:#e8796a;color:#fff}.hrb.go small{color:#fff}.hrb:disabled{opacity:1;background:#d9d4c8;color:#6b665c;cursor:default;box-shadow:0 4px 0 #a9a394}.hrb:disabled small{color:#6b665c}
+.hrb:active:not(:disabled),.hme:active:not(:disabled),.hnb:active{transform:translateY(3px);box-shadow:0 1px 0 var(--edge)}
+.hud.rt .nx{background:rgba(255,255,255,.85);border-radius:12px}
+.hud.zm{right:10px;bottom:12px}.hud.zm .btn{margin:0;min-width:48px;min-height:48px}
+.hud.nav{left:50%;bottom:12px;transform:translateX(-50%);background:#3b332e;border-radius:20px;padding:6px;gap:4px;box-shadow:0 4px 0 rgba(0,0,0,.25)}
+.hnb{position:relative;display:grid;justify-items:center;gap:2px;min-width:76px;min-height:56px;padding:6px 10px;border:0;border-radius:14px;background:none;color:#fff;font:inherit;font-weight:800;font-size:14px;cursor:pointer}
+.hnb .art,.hnb svg{width:24px;height:24px}.hnb.on{background:#fffdf6;color:var(--ink)}
+.hnb .dot{position:absolute;right:8px;top:4px;width:12px;height:12px;border-radius:50%;background:#ff5a4d;border:2px solid #fff}
+.hsheet{position:absolute;z-index:4;right:10px;top:10px;bottom:10px;width:min(460px,calc(100% - 20px));background:var(--paper,#fffdf6);border:4px solid var(--edge);border-radius:18px;padding:10px 12px 16px;overflow:auto;box-shadow:0 6px 0 rgba(0,0,0,.2)}
+.hsheet .hx{position:sticky;top:0;z-index:2;display:block;margin:0 0 6px auto}
+.hsheet .shop{border:0;padding:0;margin:0;background:none}.hsheet h3{margin-top:0}.hsheet .sbbox,.hsheet .mkzk{margin-left:0;margin-right:0}
+.hbg.open .hud.rt,.hbg.open .hud.zm,.hbg.placing .hud.rt{display:none}
+@media (min-width:900px){.hbg.open .hud.nav{left:calc(50% - 235px)}}
+@media (max-width:899px){
+  .hud.rt{top:auto;bottom:84px;right:8px;width:auto;flex-direction:row;flex-wrap:wrap-reverse;justify-content:flex-end;left:8px}
+  .hrb{min-height:48px;padding:4px 10px 4px 6px;border-radius:14px}.hrb small{display:none}.hrb b{font-size:15px}.hrb>i,.hrb>.art{width:30px;height:30px;font-size:20px}
+  .hud.rt .nx{display:none}
+  .hud.zm{bottom:auto;top:66px;right:8px;flex-direction:column}.hud.zm .btn{min-width:44px;min-height:44px;padding:0 8px}
+  .hud.ms{top:66px;left:8px;transform:none;width:calc(100% - 72px)}
+  .hme span{display:none}.hme{padding:4px}
+  .hud.nav{width:calc(100% - 16px);justify-content:space-between}.hnb{flex:1;min-width:0}
+  .hsheet{left:0;right:0;top:38%;bottom:76px;width:auto;border-radius:18px 18px 0 0;border-bottom:0}
+}
 .zks{margin:12px 0;border:3px solid var(--edge);border-radius:12px;background:#fff;overflow:hidden}
 .zks h2{margin:0;padding:6px 12px;font-size:18px;color:#fff;background:var(--math)}
 .zk-jp h2{background:var(--jp)}.zk-eng h2{background:var(--eng)}.zk-soc h2{background:var(--soc);color:var(--ink)}
@@ -2421,7 +2458,7 @@ const TX={
  "col.soon":["もうすぐ くるよ！ たのしみに まっててね"],"col.soon.b":["じゅんびちゅう"],
  "col.name":["じぶんの ひろば"],
  "col.door.d":[n=>`どんぐり ${n}こ`],"col.door.new":["あたらしい！"],
- "col.shop":["おみせ"],"col.zukan":["ずかん"],"col.zukan.t":["たんげん ずかん"],
+ "col.shop":["おみせ"],"col.hud.home":["ひろば"],"col.hud.mate":["なかま"],"col.hud.me":["きせかえ"],"col.hud.me.d":["ぼうし・もちもの"],"col.hud.deco":["もようがえ"],"col.hud.deco.d":["かう・おく"],"col.hud.close":["とじる"],"col.hud.can":[n=>`できた ${n}`],"col.zukan":["ずかん"],"col.zukan.t":["たんげん ずかん"],
  "col.gift":["どんぐりくんから、はじめの どんぐり 5こ！"],
  "col.cap":["きょうの どんぐりは ここまで。また あした！"],
  "col.next":["つぎは なにが くる？"],
@@ -4024,7 +4061,7 @@ function colRunPlay(p){      // finish() から：単元ごとの正解数と、
 /* ----- じぶんの ひろば ----- */
 function renderHiroba(){
   if(colMode()!=="on") return go("#home");
-  setLG(ui.grade); HS={sel:null,shop:false,gift:0,cap:0,done:0,mkSel:null,mkGot:null,mkLater:false,mkInfo:null,mkGrow:[],tab:"d",kzMsg:null,ya:false,isle:null,iv:null,sbNew:null,sbTab:null,sbMsg:null};
+  setLG(ui.grade); HS={sel:null,shop:false,gift:0,cap:0,done:0,mkSel:null,mkGot:null,mkLater:false,mkInfo:null,mkGrow:[],tab:"d",kzMsg:null,ya:false,pane:null,isle:null,iv:null,sbNew:null,sbTab:null,sbMsg:null};
   { const S0=colGet(); if(COL.yaCheck(S0,yaExt()).length) colSave(); }
   app.innerHTML=`<div class="hb"></div>`;
   Promise.all([loadScript("data/hiroba-art.js?v=eddf43ff",()=>!!document.getElementById("hiroba-art")),loadScript("data/hiroba-island.js?v=2",()=>!!window.MH_ISLE)]).then(()=>{ if(params().path==="hiroba") hbDraw(true); },()=>{ app.innerHTML=`<div class="q">${T("col.err")}</div>`; });
@@ -4055,39 +4092,44 @@ function hbDraw(first){
     const msg=st.ok?"":T(st.why==="none"?"col.tk.none":"col.tk.day");
     return `<section class="tkbox" aria-label="${esc(T("col.tk.name"))}"><div class="tkh"><b>${T("col.tk.name")}</b><span class="tkcs" role="img" aria-label="${esc(T("col.tk.n",st.n))}">${icons}</span></div>${msg?`<p class="note">${msg}</p>`:""}<button type="button" class="btn" id="hbTk"${st.ok?"":" disabled"}>${svgU("h-door")}${T("col.tk.go")}</button></section>`; };
   const root=app.querySelector(".hb"); if(!root) return;
-  root.innerHTML=`<div class="topbar"><button class="back" onclick="go('#home')">${BK()}</button><b>${T("col.name")}</b><span class="acn" aria-label="${esc(T("col.door.d",bal))}">${acornSvg()}<b>${bal}</b></span></div>
-    ${HS.gift?`<div class="hmsg">${acornSvg("ac")} ${T("col.gift")}</div>`:""}
-    ${HS.cap?`<div class="hmsg">${T("col.cap")}</div>`:""}
-    ${HS.mkGrow.map(id=>`<div class="hmsg">${T("col.mk.grow",mkNm(id))}</div>`).join("")}
-    ${mkPickHtml(S)}
-    ${HS.sbNew?sbHtml(S,bal):""}
-    ${done}
-    <div class="hscene t${S.theme}">
-      <div class="isle" id="hbIsle"></div><div class="isle-btns"><button type="button" class="btn sub s" data-iz="1.4" aria-label="${esc(T("col.isle.in"))}">＋</button><button type="button" class="btn sub s" data-iz="0.7" aria-label="${esc(T("col.isle.out"))}">－</button><button type="button" class="btn sub s" data-iz="0">${T("col.isle.home")}</button></div>
-      ${nx.length?`<div class="nx"><b>${T("col.next")}</b><span class="nxs">${nx.map(id=>`<img class="art sil" src="vendor/img/island/${id}-256.webp?v=1" alt="" width="44" height="44" decoding="async">`).join("")}</span><small>${T("col.next.how")}</small></div>`:""}
-      ${mkRowHtml(S)}
+  if(first){ if(HS.sbNew) HS.pane="me"; else if(mkPickHtml(S)) HS.pane="mate"; window.scrollTo(0,0); }
+  const pane=HS.shop?"shop":HS.pane, tk=colTkOn()?COL.tkState(S,today,colTkLimit()):null, pick=pane==="mate"?"":mkPickHtml(S);
+  const paneHtml=pane==="shop"?`<section class="shop" id="shopBox"><h3>${T("col.shop")}</h3><div class="pills stabs" role="group" aria-label="${esc(T("col.kz.tabs"))}">${["d","k"].map(k=>`<button type="button" class="pill small${HS.tab===k?" on":""}" data-stab="${k}" aria-pressed="${HS.tab===k}">${T("col.kz.tab."+k)}</button>`).join("")}</div>${HS.tab==="k"?kzShopHtml(S,bal):shop}</section>`
+    :pane==="mate"?`${mkPickHtml(S)}${mkRowHtml(S)}${mkZkHtml(S)}`:pane==="me"?sbHtml(S,bal):pane==="ya"?`${done}${yaHtml(S)}<p class="note">${T("col.local")}</p>`:"";
+  const nb=(k,icon,label,dot)=>`<button type="button" class="hnb${(pane||"home")===k?" on":""}" data-pane="${k}" aria-pressed="${(pane||"home")===k}">${icon}<span>${label}</span>${dot?`<i class="dot" aria-hidden="true"></i>`:""}</button>`;
+  root.className="hb hbg t"+S.theme+(pane?" open":"")+(sel?" placing":""); root.style.top=(document.querySelector("header")||{offsetHeight:0}).offsetHeight+"px";
+  root.innerHTML=`<div class="isle" id="hbIsle"></div>
+    <div class="hud tl"><button class="back" onclick="go('#home')">${BK()}</button>
+      <button type="button" class="hme" data-pane="me"${S.sb.c?"":" disabled"}>${S.sb.c?`<img src="vendor/img/soutai/${S.sb.c}-128.webp" alt="" width="52" height="52" decoding="async">`:""}<span><b>${T("col.name")}</b><small>${T("col.hud.can",COL.summary(S).can)}</small></span></button></div>
+    <div class="hud tr"><span class="acn" aria-label="${esc(T("col.door.d",bal))}">${acornSvg()}<b>${bal}</b></span>${tk?`<span class="acn tk" role="img" aria-label="${esc(T("col.tk.n",tk.n))}">${svgU("h-ticket")}<b>${tk.n}<small> / ${COL.TK_MAX}</small></b></span>`:""}</div>
+    <div class="hud ms">
+      ${HS.gift?`<div class="hmsg">${acornSvg("ac")} ${T("col.gift")}</div>`:""}
+      ${HS.cap?`<div class="hmsg">${T("col.cap")}</div>`:""}
+      ${HS.mkGrow.map(id=>`<div class="hmsg">${T("col.mk.grow",mkNm(id))}</div>`).join("")}
+      ${bar}
     </div>
-    ${bar}
-    <div class="hops"><button type="button" class="btn" id="hbShop" aria-expanded="${HS.shop}">${acornSvg("ac")}${T("col.shop")}</button><button type="button" class="btn" id="hbZk">${ic("book-open")}${T("col.zukan")}</button><button type="button" class="btn" id="hbYa" aria-expanded="${!!HS.ya}" aria-controls="yaBox">🏆 ${T("col.ya.t")}</button></div>
-    <section class="shop${HS.shop?"":" hidden"}" id="shopBox"><h3>${T("col.shop")}</h3>
-      <div class="pills stabs" role="group" aria-label="${esc(T("col.kz.tabs"))}">${["d","k"].map(k=>`<button type="button" class="pill small${HS.tab===k?" on":""}" data-stab="${k}" aria-pressed="${HS.tab===k}">${T("col.kz.tab."+k)}</button>`).join("")}</div>
-      ${HS.tab==="k"?kzShopHtml(S,bal):shop}</section>
-    ${HS.ya?yaHtml(S):""}
-    ${HS.sbNew?"":sbHtml(S,bal)}
-    ${mkZkHtml(S)}
-    ${tkBox()}
-    <p class="note">${T("col.local")}</p>`;
+    <div class="hud rt">
+      ${tk?`<button type="button" class="hrb go" id="hbTk"${tk.ok?"":" disabled"}>${svgU("h-door")}<span><b>${T("col.tk.go")}</b><small>${tk.ok?T("col.tk.n",tk.n):T(tk.why==="none"?"col.tk.none":"col.tk.day")}</small></span></button>`:""}
+      <button type="button" class="hrb" data-pane="shop"><i aria-hidden="true">${ic("pencil")}</i><span><b>${T("col.hud.deco")}</b><small>${T("col.hud.deco.d")}</small></span></button>
+      ${S.sb.c?`<button type="button" class="hrb" data-pane="me"><i aria-hidden="true">👕</i><span><b>${T("col.hud.me")}</b><small>${T("col.hud.me.d")}</small></span></button>`:""}
+      <button type="button" class="hrb" data-pane="ya"><i aria-hidden="true">${ic("trophy")}</i><span><b>${T("col.ya.t")}</b></span></button>
+      ${nx.length?`<div class="nx"><b>${T("col.next")}</b><span class="nxs">${nx.map(id=>`<img class="art sil" src="vendor/img/island/${id}-256.webp?v=1" alt="" width="44" height="44" decoding="async">`).join("")}</span><small>${T("col.next.how")}</small></div>`:""}
+    </div>
+    <div class="hud zm"><button type="button" class="btn sub s" data-iz="1.4" aria-label="${esc(T("col.isle.in"))}">＋</button><button type="button" class="btn sub s" data-iz="0.7" aria-label="${esc(T("col.isle.out"))}">－</button><button type="button" class="btn sub s" data-iz="0">${T("col.isle.home")}</button></div>
+    <nav class="hud nav" aria-label="${esc(T("col.name"))}">${nb("home",ic("flag"),T("col.hud.home"))}${nb("mate",ic("users"),T("col.hud.mate"),!!pick)}<button type="button" class="hnb" id="hbZk">${ic("book-open")}<span>${T("col.zukan")}</span></button>${nb("shop",acornSvg("ac"),T("col.shop"))}</nav>
+    ${pane?`<aside class="hsheet" id="hbSheet"><button type="button" class="btn sub s hx" id="hbX">${T("col.hud.close")}</button>${paneHtml}</aside>`:""}`;
   hbIsle(root,S,pm,D);
   root.querySelectorAll("[data-buy]").forEach(b=>b.onclick=()=>{ if(COL.buy(S,b.dataset.buy)){ HS.sel=b.dataset.buy; HS.shop=false; sfx("coin"); colSave(); hbDraw(false); hbIsleShow(); } });
   root.querySelectorAll("[data-put]").forEach(b=>b.onclick=()=>{ HS.sel=b.dataset.put; HS.shop=false; hbDraw(false); hbIsleShow(); });
   root.querySelectorAll("[data-th]").forEach(b=>b.onclick=()=>{ S.theme=+b.dataset.th; colSave(); hbDraw(false); });
   root.querySelectorAll("[data-stab]").forEach(b=>b.onclick=()=>{ HS.tab=b.dataset.stab; HS.kzMsg=null; hbDraw(false); const f=app.querySelector(`[data-stab="${HS.tab}"]`); if(f) f.focus(); });
   root.querySelectorAll("[data-kzbuy]").forEach(b=>b.onclick=()=>{ const id=b.dataset.kzbuy; if(!COL.kzBuy(S,id)) return; HS.kzMsg=id; sfx("coin"); colSave(); hbDraw(false); const f=app.querySelector("#kzGoWear"); if(f) f.focus(); });
-  if(root.querySelector("#kzGoWear")) root.querySelector("#kzGoWear").onclick=()=>{ if(S.sb.c){ HS.sbTab="kz"; HS.sbMsg=null; HS.sbNew=null; HS.shop=false; HS.kzMsg=null; hbDraw(false); const e=app.querySelector("#sbBox"); if(e) e.scrollIntoView({block:"start"}); return; } HS.mkInfo=S.mk.sh.find(id=>S.mk.own[id])||COL.MK_IDS.find(id=>S.mk.own[id])||null; HS.shop=false; HS.kzMsg=null; hbDraw(false); const e=app.querySelector("#mkInfo"); if(e){ e.scrollIntoView({block:"start"}); const f=e.querySelector(".kzb2.on,.kzb2"); if(f) f.focus({preventScroll:true}); } };
+  if(root.querySelector("#kzGoWear")) root.querySelector("#kzGoWear").onclick=()=>{ if(S.sb.c){ HS.sbTab="kz"; HS.pane="me"; HS.sbMsg=null; HS.sbNew=null; HS.shop=false; HS.kzMsg=null; hbDraw(false); const e=app.querySelector("#sbBox"); if(e) e.scrollIntoView({block:"start"}); return; } HS.pane="mate"; HS.mkInfo=S.mk.sh.find(id=>S.mk.own[id])||COL.MK_IDS.find(id=>S.mk.own[id])||null; HS.shop=false; HS.kzMsg=null; hbDraw(false); const e=app.querySelector("#mkInfo"); if(e){ e.scrollIntoView({block:"start"}); const f=e.querySelector(".kzb2.on,.kzb2"); if(f) f.focus({preventScroll:true}); } };
   const q=id=>root.querySelector(id);
-  q("#hbShop").onclick=()=>{ HS.shop=!HS.shop; hbDraw(false); };
+  root.querySelectorAll("[data-pane]").forEach(b=>b.onclick=()=>{ const k=b.dataset.pane, same=k===pane; HS.shop=k==="shop"&&!same; HS.pane=(k==="home"||k==="shop"||same)?null:k; if(k!=="home"&&!same) HS.sel=null; hbDraw(false); const f=app.querySelector("#hbX")||app.querySelector(`.hnb[data-pane="${k}"]`); if(f) f.focus({preventScroll:true}); });
+  root.querySelectorAll(".hud.ms .hmsg").forEach(e=>e.onclick=()=>{ HS.gift=0; HS.cap=0; HS.mkGrow=[]; hbDraw(false); });      // お知らせは おすと 消える
+  if(q("#hbX")) q("#hbX").onclick=()=>{ HS.shop=false; HS.pane=null; hbDraw(false); const f=app.querySelector('.hnb[data-pane="home"]'); if(f) f.focus({preventScroll:true}); };
   q("#hbZk").onclick=()=>go("#zukan");
-  q("#hbYa").onclick=()=>{ HS.ya=!HS.ya; hbDraw(false); const b=app.querySelector("#yaBox"); if(b) b.scrollIntoView({block:"nearest"}); };
   if(q("#hbTk")) q("#hbTk").onclick=()=>go("#tanken");
   if(q("#hbStore")) q("#hbStore").onclick=()=>{ COL.unplace(S,HS.sel); HS.sel=null; colSave(); hbDraw(false); };
   if(q("#hbCancel")) q("#hbCancel").onclick=()=>{ HS.sel=null; hbDraw(false); };
@@ -4319,7 +4361,7 @@ function hbIsle(root,S,pm,D){
   const mates=(S.sb&&S.sb.c?[`vendor/img/soutai/${S.sb.c}-128.webp`]:[]).concat((S.mk.sh||[]).filter(id=>id&&S.mk.own[id]).map(id=>{ const c=mkC(id); return c&&c.art?`vendor/img/manabikko/${c.art}-${COL.MK_ART[COL.mkStage(S,id)]}-v3-128.webp`:""; }).filter(Boolean));
   const sc=HS.isle&&HS.isle.scroll?HS.isle.scroll():null;
   if(HS.isle) HS.isle.destroy();
-  HS.isle=I.mount(host,{world:w,placing:!!HS.sel,sel:HS.sel,mates,zoom:HS.iv||1,scroll:sc,aria:T("col.grid"),
+  HS.isle=I.mount(host,{world:w,placing:!!HS.sel,sel:HS.sel,mates,cover:1,zoom:HS.iv,scroll:sc,aria:T("col.grid"),
     spotLabel:c=>T("col.cell",c),decorLabel:id=>T("col.d."+id),
     onSpot:c=>hbCell(c),onDecor:c=>hbCell(c),onZoom:z=>{ HS.iv=z; }});
   root.querySelectorAll("[data-iz]").forEach(b=>b.onclick=()=>{ const f=+b.dataset.iz; if(f) HS.isle.zoom(f); else HS.isle.home(); });

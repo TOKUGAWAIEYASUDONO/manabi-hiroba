@@ -89,15 +89,17 @@
       if (!calm) timers.push(setTimeout(() => { go(); timers.push(setInterval(go, 2600 + k * 300)); }, 400 + k * 500));
     });
     // 大きさ：＋ － で 1〜3ばい（はみ出したら ゆびで うごかす＝ふつうの スクロール）
-    let z = Math.max(1, Math.min(3, opt.zoom || 1));
+    const zc = opt.cover ? Math.max(1, Math.min(3, vp.clientHeight * 1.5 / (vp.clientWidth || 1))) : 1;      // cover：島で 画面を うめる 大きさ
+    let z = Math.max(1, Math.min(3, opt.zoom || zc));
+    const center = () => { vp.scrollLeft = (st.offsetWidth - vp.clientWidth) / 2; vp.scrollTop = (st.offsetHeight - vp.clientHeight) / 2; };
     const apply = () => { st.style.width = (z * 100) + "%"; };
     apply();
-    if (opt.scroll) { vp.scrollLeft = opt.scroll[0]; vp.scrollTop = opt.scroll[1]; }
+    if (opt.scroll) { vp.scrollLeft = opt.scroll[0]; vp.scrollTop = opt.scroll[1]; } else center();
     return {
       scroll: () => [vp.scrollLeft, vp.scrollTop],
       zoom(f) { const r = vp.getBoundingClientRect(), cx = (vp.scrollLeft + r.width / 2) / (r.width * z), cy = (vp.scrollTop + r.height / 2) / (st.offsetHeight || 1);
         z = Math.max(1, Math.min(3, z * f)); apply(); vp.scrollLeft = cx * r.width * z - r.width / 2; vp.scrollTop = cy * st.offsetHeight - r.height / 2; if (opt.onZoom) opt.onZoom(z); },
-      home() { z = 1; apply(); vp.scrollLeft = 0; vp.scrollTop = 0; if (opt.onZoom) opt.onZoom(z); },
+      home() { z = zc; apply(); center(); if (opt.onZoom) opt.onZoom(z); },
       nodes: () => st.querySelectorAll("*").length,
       destroy() { timers.forEach(t => { clearTimeout(t); clearInterval(t); }); vp.remove(); }
     };
