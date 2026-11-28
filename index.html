@@ -2175,6 +2175,7 @@ body[data-bw="jin"]{--bwc:#8fd04a;--bwi:url(vendor/img/battle/jin-field.webp)}
 <script src="data/gen/core.js?v=6d93eab5"></script>
 <script>window.RIKA_PUBLIC=true;</script>
 <script>window.BOSS_STAGE_PUBLIC=false;      // ひとりで ボスバトルの ステージ版（ステージ・ざこ・ひっさつわざ・ずかん）：false の あいだは 公開ページでは 今までの ボスバトル。手もと（localhost）では 出る。ひろばの 公開と いっしょに true に する</script>
+<script>window.TANKEN_PUBLIC=false;      // ひろばの「たんけん」と チケット：中身が まだ きまって いないので、true に するまで どこにも 出さない（手もとでも 出さない。2026-11-28 ユーザー決定）</script>
 <script>window.HIROBA_PUBLIC=false;      // じぶんの ひろば：false の あいだは 公開ページで「もうすぐ くるよ」（入れない・どんぐりも ふえない）。手もとの確認（localhost・127.0.0.1）では ひらく</script>
 <script>if(window.RIKA_PUBLIC) document.write('<script src="data/gen/rika.js?v=4f58fe09"><\/script>');</script>
 <script src="data/gen/other.js?v=0a3ecac9"></script>
@@ -4084,7 +4085,8 @@ function colSetOn(v){ colSetCfg({on:v?1:0}); }
 /* チケットの 1日の つかえる数：端末の せってい(tk)と リンクの tk の 小さいほう。0 なら ひろばたんけんは 出さない */
 let TKH=null, EX=null, EXLAST=null;
 const colTkLimit=()=>{ const c=store.get(COLCFG,null); return COL.tkLimit(c&&typeof c.tk==="number"?c.tk:undefined,TKH); };
-const colTkOn=()=>colMode()==="on"&&UNITS_OK&&colTkLimit()>0;
+const TKOPEN=window.TANKEN_PUBLIC===true;      // たんけん・チケットは じゅんびちゅう（ボスバトルを 入れる 案も ある）
+const colTkOn=()=>TKOPEN&&colMode()==="on"&&UNITS_OK&&colTkLimit()>0;
 /* オフが勝つ：端末のオフ、またはリンクの col=0 のどちらかでオフ。リンクの col=1 では オンにならない */
 const colMode=()=>(!COLOK||!HBOPEN||!colCfgOn()||COLH)?"off":"on";
 function colTouch(){ const S=colGet(); colStSync(S); COL.sync(S,colToday()); colSave(); return S; }
@@ -4171,7 +4173,7 @@ function hbDraw(first){
   const pane=HS.shop?"shop":HS.pane, tk=colTkOn()?COL.tkState(S,today,colTkLimit()):null, pick=pane==="mate"?"":mkPickHtml(S);
   const paneHtml=pane==="shop"?`<section class="shop" id="shopBox"><h3>${T("col.shop")}</h3><div class="pills stabs" role="group" aria-label="${esc(T("col.kz.tabs"))}">${["d","k"].map(k=>`<button type="button" class="pill small${HS.tab===k?" on":""}" data-stab="${k}" aria-pressed="${HS.tab===k}">${T("col.kz.tab."+k)}</button>`).join("")}</div>${HS.tab==="k"?kzShopHtml(S,bal):shop}</section>`
     :pane==="mate"?`${mkPickHtml(S)}${mkRowHtml(S)}${mkZkHtml(S)}`:pane==="me"?sbHtml(S,bal):pane==="ya"?`${done}${yaHtml(S)}<p class="note">${T("col.local")}</p>`
-    :pane==="help"?`<h3>${T("col.hud.help")}</h3><dl class="hhelp">${[["st","★"],["ac",acornSvg("ac")],["can","✅"],["tk",svgU("h-ticket")]].map(([k,i])=>`<dt><i aria-hidden="true">${i}</i>${T("col.hud.h."+k)}</dt><dd>${T("col.hud.h."+k+".d")}</dd>`).join("")}</dl>`:"";
+    :pane==="help"?`<h3>${T("col.hud.help")}</h3><dl class="hhelp">${[["st","★"],["ac",acornSvg("ac")],["can","✅"]].concat(tk?[["tk",svgU("h-ticket")]]:[]).map(([k,i])=>`<dt><i aria-hidden="true">${i}</i>${T("col.hud.h."+k)}</dt><dd>${T("col.hud.h."+k+".d")}</dd>`).join("")}</dl>`:"";
   const nb=(k,icon,label,dot)=>`<button type="button" class="hnb${(pane||"home")===k?" on":""}" data-pane="${k}" aria-pressed="${(pane||"home")===k}">${icon}<span>${label}</span>${dot?`<i class="dot" aria-hidden="true"></i>`:""}</button>`;
   root.className="hb hbg t"+S.theme+(pane?" open":"")+(sel?" placing":""); root.style.top=(document.querySelector("header")||{offsetHeight:0}).offsetHeight+"px";
   root.innerHTML=`<div class="isle" id="hbIsle"></div>
@@ -4598,6 +4600,7 @@ function renderZukan(){
 }
 
 function colMemoHtml(S){
+  if(!TKOPEN&&!COL.memoCount(S)) return "";      // たんけんが じゅんびちゅうの あいだは、メモが ない 子には 出さない
   const n=COL.memoCount(S), items=[...S.mo.map(id=>["o",id]),...S.mu.map(id=>["u",id])];
   const body=items.length?items.map(([k,id])=>{ const m=exMemo(k,id); return `<div class="mmc"><b>${esc(m.title)}</b><p>${esc(m.text)}</p></div>`; }).join(""):`<p class="note">${T("col.ex.mm.none")}</p>`;
   return `<section class="zks zk-memo"><h2>${T("col.ex.memo")}</h2><details class="zkp"${n?" open":""}><summary>${T("col.ex.memo")}<span class="zkn">${T("col.ex.mm.n",n,COL.memoTotal())}</span></summary><div class="mmb">${body}</div></details></section>`;
@@ -4645,8 +4648,8 @@ function colTeacherHtml(){
       <span class="note">勉強したあとが形になる「じぶんの ひろば」です。教科の なかま「まなびっこ」は、はじめての練習と、単元が「できた」になったときに 3つの候補から 1たい 選んで 迎えます（くじではありません。2学年以上 下の単元では増えません）。別の日に その教科を練習すると「なかよし」が3段階で育ち、休んでも下がりません。ランキング・くじ・課金・広告はありません。どんぐりは 1日 10こまで（あふれた分は 次の日に持ちこし）で、授業モード（課題リンク）では画面に出ません（100マス計算も 同じく 数えます）。</span>
       <label style="display:flex;gap:10px;align-items:center;font-size:16px"><input type="checkbox" id="colOn"${on?" checked":""} style="width:24px;height:24px"> この端末で ひろば・ずかん・どんぐりを つかう</label>
       <span class="note">オフにすると、ホーム・結果画面・きろく画面から ひろばが消えます（学習のきろくは今まで通り）。課題リンクの末尾に <b>&amp;col=0</b> を付けると、そのリンクだけ ひろばを出しません。<b>オフが優先</b>なので、オフの端末では、リンクに col=1 を付けてもオンになりません。</span>
-      <label style="display:flex;gap:10px;align-items:center;font-size:16px;flex-wrap:wrap">ひろばたんけんの チケット：1日に つかえる数 <select id="colTk" style="font-size:16px;padding:6px">${[0,1,2,3,4,5].map(n=>`<option value="${n}"${n===(((store.get(COLCFG,null)||{}).tk)??2)?" selected":""}>${n}回${n===2?"（ふつう）":n===0?"（たんけんを出さない）":""}</option>`).join("")}</select></label>
-      <span class="note">チケットは「できた」「マスター」を 5つ達成すると 1まい（持てるのは 3まい・1日に増えるのは 2まいまで）。たんけんは 1回 2〜3分で、どんぐりは出ません。課題リンクの末尾に <b>&amp;tk=0</b>〜<b>&amp;tk=5</b> を付けると そのリンクだけ回数を決められます（端末の設定と リンクの <b>小さいほう</b> が使われます。授業モードでは たんけんは出ません）。</span>
+      ${TKOPEN?`<label style="display:flex;gap:10px;align-items:center;font-size:16px;flex-wrap:wrap">ひろばたんけんの チケット：1日に つかえる数 <select id="colTk" style="font-size:16px;padding:6px">${[0,1,2,3,4,5].map(n=>`<option value="${n}"${n===(((store.get(COLCFG,null)||{}).tk)??2)?" selected":""}>${n}回${n===2?"（ふつう）":n===0?"（たんけんを出さない）":""}</option>`).join("")}</select></label>
+      <span class="note">チケットは「できた」「マスター」を 5つ達成すると 1まい（持てるのは 3まい・1日に増えるのは 2まいまで）。たんけんは 1回 2〜3分で、どんぐりは出ません。課題リンクの末尾に <b>&amp;tk=0</b>〜<b>&amp;tk=5</b> を付けると そのリンクだけ回数を決められます（端末の設定と リンクの <b>小さいほう</b> が使われます。授業モードでは たんけんは出ません）。</span>`:""}
       <span class="note"><b>この設定は、いま開いているこの端末だけ</b>に効きます（ほかの端末や、児童の端末は変わりません）。</span>
       <span class="note">端末が変わると、ひろばは新しく始まります（引きつぎは「きろく」画面のバックアップ文字・QR。ひろばは原則その端末のものです）。</span>
     </div>`;
