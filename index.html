@@ -403,12 +403,50 @@ body[data-v=teacher] rt{display:none}
 .tc #roomUnits .ucard[aria-checked=true]{border-color:var(--t-pr);background:var(--t-prw);box-shadow:none}
 .tc #roomUnits .ubox{width:20px;height:20px;border:1px solid #8e9aa7;border-radius:5px;font-size:12px}
 .tc #roomUnits .ubody b{font-size:14px;font-weight:600}.tc #roomUnits .unote{font-size:12px;color:var(--t-mu)}
+/* ===== 先生のページ：水彩の島の 色あい（2026-11-26。子どもの 画面と 同じ 世界に そろえる。色は 変数で 上書き） ===== */
+body[data-v=teacher]{--t-bg:#fbf6ea;--t-sf:#fffdf6;--t-ln:#e2d3ae;--t-tx:#3b2a1e;--t-mu:#6b5846;--t-pr:#2c7426;--t-prw:#eaf4dc;--t-gold:#f2b632}
+.tc-top{border-bottom-width:2px}
+.tc-brand small{background:#f3ead0;border-radius:999px;padding:2px 12px;font-weight:700}
+.tc-toplinks a.tc-kid{border-width:2px;background:#fff}
+.tc-nav{background:linear-gradient(#f5eed9,#eaf2d9 58%,#cfe9e6);border-right-width:2px;overflow:hidden}
+.tc-nav::after{content:"";flex:none;height:210px;margin:auto -44px -40px;background:url(vendor/img/teacher/island-s.webp) center/cover;-webkit-mask-image:radial-gradient(ellipse 60% 58% at 50% 55%,#000 60%,transparent 100%);mask-image:radial-gradient(ellipse 60% 58% at 50% 55%,#000 60%,transparent 100%);pointer-events:none}
+.tc-nb{border-radius:14px}.tc-nb:hover{background:rgba(255,255,255,.6)}
+.tc-ni{background:#fff;border-radius:11px;box-shadow:0 2px 0 var(--t-ln)}
+.tc-nb[aria-current=page]{background:#fff;color:var(--t-tx);box-shadow:0 3px 0 var(--t-ln),inset 0 0 0 2px var(--t-gold)}
+.tc-nb[aria-current=page] .tc-ni{background:var(--t-gold);color:var(--t-tx);box-shadow:0 2px 0 #cf9416}
+.tc-nb[aria-current=page] .tc-nt small{color:var(--t-mu)}
+.tc-ph h2,.tc-hero h2{font-size:28px;letter-spacing:.02em}
+.tc-hero{background:linear-gradient(90deg,#fffdf6 0,#fffdf6 46%,rgba(255,253,246,.55) 72%,rgba(255,253,246,0) 100%),url(vendor/img/teacher/island-s.webp) right 42%/min(520px,60%) auto no-repeat #cfeef2;border:2px solid var(--t-ln);border-radius:20px;padding:20px 24px;box-shadow:0 3px 0 var(--t-ln);overflow:hidden}
+.tc-steps li{border-width:2px;font-weight:700}
+.tc-act,.tc-card,.tc .form{border-width:2px;border-radius:16px;box-shadow:0 3px 0 var(--t-ln)}
+.tc-act:hover{box-shadow:0 3px 0 var(--pc)}
+.tc-meta i{background:#f3ead0}
+.tc .form select,.tc .form input[type=text]{border:2px solid #d3c198;border-radius:11px}
+.tc-btn,.tc .btn{border-radius:13px;box-shadow:0 4px 0 #1c4f18;min-height:46px}
+.tc-btn:hover,.tc .btn:hover{background:#235e1e}
+.tc-btn:disabled{background:#a59b8a;box-shadow:0 4px 0 #857b6b}
+.tc .btn.sub{background:#fffdf6;border:2px solid var(--t-pr);box-shadow:0 3px 0 var(--t-ln)}.tc .btn.sub:hover{background:var(--t-prw)}
+.tc #mkroom{font-size:19px;min-height:56px;padding:10px 34px}
+.tc .out{background:#f1f7e6;border:2px solid #b9d8a4;border-radius:12px}
+.tc .prep{background:#f3ead0;border-radius:999px;padding:4px 14px}
+.tc details.tguide,.tc #roomUnits{border-width:2px;border-radius:12px}
+.tc #roomUnits .ucard[aria-checked=true]{border-color:var(--t-gold);background:#fff6d6}
+.tc-modes{grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:12px}
+.tc-mode{display:flex;flex-direction:column;padding:0;overflow:hidden;border:2px solid var(--t-ln);border-radius:16px;box-shadow:0 4px 0 var(--t-ln);background:#fff}
+.tc-mode .tc-mp{display:block;position:relative;aspect-ratio:12/5;background:#e9f1d8;overflow:hidden}
+.tc-mode .tc-mp img{display:block;width:100%;height:100%;object-fit:cover}
+.tc-mode b{font-size:17px;padding:8px 12px 0;display:block}.tc-mode small{display:block;padding:2px 12px 0;font-size:12.5px}
+.tc-mode .tc-tag{align-self:flex-start;margin:6px 12px 10px;border-radius:999px;padding:1px 10px;font-weight:700;background:#f3ead0;color:var(--t-tx)}
+.tc-mode:hover{border-color:var(--t-gold)}
+.tc-mode[aria-checked=true]{border:2px solid var(--t-gold);background:#fffbea;padding:0;box-shadow:0 4px 0 #cf9416,0 0 0 4px rgba(242,182,50,.33)}
+.tc-mode[aria-checked=true] .tc-mp::after{content:"\2713  えらび中";position:absolute;left:8px;top:8px;background:var(--t-gold);color:var(--t-tx);font-weight:800;font-size:12px;border-radius:999px;padding:2px 10px;box-shadow:0 2px 0 #cf9416}
 @media (max-width:1100px){.tc-flow{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media (max-width:820px){
   .tc-top{padding:8px 14px;gap:8px}.tc-toplinks a span{display:none}.tc-toplinks a{padding:4px 10px}
   .tc-body{grid-template-columns:minmax(0,1fr)}
   .tc-nav{position:sticky;top:57px;z-index:4;flex-direction:row;overflow-x:auto;min-height:0;border-right:0;border-bottom:1px solid var(--t-ln);padding:8px 10px;gap:4px;scrollbar-width:thin}
-  .tc-nb{width:auto;flex:none;padding:6px 10px}.tc-nt small{display:none}.tc-ni{width:28px;height:28px}
+  .tc-nb{width:auto;flex:none;padding:6px 10px}.tc-nt small{display:none}.tc-ni{width:28px;height:28px}.tc-nav::after{display:none}
+  .tc-hero{background:#fffdf6}
   .tc-main{padding:16px 16px 32px}
   .tc-card,.tc .form{padding:16px}
 }
@@ -1010,6 +1048,62 @@ body[data-v=host] .wrap{max-width:none;padding:0}
 .qzh-ctl{position:fixed;right:14px;bottom:12px;margin:0;z-index:25}
 .qzh-ctl .btn{font-size:20px;min-height:52px}
 @media (max-width:900px){.px{overflow:auto}.px-lobby,.px-play,.px-race{grid-template-columns:1fr}.px-bd .sgbd{height:auto;width:100%}.px-row .nm{width:140px}}
+/* ===== 先生の大画面：水彩の世界（2026-11-26）。待合室＝島の ひろば、たからばこ＝ほらあな、すごろく＝島の 地図 ===== */
+@font-face{font-family:"LP Zen Maru";font-style:normal;font-weight:900;font-display:swap;src:url(vendor/fonts/files/lp-zen-maru-gothic-900.woff2) format("woff2")}
+.px.px-lobby-screen{background:#7fcbd6 url(vendor/img/island/base-a.webp) center 46%/cover no-repeat;color:#3b2a1e;padding:12px 20px 96px}
+@media (min-width:901px){.px.px-lobby-screen{height:100dvh}}
+.px-lobby.isl{display:flex;flex-direction:column;align-items:center;gap:1.4vh;min-height:0}
+.lb-chip{align-self:flex-start;display:inline-flex;align-items:center;gap:10px;max-width:calc(100% - 170px);background:#fffdf6;border:3px solid #8f5d36;border-radius:999px;padding:3px 22px 3px 4px;font-weight:800;font-size:clamp(20px,3vh,28px);box-shadow:0 4px 0 rgba(0,0,0,.14);white-space:nowrap}
+  .lb-chip:not(:has(img)){padding-left:22px}
+.lb-chip img{width:68px;height:44px;border-radius:999px;object-fit:cover;flex:none}
+.lb-chip small{font-size:.68em;font-weight:700;color:#6b5846;overflow:hidden;text-overflow:ellipsis;min-width:0}
+.lb-sign{position:relative;display:grid;grid-template-columns:minmax(0,1fr) auto;gap:14px;width:min(900px,94vw);padding:14px;border-radius:26px;border:6px solid #8f5d36;background:repeating-linear-gradient(0deg,#c18a55 0 52px,#b77f4b 52px 54px,#c9935e 54px 108px,#b77f4b 108px 110px);box-shadow:0 10px 0 #6e4526,0 22px 30px rgba(0,0,0,.3)}
+.lb-sign::before,.lb-sign::after{content:"";position:absolute;top:100%;width:26px;height:5vh;background:linear-gradient(90deg,#8f5d36,#b98250 45%,#8f5d36);border-radius:0 0 6px 6px}
+.lb-sign::before{left:15%}.lb-sign::after{right:15%}
+.lb-pp{min-width:0;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:1vh 16px;border-radius:16px;border:3px solid #e2cf9c;background:radial-gradient(ellipse at 30% 20%,#fffdf2,#f7ebc9);box-shadow:inset 0 0 30px rgba(233,214,163,.5)}
+.lb-pp.rcol:has(.qrbox:empty){display:none}
+.px-lobby.isl .lead{font-size:clamp(22px,3.6vh,36px);color:#6b5846;letter-spacing:.06em}
+.px-lobby.isl .bigcode{font-family:"LP Zen Maru",ui-rounded,"Hiragino Maru Gothic ProN",sans-serif;font-weight:900;font-size:clamp(84px,min(20vh,17vw),230px);line-height:1.08;letter-spacing:.1em;padding-left:.1em;margin:0;color:#3b2a1e;text-shadow:0 .028em 0 #f2b632}
+.px-lobby.isl .qrbox svg{width:min(25vh,22vw,250px);margin:0 auto;border:0;border-radius:10px;padding:6px}
+.px-lobby.isl .qrzb .qrzh{color:#6b5846;font-size:16px;font-weight:700}
+.px-lobby.isl .cnt{margin-top:calc(5vh - 2px);background:#fffdf6;border:3px solid #8f5d36;border-radius:999px;padding:0 28px;font-size:clamp(24px,3.6vh,36px);font-weight:800;box-shadow:0 4px 0 rgba(0,0,0,.14);white-space:nowrap}
+.px-lobby.isl .cnt b{font-size:1.4em;color:#d2452f;margin:0 6px}
+.px-lobby.isl #jnlob{color:#fff;width:min(620px,94vw)}.px-lobby.isl .jn-lob{margin-top:0}.px-lobby.isl .jn-lob .jn-tm{background:rgba(22,55,42,.86)}
+.lb-plaza{--k:96px;flex:1;min-height:0;width:100%;overflow:hidden;display:flex;flex-wrap:wrap;justify-content:center;align-content:center;gap:8px 14px;padding:0 1vw 14px}
+.lb-kid{font:inherit;background:none;border:0;padding:0;margin:0;cursor:pointer;color:#3b2a1e;width:calc(var(--k)*1.7);display:flex;flex-direction:column;align-items:center}
+.lb-kid:nth-child(even){transform:translateY(12px)}
+.lb-kid .av{position:relative;width:var(--k);height:var(--k);display:grid;place-items:center;filter:drop-shadow(0 6px 4px rgba(0,0,0,.32))}
+.lb-kid .av .sb{width:100%;height:100%;object-fit:contain}
+.lb-kid .av.em::before{content:"";position:absolute;inset:11%;background:#fffdf6;border:3px solid #8f5d36;border-radius:50%}
+.lb-kid .av .fc{position:relative;width:54%;height:54%}
+.lb-kid .av .mkav,.lb-kid .av .mkavw{position:absolute;right:-8%;bottom:-2%;width:44%;height:44%;margin:0}.lb-kid .av .mkavw .mkav{position:static;width:100%;height:100%}
+.lb-kid .nm{position:relative;margin-top:-5px;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;background:#fffdf6;border:2px solid #8f5d36;border-radius:999px;padding:0 10px;font-size:clamp(13px,calc(var(--k)*.18),20px);font-weight:800;line-height:1.5}
+.lb-plaza.nonm .lb-kid .nm{display:none}.lb-plaza.nonm .lb-kid{width:calc(var(--k)*1.1)}
+.lb-kid:focus-visible{outline:3px solid #fff;outline-offset:2px;border-radius:14px}
+.lb-kid.in .av{animation:lbin .6s cubic-bezier(.3,1.5,.5,1) both}
+@keyframes lbin{from{transform:translateY(-40px) scale(.4);opacity:0}to{transform:none;opacity:1}}
+@media (prefers-reduced-motion:reduce){.lb-kid.in .av{animation:none}}
+.lb-none,.lb-morek{align-self:center;background:#fffdf6;border:3px solid #8f5d36;border-radius:999px;padding:2px 24px;font-size:clamp(20px,3vh,28px);font-weight:800;color:#6b5846}
+.px.px-chest{background:#5a3417 url(vendor/img/battle/chest-cave.webp) center/cover no-repeat}
+.px-chest .px-l{background:rgba(52,30,14,.86);border:4px solid #c9935e;border-radius:22px;padding:10px 20px 12px;box-shadow:0 8px 20px rgba(0,0,0,.35)}
+.px-chest .px-row .bar{background:rgba(255,236,190,.2)}.px-chest .px-row .bar i{background:linear-gradient(#ffe27a,#f2b632)}
+.px-chest .px-play{align-items:center}
+.px-chest .px-l{align-self:center}
+.px-chest .px-r,body[data-v=host] .px-chest .px-r{align-self:center;padding:0;text-align:center}
+.px-tcard{padding:10px 8px 8px;border-radius:20px;border:4px solid #d9c188;background:radial-gradient(ellipse at 30% 10%,#fffdf2,#f5e6bd);box-shadow:0 8px 20px rgba(0,0,0,.35);color:#3b2a1e}
+.px-chest .px-tl{color:#6b5846;font-weight:800}.px-chest .px-timer{color:#3b2a1e}.px-chest .px-timer.warn{color:#c8321e}
+.px-cimg{display:block;width:100%;max-width:260px;height:auto;margin:3vh auto 0;filter:drop-shadow(0 12px 10px rgba(0,0,0,.45))}
+.px.px-race-w{background:#bfe3c8 url(vendor/img/battle/race-map.webp) center/cover no-repeat}
+.px-race-w .px-race .px-r{align-self:start;margin-top:58px;padding:12px 18px 14px;border-radius:22px;border:4px solid #8f5d36;background:rgba(255,253,246,.94);box-shadow:0 8px 20px rgba(0,0,0,.25);color:#3b2a1e}
+.px-race-w .px-tl,.px-race-w .px-more,.px-race-w .px-h{color:#6b5846;font-weight:800}.px-race-w .px-timer{color:#3b2a1e}.px-race-w .px-timer.warn{color:#c8321e}.px-race-w .px-top .rk{color:#c26a10}
+.px.px-endw{background:linear-gradient(rgba(38,22,10,.5),rgba(38,22,10,.5)),#5a3417 url(vendor/img/battle/chest-cave.webp) center/cover no-repeat}
+.px.px-endw.e-race{background:linear-gradient(rgba(20,48,40,.5),rgba(20,48,40,.5)),#bfe3c8 url(vendor/img/battle/race-map.webp) center/cover no-repeat}
+.px-endw .px-end .px-h2{justify-self:center;position:relative;background:linear-gradient(#e2674f,#c84c36);color:#fff;border-radius:10px;padding:2px 56px;box-shadow:0 6px 0 #8d2f20,0 12px 18px rgba(0,0,0,.4);letter-spacing:.06em;margin-bottom:4px}
+.px-endw .px-end .px-h2::before,.px-endw .px-end .px-h2::after{content:"";position:absolute;top:22%;height:100%;width:34px;background:#a83a28;z-index:-1}
+.px-endw .px-end .px-h2::before{left:-22px;clip-path:polygon(0 0,100% 0,100% 100%,0 100%,40% 50%)}.px-endw .px-end .px-h2::after{right:-22px;clip-path:polygon(0 0,100% 0,60% 50%,100% 100%,0 100%)}
+.px-endw .px-end{isolation:isolate}
+.px-endw .px-end .aw-hd h2{background:rgba(38,22,10,.72);border-radius:999px;padding:0 26px}
+@media (max-width:900px){.lb-sign{grid-template-columns:1fr}.lb-chip{max-width:calc(100% - 140px)}.px-race-w .px-race .px-r{margin-top:0}.px-cimg{display:none}}
 /* ===== 児童の端末：自分がやることだけ（全体の順位表は出さない） ===== */
 .mgrid.net{grid-template-columns:1fr}
 .mgrid.sb{grid-template-columns:1fr;gap:6px}.mgrid.sb .side{order:-1;padding:0;border:0;background:none;align-self:stretch}.mgrid.sb .bs-st{margin-bottom:0}
@@ -4269,6 +4363,39 @@ function mkAv(mk,ms,mh){
   const h=w.mh&&kzC(w.mh); return h?`<span class="mkavw">${img}<svg class="kzo" viewBox="0 0 100 100" aria-hidden="true">${kzHatSvg(h,30,34)}</svg></span>`:img;
 }
 const fm=p=>face(p.emoji)+mkAv(p.mk,p.ms,p.mh);          // 動物の顔＋まなびっこ（ある子だけ）
+/* 先生の大画面の 待合室（島の ひろば）：入った子を 水彩の どうぶつで 立たせる。絵の ある どうぶつ（8しゅるい）は 絵、ない どうぶつは 顔の まるい バッジ。
+   名前を おすと いつもの メニュー（名前を かえる・ニックネーム・へやから 出す）。人数が ふえると 小さくし、60人を こえたら「ほか ○人」 */
+const LB_SB={"🐼":"panda","🐰":"usagi","🐸":"kaeru","🐱":"neko","🦊":"kitsune","🐧":"pengin","🐙":"tako","🐤":"hiyoko"};
+function lbPlaza(box,players,kids){
+  if(!box) return; const LIM=60, ps=players.slice(0,LIM), n=ps.length;
+  for(const [pid,el] of [...kids]) if(!ps.some(p=>p.pid===pid)){ el.remove(); kids.delete(pid); }
+  const first=!kids.size;
+  ps.forEach(p=>{
+    let el=kids.get(p.pid);
+    if(!el){ el=document.createElement("button"); el.type="button"; el.className="lb-kid"+(first?"":" in"); el.dataset.pid=p.pid; el.innerHTML=`<span class="av"></span><span class="nm"></span>`; kids.set(p.pid,el); }
+    const sb=LB_SB[p.emoji], fk=p.emoji+(p.mk||"")+(p.ms|0)+(p.mh||"");
+    if(el.dataset.e!==fk){ el.dataset.e=fk; const av=el.firstChild; av.className="av"+(sb?"":" em");
+      av.innerHTML=(sb?`<img class="sb" src="vendor/img/soutai/${sb}-256.webp" alt="" width="256" height="256" decoding="async">`:face(p.emoji))+mkAv(p.mk,p.ms,p.mh);
+      const im=av.querySelector(".sb"); if(im) im.onerror=()=>{ av.className="av em"; im.outerHTML=face(p.emoji); }; }      // 絵が 読めないときは 顔の バッジ
+    el.lastChild.textContent=p.name;
+    if(el.parentNode!==box) box.appendChild(el);      // 入った じゅんに ならぶ
+  });
+  box.querySelectorAll(".lb-none,.lb-morek").forEach(e=>e.remove());
+  if(!n) box.insertAdjacentHTML("beforeend",`<span class="lb-none">${T("px.none")}</span>`);
+  else if(players.length>LIM) box.insertAdjacentHTML("beforeend",`<span class="lb-morek">${T("px.more",players.length-LIM)}</span>`);
+  lbFit(box);
+  if(!box._ro&&window.ResizeObserver){ box._ro=new ResizeObserver(()=>lbFit(box)); box._ro.observe(box); }      // 画面の 大きさが かわったら 合わせなおす
+}
+/* ひろばに 全員が おさまる 大きさを さがす（大きい じゅん）。小さく なりすぎる ときは 名前を かくす（名前は メニューの 中に ある） */
+function lbFit(box){
+  const n=box.querySelectorAll(".lb-kid").length, W=box.clientWidth-20, H=box.clientHeight-14; if(!n||W<=0||H<=0) return;
+  const fits=(k,nm)=>{ const w=k*(nm?1.7:1.1), per=Math.max(1,Math.floor((W+14)/(w+14))), rows=Math.ceil(n/per); return rows*(k+(nm?Math.max(20,k*.27):0)+8)+12<=H; };
+  let k=108, nm=true;
+  while(k>58&&!fits(k,true)) k-=4;
+  if(!fits(k,true)){ nm=false; k=84; while(k>30&&!fits(k,false)) k-=4; }
+  box.style.setProperty("--k",k+"px"); box.classList.toggle("nonm",!nm);
+  box.style.visibility=!nm&&!fits(k,false)?"hidden":"";      // どうしても 入らない（じんとりの チーム表が ある ときなど）は 出さない
+}
 const mkPubOf=p=>p&&p.mk?{mk:p.mk,ms:p.ms|0,...(p.mh?{mh:p.mh}:{})}:{};     // 部屋の表から 送るとき（先生の端末で 調べた 値だけが 入っている）
 function mkAvPicker(){          // 待合室：もっている子から えらぶ（もっていなければ 出さない）
   if(!mkAvOn()) return "";
@@ -4668,7 +4795,7 @@ function renderTeacher(q){
     <div class="form" id="roomForm">
       <h3 class="tc-h3">クラスで友だち対戦（児童の端末を使う）</h3>
       <span class="note"><b>準備：児童の端末とネット接続。</b>部屋を作ると4桁のコードが出ます。先に <a href="#check">${ic("plug")} 接続テスト</a> をすると安心です。</span>
-      <div class="tc-modes" role="radiogroup" aria-label="あそびかた">${TCMODES.map(m=>`<button type="button" class="tc-mode" role="radio" aria-checked="false" data-m="${m[0]}"><span class="tc-mi" aria-hidden="true">${m[1]}</span><b>${m[2]}</b><small>${m[3]}</small><span class="tc-tag">${m[4]}</span></button>`).join("")}</div>
+      <div class="tc-modes" role="radiogroup" aria-label="あそびかた">${TCMODES.map(m=>`<button type="button" class="tc-mode" role="radio" aria-checked="false" data-m="${m[0]}"><span class="tc-mp" aria-hidden="true"><img src="vendor/img/teacher/mode-${m[0]}.webp" alt="" width="480" height="200" decoding="async"></span><b>${m[2]}</b><small>${m[3]}</small><span class="tc-tag">${m[4]}</span></button>`).join("")}</div>
       <div class="tcols rooms">
         <label class="tc-sr">あそびかた<select id="nm" tabindex="-1" aria-hidden="true">${[...MODES,RKMODE,BSMODE,JNMODE,QMODE,M1MODE].map(m=>`<option value="${m.id}">${m.ico} ${m.t}</option>`).join("")}</select></label>
         <label id="ngl">問題<select id="ng">${opt}${setOpt}</select></label>
@@ -6366,9 +6493,13 @@ function renderHost(){
   }
   const lobbyBuild=s=>{
     px.className="px px-lobby-screen";
-    px.innerHTML=`<div class="px-lobby"><div class="lcol"><div class="lead">${T("px.code")}</div><div class="bigcode">${s.code}</div>
-        <div class="cnt">${T("px.n")}<b id="pxn"></b>${T("px.nin")}</div>${s.mode==="jin"?`<div id="jnlob"></div>`:""}</div>
-      <div class="rcol"><div class="qrbox" id="qrbox"></div></div></div>`;
+    const lm=modeOf(s), lx=gameOf(s);      // 水彩の島の ひろば：木の かんばんに コードと QR、入った子は ひろばに あつまる
+    px.innerHTML=`<div class="px-lobby isl"><div class="lb-chip"><img src="vendor/img/teacher/mode-${esc(s.mode)}.webp" alt="" width="68" height="44" onerror="this.remove()"><span>${lm?rbp(lm.t):""}</span>${lx&&s.mode!=="m100"?`<small>${rbp(lx.t)}</small>`:""}</div>
+      <div class="lb-sign"><div class="lb-pp lcol"><div class="lead">${T("px.code")}</div><div class="bigcode">${s.code}</div></div>
+        <div class="lb-pp rcol"><div class="qrbox" id="qrbox"></div></div></div>
+      <div class="cnt">${T("px.n")}<b id="pxn"></b>${T("px.nin")}</div>${s.mode==="jin"?`<div id="jnlob"></div>`:""}
+      <div class="lb-plaza" id="pxplaza"></div></div>`;
+    B.kids=new Map();
     document.getElementById("pxextra").innerHTML=`<div class="lockmsg hidden" id="pxlock" role="status">${ic("lock")} ${T("px.locked")}</div><div class="chips" id="pxchips"></div>`;
     showQr(document.getElementById("qrbox"),joinUrl);
   };
@@ -6382,6 +6513,7 @@ function renderHost(){
     const chips=s.players.slice(0,lim).map(p=>`<button type="button" class="chip nmb" data-pid="${esc(p.pid)}">${fm(p)} ${esc(p.name)}</button>`).join("")
       +(s.players.length>lim?`<button type="button" class="chip more" id="pxmorebtn">${T("px.more",s.players.length-lim)}</button>`:"");
     document.getElementById("pxchips").innerHTML=chips||`<span class="chip more">${T("px.none")}</span>`;
+    lbPlaza(document.getElementById("pxplaza"),s.players,B.kids);
     if(s.mode==="jin"){      // じんとり：大画面には チームの人数と顔だけ。名前つきの チーム表は メニューの中
       const jl=document.getElementById("jnlob"); if(jl) jl.innerHTML=jnLobbyHtml(s);
       let jm=document.getElementById("jnmenu"); if(!jm){ jm=document.createElement("div"); jm.id="jnmenu"; document.getElementById("pxextra").prepend(jm); }
@@ -6393,9 +6525,9 @@ function renderHost(){
   };
   const RH=58;
   const chestBuild=(s,m,x)=>{
-    px.className="px";
+    px.className="px px-chest";
     px.innerHTML=`<div class="px-play"><div class="px-l"><div class="px-bars" id="pxbars"></div><div class="px-more" id="pxmore"></div></div>
-      <div class="px-r"><div class="px-tl">のこり</div><div class="px-timer" id="pxt"></div></div></div>`;
+      <div class="px-r"><div class="px-tcard"><div class="px-tl">のこり</div><div class="px-timer" id="pxt"></div></div><img class="px-cimg" src="vendor/img/battle/chest-open-gold.webp" alt="" width="256" height="256" decoding="async" onerror="this.remove()"></div></div>`;
     B.rows=new Map();
   };
   const chestUpd=s=>{
@@ -6429,7 +6561,7 @@ function renderHost(){
     }
   };
   const endBuild=s=>{
-    M=null; px.className="px";
+    M=null; px.className="px px-endw e-"+(s.mode==="race"?"race":"chest");
     const ps=sorted(s.players), rows=ps.map((p,i)=>{const t=p.ok+p.ng;return {i:i+1,p,t,acc:t?Math.round(p.ok/t*100):0}});
     const ans=rows.filter(r=>r.t>0), avg=ans.length?Math.round(ans.reduce((n,r)=>n+r.acc,0)/ans.length):0, u=rbp(unitOf(s)), vis=pxVis(rows.length,8);
     B.tsv=()=>{ const wn=csvWithNames(); return ["順位\t名前\t"+u+"\t正解\t解答数\t正答率",...rows.map(r=>`${r.i}\t${wn?r.p.name:"児童"+r.i}\t${r.p.v}\t${r.p.ok}\t${r.t}\t${r.acc}%`)].join("\n"); };   //T
