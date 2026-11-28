@@ -19,7 +19,7 @@
 - `tools/test-collection.js` … どんぐり・ずかん・バックアップの単体テスト。`node tools/test-collection.js`
 - `data/tools-viz.js` … 算数の「🧰 ずで かんがえる」どうぐ（ブロック・さくらんぼ・アレイ・くらい・ぶんすう）の判定と図。Qalc（MIT）の かんがえるどうぐ を作り直したもの。判定は `tools/test-tools-viz.js` で検査
 - `tools/test-quiz.js` … 「先生がつくる もんだい」の部品の単体テスト。`node tools/test-quiz.js`
-- `data/statlib.js` … 回答スピードの あつまり（名前なしの数字だけ）。ひとりの練習が1回おわると、遊びの種類・学年・単元・あそびかた・問題数・正解数・答えるのにかかった時間を1回だけ `/api/stat` に送る（`ON` が false のあいだは送らない。本番の住所だけ。先生の設定 `mh_statcfg` でオフ）。受けとり口は `functions/api/stat.js`・まとめは `functions/api/stats.js`（Cloudflare Pages Functions。D1 を `DB` でつなぐ・合言葉は `STATS_KEY`）、見る画面は `stats.html`（どこからもリンクしない・検索に出さない）。手順は `docs/cloudflare-pages.md`、検査は `node tools/test-statlib.js`
+- `data/statlib.js` … 回答スピードの あつまり（名前なしの数字だけ）。ひとりの練習が1回おわると、遊びの種類・学年・単元・あそびかた・問題数・正解数・答えるのにかかった時間を1回だけ `/api/stat` に送る（`ON` が送るスイッチ。本番の住所だけ。先生の設定 `mh_statcfg` でオフ）。受けとり口は `functions/api/stat.js`・まとめは `functions/api/stats.js`（Cloudflare Pages Functions。D1 を `DB` でつなぐ・合言葉は `STATS_KEY`）、見る画面は `stats.html`（どこからもリンクしない・検索に出さない）。手順は `docs/cloudflare-pages.md`、検査は `node tools/test-statlib.js`
 - `data/learnhelp.js` … まなびの たすけ（ひとりの 練習だけ）。4択で はやすぎる まちがいが つづいたら ひと休み、単元練習で まちがえたら 1.5秒 押せない、まちがえた問題を 3〜5問 あとに もう一度（その回は メダル・どんぐりに 数えない）、算数で 1回目の まちがいに ヒント（🧰 か れいだい）、2回 まちがえたら その問題の 数で とき方（「わかった」で つぎへ）、同じ単元で × が 3回 つづいたら れいだい・やさしい ステップを すすめる。検査は `node tools/test-learnhelp.js`
 
 ## 問題の確認状況
@@ -36,7 +36,7 @@ index.html は data フォルダと一緒に置くこと（ダブルクリック
 
 ## 先生のページ（#teacher。2026-11-18 作りなおし）
 - 児童向けの 黒板・校庭の 見た目とは べつの、おとな向けの 画面（`body[data-v=teacher]` だけに効く `.tc-*` の CSS。上の 児童用ヘッダーは かくし、ふりがなも 出さない）。
-- 左の メニュー（スマホ・タブレットでは 上の 横スクロール）：ホーム／クラスであそぶ（部屋）／教室で映す／リンクを配る／問題をつくる／この端末の設定／児童の情報。`#teacher?tab=room|proj|link|make|set|guide` で ひらく（前の `tab=play` は 部屋）。
+- 左の メニュー（スマホ・タブレットでは 上の 横スクロール）：ホーム／クラスであそぶ（部屋）／教室で映す／リンクを配る／問題をつくる／この端末の設定（2026-11-28「児童の情報」は いったん なくした）。`#teacher?tab=room|proj|link|make|set` で ひらく（前の `tab=play` は 部屋）。
 - ホームは「授業でどう使うか」：導入 → 練習 → みんなで → ふりかえり の 4つに、使える活動の カード（`TCFLOW`）。押すと その設定の パネルを ひらき、部屋なら あそびかたも えらぶ。のちに「単元を えらぶと 授業の流れが 出る 授業プラン」を ここに 足す。
 - 部屋の あそびかたは カード（`TCMODES`）で えらぶ。中身の フォーム（id・動き）は 前と 同じ。
 - 2026-11-26：先生の 画面も 子どもと 同じ 水彩の 世界に そろえた。先生のページは 紙の 色あい（色は `body[data-v=teacher]` の 変数）・左の メニューの 下に 島・あそびかたは 絵の カード（`vendor/img/teacher/mode-*.webp`。元は battle・island・space の 絵を 480×200 に 切った 物）。大画面（`#host`）は、待合室＝島の ひろば（木の かんばんに コードと QR、入った子が `lbPlaza` で ひろばに 立つ。絵の ある どうぶつ 8しゅるいは `vendor/img/soutai`、ほかは 顔の バッジ。60人まで）、たからばこ＝ほらあな、すごろく＝島の 地図、結果＝その あそびの 背景と リボンの 見出し。ボス・じんとり・ロケットの 大画面は 前の まま。

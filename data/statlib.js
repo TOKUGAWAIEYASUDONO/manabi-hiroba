@@ -7,7 +7,7 @@
    ON が false の あいだは、ブラウザは 何も 送らない。検査は node tools/test-statlib.js */
 (function (root) {
   "use strict";
-  const ON = false;                       // 送るかどうか（公開の スイッチ）。先生向けの 文が きまったら true に する
+  const ON = true;                        // 送るかどうか（公開の スイッチ）。2026-11-26 先生向けの 文が きまって オン
   // 送るのは 本番の 住所で 開いたときだけ（手もと・古い住所では 送らない）。住所は data/move.js の SITE.NEW_HOST（ここには 書かない）
   const ENDPOINT = "/api/stat";
   const CFG = "mh_statcfg";               // 先生が 端末に 保存する オン／オフ（{on:0} で 送らない）

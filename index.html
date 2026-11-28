@@ -381,7 +381,6 @@ body[data-v=teacher] rt{display:none}
 .tc details.tguide{background:var(--t-bg);border:1px solid var(--t-ln);border-radius:9px;padding:4px 14px;margin:0}
 .tc details.tguide summary{font-size:14px;min-height:40px}
 .tc details.tguide .note{display:block;margin:6px 0}
-.tc-guide ol{margin:0;padding-left:22px;font-size:14px;line-height:1.8}.tc-guide li{margin:6px 0}
 /* 部屋の あそびかた：カードで えらぶ */
 .tc-sr{position:absolute!important;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
 .tc-modes{display:grid;grid-template-columns:repeat(auto-fill,minmax(176px,1fr));gap:8px}
@@ -2230,7 +2229,7 @@ body[data-bw="jin"]{--bwc:#8fd04a;--bwi:url(vendor/img/battle/jin-field.webp)}
 <script src="data/sansu-items.js?v=54e3fedb"></script>
 <script src="data/tools-viz.js?v=0582ba52"></script>
 <script src="data/learnhelp.js?v=062f8140"></script><!-- まなびの たすけ（はやすぎる まちがい・あとで もう一度・とき方・つまずき） -->
-<script src="data/statlib.js?v=2733002d"></script><!-- 回答スピードの あつまり（名前なしの 数字だけ。ON・先生の オフは data/statlib.js） -->
+<script src="data/statlib.js?v=d9dababa"></script><!-- 回答スピードの あつまり（名前なしの 数字だけ。ON・先生の オフは data/statlib.js） -->
 <script src="data/collection.js?v=bd560604"></script>
 <script src="data/masu100.js?v=a19d68e5"></script>
 <script>
@@ -4738,19 +4737,8 @@ function toolTeacherHtml(){
 /*T-END*/
 /*T-BEGIN*/
 /* 先生向けの説明（README と同じ文）。児童の名前・通信・保存について */
-const TGUIDE=[
-  "授業リンクは、開いてから90分、または日付が変わるまで授業画面に固定します。「ここでおわる」で結果を見たあとも固定は続きます。終わったら結果画面の「先生：じゅぎょうを おわる」を2秒長押ししてください。先生が試すときは新しいタブで。児童端末の JavaScript だけでは、授業中の画面移動を完全には止められません。",
-  "名前は児童が自由に入力します。本名（名字）ではなく、あだ名を入れるよう声をかけてください。名前は先生の端末のメモリにだけ置き、部屋を閉じると消えます。",
-  "先生の画面を教室の大画面に映すと、児童の名前がクラス全員に見えます。上位の子と、動いた子の名前だけが出ます（最下位の子の名前は出しません）。全員の表は「先生だけ みる」を押したときだけ開きます。気になる名前は、名前を押すと「かえる／ニックネームにする／へやから だす」ができます。",
-  "共用の端末では、前の子の名前が次の子の入力欄に出ないよう、名前は初期設定では覚えません（このタブを閉じると消えます）。児童が「この たんまつは じぶんだけ」を選んだときだけ、その端末に名前を残します。共用の端末では選ばないよう伝えてください。",
-  "結果のCSV・コピーに名前を入れるかは先生が選べます（初期設定は入れません）。名前入りのファイルは、学校の個人情報の扱いに従って保管・削除してください。",
-  "4けたの部屋コードは、インターネット上の公開仲介サーバー（0.peerjs.com）を通じて端末どうしをつなぎます。コードを教室の外に出さず、全員がそろったら「入室をしめきる」を押してください。ゲームが始まったあとは入れません。同じ端末からの続けての参加は一定時間ごとに数を制限しています。コードを知られたときは、「先生の画面」にもどって部屋を作りなおすと新しいコードになります。",
-  "通信先は 0.peerjs.com（仲介）、stun.l.google.com（STUN）、*.turn.peerjs.com（直接つながらないときの中継）だけです。これらにはIPアドレスが届きますが、名前や得点は届きません（端末どうしの通信は暗号化されます）。",
-  "ひろば・どんぐり・ずかんは、この端末の記録だけで動き、名前・順位・外部送信はありません。授業で使わないときは「その他の設定」でオフにできます。リンクの col=0 でもオフにできます。",
-  "記録は、その端末の遊びの記録で、成績の証明には使えません。どんぐり・ずかん・自己ベスト・バックアップの文字は、端末の中の記録で、本人が書きかえることもできます（端末の時計を変えても数字が変わります）。通知表・評価・順位づけには使わないでください。"
-];
 /* 先生のページのメニュー：[パネル, アイコン, 名前, 説明] */
-const TCNAV=[["home","graduation-cap","ホーム","授業でどう使うか"],["room","users","クラスであそぶ","部屋・コード・QR"],["proj","monitor","教室で映す","児童端末なし"],["link","link","リンクを配る","課題・単元・QR"],["make","pencil","問題をつくる","単元から・オリジナル"],["set","sliders","この端末の設定","ひろば・どうぐ"],["guide","lock","児童の情報","名前・通信・保存"]];
+const TCNAV=[["home","graduation-cap","ホーム","授業でどう使うか"],["room","users","クラスであそぶ","部屋・コード・QR"],["proj","monitor","教室で映す","児童端末なし"],["link","link","リンクを配る","課題・単元・QR"],["make","pencil","問題をつくる","単元から・オリジナル"],["set","sliders","この端末の設定","ひろば・どうぐ"]];
 /* 部屋のあそびかた：[id, 絵, 名前, 先生向けの説明, 種類] */
 const TCMODES=[["chest","🎁","たからばこ","答えて宝箱をあける。運の要素で下位の子にもチャンス","対戦"],["race","🎲","すごろく","答えてすすむ。ゴールをめざす","対戦"],
   ["rocket","🚀","ロケットはっしゃ","全員の正解で燃料をためる。ステージ制","協力"],["boss","👾","ボスバトル","全員でボスのげんきをへらす","協力"],["jin","🏁","じんとりバトル","2チームで盤のマスをぬる","チーム"],
@@ -4889,10 +4877,6 @@ function renderTeacher(q){
       <section class="tc-pane hidden" id="tp-set" aria-label="この端末の設定">
         <div class="tc-ph"><h2>この端末の設定</h2><p>ここで変えた設定は、いま開いているこの端末だけに効きます。</p></div>
         ${colTeacherHtml()}${toolTeacherHtml()}${statTeacherHtml()}</section>
-      <section class="tc-pane hidden" id="tp-guide" aria-label="児童の情報と使い方">
-        <div class="tc-ph"><h2>児童の情報のあつかい</h2><p>友だち対戦で児童が入れた名前は、先生の端末のメモリにだけ置き、部屋を閉じると消えます。</p></div>
-        <div class="form tc-guide" id="tguide"><ol>${TGUIDE.map(t=>`<li>${esc(t)}</li>`).join("")}</ol></div>
-      </section>
       </div>
     </div></div>`;
   const fillG=(sel,gsel)=>{ const v=$(sel).value;
